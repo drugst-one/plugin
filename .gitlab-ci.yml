@@ -1,0 +1,52 @@
+image: trion/ng-cli-karma
+
+stages:
+  - setup
+  - check
+  - build
+
+cache:
+  paths:
+    - node_modules/
+
+setup:
+  stage: setup
+  script:
+    - npm install
+
+check:audit:
+  stage: check
+  script:
+    - npm install
+    - npm audit --production
+  dependencies:
+    - setup
+
+check:lint:
+  stage: check
+  script:
+    - npm install
+    - npm run lint
+  dependencies:
+    - setup
+
+check:test:
+  stage: check
+  script:
+    - npm install
+    - ng test
+  dependencies:
+    - setup
+
+build:
+  stage: build
+  artifacts:
+    paths:
+      - dist
+  script:
+    - npm install
+    - npm run build
+  dependencies:
+    - check:audit
+    - check:lint
+    - check:test
