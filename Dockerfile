@@ -21,5 +21,6 @@ RUN npm run build -- --prod --base-href=/covid19/
 RUN cp -r dist/covid19/* /usr/share/nginx/html/
 
 COPY nginx/default.conf /etc/nginx/conf.d/
+COPY nginx/htpasswd /etc/nginx/htpasswd
 
 EXPOSE 80
