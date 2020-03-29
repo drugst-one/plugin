@@ -1,20 +1,21 @@
-image: trion/ng-cli-karma
-
 stages:
   - setup
   - check
   - build
+  - deploy
 
 cache:
   paths:
     - node_modules/
 
 setup:
+  image: trion/ng-cli-karma
   stage: setup
   script:
     - npm install
 
 check:audit:
+  image: trion/ng-cli-karma
   stage: check
   script:
     - npm install
@@ -23,6 +24,7 @@ check:audit:
     - setup
 
 check:lint:
+  image: trion/ng-cli-karma
   stage: check
   script:
     - npm install
@@ -31,6 +33,7 @@ check:lint:
     - setup
 
 check:test:
+  image: trion/ng-cli-karma
   stage: check
   script:
     - npm install
@@ -39,6 +42,7 @@ check:test:
     - setup
 
 build:
+  image: trion/ng-cli-karma
   stage: build
   artifacts:
     paths:
@@ -50,3 +54,21 @@ build:
     - check:audit
     - check:lint
     - check:test
+
+deploy:
+  image: docker
+  stage: deploy
+  only:
+    - master
+  services:
+    - docker:dind
+  variables:
+    CONTAINER_HOSTNAME: docker
+  before_script:
+    - docker info
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build -t gitlab.lrz.de:5005/covid-19/frontend .
+    - docker push gitlab.lrz.de:5005/covid-19/frontend
+  dependencies:
+    - build
