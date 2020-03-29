@@ -1,0 +1,136 @@
+<div class="content fullscreen">
+  <div class="modal" [class.is-active]="showModal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">{{groupId}}</p>
+        <button class="delete" aria-label="close" (click)="closeSummary()"></button>
+      </header>
+      <section class="modal-card-body">
+        <h2>General Information</h2>
+        <ul>
+          <li><b>Protein Group:</b> {{proteinGroup}}</li>
+          <li><b>Gene Name(s):</b> <span *ngFor="let geneName of geneNames"> {{ geneName }}</span>
+          <li><b>Protein Name(s):</b> <span *ngFor="let proteinName of proteinNames"> {{ proteinName }}</span>
+          </li>
+          <li><b>Protein AC(s):</b>
+            <a href="https://www.uniprot.org/uniprot/{{proteinAC}}" target="_blank"
+               *ngFor="let proteinAC of proteinACs">
+              {{ proteinAC }}<span><img class="inline" align="center" src="../assets/uniprot.png"></span>
+            </a>
+          </li>
+          <li><b>Number of Interactions:</b> {{numberOfInteractions}}</li>
+        </ul>
+
+        <h2>Summary</h2>
+        <figure class="image" (click)="openSummary('A4435')">
+          <img src="../assets/boxplot.png" alt="Boxplots">
+        </figure>
+      </section>
+
+      <footer class="modal-card-foot">
+        <button class="button is-danger" (click)="closeSummary()">Close</button>
+      </footer>
+    </div>
+  </div>
+
+
+  <div class="content left-bar">
+
+    <div class="card left-bar-item">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon">
+        <i class="fas fa-info" aria-hidden="true"></i>
+      </span> Info
+        </p>
+      </header>
+      <div class="card-content">
+        <div class="content">
+          Information about how to use the explorer
+        </div>
+      </div>
+    </div>
+
+    <div class="card left-bar-item">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon">
+        <i class="fas fa-search" aria-hidden="true"></i>
+      </span> Query Protein/Gene
+        </p>
+      </header>
+      <div class="card-content">
+        <div class="content">
+          <div class="field">
+            <div class="control is-loading">
+              <input class="input" type="text" placeholder="Search for Protein/Gene...">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card left-bar-item">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon">
+        <i class="fas fa-filter" aria-hidden="true"></i>
+      </span> Filtering
+        </p>
+      </header>
+      <div class="card-content">
+        <div class="content">
+          <p><b>Baits</b></p>
+          <label class="checkbox" *ngFor="let baitName of baitNames">
+            <input type="checkbox" class="checkbox">
+            {{ baitName }}
+          </label>
+        </div>
+      </div>
+      <footer class="card-footer">
+        <button class="card-footer-item button is-danger">Reset
+        </button>
+      </footer>
+    </div>
+  </div>
+
+  <div class="card right-big" >
+    <header class="card-header">
+      <p class="card-header-title">
+        SARS-CoV-2 Protein-Protein Interaction Network
+      </p>
+      <a href="#" class="card-header-icon" aria-label="more options">
+      <span class="icon">
+        <i class="fas fa-sliders-h" aria-hidden="true"></i>
+      </span>
+      </a>
+    </header>
+    <div class="card-content">
+      <div class="card-image">
+        <figure class="image" (click)="openSummary('A4435')">
+          <img src="assets/graph_example.png" alt="PPI Network" class="network">
+        </figure>
+      </div>
+      <footer class="card-footer">
+        <button class="card-footer-item button is-primary">
+                <span class="icon">
+        <i class="fas fa-cloud-download-alt" aria-hidden="true"></i>
+      </span>
+        </button>
+        <a class="card-footer-item">
+        <span class="icon">
+        <i class="fas fa-search-plus" aria-hidden="true"></i>
+      </span>
+        </a>
+        <a href="#" class="card-footer-item">
+         <span class="icon">
+        <i class="fas fa-search-minus" aria-hidden="true"></i>
+      </span>
+        </a>
+      </footer>
+    </div>
+  </div>
+</div>
+
+

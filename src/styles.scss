@@ -1,3 +1,92 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import '~bulma';
+@charset "utf-8";
+
+@import url('https://fonts.googleapis.com/css?family=Varela+Round');
+$family-sans-serif: "Varela Round", sans-serif;
+@import "~bulma/bulma.sass";
+
+.hero.is-primary {
+  background-color: #118AB2;
+  background-image: url("assets/logo.png"), linear-gradient(to left, #f2fcfe, #118AB2);
+  background-repeat: no-repeat;
+  background-position: 80%;
+  padding: 50px;
+}
+
+.button.is-primary, .button.is-primary:hover, .button.is-primary:disabled {
+  background-color: #118AB2;
+}
+
+.button.is-danger, .button.is-danger:hover, .button.is-danger:disabled {
+  background-color: #EF476F;
+}
+
+.button.is-success, .button.is-success:hover, .button.is-success:disabled {
+  background-color: #06D6A0;
+}
+
+div.content {
+  margin: 30px;
+}
+
+div.content.fullscreen {
+  margin: 20px;
+  height: calc(100vh - 120px);
+  width: 100%;
+}
+
+div.navbar-menu {
+  margin-left: 5px;
+}
+
+div.content.left-bar {
+  float: left;
+  width: 400px;
+}
+
+div.card.left-bar-item {
+  margin-bottom: 30px;
+}
+
+div.card.right-big {
+  float: right;
+  width: calc(100% - 460px);
+  height: calc(100vh - 105px);
+}
+
+button.i {
+  margin-left: 5px;
+}
+
+body {
+   height: 100%;
+}
+
+img {
+  margin: 10px;
+}
+
+span.icon {
+  margin-right: 5px;
+}
+
+img.inline {
+  height: 30px;
+  margin-left: 0px;
+}
+
+img.network {
+  height: calc(100vh - 270px);
+}
+
+main {
+  height: calc(100vh - 500px);
+}
+
+input.checkbox {
+  margin-left: 15px;
+}
+
+
+
