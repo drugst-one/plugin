@@ -1,6 +1,9 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import {Effect, ProteinNetwork} from '../protein-network';
+import { ApiService } from '../../api.service';
 
 declare var vis: any;
 
@@ -23,14 +26,20 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public proteinData: ProteinNetwork;
 
+  public proteinGroups: any;
+  public effects: any;
+  public edges: any;
+
   private network: any;
   private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
+
+  private networkData: any = [];
 
   private seed = 1;  // TODO: Remove this
 
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  constructor(private route: ActivatedRoute, private router: Router, private api: ApiService) {
     this.groupId = 'IFI16';
     this.geneNames.push('IFI16');
     this.proteinNames.push('Gamma-interface-inducible protein 16');
@@ -70,10 +79,19 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   ngOnInit() {
   }
 
+
+
   async ngAfterViewInit() {
     if (!this.network) {
       await this.createNetwork();
     }
+  }
+
+  private async getNetwork() {
+    const data: any = await this.api.getNetwork();
+    this.proteinGroups = data.proteinGroups;
+    this.effects = data.effects;
+    this.edges = data.edges;
   }
 
   public zoomToNode(id: string) {
@@ -99,8 +117,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   private async createNetwork() {
-    const {proteinGroups, effects, edges: proteinEdges} = await this.loadNetwork();
-    this.proteinData = new ProteinNetwork(proteinGroups, effects, proteinEdges);
+    await this.getNetwork();
+    this.proteinData = new ProteinNetwork(this.proteinGroups, this.effects, this.edges);
     this.proteinData.loadPositions();
     this.proteinData.linkNodes();
 
@@ -113,8 +131,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
 
     const {nodes, edges} = this.mapDataToNodes(this.proteinData);
-
-    console.log(nodes, edges);
 
     this.nodeData.nodes = new vis.DataSet(nodes);
     this.nodeData.edges = new vis.DataSet(edges);
@@ -203,58 +219,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.nodeData.nodes.add(Array.from(addNodes.values()));
   }
 
-  private async loadNetwork(): Promise<any> {
-    // TODO: Load from backend instead of generating random stuff here...
-
-    const proteinGroupCount = 10000;
-    const effectCount = 50;
-    const edgeCount = 2000;
-
-    const proteinGroups = [];
-    const effects = [];
-    const edges = [];
-
-    for (let i = 0; i < effectCount; i++) {
-      effects.push({
-        id: i,
-        name: `eff${i}`,
-      });
-    }
-
-    const proteinGroupIds = [];
-    for (let i = 0; i < edgeCount; i++) {
-      const proteinGroupId = Math.floor(this.random() * proteinGroupCount);
-      const effectId = Math.floor(this.random() * effects.length);
-      let found = false;
-      for (const edge of edges) {
-        if (edge.proteinGroupId === proteinGroupId && edge.effectId === effectId) {
-          found = true;
-          break;
-        }
-      }
-      if (!found) {
-        edges.push({
-          proteinGroupId, effectId
-        });
-        if (proteinGroupIds.indexOf(proteinGroupId) === -1) {
-          proteinGroupIds.push(proteinGroupId);
-        }
-      }
-    }
-
-    for (const proteinGroupId of proteinGroupIds) {
-      proteinGroups.push({
-        id: proteinGroupId,
-        name: `pg${proteinGroupId}`,
-      });
-    }
-
-    return {
-      proteinGroups,
-      effects,
-      edges
-    };
-  }
 
   private mapProteinGroupToNode(proteinGroup: any): any {
     return {
