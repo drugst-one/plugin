@@ -69,10 +69,21 @@ div.content.network {
   height: calc(100vh - 90px);
 }
 
-img.network {
-  height: calc(100vh - 250px);
-  margin: 10px;
+div.card.network {
+  width: 100%;
+  height: calc(100vh - 100px);
 }
+
+div.network {
+   height: calc(100vh - 240px);
+}
+
+div.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
 div.content.explorer {
   margin-left: 20px;
