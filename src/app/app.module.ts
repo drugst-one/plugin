@@ -9,6 +9,8 @@ import { AppComponent } from './app.component';
 import {ExplorerPageComponent} from './pages/explorer-page/explorer-page.component';
 import {AboutPageComponent} from './pages/about-page/about-page.component';
 import {HomePageComponent} from './pages/home-page/home-page.component';
+import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
@@ -21,7 +23,8 @@ import {HomePageComponent} from './pages/home-page/home-page.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    CommonModule
+    CommonModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
