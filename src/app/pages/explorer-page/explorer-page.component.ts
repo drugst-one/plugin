@@ -9,7 +9,7 @@ import {Network, Edge, Node} from 'vis-network';
 })
 export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
-  public showModal = false;
+  public showDetails = false;
   public groupId = '';
   public geneNames: Array<string> = [];
   public proteinGroup = '';
@@ -30,7 +30,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.geneNames.push('IFI16');
     this.proteinNames.push('Gamma-interface-inducible protein 16');
     this.proteinACs.push('Q16666');
-    this.numberOfInteractions = 25;
     this.baitNames.push('Bait Protein 1');
     this.baitNames.push('Bait Protein 2');
     this.baitNames.push('Bait Protein 3');
@@ -42,7 +41,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (!proteinGroup) {
         // In this case, the URL is just `/explorer`
         // Therefore, we do not show a modal
-        this.showModal = false;
+        this.showDetails = false;
         return;
       }
 
@@ -58,8 +57,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.proteinGroup = proteinGroup;
 
       // TODO: Perform call here for 'proteinGroup'...
-
-      this.showModal = true;
+      // this.zoomToNode(proteinGroup)
+      this.showDetails = true;
     });
   }
 
@@ -75,12 +74,22 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
   }
 
+  public zoomToNode(id: string) {
+    const coords = this.network.getPositions(id)[id];
+    this.network.moveTo({
+      position: {x: coords.x, y: coords.y},
+      scale: 1.0,
+      animation: true,
+    });
+  }
+
   public getGroupId() {
     return this.groupId;
   }
 
   public async openSummary(groupId: string) {
     await this.router.navigate(['explorer'], {queryParams: {proteinGroup: groupId}});
+    this.zoomToNode(this.proteinGroup);
   }
 
   public async closeSummary() {
@@ -890,8 +899,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       });
     }
 
-
-
     this.numberOfInteractions = edges.length;
 
     const container = this.networkEl.nativeElement;
@@ -913,8 +920,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       // TODO use groupID
       console.log(id);
       if (id.length > 0) {
-        console.log('clicked node:', id);
         this.openSummary(id[0]);
+      } else {
+        this.closeSummary();
       }
     });
 
@@ -924,6 +932,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         localStorage.setItem('positions', JSON.stringify(this.network.getPositions()));
       });
       this.network.stabilize();
+    }
+
+    if (this.proteinGroup) {
+      this.zoomToNode(this.proteinGroup);
     }
   }
 
