@@ -1,4 +1,5 @@
-<div class="content fullscreen">
+<div class="content explorer">
+
   <div class="modal" [class.is-active]="showModal">
     <div class="modal-background"></div>
     <div class="modal-card">
@@ -24,7 +25,7 @@
 
         <h2>Summary</h2>
         <figure class="image" (click)="openSummary('A4435')">
-          <img src="../assets/boxplot.png" alt="Boxplots">
+          <img src="assets/boxplot.png" alt="Boxplots">
         </figure>
       </section>
 
@@ -35,9 +36,9 @@
   </div>
 
 
-  <div class="content left-bar">
+  <div class="content bar">
 
-    <div class="card left-bar-item">
+    <div class="card bar">
       <header class="card-header">
         <p class="card-header-title">
           <span class="icon">
@@ -52,7 +53,7 @@
       </div>
     </div>
 
-    <div class="card left-bar-item">
+    <div class="card bar">
       <header class="card-header">
         <p class="card-header-title">
           <span class="icon">
@@ -71,12 +72,12 @@
       </div>
     </div>
 
-    <div class="card left-bar-item">
+    <div class="card bar">
       <header class="card-header">
         <p class="card-header-title">
           <span class="icon">
         <i class="fas fa-filter" aria-hidden="true"></i>
-      </span> Filtering
+      </span> Filter Network
         </p>
       </header>
       <div class="card-content">
@@ -93,44 +94,44 @@
         </button>
       </footer>
     </div>
+
   </div>
 
-  <div class="card right-big" >
-    <header class="card-header">
-      <p class="card-header-title">
-        SARS-CoV-2 Protein-Protein Interaction Network
-      </p>
-      <a href="#" class="card-header-icon" aria-label="more options">
-      <span class="icon">
-        <i class="fas fa-sliders-h" aria-hidden="true"></i>
-      </span>
-      </a>
-    </header>
-    <div class="card-content">
-      <div class="card-image">
-        <figure class="image" (click)="openSummary('A4435')">
-          <img src="assets/graph_example.png" alt="PPI Network" class="network">
-        </figure>
-      </div>
-      <footer class="card-footer">
-        <button class="card-footer-item button is-primary">
+
+  <div class="content network">
+
+    <div class="card">
+      <header class="card-header">
+        <p class="card-header-title">
+          SARS-CoV-2 Protein-Protein Interaction Network
+        </p>
+      </header>
+      <div class="card-content">
+        <div class="card-image">
+          <figure class="image" (click)="openSummary('A4435')">
+            <img src="assets/graph_example.png" alt="PPI Network" class="network">
+          </figure>
+        </div>
+        <footer class="card-footer">
+          <button class="card-footer-item button is-primary">
                 <span class="icon">
         <i class="fas fa-cloud-download-alt" aria-hidden="true"></i>
       </span>
-        </button>
-        <a class="card-footer-item">
+          </button>
+          <a class="card-footer-item">
         <span class="icon">
         <i class="fas fa-search-plus" aria-hidden="true"></i>
       </span>
-        </a>
-        <a href="#" class="card-footer-item">
+          </a>
+          <a href="#" class="card-footer-item">
          <span class="icon">
         <i class="fas fa-search-minus" aria-hidden="true"></i>
       </span>
-        </a>
-      </footer>
+          </a>
+        </footer>
+      </div>
     </div>
+
   </div>
+
 </div>
-
-

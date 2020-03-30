@@ -26,49 +26,16 @@ $family-sans-serif: "Varela Round", sans-serif;
   background-color: #06D6A0;
 }
 
-div.content {
-  margin: 30px;
-}
-
-div.content.fullscreen {
-  margin: 20px;
-  height: calc(100vh - 120px);
-  width: 100%;
-}
-
 div.navbar-menu {
   margin-left: 5px;
 }
 
-div.content.left-bar {
-  float: left;
-  width: 400px;
-}
-
-div.card.left-bar-item {
-  margin-bottom: 30px;
-}
-
-div.card.right-big {
-  float: right;
-  width: calc(100% - 460px);
-  height: calc(100vh - 105px);
-}
-
-button.i {
-  margin-left: 5px;
-}
-
-body {
-   height: 100%;
+span.icon {
+  margin-right: 5px;
 }
 
 img {
   margin: 10px;
-}
-
-span.icon {
-  margin-right: 5px;
 }
 
 img.inline {
@@ -76,17 +43,38 @@ img.inline {
   margin-left: 0px;
 }
 
-img.network {
-  height: calc(100vh - 270px);
-}
-
-main {
-  height: calc(100vh - 500px);
+button.i {
+  margin-left: 5px;
 }
 
 input.checkbox {
   margin-left: 15px;
 }
 
+div.content.bar {
+  float: left;
+  width: 15%;
+  height: calc(100vh - 30%);
+}
 
 
+div.card.bar {
+  margin-bottom: 21px;
+}
+
+
+div.content.network {
+  float: right;
+  width: 84%;
+  height: calc(100vh - 90px);
+}
+
+img.network {
+  height: calc(100vh - 250px);
+  margin: 10px;
+}
+
+div.content.explorer {
+  margin-left: 20px;
+  margin-right: 20px;
+}
