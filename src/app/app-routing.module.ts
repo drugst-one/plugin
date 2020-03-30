@@ -4,7 +4,6 @@ import {ExplorerPageComponent} from './pages/explorer-page/explorer-page.compone
 import {AboutPageComponent} from './pages/about-page/about-page.component';
 import {HomePageComponent} from './pages/home-page/home-page.component';
 
-
 export const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'explorer', component: ExplorerPageComponent},
