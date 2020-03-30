@@ -51,22 +51,28 @@ input.checkbox {
   margin-left: 15px;
 }
 
-div.content.bar {
+div.content.bar-left {
   float: left;
   width: 15%;
   height: calc(100vh - 30%);
 }
 
+div.content.bar-right {
+  float: right;
+  width: 15%;
+}
 
 div.card.bar {
   margin-bottom: 21px;
+  word-wrap: break-word;
 }
 
 
 div.content.network {
-  float: right;
-  width: 84%;
+  width: 68%;
   height: calc(100vh - 90px);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 div.card.network {
@@ -75,7 +81,7 @@ div.card.network {
 }
 
 div.network {
-   height: calc(100vh - 240px);
+   height: calc(100vh - 220px);
 }
 
 div.center {

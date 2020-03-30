@@ -1,42 +1,42 @@
 <div class="content explorer">
 
-  <div class="modal" [class.is-active]="showModal">
-    <div class="modal-background" (click)="closeSummary()"></div>
-    <div class="modal-card">
-      <header class="modal-card-head">
-        <p class="modal-card-title">{{groupId}}</p>
-        <button class="delete" aria-label="close" (click)="closeSummary()"></button>
-      </header>
-      <section class="modal-card-body">
-        <h2>General Information</h2>
-        <ul>
-          <li><b>Protein Group:</b> {{proteinGroup}}</li>
-          <li><b>Gene Name(s):</b> <span *ngFor="let geneName of geneNames"> {{ geneName }}</span>
-          <li><b>Protein Name(s):</b> <span *ngFor="let proteinName of proteinNames"> {{ proteinName }}</span>
-          </li>
-          <li><b>Protein AC(s):</b>
-            <a href="https://www.uniprot.org/uniprot/{{proteinAC}}" target="_blank"
-               *ngFor="let proteinAC of proteinACs">
-              {{ proteinAC }}<span><img class="inline" align="center" src="../assets/uniprot.png"></span>
-            </a>
-          </li>
-          <li><b>Number of Interactions:</b> {{numberOfInteractions}}</li>
-        </ul>
+  <!--  <div class="modal" [class.is-active]="showModal">
+      <div class="modal-background" (click)="closeSummary()"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">{{groupId}}</p>
+          <button class="delete" aria-label="close" (click)="closeSummary()"></button>
+        </header>
+        <section class="modal-card-body">
+          <h2>General Information</h2>
+          <ul>
+            <li><b>Protein Group:</b> {{proteinGroup}}</li>
+            <li><b>Gene Name(s):</b> <span *ngFor="let geneName of geneNames"> {{ geneName }}</span>
+            <li><b>Protein Name(s):</b> <span *ngFor="let proteinName of proteinNames"> {{ proteinName }}</span>
+            </li>
+            <li><b>Protein AC(s):</b>
+              <a href="https://www.uniprot.org/uniprot/{{proteinAC}}" target="_blank"
+                 *ngFor="let proteinAC of proteinACs">
+                {{ proteinAC }}<span><img class="inline" align="center" src="../assets/uniprot.png"></span>
+              </a>
+            </li>
+            <li><b>Number of Interactions:</b> {{numberOfInteractions}}</li>
+          </ul>
 
-        <h2>Summary</h2>
-        <figure class="image" (click)="openSummary('A4435')">
-          <img src="../assets/boxplot.png" alt="Boxplots">
-        </figure>
-      </section>
+          <h2>Summary</h2>
+          <figure class="image" (click)="openSummary('A4435')">
+            <img src="../assets/boxplot.png" alt="Boxplots">
+          </figure>
+        </section>
 
-      <footer class="modal-card-foot">
-        <button class="button is-danger" (click)="closeSummary()">Close</button>
-      </footer>
-    </div>
-  </div>
+        <footer class="modal-card-foot">
+          <button class="button is-danger" (click)="closeSummary()">Close</button>
+        </footer>
+      </div>
+    </div>-->
 
 
-  <div class="content bar">
+  <div class="content bar-left">
 
     <div class="card bar">
       <header class="card-header">
@@ -115,29 +115,79 @@
     </div>
   </div>
 
-  <div class="content network">
+  <div class="content bar-right">
 
-     <div class="card network">
-    <header class="card-header">
-      <p class="card-header-title">
-        SARS-CoV-2 Protein-Protein Interaction Network
-      </p>
-    </header>
-    <div class="card-content">
-      <div class="card-image">
-        <div class="network center" #network>
-          <button class="button is-loading center">Loading</button>
+    <div class="card bar">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon">
+        <i class="fas fa-info" aria-hidden="true"></i>
+      </span> Details
+        </p>
+      </header>
+      <div class="card-content">
+        <div *ngIf="showDetails" class="content">
+
+          <p><b>Protein Group:</b> {{ proteinGroup }}</p>
+          <p><b>Gene Name(s):</b> <span *ngFor="let geneName of geneNames"> {{ geneName }}</span></p>
+          <p><b>Protein Name(s):</b> <span *ngFor="let proteinName of proteinNames"> {{ proteinName }}</span></p>
+          <p align="row"><b>Protein AC(s):</b>
+            <a href="https://www.uniprot.org/uniprot/{{proteinAC}}" target="_blank"
+               *ngFor="let proteinAC of proteinACs">
+              {{ proteinAC }}
+            </a>
+          </p>
+        </div>
+        <div *ngIf="!showDetails">
+          Please select a node for further information.
+        </div>
+
+      </div>
+    </div>
+
+    <div class="card bar">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon">
+        <i class="fas fa-filter" aria-hidden="true"></i>
+      </span> Summary
+        </p>
+      </header>
+      <div *ngIf="showDetails" class="card-content">
+        <div class="content">
+          <h2>Summary</h2>
+          <figure class="image">
+            <img src="assets/boxplot.png" alt="Boxplots">
+          </figure>
         </div>
       </div>
-      <footer class="card-footer">
-        <button class="card-footer-item button is-primary">
+    </div>
+
+  </div>
+
+  <div class="content network">
+
+    <div class="card network">
+      <header class="card-header">
+        <p class="card-header-title">
+          SARS-CoV-2 Protein-Protein Interaction Network
+        </p>
+      </header>
+      <div class="card-content">
+        <div class="card-image">
+          <div class="network center" #network>
+            <button class="button is-loading center">Loading</button>
+          </div>
+        </div>
+        <footer class="card-footer">
+          <button class="card-footer-item button is-primary">
                 <span class="icon">
         <i class="fas fa-cloud-download-alt" aria-hidden="true"></i>
       </span>
-        </button>
-      </footer>
+          </button>
+        </footer>
+      </div>
     </div>
   </div>
-</div>
 
 </div>
