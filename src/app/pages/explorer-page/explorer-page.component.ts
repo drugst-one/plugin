@@ -1,6 +1,8 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Network, Edge, Node} from 'vis-network';
+import {Effect, ProteinNetwork} from '../protein-network';
+
+declare var vis: any;
 
 @Component({
   selector: 'app-explorer-page',
@@ -17,11 +19,14 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public proteinACs: Array<string> = [];
   public baitNames: Array<string> = [];
 
-  public numberOfInteractions = 0;
-  public numberOfEffects = 0;
-  public numberOfProteinGroups = 0;
+  public baitProteins: Array<{ checked: boolean; data: Effect }> = [];
 
-  private network: Network;
+  public proteinData: ProteinNetwork;
+
+  private network: any;
+  private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
+
+  private seed = 1;  // TODO: Remove this
 
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 
@@ -65,12 +70,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   ngOnInit() {
   }
 
-  ngAfterViewInit() {
-    console.log(this.network);
-    if (this.network) {
-      return;
-    } else {
-      this.createNetwork();
+  async ngAfterViewInit() {
+    if (!this.network) {
+      await this.createNetwork();
     }
   }
 
@@ -96,816 +98,34 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     await this.router.navigate(['explorer']);
   }
 
-  private createNetwork() {
-    // create an array with nodes
-    const nodes: Node[] = [
-      {id: 0, label: 'pg0', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 1, label: 'pg1', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 2, label: 'pg2', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 3, label: 'pg3', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 4, label: 'pg4', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 5, label: 'pg5', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 6, label: 'pg6', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 7, label: 'pg7', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 8, label: 'pg8', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 9, label: 'pg9', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 10, label: 'pg10', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 11, label: 'pg11', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 12, label: 'pg12', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 13, label: 'pg13', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 14, label: 'pg14', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 15, label: 'pg15', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 16, label: 'pg16', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 17, label: 'pg17', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 18, label: 'pg18', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 19, label: 'pg19', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 20, label: 'pg20', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 21, label: 'pg21', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 22, label: 'pg22', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 23, label: 'pg23', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 24, label: 'pg24', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 25, label: 'pg25', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 26, label: 'pg26', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 27, label: 'pg27', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 28, label: 'pg28', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 29, label: 'pg29', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 30, label: 'pg30', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 31, label: 'pg31', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 32, label: 'pg32', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 33, label: 'pg33', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 34, label: 'pg34', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 35, label: 'pg35', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 36, label: 'pg36', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 37, label: 'pg37', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 38, label: 'pg38', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 39, label: 'pg39', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 40, label: 'pg40', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 41, label: 'pg41', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 42, label: 'pg42', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 43, label: 'pg43', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 44, label: 'pg44', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 45, label: 'pg45', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 46, label: 'pg46', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 47, label: 'pg47', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 48, label: 'pg48', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 49, label: 'pg49', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 50, label: 'pg50', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 51, label: 'pg51', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 52, label: 'pg52', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 53, label: 'pg53', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 54, label: 'pg54', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 55, label: 'pg55', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 56, label: 'pg56', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 57, label: 'pg57', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 58, label: 'pg58', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 59, label: 'pg59', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 60, label: 'pg60', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 61, label: 'pg61', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 62, label: 'pg62', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 63, label: 'pg63', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 64, label: 'pg64', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 65, label: 'pg65', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 66, label: 'pg66', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 67, label: 'pg67', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 68, label: 'pg68', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 69, label: 'pg69', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 70, label: 'pg70', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 71, label: 'pg71', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 72, label: 'pg72', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 73, label: 'pg73', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 74, label: 'pg74', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 75, label: 'pg75', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 76, label: 'pg76', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 77, label: 'pg77', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 78, label: 'pg78', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 79, label: 'pg79', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 80, label: 'pg80', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 81, label: 'pg81', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 82, label: 'pg82', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 83, label: 'pg83', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 84, label: 'pg84', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 85, label: 'pg85', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 86, label: 'pg86', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 87, label: 'pg87', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 88, label: 'pg88', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 89, label: 'pg89', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 90, label: 'pg90', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 91, label: 'pg91', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 92, label: 'pg92', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 93, label: 'pg93', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 94, label: 'pg94', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 95, label: 'pg95', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 96, label: 'pg96', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 97, label: 'pg97', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 98, label: 'pg98', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 99, label: 'pg99', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 100, label: 'pg100', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 101, label: 'pg101', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 102, label: 'pg102', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 103, label: 'pg103', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 104, label: 'pg104', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 105, label: 'pg105', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 106, label: 'pg106', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 107, label: 'pg107', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 108, label: 'pg108', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 109, label: 'pg109', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 110, label: 'pg110', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 111, label: 'pg111', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 112, label: 'pg112', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 113, label: 'pg113', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 114, label: 'pg114', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 115, label: 'pg115', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 116, label: 'pg116', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 117, label: 'pg117', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 118, label: 'pg118', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 119, label: 'pg119', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 120, label: 'pg120', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 121, label: 'pg121', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 122, label: 'pg122', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 123, label: 'pg123', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 124, label: 'pg124', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 125, label: 'pg125', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 126, label: 'pg126', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 127, label: 'pg127', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 128, label: 'pg128', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 129, label: 'pg129', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 130, label: 'pg130', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 131, label: 'pg131', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 132, label: 'pg132', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 133, label: 'pg133', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 134, label: 'pg134', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 135, label: 'pg135', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 136, label: 'pg136', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 137, label: 'pg137', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 138, label: 'pg138', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 139, label: 'pg139', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 140, label: 'pg140', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 141, label: 'pg141', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 142, label: 'pg142', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 143, label: 'pg143', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 144, label: 'pg144', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 145, label: 'pg145', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 146, label: 'pg146', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 147, label: 'pg147', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 148, label: 'pg148', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 149, label: 'pg149', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 150, label: 'pg150', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 151, label: 'pg151', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 152, label: 'pg152', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 153, label: 'pg153', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 154, label: 'pg154', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 155, label: 'pg155', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 156, label: 'pg156', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 157, label: 'pg157', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 158, label: 'pg158', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 159, label: 'pg159', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 160, label: 'pg160', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 161, label: 'pg161', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 162, label: 'pg162', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 163, label: 'pg163', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 164, label: 'pg164', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 165, label: 'pg165', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 166, label: 'pg166', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 167, label: 'pg167', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 168, label: 'pg168', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 169, label: 'pg169', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 170, label: 'pg170', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 171, label: 'pg171', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 172, label: 'pg172', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 173, label: 'pg173', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 174, label: 'pg174', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 175, label: 'pg175', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 176, label: 'pg176', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 177, label: 'pg177', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 178, label: 'pg178', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 179, label: 'pg179', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 180, label: 'pg180', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 181, label: 'pg181', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 182, label: 'pg182', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 183, label: 'pg183', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 184, label: 'pg184', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 185, label: 'pg185', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 186, label: 'pg186', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 187, label: 'pg187', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 188, label: 'pg188', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 189, label: 'pg189', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 190, label: 'pg190', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 191, label: 'pg191', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 192, label: 'pg192', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 193, label: 'pg193', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 194, label: 'pg194', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 195, label: 'pg195', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 196, label: 'pg196', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 197, label: 'pg197', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 198, label: 'pg198', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 199, label: 'pg199', size: 5, color: '#ADADAD', shape: 'square', shadow: true},
-      {id: 200, label: 'eff0', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 201, label: 'eff1', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 202, label: 'eff2', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 203, label: 'eff3', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 204, label: 'eff4', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 205, label: 'eff5', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 206, label: 'eff6', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 207, label: 'eff7', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 208, label: 'eff8', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 209, label: 'eff9', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 210, label: 'eff10', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 211, label: 'eff11', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 212, label: 'eff12', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 213, label: 'eff13', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 214, label: 'eff14', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 215, label: 'eff15', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 216, label: 'eff16', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 217, label: 'eff17', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 218, label: 'eff18', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 219, label: 'eff19', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 220, label: 'eff20', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 221, label: 'eff21', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 222, label: 'eff22', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 223, label: 'eff23', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 224, label: 'eff24', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 225, label: 'eff25', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 226, label: 'eff26', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 227, label: 'eff27', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 228, label: 'eff28', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 229, label: 'eff29', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 230, label: 'eff30', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 231, label: 'eff31', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 232, label: 'eff32', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 233, label: 'eff33', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 234, label: 'eff34', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 235, label: 'eff35', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 236, label: 'eff36', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 237, label: 'eff37', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 238, label: 'eff38', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 239, label: 'eff39', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 240, label: 'eff40', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 241, label: 'eff41', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 242, label: 'eff42', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 243, label: 'eff43', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 244, label: 'eff44', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 245, label: 'eff45', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 246, label: 'eff46', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 247, label: 'eff47', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 248, label: 'eff48', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-      {id: 249, label: 'eff49', size: 10, color: '#118AB2', shape: 'circle', shadow: true},
-    ];
+  private async createNetwork() {
+    const {proteinGroups, effects, edges: proteinEdges} = await this.loadNetwork();
+    this.proteinData = new ProteinNetwork(proteinGroups, effects, proteinEdges);
+    this.proteinData.loadPositions();
+    this.proteinData.linkNodes();
 
-    // create an array with edges
-    const edges: Edge[] = [
-      {from: 200, to: 154, color: {color: 'black', opacity: 0.5}},
-      {from: 200, to: 116, color: {color: 'black', opacity: 0.5}},
-      {from: 200, to: 181, color: {color: 'black', opacity: 0.5}},
-      {from: 200, to: 22, color: {color: 'black', opacity: 0.5}},
-      {from: 200, to: 126, color: {color: 'black', opacity: 0.5}},
-      {from: 200, to: 130, color: {color: 'black', opacity: 0.5}},
-      {from: 200, to: 111, color: {color: 'black', opacity: 0.5}},
-      {from: 200, to: 94, color: {color: 'black', opacity: 0.5}},
-      {from: 200, to: 30, color: {color: 'black', opacity: 0.5}},
-      {from: 200, to: 110, color: {color: 'black', opacity: 0.5}},
-      {from: 201, to: 150, color: {color: 'black', opacity: 0.5}},
-      {from: 201, to: 100, color: {color: 'black', opacity: 0.5}},
-      {from: 201, to: 132, color: {color: 'black', opacity: 0.5}},
-      {from: 201, to: 94, color: {color: 'black', opacity: 0.5}},
-      {from: 201, to: 136, color: {color: 'black', opacity: 0.5}},
-      {from: 201, to: 122, color: {color: 'black', opacity: 0.5}},
-      {from: 201, to: 41, color: {color: 'black', opacity: 0.5}},
-      {from: 201, to: 85, color: {color: 'black', opacity: 0.5}},
-      {from: 201, to: 173, color: {color: 'black', opacity: 0.5}},
-      {from: 201, to: 80, color: {color: 'black', opacity: 0.5}},
-      {from: 202, to: 180, color: {color: 'black', opacity: 0.5}},
-      {from: 202, to: 146, color: {color: 'black', opacity: 0.5}},
-      {from: 202, to: 130, color: {color: 'black', opacity: 0.5}},
-      {from: 202, to: 38, color: {color: 'black', opacity: 0.5}},
-      {from: 202, to: 107, color: {color: 'black', opacity: 0.5}},
-      {from: 202, to: 1, color: {color: 'black', opacity: 0.5}},
-      {from: 202, to: 12, color: {color: 'black', opacity: 0.5}},
-      {from: 202, to: 16, color: {color: 'black', opacity: 0.5}},
-      {from: 202, to: 169, color: {color: 'black', opacity: 0.5}},
-      {from: 202, to: 11, color: {color: 'black', opacity: 0.5}},
-      {from: 203, to: 65, color: {color: 'black', opacity: 0.5}},
-      {from: 203, to: 76, color: {color: 'black', opacity: 0.5}},
-      {from: 203, to: 65, color: {color: 'black', opacity: 0.5}},
-      {from: 203, to: 29, color: {color: 'black', opacity: 0.5}},
-      {from: 203, to: 31, color: {color: 'black', opacity: 0.5}},
-      {from: 203, to: 170, color: {color: 'black', opacity: 0.5}},
-      {from: 203, to: 14, color: {color: 'black', opacity: 0.5}},
-      {from: 203, to: 6, color: {color: 'black', opacity: 0.5}},
-      {from: 203, to: 141, color: {color: 'black', opacity: 0.5}},
-      {from: 203, to: 59, color: {color: 'black', opacity: 0.5}},
-      {from: 204, to: 137, color: {color: 'black', opacity: 0.5}},
-      {from: 204, to: 16, color: {color: 'black', opacity: 0.5}},
-      {from: 204, to: 185, color: {color: 'black', opacity: 0.5}},
-      {from: 204, to: 96, color: {color: 'black', opacity: 0.5}},
-      {from: 204, to: 189, color: {color: 'black', opacity: 0.5}},
-      {from: 204, to: 139, color: {color: 'black', opacity: 0.5}},
-      {from: 204, to: 43, color: {color: 'black', opacity: 0.5}},
-      {from: 204, to: 67, color: {color: 'black', opacity: 0.5}},
-      {from: 204, to: 140, color: {color: 'black', opacity: 0.5}},
-      {from: 204, to: 198, color: {color: 'black', opacity: 0.5}},
-      {from: 205, to: 51, color: {color: 'black', opacity: 0.5}},
-      {from: 205, to: 61, color: {color: 'black', opacity: 0.5}},
-      {from: 205, to: 171, color: {color: 'black', opacity: 0.5}},
-      {from: 205, to: 192, color: {color: 'black', opacity: 0.5}},
-      {from: 205, to: 42, color: {color: 'black', opacity: 0.5}},
-      {from: 205, to: 103, color: {color: 'black', opacity: 0.5}},
-      {from: 205, to: 190, color: {color: 'black', opacity: 0.5}},
-      {from: 205, to: 16, color: {color: 'black', opacity: 0.5}},
-      {from: 205, to: 56, color: {color: 'black', opacity: 0.5}},
-      {from: 205, to: 163, color: {color: 'black', opacity: 0.5}},
-      {from: 206, to: 176, color: {color: 'black', opacity: 0.5}},
-      {from: 206, to: 80, color: {color: 'black', opacity: 0.5}},
-      {from: 206, to: 9, color: {color: 'black', opacity: 0.5}},
-      {from: 206, to: 54, color: {color: 'black', opacity: 0.5}},
-      {from: 206, to: 94, color: {color: 'black', opacity: 0.5}},
-      {from: 206, to: 174, color: {color: 'black', opacity: 0.5}},
-      {from: 206, to: 47, color: {color: 'black', opacity: 0.5}},
-      {from: 206, to: 144, color: {color: 'black', opacity: 0.5}},
-      {from: 206, to: 52, color: {color: 'black', opacity: 0.5}},
-      {from: 206, to: 152, color: {color: 'black', opacity: 0.5}},
-      {from: 207, to: 33, color: {color: 'black', opacity: 0.5}},
-      {from: 207, to: 74, color: {color: 'black', opacity: 0.5}},
-      {from: 207, to: 71, color: {color: 'black', opacity: 0.5}},
-      {from: 207, to: 43, color: {color: 'black', opacity: 0.5}},
-      {from: 207, to: 73, color: {color: 'black', opacity: 0.5}},
-      {from: 207, to: 177, color: {color: 'black', opacity: 0.5}},
-      {from: 207, to: 93, color: {color: 'black', opacity: 0.5}},
-      {from: 207, to: 175, color: {color: 'black', opacity: 0.5}},
-      {from: 207, to: 133, color: {color: 'black', opacity: 0.5}},
-      {from: 207, to: 24, color: {color: 'black', opacity: 0.5}},
-      {from: 208, to: 174, color: {color: 'black', opacity: 0.5}},
-      {from: 208, to: 167, color: {color: 'black', opacity: 0.5}},
-      {from: 208, to: 42, color: {color: 'black', opacity: 0.5}},
-      {from: 208, to: 117, color: {color: 'black', opacity: 0.5}},
-      {from: 208, to: 174, color: {color: 'black', opacity: 0.5}},
-      {from: 208, to: 72, color: {color: 'black', opacity: 0.5}},
-      {from: 208, to: 59, color: {color: 'black', opacity: 0.5}},
-      {from: 208, to: 86, color: {color: 'black', opacity: 0.5}},
-      {from: 208, to: 55, color: {color: 'black', opacity: 0.5}},
-      {from: 208, to: 15, color: {color: 'black', opacity: 0.5}},
-      {from: 209, to: 6, color: {color: 'black', opacity: 0.5}},
-      {from: 209, to: 189, color: {color: 'black', opacity: 0.5}},
-      {from: 209, to: 174, color: {color: 'black', opacity: 0.5}},
-      {from: 209, to: 140, color: {color: 'black', opacity: 0.5}},
-      {from: 209, to: 49, color: {color: 'black', opacity: 0.5}},
-      {from: 209, to: 98, color: {color: 'black', opacity: 0.5}},
-      {from: 209, to: 197, color: {color: 'black', opacity: 0.5}},
-      {from: 209, to: 179, color: {color: 'black', opacity: 0.5}},
-      {from: 209, to: 19, color: {color: 'black', opacity: 0.5}},
-      {from: 209, to: 177, color: {color: 'black', opacity: 0.5}},
-      {from: 210, to: 143, color: {color: 'black', opacity: 0.5}},
-      {from: 210, to: 21, color: {color: 'black', opacity: 0.5}},
-      {from: 210, to: 126, color: {color: 'black', opacity: 0.5}},
-      {from: 210, to: 8, color: {color: 'black', opacity: 0.5}},
-      {from: 210, to: 14, color: {color: 'black', opacity: 0.5}},
-      {from: 210, to: 72, color: {color: 'black', opacity: 0.5}},
-      {from: 210, to: 104, color: {color: 'black', opacity: 0.5}},
-      {from: 210, to: 80, color: {color: 'black', opacity: 0.5}},
-      {from: 210, to: 128, color: {color: 'black', opacity: 0.5}},
-      {from: 210, to: 6, color: {color: 'black', opacity: 0.5}},
-      {from: 211, to: 49, color: {color: 'black', opacity: 0.5}},
-      {from: 211, to: 152, color: {color: 'black', opacity: 0.5}},
-      {from: 211, to: 39, color: {color: 'black', opacity: 0.5}},
-      {from: 211, to: 16, color: {color: 'black', opacity: 0.5}},
-      {from: 211, to: 170, color: {color: 'black', opacity: 0.5}},
-      {from: 211, to: 88, color: {color: 'black', opacity: 0.5}},
-      {from: 211, to: 99, color: {color: 'black', opacity: 0.5}},
-      {from: 211, to: 56, color: {color: 'black', opacity: 0.5}},
-      {from: 211, to: 51, color: {color: 'black', opacity: 0.5}},
-      {from: 211, to: 126, color: {color: 'black', opacity: 0.5}},
-      {from: 212, to: 106, color: {color: 'black', opacity: 0.5}},
-      {from: 212, to: 15, color: {color: 'black', opacity: 0.5}},
-      {from: 212, to: 75, color: {color: 'black', opacity: 0.5}},
-      {from: 212, to: 63, color: {color: 'black', opacity: 0.5}},
-      {from: 212, to: 71, color: {color: 'black', opacity: 0.5}},
-      {from: 212, to: 89, color: {color: 'black', opacity: 0.5}},
-      {from: 212, to: 97, color: {color: 'black', opacity: 0.5}},
-      {from: 212, to: 144, color: {color: 'black', opacity: 0.5}},
-      {from: 212, to: 100, color: {color: 'black', opacity: 0.5}},
-      {from: 212, to: 150, color: {color: 'black', opacity: 0.5}},
-      {from: 213, to: 160, color: {color: 'black', opacity: 0.5}},
-      {from: 213, to: 67, color: {color: 'black', opacity: 0.5}},
-      {from: 213, to: 96, color: {color: 'black', opacity: 0.5}},
-      {from: 213, to: 178, color: {color: 'black', opacity: 0.5}},
-      {from: 213, to: 163, color: {color: 'black', opacity: 0.5}},
-      {from: 213, to: 190, color: {color: 'black', opacity: 0.5}},
-      {from: 213, to: 47, color: {color: 'black', opacity: 0.5}},
-      {from: 213, to: 172, color: {color: 'black', opacity: 0.5}},
-      {from: 213, to: 35, color: {color: 'black', opacity: 0.5}},
-      {from: 213, to: 99, color: {color: 'black', opacity: 0.5}},
-      {from: 214, to: 135, color: {color: 'black', opacity: 0.5}},
-      {from: 214, to: 158, color: {color: 'black', opacity: 0.5}},
-      {from: 214, to: 81, color: {color: 'black', opacity: 0.5}},
-      {from: 214, to: 196, color: {color: 'black', opacity: 0.5}},
-      {from: 214, to: 173, color: {color: 'black', opacity: 0.5}},
-      {from: 214, to: 121, color: {color: 'black', opacity: 0.5}},
-      {from: 214, to: 0, color: {color: 'black', opacity: 0.5}},
-      {from: 214, to: 4, color: {color: 'black', opacity: 0.5}},
-      {from: 214, to: 16, color: {color: 'black', opacity: 0.5}},
-      {from: 214, to: 9, color: {color: 'black', opacity: 0.5}},
-      {from: 215, to: 94, color: {color: 'black', opacity: 0.5}},
-      {from: 215, to: 34, color: {color: 'black', opacity: 0.5}},
-      {from: 215, to: 119, color: {color: 'black', opacity: 0.5}},
-      {from: 215, to: 86, color: {color: 'black', opacity: 0.5}},
-      {from: 215, to: 5, color: {color: 'black', opacity: 0.5}},
-      {from: 215, to: 25, color: {color: 'black', opacity: 0.5}},
-      {from: 215, to: 121, color: {color: 'black', opacity: 0.5}},
-      {from: 215, to: 167, color: {color: 'black', opacity: 0.5}},
-      {from: 215, to: 153, color: {color: 'black', opacity: 0.5}},
-      {from: 215, to: 9, color: {color: 'black', opacity: 0.5}},
-      {from: 216, to: 170, color: {color: 'black', opacity: 0.5}},
-      {from: 216, to: 69, color: {color: 'black', opacity: 0.5}},
-      {from: 216, to: 158, color: {color: 'black', opacity: 0.5}},
-      {from: 216, to: 61, color: {color: 'black', opacity: 0.5}},
-      {from: 216, to: 52, color: {color: 'black', opacity: 0.5}},
-      {from: 216, to: 106, color: {color: 'black', opacity: 0.5}},
-      {from: 216, to: 72, color: {color: 'black', opacity: 0.5}},
-      {from: 216, to: 151, color: {color: 'black', opacity: 0.5}},
-      {from: 216, to: 148, color: {color: 'black', opacity: 0.5}},
-      {from: 216, to: 107, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 76, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 65, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 166, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 92, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 135, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 138, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 101, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 123, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 50, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 165, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 149, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 90, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 84, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 155, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 45, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 162, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 109, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 115, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 37, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 161, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 10, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 66, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 108, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 26, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 20, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 78, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 118, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 83, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 114, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 120, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 131, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 178, color: {color: 'black', opacity: 0.5}},
-      {from: 217, to: 187, color: {color: 'black', opacity: 0.5}},
-      {from: 218, to: 51, color: {color: 'black', opacity: 0.5}},
-      {from: 218, to: 135, color: {color: 'black', opacity: 0.5}},
-      {from: 218, to: 46, color: {color: 'black', opacity: 0.5}},
-      {from: 218, to: 144, color: {color: 'black', opacity: 0.5}},
-      {from: 218, to: 75, color: {color: 'black', opacity: 0.5}},
-      {from: 218, to: 164, color: {color: 'black', opacity: 0.5}},
-      {from: 218, to: 156, color: {color: 'black', opacity: 0.5}},
-      {from: 218, to: 63, color: {color: 'black', opacity: 0.5}},
-      {from: 218, to: 178, color: {color: 'black', opacity: 0.5}},
-      {from: 218, to: 116, color: {color: 'black', opacity: 0.5}},
-      {from: 219, to: 67, color: {color: 'black', opacity: 0.5}},
-      {from: 219, to: 14, color: {color: 'black', opacity: 0.5}},
-      {from: 219, to: 97, color: {color: 'black', opacity: 0.5}},
-      {from: 219, to: 74, color: {color: 'black', opacity: 0.5}},
-      {from: 219, to: 21, color: {color: 'black', opacity: 0.5}},
-      {from: 219, to: 198, color: {color: 'black', opacity: 0.5}},
-      {from: 219, to: 199, color: {color: 'black', opacity: 0.5}},
-      {from: 219, to: 143, color: {color: 'black', opacity: 0.5}},
-      {from: 219, to: 62, color: {color: 'black', opacity: 0.5}},
-      {from: 219, to: 60, color: {color: 'black', opacity: 0.5}},
-      {from: 220, to: 40, color: {color: 'black', opacity: 0.5}},
-      {from: 220, to: 35, color: {color: 'black', opacity: 0.5}},
-      {from: 220, to: 36, color: {color: 'black', opacity: 0.5}},
-      {from: 220, to: 34, color: {color: 'black', opacity: 0.5}},
-      {from: 220, to: 93, color: {color: 'black', opacity: 0.5}},
-      {from: 220, to: 107, color: {color: 'black', opacity: 0.5}},
-      {from: 220, to: 137, color: {color: 'black', opacity: 0.5}},
-      {from: 220, to: 190, color: {color: 'black', opacity: 0.5}},
-      {from: 220, to: 82, color: {color: 'black', opacity: 0.5}},
-      {from: 220, to: 172, color: {color: 'black', opacity: 0.5}},
-      {from: 221, to: 192, color: {color: 'black', opacity: 0.5}},
-      {from: 221, to: 9, color: {color: 'black', opacity: 0.5}},
-      {from: 221, to: 1, color: {color: 'black', opacity: 0.5}},
-      {from: 221, to: 8, color: {color: 'black', opacity: 0.5}},
-      {from: 221, to: 129, color: {color: 'black', opacity: 0.5}},
-      {from: 221, to: 72, color: {color: 'black', opacity: 0.5}},
-      {from: 221, to: 94, color: {color: 'black', opacity: 0.5}},
-      {from: 221, to: 18, color: {color: 'black', opacity: 0.5}},
-      {from: 221, to: 117, color: {color: 'black', opacity: 0.5}},
-      {from: 221, to: 85, color: {color: 'black', opacity: 0.5}},
-      {from: 222, to: 141, color: {color: 'black', opacity: 0.5}},
-      {from: 222, to: 53, color: {color: 'black', opacity: 0.5}},
-      {from: 222, to: 23, color: {color: 'black', opacity: 0.5}},
-      {from: 222, to: 196, color: {color: 'black', opacity: 0.5}},
-      {from: 222, to: 150, color: {color: 'black', opacity: 0.5}},
-      {from: 222, to: 166, color: {color: 'black', opacity: 0.5}},
-      {from: 222, to: 133, color: {color: 'black', opacity: 0.5}},
-      {from: 222, to: 31, color: {color: 'black', opacity: 0.5}},
-      {from: 222, to: 179, color: {color: 'black', opacity: 0.5}},
-      {from: 222, to: 107, color: {color: 'black', opacity: 0.5}},
-      {from: 223, to: 86, color: {color: 'black', opacity: 0.5}},
-      {from: 223, to: 43, color: {color: 'black', opacity: 0.5}},
-      {from: 223, to: 22, color: {color: 'black', opacity: 0.5}},
-      {from: 223, to: 11, color: {color: 'black', opacity: 0.5}},
-      {from: 223, to: 121, color: {color: 'black', opacity: 0.5}},
-      {from: 223, to: 13, color: {color: 'black', opacity: 0.5}},
-      {from: 223, to: 2, color: {color: 'black', opacity: 0.5}},
-      {from: 223, to: 153, color: {color: 'black', opacity: 0.5}},
-      {from: 223, to: 151, color: {color: 'black', opacity: 0.5}},
-      {from: 223, to: 25, color: {color: 'black', opacity: 0.5}},
-      {from: 224, to: 96, color: {color: 'black', opacity: 0.5}},
-      {from: 224, to: 172, color: {color: 'black', opacity: 0.5}},
-      {from: 224, to: 142, color: {color: 'black', opacity: 0.5}},
-      {from: 224, to: 197, color: {color: 'black', opacity: 0.5}},
-      {from: 224, to: 148, color: {color: 'black', opacity: 0.5}},
-      {from: 224, to: 116, color: {color: 'black', opacity: 0.5}},
-      {from: 224, to: 21, color: {color: 'black', opacity: 0.5}},
-      {from: 224, to: 177, color: {color: 'black', opacity: 0.5}},
-      {from: 224, to: 55, color: {color: 'black', opacity: 0.5}},
-      {from: 224, to: 87, color: {color: 'black', opacity: 0.5}},
-      {from: 225, to: 17, color: {color: 'black', opacity: 0.5}},
-      {from: 225, to: 163, color: {color: 'black', opacity: 0.5}},
-      {from: 225, to: 134, color: {color: 'black', opacity: 0.5}},
-      {from: 225, to: 86, color: {color: 'black', opacity: 0.5}},
-      {from: 225, to: 51, color: {color: 'black', opacity: 0.5}},
-      {from: 225, to: 122, color: {color: 'black', opacity: 0.5}},
-      {from: 225, to: 12, color: {color: 'black', opacity: 0.5}},
-      {from: 225, to: 93, color: {color: 'black', opacity: 0.5}},
-      {from: 225, to: 60, color: {color: 'black', opacity: 0.5}},
-      {from: 225, to: 3, color: {color: 'black', opacity: 0.5}},
-      {from: 226, to: 35, color: {color: 'black', opacity: 0.5}},
-      {from: 226, to: 80, color: {color: 'black', opacity: 0.5}},
-      {from: 226, to: 171, color: {color: 'black', opacity: 0.5}},
-      {from: 226, to: 157, color: {color: 'black', opacity: 0.5}},
-      {from: 226, to: 40, color: {color: 'black', opacity: 0.5}},
-      {from: 226, to: 127, color: {color: 'black', opacity: 0.5}},
-      {from: 226, to: 13, color: {color: 'black', opacity: 0.5}},
-      {from: 226, to: 54, color: {color: 'black', opacity: 0.5}},
-      {from: 226, to: 185, color: {color: 'black', opacity: 0.5}},
-      {from: 226, to: 187, color: {color: 'black', opacity: 0.5}},
-      {from: 227, to: 80, color: {color: 'black', opacity: 0.5}},
-      {from: 227, to: 102, color: {color: 'black', opacity: 0.5}},
-      {from: 227, to: 44, color: {color: 'black', opacity: 0.5}},
-      {from: 227, to: 70, color: {color: 'black', opacity: 0.5}},
-      {from: 227, to: 79, color: {color: 'black', opacity: 0.5}},
-      {from: 227, to: 30, color: {color: 'black', opacity: 0.5}},
-      {from: 227, to: 104, color: {color: 'black', opacity: 0.5}},
-      {from: 227, to: 48, color: {color: 'black', opacity: 0.5}},
-      {from: 227, to: 36, color: {color: 'black', opacity: 0.5}},
-      {from: 227, to: 128, color: {color: 'black', opacity: 0.5}},
-      {from: 228, to: 60, color: {color: 'black', opacity: 0.5}},
-      {from: 228, to: 74, color: {color: 'black', opacity: 0.5}},
-      {from: 228, to: 44, color: {color: 'black', opacity: 0.5}},
-      {from: 228, to: 12, color: {color: 'black', opacity: 0.5}},
-      {from: 228, to: 43, color: {color: 'black', opacity: 0.5}},
-      {from: 228, to: 32, color: {color: 'black', opacity: 0.5}},
-      {from: 228, to: 164, color: {color: 'black', opacity: 0.5}},
-      {from: 228, to: 71, color: {color: 'black', opacity: 0.5}},
-      {from: 228, to: 87, color: {color: 'black', opacity: 0.5}},
-      {from: 228, to: 33, color: {color: 'black', opacity: 0.5}},
-      {from: 229, to: 184, color: {color: 'black', opacity: 0.5}},
-      {from: 229, to: 62, color: {color: 'black', opacity: 0.5}},
-      {from: 229, to: 105, color: {color: 'black', opacity: 0.5}},
-      {from: 229, to: 98, color: {color: 'black', opacity: 0.5}},
-      {from: 229, to: 193, color: {color: 'black', opacity: 0.5}},
-      {from: 229, to: 191, color: {color: 'black', opacity: 0.5}},
-      {from: 229, to: 89, color: {color: 'black', opacity: 0.5}},
-      {from: 229, to: 160, color: {color: 'black', opacity: 0.5}},
-      {from: 229, to: 32, color: {color: 'black', opacity: 0.5}},
-      {from: 229, to: 38, color: {color: 'black', opacity: 0.5}},
-      {from: 230, to: 42, color: {color: 'black', opacity: 0.5}},
-      {from: 230, to: 64, color: {color: 'black', opacity: 0.5}},
-      {from: 230, to: 134, color: {color: 'black', opacity: 0.5}},
-      {from: 230, to: 146, color: {color: 'black', opacity: 0.5}},
-      {from: 230, to: 111, color: {color: 'black', opacity: 0.5}},
-      {from: 230, to: 178, color: {color: 'black', opacity: 0.5}},
-      {from: 230, to: 42, color: {color: 'black', opacity: 0.5}},
-      {from: 230, to: 104, color: {color: 'black', opacity: 0.5}},
-      {from: 230, to: 41, color: {color: 'black', opacity: 0.5}},
-      {from: 230, to: 133, color: {color: 'black', opacity: 0.5}},
-      {from: 231, to: 187, color: {color: 'black', opacity: 0.5}},
-      {from: 231, to: 122, color: {color: 'black', opacity: 0.5}},
-      {from: 231, to: 130, color: {color: 'black', opacity: 0.5}},
-      {from: 231, to: 13, color: {color: 'black', opacity: 0.5}},
-      {from: 231, to: 25, color: {color: 'black', opacity: 0.5}},
-      {from: 231, to: 42, color: {color: 'black', opacity: 0.5}},
-      {from: 231, to: 175, color: {color: 'black', opacity: 0.5}},
-      {from: 231, to: 7, color: {color: 'black', opacity: 0.5}},
-      {from: 231, to: 98, color: {color: 'black', opacity: 0.5}},
-      {from: 231, to: 110, color: {color: 'black', opacity: 0.5}},
-      {from: 232, to: 38, color: {color: 'black', opacity: 0.5}},
-      {from: 232, to: 112, color: {color: 'black', opacity: 0.5}},
-      {from: 232, to: 164, color: {color: 'black', opacity: 0.5}},
-      {from: 232, to: 131, color: {color: 'black', opacity: 0.5}},
-      {from: 232, to: 193, color: {color: 'black', opacity: 0.5}},
-      {from: 232, to: 126, color: {color: 'black', opacity: 0.5}},
-      {from: 232, to: 137, color: {color: 'black', opacity: 0.5}},
-      {from: 232, to: 140, color: {color: 'black', opacity: 0.5}},
-      {from: 232, to: 144, color: {color: 'black', opacity: 0.5}},
-      {from: 232, to: 113, color: {color: 'black', opacity: 0.5}},
-      {from: 233, to: 24, color: {color: 'black', opacity: 0.5}},
-      {from: 233, to: 186, color: {color: 'black', opacity: 0.5}},
-      {from: 233, to: 36, color: {color: 'black', opacity: 0.5}},
-      {from: 233, to: 9, color: {color: 'black', opacity: 0.5}},
-      {from: 233, to: 160, color: {color: 'black', opacity: 0.5}},
-      {from: 233, to: 119, color: {color: 'black', opacity: 0.5}},
-      {from: 233, to: 9, color: {color: 'black', opacity: 0.5}},
-      {from: 233, to: 95, color: {color: 'black', opacity: 0.5}},
-      {from: 233, to: 22, color: {color: 'black', opacity: 0.5}},
-      {from: 233, to: 87, color: {color: 'black', opacity: 0.5}},
-      {from: 234, to: 178, color: {color: 'black', opacity: 0.5}},
-      {from: 234, to: 71, color: {color: 'black', opacity: 0.5}},
-      {from: 234, to: 171, color: {color: 'black', opacity: 0.5}},
-      {from: 234, to: 168, color: {color: 'black', opacity: 0.5}},
-      {from: 234, to: 44, color: {color: 'black', opacity: 0.5}},
-      {from: 234, to: 5, color: {color: 'black', opacity: 0.5}},
-      {from: 234, to: 74, color: {color: 'black', opacity: 0.5}},
-      {from: 234, to: 65, color: {color: 'black', opacity: 0.5}},
-      {from: 234, to: 71, color: {color: 'black', opacity: 0.5}},
-      {from: 234, to: 58, color: {color: 'black', opacity: 0.5}},
-      {from: 235, to: 97, color: {color: 'black', opacity: 0.5}},
-      {from: 235, to: 14, color: {color: 'black', opacity: 0.5}},
-      {from: 235, to: 27, color: {color: 'black', opacity: 0.5}},
-      {from: 235, to: 175, color: {color: 'black', opacity: 0.5}},
-      {from: 235, to: 145, color: {color: 'black', opacity: 0.5}},
-      {from: 235, to: 13, color: {color: 'black', opacity: 0.5}},
-      {from: 235, to: 94, color: {color: 'black', opacity: 0.5}},
-      {from: 235, to: 86, color: {color: 'black', opacity: 0.5}},
-      {from: 235, to: 75, color: {color: 'black', opacity: 0.5}},
-      {from: 235, to: 59, color: {color: 'black', opacity: 0.5}},
-      {from: 236, to: 147, color: {color: 'black', opacity: 0.5}},
-      {from: 236, to: 9, color: {color: 'black', opacity: 0.5}},
-      {from: 236, to: 48, color: {color: 'black', opacity: 0.5}},
-      {from: 236, to: 134, color: {color: 'black', opacity: 0.5}},
-      {from: 236, to: 2, color: {color: 'black', opacity: 0.5}},
-      {from: 236, to: 41, color: {color: 'black', opacity: 0.5}},
-      {from: 236, to: 128, color: {color: 'black', opacity: 0.5}},
-      {from: 236, to: 177, color: {color: 'black', opacity: 0.5}},
-      {from: 236, to: 136, color: {color: 'black', opacity: 0.5}},
-      {from: 236, to: 169, color: {color: 'black', opacity: 0.5}},
-      {from: 237, to: 177, color: {color: 'black', opacity: 0.5}},
-      {from: 237, to: 106, color: {color: 'black', opacity: 0.5}},
-      {from: 237, to: 54, color: {color: 'black', opacity: 0.5}},
-      {from: 237, to: 40, color: {color: 'black', opacity: 0.5}},
-      {from: 237, to: 76, color: {color: 'black', opacity: 0.5}},
-      {from: 237, to: 152, color: {color: 'black', opacity: 0.5}},
-      {from: 237, to: 177, color: {color: 'black', opacity: 0.5}},
-      {from: 237, to: 92, color: {color: 'black', opacity: 0.5}},
-      {from: 237, to: 186, color: {color: 'black', opacity: 0.5}},
-      {from: 237, to: 152, color: {color: 'black', opacity: 0.5}},
-      {from: 238, to: 2, color: {color: 'black', opacity: 0.5}},
-      {from: 238, to: 54, color: {color: 'black', opacity: 0.5}},
-      {from: 238, to: 38, color: {color: 'black', opacity: 0.5}},
-      {from: 238, to: 173, color: {color: 'black', opacity: 0.5}},
-      {from: 238, to: 154, color: {color: 'black', opacity: 0.5}},
-      {from: 238, to: 46, color: {color: 'black', opacity: 0.5}},
-      {from: 238, to: 5, color: {color: 'black', opacity: 0.5}},
-      {from: 238, to: 98, color: {color: 'black', opacity: 0.5}},
-      {from: 238, to: 188, color: {color: 'black', opacity: 0.5}},
-      {from: 238, to: 192, color: {color: 'black', opacity: 0.5}},
-      {from: 239, to: 125, color: {color: 'black', opacity: 0.5}},
-      {from: 239, to: 190, color: {color: 'black', opacity: 0.5}},
-      {from: 239, to: 173, color: {color: 'black', opacity: 0.5}},
-      {from: 239, to: 44, color: {color: 'black', opacity: 0.5}},
-      {from: 239, to: 64, color: {color: 'black', opacity: 0.5}},
-      {from: 239, to: 61, color: {color: 'black', opacity: 0.5}},
-      {from: 239, to: 131, color: {color: 'black', opacity: 0.5}},
-      {from: 239, to: 181, color: {color: 'black', opacity: 0.5}},
-      {from: 239, to: 58, color: {color: 'black', opacity: 0.5}},
-      {from: 239, to: 106, color: {color: 'black', opacity: 0.5}},
-      {from: 240, to: 43, color: {color: 'black', opacity: 0.5}},
-      {from: 240, to: 143, color: {color: 'black', opacity: 0.5}},
-      {from: 240, to: 194, color: {color: 'black', opacity: 0.5}},
-      {from: 240, to: 55, color: {color: 'black', opacity: 0.5}},
-      {from: 240, to: 55, color: {color: 'black', opacity: 0.5}},
-      {from: 240, to: 183, color: {color: 'black', opacity: 0.5}},
-      {from: 240, to: 46, color: {color: 'black', opacity: 0.5}},
-      {from: 240, to: 188, color: {color: 'black', opacity: 0.5}},
-      {from: 240, to: 69, color: {color: 'black', opacity: 0.5}},
-      {from: 240, to: 133, color: {color: 'black', opacity: 0.5}},
-      {from: 241, to: 85, color: {color: 'black', opacity: 0.5}},
-      {from: 241, to: 136, color: {color: 'black', opacity: 0.5}},
-      {from: 241, to: 99, color: {color: 'black', opacity: 0.5}},
-      {from: 241, to: 60, color: {color: 'black', opacity: 0.5}},
-      {from: 241, to: 188, color: {color: 'black', opacity: 0.5}},
-      {from: 241, to: 137, color: {color: 'black', opacity: 0.5}},
-      {from: 241, to: 57, color: {color: 'black', opacity: 0.5}},
-      {from: 241, to: 6, color: {color: 'black', opacity: 0.5}},
-      {from: 241, to: 73, color: {color: 'black', opacity: 0.5}},
-      {from: 241, to: 192, color: {color: 'black', opacity: 0.5}},
-      {from: 242, to: 182, color: {color: 'black', opacity: 0.5}},
-      {from: 242, to: 159, color: {color: 'black', opacity: 0.5}},
-      {from: 242, to: 32, color: {color: 'black', opacity: 0.5}},
-      {from: 242, to: 97, color: {color: 'black', opacity: 0.5}},
-      {from: 242, to: 22, color: {color: 'black', opacity: 0.5}},
-      {from: 242, to: 186, color: {color: 'black', opacity: 0.5}},
-      {from: 242, to: 146, color: {color: 'black', opacity: 0.5}},
-      {from: 242, to: 56, color: {color: 'black', opacity: 0.5}},
-      {from: 242, to: 75, color: {color: 'black', opacity: 0.5}},
-      {from: 242, to: 175, color: {color: 'black', opacity: 0.5}},
-      {from: 243, to: 95, color: {color: 'black', opacity: 0.5}},
-      {from: 243, to: 28, color: {color: 'black', opacity: 0.5}},
-      {from: 243, to: 170, color: {color: 'black', opacity: 0.5}},
-      {from: 243, to: 18, color: {color: 'black', opacity: 0.5}},
-      {from: 243, to: 137, color: {color: 'black', opacity: 0.5}},
-      {from: 243, to: 111, color: {color: 'black', opacity: 0.5}},
-      {from: 243, to: 48, color: {color: 'black', opacity: 0.5}},
-      {from: 243, to: 136, color: {color: 'black', opacity: 0.5}},
-      {from: 243, to: 36, color: {color: 'black', opacity: 0.5}},
-      {from: 243, to: 30, color: {color: 'black', opacity: 0.5}},
-      {from: 244, to: 65, color: {color: 'black', opacity: 0.5}},
-      {from: 244, to: 91, color: {color: 'black', opacity: 0.5}},
-      {from: 244, to: 86, color: {color: 'black', opacity: 0.5}},
-      {from: 244, to: 183, color: {color: 'black', opacity: 0.5}},
-      {from: 244, to: 98, color: {color: 'black', opacity: 0.5}},
-      {from: 244, to: 28, color: {color: 'black', opacity: 0.5}},
-      {from: 244, to: 32, color: {color: 'black', opacity: 0.5}},
-      {from: 244, to: 77, color: {color: 'black', opacity: 0.5}},
-      {from: 244, to: 124, color: {color: 'black', opacity: 0.5}},
-      {from: 244, to: 72, color: {color: 'black', opacity: 0.5}},
-      {from: 245, to: 65, color: {color: 'black', opacity: 0.5}},
-      {from: 245, to: 11, color: {color: 'black', opacity: 0.5}},
-      {from: 245, to: 159, color: {color: 'black', opacity: 0.5}},
-      {from: 245, to: 64, color: {color: 'black', opacity: 0.5}},
-      {from: 245, to: 28, color: {color: 'black', opacity: 0.5}},
-      {from: 245, to: 179, color: {color: 'black', opacity: 0.5}},
-      {from: 245, to: 117, color: {color: 'black', opacity: 0.5}},
-      {from: 245, to: 15, color: {color: 'black', opacity: 0.5}},
-      {from: 245, to: 2, color: {color: 'black', opacity: 0.5}},
-      {from: 245, to: 116, color: {color: 'black', opacity: 0.5}},
-      {from: 246, to: 68, color: {color: 'black', opacity: 0.5}},
-      {from: 246, to: 176, color: {color: 'black', opacity: 0.5}},
-      {from: 246, to: 48, color: {color: 'black', opacity: 0.5}},
-      {from: 246, to: 95, color: {color: 'black', opacity: 0.5}},
-      {from: 246, to: 27, color: {color: 'black', opacity: 0.5}},
-      {from: 246, to: 79, color: {color: 'black', opacity: 0.5}},
-      {from: 246, to: 87, color: {color: 'black', opacity: 0.5}},
-      {from: 246, to: 119, color: {color: 'black', opacity: 0.5}},
-      {from: 246, to: 180, color: {color: 'black', opacity: 0.5}},
-      {from: 246, to: 148, color: {color: 'black', opacity: 0.5}},
-      {from: 247, to: 82, color: {color: 'black', opacity: 0.5}},
-      {from: 247, to: 106, color: {color: 'black', opacity: 0.5}},
-      {from: 247, to: 197, color: {color: 'black', opacity: 0.5}},
-      {from: 247, to: 156, color: {color: 'black', opacity: 0.5}},
-      {from: 247, to: 62, color: {color: 'black', opacity: 0.5}},
-      {from: 247, to: 25, color: {color: 'black', opacity: 0.5}},
-      {from: 247, to: 3, color: {color: 'black', opacity: 0.5}},
-      {from: 247, to: 9, color: {color: 'black', opacity: 0.5}},
-      {from: 247, to: 14, color: {color: 'black', opacity: 0.5}},
-      {from: 247, to: 24, color: {color: 'black', opacity: 0.5}},
-      {from: 248, to: 132, color: {color: 'black', opacity: 0.5}},
-      {from: 248, to: 130, color: {color: 'black', opacity: 0.5}},
-      {from: 248, to: 133, color: {color: 'black', opacity: 0.5}},
-      {from: 248, to: 188, color: {color: 'black', opacity: 0.5}},
-      {from: 248, to: 38, color: {color: 'black', opacity: 0.5}},
-      {from: 248, to: 146, color: {color: 'black', opacity: 0.5}},
-      {from: 248, to: 159, color: {color: 'black', opacity: 0.5}},
-      {from: 248, to: 99, color: {color: 'black', opacity: 0.5}},
-      {from: 248, to: 38, color: {color: 'black', opacity: 0.5}},
-      {from: 248, to: 79, color: {color: 'black', opacity: 0.5}},
-      {from: 249, to: 48, color: {color: 'black', opacity: 0.5}},
-      {from: 249, to: 29, color: {color: 'black', opacity: 0.5}},
-      {from: 249, to: 69, color: {color: 'black', opacity: 0.5}},
-      {from: 249, to: 167, color: {color: 'black', opacity: 0.5}},
-      {from: 249, to: 171, color: {color: 'black', opacity: 0.5}},
-      {from: 249, to: 43, color: {color: 'black', opacity: 0.5}},
-      {from: 249, to: 150, color: {color: 'black', opacity: 0.5}},
-      {from: 249, to: 199, color: {color: 'black', opacity: 0.5}},
-      {from: 249, to: 195, color: {color: 'black', opacity: 0.5}},
-      {from: 249, to: 186, color: {color: 'black', opacity: 0.5}},
-    ];
-
-    const savedPositions = localStorage.getItem('positions');
-
-    nodes.forEach((node) => {
-      if (node.shape === 'circle') {
-        this.numberOfEffects += 1;
-      } else {
-        this.numberOfProteinGroups += 1;
-      }
+    // Populate baits
+    this.proteinData.effects.forEach((effect) => {
+      this.baitProteins.push({
+        checked: false,
+        data: effect,
+      });
     });
 
-    if (savedPositions) {
-      const nodePositions = JSON.parse(savedPositions);
-      nodes.forEach((node) => {
-        const nodePosition = nodePositions[node.id];
-        if (nodePosition) {
-          (node as any).x = nodePosition.x;
-          (node as any).y = nodePosition.y;
-        }
-      });
-    }
+    const {nodes, edges} = this.mapDataToNodes(this.proteinData);
 
-    this.numberOfInteractions = edges.length;
+    console.log(nodes, edges);
+
+    this.nodeData.nodes = new vis.DataSet(nodes);
+    this.nodeData.edges = new vis.DataSet(edges);
 
     const container = this.networkEl.nativeElement;
-    const data = {nodes, edges};
     const options = {
       layout: {
         improvedLayout: false,
+      },
+      edges: {
+        smooth: false,
       },
       physics: {
         stabilization: {
@@ -914,20 +134,18 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       },
     };
 
-    this.network = new Network(container, data, options);
+    this.network = new vis.Network(container, this.nodeData, options);
     this.network.on('click', (properties) => {
       const id: Array<string> = properties.nodes;
       // TODO use groupID
       console.log(id);
       if (id.length > 0) {
+        console.log('clicked node:', id);
         this.openSummary(id[0]);
-      } else {
-        this.closeSummary();
       }
     });
 
-
-    if (!savedPositions) {
+    if (!localStorage.getItem('positions')) {
       this.network.on('stabilizationIterationsDone', () => {
         localStorage.setItem('positions', JSON.stringify(this.network.getPositions()));
       });
@@ -939,5 +157,155 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
   }
 
+
+  public async filterNodes() {
+    const visibleIds = new Set<string>(this.nodeData.nodes.getIds());
+
+    const removeIds = new Set<string>();
+    const addNodes = new Map<string, Node>();
+
+    const showAll = !this.baitProteins.find((eff) => eff.checked);
+    console.log(showAll);
+
+    const connectedProteinGroupIds = new Set<number>();
+    this.baitProteins.forEach((bait) => {
+      const nodeId = `eff${bait.data.id}`;
+      const found = visibleIds.has(nodeId);
+      if ((bait.checked || showAll) && !found) {
+        const node = this.mapEffectToNode(bait.data);
+        // this.nodeData.nodes.add(node);
+        addNodes.set(node.id, node);
+      } else if ((!showAll && !bait.checked) && found) {
+        // this.nodeData.nodes.remove(nodeId);
+        removeIds.add(nodeId);
+      }
+      if (bait.checked || showAll) {
+        bait.data.proteinGroups.forEach((pg) => {
+          connectedProteinGroupIds.add(pg.id);
+        });
+      }
+    });
+    for (const proteinGroup of this.proteinData.proteinGroups) {
+      const nodeId = `pg${proteinGroup.id}`;
+      const contains = connectedProteinGroupIds.has(proteinGroup.id);
+      const found = visibleIds.has(nodeId);
+      if (contains && !found) {
+        const node = this.mapProteinGroupToNode(proteinGroup);
+        // this.nodeData.nodes.add(node);
+        addNodes.set(node.id, node);
+      } else if (!contains && found) {
+        // this.nodeData.nodes.remove(nodeId);
+        removeIds.add(nodeId);
+      }
+    }
+
+    this.nodeData.nodes.remove(Array.from(removeIds.values()));
+    this.nodeData.nodes.add(Array.from(addNodes.values()));
+  }
+
+  private async loadNetwork(): Promise<any> {
+    // TODO: Load from backend instead of generating random stuff here...
+
+    const proteinGroupCount = 10000;
+    const effectCount = 50;
+    const edgeCount = 2000;
+
+    const proteinGroups = [];
+    const effects = [];
+    const edges = [];
+
+    for (let i = 0; i < effectCount; i++) {
+      effects.push({
+        id: i,
+        name: `eff${i}`,
+      });
+    }
+
+    const proteinGroupIds = [];
+    for (let i = 0; i < edgeCount; i++) {
+      const proteinGroupId = Math.floor(this.random() * proteinGroupCount);
+      const effectId = Math.floor(this.random() * effects.length);
+      let found = false;
+      for (const edge of edges) {
+        if (edge.proteinGroupId === proteinGroupId && edge.effectId === effectId) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        edges.push({
+          proteinGroupId, effectId
+        });
+        if (proteinGroupIds.indexOf(proteinGroupId) === -1) {
+          proteinGroupIds.push(proteinGroupId);
+        }
+      }
+    }
+
+    for (const proteinGroupId of proteinGroupIds) {
+      proteinGroups.push({
+        id: proteinGroupId,
+        name: `pg${proteinGroupId}`,
+      });
+    }
+
+    return {
+      proteinGroups,
+      effects,
+      edges
+    };
+  }
+
+  private mapProteinGroupToNode(proteinGroup: any): any {
+    return {
+      id: `pg${proteinGroup.id}`,
+      label: `pg${proteinGroup.id}`,
+      size: 5, color: '#ADADAD', shape: 'square', shadow: true,
+      x: proteinGroup.x,
+      y: proteinGroup.y
+    };
+  }
+
+  private mapEffectToNode(effect: any): any {
+    return {
+      id: `eff${effect.id}`,
+      label: `eff${effect.id}`,
+      size: 10, color: '#118AB2', shape: 'circle', shadow: true,
+      x: effect.x,
+      y: effect.y
+    };
+  }
+
+  private mapEdge(edge: any): any {
+    return {from: `pg${edge.proteinGroupId}`, to: `eff${edge.effectId}`};
+  }
+
+  private mapDataToNodes(data: ProteinNetwork): { nodes: any[], edges: any[] } {
+    const nodes = [];
+    const edges = [];
+
+    for (const proteinGroup of data.proteinGroups) {
+      nodes.push(this.mapProteinGroupToNode(proteinGroup));
+    }
+
+    for (const effect of data.effects) {
+      nodes.push(this.mapEffectToNode(effect));
+    }
+
+    for (const edge of data.edges) {
+      edges.push(this.mapEdge(edge));
+    }
+
+    return {
+      nodes,
+      edges,
+    };
+  }
+
+  // TODO: Remove this:
+  private random() {
+    const x = Math.sin(this.seed++) * 10000;
+    return x - Math.floor(x);
+  }
 
 }

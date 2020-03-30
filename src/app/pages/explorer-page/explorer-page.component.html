@@ -48,23 +48,23 @@
       </header>
       <div class="card-content">
         <div class="content">
-          <nav class="level">
+          <nav class="level" *ngIf="proteinData">
             <div class="level-item has-text-centered">
               <div>
                 <p class="heading">Effects</p>
-                <p class="title"> {{ numberOfEffects }}</p>
+                <p class="title"> {{ proteinData.effects.length }}</p>
               </div>
             </div>
             <div class="level-item has-text-centered">
               <div>
                 <p class="heading">Protein Groups</p>
-                <p class="title">{{ numberOfProteinGroups }}</p>
+                <p class="title">{{ proteinData.proteinGroups.length }}</p>
               </div>
             </div>
             <div class="level-item has-text-centered">
               <div>
                 <p class="heading">Interactions</p>
-                <p class="title">{{ numberOfInteractions }}</p>
+                <p class="title">{{ proteinData.edges.length }}</p>
               </div>
             </div>
           </nav>
@@ -102,10 +102,14 @@
       <div class="card-content">
         <div class="content">
           <p><b>Baits</b></p>
-          <label class="checkbox" *ngFor="let baitName of baitNames">
-            <input type="checkbox" class="checkbox">
-            {{ baitName }}
-          </label>
+          <div class="bait-frame">
+            <div *ngFor="let bait of baitProteins">
+              <label class="checkbox">
+                <input type="checkbox" class="checkbox" [ngModel]="bait.checked" (ngModelChange)="bait.checked = $event; filterNodes()">
+                Bait {{ bait.data.name }}
+              </label>
+            </div>
+          </div>
         </div>
       </div>
       <footer class="card-footer">
