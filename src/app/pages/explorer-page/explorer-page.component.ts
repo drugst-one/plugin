@@ -94,6 +94,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.edges = data.edges;
   }
 
+   public reset(event) {
+    const checked = event.target.checked;
+    this.baitProteins.forEach(item => item.checked = checked);
+    this.filterNodes();
+  }
+
   public zoomToNode(id: string) {
     const coords = this.network.getPositions(id)[id];
     this.network.moveTo({
