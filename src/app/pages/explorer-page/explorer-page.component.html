@@ -81,6 +81,24 @@
         </button>
       </footer>
     </div>
+
+    <div class="card bar">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon">
+        <i class="fas fa-cog" aria-hidden="true"></i>
+      </span> Settings
+        </p>
+      </header>
+      <div class="card-content">
+        <div class="content">
+          <label class="checkbox">
+            <input type="checkbox" class="checkbox" [(ngModel)]="physicsEnabled" (ngModelChange)="physicsEnabled = $event; updatePhysicsEnabled()">
+            Physics enabled
+          </label>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="content bar-right">
