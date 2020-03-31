@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../environments/environment';
 
 
-const networkUrl = `${environment.backend}` + 'network';
+const networkUrl = `${environment.backend}` + 'network/';
 @Injectable({
   providedIn: 'root'
 })
