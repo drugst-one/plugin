@@ -16,7 +16,7 @@ RUN npm install
 
 COPY . /app/
 
-RUN npm run build -- --prod --base-href=/covid19/
+RUN npm run build -- --prod --base-href=/covex/
 
 RUN cp -r dist/covid19/* /usr/share/nginx/html/
 
