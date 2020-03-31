@@ -1,6 +1,9 @@
+import {HttpClient} from '@angular/common/http';
+
 export interface ProteinGroup {
   id: number;
   name: string;
+  groupId: number;
   effects?: Effect[];
   x?: number;
   y?: number;
@@ -15,8 +18,8 @@ export interface Effect {
 }
 
 export interface Edge {
-  proteinGroupId: number;
-  effectId: number;
+  groupId: number;
+  effectName: string;
 }
 
 export class ProteinNetwork {
@@ -24,21 +27,17 @@ export class ProteinNetwork {
   constructor(public proteinGroups: ProteinGroup[], public effects: Effect[], public edges: Edge[]) {
   }
 
-  public loadPositions() {
-    const savedPositions = localStorage.getItem('positions');
-    if (!savedPositions) {
-      return;
-    }
-    const nodePositions = JSON.parse(savedPositions);
+  public async loadPositions(http: HttpClient) {
+    const nodePositions = await http.get(`assets/positions/network.json`).toPromise();
     this.proteinGroups.forEach((node) => {
-      const nodePosition = nodePositions[`pg${node.id}`];
+      const nodePosition = nodePositions[`pg_${node.groupId}`];
       if (nodePosition) {
         node.x = nodePosition.x;
         node.y = nodePosition.y;
       }
     });
     this.effects.forEach((node) => {
-      const nodePosition = nodePositions[`eff${node.id}`];
+      const nodePosition = nodePositions[`eff_${node.name}`];
       if (nodePosition) {
         node.x = nodePosition.x;
         node.y = nodePosition.y;
@@ -47,11 +46,11 @@ export class ProteinNetwork {
   }
 
   public getProteinGroup(id: number): ProteinGroup {
-    return this.proteinGroups.find((pg) => pg.id === id);
+    return this.proteinGroups.find((pg) => pg.groupId === id);
   }
 
-  public getEffect(id: number): Effect {
-    return this.effects.find((eff) => eff.id === id);
+  public getEffect(name: string): Effect {
+    return this.effects.find((eff) => eff.name === name);
   }
 
   public linkNodes() {
@@ -62,8 +61,8 @@ export class ProteinNetwork {
       eff.proteinGroups = [];
     });
     this.edges.forEach((edge) => {
-      const proteinGroup = this.getProteinGroup(edge.proteinGroupId);
-      const effect = this.getEffect(edge.effectId);
+      const proteinGroup = this.getProteinGroup(edge.groupId);
+      const effect = this.getEffect(edge.effectName);
       if (proteinGroup && effect) {
         proteinGroup.effects.push(effect);
         effect.proteinGroups.push(proteinGroup);

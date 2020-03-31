@@ -1,9 +1,8 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import {Effect, ProteinNetwork} from '../protein-network';
-import { ApiService } from '../../api.service';
+import {HttpClient} from '@angular/common/http';
+import {ApiService} from '../../api.service';
 
 declare var vis: any;
 
@@ -37,9 +36,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private seed = 1;  // TODO: Remove this
 
+  private dumpPositions = false;
+  public physicsEnabled = false;
+
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 
-  constructor(private route: ActivatedRoute, private router: Router, private api: ApiService) {
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private api: ApiService) {
     this.groupId = 'IFI16';
     this.geneNames.push('IFI16');
     this.proteinNames.push('Gamma-interface-inducible protein 16');
@@ -51,6 +53,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.baitNames.push('Bait Protein 5');
 
     this.route.queryParams.subscribe(async (params) => {
+      this.dumpPositions = params.dumpPositions;
+      this.physicsEnabled = !!this.dumpPositions;
+
       const proteinGroup = params.proteinGroup;
       if (!proteinGroup) {
         // In this case, the URL is just `/explorer`
@@ -80,7 +85,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
 
-
   async ngAfterViewInit() {
     if (!this.network) {
       await this.createNetwork();
@@ -94,7 +98,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.edges = data.edges;
   }
 
-   public reset(event) {
+  public reset(event) {
     const checked = event.target.checked;
     this.baitProteins.forEach(item => item.checked = checked);
     this.filterNodes();
@@ -125,7 +129,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   private async createNetwork() {
     await this.getNetwork();
     this.proteinData = new ProteinNetwork(this.proteinGroups, this.effects, this.edges);
-    this.proteinData.loadPositions();
+    if (!this.dumpPositions) {
+      await this.proteinData.loadPositions(this.http);
+    }
     this.proteinData.linkNodes();
 
     // Populate baits
@@ -150,6 +156,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         smooth: false,
       },
       physics: {
+        enabled: this.physicsEnabled,
         stabilization: {
           enabled: false,
         },
@@ -167,9 +174,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }
     });
 
-    if (!localStorage.getItem('positions')) {
+    if (this.dumpPositions) {
       this.network.on('stabilizationIterationsDone', () => {
-        localStorage.setItem('positions', JSON.stringify(this.network.getPositions()));
+        console.log(JSON.stringify(this.network.getPositions()));
       });
       this.network.stabilize();
     }
@@ -191,7 +198,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     const connectedProteinGroupIds = new Set<number>();
     this.baitProteins.forEach((bait) => {
-      const nodeId = `eff${bait.data.id}`;
+      const nodeId = `eff_${bait.data.name}`;
       const found = visibleIds.has(nodeId);
       if ((bait.checked || showAll) && !found) {
         const node = this.mapEffectToNode(bait.data);
@@ -208,7 +215,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }
     });
     for (const proteinGroup of this.proteinData.proteinGroups) {
-      const nodeId = `pg${proteinGroup.id}`;
+      const nodeId = `pg_${proteinGroup.groupId}`;
       const contains = connectedProteinGroupIds.has(proteinGroup.id);
       const found = visibleIds.has(nodeId);
       if (contains && !found) {
@@ -226,11 +233,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
 
+  public updatePhysicsEnabled() {
+    this.network.setOptions({
+      physics: {enabled: this.physicsEnabled},
+    });
+  }
+
   private mapProteinGroupToNode(proteinGroup: any): any {
     return {
-      id: `pg${proteinGroup.id}`,
-      label: `pg${proteinGroup.id}`,
-      size: 5, color: '#ADADAD', shape: 'square', shadow: true,
+      id: `pg_${proteinGroup.groupId}`,
+      label: `${proteinGroup.name}`,
+      size: 10, font: '5px', color: '#e2b600', shape: 'ellipse', shadow: false,
       x: proteinGroup.x,
       y: proteinGroup.y
     };
@@ -238,16 +251,16 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private mapEffectToNode(effect: any): any {
     return {
-      id: `eff${effect.id}`,
-      label: `eff${effect.id}`,
-      size: 10, color: '#118AB2', shape: 'circle', shadow: true,
+      id: `eff_${effect.name}`,
+      label: `${effect.name}`,
+      size: 10, color: '#118AB2', shape: 'box', shadow: true, font: {color: '#FFFFFF'},
       x: effect.x,
       y: effect.y
     };
   }
 
   private mapEdge(edge: any): any {
-    return {from: `pg${edge.proteinGroupId}`, to: `eff${edge.effectId}`};
+    return {from: `pg_${edge.groupId}`, to: `eff_${edge.effectName}`, color: { color: '#afafaf', highlight: '#854141' }};
   }
 
   private mapDataToNodes(data: ProteinNetwork): { nodes: any[], edges: any[] } {
