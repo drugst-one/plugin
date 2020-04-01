@@ -1,3 +1,5 @@
+<app-protein-analysis [(show)]="showAnalysisDialog"></app-protein-analysis>
+
 <div class="content explorer">
 
   <div class="content bar-left">
@@ -107,6 +109,26 @@
       <header class="card-header">
         <p class="card-header-title">
           <span class="icon">
+        <i class="fas fa-flask" aria-hidden="true"></i>
+      </span> Analysis
+        </p>
+      </header>
+      <div class="card-content">
+        <button (click)="showAnalysisDialog = true" class="button is-success" [disabled]="analysis.getCount() === 0">
+          <span class="icon">
+            <i class="fa fa-list"></i>
+          </span>
+          <span>
+            Open Protein Selection
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <div class="card bar">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon">
         <i class="fas fa-info" aria-hidden="true"></i>
       </span> Details
         </p>
@@ -145,6 +167,8 @@
           <figure class="image">
             <img src="assets/boxplot.png" alt="Boxplots">
           </figure>
+          <button class="button" *ngIf="!inSelection(proteinGroup)" (click)="addToSelection(proteinGroup)">Select for analysis</button>
+          <button class="button" *ngIf="inSelection(proteinGroup)" (click)="removeFromSelection(proteinGroup)">Remove from analysis</button>
         </div>
       </div>
     </div>

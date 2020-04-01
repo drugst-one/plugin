@@ -1,0 +1,40 @@
+<div class="modal" [class.is-active]="show">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Launch Protein Analysis</p>
+      <button class="delete" aria-label="close" (click)="close()"></button>
+    </header>
+    <section class="modal-card-body">
+      <h4 class="title is-4">Selection</h4>
+      <table class="table">
+        <thead>
+        <tr>
+          <td>AC</td>
+          <td>Actions</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let p of analysis.getSelection()">
+          <td>{{p.name}}</td>
+          <td>
+            <button (click)="analysis.removeProtein(p)" class="button is-small is-danger">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-success">
+        <span class="icon"><i class="fa fa-play"></i></span>
+        <span>Multi Steiner</span>
+      </button>
+      <button class="button is-success">
+        <span class="icon"><i class="fa fa-play"></i></span>
+        <span>Key Pathway Miner</span>
+      </button>
+    </footer>
+  </div>
+</div>

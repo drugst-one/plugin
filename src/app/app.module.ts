@@ -10,6 +10,7 @@ import {ExplorerPageComponent} from './pages/explorer-page/explorer-page.compone
 import {AboutPageComponent} from './pages/about-page/about-page.component';
 import {HomePageComponent} from './pages/home-page/home-page.component';
 import {HttpClientModule} from '@angular/common/http';
+import {ProteinAnalysisComponent} from './components/protein-analysis/protein-analysis.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import {HttpClientModule} from '@angular/common/http';
     ExplorerPageComponent,
     AboutPageComponent,
     HomePageComponent,
+    ProteinAnalysisComponent,
   ],
   imports: [
     BrowserModule,

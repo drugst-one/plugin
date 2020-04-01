@@ -1,8 +1,9 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Effect, ProteinNetwork} from '../protein-network';
+import {Effect, ProteinGroup, ProteinNetwork} from '../protein-network';
 import {HttpClient} from '@angular/common/http';
 import {ApiService} from '../../api.service';
+import {AnalysisService} from '../../analysis.service';
 
 declare var vis: any;
 
@@ -19,7 +20,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public proteinGroup = '';
   public proteinNames: Array<string> = [];
   public proteinACs: Array<string> = [];
-  public baitNames: Array<string> = [];
 
   public baitProteins: Array<{ checked: boolean; data: Effect }> = [];
 
@@ -39,18 +39,18 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   private dumpPositions = false;
   public physicsEnabled = false;
 
+  public showAnalysisDialog = false;
+
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private api: ApiService) {
-    this.groupId = 'IFI16';
+  constructor(private http: HttpClient,
+              private route: ActivatedRoute,
+              private router: Router,
+              private api: ApiService,
+              public analysis: AnalysisService) {
     this.geneNames.push('IFI16');
     this.proteinNames.push('Gamma-interface-inducible protein 16');
     this.proteinACs.push('Q16666');
-    this.baitNames.push('Bait Protein 1');
-    this.baitNames.push('Bait Protein 2');
-    this.baitNames.push('Bait Protein 3');
-    this.baitNames.push('Bait Protein 4');
-    this.baitNames.push('Bait Protein 5');
 
     this.route.queryParams.subscribe(async (params) => {
       this.dumpPositions = params.dumpPositions;
@@ -79,6 +79,23 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       // this.zoomToNode(proteinGroup)
       this.showDetails = true;
     });
+
+    this.analysis.subscribe((protein, selected) => {
+      const nodeId = `pg_${protein.groupId}`;
+      if (selected) {
+        const node = this.nodeData.nodes.get(nodeId);
+        if (node) {
+          node.color = '#c42eff';
+          this.nodeData.nodes.update(node);
+        }
+      } else {
+        const node = this.nodeData.nodes.get(nodeId);
+        if (node) {
+          node.color = '#e2b600';
+          this.nodeData.nodes.update(node);
+        }
+      }
+    });
   }
 
   ngOnInit() {
@@ -104,7 +121,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.filterNodes();
   }
 
-  public zoomToNode(id: string) {
+  private zoomToNode(id: string) {
     const coords = this.network.getPositions(id)[id];
     this.network.moveTo({
       position: {x: coords.x, y: coords.y},
@@ -117,9 +134,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     return this.groupId;
   }
 
-  public async openSummary(groupId: string) {
+  public async openSummary(groupId: string, zoom: boolean) {
     await this.router.navigate(['explorer'], {queryParams: {proteinGroup: groupId}});
-    this.zoomToNode(this.proteinGroup);
+    if (zoom) {
+      this.zoomToNode(this.proteinGroup);
+    }
   }
 
   public async closeSummary() {
@@ -170,7 +189,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       console.log(id);
       if (id.length > 0) {
         console.log('clicked node:', id);
-        this.openSummary(id[0]);
+        this.openSummary(id[0], false);
       }
     });
 
@@ -239,17 +258,21 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private mapProteinGroupToNode(proteinGroup: any): any {
+  private mapProteinGroupToNode(proteinGroup: ProteinGroup): any {
+    let color = '#e2b600';
+    if (this.analysis.inSelection(proteinGroup)) {
+      color = '#c42eff';
+    }
     return {
       id: `pg_${proteinGroup.groupId}`,
       label: `${proteinGroup.name}`,
-      size: 10, font: '5px', color: '#e2b600', shape: 'ellipse', shadow: false,
+      size: 10, font: '5px', color, shape: 'ellipse', shadow: false,
       x: proteinGroup.x,
       y: proteinGroup.y
     };
   }
 
-  private mapEffectToNode(effect: any): any {
+  private mapEffectToNode(effect: Effect): any {
     return {
       id: `eff_${effect.name}`,
       label: `${effect.name}`,
@@ -260,7 +283,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   private mapEdge(edge: any): any {
-    return {from: `pg_${edge.groupId}`, to: `eff_${edge.effectName}`, color: { color: '#afafaf', highlight: '#854141' }};
+    return {from: `pg_${edge.groupId}`, to: `eff_${edge.effectName}`, color: {color: '#afafaf', highlight: '#854141'}};
   }
 
   private mapDataToNodes(data: ProteinNetwork): { nodes: any[], edges: any[] } {
@@ -289,6 +312,36 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   private random() {
     const x = Math.sin(this.seed++) * 10000;
     return x - Math.floor(x);
+  }
+
+  // Selection
+  // TODO: Improve usage of group ids, revise this after models have been changed to just protein
+
+  inSelection(groupIdStr: string): boolean {
+    if (!this.proteinData || !groupIdStr) {
+      return false;
+    }
+    const groupId = Number(groupIdStr.split('_')[1]);
+    const protein = this.proteinData.getProteinGroup(groupId);
+    return this.analysis.inSelection(protein);
+  }
+
+  addToSelection(groupIdStr: string) {
+    if (!groupIdStr) {
+      return;
+    }
+    const groupId = Number(groupIdStr.split('_')[1]);
+    const protein = this.proteinData.getProteinGroup(groupId);
+    this.analysis.addProtein(protein);
+  }
+
+  removeFromSelection(groupIdStr: string) {
+    if (!groupIdStr) {
+      return;
+    }
+    const groupId = Number(groupIdStr.split('_')[1]);
+    const protein = this.proteinData.getProteinGroup(groupId);
+    this.analysis.removeProtein(protein);
   }
 
 }
