@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ProteinGroup} from './pages/protein-network';
+import {Protein} from './pages/protein-network';
 import {Subject} from 'rxjs';
 
 @Injectable({
@@ -7,30 +7,30 @@ import {Subject} from 'rxjs';
 })
 export class AnalysisService {
 
-  private selectedProteins = new Map<string, ProteinGroup>();
-  private selectSubject = new Subject<{protein: ProteinGroup, selected: boolean}>();
+  private selectedProteins = new Map<string, Protein>();
+  private selectSubject = new Subject<{protein: Protein, selected: boolean}>();
 
   constructor() {
   }
 
-  addProtein(protein: ProteinGroup) {
+  addProtein(protein: Protein) {
     if (!this.inSelection(protein)) {
-      this.selectedProteins.set(`${protein.groupId}`, protein);
+      this.selectedProteins.set(`${protein.proteinAc}`, protein);
       this.selectSubject.next({protein, selected: true});
     }
   }
 
-  inSelection(protein: ProteinGroup): boolean {
-    return this.selectedProteins.has(`${protein.groupId}`);
+  inSelection(protein: Protein): boolean {
+    return this.selectedProteins.has(protein.proteinAc);
   }
 
-  removeProtein(protein: ProteinGroup) {
-    if (this.selectedProteins.delete(`${protein.groupId}`)) {
+  removeProtein(protein: Protein) {
+    if (this.selectedProteins.delete(`${protein.proteinAc}`)) {
       this.selectSubject.next({protein, selected: false});
     }
   }
 
-  getSelection(): ProteinGroup[] {
+  getSelection(): Protein[] {
     return Array.from(this.selectedProteins.values());
   }
 
@@ -38,7 +38,7 @@ export class AnalysisService {
     return this.selectedProteins.size;
   }
 
-  subscribe(cb: (protein: ProteinGroup, selected: boolean) => void) {
+  subscribe(cb: (protein: Protein, selected: boolean) => void) {
     this.selectSubject.subscribe((event) => {
       cb(event.protein, event.selected);
     });

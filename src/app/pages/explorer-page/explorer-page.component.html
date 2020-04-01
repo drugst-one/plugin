@@ -24,7 +24,7 @@
             <div class="level-item has-text-centered">
               <div>
                 <p class="heading">Protein Groups</p>
-                <p class="title">{{ proteinData.proteinGroups.length }}</p>
+                <p class="title">{{ proteinData.proteins.length }}</p>
               </div>
             </div>
             <div class="level-item has-text-centered">
@@ -70,11 +70,11 @@
         <div class="content">
           <p><b>Baits</b></p>
           <div class="bait-frame">
-            <div *ngFor="let bait of baitProteins">
+            <div *ngFor="let bait of viralProteinCheckboxes">
               <label class="checkbox">
                 <input type="checkbox" class="checkbox" [ngModel]="bait.checked"
                        (ngModelChange)="bait.checked = $event; filterNodes()">
-                Bait {{ bait.data.name }}
+                Bait {{ bait.data.effectId }}
               </label>
             </div>
           </div>
@@ -139,13 +139,12 @@
       <div class="card-content">
         <div *ngIf="showDetails" class="content">
 
-          <p><b>Protein Group:</b> {{ proteinGroup }}</p>
+          <p><b>Protein Group:</b> {{ currentProteinAc }}</p>
           <p><b>Gene Name(s):</b> <span *ngFor="let geneName of geneNames"> {{ geneName }}</span></p>
           <p><b>Protein Name(s):</b> <span *ngFor="let proteinName of proteinNames"> {{ proteinName }}</span></p>
-          <p align="row"><b>Protein AC(s):</b>
-            <a href="https://www.uniprot.org/uniprot/{{proteinAC}}" target="_blank"
-               *ngFor="let proteinAC of proteinACs">
-              {{ proteinAC }}
+          <p><b>Protein AC(s):</b>
+            <a href="https://www.uniprot.org/uniprot/{{proteinAc}}" target="_blank" *ngFor="let proteinAc of proteinAcs">
+              {{ proteinAc }}
             </a>
           </p>
         </div>
@@ -170,8 +169,8 @@
           <figure class="image">
             <img src="assets/boxplot.png" alt="Boxplots">
           </figure>
-          <button class="button" *ngIf="!inSelection(proteinGroup)" (click)="addToSelection(proteinGroup)">Select for analysis</button>
-          <button class="button" *ngIf="inSelection(proteinGroup)" (click)="removeFromSelection(proteinGroup)">Remove from analysis</button>
+          <button class="button" *ngIf="!inSelection(currentProteinAc)" (click)="addToSelection(currentProteinAc)">Select for analysis</button>
+          <button class="button" *ngIf="inSelection(currentProteinAc)" (click)="removeFromSelection(currentProteinAc)">Remove from analysis</button>
         </div>
       </div>
     </div>
