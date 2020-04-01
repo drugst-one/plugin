@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild, Output, EventEmitter} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Effect, ProteinGroup, ProteinNetwork} from '../protein-network';
 import {HttpClient} from '@angular/common/http';
@@ -25,6 +25,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public proteinData: ProteinNetwork;
 
+  public filteredProteins = [];
   public proteinGroups: any;
   public effects: any;
   public edges: any;
@@ -39,7 +40,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   private dumpPositions = false;
   public physicsEnabled = false;
 
+
+  public queryItems = [];
   public showAnalysisDialog = false;
+
 
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 
@@ -68,6 +72,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
       if (this.proteinGroup === proteinGroup) {
         // The protein group is the same as before, so we do not need to do anything
+        // TODO Also highlight node when reloading the page/sharing the URL
         return;
       }
 
@@ -108,6 +113,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
   }
 
+  fillQueryItems() {
+    this.queryItems = this.filteredProteins;
+  }
+
   private async getNetwork() {
     const data: any = await this.api.getNetwork();
     this.proteinGroups = data.proteinGroups;
@@ -145,6 +154,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     await this.router.navigate(['explorer']);
   }
 
+
   private async createNetwork() {
     await this.getNetwork();
     this.proteinData = new ProteinNetwork(this.proteinGroups, this.effects, this.edges);
@@ -162,7 +172,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
 
     const {nodes, edges} = this.mapDataToNodes(this.proteinData);
-
     this.nodeData.nodes = new vis.DataSet(nodes);
     this.nodeData.edges = new vis.DataSet(edges);
 
@@ -203,6 +212,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (this.proteinGroup) {
       this.zoomToNode(this.proteinGroup);
     }
+
+    this.filteredProteins = this.proteinGroups;
+    this.fillQueryItems();
+
   }
 
 
@@ -216,6 +229,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     console.log(showAll);
 
     const connectedProteinGroupIds = new Set<number>();
+
     this.baitProteins.forEach((bait) => {
       const nodeId = `eff_${bait.data.name}`;
       const found = visibleIds.has(nodeId);
@@ -233,13 +247,18 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         });
       }
     });
+    this.filteredProteins = [];
     for (const proteinGroup of this.proteinData.proteinGroups) {
       const nodeId = `pg_${proteinGroup.groupId}`;
       const contains = connectedProteinGroupIds.has(proteinGroup.id);
       const found = visibleIds.has(nodeId);
+      if (contains) {
+        this.filteredProteins.push(proteinGroup);
+      }
       if (contains && !found) {
         const node = this.mapProteinGroupToNode(proteinGroup);
         // this.nodeData.nodes.add(node);
+
         addNodes.set(node.id, node);
       } else if (!contains && found) {
         // this.nodeData.nodes.remove(nodeId);
@@ -247,8 +266,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }
     }
 
+
     this.nodeData.nodes.remove(Array.from(removeIds.values()));
     this.nodeData.nodes.add(Array.from(addNodes.values()));
+    this.fillQueryItems();
   }
 
 
