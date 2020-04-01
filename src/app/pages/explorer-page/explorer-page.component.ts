@@ -82,14 +82,16 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     this.analysis.subscribe((protein, selected) => {
       const nodeId = `pg_${protein.proteinAc}`;
+      const node = this.nodeData.nodes.get(nodeId);
+      const pos = this.network.getPositions([nodeId]);
+      node.x = pos[nodeId].x;
+      node.y = pos[nodeId].y;
       if (selected) {
-        const node = this.nodeData.nodes.get(nodeId);
         if (node) {
           node.color = '#c42eff';
           this.nodeData.nodes.update(node);
         }
       } else {
-        const node = this.nodeData.nodes.get(nodeId);
         if (node) {
           node.color = '#e2b600';
           this.nodeData.nodes.update(node);
