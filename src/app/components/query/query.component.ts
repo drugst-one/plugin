@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {Protein} from '../../pages/protein-network';
 
 @Component({
   selector: 'app-query-component',
@@ -8,12 +9,11 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class QueryComponent {
 
 
-  @Output() selectProtein: EventEmitter<string> = new EventEmitter();
-  @Input() queryItems: any[];
+  @Output() selectProtein: EventEmitter<Protein> = new EventEmitter();
+  @Input() queryItems: Protein[];
 
   select(protein) {
-    console.log(protein);
-    this.selectProtein.emit('pg_' + protein.groupId);
+    this.selectProtein.emit(protein);
   }
 
 }

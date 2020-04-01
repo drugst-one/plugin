@@ -16,7 +16,7 @@
         </thead>
         <tbody>
         <tr *ngFor="let p of analysis.getSelection()">
-          <td>{{p.name}}</td>
+          <td>{{p.proteinAc}}</td>
           <td>
             <button (click)="analysis.removeProtein(p)" class="button is-small is-danger">
               <i class="fa fa-trash"></i>

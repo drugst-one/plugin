@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild, Output, EventEmitter} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Effect, ProteinGroup, ProteinNetwork} from '../protein-network';
+import {Effect, Protein, ProteinNetwork} from '../protein-network';
 import {HttpClient} from '@angular/common/http';
 import {ApiService} from '../../api.service';
 import {AnalysisService} from '../../analysis.service';
@@ -15,35 +15,30 @@ declare var vis: any;
 export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public showDetails = false;
-  public groupId = '';
+  public currentProteinAc = '';
   public geneNames: Array<string> = [];
-  public proteinGroup = '';
   public proteinNames: Array<string> = [];
-  public proteinACs: Array<string> = [];
+  public proteinAcs: Array<string> = [];
 
-  public baitProteins: Array<{ checked: boolean; data: Effect }> = [];
+  public viralProteinCheckboxes: Array<{ checked: boolean; data: Effect }> = [];
 
   public proteinData: ProteinNetwork;
 
   public filteredProteins = [];
-  public proteinGroups: any;
+  public proteins: any;
   public effects: any;
   public edges: any;
 
   private network: any;
   private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
 
-  private networkData: any = [];
-
   private seed = 1;  // TODO: Remove this
 
   private dumpPositions = false;
   public physicsEnabled = false;
 
-
   public queryItems = [];
   public showAnalysisDialog = false;
-
 
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 
@@ -54,39 +49,39 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
               public analysis: AnalysisService) {
     this.geneNames.push('IFI16');
     this.proteinNames.push('Gamma-interface-inducible protein 16');
-    this.proteinACs.push('Q16666');
+    this.proteinAcs.push('Q16666');
 
     this.route.queryParams.subscribe(async (params) => {
       this.dumpPositions = params.dumpPositions;
       this.physicsEnabled = !!this.dumpPositions;
 
-      const proteinGroup = params.proteinGroup;
-      if (!proteinGroup) {
+      const protein = params.protein;
+      if (!protein) {
         // In this case, the URL is just `/explorer`
         // Therefore, we do not show a modal
         this.showDetails = false;
         return;
       }
 
-      // In this case, the URL is `/explorer/<proteinGroup>`
+      // In this case, the URL is `/explorer/<protein>`
 
-      if (this.proteinGroup === proteinGroup) {
+      if (this.currentProteinAc === protein) {
         // The protein group is the same as before, so we do not need to do anything
         // TODO Also highlight node when reloading the page/sharing the URL
         return;
       }
 
-      // We have a new proteinGroup id, so we need to load it and show the modal...
+      // We have a new protein id, so we need to load it and show the modal...
 
-      this.proteinGroup = proteinGroup;
+      this.currentProteinAc = protein;
 
-      // TODO: Perform call here for 'proteinGroup'...
-      // this.zoomToNode(proteinGroup)
+      // TODO: Perform call here for 'protein'...
+      // this.zoomToNode(protein)
       this.showDetails = true;
     });
 
     this.analysis.subscribe((protein, selected) => {
-      const nodeId = `pg_${protein.groupId}`;
+      const nodeId = `pg_${protein.proteinAc}`;
       if (selected) {
         const node = this.nodeData.nodes.get(nodeId);
         if (node) {
@@ -119,14 +114,14 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private async getNetwork() {
     const data: any = await this.api.getNetwork();
-    this.proteinGroups = data.proteinGroups;
+    this.proteins = data.proteins;
     this.effects = data.effects;
     this.edges = data.edges;
   }
 
   public reset(event) {
     const checked = event.target.checked;
-    this.baitProteins.forEach(item => item.checked = checked);
+    this.viralProteinCheckboxes.forEach(item => item.checked = checked);
     this.filterNodes();
   }
 
@@ -139,14 +134,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public getGroupId() {
-    return this.groupId;
-  }
-
-  public async openSummary(groupId: string, zoom: boolean) {
-    await this.router.navigate(['explorer'], {queryParams: {proteinGroup: groupId}});
+  public async openSummary(protein: Protein, zoom: boolean) {
+    await this.router.navigate(['explorer'], {queryParams: {protein: protein.proteinAc}});
     if (zoom) {
-      this.zoomToNode(this.proteinGroup);
+      this.zoomToNode(`pg_${protein.proteinAc}`);
     }
   }
 
@@ -157,7 +148,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private async createNetwork() {
     await this.getNetwork();
-    this.proteinData = new ProteinNetwork(this.proteinGroups, this.effects, this.edges);
+    this.proteinData = new ProteinNetwork(this.proteins, this.effects, this.edges);
     if (!this.dumpPositions) {
       await this.proteinData.loadPositions(this.http);
     }
@@ -165,7 +156,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     // Populate baits
     this.proteinData.effects.forEach((effect) => {
-      this.baitProteins.push({
+      this.viralProteinCheckboxes.push({
         checked: false,
         data: effect,
       });
@@ -198,7 +189,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       console.log(id);
       if (id.length > 0) {
         console.log('clicked node:', id);
-        this.openSummary(id[0], false);
+        if (id[0].startsWith('pg_')) {
+          const protein = this.proteinData.getProtein(id[0].substr(3));
+          this.openSummary(protein, false);
+        } else {
+          this.closeSummary();
+        }
       }
     });
 
@@ -209,11 +205,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.network.stabilize();
     }
 
-    if (this.proteinGroup) {
-      this.zoomToNode(this.proteinGroup);
+    if (this.currentProteinAc) {
+      this.zoomToNode(`pg_${this.currentProteinAc}`);
     }
 
-    this.filteredProteins = this.proteinGroups;
+    this.filteredProteins = this.proteins;
     this.fillQueryItems();
 
   }
@@ -225,13 +221,13 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     const removeIds = new Set<string>();
     const addNodes = new Map<string, Node>();
 
-    const showAll = !this.baitProteins.find((eff) => eff.checked);
+    const showAll = !this.viralProteinCheckboxes.find((eff) => eff.checked);
     console.log(showAll);
 
-    const connectedProteinGroupIds = new Set<number>();
+    const connectedProteinAcs = new Set<string>();
 
-    this.baitProteins.forEach((bait) => {
-      const nodeId = `eff_${bait.data.name}`;
+    this.viralProteinCheckboxes.forEach((bait) => {
+      const nodeId = `eff_${bait.data.effectId}`;
       const found = visibleIds.has(nodeId);
       if ((bait.checked || showAll) && !found) {
         const node = this.mapEffectToNode(bait.data);
@@ -242,21 +238,21 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         removeIds.add(nodeId);
       }
       if (bait.checked || showAll) {
-        bait.data.proteinGroups.forEach((pg) => {
-          connectedProteinGroupIds.add(pg.id);
+        bait.data.proteins.forEach((pg) => {
+          connectedProteinAcs.add(pg.proteinAc);
         });
       }
     });
     this.filteredProteins = [];
-    for (const proteinGroup of this.proteinData.proteinGroups) {
-      const nodeId = `pg_${proteinGroup.groupId}`;
-      const contains = connectedProteinGroupIds.has(proteinGroup.id);
+    for (const protein of this.proteinData.proteins) {
+      const nodeId = `pg_${protein.proteinAc}`;
+      const contains = connectedProteinAcs.has(protein.proteinAc);
       const found = visibleIds.has(nodeId);
       if (contains) {
-        this.filteredProteins.push(proteinGroup);
+        this.filteredProteins.push(protein);
       }
       if (contains && !found) {
-        const node = this.mapProteinGroupToNode(proteinGroup);
+        const node = this.mapProteinToNode(protein);
         // this.nodeData.nodes.add(node);
 
         addNodes.set(node.id, node);
@@ -279,24 +275,24 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private mapProteinGroupToNode(proteinGroup: ProteinGroup): any {
+  private mapProteinToNode(protein: Protein): any {
     let color = '#e2b600';
-    if (this.analysis.inSelection(proteinGroup)) {
+    if (this.analysis.inSelection(protein)) {
       color = '#c42eff';
     }
     return {
-      id: `pg_${proteinGroup.groupId}`,
-      label: `${proteinGroup.name}`,
+      id: `pg_${protein.proteinAc}`,
+      label: `${protein.proteinAc}`,
       size: 10, font: '5px', color, shape: 'ellipse', shadow: false,
-      x: proteinGroup.x,
-      y: proteinGroup.y
+      x: protein.x,
+      y: protein.y
     };
   }
 
   private mapEffectToNode(effect: Effect): any {
     return {
-      id: `eff_${effect.name}`,
-      label: `${effect.name}`,
+      id: `eff_${effect.effectId}`,
+      label: `${effect.effectId}`,
       size: 10, color: '#118AB2', shape: 'box', shadow: true, font: {color: '#FFFFFF'},
       x: effect.x,
       y: effect.y
@@ -304,15 +300,15 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   private mapEdge(edge: any): any {
-    return {from: `pg_${edge.groupId}`, to: `eff_${edge.effectName}`, color: {color: '#afafaf', highlight: '#854141'}};
+    return {from: `pg_${edge.proteinAc}`, to: `eff_${edge.effectId}`, color: {color: '#afafaf', highlight: '#854141'}};
   }
 
   private mapDataToNodes(data: ProteinNetwork): { nodes: any[], edges: any[] } {
     const nodes = [];
     const edges = [];
 
-    for (const proteinGroup of data.proteinGroups) {
-      nodes.push(this.mapProteinGroupToNode(proteinGroup));
+    for (const protein of data.proteins) {
+      nodes.push(this.mapProteinToNode(protein));
     }
 
     for (const effect of data.effects) {
@@ -338,30 +334,27 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   // Selection
   // TODO: Improve usage of group ids, revise this after models have been changed to just protein
 
-  inSelection(groupIdStr: string): boolean {
-    if (!this.proteinData || !groupIdStr) {
+  inSelection(proteinAc: string): boolean {
+    if (!this.proteinData || !proteinAc) {
       return false;
     }
-    const groupId = Number(groupIdStr.split('_')[1]);
-    const protein = this.proteinData.getProteinGroup(groupId);
+    const protein = this.proteinData.getProtein(proteinAc);
     return this.analysis.inSelection(protein);
   }
 
-  addToSelection(groupIdStr: string) {
-    if (!groupIdStr) {
-      return;
+  addToSelection(proteinAc: string) {
+    if (!this.proteinData || !proteinAc) {
+      return false;
     }
-    const groupId = Number(groupIdStr.split('_')[1]);
-    const protein = this.proteinData.getProteinGroup(groupId);
+    const protein = this.proteinData.getProtein(proteinAc);
     this.analysis.addProtein(protein);
   }
 
-  removeFromSelection(groupIdStr: string) {
-    if (!groupIdStr) {
-      return;
+  removeFromSelection(proteinAc: string) {
+    if (!this.proteinData || !proteinAc) {
+      return false;
     }
-    const groupId = Number(groupIdStr.split('_')[1]);
-    const protein = this.proteinData.getProteinGroup(groupId);
+    const protein = this.proteinData.getProtein(proteinAc);
     this.analysis.removeProtein(protein);
   }
 
