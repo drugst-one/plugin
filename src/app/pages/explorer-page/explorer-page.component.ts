@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild, Output, EventEmitter} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild, Output, EventEmitter, HostListener} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Edge, Effect, getDatasetFilename, Protein, ProteinNetwork} from '../protein-network';
 import {HttpClient} from '@angular/common/http';
@@ -6,6 +6,8 @@ import {ApiService} from '../../api.service';
 import {AnalysisService} from '../../analysis.service';
 
 declare var vis: any;
+
+
 
 @Component({
   selector: 'app-explorer-page',
@@ -19,6 +21,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public geneNames: Array<string> = [];
   public proteinNames: Array<string> = [];
   public proteinAcs: Array<string> = [];
+  public watcher = 0;
 
   public viralProteinCheckboxes: Array<{ checked: boolean; data: Effect }> = [];
 
@@ -47,6 +50,28 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     {label: 'CoV2', datasets: 'TUM', data: [['TUM', 'SARS-CoV2']]}];
 
   @ViewChild('network', {static: false}) networkEl: ElementRef;
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent1(event: KeyboardEvent) {
+
+
+    if (event.ctrlKey) {
+        this.watcher = 1;
+        // console.log(this.watcher);
+
+    }
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+
+
+    if (event.ctrlKey) {
+        this.watcher = 0;
+        // console.log(this.watcher);
+
+    }
+  }
 
   constructor(private http: HttpClient,
               private route: ActivatedRoute,
@@ -205,6 +230,20 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         if (id[0].startsWith('pg_')) {
           const protein = this.proteinData.getProtein(id[0].substr(3));
           this.openSummary(protein, false);
+          // tslint:disable-next-line:no-console
+          console.log(this.currentProteinAc);
+          if (this.watcher === 1 ) {
+            if (this.inSelection(protein.proteinAc) === true) {
+              // tslint:disable-next-line:no-console
+                console.log(this.removeFromSelection(protein.proteinAc));
+            } else {
+              // tslint:disable-next-line:no-console
+                console.log(this.addToSelection(protein.proteinAc));
+            // console.log(this.removeFromSelection(this.currentProteinAc));
+              // tslint:disable-next-line:no-console
+                console.log(this.analysis.getCount());
+            }
+          }
         } else {
           this.closeSummary();
         }
