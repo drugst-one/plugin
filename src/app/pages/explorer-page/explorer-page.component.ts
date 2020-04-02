@@ -55,7 +55,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     if (event.ctrlKey) {
         this.watcher = 1;
-        console.log(this.watcher);
+        // console.log(this.watcher);
 
     }
   }
@@ -66,7 +66,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     if (event.ctrlKey) {
         this.watcher = 0;
-        console.log(this.watcher);
+        // console.log(this.watcher);
 
     }
   }
@@ -229,14 +229,18 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         if (id[0].startsWith('pg_')) {
           const protein = this.proteinData.getProtein(id[0].substr(3));
           this.openSummary(protein, false);
+          // tslint:disable-next-line:no-console
           console.log(this.currentProteinAc);
           if (this.watcher === 1 ) {
             if (this.inSelection(protein.proteinAc) === true) {
-              console.log(this.removeFromSelection(protein.proteinAc));
+              // tslint:disable-next-line:no-console
+                console.log(this.removeFromSelection(protein.proteinAc));
             } else {
-              console.log(this.addToSelection(protein.proteinAc));
+              // tslint:disable-next-line:no-console
+                console.log(this.addToSelection(protein.proteinAc));
             // console.log(this.removeFromSelection(this.currentProteinAc));
-              console.log(this.analysis.getCount());
+              // tslint:disable-next-line:no-console
+                console.log(this.analysis.getCount());
             }
           }
         } else {
