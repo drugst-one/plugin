@@ -157,11 +157,19 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.proteinData.linkNodes();
 
     // Populate baits
+    const effectNames = [];
+    this.proteinData.effects.sort((a, b) => {
+      return a.effectName.localeCompare(b.effectName);
+    });
     this.proteinData.effects.forEach((effect) => {
-      this.viralProteinCheckboxes.push({
-        checked: false,
-        data: effect,
-      });
+      const effectName = effect.effectName;
+      if (effectNames.indexOf(effectName) === -1) {
+        effectNames.push(effectName);
+        this.viralProteinCheckboxes.push({
+          checked: false,
+          data: effect,
+        });
+      }
     });
 
     const {nodes, edges} = this.mapDataToNodes(this.proteinData);
@@ -188,9 +196,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.network.on('click', (properties) => {
       const id: Array<string> = properties.nodes;
       // TODO use groupID
-      console.log(id);
       if (id.length > 0) {
-        console.log('clicked node:', id);
         if (id[0].startsWith('pg_')) {
           const protein = this.proteinData.getProtein(id[0].substr(3));
           this.openSummary(protein, false);
@@ -202,6 +208,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     if (this.dumpPositions) {
       this.network.on('stabilizationIterationsDone', () => {
+        // tslint:disable-next-line:no-console
         console.log(JSON.stringify(this.network.getPositions()));
       });
       this.network.stabilize();
@@ -224,26 +231,32 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     const addNodes = new Map<string, Node>();
 
     const showAll = !this.viralProteinCheckboxes.find((eff) => eff.checked);
-    console.log(showAll);
-
     const connectedProteinAcs = new Set<string>();
 
-    this.viralProteinCheckboxes.forEach((bait) => {
-      const nodeId = `eff_${bait.data.effectId}`;
-      const found = visibleIds.has(nodeId);
-      if ((bait.checked || showAll) && !found) {
-        const node = this.mapEffectToNode(bait.data);
-        // this.nodeData.nodes.add(node);
-        addNodes.set(node.id, node);
-      } else if ((!showAll && !bait.checked) && found) {
-        // this.nodeData.nodes.remove(nodeId);
-        removeIds.add(nodeId);
-      }
-      if (bait.checked || showAll) {
-        bait.data.proteins.forEach((pg) => {
-          connectedProteinAcs.add(pg.proteinAc);
-        });
-      }
+    this.viralProteinCheckboxes.forEach((cb) => {
+      const effects = [];
+      this.proteinData.effects.forEach((effect) => {
+        if (effect.effectName === cb.data.effectName) {
+          effects.push(effect);
+        }
+       });
+      effects.forEach((effect) => {
+        const nodeId = `eff_${effect.effectId}`;
+        const found = visibleIds.has(nodeId);
+        if ((cb.checked || showAll) && !found) {
+          const node = this.mapEffectToNode(effect);
+          // this.nodeData.nodes.add(node);
+          addNodes.set(node.id, node);
+        } else if ((!showAll && !cb.checked) && found) {
+          // this.nodeData.nodes.remove(nodeId);
+          removeIds.add(nodeId);
+        }
+        if (cb.checked || showAll) {
+          effect.proteins.forEach((pg) => {
+            connectedProteinAcs.add(pg.proteinAc);
+          });
+        }
+     });
     });
     this.filteredProteins = [];
     for (const protein of this.proteinData.proteins) {
@@ -256,7 +269,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (contains && !found) {
         const node = this.mapProteinToNode(protein);
         // this.nodeData.nodes.add(node);
-
         addNodes.set(node.id, node);
       } else if (!contains && found) {
         // this.nodeData.nodes.remove(nodeId);
@@ -264,11 +276,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }
     }
 
-
     this.nodeData.nodes.remove(Array.from(removeIds.values()));
     this.nodeData.nodes.add(Array.from(addNodes.values()));
     this.fillQueryItems();
-  }
+ }
 
 
   public updatePhysicsEnabled() {
