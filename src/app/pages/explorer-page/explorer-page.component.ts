@@ -7,6 +7,8 @@ import {AnalysisService} from '../../analysis.service';
 
 declare var vis: any;
 
+
+
 @Component({
   selector: 'app-explorer-page',
   templateUrl: './explorer-page.component.html',
@@ -42,12 +44,16 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public showAnalysisDialog = false;
 
 
-    @HostListener('window:keydown', ['$event'])
+
+
+
+  @ViewChild('network', {static: false}) networkEl: ElementRef;
+
+  @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent1(event: KeyboardEvent) {
 
 
-    if (event.keyCode == 17)
-    {
+    if (event.ctrlKey) {
         this.watcher = 1;
         console.log(this.watcher);
 
@@ -58,16 +64,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   handleKeyboardEvent(event: KeyboardEvent) {
 
 
-    if (event.keyCode == 17)
-    {
+    if (event.ctrlKey) {
         this.watcher = 0;
         console.log(this.watcher);
 
     }
   }
-
-
-  @ViewChild('network', {static: false}) networkEl: ElementRef;
 
   constructor(private http: HttpClient,
               private route: ActivatedRoute,
@@ -217,16 +219,16 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       // TODO use groupID
       console.log(id);
       console.log(this.watcher);
-       if (id.length > 0) {
+      if (id.length > 0) {
         console.log('clicked node:', id);
         if (id[0].startsWith('pg_')) {
           const protein = this.proteinData.getProtein(id[0].substr(3));
           this.openSummary(protein, false);
           console.log(this.currentProteinAc);
-          if (this.watcher==1){
-            if(this.inSelection(protein.proteinAc) == true){
+          if (this.watcher === 1 ) {
+            if (this.inSelection(protein.proteinAc) === true) {
               console.log(this.removeFromSelection(protein.proteinAc));
-            } else{
+            } else {
               console.log(this.addToSelection(protein.proteinAc));
             // console.log(this.removeFromSelection(this.currentProteinAc));
               console.log(this.analysis.getCount());
