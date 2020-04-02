@@ -14,15 +14,6 @@ setup:
   script:
     - npm install
 
-check:audit:
-  image: trion/ng-cli-karma
-  stage: check
-  script:
-    - npm install
-    - npm audit --production
-  dependencies:
-    - setup
-
 check:lint:
   image: trion/ng-cli-karma
   stage: check
@@ -51,7 +42,6 @@ build:
     - npm install
     - npm run build
   dependencies:
-    - check:audit
     - check:lint
     - check:test
 
