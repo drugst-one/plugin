@@ -9,18 +9,23 @@ export interface Protein {
 }
 
 export interface Effect {
-  effectId: string;
   effectName: string;
-  datasetName: string;
   virusName: string;
+  datasetName: string;
   proteins?: Protein[];
   x?: number;
   y?: number;
 }
 
 export interface Edge {
+  effectName: string;
+  virusName: string;
+  datasetName: string;
   proteinAc: string;
-  effectId: string;
+}
+
+export function getDatasetFilename(dataset: Array<[string, string]>): string {
+  return `network-${JSON.stringify(dataset).replace(/[\[\]\",]/g, '')}.json`;
 }
 
 export class ProteinNetwork {
@@ -28,8 +33,8 @@ export class ProteinNetwork {
   constructor(public proteins: Protein[], public effects: Effect[], public edges: Edge[]) {
   }
 
-  public async loadPositions(http: HttpClient) {
-    const nodePositions = await http.get(`assets/positions/network.json`).toPromise();
+  public async loadPositions(http: HttpClient, dataset: Array<[string, string]>) {
+    const nodePositions = await http.get(`assets/positions/${getDatasetFilename(dataset)}`).toPromise();
     this.proteins.forEach((node) => {
       const nodePosition = nodePositions[`pg_${node.proteinAc}`];
       if (nodePosition) {
@@ -38,7 +43,7 @@ export class ProteinNetwork {
       }
     });
     this.effects.forEach((node) => {
-      const nodePosition = nodePositions[`eff_${node.effectId}`];
+      const nodePosition = nodePositions[`eff_${node.effectName}_${node.virusName}_${node.datasetName}`];
       if (nodePosition) {
         node.x = nodePosition.x;
         node.y = nodePosition.y;
@@ -50,8 +55,8 @@ export class ProteinNetwork {
     return this.proteins.find((p) => p.proteinAc === ac);
   }
 
-  public getEffect(name: string): Effect {
-    return this.effects.find((eff) => eff.effectId === name);
+  public getEffect(name: string, virus: string, dataset: string): Effect {
+    return this.effects.find((eff) => eff.effectName === name && eff.virusName === virus && eff.datasetName === dataset);
   }
 
   public linkNodes() {
@@ -63,7 +68,7 @@ export class ProteinNetwork {
     });
     this.edges.forEach((edge) => {
       const proteinGroup = this.getProtein(edge.proteinAc);
-      const effect = this.getEffect(edge.effectId);
+      const effect = this.getEffect(edge.effectName, edge.virusName, edge.datasetName);
       if (proteinGroup && effect) {
         proteinGroup.effects.push(effect);
         effect.proteins.push(proteinGroup);

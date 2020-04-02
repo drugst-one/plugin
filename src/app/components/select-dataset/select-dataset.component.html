@@ -1,0 +1,9 @@
+<div class="content">
+  <ng-select [items]="datasetItems" bindLabel="label" bindValue="data" [virtualScroll]="true" class="custom"
+             placeholder="Select..." (change)="select($event)">
+    <ng-template ng-option-tmp let-item="item">
+      {{item.label}} <br/>
+      <small>{{item.datasets}}</small>
+    </ng-template>
+  </ng-select>
+</div>
