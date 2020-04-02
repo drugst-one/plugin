@@ -74,7 +74,7 @@
               <label class="checkbox">
                 <input type="checkbox" class="checkbox" [ngModel]="bait.checked"
                        (ngModelChange)="bait.checked = $event; filterNodes()">
-                Bait {{ bait.data.effectId }}
+                {{ bait.data.effectName }}
               </label>
             </div>
           </div>
@@ -173,7 +173,7 @@
           <button class="button is-primary" *ngIf="!inSelection(currentProteinAc)"
                   (click)="addToSelection(currentProteinAc)">Select for analysis
           </button>
-          <button class="button is-primary" *ngIf="inSelection(currentProteinAc)"
+          <button class="button is-danger" *ngIf="inSelection(currentProteinAc)"
                   (click)="removeFromSelection(currentProteinAc)">Remove from analysis
           </button>
         </div>
