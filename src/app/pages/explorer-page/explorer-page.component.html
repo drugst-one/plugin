@@ -17,13 +17,13 @@
           <nav class="level" *ngIf="proteinData">
             <div class="level-item has-text-centered">
               <div>
-                <p class="heading">Effects</p>
+                <p class="heading">Viral protein</p>
                 <p class="title"> {{ proteinData.effects.length }}</p>
               </div>
             </div>
             <div class="level-item has-text-centered">
               <div>
-                <p class="heading">Protein Groups</p>
+                <p class="heading">Host protein</p>
                 <p class="title">{{ proteinData.proteins.length }}</p>
               </div>
             </div>
@@ -117,7 +117,7 @@
         </p>
       </header>
       <div class="card-content">
-        <button (click)="showAnalysisDialog = true" class="button is-success" [disabled]="analysis.getCount() === 0">
+        <button (click)="showAnalysisDialog = true" class="button is-primary" [disabled]="analysis.getCount() === 0">
           <span class="icon">
             <i class="fa fa-list"></i>
           </span>
@@ -140,10 +140,11 @@
         <div *ngIf="showDetails" class="content">
 
           <p><b>Protein Group:</b> {{ currentProteinAc }}</p>
-          <p><b>Gene Name(s):</b> <span *ngFor="let geneName of geneNames"> {{ geneName }}</span></p>
-          <p><b>Protein Name(s):</b> <span *ngFor="let proteinName of proteinNames"> {{ proteinName }}</span></p>
+          <!--          <p><b>Gene Name(s):</b> <span *ngFor="let geneName of geneNames"> {{ geneName }}</span></p>-->
+          <!--          <p><b>Protein Name(s):</b> <span *ngFor="let proteinName of proteinNames"> {{ proteinName }}</span></p>-->
           <p><b>Protein AC(s):</b>
-            <a href="https://www.uniprot.org/uniprot/{{proteinAc}}" target="_blank" *ngFor="let proteinAc of proteinAcs">
+            <a href="https://www.uniprot.org/uniprot/{{proteinAc}}" target="_blank"
+               *ngFor="let proteinAc of proteinAcs">
               {{ proteinAc }}
             </a>
           </p>
@@ -167,10 +168,14 @@
         <div class="content">
           <h2>Summary</h2>
           <figure class="image">
-            <img src="assets/boxplot.png" alt="Boxplots">
+            <!--            <img src="assets/boxplot.png" alt="Boxplots">-->
           </figure>
-          <button class="button" *ngIf="!inSelection(currentProteinAc)" (click)="addToSelection(currentProteinAc)">Select for analysis</button>
-          <button class="button" *ngIf="inSelection(currentProteinAc)" (click)="removeFromSelection(currentProteinAc)">Remove from analysis</button>
+          <button class="button is-primary" *ngIf="!inSelection(currentProteinAc)"
+                  (click)="addToSelection(currentProteinAc)">Select for analysis
+          </button>
+          <button class="button is-primary" *ngIf="inSelection(currentProteinAc)"
+                  (click)="removeFromSelection(currentProteinAc)">Remove from analysis
+          </button>
         </div>
       </div>
     </div>
