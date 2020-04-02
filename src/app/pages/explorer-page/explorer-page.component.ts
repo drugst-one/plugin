@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild, Output, EventEmitter, HostListener} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Effect, Protein, ProteinNetwork} from '../protein-network';
+import {Edge, Effect, getDatasetFilename, Protein, ProteinNetwork} from '../protein-network';
 import {HttpClient} from '@angular/common/http';
 import {ApiService} from '../../api.service';
 import {AnalysisService} from '../../analysis.service';
@@ -27,7 +27,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public proteinData: ProteinNetwork;
 
-  public filteredProteins = [];
   public proteins: any;
   public effects: any;
   public edges: any;
@@ -43,9 +42,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public queryItems = [];
   public showAnalysisDialog = false;
 
-
-
-
+  public datasetItems: Array<{ label: string, datasets: string, data: Array<[string, string]> }> = [
+    {label: 'All', datasets: 'TUM & Krogan', data: [['TUM', 'HCoV'], ['TUM', 'SARS-CoV2'], ['Krogan', 'SARS-CoV2']]},
+    {label: 'HCoV', datasets: 'TUM', data: [['TUM', 'HCoV']]},
+    {label: 'CoV2', datasets: 'TUM & Krogan', data: [['TUM', 'SARS-CoV2'], ['Krogan', 'SARS-CoV2']]},
+    {label: 'CoV2', datasets: 'Krogan', data: [['Krogan', 'SARS-CoV2']]},
+    {label: 'CoV2', datasets: 'TUM', data: [['TUM', 'SARS-CoV2']]}];
 
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 
@@ -135,16 +137,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   async ngAfterViewInit() {
     if (!this.network) {
-      await this.createNetwork();
+      await this.createNetwork(this.datasetItems[0].data);
     }
   }
 
-  fillQueryItems() {
-    this.queryItems = this.filteredProteins;
-  }
-
-  private async getNetwork() {
-    const data: any = await this.api.getNetwork();
+  private async getNetwork(dataset: Array<[string, string]>) {
+    const data: any = await this.api.getNetwork(dataset);
     this.proteins = data.proteins;
     this.effects = data.effects;
     this.edges = data.edges;
@@ -158,6 +156,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private zoomToNode(id: string) {
     const coords = this.network.getPositions(id)[id];
+    if (!coords) {
+      return;
+    }
     this.network.moveTo({
       position: {x: coords.x, y: coords.y},
       scale: 1.0,
@@ -176,12 +177,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     await this.router.navigate(['explorer']);
   }
 
-
-  private async createNetwork() {
-    await this.getNetwork();
+  public async createNetwork(dataset: Array<[string, string]>) {
+    await this.getNetwork(dataset);
     this.proteinData = new ProteinNetwork(this.proteins, this.effects, this.edges);
     if (!this.dumpPositions) {
-      await this.proteinData.loadPositions(this.http);
+      await this.proteinData.loadPositions(this.http, dataset);
     }
     this.proteinData.linkNodes();
 
@@ -190,6 +190,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.proteinData.effects.sort((a, b) => {
       return a.effectName.localeCompare(b.effectName);
     });
+    this.viralProteinCheckboxes = [];
     this.proteinData.effects.forEach((effect) => {
       const effectName = effect.effectName;
       if (effectNames.indexOf(effectName) === -1) {
@@ -252,6 +253,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (this.dumpPositions) {
       this.network.on('stabilizationIterationsDone', () => {
         // tslint:disable-next-line:no-console
+        console.log(`${getDatasetFilename(dataset)}`);
+        // tslint:disable-next-line:no-console
         console.log(JSON.stringify(this.network.getPositions()));
       });
       this.network.stabilize();
@@ -261,11 +264,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.zoomToNode(`pg_${this.currentProteinAc}`);
     }
 
-    this.filteredProteins = this.proteins;
-    this.fillQueryItems();
-
+    this.queryItems = this.proteins;
   }
-
 
   public async filterNodes() {
     const visibleIds = new Set<string>(this.nodeData.nodes.getIds());
@@ -277,14 +277,14 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     const connectedProteinAcs = new Set<string>();
 
     this.viralProteinCheckboxes.forEach((cb) => {
-      const effects = [];
+      const effects: Array<Effect> = [];
       this.proteinData.effects.forEach((effect) => {
         if (effect.effectName === cb.data.effectName) {
           effects.push(effect);
         }
-       });
+      });
       effects.forEach((effect) => {
-        const nodeId = `eff_${effect.effectId}`;
+        const nodeId = `eff_${effect.effectName}_${effect.virusName}_${effect.datasetName}`;
         const found = visibleIds.has(nodeId);
         if ((cb.checked || showAll) && !found) {
           const node = this.mapEffectToNode(effect);
@@ -299,21 +299,22 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
             connectedProteinAcs.add(pg.proteinAc);
           });
         }
-     });
+      });
     });
-    this.filteredProteins = [];
+    const filteredProteins = [];
     for (const protein of this.proteinData.proteins) {
       const nodeId = `pg_${protein.proteinAc}`;
       const contains = connectedProteinAcs.has(protein.proteinAc);
       const found = visibleIds.has(nodeId);
       if (contains) {
-        this.filteredProteins.push(protein);
-      }
-      if (contains && !found) {
-        const node = this.mapProteinToNode(protein);
-        // this.nodeData.nodes.add(node);
-        addNodes.set(node.id, node);
-      } else if (!contains && found) {
+        filteredProteins.push(protein);
+
+        if (!found) {
+          const node = this.mapProteinToNode(protein);
+          // this.nodeData.nodes.add(node);
+          addNodes.set(node.id, node);
+        }
+      } else if (found) {
         // this.nodeData.nodes.remove(nodeId);
         removeIds.add(nodeId);
       }
@@ -321,13 +322,18 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     this.nodeData.nodes.remove(Array.from(removeIds.values()));
     this.nodeData.nodes.add(Array.from(addNodes.values()));
-    this.fillQueryItems();
- }
 
+    this.queryItems = filteredProteins;
+  }
 
   public updatePhysicsEnabled() {
     this.network.setOptions({
-      physics: {enabled: this.physicsEnabled},
+      physics: {
+        enabled: this.physicsEnabled,
+        stabilization: {
+          enabled: false,
+        },
+      }
     });
   }
 
@@ -341,22 +347,26 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       label: `${protein.proteinAc}`,
       size: 10, font: '5px', color, shape: 'ellipse', shadow: false,
       x: protein.x,
-      y: protein.y
+      y: protein.y,
     };
   }
 
   private mapEffectToNode(effect: Effect): any {
     return {
-      id: `eff_${effect.effectId}`,
-      label: `${effect.effectId}`,
+      id: `eff_${effect.effectName}_${effect.virusName}_${effect.datasetName}`,
+      label: `${effect.effectName} (${effect.virusName}, ${effect.datasetName})`,
       size: 10, color: '#118AB2', shape: 'box', shadow: true, font: {color: '#FFFFFF'},
       x: effect.x,
-      y: effect.y
+      y: effect.y,
     };
   }
 
-  private mapEdge(edge: any): any {
-    return {from: `pg_${edge.proteinAc}`, to: `eff_${edge.effectId}`, color: {color: '#afafaf', highlight: '#854141'}};
+  private mapEdge(edge: Edge): any {
+    return {
+      from: `pg_${edge.proteinAc}`,
+      to: `eff_${edge.effectName}_${edge.virusName}_${edge.datasetName}`,
+      color: {color: '#afafaf', highlight: '#854141'},
+    };
   }
 
   private mapDataToNodes(data: ProteinNetwork): { nodes: any[], edges: any[] } {

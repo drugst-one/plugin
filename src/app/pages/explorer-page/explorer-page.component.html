@@ -8,6 +8,21 @@
       <header class="card-header">
         <p class="card-header-title">
           <span class="icon">
+        <i class="fas fa-database" aria-hidden="true"></i>
+      </span> Choose Dataset
+        </p>
+      </header>
+      <div class="card-content">
+        <div class="content">
+          <app-select-dataset [datasetItems]="datasetItems" (selectDataset)="createNetwork($event)"></app-select-dataset>
+        </div>
+      </div>
+    </div>
+
+    <div class="card bar">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon">
         <i class="fas fa-info" aria-hidden="true"></i>
       </span> Info
         </p>
@@ -81,7 +96,8 @@
         </div>
       </div>
       <footer class="card-footer">
-        <button (click)="reset($event);" class="card-footer-item button is-danger">Reset
+        <button (click)="reset($event);" class="card-footer-item button is-danger">
+          Reset
         </button>
       </footer>
     </div>
@@ -157,13 +173,13 @@
     </div>
 
     <div class="card bar">
-      <!--      <header class="card-header">-->
-      <!--        <p class="card-header-title">-->
-      <!--          <span class="icon">-->
-      <!--        <i class="fas fa-filter" aria-hidden="true"></i>-->
-      <!--      </span> Summary-->
-      <!--        </p>-->
-      <!--      </header>-->
+            <header class="card-header">
+              <p class="card-header-title">
+                <span class="icon">
+              <i class="fas fa-filter" aria-hidden="true"></i>
+            </span> Summary
+              </p>
+            </header>
       <div *ngIf="showDetails" class="card-content">
         <div class="content">
 <!--          <h2>Summary</h2>-->
