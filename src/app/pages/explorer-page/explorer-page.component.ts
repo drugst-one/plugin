@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild, Output, EventEmitter} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild, Output, EventEmitter, HostListener} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Effect, Protein, ProteinNetwork} from '../protein-network';
 import {HttpClient} from '@angular/common/http';
@@ -19,6 +19,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public geneNames: Array<string> = [];
   public proteinNames: Array<string> = [];
   public proteinAcs: Array<string> = [];
+  public watcher = 0;
 
   public viralProteinCheckboxes: Array<{ checked: boolean; data: Effect }> = [];
 
@@ -39,6 +40,32 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public queryItems = [];
   public showAnalysisDialog = false;
+
+
+    @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent1(event: KeyboardEvent) {
+
+
+    if (event.keyCode == 17)
+    {
+        this.watcher = 1;
+        console.log(this.watcher);
+
+    }
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+
+
+    if (event.keyCode == 17)
+    {
+        this.watcher = 0;
+        console.log(this.watcher);
+
+    }
+  }
+
 
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 
@@ -189,11 +216,22 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       const id: Array<string> = properties.nodes;
       // TODO use groupID
       console.log(id);
-      if (id.length > 0) {
+      console.log(this.watcher);
+       if (id.length > 0) {
         console.log('clicked node:', id);
         if (id[0].startsWith('pg_')) {
           const protein = this.proteinData.getProtein(id[0].substr(3));
           this.openSummary(protein, false);
+          console.log(this.currentProteinAc);
+          if (this.watcher==1){
+            if(this.inSelection(protein.proteinAc) == true){
+              console.log(this.removeFromSelection(protein.proteinAc));
+            } else{
+              console.log(this.addToSelection(protein.proteinAc));
+            // console.log(this.removeFromSelection(this.currentProteinAc));
+              console.log(this.analysis.getCount());
+            }
+          }
         } else {
           this.closeSummary();
         }
