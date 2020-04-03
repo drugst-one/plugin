@@ -405,6 +405,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       return false;
     }
     const protein = this.proteinData.getProtein(proteinAc);
+    if (!protein) {
+      return false;
+    }
     return this.analysis.inSelection(protein);
   }
 
@@ -413,6 +416,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       return false;
     }
     const protein = this.proteinData.getProtein(proteinAc);
+    if (!protein) {
+      return false;
+    }
     this.analysis.addProtein(protein);
   }
 
@@ -421,6 +427,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       return false;
     }
     const protein = this.proteinData.getProtein(proteinAc);
+    if (!protein) {
+      return false;
+    }
     this.analysis.removeProtein(protein);
   }
 

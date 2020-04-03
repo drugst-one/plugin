@@ -25,4 +25,10 @@ export class ProteinAnalysisComponent implements OnInit {
     this.showChange.emit(this.show);
   }
 
+  public async startTask() {
+    await this.analysis.startAnalysis('dummy', {
+      proteins: this.analysis.getSelection().map((protein) => protein.proteinAc),
+    });
+  }
+
 }

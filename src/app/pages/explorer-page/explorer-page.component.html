@@ -133,12 +133,47 @@
         </p>
       </header>
       <div class="card-content">
-        <button (click)="showAnalysisDialog = true" class="button is-primary" [disabled]="analysis.getCount() === 0">
-          <span class="icon">
-            <i class="fa fa-list"></i>
+        <button (click)="showAnalysisDialog = true"
+                class="button"
+                [class.is-info]="!analysis.getTask()"
+                [class.is-warning]="analysis.getTask() && !analysis.getTask().startedAt"
+                [class.is-primary]="analysis.getTask() && analysis.getTask().startedAt && !analysis.getTask().done"
+                [class.is-success]="analysis.getTask() && analysis.getTask().done"
+                [disabled]="analysis.getCount() === 0 && !analysis.getTask()">
+          <span *ngIf="!analysis.getTask()">
+            <span class="icon">
+              <i class="fa fa-list"></i>
+            </span>
+            <span>
+              Open Protein Selection
+            </span>
           </span>
-          <span>
-            Open Protein Selection
+
+          <span *ngIf="analysis.getTask() && !analysis.getTask().startedAt">
+            <span class="icon">
+              <i class="fa fa-cog"></i>
+            </span>
+            <span>
+              Analysis queued...
+            </span>
+          </span>
+
+          <span *ngIf="analysis.getTask() && !analysis.getTask().done && analysis.getTask().startedAt">
+            <span class="icon">
+              <i class="fa fa-cog fa-spin"></i>
+            </span>
+            <span>
+              Analysis running ({{analysis.getTask().progress | percent}})
+            </span>
+          </span>
+
+          <span *ngIf="analysis.getTask() && analysis.getTask().done">
+            <span class="icon">
+              <i class="fa fa-check"></i>
+            </span>
+            <span>
+              Analysis done
+            </span>
           </span>
         </button>
       </div>
