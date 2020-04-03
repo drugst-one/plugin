@@ -32,13 +32,13 @@
           <nav class="level" *ngIf="proteinData">
             <div class="level-item has-text-centered">
               <div>
-                <p class="heading">Viral protein</p>
+                <p class="heading">Viral Proteins</p>
                 <p class="title"> {{ proteinData.effects.length }}</p>
               </div>
             </div>
             <div class="level-item has-text-centered">
               <div>
-                <p class="heading">Host protein</p>
+                <p class="heading">Host Proteins</p>
                 <p class="title">{{ proteinData.proteins.length }}</p>
               </div>
             </div>
@@ -58,7 +58,7 @@
         <p class="card-header-title">
           <span class="icon">
         <i class="fas fa-search" aria-hidden="true"></i>
-      </span> Query Protein/Gene
+      </span> Query Protein
         </p>
       </header>
       <div class="card-content">
@@ -78,12 +78,11 @@
         <p class="card-header-title">
           <span class="icon">
         <i class="fas fa-filter" aria-hidden="true"></i>
-      </span> Filtering
+      </span> Filter Viral Proteins
         </p>
       </header>
       <div class="card-content">
         <div class="content">
-          <p><b>Baits</b></p>
           <div class="bait-frame">
             <div *ngFor="let bait of viralProteinCheckboxes">
               <label class="checkbox">
@@ -128,11 +127,65 @@
       <header class="card-header">
         <p class="card-header-title">
           <span class="icon">
+        <i class="fas fa-info" aria-hidden="true"></i>
+      </span> {{currentProteinAc}}
+        </p>
+      </header>
+      <div class="card-content">
+        <div *ngIf="showDetails" class="content">
+
+          <p><b>Protein Name:</b> {{ currentProteinAc }}</p>
+          <!--          <p><b>Gene Name(s):</b> <span *ngFor="let geneName of geneNames"> {{ geneName }}</span></p>-->
+          <!--          <p><b>Protein Name(s):</b> <span *ngFor="let proteinName of proteinNames"> {{ proteinName }}</span></p>-->
+          <p><b>Protein AC(s):</b>
+            <a href="https://www.uniprot.org/uniprot/{{proteinAc}}" target="_blank"
+               *ngFor="let proteinAc of proteinAcs">
+              {{ proteinAc }}
+            </a>
+          </p>
+          <button class="button is-primary" *ngIf="!inSelection(currentProteinAc)"
+                  (click)="addToSelection(currentProteinAc)">Add to Analysis
+          </button>
+          <button class="button is-danger" *ngIf="inSelection(currentProteinAc)"
+                  (click)="removeFromSelection(currentProteinAc)">Remove from Analysis
+          </button>
+        </div>
+
+        <div *ngIf="!showDetails">
+          Please select a node for further information.
+        </div>
+
+      </div>
+    </div>
+
+    <div class="card bar">
+            <header class="card-header">
+              <p class="card-header-title">
+                <span class="icon">
+              <i class="fas fa-filter" aria-hidden="true"></i>
+            </span> Summary
+              </p>
+            </header>
+      <div *ngIf="showDetails" class="card-content">
+        <div class="content">
+          <figure class="image">
+            <img src="assets/boxplot.png" alt="Boxplots">
+          </figure>
+        </div>
+      </div>
+    </div>
+
+    <div class="card bar">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon">
         <i class="fas fa-flask" aria-hidden="true"></i>
       </span> Analysis
         </p>
       </header>
       <div class="card-content">
+        <p>Hold down the CTRL button to select multiple proteins.</p>
+
         <button (click)="showAnalysisDialog = true"
                 class="button"
                 [class.is-info]="!analysis.getTask()"
@@ -145,7 +198,7 @@
               <i class="fa fa-list"></i>
             </span>
             <span>
-              Open Protein Selection
+              Open Analysis
             </span>
           </span>
 
@@ -179,59 +232,6 @@
       </div>
     </div>
 
-    <div class="card bar">
-      <header class="card-header">
-        <p class="card-header-title">
-          <span class="icon">
-        <i class="fas fa-info" aria-hidden="true"></i>
-      </span> Details
-        </p>
-      </header>
-      <div class="card-content">
-        <div *ngIf="showDetails" class="content">
-
-          <p><b>Protein Group:</b> {{ currentProteinAc }}</p>
-          <!--          <p><b>Gene Name(s):</b> <span *ngFor="let geneName of geneNames"> {{ geneName }}</span></p>-->
-          <!--          <p><b>Protein Name(s):</b> <span *ngFor="let proteinName of proteinNames"> {{ proteinName }}</span></p>-->
-          <p><b>Protein AC(s):</b>
-            <a href="https://www.uniprot.org/uniprot/{{proteinAc}}" target="_blank"
-               *ngFor="let proteinAc of proteinAcs">
-              {{ proteinAc }}
-            </a>
-          </p>
-        </div>
-        <div *ngIf="!showDetails">
-          Please select a node for further information.
-        </div>
-
-      </div>
-    </div>
-
-    <div class="card bar">
-            <header class="card-header">
-              <p class="card-header-title">
-                <span class="icon">
-              <i class="fas fa-filter" aria-hidden="true"></i>
-            </span> Summary
-              </p>
-            </header>
-      <div *ngIf="showDetails" class="card-content">
-        <div class="content">
-<!--          <h2>Summary</h2>-->
-          <p>Hold down the CTRL button to select multiple proteins.</p>
-          <figure class="image">
-            <!--            <img src="assets/boxplot.png" alt="Boxplots">-->
-          </figure>
-          <button class="button is-primary" *ngIf="!inSelection(currentProteinAc)"
-                  (click)="addToSelection(currentProteinAc)">Select for analysis
-          </button>
-          <button class="button is-danger" *ngIf="inSelection(currentProteinAc)"
-                  (click)="removeFromSelection(currentProteinAc)">Remove from analysis
-          </button>
-        </div>
-      </div>
-    </div>
-
   </div>
 
   <div class="content network">
@@ -239,7 +239,7 @@
     <div class="card network">
       <header class="card-header">
         <p class="card-header-title">
-          SARS-CoV-2 Protein-Protein Interaction Network
+          Protein-Protein Interaction Network
         </p>
       </header>
       <div class="card-content">

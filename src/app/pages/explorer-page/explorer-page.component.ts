@@ -42,6 +42,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public queryItems = [];
   public showAnalysisDialog = false;
 
+  public currentDataset = [];
+
   public datasetItems: Array<{ label: string, datasets: string, data: Array<[string, string]> }> = [
     {label: 'All', datasets: 'TUM & Krogan', data: [['TUM', 'HCoV'], ['TUM', 'SARS-CoV2'], ['Krogan', 'SARS-CoV2']]},
     {label: 'HCoV', datasets: 'TUM', data: [['TUM', 'HCoV']]},
@@ -143,6 +145,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   private async getNetwork(dataset: Array<[string, string]>) {
+    this.currentDataset = dataset;
     const data: any = await this.api.getNetwork(dataset);
     this.proteins = data.proteins;
     this.effects = data.effects;
