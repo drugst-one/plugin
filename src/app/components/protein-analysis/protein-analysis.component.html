@@ -1,6 +1,6 @@
 <div class="modal" [class.is-active]="show">
   <div class="modal-background"></div>
-  <div class="modal-card">
+  <div class="modal-card" *ngIf="!analysis.getTask()">
     <header class="modal-card-head">
       <p class="modal-card-title">Launch Protein Analysis</p>
       <button class="delete" aria-label="close" (click)="close()"></button>
@@ -27,14 +27,70 @@
       </table>
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-primary">
+      <button class="button is-primary" [disabled]="true">
         <span class="icon"><i class="fa fa-play"></i></span>
         <span>Multi Steiner</span>
       </button>
-      <button class="button is-primary">
+      <button class="button is-primary" [disabled]="true">
         <span class="icon"><i class="fa fa-play"></i></span>
         <span>Key Pathway Miner</span>
       </button>
+      <button class="button is-primary" (click)="startTask()">
+        <span class="icon"><i class="fa fa-play"></i></span>
+        <span>Demo</span>
+      </button>
     </footer>
+  </div>
+  <div class="modal-card" *ngIf="analysis.getTask()">
+    <div *ngIf="!analysis.getTask().startedAt">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Queued...</p>
+        <button class="delete" aria-label="close" (click)="close()"></button>
+      </header>
+      <section class="modal-card-body">
+        <p>
+          Queue position: {{analysis.getStats().queuePosition}}
+        </p>
+        <p>
+          Queue length: {{analysis.getStats().queueLength}}
+        </p>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-danger" (click)="analysis.reset()">
+          <span class="icon"><i class="fa fa-stop"></i></span>
+          <span>Stop</span>
+        </button>
+      </footer>
+    </div>
+    <div *ngIf="analysis.getTask().startedAt && !analysis.getTask().done">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Running...</p>
+        <button class="delete" aria-label="close" (click)="close()"></button>
+      </header>
+      <section class="modal-card-body">
+        <progress class="progress is-primary" [value]="analysis.getTask().progress * 100" max="100">15%</progress>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-danger" (click)="analysis.reset()">
+          <span class="icon"><i class="fa fa-stop"></i></span>
+          <span>Stop</span>
+        </button>
+      </footer>
+    </div>
+    <div *ngIf="analysis.getTask().done">
+      <header class="modal-card-head">
+        <p class="modal-card-title">View Results</p>
+        <button class="delete" aria-label="close" (click)="close()"></button>
+      </header>
+      <section class="modal-card-body">
+        <pre>{{analysis.getTask().result}}</pre>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-danger" (click)="analysis.reset()">
+          <span class="icon"><i class="fa fa-stop"></i></span>
+          <span>Discard</span>
+        </button>
+      </footer>
+    </div>
   </div>
 </div>

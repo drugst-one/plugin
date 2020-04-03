@@ -51,11 +51,11 @@ export class ProteinNetwork {
     });
   }
 
-  public getProtein(ac: string): Protein {
+  public getProtein(ac: string): Protein | undefined {
     return this.proteins.find((p) => p.proteinAc === ac);
   }
 
-  public getEffect(name: string, virus: string, dataset: string): Effect {
+  public getEffect(name: string, virus: string, dataset: string): Effect | undefined {
     return this.effects.find((eff) => eff.effectName === name && eff.virusName === virus && eff.datasetName === dataset);
   }
 
