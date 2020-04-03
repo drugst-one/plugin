@@ -54,8 +54,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent1(event: KeyboardEvent) {
 
+      const keyName = event.key;
 
-    if (event.ctrlKey) {
+      if (keyName === 'Control') {
         this.watcher = 1;
         // console.log(this.watcher);
 
@@ -65,8 +66,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   @HostListener('window:keyup', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
 
-
-    if (event.ctrlKey) {
+     const keyName1 = event.key;
+     if (keyName1 === 'Control') {
         this.watcher = 0;
         // console.log(this.watcher);
 
