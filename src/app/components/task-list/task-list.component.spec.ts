@@ -1,22 +1,22 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {AnalysisWindowComponent} from './analysis-window.component';
+import {TaskListComponent} from './task-list.component';
 import {HttpClientModule} from '@angular/common/http';
 
-describe('AnalysisWindowComponent', () => {
-  let component: AnalysisWindowComponent;
-  let fixture: ComponentFixture<AnalysisWindowComponent>;
+describe('TaskListComponent', () => {
+  let component: TaskListComponent;
+  let fixture: ComponentFixture<TaskListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AnalysisWindowComponent],
+      declarations: [TaskListComponent],
       imports: [HttpClientModule],
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AnalysisWindowComponent);
+    fixture = TestBed.createComponent(TaskListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
