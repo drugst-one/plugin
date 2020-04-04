@@ -7,6 +7,14 @@
 $family-sans-serif: "Varela Round", sans-serif;
 @import "~bulma/bulma.sass";
 
+html {
+  overflow: hidden;
+}
+
+body {
+  overflow: hidden;
+}
+
 .hero.is-primary {
   background-color: #118AB2;
   background-image: url("assets/logo.png"), linear-gradient(to left, #f2fcfe, #118AB2);
@@ -54,35 +62,53 @@ input.checkbox {
 
 div.content.bar-left {
   float: left;
-  width: 15%;
-  height: calc(100vh - 30%);
+  width: 350px;
+  height: calc(100vh - 102px);
 }
 
 div.content.bar-right {
   float: right;
-  width: 15%;
+  width: 350px;
 }
 
-div.card.bar {
-  margin-bottom: 21px;
+div.card.bar-small {
+  margin-bottom: 15px;
   word-wrap: break-word;
+  height: 130px;
 }
 
+div.card.bar-medium {
+  margin-bottom: 15px;
+  word-wrap: break-word;
+  height: 170px;
+}
+
+div.card.bar-large {
+  margin-bottom: 15px;
+  height: calc(100vh - 660px);
+}
+
+div.content.left-window {
+  float: left;
+  width: calc(100vw - 350px - 2 * 20px);
+  height: 100%;
+}
 
 div.content.network {
-  width: 68%;
+  width: calc(100% - 350px - 40px);
   height: calc(100vh - 100px);
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 20px;
+  margin-right: 20px;
+  float: right;
 }
 
 div.card.network {
   width: 100%;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 85px);
 }
 
 div.network {
-   height: calc(100vh - 200px);
+   height: calc(100vh - 210px);
 }
 
 div.center {
@@ -93,8 +119,19 @@ div.center {
 
 
 div.content.explorer {
+  height: calc(100vh - 90px);
   margin-left: 20px;
   margin-right: 20px;
+}
+
+div.analysis-view {
+  height: 100%;
+  width: calc(100% - 20px);
+  position: relative;
+  margin-top: 0;
+  /* Just for looks*/
+  z-index: 1000;
+  padding: 0;
 }
 
 html, body { height: 100%; }

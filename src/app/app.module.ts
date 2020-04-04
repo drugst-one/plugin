@@ -14,7 +14,8 @@ import {HttpClientModule} from '@angular/common/http';
 import {QueryComponent} from './components/query/query.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ProteinAnalysisComponent} from './components/protein-analysis/protein-analysis.component';
-import { SelectDatasetComponent } from './components/select-dataset/select-dataset.component';
+import {SelectDatasetComponent} from './components/select-dataset/select-dataset.component';
+import {AnalysisWindowComponent} from './components/analysis-window/analysis-window.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { SelectDatasetComponent } from './components/select-dataset/select-datas
     QueryComponent,
     ProteinAnalysisComponent,
     SelectDatasetComponent,
+    AnalysisWindowComponent,
   ],
   imports: [
     BrowserModule,
