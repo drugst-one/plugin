@@ -242,14 +242,14 @@
           Protein-Protein Interaction Network
         </p>
       </header>
-      <div class="card-content">
-        <div class="card-image">
+      <div  class="card-content">
+        <div id= "0" class="card-image">
           <div class="network center" #network>
             <button class="button is-loading center">Loading</button>
           </div>
         </div>
         <footer class="card-footer">
-          <button class="card-footer-item button is-primary">
+          <button (click)="toCanvas()" class="card-footer-item button is-primary">
                 <span class="icon">
         <i class="fas fa-cloud-download-alt" aria-hidden="true"></i>
       </span>
