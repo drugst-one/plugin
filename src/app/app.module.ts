@@ -16,6 +16,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ProteinAnalysisComponent} from './components/protein-analysis/protein-analysis.component';
 import {SelectDatasetComponent} from './components/select-dataset/select-dataset.component';
 import {AnalysisWindowComponent} from './components/analysis-window/analysis-window.component';
+import { TaskListComponent } from './components/task-list/task-list.component';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import {AnalysisWindowComponent} from './components/analysis-window/analysis-win
     ProteinAnalysisComponent,
     SelectDatasetComponent,
     AnalysisWindowComponent,
+    TaskListComponent,
   ],
   imports: [
     BrowserModule,

@@ -7,22 +7,30 @@ import {environment} from '../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
+
 export class AnalysisService {
 
   private selectedProteins = new Map<string, Protein>();
-  private selectSubject = new Subject<{protein: Protein, selected: boolean}>();
+  private selectSubject = new Subject<{ protein: Protein, selected: boolean }>();
 
-  private token: string | null = null;
+  public tokens: any[] = [];
   private stats: any;
-  private task: any;
+  public tasks: any[] = [];
 
   private intervalId: any;
 
   constructor(private http: HttpClient) {
-    this.token = localStorage.getItem('token');
-    if (this.token) {
-      this.startWatching();
+    const tokens = localStorage.getItem('tokens');
+    if (tokens) {
+      this.tokens = JSON.parse(tokens);
     }
+    this.startWatching();
+  }
+
+  async getTasks() {
+    return await this.http.get<any>(`${environment.backend}tasks/?tokens=${JSON.stringify(this.tokens)}`).toPromise().catch((e) => {
+      clearInterval(this.intervalId);
+    });
   }
 
   addProtein(protein: Protein) {
@@ -56,13 +64,17 @@ export class AnalysisService {
     });
   }
 
-  getTask(): any {
-    return this.task;
+  getTask(token): any {
+    this.tasks.forEach((task) => {
+      if (task.token === token) {
+        return task;
+      }
+    });
   }
 
   reset() {
-    this.token = null;
-    this.task = null;
+    this.tokens = null;
+    this.tasks = null;
     this.stats = null;
     if (this.intervalId) {
       clearInterval(this.intervalId);
@@ -78,20 +90,15 @@ export class AnalysisService {
       algorithm,
       parameters,
     }).toPromise();
-    this.token = resp.token;
-    localStorage.setItem('token', this.token);
+    this.tokens.push(resp.token);
+    localStorage.setItem('tokens', JSON.stringify(this.tokens));
     this.startWatching();
   }
 
-  async startWatching() {
+  startWatching() {
     this.intervalId = setInterval(async () => {
-      const resp = await this.http.get<any>(`${environment.backend}task/?token=${this.token}`).toPromise().catch((e) => {
-        clearInterval(this.intervalId);
-      });
-      this.task = resp.task;
-      this.stats = resp.stats;
-      if (this.task.done) {
-        clearInterval(this.intervalId);
+      if (this.tokens.length > 0) {
+        this.tasks = await this.getTasks();
       }
     }, 1000);
   }

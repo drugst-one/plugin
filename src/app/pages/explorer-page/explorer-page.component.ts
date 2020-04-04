@@ -4,8 +4,6 @@ import {
   ElementRef,
   OnInit,
   ViewChild,
-  Output,
-  EventEmitter,
   HostListener
 } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -51,7 +49,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public queryItems = [];
   public showAnalysisDialog = false;
 
-  public analysisWindow = false;
+  public selectedAnalysisToken: string | null = null;
 
   public currentDataset = [];
   private array = [0];
@@ -87,15 +85,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     }
   }
-
-  closeAnalysisWindow() {
-    this.analysisWindow = false;
-  }
-
-  showAnalysisWindow() {
-    this.analysisWindow = true;
-  }
-
 
   constructor(private http: HttpClient,
               private route: ActivatedRoute,
@@ -415,15 +404,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       edges,
     };
   }
-
-  // TODO: Remove this:
-  private random() {
-    const x = Math.sin(this.seed++) * 10000;
-    return x - Math.floor(x);
-  }
-
-  // Selection
-  // TODO: Improve usage of group ids, revise this after models have been changed to just protein
 
   inSelection(proteinAc: string): boolean {
     if (!this.proteinData || !proteinAc) {
