@@ -15,10 +15,8 @@
             </p>
           </header>
           <div class="card-content">
-            <div class="content">
-              <app-select-dataset [datasetItems]="datasetItems"
-                                  (selectDataset)="createNetwork($event)"></app-select-dataset>
-            </div>
+            <app-select-dataset [datasetItems]="datasetItems"
+                                (selectDataset)="createNetwork($event)"></app-select-dataset>
           </div>
         </div>
 
@@ -31,28 +29,26 @@
             </p>
           </header>
           <div class="card-content">
-            <div class="content">
-              <nav class="level" *ngIf="proteinData">
-                <div class="level-item has-text-centered">
-                  <div>
-                    <p class="heading">Viral<br>Proteins</p>
-                    <p class="title"> {{ proteinData.effects.length }}</p>
-                  </div>
+            <nav class="level" *ngIf="proteinData">
+              <div class="level-item has-text-centered">
+                <div>
+                  <p class="heading">Viral<br>Proteins</p>
+                  <p class="title"> {{ proteinData.effects.length }}</p>
                 </div>
-                <div class="level-item has-text-centered">
-                  <div>
-                    <p class="heading">Host<br>Proteins</p>
-                    <p class="title">{{ proteinData.proteins.length }}</p>
-                  </div>
+              </div>
+              <div class="level-item has-text-centered">
+                <div>
+                  <p class="heading">Host<br>Proteins</p>
+                  <p class="title">{{ proteinData.proteins.length }}</p>
                 </div>
-                <div class="level-item has-text-centered">
-                  <div>
-                    <p class="heading">Virus-Host<br>Interactions</p>
-                    <p class="title">{{ proteinData.edges.length }}</p>
-                  </div>
+              </div>
+              <div class="level-item has-text-centered">
+                <div>
+                  <p class="heading">Virus-Host<br>Interactions</p>
+                  <p class="title">{{ proteinData.edges.length }}</p>
                 </div>
-              </nav>
-            </div>
+              </div>
+            </nav>
           </div>
         </div>
 
@@ -65,12 +61,10 @@
             </p>
           </header>
           <div class="card-content">
-            <div class="content">
-              <div class="field">
-                <div class="control">
-                  <app-query-component [queryItems]="queryItems"
-                                       (selectProtein)="openSummary($event, true)"></app-query-component>
-                </div>
+            <div class="field">
+              <div class="control">
+                <app-query-component [queryItems]="queryItems"
+                                     (selectProtein)="openSummary($event, true)"></app-query-component>
               </div>
             </div>
           </div>
@@ -84,17 +78,13 @@
       </span> Filter Viral Proteins
             </p>
           </header>
-          <div class="card-content">
-            <div class="content">
-              <div class="bait-frame">
-                <div *ngFor="let bait of viralProteinCheckboxes">
-                  <label class="checkbox">
-                    <input type="checkbox" class="checkbox" [ngModel]="bait.checked"
-                           (ngModelChange)="bait.checked = $event; filterNodes()">
-                    {{ bait.data.effectName }}
-                  </label>
-                </div>
-              </div>
+          <div class="card-content overflow">
+            <div *ngFor="let bait of viralProteinCheckboxes">
+              <label class="checkbox">
+                <input type="checkbox" class="checkbox" [ngModel]="bait.checked"
+                       (ngModelChange)="bait.checked = $event; filterNodes()">
+                {{ bait.data.effectName }}
+              </label>
             </div>
           </div>
           <footer class="card-footer">
@@ -104,6 +94,7 @@
           </footer>
         </div>
       </div>
+
 
       <div class="content network">
 
@@ -152,7 +143,7 @@
         </p>
       </header>
       <div class="card-content">
-        <div *ngIf="showDetails" class="content">
+        <div *ngIf="showDetails">
 
           <p><b>Protein Name:</b> {{ currentProteinAc }}</p>
           <!--          <p><b>Gene Name(s):</b> <span *ngFor="let geneName of geneNames"> {{ geneName }}</span></p>-->
@@ -170,23 +161,6 @@
           <a (click)="showAnalysisWindow()"> Open Analysis Window </a>
         </div>
 
-      </div>
-    </div>
-
-    <div class="card bar-medium">
-      <header class="card-header">
-        <p class="card-header-title">
-                <span class="icon">
-              <i class="fas fa-filter" aria-hidden="true"></i>
-            </span> Summary
-        </p>
-      </header>
-      <div *ngIf="showDetails" class="card-content">
-        <div class="content">
-          <figure class="image">
-            <img src="assets/boxplot.png" alt="Boxplots">
-          </figure>
-        </div>
       </div>
     </div>
 
@@ -251,6 +225,37 @@
         </button>
       </div>
     </div>
+
+    <div class="card bar-large">
+      <header class="card-header">
+        <p class="card-header-title">
+                <span class="icon">
+              <i class="fas fa-filter" aria-hidden="true"></i>
+            </span> Selection
+        </p>
+      </header>
+      <div class="card-content overflow">
+        <table class="table">
+          <thead>
+          <tr>
+            <td>AC</td>
+            <td>Actions</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let p of analysis.getSelection()">
+            <td>{{p.proteinAc}}</td>
+            <td>
+              <button (click)="analysis.removeProtein(p)" class="button is-small is-danger">
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
 
   </div>
 

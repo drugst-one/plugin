@@ -64,11 +64,14 @@ div.content.bar-left {
   float: left;
   width: 350px;
   height: calc(100vh - 102px);
+  overflow: auto;
 }
 
 div.content.bar-right {
   float: right;
   width: 350px;
+  height: calc(100vh - 102px);
+  overflow: auto;
 }
 
 div.card.bar-small {
@@ -85,8 +88,14 @@ div.card.bar-medium {
 
 div.card.bar-large {
   margin-bottom: 15px;
-  height: calc(100vh - 660px);
+  height: 600px;
 }
+
+div.card-content.overflow {
+  overflow: auto;
+  height: 500px;
+}
+
 
 div.content.left-window {
   float: left;
