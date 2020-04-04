@@ -2,128 +2,148 @@
 
 <div class="content explorer">
 
-  <div class="content bar-left">
+  <div class="content left-window">
+    <div>
+      <div class="content bar-left">
 
-    <div class="card bar">
-      <header class="card-header">
-        <p class="card-header-title">
+        <div class="card bar-small">
+          <header class="card-header">
+            <p class="card-header-title">
           <span class="icon">
         <i class="fas fa-database" aria-hidden="true"></i>
       </span> Choose Dataset
-        </p>
-      </header>
-      <div class="card-content">
-        <div class="content">
-          <app-select-dataset [datasetItems]="datasetItems" (selectDataset)="createNetwork($event)"></app-select-dataset>
+            </p>
+          </header>
+          <div class="card-content">
+            <div class="content">
+              <app-select-dataset [datasetItems]="datasetItems"
+                                  (selectDataset)="createNetwork($event)"></app-select-dataset>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <div class="card bar">
-      <header class="card-header">
-        <p class="card-header-title">
+        <div class="card bar-medium">
+          <header class="card-header">
+            <p class="card-header-title">
           <span class="icon">
         <i class="fas fa-info" aria-hidden="true"></i>
-      </span> Info
-        </p>
-      </header>
-      <div class="card-content">
-        <div class="content">
-          <nav class="level" *ngIf="proteinData">
-            <div class="level-item has-text-centered">
-              <div>
-                <p class="heading">Viral Proteins</p>
-                <p class="title"> {{ proteinData.effects.length }}</p>
-              </div>
+      </span> Network Overview
+            </p>
+          </header>
+          <div class="card-content">
+            <div class="content">
+              <nav class="level" *ngIf="proteinData">
+                <div class="level-item has-text-centered">
+                  <div>
+                    <p class="heading">Viral<br>Proteins</p>
+                    <p class="title"> {{ proteinData.effects.length }}</p>
+                  </div>
+                </div>
+                <div class="level-item has-text-centered">
+                  <div>
+                    <p class="heading">Host<br>Proteins</p>
+                    <p class="title">{{ proteinData.proteins.length }}</p>
+                  </div>
+                </div>
+                <div class="level-item has-text-centered">
+                  <div>
+                    <p class="heading">Virus-Host<br>Interactions</p>
+                    <p class="title">{{ proteinData.edges.length }}</p>
+                  </div>
+                </div>
+              </nav>
             </div>
-            <div class="level-item has-text-centered">
-              <div>
-                <p class="heading">Host Proteins</p>
-                <p class="title">{{ proteinData.proteins.length }}</p>
-              </div>
-            </div>
-            <div class="level-item has-text-centered">
-              <div>
-                <p class="heading">Interactions</p>
-                <p class="title">{{ proteinData.edges.length }}</p>
-              </div>
-            </div>
-          </nav>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <div class="card bar">
-      <header class="card-header">
-        <p class="card-header-title">
+        <div class="card bar-small">
+          <header class="card-header">
+            <p class="card-header-title">
           <span class="icon">
         <i class="fas fa-search" aria-hidden="true"></i>
       </span> Query Protein
-        </p>
-      </header>
-      <div class="card-content">
-        <div class="content">
-          <div class="field">
-            <div class="control">
-              <app-query-component [queryItems]="queryItems"
-                                   (selectProtein)="openSummary($event, true)"></app-query-component>
+            </p>
+          </header>
+          <div class="card-content">
+            <div class="content">
+              <div class="field">
+                <div class="control">
+                  <app-query-component [queryItems]="queryItems"
+                                       (selectProtein)="openSummary($event, true)"></app-query-component>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div class="card bar">
-      <header class="card-header">
-        <p class="card-header-title">
+        <div class="card bar-large">
+          <header class="card-header">
+            <p class="card-header-title">
           <span class="icon">
         <i class="fas fa-filter" aria-hidden="true"></i>
       </span> Filter Viral Proteins
-        </p>
-      </header>
-      <div class="card-content">
-        <div class="content">
-          <div class="bait-frame">
-            <div *ngFor="let bait of viralProteinCheckboxes">
-              <label class="checkbox">
-                <input type="checkbox" class="checkbox" [ngModel]="bait.checked"
-                       (ngModelChange)="bait.checked = $event; filterNodes()">
-                {{ bait.data.effectName }}
-              </label>
+            </p>
+          </header>
+          <div class="card-content">
+            <div class="content">
+              <div class="bait-frame">
+                <div *ngFor="let bait of viralProteinCheckboxes">
+                  <label class="checkbox">
+                    <input type="checkbox" class="checkbox" [ngModel]="bait.checked"
+                           (ngModelChange)="bait.checked = $event; filterNodes()">
+                    {{ bait.data.effectName }}
+                  </label>
+                </div>
+              </div>
             </div>
+          </div>
+          <footer class="card-footer">
+            <button (click)="reset($event);" class="card-footer-item button is-danger">
+              Reset
+            </button>
+          </footer>
+        </div>
+      </div>
+
+      <div class="content network">
+
+        <div class="card network">
+          <header class="card-header">
+            <p class="card-header-title">
+              Protein-Protein Interaction Network
+            </p>
+          </header>
+          <div class="card-content">
+            <div class="card-image" id="0">
+              <div class="network center" #network>
+                <button class="button is-loading center">Loading</button>
+              </div>
+            </div>
+            <footer class="card-footer">
+              <button (click)="toCanvas()" class="card-footer-item button is-primary">
+                <span class="icon">
+        <i class="fas fa-cloud-download-alt" aria-hidden="true"></i>
+      </span>
+              </button>
+              <label class="checkbox">
+                <input type="checkbox" class="checkbox" [(ngModel)]="physicsEnabled"
+                       (ngModelChange)="physicsEnabled = $event; updatePhysicsEnabled()">
+                Physics enabled
+              </label>
+            </footer>
           </div>
         </div>
       </div>
-      <footer class="card-footer">
-        <button (click)="reset($event);" class="card-footer-item button is-danger">
-          Reset
-        </button>
-      </footer>
     </div>
 
-    <div class="card bar">
-      <header class="card-header">
-        <p class="card-header-title">
-          <span class="icon">
-        <i class="fas fa-cog" aria-hidden="true"></i>
-      </span> Settings
-        </p>
-      </header>
-      <div class="card-content">
-        <div class="content">
-          <label class="checkbox">
-            <input type="checkbox" class="checkbox" [(ngModel)]="physicsEnabled"
-                   (ngModelChange)="physicsEnabled = $event; updatePhysicsEnabled()">
-            Physics enabled
-          </label>
-        </div>
-      </div>
+    <div class="analysis-view" [hidden]="!analysisWindow">
+      <app-analysis-window (closeWindow)="closeAnalysisWindow()"></app-analysis-window>
     </div>
   </div>
 
   <div class="content bar-right">
 
-    <div class="card bar">
+    <div class="card bar-medium">
       <header class="card-header">
         <p class="card-header-title">
           <span class="icon">
@@ -143,29 +163,24 @@
               {{ proteinAc }}
             </a>
           </p>
-          <button class="button is-primary" *ngIf="!inSelection(currentProteinAc)"
-                  (click)="addToSelection(currentProteinAc)">Add to Analysis
-          </button>
-          <button class="button is-danger" *ngIf="inSelection(currentProteinAc)"
-                  (click)="removeFromSelection(currentProteinAc)">Remove from Analysis
-          </button>
         </div>
 
         <div *ngIf="!showDetails">
           Please select a node for further information.
+          <a (click)="showAnalysisWindow()"> Open Analysis Window </a>
         </div>
 
       </div>
     </div>
 
-    <div class="card bar">
-            <header class="card-header">
-              <p class="card-header-title">
+    <div class="card bar-medium">
+      <header class="card-header">
+        <p class="card-header-title">
                 <span class="icon">
               <i class="fas fa-filter" aria-hidden="true"></i>
             </span> Summary
-              </p>
-            </header>
+        </p>
+      </header>
       <div *ngIf="showDetails" class="card-content">
         <div class="content">
           <figure class="image">
@@ -175,7 +190,7 @@
       </div>
     </div>
 
-    <div class="card bar">
+    <div class="card bar-medium">
       <header class="card-header">
         <p class="card-header-title">
           <span class="icon">
@@ -184,8 +199,13 @@
         </p>
       </header>
       <div class="card-content">
-        <p>Hold down the CTRL button to select multiple proteins.</p>
-
+        <button class="button is-success" *ngIf="!inSelection(currentProteinAc)"
+                (click)="addToSelection(currentProteinAc)">Add to Analysis
+        </button>
+        <button class="button is-danger" *ngIf="inSelection(currentProteinAc)"
+                (click)="removeFromSelection(currentProteinAc)">Remove from Analysis
+        </button>
+        <p></p>
         <button (click)="showAnalysisDialog = true"
                 class="button"
                 [class.is-info]="!analysis.getTask()"
@@ -232,31 +252,6 @@
       </div>
     </div>
 
-  </div>
-
-  <div class="content network">
-
-    <div class="card network">
-      <header class="card-header">
-        <p class="card-header-title">
-          Protein-Protein Interaction Network
-        </p>
-      </header>
-      <div  class="card-content">
-        <div id= "0" class="card-image">
-          <div class="network center" #network>
-            <button class="button is-loading center">Loading</button>
-          </div>
-        </div>
-        <footer class="card-footer">
-          <button (click)="toCanvas()" class="card-footer-item button is-primary">
-                <span class="icon">
-        <i class="fas fa-cloud-download-alt" aria-hidden="true"></i>
-      </span>
-          </button>
-        </footer>
-      </div>
-    </div>
   </div>
 
 </div>

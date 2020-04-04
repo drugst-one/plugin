@@ -1,4 +1,13 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild, Output, EventEmitter, HostListener} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  Output,
+  EventEmitter,
+  HostListener
+} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Edge, Effect, getDatasetFilename, Protein, ProteinNetwork} from '../protein-network';
 import {HttpClient} from '@angular/common/http';
@@ -9,13 +18,84 @@ import html2canvas from 'html2canvas';
 declare var vis: any;
 
 
-
 @Component({
   selector: 'app-explorer-page',
   templateUrl: './explorer-page.component.html',
   styleUrls: ['./explorer-page.component.scss'],
 })
 export class ExplorerPageComponent implements OnInit, AfterViewInit {
+
+  public showDetails = false;
+  public currentProteinAc = '';
+  public geneNames: Array<string> = [];
+  public proteinNames: Array<string> = [];
+  public proteinAcs: Array<string> = [];
+  public watcher = 0;
+
+  public viralProteinCheckboxes: Array<{ checked: boolean; data: Effect }> = [];
+
+  public proteinData: ProteinNetwork;
+
+  public proteins: any;
+  public effects: any;
+  public edges: any;
+
+  private network: any;
+  private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
+
+  private seed = 1;  // TODO: Remove this
+
+  private dumpPositions = false;
+  public physicsEnabled = false;
+
+  public queryItems = [];
+  public showAnalysisDialog = false;
+
+  public analysisWindow = false;
+
+  public currentDataset = [];
+  private array = [0];
+
+  public datasetItems: Array<{ label: string, datasets: string, data: Array<[string, string]> }> = [
+    {label: 'All', datasets: 'TUM & Krogan', data: [['TUM', 'HCoV'], ['TUM', 'SARS-CoV2'], ['Krogan', 'SARS-CoV2']]},
+    {label: 'HCoV', datasets: 'TUM', data: [['TUM', 'HCoV']]},
+    {label: 'CoV2', datasets: 'TUM & Krogan', data: [['TUM', 'SARS-CoV2'], ['Krogan', 'SARS-CoV2']]},
+    {label: 'CoV2', datasets: 'Krogan', data: [['Krogan', 'SARS-CoV2']]},
+    {label: 'CoV2', datasets: 'TUM', data: [['TUM', 'SARS-CoV2']]}];
+
+  @ViewChild('network', {static: false}) networkEl: ElementRef;
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent1(event: KeyboardEvent) {
+
+    const keyName = event.key;
+
+    if (keyName === 'Control') {
+      this.watcher = 1;
+      // console.log(this.watcher);
+
+    }
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+
+    const keyName1 = event.key;
+    if (keyName1 === 'Control') {
+      this.watcher = 0;
+      // console.log(this.watcher);
+
+    }
+  }
+
+  closeAnalysisWindow() {
+    this.analysisWindow = false;
+  }
+
+  showAnalysisWindow() {
+    this.analysisWindow = true;
+  }
+
 
   constructor(private http: HttpClient,
               private route: ActivatedRoute,
@@ -73,84 +153,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         }
       }
     });
-  }
-
-  public showDetails = false;
-  public currentProteinAc = '';
-  public geneNames: Array<string> = [];
-  public proteinNames: Array<string> = [];
-  public proteinAcs: Array<string> = [];
-  public watcher = 0;
-
-  public viralProteinCheckboxes: Array<{ checked: boolean; data: Effect }> = [];
-
-  public proteinData: ProteinNetwork;
-
-  public proteins: any;
-  public effects: any;
-  public edges: any;
-
-  private network: any;
-  private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
-
-  private seed = 1;  // TODO: Remove this
-
-  private dumpPositions = false;
-  public physicsEnabled = false;
-
-  public queryItems = [];
-  public showAnalysisDialog = false;
-
-  public currentDataset = [];
-  private array = [0];
-
-  public datasetItems: Array<{ label: string, datasets: string, data: Array<[string, string]> }> = [
-    {label: 'All', datasets: 'TUM & Krogan', data: [['TUM', 'HCoV'], ['TUM', 'SARS-CoV2'], ['Krogan', 'SARS-CoV2']]},
-    {label: 'HCoV', datasets: 'TUM', data: [['TUM', 'HCoV']]},
-    {label: 'CoV2', datasets: 'TUM & Krogan', data: [['TUM', 'SARS-CoV2'], ['Krogan', 'SARS-CoV2']]},
-    {label: 'CoV2', datasets: 'Krogan', data: [['Krogan', 'SARS-CoV2']]},
-    {label: 'CoV2', datasets: 'TUM', data: [['TUM', 'SARS-CoV2']]}];
-
-
-  @ViewChild('network', {static: false}) networkEl: ElementRef;
-
-
-
-  public toCanvas() {
-    this.array.forEach((key, index) => {
-        const elem = document.getElementById(index.toString());
-      // tslint:disable-next-line:only-arrow-functions
-        html2canvas(elem).then(function(canvas) {
-          const generatedImage = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-          const a = document.createElement('a');
-          a.href = generatedImage;
-          a.download = `Network.png`;
-          a.click();
-        });
-    });
-  }
-
-  @HostListener('window:keydown', ['$event'])
-  handleKeyboardEvent1(event: KeyboardEvent) {
-
-      const keyName = event.key;
-
-      if (keyName === 'Control') {
-        this.watcher = 1;
-        // console.log(this.watcher);
-
-    }
-  }
-
-  @HostListener('window:keyup', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) {
-
-     const keyName1 = event.key;
-     if (keyName1 === 'Control') {
-        this.watcher = 0;
-        // console.log(this.watcher);
-
-    }
   }
 
   ngOnInit() {
@@ -255,16 +257,16 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           this.openSummary(protein, false);
           // tslint:disable-next-line:no-console
           console.log(this.currentProteinAc);
-          if (this.watcher === 1 ) {
+          if (this.watcher === 1) {
             if (this.inSelection(protein.proteinAc) === true) {
               // tslint:disable-next-line:no-console
-                console.log(this.removeFromSelection(protein.proteinAc));
+              console.log(this.removeFromSelection(protein.proteinAc));
             } else {
               // tslint:disable-next-line:no-console
-                console.log(this.addToSelection(protein.proteinAc));
-            // console.log(this.removeFromSelection(this.currentProteinAc));
+              console.log(this.addToSelection(protein.proteinAc));
+              // console.log(this.removeFromSelection(this.currentProteinAc));
               // tslint:disable-next-line:no-console
-                console.log(this.analysis.getCount());
+              console.log(this.analysis.getCount());
             }
           }
         } else {
@@ -455,5 +457,21 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
     this.analysis.removeProtein(protein);
   }
+
+  public toCanvas() {
+    this.array.forEach((key, index) => {
+      const elem = document.getElementById(index.toString());
+      // tslint:disable-next-line:only-arrow-functions
+      html2canvas(elem).then(function(canvas) {
+        const generatedImage = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+        const a = document.createElement('a');
+        a.href = generatedImage;
+        a.download = `Network.png`;
+        a.click();
+      });
+    });
+  }
+
+
 
 }
