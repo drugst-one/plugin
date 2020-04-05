@@ -5,39 +5,24 @@
       <p class="modal-card-title">Launch Protein Analysis</p>
       <button class="delete" aria-label="close" (click)="close()"></button>
     </header>
-    <section class="modal-card-body">
-      <h4 class="title is-4">Selection</h4>
-      <table class="table">
-        <thead>
-        <tr>
-          <td>AC</td>
-          <td>Actions</td>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let p of analysis.getSelection()">
-          <td>{{p.proteinAc}}</td>
-          <td>
-            <button (click)="analysis.removeProtein(p)" class="button is-small is-danger">
-              <i class="fa fa-trash"></i>
-            </button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </section>
+    <div class="modal-card-body">
+      <div class="tabs">
+        <ul>
+          <li [class.is-active]="algorithm === 'dummy'"><a (click)="algorithm = 'dummy'">Dummy</a></li>
+          <li [class.is-active]="algorithm === 'trustrank'"><a (click)="algorithm = 'trustrank'">Trustrank</a></li>
+        </ul>
+      </div>
+      <div *ngIf="algorithm === 'dummy'">
+        NO PARAMS
+      </div>
+      <div *ngIf="algorithm === 'trustrank'">
+        SHOW PARAMETERS HERE LATER
+      </div>
+    </div>
     <footer class="modal-card-foot">
-      <button class="button is-primary" [disabled]="true">
+      <button class="button is-success" (click)="startTask(); close()">
         <span class="icon"><i class="fa fa-play"></i></span>
-        <span>Multi Steiner</span>
-      </button>
-      <button class="button is-primary" [disabled]="true">
-        <span class="icon"><i class="fa fa-play"></i></span>
-        <span>Key Pathway Miner</span>
-      </button>
-      <button class="button is-primary" (click)="startTask(); close()">
-        <span class="icon"><i class="fa fa-play"></i></span>
-        <span>Demo</span>
+        <span>Start</span>
       </button>
     </footer>
   </div>
