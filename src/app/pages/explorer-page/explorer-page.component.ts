@@ -6,7 +6,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ProteinViralInteraction, ViralProtein, Protein} from '../../interfaces';
+import {ProteinViralInteraction, ViralProtein, Protein, QueryItem} from '../../interfaces';
 import {ProteinNetwork, getDatasetFilename} from '../../main-network';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {AnalysisService} from '../../analysis.service';
@@ -14,7 +14,6 @@ import html2canvas from 'html2canvas';
 import {environment} from '../../../environments/environment';
 
 declare var vis: any;
-
 
 @Component({
   selector: 'app-explorer-page',
@@ -43,7 +42,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   private dumpPositions = false;
   public physicsEnabled = false;
 
-  public queryItems = [];
+  public queryItems: QueryItem[] = [];
   public showAnalysisDialog = false;
 
   public selectedAnalysisToken: string | null = null;
@@ -150,9 +149,15 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (!coords) {
       return;
     }
+    let zoomScale = null;
+    if (id.startsWith('eff')) {
+      zoomScale = 1.0;
+    } else {
+      zoomScale = 3.0;
+    }
     this.network.moveTo({
       position: {x: coords.x, y: coords.y},
-      scale: 1.0,
+      scale: zoomScale,
       animation: true,
     });
   }
@@ -248,7 +253,28 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.zoomToNode(`pg_${this.currentProteinAc}`);
     }
 
-    this.queryItems = this.proteins;
+    this.queryItems = [];
+    this.fillQueryItems(this.proteins, this.effects);
+  }
+
+
+  fillQueryItems(hostProteins: Protein[], viralProteins: ViralProtein[]) {
+    this.queryItems = [];
+    hostProteins.forEach((protein) => {
+      this.queryItems.push({
+        name: protein.proteinAc,
+        type: 'Host Protein',
+        data: protein
+      });
+    });
+
+    viralProteins.forEach((effect) => {
+      this.queryItems.push({
+        name: effect.effectName,
+        type: 'Viral Protein',
+        data: effect
+      });
+    });
   }
 
   public async filterNodes() {
@@ -260,6 +286,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     const showAll = !this.viralProteinCheckboxes.find((eff) => eff.checked);
     const connectedProteinAcs = new Set<string>();
 
+    const filteredViralProteins = [];
     this.viralProteinCheckboxes.forEach((cb) => {
       const effects: Array<ViralProtein> = [];
       this.proteinData.effects.forEach((effect) => {
@@ -279,6 +306,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           removeIds.add(nodeId);
         }
         if (cb.checked || showAll) {
+          filteredViralProteins.push(effect);
           effect.proteins.forEach((pg) => {
             connectedProteinAcs.add(pg.proteinAc);
           });
@@ -304,8 +332,19 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     this.nodeData.nodes.remove(Array.from(removeIds.values()));
     this.nodeData.nodes.add(Array.from(addNodes.values()));
+    this.fillQueryItems(filteredProteins, filteredViralProteins);
+  }
 
-    this.queryItems = filteredProteins;
+  public queryAction(item: any) {
+    if (item) {
+      if (item.type === 'Host Protein') {
+        this.openSummary(item.data, true);
+      } else if (item.type === 'Viral Protein') {
+        this.zoomToNode(`eff_${item.data.effectName}_${item.data.virusName}_${item.data.datasetName}`
+        );
+      }
+    }
+
   }
 
   public updatePhysicsEnabled() {

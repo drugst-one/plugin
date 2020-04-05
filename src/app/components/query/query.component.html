@@ -1,5 +1,11 @@
 <div class="content">
-  <ng-select [items]="queryItems" bindLabel="proteinAc" [virtualScroll]="true" class="custom"
+  <ng-select [items]="queryItems" bindLabel="name" bindValue="data" [virtualScroll]="true" class="custom"
              placeholder="Search..." (change)="select($event)">
+    <ng-template ng-option-tmp let-item="item">
+      <b>{{item.name}}</b> <br/>
+      <span *ngIf="item.type == 'Host Protein'"><small>{{item.type}}</small></span>
+      <span *ngIf="item.type == 'Viral Protein'"><small>{{item.data.virusName}}</small> | </span>
+      <span *ngIf="item.type == 'Viral Protein'"><small>{{item.data.datasetName}}</small> </span>
+    </ng-template>
   </ng-select>
 </div>

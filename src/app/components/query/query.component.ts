@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import {Protein} from '../../interfaces';
+import {QueryItem} from '../../interfaces';
 
 @Component({
   selector: 'app-query-component',
@@ -9,11 +9,11 @@ import {Protein} from '../../interfaces';
 export class QueryComponent {
 
 
-  @Output() selectProtein: EventEmitter<Protein> = new EventEmitter();
-  @Input() queryItems: Protein[];
+  @Output() selectItem: EventEmitter<any> = new EventEmitter();
+  @Input() queryItems: QueryItem[];
 
-  select(protein) {
-    this.selectProtein.emit(protein);
+  select(item) {
+    this.selectItem.emit(item);
   }
 
 }
