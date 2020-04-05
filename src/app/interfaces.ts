@@ -46,3 +46,9 @@ export interface Task {
     queueLength: number;
   };
 }
+
+export interface QueryItem {
+  name: string;
+  type: 'Host Protein' | 'Viral Protein';
+  data: Protein | ViralProtein;
+}
