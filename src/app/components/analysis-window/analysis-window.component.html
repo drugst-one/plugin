@@ -22,36 +22,42 @@
         <footer class="card-footer">
           <div class="field has-addons">
             <p class="control">
-              <button class="button is-rounded" (click)="toggleDrugs(true)">
-      <span class="icon is-small">
-        <i class="fas fa-capsules"></i>
-      </span>
+              <button class="button is-rounded" [class.is-primary]="showDrugs" (click)="toggleDrugs(true)">
+                <span class="icon is-small">
+                  <i class="fas fa-capsules"></i>
+                </span>
                 <span>Drugs On</span>
               </button>
             </p>
             <p class="control">
-              <button class="button is-rounded" (click)="toggleDrugs(false)">
-      <span class="icon is-small">
-        <i class="fas fa-times"></i>
-      </span>
-                <span>Drugs Off</span>
+              <button class="button is-rounded" [class.is-primary]="!showDrugs" (click)="toggleDrugs(false)">
+                <span>Off</span>
               </button>
             </p>
           </div>
-          <button class="card-footer-item button is-primary">
-                <span class="icon">
-        <i class="fas fa-cloud-download-alt" aria-hidden="true"></i>
-      </span> <span>Export Results</span>
+          <button class="card-footer-item button is-primary" [disabled]="true">
+            <span class="icon">
+              <i class="fas fa-cloud-download-alt" aria-hidden="true"></i>
+            </span>
+            <span>
+              Export Results
+            </span>
           </button>
-          <button class="card-footer-item button">
-                <span class="icon">
-        <i class="fas fa-cloud-download-alt" aria-hidden="true"></i>
-      </span> <span>Save as PNG</span>
+          <button class="card-footer-item button" [disabled]="true">
+            <span class="icon">
+              <i class="fas fa-cloud-download-alt" aria-hidden="true"></i>
+            </span>
+            <span>
+              Save as PNG
+            </span>
           </button>
-          <button class="card-footer-item button is-danger">
-                <span class="icon">
-        <i class="fas fa-trash" aria-hidden="true"></i>
-      </span> <span>Delete Analysis</span>
+          <button class="card-footer-item button is-danger" [disabled]="true">
+            <span class="icon">
+              <i class="fas fa-trash" aria-hidden="true"></i>
+            </span>
+            <span>
+              Delete Analysis
+            </span>
           </button>
         </footer>
       </div>

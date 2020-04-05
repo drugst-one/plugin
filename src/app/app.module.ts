@@ -1,6 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import { NgSelectModule } from '@ng-select/ng-select';
+import {NgSelectModule} from '@ng-select/ng-select';
 
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
@@ -16,7 +16,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ProteinAnalysisComponent} from './components/protein-analysis/protein-analysis.component';
 import {SelectDatasetComponent} from './components/select-dataset/select-dataset.component';
 import {AnalysisWindowComponent} from './components/analysis-window/analysis-window.component';
-import { TaskListComponent } from './components/task-list/task-list.component';
+import {TaskListComponent} from './components/task-list/task-list.component';
+import {AnalysisService} from './analysis.service';
 
 
 @NgModule({
@@ -40,7 +41,7 @@ import { TaskListComponent } from './components/task-list/task-list.component';
     HttpClientModule,
     BrowserAnimationsModule,
   ],
-  providers: [],
+  providers: [AnalysisService],
   bootstrap: [AppComponent]
 
 })
