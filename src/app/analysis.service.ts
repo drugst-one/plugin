@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Protein} from './pages/protein-network';
+import {Protein, Task} from './interfaces';
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../environments/environment';
@@ -13,9 +13,8 @@ export class AnalysisService {
   private selectedProteins = new Map<string, Protein>();
   private selectSubject = new Subject<{ protein: Protein, selected: boolean }>();
 
-  public tokens: any[] = [];
-  private stats: any;
-  public tasks: any[] = [];
+  public tokens: string[] = [];
+  public tasks: Task[] = [];
 
   private intervalId: any;
 
@@ -64,27 +63,6 @@ export class AnalysisService {
     });
   }
 
-  getTask(token): any {
-    this.tasks.forEach((task) => {
-      if (task.token === token) {
-        return task;
-      }
-    });
-  }
-
-  reset() {
-    this.tokens = null;
-    this.tasks = null;
-    this.stats = null;
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
-  }
-
-  getStats(): any {
-    return this.stats;
-  }
-
   async startAnalysis(algorithm, parameters) {
     const resp = await this.http.post<any>(`${environment.backend}task/`, {
       algorithm,
@@ -96,11 +74,13 @@ export class AnalysisService {
   }
 
   startWatching() {
-    this.intervalId = setInterval(async () => {
+    const watch = async () => {
       if (this.tokens.length > 0) {
         this.tasks = await this.getTasks();
       }
-    }, 1000);
+    };
+    watch();
+    this.intervalId = setInterval(watch, 5000);
   }
 
 }

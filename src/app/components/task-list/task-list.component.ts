@@ -10,8 +10,8 @@ import {AnalysisService} from '../../analysis.service';
 
 export class TaskListComponent implements OnInit {
 
-
-  @Output() token: EventEmitter<any> = new EventEmitter();
+  @Input() token: string;
+  @Output() tokenChange: EventEmitter<string> = new EventEmitter();
 
   constructor(public analysis: AnalysisService) {
   }
@@ -20,7 +20,8 @@ export class TaskListComponent implements OnInit {
   }
 
   open(token) {
-    this.token.emit(token);
+    this.token = token;
+    this.tokenChange.emit(token);
   }
 
 }

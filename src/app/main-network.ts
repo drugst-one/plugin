@@ -1,28 +1,5 @@
 import {HttpClient} from '@angular/common/http';
-
-export interface Protein {
-  name: string;
-  proteinAc: string;
-  effects?: Effect[];
-  x?: number;
-  y?: number;
-}
-
-export interface Effect {
-  effectName: string;
-  virusName: string;
-  datasetName: string;
-  proteins?: Protein[];
-  x?: number;
-  y?: number;
-}
-
-export interface Edge {
-  effectName: string;
-  virusName: string;
-  datasetName: string;
-  proteinAc: string;
-}
+import {ProteinViralInteraction, ViralProtein, Protein} from './interfaces';
 
 export function getDatasetFilename(dataset: Array<[string, string]>): string {
   return `network-${JSON.stringify(dataset).replace(/[\[\]\",]/g, '')}.json`;
@@ -30,7 +7,7 @@ export function getDatasetFilename(dataset: Array<[string, string]>): string {
 
 export class ProteinNetwork {
 
-  constructor(public proteins: Protein[], public effects: Effect[], public edges: Edge[]) {
+  constructor(public proteins: Protein[], public effects: ViralProtein[], public edges: ProteinViralInteraction[]) {
   }
 
   public async loadPositions(http: HttpClient, dataset: Array<[string, string]>) {
@@ -55,7 +32,7 @@ export class ProteinNetwork {
     return this.proteins.find((p) => p.proteinAc === ac);
   }
 
-  public getEffect(name: string, virus: string, dataset: string): Effect | undefined {
+  public getEffect(name: string, virus: string, dataset: string): ViralProtein | undefined {
     return this.effects.find((eff) => eff.effectName === name && eff.virusName === virus && eff.datasetName === dataset);
   }
 

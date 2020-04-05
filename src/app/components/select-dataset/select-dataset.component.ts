@@ -1,6 +1,4 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {DataSet} from 'vis-data';
-import {Edge, Effect, Protein} from '../../pages/protein-network';
 
 @Component({
   selector: 'app-select-dataset',

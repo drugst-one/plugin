@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import {Protein} from '../../pages/protein-network';
+import {Protein} from '../../interfaces';
 
 @Component({
   selector: 'app-query-component',

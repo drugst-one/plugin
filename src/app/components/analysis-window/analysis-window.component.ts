@@ -1,8 +1,8 @@
 import {Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
-import {Edge, Effect, getDatasetFilename, Protein, ProteinNetwork} from '../../pages/protein-network';
 import {AnalysisService} from '../../analysis.service';
+import {Task} from '../../interfaces';
 
 declare var vis: any;
 
@@ -16,8 +16,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   @Input() token: string | null = null;
   @Output() tokenChange = new EventEmitter<string | null>();
 
-  public info: any = null;
-  public stats: any = null;
+  public task: Task | null = null;
 
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 
@@ -33,13 +32,18 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   }
 
   async ngOnChanges(changes: SimpleChanges) {
-    if (this.token) {
-      const {info, stats} = await this.getTask(this.token);
-      this.info = info;
-      this.stats = stats;
+    await this.refresh();
+  }
 
-      if (this.info && this.info.done) {
+  private async refresh() {
+    if (this.token) {
+      this.task = await this.getTask(this.token);
+
+      if (this.task && this.task.info.done) {
         const result = await this.http.get<any>(`${environment.backend}result/?token=${this.token}`).toPromise();
+        this.networkEl.nativeElement.innerHTML = '';
+        this.network =  null;
+        this.nodeData = {nodes: null, edges: null};
         this.createNetwork(result);
       }
     }
@@ -75,6 +79,10 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     };
 
     this.network = new vis.Network(container, this.nodeData, options);
+
+    this.network.on('select', () => {
+      // TODO
+    });
   }
 
   private mapProteinToNode(protein: any): any {
