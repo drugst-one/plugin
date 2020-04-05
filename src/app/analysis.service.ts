@@ -40,7 +40,10 @@ export class AnalysisService {
   }
 
   resetSelection() {
-    this.selectedProteins = new Map<string, Protein>();
+    const oldSelection = this.selectedProteins.values();
+    for (const protein of oldSelection) {
+      this.removeProtein(protein);
+    }
   }
 
   inSelection(protein: Protein): boolean {

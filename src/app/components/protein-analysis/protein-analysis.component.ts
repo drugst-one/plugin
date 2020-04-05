@@ -13,12 +13,20 @@ export class ProteinAnalysisComponent implements OnInit {
   @Output()
   public showChange = new EventEmitter<boolean>();
 
-  public algorithm: 'dummy' | 'trustrank' = 'dummy';
+  public algorithm: 'dummy' | 'trustrank' | 'keypathwayminer' | 'multisteiner';
 
-  public strain = 'SARS_CoV2';
-  public dampingFactor = 0.85;
-  public resultSize = 20;
-  private /*sic!*/ numThreads = 1;
+  // Trustrank Parameters
+  public trustrankStrain = 'SARS_CoV2';
+  public trustrankDampingFactor = 0.85;
+  public trustrankResultSize = 20;
+  public trustrankNumThreads = 1;
+  public trustrankDatasets = [];
+  public trustrankIgnoredEdgeTypes = [];
+
+  // Multisteiner Parameters
+  public multisteinerStrain = 'SARS_CoV2';
+  public multisteinerNumTrees = 5;
+
 
   constructor(public analysis: AnalysisService) {
   }
@@ -39,12 +47,18 @@ export class ProteinAnalysisComponent implements OnInit {
     if (this.algorithm === 'dummy') {
       // No parameters for dummy
     } else if (this.algorithm === 'trustrank') {
-      parameters.strain = this.strain;
+      parameters.strain = this.trustrankStrain;
       parameters.datasets = [];
       parameters.ignored_edge_types = [];
-      parameters.damping_factor = this.dampingFactor;
-      parameters.result_size = this.resultSize;
-      parameters.num_threads = this.numThreads;
+      parameters.damping_factor = this.trustrankDampingFactor;
+      parameters.result_size = this.trustrankResultSize;
+      parameters.num_threads = this.trustrankNumThreads;
+    } else if (this.algorithm === 'keypathwayminer') {
+      // TODO
+    } else if (this.algorithm === 'multisteiner') {
+      parameters.strain = this.multisteinerStrain;
+      parameters.num_trees = this.multisteinerNumTrees;
+
     }
 
     await this.analysis.startAnalysis(this.algorithm, parameters);

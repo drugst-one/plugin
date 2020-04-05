@@ -33,7 +33,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   private network: any;
   private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
   private drugNodes = [];
-  private showDrugs = false;
+  public showDrugs = false;
   private result: any;
 
   constructor(private http: HttpClient, private analysis: AnalysisService) {
@@ -55,6 +55,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
         this.result = result;
         this.networkEl.nativeElement.innerHTML = '';
         this.network = null;
+        this.showDrugs = false;
         this.nodeData = {nodes: null, edges: null};
         this.createNetwork(result);
       }
@@ -215,6 +216,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
       nodes.push(this.mapProteinToNode(protein));
     }
 
+    this.drugNodes = [];
     for (const drug of result.drugs) {
       this.drugNodes.push(this.mapDrugToNode(drug));
     }
