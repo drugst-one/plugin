@@ -39,6 +39,10 @@ export class AnalysisService {
     }
   }
 
+  resetSelection() {
+    this.selectedProteins = new Map<string, Protein>();
+  }
+
   inSelection(protein: Protein): boolean {
     return this.selectedProteins.has(protein.proteinAc);
   }

@@ -97,7 +97,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
 
     this.analysis.subscribe((protein, selected) => {
-      const nodeId = `pg_${protein.proteinAc}`;
+      const nodeId = `p_${protein.proteinAc}`;
       const node = this.nodeData.nodes.get(nodeId);
       if (!node) {
         return;
@@ -106,15 +106,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       node.x = pos[nodeId].x;
       node.y = pos[nodeId].y;
       if (selected) {
-        if (node) {
-          node.color = '#c42eff';
-          this.nodeData.nodes.update(node);
-        }
+        node.color = '#48C774';
+        this.nodeData.nodes.update(node);
       } else {
-        if (node) {
-          node.color = '#e2b600';
-          this.nodeData.nodes.update(node);
-        }
+        node.color = '#e2b600';
+        this.nodeData.nodes.update(node);
       }
     });
   }
@@ -165,7 +161,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public async openSummary(protein: Protein, zoom: boolean) {
     await this.router.navigate(['explorer'], {queryParams: {protein: protein.proteinAc}});
     if (zoom) {
-      this.zoomToNode(`pg_${protein.proteinAc}`);
+      this.zoomToNode(`p_${protein.proteinAc}`);
     }
   }
 
@@ -222,8 +218,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.network.on('select', (properties) => {
       const id: Array<string> = properties.nodes;
       if (id.length > 0) {
-        if (id[0].startsWith('pg_')) {
-          const protein = this.proteinData.getProtein(id[0].substr(3));
+        if (id[0].startsWith('p_')) {
+          const protein = this.proteinData.getProtein(id[0].substr(2));
           this.openSummary(protein, false);
           if (properties.event.srcEvent.ctrlKey) {
             if (this.inSelection(protein.proteinAc) === true) {
@@ -250,7 +246,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
 
     if (this.currentProteinAc) {
-      this.zoomToNode(`pg_${this.currentProteinAc}`);
+      this.zoomToNode(`p_${this.currentProteinAc}`);
     }
 
     this.queryItems = [];
@@ -315,7 +311,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
     const filteredProteins = [];
     for (const protein of this.proteinData.proteins) {
-      const nodeId = `pg_${protein.proteinAc}`;
+      const nodeId = `p_${protein.proteinAc}`;
       const contains = connectedProteinAcs.has(protein.proteinAc);
       const found = visibleIds.has(nodeId);
       if (contains) {
@@ -361,10 +357,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   private mapProteinToNode(protein: Protein): any {
     let color = '#e2b600';
     if (this.analysis.inSelection(protein)) {
-      color = '#c42eff';
+      color = '#48C774';
     }
     return {
-      id: `pg_${protein.proteinAc}`,
+      id: `p_${protein.proteinAc}`,
       label: `${protein.proteinAc}`,
       size: 10, font: '5px', color, shape: 'ellipse', shadow: false,
       x: protein.x,
@@ -384,7 +380,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private mapEdge(edge: ProteinViralInteraction): any {
     return {
-      from: `pg_${edge.proteinAc}`,
+      from: `p_${edge.proteinAc}`,
       to: `eff_${edge.effectName}_${edge.virusName}_${edge.datasetName}`,
       color: {color: '#afafaf', highlight: '#854141'},
     };
