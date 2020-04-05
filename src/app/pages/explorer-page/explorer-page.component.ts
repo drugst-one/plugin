@@ -3,15 +3,15 @@ import {
   Component,
   ElementRef,
   OnInit,
-  ViewChild,
-  HostListener
+  ViewChild
 } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Edge, Effect, getDatasetFilename, Protein, ProteinNetwork} from '../protein-network';
-import {HttpClient} from '@angular/common/http';
-import {ApiService} from '../../api.service';
+import {ProteinViralInteraction, ViralProtein, Protein} from '../../interfaces';
+import {ProteinNetwork, getDatasetFilename} from '../../main-network';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {AnalysisService} from '../../analysis.service';
 import html2canvas from 'html2canvas';
+import {environment} from '../../../environments/environment';
 
 declare var vis: any;
 
@@ -28,9 +28,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public geneNames: Array<string> = [];
   public proteinNames: Array<string> = [];
   public proteinAcs: Array<string> = [];
-  public watcher = 0;
 
-  public viralProteinCheckboxes: Array<{ checked: boolean; data: Effect }> = [];
+  public viralProteinCheckboxes: Array<{ checked: boolean; data: ViralProtein }> = [];
 
   public proteinData: ProteinNetwork;
 
@@ -40,8 +39,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private network: any;
   private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
-
-  private seed = 1;  // TODO: Remove this
 
   private dumpPositions = false;
   public physicsEnabled = false;
@@ -63,33 +60,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 
-  @HostListener('window:keydown', ['$event'])
-  handleKeyboardEvent1(event: KeyboardEvent) {
-
-    const keyName = event.key;
-
-    if (keyName === 'Control') {
-      this.watcher = 1;
-      // console.log(this.watcher);
-
-    }
-  }
-
-  @HostListener('window:keyup', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) {
-
-    const keyName1 = event.key;
-    if (keyName1 === 'Control') {
-      this.watcher = 0;
-      // console.log(this.watcher);
-
-    }
-  }
-
   constructor(private http: HttpClient,
               private route: ActivatedRoute,
               private router: Router,
-              private api: ApiService,
               public analysis: AnalysisService) {
     this.geneNames.push('IFI16');
     this.proteinNames.push('Gamma-interface-inducible protein 16');
@@ -127,6 +100,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.analysis.subscribe((protein, selected) => {
       const nodeId = `pg_${protein.proteinAc}`;
       const node = this.nodeData.nodes.get(nodeId);
+      if (!node) {
+        return;
+      }
       const pos = this.network.getPositions([nodeId]);
       node.x = pos[nodeId].x;
       node.y = pos[nodeId].y;
@@ -156,7 +132,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private async getNetwork(dataset: Array<[string, string]>) {
     this.currentDataset = dataset;
-    const data: any = await this.api.getNetwork(dataset);
+    const params = new HttpParams().set('data', JSON.stringify(dataset));
+    const data = await this.http.get<any>(`${environment.backend}network/`, {params}).toPromise();
     this.proteins = data.proteins;
     this.effects = data.effects;
     this.edges = data.edges;
@@ -237,25 +214,18 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     };
 
     this.network = new vis.Network(container, this.nodeData, options);
-    this.network.on('click', (properties) => {
+    this.network.on('select', (properties) => {
       const id: Array<string> = properties.nodes;
-      // TODO use groupID
       if (id.length > 0) {
         if (id[0].startsWith('pg_')) {
           const protein = this.proteinData.getProtein(id[0].substr(3));
           this.openSummary(protein, false);
-          // tslint:disable-next-line:no-console
-          console.log(this.currentProteinAc);
-          if (this.watcher === 1) {
+          if (properties.event.srcEvent.ctrlKey) {
             if (this.inSelection(protein.proteinAc) === true) {
-              // tslint:disable-next-line:no-console
-              console.log(this.removeFromSelection(protein.proteinAc));
+              this.removeFromSelection(protein.proteinAc);
             } else {
-              // tslint:disable-next-line:no-console
-              console.log(this.addToSelection(protein.proteinAc));
-              // console.log(this.removeFromSelection(this.currentProteinAc));
-              // tslint:disable-next-line:no-console
-              console.log(this.analysis.getCount());
+              this.addToSelection(protein.proteinAc);
+              this.analysis.getCount();
             }
           }
         } else {
@@ -291,7 +261,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     const connectedProteinAcs = new Set<string>();
 
     this.viralProteinCheckboxes.forEach((cb) => {
-      const effects: Array<Effect> = [];
+      const effects: Array<ViralProtein> = [];
       this.proteinData.effects.forEach((effect) => {
         if (effect.effectName === cb.data.effectName) {
           effects.push(effect);
@@ -325,11 +295,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
         if (!found) {
           const node = this.mapProteinToNode(protein);
-          // this.nodeData.nodes.add(node);
           addNodes.set(node.id, node);
         }
       } else if (found) {
-        // this.nodeData.nodes.remove(nodeId);
         removeIds.add(nodeId);
       }
     }
@@ -365,7 +333,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     };
   }
 
-  private mapEffectToNode(effect: Effect): any {
+  private mapEffectToNode(effect: ViralProtein): any {
     return {
       id: `eff_${effect.effectName}_${effect.virusName}_${effect.datasetName}`,
       label: `${effect.effectName} (${effect.virusName}, ${effect.datasetName})`,
@@ -375,7 +343,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     };
   }
 
-  private mapEdge(edge: Edge): any {
+  private mapEdge(edge: ProteinViralInteraction): any {
     return {
       from: `pg_${edge.proteinAc}`,
       to: `eff_${edge.effectName}_${edge.virusName}_${edge.datasetName}`,
@@ -441,8 +409,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public toCanvas() {
     this.array.forEach((key, index) => {
       const elem = document.getElementById(index.toString());
-      // tslint:disable-next-line:only-arrow-functions
-      html2canvas(elem).then(function(canvas) {
+      html2canvas(elem).then((canvas) => {
         const generatedImage = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
         const a = document.createElement('a');
         a.href = generatedImage;
@@ -451,7 +418,5 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       });
     });
   }
-
-
 
 }
