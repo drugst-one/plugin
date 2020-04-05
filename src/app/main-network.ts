@@ -13,7 +13,7 @@ export class ProteinNetwork {
   public async loadPositions(http: HttpClient, dataset: Array<[string, string]>) {
     const nodePositions = await http.get(`assets/positions/${getDatasetFilename(dataset)}`).toPromise();
     this.proteins.forEach((node) => {
-      const nodePosition = nodePositions[`pg_${node.proteinAc}`];
+      const nodePosition = nodePositions[`p_${node.proteinAc}`];
       if (nodePosition) {
         node.x = nodePosition.x;
         node.y = nodePosition.y;

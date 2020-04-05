@@ -185,10 +185,26 @@
       </header>
       <div class="card-content">
         <button class="button is-success" *ngIf="!inSelection(currentProteinAc)"
-                (click)="addToSelection(currentProteinAc)">Add to Analysis
+                (click)="addToSelection(currentProteinAc)">
+          <span>
+            <span class="icon">
+              <i class="fa fa-plus"></i>
+            </span>
+            <span>
+              Add to Analysis
+            </span>
+          </span>
         </button>
         <button class="button is-danger" *ngIf="inSelection(currentProteinAc)"
-                (click)="removeFromSelection(currentProteinAc)">Remove from Analysis
+                (click)="removeFromSelection(currentProteinAc)">
+          <span>
+            <span class="icon">
+              <i class="fa fa-minus"></i>
+            </span>
+            <span>
+              Remove from Analysis
+            </span>
+          </span>
         </button>
         <p></p>
         <button (click)="showAnalysisDialog = true"
@@ -247,6 +263,12 @@
             </tr>
             </tbody>
           </table>
+          <footer class="card-footer">
+            <button [disabled]="analysis.getSelection().length < 1" (click)="analysis.resetSelection();"
+                    class="card-footer-item button is-danger">
+              Reset
+            </button>
+          </footer>
         </div>
       </div>
 
