@@ -13,88 +13,121 @@
         </span>
       </a>
     </header>
+
     <div class="card-content">
       <div class="content">
         <div class="network center" #network>
           <button class="button is-loading center">Loading</button>
         </div>
+        <footer class="card-footer">
+          <div class="field has-addons">
+            <p class="control">
+              <button class="button is-rounded" (click)="toggleDrugs(true)">
+      <span class="icon is-small">
+        <i class="fas fa-capsules"></i>
+      </span>
+                <span>Drugs On</span>
+              </button>
+            </p>
+            <p class="control">
+              <button class="button is-rounded" (click)="toggleDrugs(false)">
+      <span class="icon is-small">
+        <i class="fas fa-times"></i>
+      </span>
+                <span>Drugs Off</span>
+              </button>
+            </p>
+          </div>
+          <button class="card-footer-item button is-primary">
+                <span class="icon">
+        <i class="fas fa-cloud-download-alt" aria-hidden="true"></i>
+      </span> <span>Export Results</span>
+          </button>
+          <button class="card-footer-item button">
+                <span class="icon">
+        <i class="fas fa-cloud-download-alt" aria-hidden="true"></i>
+      </span> <span>Save as PNG</span>
+          </button>
+          <button class="card-footer-item button is-danger">
+                <span class="icon">
+        <i class="fas fa-trash" aria-hidden="true"></i>
+      </span> <span>Delete Analysis</span>
+          </button>
+        </footer>
       </div>
-      <button (click)="toggleDrugs()">Show/hide</button>
     </div>
-    <footer class="card-footer">
-    </footer>
-  </div>
 
-  <div class="card analysis" *ngIf="task && !task.info.startedAt">
-    <header class="card-header">
-      <p class="card-header-title">
+    <div class="card analysis" *ngIf="task && !task.info.startedAt">
+      <header class="card-header">
+        <p class="card-header-title">
         <span class="icon">
           <i class="fas fa-cog" aria-hidden="true"></i>
         </span>
-        Analysis Queued...
-      </p>
-      <a (click)="close()" class="card-header-icon" aria-label="close">
+          Analysis Queued...
+        </p>
+        <a (click)="close()" class="card-header-icon" aria-label="close">
         <span class="icon">
           <i class="fas fa-times" aria-hidden="true"></i>
         </span>
-      </a>
-    </header>
-    <div class="card-content">
-      <div class="content">
-        The analysis is queued
-        <!--TODO: Display queue information-->
+        </a>
+      </header>
+      <div class="card-content">
+        <div class="content">
+          The analysis is queued
+          <!--TODO: Display queue information-->
+        </div>
       </div>
+      <footer class="card-footer">
+      </footer>
     </div>
-    <footer class="card-footer">
-    </footer>
-  </div>
 
-  <div class="card analysis" *ngIf="task && task.info.startedAt && !task.info.done">
-    <header class="card-header">
-      <p class="card-header-title">
+    <div class="card analysis" *ngIf="task && task.info.startedAt && !task.info.done">
+      <header class="card-header">
+        <p class="card-header-title">
         <span class="icon">
           <i class="fas fa-cog fa-spin" aria-hidden="true"></i>
         </span>
-        Analysis in Progress...
-      </p>
-      <a (click)="close()" class="card-header-icon" aria-label="close">
+          Analysis in Progress...
+        </p>
+        <a (click)="close()" class="card-header-icon" aria-label="close">
         <span class="icon">
           <i class="fas fa-times" aria-hidden="true"></i>
         </span>
-      </a>
-    </header>
-    <div class="card-content">
-      <div class="content">
-        The analysis is in progress
-        <!--TODO: Display analysis progress-->
+        </a>
+      </header>
+      <div class="card-content">
+        <div class="content">
+          The analysis is in progress
+          <!--TODO: Display analysis progress-->
+        </div>
       </div>
+      <footer class="card-footer">
+      </footer>
     </div>
-    <footer class="card-footer">
-    </footer>
-  </div>
 
-  <div class="card analysis" *ngIf="!task">
-    <header class="card-header">
-      <p class="card-header-title">
+    <div class="card analysis" *ngIf="!task">
+      <header class="card-header">
+        <p class="card-header-title">
         <span class="icon">
           <i class="fas fa-question" aria-hidden="true"></i>
         </span>
-        Analysis not found
-      </p>
-      <a (click)="close()" class="card-header-icon" aria-label="more options">
+          Analysis not found
+        </p>
+        <a (click)="close()" class="card-header-icon" aria-label="more options">
         <span class="icon">
           <i class="fas fa-times" aria-hidden="true"></i>
         </span>
-      </a>
-    </header>
-    <div class="card-content">
-      <div class="content">
+        </a>
+      </header>
+      <div class="card-content">
+        <div class="content">
         <span class="notification is-danger">
           The analysis you were looking for is either gone or never existed.
         </span>
+        </div>
       </div>
+      <footer class="card-footer">
+      </footer>
     </div>
-    <footer class="card-footer">
-    </footer>
   </div>
 </div>

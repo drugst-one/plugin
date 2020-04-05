@@ -155,8 +155,8 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     };
   }
 
-  public toggleDrugs() {
-    this.showDrugs = !this.showDrugs;
+  public toggleDrugs(bool) {
+    this.showDrugs = bool;
 
     if (!this.showDrugs) {
       this.nodeData.nodes.remove(this.drugNodes);

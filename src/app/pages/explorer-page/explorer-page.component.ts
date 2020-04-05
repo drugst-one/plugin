@@ -347,10 +347,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   }
 
-  public updatePhysicsEnabled() {
+  public updatePhysicsEnabled(bool) {
     this.network.setOptions({
       physics: {
-        enabled: this.physicsEnabled,
+        enabled: bool,
         stabilization: {
           enabled: false,
         },
