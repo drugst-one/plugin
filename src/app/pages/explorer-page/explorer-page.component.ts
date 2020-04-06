@@ -28,6 +28,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public collabsTask = true;
   public collabsSelection = true;
   public collabsDFilter = true;
+  public collabsQuery = true;
+  public collabsData = true;
+  public collabsOverview = true;
   public currentProteinAc = '';
   public geneNames: Array<string> = [];
   public proteinNames: Array<string> = [];
