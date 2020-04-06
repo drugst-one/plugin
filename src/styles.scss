@@ -118,6 +118,17 @@ div.card.network {
 div.network {
    height: calc(100vh - 210px);
 }
+div.parent {
+  position: relative;
+}
+div.image1 {
+  position: relative;
+}
+div.image2 {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+}
 
 div.center {
   display: flex;
