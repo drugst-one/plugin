@@ -288,17 +288,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     const filteredViralProteins = [];
     this.viralProteinCheckboxes.forEach((cb) => {
-      const effects: Array<ViralProtein> = [];
+      const viralProteins: Array<ViralProtein> = [];
       this.proteinData.effects.forEach((effect) => {
         if (effect.effectName === cb.data.effectName) {
-          effects.push(effect);
+          viralProteins.push(effect);
         }
       });
-      effects.forEach((effect) => {
+      viralProteins.forEach((effect) => {
         const nodeId = `eff_${effect.effectName}_${effect.virusName}_${effect.datasetName}`;
         const found = visibleIds.has(nodeId);
         if ((cb.checked || showAll) && !found) {
-          const node = this.mapEffectToNode(effect);
+          const node = this.mapViralProteinToNode(effect);
           // this.nodeData.nodes.add(node);
           addNodes.set(node.id, node);
         } else if ((!showAll && !cb.checked) && found) {
@@ -322,7 +322,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         filteredProteins.push(protein);
 
         if (!found) {
-          const node = this.mapProteinToNode(protein);
+          const node = this.mapHostProteinToNode(protein);
           addNodes.set(node.id, node);
         }
       } else if (found) {
@@ -359,7 +359,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private mapProteinToNode(protein: Protein): any {
+  private mapHostProteinToNode(protein: Protein): any {
     let color = '#e2b600';
     if (this.analysis.inSelection(protein)) {
       color = '#48C774';
@@ -373,7 +373,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     };
   }
 
-  private mapEffectToNode(effect: ViralProtein): any {
+  private mapViralProteinToNode(effect: ViralProtein): any {
     return {
       id: `eff_${effect.effectName}_${effect.virusName}_${effect.datasetName}`,
       label: `${effect.effectName} (${effect.virusName}, ${effect.datasetName})`,
@@ -396,11 +396,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     const edges = [];
 
     for (const protein of data.proteins) {
-      nodes.push(this.mapProteinToNode(protein));
+      nodes.push(this.mapHostProteinToNode(protein));
     }
 
     for (const effect of data.effects) {
-      nodes.push(this.mapEffectToNode(effect));
+      nodes.push(this.mapViralProteinToNode(effect));
     }
 
     for (const edge of data.edges) {
@@ -411,6 +411,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       nodes,
       edges,
     };
+  }
+
+  public addAllHostProteins() {
+    const visibleIds = new Set<string>(this.nodeData.nodes.getIds());
+    for (const protein of this.proteinData.proteins) {
+      const nodeId = `p_${protein.proteinAc}`;
+      const found = visibleIds.has(nodeId);
+      if (found && !this.analysis.inSelection(protein)) {
+        this.analysis.addProtein(protein);
+      }
+    }
   }
 
   inSelection(proteinAc: string): boolean {

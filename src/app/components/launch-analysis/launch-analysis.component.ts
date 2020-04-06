@@ -2,11 +2,11 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AnalysisService} from '../../analysis.service';
 
 @Component({
-  selector: 'app-protein-analysis',
-  templateUrl: './protein-analysis.component.html',
-  styleUrls: ['./protein-analysis.component.scss']
+  selector: 'app-launch-analysis',
+  templateUrl: './launch-analysis.component.html',
+  styleUrls: ['./launch-analysis.component.scss']
 })
-export class ProteinAnalysisComponent implements OnInit {
+export class LaunchAnalysisComponent implements OnInit {
 
   @Input()
   public show = false;
@@ -22,6 +22,9 @@ export class ProteinAnalysisComponent implements OnInit {
   public trustrankNumThreads = 1;
   public trustrankDatasets = [];
   public trustrankIgnoredEdgeTypes = [];
+
+  // Keypathwayminer Parameters
+  public keypathwayminerK = 1;
 
   // Multisteiner Parameters
   public multisteinerStrain = 'SARS_CoV2';

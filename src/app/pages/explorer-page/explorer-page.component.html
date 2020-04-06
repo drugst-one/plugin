@@ -1,4 +1,4 @@
-<app-protein-analysis [(show)]="showAnalysisDialog"></app-protein-analysis>
+<app-launch-analysis [(show)]="showAnalysisDialog"></app-launch-analysis>
 
 <div class="covex explorer">
 
@@ -115,11 +115,11 @@
                 <button class="button is-loading center">Loading</button>
               </div>
             </div>
-            <footer class="card-footer">
-              <button (click)="toCanvas()" class="button is-primary">
+            <footer class="card-footer toolbar">
+              <button (click)="toCanvas()" class="button is-primary is-rounded">
                 <span class="icon">
-        <i class="fas fa-camera" aria-hidden="true"></i>
-      </span> <span>Screenshot</span>
+                  <i class="fas fa-camera" aria-hidden="true"></i>
+                </span> <span>Screenshot</span>
               </button>
               <div class="field has-addons footer-toggle-buttons">
                 <p class="control">
@@ -208,7 +208,7 @@
       </header>
       <div class="card-content">
         <button (click)="showAnalysisDialog = true"
-                class="button is-primary is-fullwidth"
+                class="button is-primary is-fullwidth is-rounded"
                 [disabled]="analysis.getCount() === 0">
           <span class="icon">
             <i class="fa fa-rocket"></i>
@@ -275,13 +275,31 @@
         </i>
       </div>
       <footer class="card-footer">
-        <a (click)="analysis.resetSelection()" class="card-footer-item has-text-danger">
-            <span class="icon">
-              <i class="fa fa-refresh"></i>
-            </span>
+        <a (click)="addAllHostProteins()" class="card-footer-item has-text-success">
+          <span class="icon">
+            <i class="fa fa-plus"></i>
+          </span>
           <span>
-              Reset
-            </span>
+            Host Proteins
+          </span>
+        </a>
+        <a class="card-footer-item has-text-grey-light">
+          <span class="icon">
+            <i class="fa fa-plus"></i>
+          </span>
+          <span>
+            Viral Proteins
+          </span>
+        </a>
+      </footer>
+      <footer class="card-footer">
+        <a (click)="analysis.resetSelection()" class="card-footer-item has-text-danger">
+          <span class="icon">
+            <i class="fa fa-refresh"></i>
+          </span>
+          <span>
+            Reset
+          </span>
         </a>
       </footer>
     </div>

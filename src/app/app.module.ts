@@ -13,7 +13,7 @@ import {HomePageComponent} from './pages/home-page/home-page.component';
 import {HttpClientModule} from '@angular/common/http';
 import {QueryComponent} from './components/query/query.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {ProteinAnalysisComponent} from './components/protein-analysis/protein-analysis.component';
+import {LaunchAnalysisComponent} from './components/launch-analysis/launch-analysis.component';
 import {SelectDatasetComponent} from './components/select-dataset/select-dataset.component';
 import {AnalysisWindowComponent} from './components/analysis-window/analysis-window.component';
 import {TaskListComponent} from './components/task-list/task-list.component';
@@ -27,7 +27,7 @@ import {AnalysisService} from './analysis.service';
     AboutPageComponent,
     HomePageComponent,
     QueryComponent,
-    ProteinAnalysisComponent,
+    LaunchAnalysisComponent,
     SelectDatasetComponent,
     AnalysisWindowComponent,
     TaskListComponent,
