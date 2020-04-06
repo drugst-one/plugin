@@ -23,6 +23,11 @@ declare var vis: any;
 export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public showDetails = false;
+  public collabsAnalysis = true;
+  public collabsDetails = true;
+  public collabsTask = true;
+  public collabsSelection = true;
+  public collabsDFilter = true;
   public currentProteinAc = '';
   public geneNames: Array<string> = [];
   public proteinNames: Array<string> = [];
