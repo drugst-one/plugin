@@ -14,10 +14,8 @@ export class SelectDatasetComponent {
   @Input() datasetItems: Array<{label: string, datasets: string, data: Array<[string, string]>}>;
 
   public select(selectionItem) {
-    // console.log(selectionItem);
     this.selectedDataset = selectionItem;
     this.selectedDatasetChange.emit(selectionItem);
-
   }
 
 }

@@ -62,6 +62,10 @@ export class AnalysisService {
     return this.selectedProteins.has(protein.proteinAc);
   }
 
+  idInSelection(id: string): boolean {
+    return this.selectedProteins.has(id);
+  }
+
   removeProtein(protein: Protein) {
     if (this.selectedProteins.delete(`${protein.proteinAc}`)) {
       this.selectSubject.next({protein, selected: false});

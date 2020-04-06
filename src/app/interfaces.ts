@@ -1,3 +1,5 @@
+export type NodeType = 'host' | 'virus' | 'drug';
+
 export interface Protein {
   name: string;
   proteinAc: string;
@@ -25,7 +27,7 @@ export interface ProteinViralInteraction {
 export interface Task {
   token: string;
   info: {
-    algorithm: string;
+    algorithm: 'trustrank' | 'multisteiner' | 'keypathwayminer';
     parameters?: { [key: string]: any };
 
     workerId?: string;

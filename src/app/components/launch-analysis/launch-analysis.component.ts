@@ -30,7 +30,6 @@ export class LaunchAnalysisComponent implements OnInit {
   public multisteinerStrain = 'SARS_CoV2';
   public multisteinerNumTrees = 5;
 
-
   constructor(public analysis: AnalysisService) {
   }
 
@@ -44,13 +43,13 @@ export class LaunchAnalysisComponent implements OnInit {
 
   public async startTask() {
     const parameters: any = {
-      proteins: this.analysis.getSelection().map((protein) => protein.proteinAc),
+      seeds: this.analysis.getSelection().map((protein) => protein.proteinAc),
     };
 
     if (this.algorithm === 'dummy') {
       // No parameters for dummy
     } else if (this.algorithm === 'trustrank') {
-      parameters.strain = this.trustrankStrain;
+      parameters.strain_or_drugs = this.trustrankStrain;
       parameters.datasets = [];
       parameters.ignored_edge_types = [];
       parameters.damping_factor = this.trustrankDampingFactor;
