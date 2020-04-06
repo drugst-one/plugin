@@ -6,68 +6,26 @@
     <div>
       <div class="covex bar-left">
 
-        <div class="card bar-small">
+        <div class="card bar-large">
           <header class="card-header">
             <p class="card-header-title">
           <span class="icon">
         <i class="fas fa-database" aria-hidden="true"></i>
       </span> Choose Dataset
             </p>
+            <a (click)="collabsData = !collabsData" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+             <span class="icon">
+               <i class="fas fa-angle-down" aria-hidden="true"></i>
+             </span>
+            </a>
           </header>
-          <div class="card-content">
-            <app-select-dataset [datasetItems]="datasetItems"  [selectedDataset]="selectedDataset"
-                                (selectedDatasetChange)="selectedDataset = $event; createNetwork($event.data)">
-            </app-select-dataset>
+          <div *ngIf="collabsData">
 
-          </div>
-        </div>
+            <div class="card-content">
+              <app-select-dataset [datasetItems]="datasetItems"  [selectedDataset]="selectedDataset"
+                                  (selectedDatasetChange)="selectedDataset = $event; createNetwork($event.data)">
+              </app-select-dataset>
 
-        <div class="card bar-medium">
-          <header class="card-header">
-            <p class="card-header-title">
-          <span class="icon">
-        <i class="fas fa-info" aria-hidden="true"></i>
-      </span> Network Overview
-            </p>
-          </header>
-          <div class="card-content">
-            <nav class="level" *ngIf="proteinData">
-              <div class="level-item has-text-centered">
-                <div>
-                  <p class="heading">Viral<br>Proteins</p>
-                  <p class="title"> {{ proteinData.effects.length }}</p>
-                </div>
-              </div>
-              <div class="level-item has-text-centered">
-                <div>
-                  <p class="heading">Host<br>Proteins</p>
-                  <p class="title">{{ proteinData.proteins.length }}</p>
-                </div>
-              </div>
-              <div class="level-item has-text-centered">
-                <div>
-                  <p class="heading">Virus-Host<br>Interactions</p>
-                  <p class="title">{{ proteinData.edges.length }}</p>
-                </div>
-              </div>
-            </nav>
-          </div>
-        </div>
-
-        <div class="card bar-small">
-          <header class="card-header">
-            <p class="card-header-title">
-          <span class="icon">
-        <i class="fas fa-search" aria-hidden="true"></i>
-      </span> Query Protein
-            </p>
-          </header>
-          <div class="card-content">
-            <div class="field">
-              <div class="control">
-                <app-query-component [queryItems]="queryItems"
-                                     (selectItem)="queryAction($event)"></app-query-component>
-              </div>
             </div>
           </div>
         </div>
@@ -76,19 +34,89 @@
           <header class="card-header">
             <p class="card-header-title">
           <span class="icon">
+        <i class="fas fa-info" aria-hidden="true"></i>
+      </span> Network Overview
+            </p>
+            <a (click)="collabsOverview= !collabsOverview" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+             <span class="icon">
+               <i class="fas fa-angle-down" aria-hidden="true"></i>
+             </span>
+            </a>
+          </header>
+          <div *ngIf="collabsOverview">
+            <div class="card-content">
+              <nav class="level" *ngIf="proteinData">
+                <div class="level-item has-text-centered">
+                  <div>
+                    <p class="heading">Viral<br>Proteins</p>
+                    <p class="title"> {{ proteinData.effects.length }}</p>
+                  </div>
+                </div>
+                <div class="level-item has-text-centered">
+                  <div>
+                    <p class="heading">Host<br>Proteins</p>
+                    <p class="title">{{ proteinData.proteins.length }}</p>
+                  </div>
+                </div>
+                <div class="level-item has-text-centered">
+                  <div>
+                    <p class="heading">Virus-Host<br>Interactions</p>
+                    <p class="title">{{ proteinData.edges.length }}</p>
+                  </div>
+                </div>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+        <div class="card bar-large" >
+          <header class="card-header">
+            <p class="card-header-title">
+          <span class="icon">
+        <i class="fas fa-search" aria-hidden="true"></i>
+      </span> Query Protein
+            </p>
+            <a (click)="collabsQuery = !collabsQuery" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+           <span class="icon">
+             <i class="fas fa-angle-down" aria-hidden="true"></i>
+           </span>
+          </a>
+          </header >
+          <div *ngIf="collabsQuery">
+            <div class="card-content">
+              <div class="field">
+                <div class="control">
+                  <app-query-component [queryItems]="queryItems"
+                                       (selectItem)="queryAction($event)"></app-query-component>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+
+        <div class="card bar-large">
+          <header class="card-header">
+            <p class="card-header-title">
+          <span class="icon">
         <i class="fas fa-filter" aria-hidden="true"></i>
       </span> Filter Viral Proteins
             </p>
+            <a (click)="collabsDFilter = !collabsDFilter" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+              <span class="icon">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+            </a>
           </header>
-          <div class="card-content overflow">
-            <div *ngFor="let bait of viralProteinCheckboxes">
-              <label class="checkbox">
-                <input type="checkbox" class="checkbox" [ngModel]="bait.checked"
-                       (ngModelChange)="bait.checked = $event; filterNodes()">
-                {{ bait.data.effectName }}
-              </label>
+          <div *ngIf="collabsDFilter">
+            <div class="card-content overflow">
+              <div *ngFor="let bait of viralProteinCheckboxes">
+                <label class="checkbox">
+                  <input type="checkbox" class="checkbox" [ngModel]="bait.checked"
+                         (ngModelChange)="bait.checked = $event; filterNodes()">
+                  {{ bait.data.effectName }}
+                </label>
+              </div>
             </div>
-          </div>
           <footer class="card-footer">
             <a (click)="reset($event);" class="card-footer-item has-text-danger">
               <span class="icon">
@@ -100,6 +128,7 @@
             </a>
           </footer>
         </div>
+      </div>
       </div>
 
       <div class="covex network">
@@ -158,42 +187,49 @@
         <i class="fas fa-info" aria-hidden="true"></i>
       </span> {{currentProteinAc}}
         </p>
+        <a (click)="collabsDetails = !collabsDetails" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+          <span class="icon">
+            <i class="fas fa-angle-down" aria-hidden="true"></i>
+          </span>
+        </a>
       </header>
-      <div class="card-content">
-        <div *ngIf="showDetails">
-          <p><b>Protein Name:</b> {{ currentProteinAc }}</p>
-          <p><b>Protein AC(s):</b>
-            <a href="https://www.uniprot.org/uniprot/{{proteinAc}}" target="_blank"
-               *ngFor="let proteinAc of proteinAcs">
-              {{ proteinAc }}
-            </a>
-          </p>
-          <div class="field has-addons add-remove-toggle">
-            <p class="control">
-              <button class="button is-rounded" [class.is-success]="!inSelection(currentProteinAc)"
-                      [disabled]="inSelection(currentProteinAc)"
-                      (click)="addToSelection(currentProteinAc)">
-                <span class="icon is-small">
-                  <i class="fas fa-plus"></i>
-                </span>
-                <span>Add to Analysis</span>
-              </button>
+      <div *ngIf="collabsDetails">
+        <div class="card-content">
+          <div *ngIf="showDetails">
+            <p><b>Protein Name:</b> {{ currentProteinAc }}</p>
+            <p><b>Protein AC(s):</b>
+              <a href="https://www.uniprot.org/uniprot/{{proteinAc}}" target="_blank"
+                 *ngFor="let proteinAc of proteinAcs">
+                {{ proteinAc }}
+              </a>
             </p>
-            <p class="control">
-              <button class="button is-rounded" [class.is-danger]="inSelection(currentProteinAc)"
-                      [disabled]="!inSelection(currentProteinAc)"
-                      (click)="removeFromSelection(currentProteinAc)">
-                <span>Remove</span>
-                <span class="icon is-small">
-                  <i class="fas fa-trash"></i>
-                </span>
-              </button>
-            </p>
+            <div class="field has-addons add-remove-toggle">
+              <p class="control">
+                <button class="button is-rounded" [class.is-success]="!inSelection(currentProteinAc)"
+                        [disabled]="inSelection(currentProteinAc)"
+                        (click)="addToSelection(currentProteinAc)">
+                  <span class="icon is-small">
+                    <i class="fas fa-plus"></i>
+                  </span>
+                  <span>Add to Analysis</span>
+                </button>
+              </p>
+              <p class="control">
+                <button class="button is-rounded" [class.is-danger]="inSelection(currentProteinAc)"
+                        [disabled]="!inSelection(currentProteinAc)"
+                        (click)="removeFromSelection(currentProteinAc)">
+                  <span>Remove</span>
+                  <span class="icon is-small">
+                    <i class="fas fa-trash"></i>
+                  </span>
+                </button>
+              </p>
+            </div>
           </div>
-        </div>
-        <div *ngIf="!showDetails">
-          Please select a node for further information.
-          <!--          <a (click)="selectedAnalysisToken = 'oy4UsXfBDobTucdQBhN9IUzfnpqKwzqx'"> Open Analysis Window </a>-->
+          <div *ngIf="!showDetails">
+            Please select a node for further information.
+            <!--          <a (click)="selectedAnalysisToken = 'oy4UsXfBDobTucdQBhN9IUzfnpqKwzqx'"> Open Analysis Window </a>-->
+          </div>
         </div>
       </div>
     </div>
@@ -205,18 +241,25 @@
         <i class="fas fa-flask" aria-hidden="true"></i>
       </span> Analysis
         </p>
-      </header>
-      <div class="card-content">
-        <button (click)="showAnalysisDialog = true"
-                class="button is-primary is-fullwidth is-rounded"
-                [disabled]="analysis.getCount() === 0">
+        <a (click)="collabsAnalysis = !collabsAnalysis" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
-            <i class="fa fa-rocket"></i>
+            <i class="fas fa-angle-down" aria-hidden="true"></i>
           </span>
-          <span>
-            Launch Analysis
-          </span>
-        </button>
+        </a>
+      </header>
+      <div *ngIf="collabsAnalysis">
+        <div class="card-content">
+          <button (click)="showAnalysisDialog = true"
+                  class="button is-primary is-fullwidth is-rounded"
+                  [disabled]="analysis.getCount() === 0">
+            <span class="icon">
+              <i class="fa fa-rocket"></i>
+            </span>
+            <span>
+              Launch Analysis
+            </span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -227,21 +270,29 @@
               <i class="fas fa-filter" aria-hidden="true"></i>
             </span> Tasks
         </p>
-      </header>
-      <div class="card-content overflow">
-        <app-task-list [(token)]="selectedAnalysisToken"></app-task-list>
-      </div>
-      <footer class="card-footer">
-        <a (click)="analysis.removeAllTasks();" class="card-footer-item has-text-danger">
+        <a (click)="collabsTask = !collabsTask" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
-              <i class="fa fa-trash"></i>
-            </span>
-          <span>
-              Delete All
-            </span>
+            <i class="fas fa-angle-down" aria-hidden="true"></i>
+          </span>
         </a>
-      </footer>
+      </header>
+      <div *ngIf="collabsTask">
+        <div class="card-content overflow">
+          <app-task-list [(token)]="selectedAnalysisToken"></app-task-list>
+        </div>
+        <footer class="card-footer">
+          <a (click)="analysis.removeAllTasks();" class="card-footer-item has-text-danger">
+            <span class="icon">
+                <i class="fa fa-trash"></i>
+              </span>
+            <span>
+                Delete All
+              </span>
+          </a>
+        </footer>
+      </div>
     </div>
+
 
     <div class="card bar-large">
       <header class="card-header">
@@ -250,30 +301,36 @@
               <i class="fas fa-filter" aria-hidden="true"></i>
             </span> Selection
         </p>
+        <a (click)="collabsSelection = !collabsSelection" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+          <span class="icon">
+            <i class="fas fa-angle-down" aria-hidden="true"></i>
+          </span>
+        </a>
       </header>
-      <div class="card-content overflow">
-        <table class="table" *ngIf="analysis.getCount() > 0">
-          <thead>
-          <tr>
-            <td>AC</td>
-            <td>Actions</td>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let p of analysis.getSelection()">
-            <td>{{p.proteinAc}}</td>
-            <td>
-              <button (click)="analysis.removeProtein(p)" class="button is-small is-danger is-outlined">
-                <i class="fa fa-trash"></i>
-              </button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-        <i *ngIf="analysis.getCount() === 0">
-          To select proteins, click them while pressing CTRL.
-        </i>
-      </div>
+      <div *ngIf="collabsSelection">
+        <div class="card-content overflow">
+          <table class="table" *ngIf="analysis.getCount() > 0">
+            <thead>
+            <tr>
+              <td>AC</td>
+              <td>Actions</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let p of analysis.getSelection()">
+              <td>{{p.proteinAc}}</td>
+              <td>
+                <button (click)="analysis.removeProtein(p)" class="button is-small is-danger is-outlined">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <i *ngIf="analysis.getCount() === 0">
+            To select proteins, click them while pressing CTRL.
+          </i>
+        </div>
       <footer class="card-footer">
         <a (click)="addAllHostProteins()" class="card-footer-item has-text-success">
           <span class="icon">
@@ -302,6 +359,7 @@
           </span>
         </a>
       </footer>
+    </div>
     </div>
 
 
