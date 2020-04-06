@@ -8,12 +8,16 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 export class SelectDatasetComponent {
 
-  @Output() selectDataset: EventEmitter<any> = new EventEmitter();
+  @Input() selectedDataset;
+  @Output() selectedDatasetChange: EventEmitter<any> = new EventEmitter();
 
   @Input() datasetItems: Array<{label: string, datasets: string, data: Array<[string, string]>}>;
 
   public select(selectionItem) {
-    this.selectDataset.emit(selectionItem.data);
+    // console.log(selectionItem);
+    this.selectedDataset = selectionItem;
+    this.selectedDatasetChange.emit(selectionItem);
+
   }
 
 }

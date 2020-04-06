@@ -57,6 +57,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     {label: 'CoV2', datasets: 'Krogan', data: [['Krogan', 'SARS-CoV2']]},
     {label: 'CoV2', datasets: 'TUM', data: [['TUM', 'SARS-CoV2']]}];
 
+  public selectedDataset = this.datasetItems[0];
+
+
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 
   constructor(private http: HttpClient,
@@ -121,7 +124,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   async ngAfterViewInit() {
     if (!this.network) {
-      await this.createNetwork(this.datasetItems[0].data);
+      this.selectedDataset = this.datasetItems[4];
+      await this.createNetwork(this.datasetItems[4].data);
     }
   }
 
