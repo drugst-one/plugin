@@ -36,7 +36,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   public showDrugs = false;
   private result: any;
 
-  constructor(private http: HttpClient, private analysis: AnalysisService) {
+  constructor(private http: HttpClient, public analysis: AnalysisService) {
   }
 
   async ngOnInit() {
@@ -119,7 +119,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
       node.x = pos[nodeId].x;
       node.y = pos[nodeId].y;
       if (selected) {
-        node.color = '#c42eff';
+        node.color = '#48C774';
         this.nodeData.nodes.update(node);
       } else {
         node.color = '#e2b600';
@@ -169,7 +169,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   private mapProteinToNode(protein: any): any {
     let color = '#e2b600';
     if (this.analysis.inSelection(protein)) {
-      color = '#c42eff';
+      color = '#48C774';
     }
     return {
       id: `p_${protein.proteinAc}`,

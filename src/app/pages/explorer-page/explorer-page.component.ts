@@ -48,7 +48,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public selectedAnalysisToken: string | null = null;
 
   public currentDataset = [];
-  private array = [0];
+  private screenshotArray = [0];
 
   public datasetItems: Array<{ label: string, datasets: string, data: Array<[string, string]> }> = [
     {label: 'All', datasets: 'TUM & Krogan', data: [['TUM', 'HCoV'], ['TUM', 'SARS-CoV2'], ['Krogan', 'SARS-CoV2']]},
@@ -348,9 +348,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public updatePhysicsEnabled(bool) {
+    this.physicsEnabled = bool;
     this.network.setOptions({
       physics: {
-        enabled: bool,
+        enabled: this.physicsEnabled,
         stabilization: {
           enabled: false,
         },
@@ -446,7 +447,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public toCanvas() {
-    this.array.forEach((key, index) => {
+    this.screenshotArray.forEach((key, index) => {
       const elem = document.getElementById(index.toString());
       html2canvas(elem).then((canvas) => {
         const generatedImage = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
