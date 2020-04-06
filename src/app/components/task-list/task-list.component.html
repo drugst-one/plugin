@@ -2,17 +2,25 @@
   <div class="list is-hoverable">
     <a *ngFor="let task of analysis.tasks" class="list-item" [class.is-active]="task.token === token">
       <div *ngIf="!task.info.startedAt" (click)="open(task.token)">
-        <b>Algorithm: {{task.info.algorithm}}</b><br>
+        <span><b>{{task.info.algorithm}} (Queued)</b></span>
+        <span class="icon"><i class="fas fa-pause" aria-hidden="true"></i></span><br>
         Queue Length: {{task.stats.queueLength}}<br>
         Queue Position:{{task.stats.queuePosition}}
       </div>
-      <div *ngIf="task.info.startedAt && !task.info.done" (click)="open(task.token)">
-        <a>Algorithm: {{task.info.algorithm}}</a><br>
+      <div *ngIf="task.info.startedAt && !task.info.done && !task.info.failed" (click)="open(task.token)">
+        <span><b>{{task.info.algorithm}} ({{task.info.startedAt | date :'short'}})</b></span>
+        <span class="icon"><i class="fas fa-spinner" aria-hidden="true"></i></span>
+        <br>
         <progress class="progress is-primary" [value]="task.info.progress * 100" max="100"></progress>
       </div>
-      <div *ngIf="task.info.done" (click)="open(task.token)">
-        <span>Algorithm: {{task.info.algorithm}}</span>
-        <span class="icon is-success"><i class="fas fa-check is-success" aria-hidden="true"></i>
+      <div *ngIf="task.info.failed && task.info.finishedAt == null">
+        <span><b>{{task.info.algorithm}} ({{task.info.startedAt | date :'short'}})</b></span>
+        <span class="icon"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+        </span>
+      </div>
+      <div *ngIf="task.info.done && !task.info.failed" (click)="open(task.token)">
+        <span><b>{{task.info.algorithm}} ({{task.info.startedAt | date :'short'}})</b></span>
+        <span class="icon"><i class="fas fa-check" aria-hidden="true"></i>
         </span>
       </div>
     </a>

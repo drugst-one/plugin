@@ -139,9 +139,31 @@ div.covex.explorer {
   margin-top: 0;
 }
 
-i.fas.is-success {
-
+div.field.has-addons.add-remove-toggle {
+  margin-top: 20px;
 }
+
+.fa-check {
+  color: #48C774;
+}
+
+.fa-spinner {
+  color: #e2b600;
+}
+
+.fa-pause {
+  color: #e2b600;
+}
+
+.fa-exclamation-triangle {
+  color: #EF476F;
+}
+
+div.field.has-addons.footer-toggle-buttons {
+  margin-left: 20px;
+  margin-right: 10px;
+}
+
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

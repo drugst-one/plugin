@@ -26,6 +26,18 @@ export class AnalysisService {
     this.startWatching();
   }
 
+  removeTask(token) {
+    this.tokens = this.tokens.filter((item) => item !== token);
+    this.tasks = this.tasks.filter((item) => item.token !== (token));
+    localStorage.setItem('tokens', JSON.stringify(this.tokens));
+  }
+
+  removeAllTasks() {
+    this.tasks.forEach((task) => {
+      this.removeTask(task.token);
+    });
+  }
+
   async getTasks() {
     return await this.http.get<any>(`${environment.backend}tasks/?tokens=${JSON.stringify(this.tokens)}`).toPromise().catch((e) => {
       clearInterval(this.intervalId);
