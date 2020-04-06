@@ -58,15 +58,19 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public currentDataset = [];
   private screenshotArray = [0];
 
-  public datasetItems: Array<{ label: string, datasets: string, data: Array<[string, string]> }> = [
-    {label: 'All', datasets: 'TUM & Krogan', data: [['TUM', 'HCoV'], ['TUM', 'SARS-CoV2'], ['Krogan', 'SARS-CoV2']]},
-    {label: 'HCoV', datasets: 'TUM', data: [['TUM', 'HCoV']]},
-    {label: 'CoV2', datasets: 'TUM & Krogan', data: [['TUM', 'SARS-CoV2'], ['Krogan', 'SARS-CoV2']]},
-    {label: 'CoV2', datasets: 'Krogan', data: [['Krogan', 'SARS-CoV2']]},
-    {label: 'CoV2', datasets: 'TUM', data: [['TUM', 'SARS-CoV2']]}];
+  public datasetItems: Array<{ id: string, label: string, datasets: string, data: Array<[string, string]> }> = [
+    {
+      id: 'All (TUM & Krogan)',
+      label: 'All',
+      datasets: 'TUM & Krogan',
+      data: [['TUM', 'HCoV'], ['TUM', 'SARS-CoV2'], ['Krogan', 'SARS-CoV2']]
+    },
+    {id: 'HCoV (TUM)', label: 'HCoV', datasets: 'TUM', data: [['TUM', 'HCoV']]},
+    {id: 'CoV2 (TUM & Krogan)', label: 'CoV2', datasets: 'TUM & Krogan', data: [['TUM', 'SARS-CoV2'], ['Krogan', 'SARS-CoV2']]},
+    {id: 'CoV2 (Krogan)', label: 'CoV2', datasets: 'Krogan', data: [['Krogan', 'SARS-CoV2']]},
+    {id: 'CoV2 (TUM)', label: 'CoV2', datasets: 'TUM', data: [['TUM', 'SARS-CoV2']]}];
 
-  public selectedDataset = this.datasetItems[0];
-
+  public selectedDataset = this.datasetItems[3];
 
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 
@@ -132,8 +136,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   async ngAfterViewInit() {
     if (!this.network) {
-      this.selectedDataset = this.datasetItems[4];
-      await this.createNetwork(this.datasetItems[4].data);
+      this.selectedDataset = this.datasetItems[3];
+      await this.createNetwork(this.selectedDataset.data);
     }
   }
 

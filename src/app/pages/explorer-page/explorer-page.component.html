@@ -266,9 +266,9 @@
     <div class="card bar-large">
       <header class="card-header">
         <p class="card-header-title">
-                <span class="icon">
-              <i class="fas fa-filter" aria-hidden="true"></i>
-            </span> Tasks
+          <span class="icon">
+            <i class="fas fa-filter" aria-hidden="true"></i>
+          </span> Tasks
         </p>
         <a (click)="collabsTask = !collabsTask" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
@@ -281,7 +281,7 @@
           <app-task-list [(token)]="selectedAnalysisToken"></app-task-list>
         </div>
         <footer class="card-footer">
-          <a (click)="analysis.removeAllTasks();" class="card-footer-item has-text-danger">
+          <a (click)="analysis.removeAllTasks(); selectedAnalysisToken = null;" class="card-footer-item has-text-danger">
             <span class="icon">
                 <i class="fa fa-trash"></i>
               </span>

@@ -12,7 +12,7 @@ import {
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {AnalysisService} from '../../analysis.service';
-import {Protein, Task} from '../../interfaces';
+import {Protein, Task, NodeType} from '../../interfaces';
 
 declare var vis: any;
 
@@ -34,7 +34,6 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
   private drugNodes = [];
   public showDrugs = false;
-  private result: any;
 
   constructor(private http: HttpClient, public analysis: AnalysisService) {
   }
@@ -51,13 +50,53 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
       this.task = await this.getTask(this.token);
 
       if (this.task && this.task.info.done) {
-        const result = await this.http.get<any>(`${environment.backend}result/?token=${this.token}`).toPromise();
-        this.result = result;
+        const result = await this.http.get<any>(`${environment.backend}task_result/?token=${this.token}`).toPromise();
+
+        // Reset
+        this.nodeData = {nodes: null, edges: null};
         this.networkEl.nativeElement.innerHTML = '';
         this.network = null;
         this.showDrugs = false;
-        this.nodeData = {nodes: null, edges: null};
-        this.createNetwork(result);
+
+        // Create
+        const {nodes, edges} = this.createNetwork(result);
+        this.nodeData.nodes = new vis.DataSet(nodes);
+        this.nodeData.edges = new vis.DataSet(edges);
+
+        const container = this.networkEl.nativeElement;
+        const options = {};
+
+        this.network = new vis.Network(container, this.nodeData, options);
+        this.network.on('select', (properties) => {
+          const selectedNodes = this.nodeData.nodes.get(properties.nodes);
+          if (selectedNodes.length > 0) {
+            if (selectedNodes[0].nodeType === 'host') {
+              const protein: Protein = {name: '', proteinAc: selectedNodes[0].id};
+              if (properties.event.srcEvent.ctrlKey) {
+                if (this.analysis.inSelection(protein) === true) {
+                  this.analysis.removeProtein(protein);
+                } else {
+                  this.analysis.addProtein(protein);
+                  this.analysis.getCount();
+                }
+              }
+            }
+          }
+        });
+
+        this.analysis.subscribe((protein, selected) => {
+          const nodeId = `${protein.proteinAc}`;
+          const node = this.nodeData.nodes.get(nodeId);
+          if (!node) {
+            return;
+          }
+          const pos = this.network.getPositions([nodeId]);
+          node.x = pos[nodeId].x;
+          node.y = pos[nodeId].y;
+          const {color} = this.getNodeLooks(nodeId, node.nodeType, node.isSeed);
+          node.color = color;
+          this.nodeData.nodes.update(node);
+        });
       }
     }
   }
@@ -79,161 +118,92 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
 
   }
 
-  public async createNetwork(result: any) {
-    const {nodes, edges} = this.mapDataToNodes(result);
-    this.nodeData.nodes = new vis.DataSet(nodes);
-    this.nodeData.edges = new vis.DataSet(edges);
-
-    const container = this.networkEl.nativeElement;
-    const options = {
-      layout: {
-        improvedLayout: false,
-      },
-    };
-
-    this.network = new vis.Network(container, this.nodeData, options);
-    this.network.on('select', (properties) => {
-      const id: Array<string> = properties.nodes;
-      if (id.length > 0) {
-        if (id[0].startsWith('p_')) {
-          const protein = this.getProtein(id[0].substr(2));
-          if (properties.event.srcEvent.ctrlKey) {
-            if (this.inSelection(protein.proteinAc) === true) {
-              this.removeFromSelection(protein.proteinAc);
-            } else {
-              this.addToSelection(protein.proteinAc);
-              this.analysis.getCount();
-            }
-          }
-        }
-      }
-    });
-
-    this.analysis.subscribe((protein, selected) => {
-      const nodeId = `p_${protein.proteinAc}`;
-      const node = this.nodeData.nodes.get(nodeId);
-      if (!node) {
-        return;
-      }
-      const pos = this.network.getPositions([nodeId]);
-      node.x = pos[nodeId].x;
-      node.y = pos[nodeId].y;
-      if (selected) {
-        node.color = '#48C774';
-        this.nodeData.nodes.update(node);
-      } else {
-        node.color = '#e2b600';
-        this.nodeData.nodes.update(node);
-      }
-    });
-  }
-
-  inSelection(proteinAc: string): boolean {
-    if (!this.result.proteins || !proteinAc) {
-      return false;
+  public inferNodeType(nodeId: string): 'host' | 'virus' | 'drug' {
+    if (nodeId.indexOf('-') !== -1 || nodeId.indexOf('_') !== -1) {
+      return 'virus';
     }
-    const protein = this.getProtein(proteinAc);
-    if (!protein) {
-      return false;
-    }
-    return this.analysis.inSelection(protein);
+    return 'host';
   }
 
-  addToSelection(proteinAc: string) {
-    if (!this.result.proteins || !proteinAc) {
-      return false;
-    }
-    const protein = this.getProtein(proteinAc);
-    if (!protein) {
-      return false;
-    }
-    this.analysis.addProtein(protein);
-  }
-
-  removeFromSelection(proteinAc: string) {
-    if (!this.result.proteins || !proteinAc) {
-      return false;
-    }
-    const protein = this.getProtein(proteinAc);
-    if (!protein) {
-      return false;
-    }
-    this.analysis.removeProtein(protein);
-  }
-
-  public getProtein(ac: string): Protein | undefined {
-    return this.result.proteins.find((p) => p.proteinAc === ac);
-  }
-
-
-  private mapProteinToNode(protein: any): any {
-    let color = '#e2b600';
-    if (this.analysis.inSelection(protein)) {
-      color = '#48C774';
-    }
-    return {
-      id: `p_${protein.proteinAc}`,
-      label: `${protein.proteinAc}`,
-      size: 10, color, shape: 'ellipse', shadow: false,
-    };
-  }
-
-  private mapDrugToNode(drug: any): any {
-    let color = '#ffffff';
-    if (drug.status === 'investigational') {
-      color = '#ffa066';
-    } else if (drug.status === 'approved') {
-      color = '#a0ff66';
-    }
-    return {
-      id: `d_${drug.drugId}`,
-      label: `${drug.name}`,
-      size: 10, color, shape: 'ellipse', shadow: true, font: {color: '#000000', size: 5},
-    };
-  }
-
-  private mapProteinProteinInteractionToEdge(edge: any): any {
-    return {
-      from: `p_${edge.from}`,
-      to: `p_${edge.to}`,
-      color: {color: '#afafaf', highlight: '#854141'},
-    };
-  }
-
-  private mapDrugProteinInteractionToEdge(edge: any): any {
-    return {
-      from: `p_${edge.proteinAc}`,
-      to: `d_${edge.drugId}`,
-      color: {color: '#afafaf', highlight: '#854141'},
-    };
-  }
-
-  private mapDataToNodes(result: any): { nodes: any[], edges: any[] } {
+  public createNetwork(result: any): { edges: any[], nodes: any[] } {
     const nodes = [];
     const edges = [];
 
-    for (const protein of result.proteins) {
-      nodes.push(this.mapProteinToNode(protein));
-    }
+    const nodeAttributes = result.nodeAttributes || [];
 
-    this.drugNodes = [];
-    for (const drug of result.drugs) {
-      this.drugNodes.push(this.mapDrugToNode(drug));
-    }
+    for (let i = 0; i < result.networks.length; i++) {
+      const network = result.networks[i];
 
-    for (const network of result.networks) {
-      for (const edge of network.ppEdges) {
-        edges.push(this.mapProteinProteinInteractionToEdge(edge));
+      const attributes = nodeAttributes[i] || {};
+      const nodeTypes = attributes.nodeTypes || {};
+      const isSeed = attributes.isSeed || {};
+      const scores = attributes.scores || {};
+
+      for (const node of network.nodes) {
+        nodes.push(this.mapNode(node, nodeTypes[node] || this.inferNodeType(node), isSeed[node], scores[node]));
       }
-    }
 
-    for (const edge of result.dpEdges) {
-      edges.push(this.mapDrugProteinInteractionToEdge(edge));
+      for (const edge of network.edges) {
+        edges.push(this.mapEdge(edge));
+      }
     }
 
     return {
       nodes,
       edges,
+    };
+  }
+
+  private getNodeLooks(nodeId: string, nodeType: NodeType, isSeed: boolean):
+    { color: string, shape: string, size: number, font: any, shadow: boolean } {
+    let color = '';
+    let shape = '';
+    let size = 10;
+    let font = {};
+    let shadow = false;
+
+    if (nodeType === 'host') {
+      shape = 'ellipse';
+      if (this.analysis.idInSelection(nodeId)) {
+        color = '#c7661c';
+      } else {
+        color = '#e2b600';
+      }
+      size = 10;
+    } else if (nodeType === 'virus') {
+      shape = 'box';
+      color = '#118AB2';
+      size = 12;
+      font = {color: 'white'};
+      shadow = true;
+    } else if (nodeType === 'drug') {
+      shape = 'ellipse';
+      color = '#26b28b';
+      size = 6;
+    }
+
+    if (isSeed) {
+      color = '#c064c7';
+    }
+
+    return {color, shape, size, font, shadow};
+  }
+
+  private mapNode(nodeId: any, nodeType?: NodeType, isSeed?: boolean, score?: number): any {
+    const {shape, color, size, font, shadow} = this.getNodeLooks(nodeId, nodeType, isSeed);
+    return {
+      id: nodeId,
+      label: nodeId,
+      size, color, shape, font, shadow,
+      nodeType, isSeed,
+    };
+  }
+
+  private mapEdge(edge: any): any {
+    return {
+      from: `${edge.from}`,
+      to: `${edge.to}`,
+      color: {color: '#afafaf', highlight: '#854141'},
     };
   }
 
