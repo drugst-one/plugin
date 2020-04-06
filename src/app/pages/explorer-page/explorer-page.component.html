@@ -15,8 +15,10 @@
             </p>
           </header>
           <div class="card-content">
-            <app-select-dataset [datasetItems]="datasetItems"
-                                (selectDataset)="createNetwork($event)"></app-select-dataset>
+            <app-select-dataset [datasetItems]="datasetItems"  [selectedDataset]="selectedDataset"
+                                (selectedDatasetChange)="selectedDataset = $event; createNetwork($event.data)">
+            </app-select-dataset>
+
           </div>
         </div>
 
