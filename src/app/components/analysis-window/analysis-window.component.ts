@@ -145,7 +145,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
                 }
               }
             } else if (selectedNodes[0].nodeType === 'drug') {
-              const drug: Drug = selectedNodes[0];
+              const drug: Drug = selectedNodes[0].details;
               selectedId = drug.drugId;
               selectedStatus = drug.status;
               selectedName = drug.name;
@@ -218,7 +218,6 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
       const isSeed = attributes.isSeed || {};
       const scores = attributes.scores || {};
       const details = attributes.details || {};
-
 
 
       for (const node of network.nodes) {
@@ -298,6 +297,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
       this.nodeData.nodes.add(this.drugNodes);
     }
   }
+
   public screenshot() {
     const elem = document.getElementById(this.indexscreenshot.toString());
     html2canvas(elem).then((canvas) => {
@@ -307,7 +307,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
       a.download = `Resulting_Network.png`;
       a.click();
 
-  });
-}
+    });
+  }
 
 }
