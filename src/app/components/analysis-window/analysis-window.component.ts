@@ -13,6 +13,7 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {AnalysisService} from '../../analysis.service';
 import {Protein, Task, NodeType, ViralProtein, Drug} from '../../interfaces';
+import html2canvas from 'html2canvas';
 
 declare var vis: any;
 
