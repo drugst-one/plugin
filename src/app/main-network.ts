@@ -20,7 +20,7 @@ export class ProteinNetwork {
       }
     });
     this.effects.forEach((node) => {
-      const nodePosition = nodePositions[`eff_${node.effectName}_${node.virusName}_${node.datasetName}`];
+      const nodePosition = nodePositions[`eff_${node.effectName}_${node.datasetName}_${node.virusName}`];
       if (nodePosition) {
         node.x = nodePosition.x;
         node.y = nodePosition.y;

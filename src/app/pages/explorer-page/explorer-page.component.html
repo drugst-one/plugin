@@ -371,12 +371,19 @@
           <table class="table" *ngIf="analysis.getCount() > 0">
             <thead>
             <tr>
-              <td>AC</td>
+              <td>Type</td>
+              <td>Name</td>
               <td>Actions</td>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let p of analysis.getSelection()">
+               <td>
+                   <span class="icon">
+                      <i class="fa fa-dna" *ngIf="p.type == 'Host Protein'"></i>
+                      <i class="fa fa-virus" *ngIf="p.type =='Viral Protein'"></i>
+                    </span>
+              </td>
               <td>{{p.name}}</td>
               <td>
                 <button (click)="analysis.removeItem(p.name)" class="button is-small is-danger is-outlined">

@@ -42,6 +42,9 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   public showDrugs = false;
   public tab = 'network';
 
+  public tableDrugs: Array<Drug> = [];
+  public tableProteins: Array<Protein> = [];
+  public tableViralProteins: Array<ViralProtein> = [];
 
   constructor(private http: HttpClient, public analysis: AnalysisService) {
   }
@@ -71,6 +74,27 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
         this.nodeData.nodes = new vis.DataSet(nodes);
         this.nodeData.edges = new vis.DataSet(edges);
 
+        // Fill tables
+        result.networks.forEach((network, i) => {
+          const attributes = result.nodeAttributes[i];
+          const nodeTypes = attributes.nodeTypes || {};
+          const nodeDetails = attributes.details || {};
+          network.nodes.forEach((nodeId, j) => {
+            const nodeType = nodeTypes[nodeId] || this.inferNodeType(nodeId);
+            switch (nodeType) {
+              case 'drug':
+                this.tableDrugs.push(nodeDetails[nodeId] || {});
+                break;
+              case 'host':
+                this.tableProteins.push(nodeDetails[nodeId] || {});
+                break;
+              case 'virus':
+                this.tableViralProteins.push(nodeDetails[nodeId] || {});
+                break;
+            }
+          });
+        });
+
         const container = this.networkEl.nativeElement;
         const options = {};
 
@@ -88,7 +112,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
             let selectedVirusName;
             let selectedStatus;
             if (selectedNodes[0].nodeType === 'host') {
-              const protein: Protein = {name: '', proteinAc: selectedNodes[0].id};
+              const protein: Protein = selectedNodes[0].details;
               selectedVirusName = null;
               selectedStatus = null;
               selectedItem = {name: selectedNodes[0].id, type: 'Host Protein', data: protein};
@@ -105,15 +129,10 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
                 }
               }
             } else if (selectedNodes[0].nodeType === 'virus') {
-              const virus: ViralProtein = {
-                viralProteinId: null,
-                effectName: selectedNodes[0].id,
-                virusName: null,
-                datasetName: null
-              };
+              const virus: ViralProtein = selectedNodes[0].details;
               selectedId = null;
               selectedStatus = null;
-              selectedItem = {name: virus.effectName, type: 'Viral Protein', data: virus};
+              selectedItem = {name: virus.effectId, type: 'Viral Protein', data: virus};
               selectedVirusName = virus.virusName;
               selectedName = virus.effectName;
               selectedType = 'Viral Protein';
@@ -126,11 +145,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
                 }
               }
             } else if (selectedNodes[0].nodeType === 'drug') {
-              const drug: Drug = {
-                drugId: selectedNodes[0].details.drugId,
-                name: selectedNodes[0].details.name,
-                status: selectedNodes[0].details.status,
-              };
+              const drug: Drug = selectedNodes[0];
               selectedId = drug.drugId;
               selectedStatus = drug.status;
               selectedName = drug.name;

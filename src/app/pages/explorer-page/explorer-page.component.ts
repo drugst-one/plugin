@@ -38,7 +38,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public collabsData = true;
   public collabsOverview = true;
 
-
   public viralProteinCheckboxes: Array<{ checked: boolean; data: ViralProtein }> = [];
 
   public proteinData: ProteinNetwork;
@@ -256,10 +255,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
             data: this.proteinData.getProtein(nodeId[1])
           };
         } else if (nodeId[0].startsWith('e')) {
+          const effect = this.effects.find((eff) => eff.effectName === nodeId[1] && eff.datasetName === nodeId[2] &&
+            eff.virusName === nodeId[3]);
           node = {
-            name: nodeId[1] + '_' + nodeId[2] + '_' + nodeId[3],
+            name: effect.effectId,
             type: 'Viral Protein',
-            data: this.effects.find((eff) => eff.effectName === nodeId[1] && eff.datasetName === nodeId[2] && eff.virusName === nodeId[3])
+            data: effect
           };
         }
         if (properties.event.srcEvent.ctrlKey) {
@@ -315,7 +316,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     viralProteins.forEach((effect) => {
       this.queryItems.push({
-        name: effect.effectName,
+        name: effect.effectId,
         type: 'Viral Protein',
         data: effect
       });
@@ -340,7 +341,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         }
       });
       viralProteins.forEach((effect) => {
-        const nodeId = `eff_${effect.effectName}_${effect.datasetName}_${effect.effectName}`;
+        const nodeId = `eff_${effect.effectName}_${effect.datasetName}_${effect.virusName}`;
         const found = visibleIds.has(nodeId);
         if ((cb.checked || showAll) && !found) {
           const node = this.mapViralProteinToNode(effect);
@@ -474,7 +475,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       const found = visibleIds.has(nodeId);
       if (found && !this.analysis.inSelection(effect.effectName + '_' + effect.datasetName + '_' + effect.virusName)) {
         this.analysis.addItem({
-          name: effect.effectName + '_' + effect.datasetName + '_' + effect.virusName,
+          name: effect.effectId,
           type: 'Viral Protein',
           data: effect
         });
