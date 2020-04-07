@@ -13,6 +13,7 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {AnalysisService} from '../../analysis.service';
 import {Protein, Task, NodeType} from '../../interfaces';
+import html2canvas from 'html2canvas';
 
 declare var vis: any;
 
@@ -27,6 +28,8 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   @Output() tokenChange = new EventEmitter<string | null>();
 
   public task: Task | null = null;
+  public indexscreenshot = 1;
+
 
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 
@@ -34,6 +37,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
   private drugNodes = [];
   public showDrugs = false;
+
 
   constructor(private http: HttpClient, public analysis: AnalysisService) {
   }
@@ -216,5 +220,16 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
       this.nodeData.nodes.add(this.drugNodes);
     }
   }
+  public screenshot() {
+    const elem = document.getElementById(this.indexscreenshot.toString());
+    html2canvas(elem).then((canvas) => {
+      const generatedImage1 = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+      const a = document.createElement('a');
+      a.href = generatedImage1;
+        a.download = `Resulting_Network.png`;
+      a.click();
+
+  });
+}
 
 }
