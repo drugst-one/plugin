@@ -81,7 +81,7 @@
               </button>
             </p>
           </div>
-          <div class="field has-addons footer-toggle-buttons">
+          <div class="field has-addons footer-toggle-buttons" *ngIf="false"> <!-- temporarliy disabled -->
             <p class="control">
               <button class="button is-rounded" [class.is-primary]="showDrugs" (click)="toggleDrugs(true)">
                 <span class="icon is-small">
@@ -98,8 +98,56 @@
           </div>
         </footer>
       </div>
-      <div class="content tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'table'">
-        TABLE
+      <div class="content tab-content scrollable" *ngIf="task && task.info.done" [class.is-visible]="tab === 'table'">
+        <h4 class="is-4">Drugs</h4>
+        <table class="table is-striped">
+          <thead>
+          <tr>
+            <td>ID</td>
+            <td>Name</td>
+            <td>Status</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let e of tableDrugs">
+            <td>{{e.drugId}}</td>
+            <td>{{e.name}}</td>
+            <td>{{e.status}}</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <h4 class="is-4">Proteins</h4>
+        <table class="table is-striped">
+          <thead>
+          <tr>
+            <td>AC</td>
+            <td>Gene</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let e of tableProteins">
+            <td>{{e.proteinAc}}</td>
+            <td>{{e.name}}</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <h4 class="is-4">Viral Proteins</h4>
+        <table class="table is-striped">
+          <thead>
+          <tr>
+            <td>Name</td>
+            <td>Virus Strain</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let e of tableViralProteins">
+            <td>{{e.effectName}}</td>
+            <td>{{e.virusName}}</td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
