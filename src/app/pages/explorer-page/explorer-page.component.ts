@@ -12,6 +12,7 @@ import {AnalysisService} from '../../analysis.service';
 import html2canvas from 'html2canvas';
 import {environment} from '../../../environments/environment';
 
+
 declare var vis: any;
 
 @Component({
