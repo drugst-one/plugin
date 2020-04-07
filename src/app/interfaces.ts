@@ -9,6 +9,7 @@ export interface Protein {
 }
 
 export interface ViralProtein {
+  viralProteinId: string;
   effectName: string;
   virusName: string;
   datasetName: string;
@@ -27,6 +28,7 @@ export interface ProteinViralInteraction {
 export interface Task {
   token: string;
   info: {
+    target: 'drug' | 'drug-target',
     algorithm: 'trustrank' | 'multisteiner' | 'keypathwayminer';
     parameters?: { [key: string]: any };
 

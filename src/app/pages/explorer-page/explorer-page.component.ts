@@ -55,6 +55,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public queryItems: QueryItem[] = [];
   public showAnalysisDialog = false;
+  public analysisDialogTarget: 'drug' | 'drug-target';
 
   public selectedAnalysisToken: string | null = null;
 

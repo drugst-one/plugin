@@ -92,9 +92,10 @@ export class AnalysisService {
     });
   }
 
-  async startAnalysis(algorithm, parameters) {
+  async startAnalysis(algorithm, target: 'drug' | 'drug-target', parameters) {
     const resp = await this.http.post<any>(`${environment.backend}task/`, {
       algorithm,
+      target,
       parameters,
     }).toPromise();
     this.tokens.push(resp.token);

@@ -3,3 +3,15 @@
   height: 100%;
   width: 100%;
 }
+
+div.network {
+  height: calc(100vh - 210px - 80px);
+}
+
+.tab-content {
+  visibility: hidden;
+
+  &.is-visible {
+    visibility: visible;
+  }
+}

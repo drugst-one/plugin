@@ -1,19 +1,33 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {AnalysisService} from '../../analysis.service';
+
+interface Algorithm {
+  slug: string;
+  name: string;
+}
+
+const DUMMY: Algorithm = {slug: 'dummy', name: 'Dummy'};
+const TRUSTRANK: Algorithm = {slug: 'trustrank', name: 'Trust-Rank'};
+const KEYPATHWAYMINER: Algorithm = {slug: 'keypathwayminer', name: 'KeyPathwayMiner'};
+const MULTISTEINER: Algorithm = {slug: 'multisteiner', name: 'Multi-Steiner'};
 
 @Component({
   selector: 'app-launch-analysis',
   templateUrl: './launch-analysis.component.html',
   styleUrls: ['./launch-analysis.component.scss']
 })
-export class LaunchAnalysisComponent implements OnInit {
+export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   @Input()
   public show = false;
+  @Input()
+  public target: 'drug' | 'drug-target';
   @Output()
   public showChange = new EventEmitter<boolean>();
 
   public algorithm: 'dummy' | 'trustrank' | 'keypathwayminer' | 'multisteiner';
+
+  public algorithms: Array<Algorithm> = [];
 
   // Trustrank Parameters
   public trustrankStrain = 'SARS_CoV2';
@@ -34,6 +48,16 @@ export class LaunchAnalysisComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.target === 'drug-target') {
+      this.algorithms = [TRUSTRANK, MULTISTEINER, KEYPATHWAYMINER, DUMMY];
+      this.trustrankStrain = 'SARS_CoV2';
+    } else if (this.target === 'drug') {
+      this.algorithms = [TRUSTRANK, DUMMY];
+      this.trustrankStrain = 'drugs';
+    }
   }
 
   public close() {
@@ -60,10 +84,9 @@ export class LaunchAnalysisComponent implements OnInit {
     } else if (this.algorithm === 'multisteiner') {
       parameters.strain = this.multisteinerStrain;
       parameters.num_trees = this.multisteinerNumTrees;
-
     }
 
-    await this.analysis.startAnalysis(this.algorithm, parameters);
+    await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
   }
 
 }

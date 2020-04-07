@@ -1,4 +1,4 @@
-<app-launch-analysis [(show)]="showAnalysisDialog"></app-launch-analysis>
+<app-launch-analysis [(show)]="showAnalysisDialog" [target]="analysisDialogTarget"></app-launch-analysis>
 
 <div class="covex explorer">
 
@@ -260,16 +260,34 @@
       </header>
       <div *ngIf="collabsAnalysis">
         <div class="card-content">
-          <button (click)="showAnalysisDialog = true"
-                  class="button is-primary is-fullwidth is-rounded"
-                  [disabled]="analysis.getCount() === 0">
-            <span class="icon">
-              <i class="fa fa-rocket"></i>
-            </span>
-            <span>
-              Launch Analysis
-            </span>
-          </button>
+          <div class="field">
+            <div class="control">
+              <button (click)="analysisDialogTarget = 'drug-target'; showAnalysisDialog = true;"
+                      class="button is-primary is-fullwidth is-rounded"
+                      [disabled]="analysis.getCount() === 0">
+              <span class="icon">
+                <i class="fa fa-crosshairs"></i>
+              </span>
+                <span>
+                Find Drug Targets
+              </span>
+              </button>
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <button (click)="analysisDialogTarget = 'drug'; showAnalysisDialog = true;"
+                      class="button is-primary is-fullwidth is-rounded"
+                      [disabled]="analysis.getCount() === 0">
+              <span class="icon">
+                <i class="fa fa-capsules"></i>
+              </span>
+                <span>
+                Find Drugs
+              </span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
