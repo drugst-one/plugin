@@ -1,5 +1,5 @@
 <div *ngIf="token">
-  <div class="card analysis" *ngIf="task && task.info.done">
+  <div class="card analysis">
     <header class="card-header">
       <p class="card-header-title">
         <span class="icon">
@@ -13,9 +13,36 @@
         </span>
       </a>
     </header>
-
     <div class="card-content">
-      <div class="content">
+      <div class="tabs is-centered">
+        <ul>
+          <li [class.is-active]="tab === 'meta'"><a (click)="tab = 'meta'">Meta</a></li>
+          <li [class.is-active]="tab === 'network'"><a (click)="tab = 'network'">Network</a></li>
+          <li [class.is-active]="tab === 'table'"><a (click)="tab = 'table'">Table</a></li>
+        </ul>
+      </div>
+      <div class="content tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'meta'">
+        <div *ngIf="task">
+          <p>
+            Algorithm: {{task.info.algorithm}}
+          </p>
+          <div *ngIf="task.info.algorithm === 'trustrank'">
+            <table class="table is-narrow">
+              <tbody>
+              <tr>
+                <td>Damping Factor</td>
+                <td>{{task.info.parameters.dampingFactor}}</td>
+              </tr>
+              <tr>
+                <td>Result Size</td>
+                <td>{{task.info.parameters.resultSize}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="content tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'network'">
         <div class="card-image">
           <div class="network center" #network>
             <button class="button is-loading center">Loading</button>
@@ -71,79 +98,9 @@
           </div>
         </footer>
       </div>
-    </div>
-
-    <div class="card analysis" *ngIf="task && !task.info.startedAt">
-      <header class="card-header">
-        <p class="card-header-title">
-        <span class="icon">
-          <i class="fas fa-cog" aria-hidden="true"></i>
-        </span>
-          Analysis Queued...
-        </p>
-        <a (click)="close()" class="card-header-icon" aria-label="close">
-        <span class="icon">
-          <i class="fas fa-times" aria-hidden="true"></i>
-        </span>
-        </a>
-      </header>
-      <div class="card-content">
-        <div class="content">
-          The analysis is queued
-          <!--TODO: Display queue information-->
-        </div>
+      <div class="content tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'table'">
+        TABLE
       </div>
-      <footer class="card-footer">
-      </footer>
-    </div>
-
-    <div class="card analysis" *ngIf="task && task.info.startedAt && !task.info.done">
-      <header class="card-header">
-        <p class="card-header-title">
-        <span class="icon">
-          <i class="fas fa-cog fa-spin" aria-hidden="true"></i>
-        </span>
-          Analysis in Progress...
-        </p>
-        <a (click)="close()" class="card-header-icon" aria-label="close">
-        <span class="icon">
-          <i class="fas fa-times" aria-hidden="true"></i>
-        </span>
-        </a>
-      </header>
-      <div class="card-content">
-        <div class="content">
-          The analysis is in progress
-          <!--TODO: Display analysis progress-->
-        </div>
-      </div>
-      <footer class="card-footer">
-      </footer>
-    </div>
-
-    <div class="card analysis" *ngIf="!task">
-      <header class="card-header">
-        <p class="card-header-title">
-        <span class="icon">
-          <i class="fas fa-question" aria-hidden="true"></i>
-        </span>
-          Analysis not found
-        </p>
-        <a (click)="close()" class="card-header-icon" aria-label="more options">
-        <span class="icon">
-          <i class="fas fa-times" aria-hidden="true"></i>
-        </span>
-        </a>
-      </header>
-      <div class="card-content">
-        <div class="content">
-        <span class="notification is-danger">
-          The analysis you were looking for is either gone or never existed.
-        </span>
-        </div>
-      </div>
-      <footer class="card-footer">
-      </footer>
     </div>
   </div>
 </div>

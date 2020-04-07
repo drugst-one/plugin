@@ -3,7 +3,7 @@
     <a *ngFor="let task of analysis.tasks" class="list-item" [class.is-active]="task.token === token">
       <div *ngIf="!task.info.startedAt" (click)="open(task.token)">
         <p>
-          <span class="is-capitalized">{{task.info.algorithm}}</span>
+          <span class="is-capitalized"><i class="fa" [class.fa-capsules]="task.info.target === 'drug'" [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{task.info.algorithm}}</span>
           <span class="icon is-pulled-right"><i class="fas fa-pause" aria-hidden="true"></i></span>
         </p>
         <p>
@@ -12,7 +12,7 @@
       </div>
       <div *ngIf="!task.info.done && !task.info.failed && task.info.startedAt" (click)="open(task.token)">
         <p>
-          <span class="is-capitalized">{{task.info.algorithm}}</span>
+          <span class="is-capitalized"><i class="fa" [class.fa-capsules]="task.info.target === 'drug'" [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{task.info.algorithm}}</span>
           <span class="icon is-pulled-right"><i class="fas fa-spinner fa-spin" aria-hidden="true"></i></span>
         </p>
         <p>
@@ -23,7 +23,7 @@
       </div>
       <div *ngIf="task.info.done" (click)="open(task.token)">
         <p>
-          <span class="is-capitalized">{{task.info.algorithm}}</span>
+          <span class="is-capitalized"><i class="fa" [class.fa-capsules]="task.info.target === 'drug'" [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{task.info.algorithm}}</span>
           <span class="icon is-pulled-right"><i class="fas fa-check" aria-hidden="true"></i></span>
         </p>
         <p>
@@ -32,7 +32,7 @@
       </div>
       <div *ngIf="task.info.failed && task.info.finishedAt == null">
         <p>
-          <span class="is-capitalized">{{task.info.algorithm}}</span>
+          <span class="is-capitalized"><i class="fa" [class.fa-capsules]="task.info.target === 'drug'" [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{task.info.algorithm}}</span>
           <span class="icon is-pulled-right"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i></span>
         </p>
         <p class="has-text-danger">

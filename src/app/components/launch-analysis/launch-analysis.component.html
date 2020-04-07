@@ -2,35 +2,32 @@
   <div class="modal-background"></div>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Launch Analysis</p>
+      <p class="modal-card-title" *ngIf="target === 'drug'">
+        <span class="icon"><i class="fa fa-capsules"></i></span>
+        Find Drugs
+      </p>
+      <p class="modal-card-title" *ngIf="target === 'drug-target'">
+        <span class="icon"><i class="fa fa-crosshairs"></i></span>
+        Find Drug Targets
+      </p>
       <button (click)="close()" class="delete" aria-label="close"></button>
     </header>
     <section class="modal-card-body">
       <div class="tabs is-toggle is-small is-fullwidth is-rounded">
         <ul>
-          <li [class.is-active]="algorithm === 'dummy'">
-            <a (click)="algorithm = 'dummy'" class="is-boxed is-medium">Dummy</a>
-          </li>
-          <li [class.is-active]="algorithm === 'trustrank'">
-            <a (click)="algorithm = 'trustrank'" class="is-boxed is-medium">Trustrank</a>
-          </li>
-          <li [class.is-active]="algorithm === 'keypathwayminer'">
-            <a (click)="algorithm = 'keypathwayminer'" class="is-boxed is-medium">KeyPathwayMiner</a>
-          </li>
-          <li [class.is-active]="algorithm === 'multisteiner'">
-            <a (click)="algorithm = 'multisteiner'" class="is-boxed is-medium">Multi-Steiner</a>
+          <li [class.is-active]="algorithm === algo.slug" *ngFor="let algo of algorithms">
+            <a (click)="algorithm = algo.slug" class="is-boxed is-medium">{{algo.name}}</a>
           </li>
         </ul>
       </div>
 
       <div *ngIf="algorithm==='trustrank'">
-        <div class="field">
+        <div class="field" *ngIf="target === 'drug-target'">
           <label class="label" for="trustrank-strain">Strain</label>
           <div  class="control">
             <div class="select">
               <select id="trustrank-strain" [(ngModel)]="trustrankStrain">
                 <option [ngValue]="'SARS_CoV2'">SARS Coronavirus 2</option>
-                <option [ngValue]="'drugs'">Drugs</option>
               </select>
             </div>
           </div>
