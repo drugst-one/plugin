@@ -42,9 +42,9 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   public showDrugs = false;
   public tab = 'network';
 
-  public tableDrugs: Array<Drug> = [];
-  public tableProteins: Array<Protein> = [];
-  public tableViralProteins: Array<ViralProtein> = [];
+  public tableDrugs: Array<any> = [];
+  public tableProteins: Array<any> = [];
+  public tableViralProteins: Array<any> = [];
 
   constructor(private http: HttpClient, public analysis: AnalysisService) {
   }
@@ -79,21 +79,32 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
           const attributes = result.nodeAttributes[i];
           const nodeTypes = attributes.nodeTypes || {};
           const nodeDetails = attributes.details || {};
+          const nodeScores = attributes.scores || {};
+          const normalizeScore = network.maxScore || 1.0;
           network.nodes.forEach((nodeId, j) => {
             const nodeType = nodeTypes[nodeId] || this.inferNodeType(nodeId);
+            const entry = nodeDetails[nodeId] || {};
+            entry.score = nodeScores[nodeId] || null;
+            if (entry.score) {
+              entry.score /= normalizeScore;
+            }
             switch (nodeType) {
               case 'drug':
-                this.tableDrugs.push(nodeDetails[nodeId] || {});
+                this.tableDrugs.push(entry);
                 break;
               case 'host':
-                this.tableProteins.push(nodeDetails[nodeId] || {});
+                this.tableProteins.push(entry);
                 break;
               case 'virus':
-                this.tableViralProteins.push(nodeDetails[nodeId] || {});
+                this.tableViralProteins.push(entry);
                 break;
             }
           });
         });
+
+        this.tableDrugs = this.tableDrugs.reverse();
+        this.tableProteins = this.tableProteins.reverse();
+        this.tableViralProteins = this.tableViralProteins.reverse();
 
         const container = this.networkEl.nativeElement;
         const options = {};
