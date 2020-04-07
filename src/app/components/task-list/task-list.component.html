@@ -18,7 +18,8 @@
         <p>
           <small>Started {{task.info.startedAt | date :'short'}}</small>
         </p>
-        <progress class="progress is-primary" [value]="task.info.progress * 100" max="100">Test</progress>
+        <progress class="progress is-success" [value]="task.info.progress * 100" max="100">Test</progress>
+
       </div>
       <div *ngIf="task.info.done" (click)="open(task.token)">
         <p>
