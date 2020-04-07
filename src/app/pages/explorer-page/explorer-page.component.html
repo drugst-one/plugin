@@ -15,7 +15,8 @@
             </p>
             <a (click)="collabsData = !collabsData" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
              <span class="icon">
-               <i class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collabsData" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collabsData" class="fas fa-angle-down" aria-hidden="true"></i>
              </span>
             </a>
           </header>
@@ -39,8 +40,8 @@
             </p>
             <a (click)="collabsOverview= !collabsOverview" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
              <span class="icon">
-               <i class="fas fa-angle-down" aria-hidden="true"></i>
-             </span>
+            <i *ngIf="collabsOverview" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collabsOverview" class="fas fa-angle-down" aria-hidden="true"></i>             </span>
             </a>
           </header>
           <div *ngIf="collabsOverview">
@@ -78,7 +79,8 @@
             </p>
             <a (click)="collabsQuery = !collabsQuery" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
            <span class="icon">
-             <i class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collabsQuery" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collabsQuery" class="fas fa-angle-down" aria-hidden="true"></i>
            </span>
           </a>
           </header >
@@ -103,7 +105,8 @@
             </p>
             <a (click)="collabsDFilter = !collabsDFilter" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
               <span class="icon">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                <i *ngIf="collabsDFilter" class="fas fa-angle-up" aria-hidden="true"></i>
+                <i *ngIf="!collabsDFilter" class="fas fa-angle-down" aria-hidden="true"></i>
               </span>
             </a>
           </header>
@@ -188,13 +191,14 @@
     <div class="card bar-large">
       <header class="card-header">
         <p class="card-header-title">
-          <span class="icon">
+          <span class="icon ">
         <i class="fas fa-info" aria-hidden="true"></i>
       </span> {{currentProteinAc}}
         </p>
         <a (click)="collabsDetails = !collabsDetails" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
-            <i class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collabsDetails" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collabsDetails" class="fas fa-angle-down" aria-hidden="true"></i>
           </span>
         </a>
       </header>
@@ -248,7 +252,8 @@
         </p>
         <a (click)="collabsAnalysis = !collabsAnalysis" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
-            <i class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collabsAnalysis" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collabsAnalysis" class="fas fa-angle-down" aria-hidden="true"></i>
           </span>
         </a>
       </header>
@@ -277,7 +282,8 @@
         </p>
         <a (click)="collabsTask = !collabsTask" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
-            <i class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collabsSelection" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collabsSelection" class="fas fa-angle-down" aria-hidden="true"></i>
           </span>
         </a>
       </header>
@@ -306,9 +312,10 @@
               <i class="fas fa-filter" aria-hidden="true"></i>
             </span> Selection
         </p>
-        <a (click)="collabsSelection = !collabsSelection" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+        <a  (click)="collabsSelection = !collabsSelection" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
-            <i class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collabsSelection" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collabsSelection" class="fas fa-angle-down" aria-hidden="true"></i>
           </span>
         </a>
       </header>
