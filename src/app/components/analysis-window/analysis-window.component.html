@@ -101,13 +101,14 @@
         </footer>
       </div>
       <div class="content tab-content scrollable" *ngIf="task && task.info.done" [class.is-visible]="tab === 'table'">
-        <h4 class="is-4">Drugs</h4>
-        <table class="table is-striped">
+        <h4 class="is-4" *ngIf="tableDrugs.length > 0">Drugs</h4>
+        <table class="table is-striped" *ngIf="tableDrugs.length > 0">
           <thead>
           <tr>
             <td>ID</td>
             <td>Name</td>
             <td>Status</td>
+            <td>Score</td>
           </tr>
           </thead>
           <tbody>
@@ -115,38 +116,43 @@
             <td>{{e.drugId}}</td>
             <td>{{e.name}}</td>
             <td>{{e.status}}</td>
+            <td>{{e.score}}</td>
           </tr>
           </tbody>
         </table>
 
-        <h4 class="is-4">Proteins</h4>
-        <table class="table is-striped">
+        <h4 class="is-4" *ngIf="tableProteins.length > 0">Proteins</h4>
+        <table class="table is-striped" *ngIf="tableProteins.length > 0">
           <thead>
           <tr>
             <td>AC</td>
             <td>Gene</td>
+            <td>Score</td>
           </tr>
           </thead>
           <tbody>
           <tr *ngFor="let e of tableProteins">
             <td>{{e.proteinAc}}</td>
             <td>{{e.name}}</td>
+            <td>{{e.score}}</td>
           </tr>
           </tbody>
         </table>
 
-        <h4 class="is-4">Viral Proteins</h4>
-        <table class="table is-striped">
+        <h4 class="is-4" *ngIf="tableViralProteins.length > 0">Viral Proteins</h4>
+        <table class="table is-striped" *ngIf="tableViralProteins.length > 0">
           <thead>
           <tr>
             <td>Name</td>
             <td>Virus Strain</td>
+            <td>Score</td>
           </tr>
           </thead>
           <tbody>
           <tr *ngFor="let e of tableViralProteins">
             <td>{{e.effectName}}</td>
             <td>{{e.virusName}}</td>
+            <td>{{e.score}}</td>
           </tr>
           </tbody>
         </table>
