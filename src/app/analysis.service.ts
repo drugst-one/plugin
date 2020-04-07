@@ -3,6 +3,7 @@ import {QueryItem, Task} from './interfaces';
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../environments/environment';
+import {toast} from 'bulma-toast';
 
 @Injectable({
   providedIn: 'root'
@@ -14,20 +15,28 @@ export class AnalysisService {
   private selectSubject = new Subject<{ item: QueryItem, selected: boolean }>();
 
   public tokens: string[] = [];
+  public finishedTokens: string[] = [];
   public tasks: Task[] = [];
 
   private intervalId: any;
 
   constructor(private http: HttpClient) {
     const tokens = localStorage.getItem('tokens');
+    const finishedTokens = localStorage.getItem('finishedTokens');
+
+
     if (tokens) {
       this.tokens = JSON.parse(tokens);
+    }
+    if (finishedTokens) {
+      this.finishedTokens = JSON.parse(finishedTokens);
     }
     this.startWatching();
   }
 
   removeTask(token) {
     this.tokens = this.tokens.filter((item) => item !== token);
+    this.finishedTokens = this.finishedTokens.filter((item) => item !== token);
     this.tasks = this.tasks.filter((item) => item.token !== (token));
     localStorage.setItem('tokens', JSON.stringify(this.tokens));
   }
@@ -93,14 +102,59 @@ export class AnalysisService {
     this.startWatching();
   }
 
+  showToast(task: Task, status: 'DONE' | 'FAILED') {
+    let toastMessage;
+    let toastType;
+    const startDate = new Date(task.info.startedAt);
+    const finishedDate = new Date(task.info.finishedAt);
+    if (status === 'DONE') {
+      toastMessage = `Computation finished succesfully.
+              \n- Algorithm: ${task.info.algorithm}
+              \n- Started At: ${startDate.getHours()}:${startDate.getMinutes()}
+              \n- Finished At: ${finishedDate.getHours()}:${finishedDate.getMinutes()}`;
+      toastType = 'is-success';
+    } else if (status === 'FAILED') {
+      toastMessage = `Computation failed.
+              \n- Algorithm: ${task.info.algorithm}
+              \n- Started At: ${startDate.getHours()}:${startDate.getMinutes()}`;
+      toastType = 'is-danger';
+    }
+
+    toast({
+      message: toastMessage,
+      duration: 5000,
+      dismissible: true,
+      pauseOnHover: true,
+      type: toastType,
+      position: 'top-center',
+      animate: { in: 'fadeIn', out: 'fadeOut' }
+    });
+  }
+
   startWatching() {
     const watch = async () => {
       if (this.tokens.length > 0) {
         this.tasks = await this.getTasks();
+        this.tasks.forEach((task) => {
+          if (this.finishedTokens.find((finishedToken) => finishedToken === task.token)) {
+          } else {
+            if (task.info.done) {
+              this.finishedTokens.push(task.token);
+              this.showToast(task, 'DONE');
+              localStorage.setItem('finishedTokens', JSON.stringify(this.finishedTokens));
+            } else if (task.info.failed) {
+              this.finishedTokens.push(task.token);
+              this.showToast(task, 'FAILED');
+              localStorage.setItem('finishedTokens', JSON.stringify(this.finishedTokens));
+            } else {
+            }
+          }
+        });
       }
     };
     watch();
     this.intervalId = setInterval(watch, 5000);
   }
+
 
 }
