@@ -25,7 +25,10 @@ declare var vis: any;
 export class AnalysisWindowComponent implements OnInit, OnChanges {
 
   @Input() token: string | null = null;
+
   @Output() tokenChange = new EventEmitter<string | null>();
+  @Output() showDetailsChange: EventEmitter<any> = new EventEmitter();
+
 
   public task: Task | null = null;
   public indexscreenshot = 1;
@@ -37,6 +40,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
   private drugNodes = [];
   public showDrugs = false;
+  public tab = 'network';
 
 
   constructor(private http: HttpClient, public analysis: AnalysisService) {
@@ -71,25 +75,57 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
         const options = {};
 
         this.network = new vis.Network(container, this.nodeData, options);
-        this.network.on('select', (properties) => {
+        this.network.on('selectNode', (properties) => {
           const selectedNodes = this.nodeData.nodes.get(properties.nodes);
           if (selectedNodes.length > 0) {
+            let selectedProteinItem;
+            let selectedProteinName;
+            let selectedProteinType;
+            let selectedProteinAc;
+            let selectedProteinDataset;
+            let selectedProteinVirus;
             if (selectedNodes[0].nodeType === 'host') {
               const protein: Protein = {name: '', proteinAc: selectedNodes[0].id};
+              selectedProteinName = null;
+              selectedProteinDataset = null;
+              selectedProteinVirus = null;
+              selectedProteinItem = {name: selectedNodes[0].id, type: 'Host Protein', data: protein};
+              selectedProteinAc = protein.proteinAc;
+              selectedProteinType = 'Host Protein';
               if (properties.event.srcEvent.ctrlKey) {
-                if (this.analysis.inSelection(protein) === true) {
-                  this.analysis.removeProtein(protein);
+                if (this.analysis.inSelection(protein.proteinAc)) {
+                  this.analysis.removeItem(protein.proteinAc);
                 } else {
-                  this.analysis.addProtein(protein);
+                  this.analysis.addItem({name: protein.proteinAc, type: 'Host Protein', data: protein});
+                  this.analysis.getCount();
+                }
+              }
+            } else if (selectedNodes[0].nodeType === 'virus') {
+              const virus: ViralProtein = {viralProteinId: null, effectName: selectedNodes[0].id, virusName: null, datasetName: null};
+              selectedProteinAc = null;
+              selectedProteinDataset = null;
+              selectedProteinVirus = null;
+              selectedProteinItem = {name: virus.effectName, type: 'Viral Protein', data: virus};
+              selectedProteinName = virus.effectName;
+              selectedProteinType = 'Viral Protein';
+              if (properties.event.srcEvent.ctrlKey) {
+                if (this.analysis.inSelection(virus.effectName)) {
+                  this.analysis.removeItem(virus.effectName);
+                } else {
+                  this.analysis.addItem(selectedProteinItem);
                   this.analysis.getCount();
                 }
               }
             }
+            this.showDetailsChange.emit([true, [selectedProteinItem, selectedProteinName, selectedProteinType, selectedProteinAc,
+              selectedProteinDataset, selectedProteinVirus]]);
+          } else {
+            this.showDetailsChange.emit([false, [null, null, null, null, null, null]]);
           }
         });
 
-        this.analysis.subscribe((protein, selected) => {
-          const nodeId = `${protein.proteinAc}`;
+        this.analysis.subscribe((item, selected) => {
+          const nodeId = item.name;
           const node = this.nodeData.nodes.get(nodeId);
           if (!node) {
             return;
@@ -168,7 +204,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
 
     if (nodeType === 'host') {
       shape = 'ellipse';
-      if (this.analysis.idInSelection(nodeId)) {
+      if (this.analysis.inSelection(nodeId)) {
         color = '#c7661c';
       } else {
         color = '#e2b600';
