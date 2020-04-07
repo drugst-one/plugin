@@ -16,7 +16,8 @@
             <a (click)="collabsData = !collabsData" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
                aria-label="more options">
              <span class="icon">
-               <i class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collabsData" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collabsData" class="fas fa-angle-down" aria-hidden="true"></i>
              </span>
             </a>
           </header>
@@ -41,8 +42,8 @@
             <a (click)="collabsOverview= !collabsOverview" data-action="collapse"
                class="card-header-icon is-hidden-fullscreen" aria-label="more options">
              <span class="icon">
-               <i class="fas fa-angle-down" aria-hidden="true"></i>
-             </span>
+            <i *ngIf="collabsOverview" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collabsOverview" class="fas fa-angle-down" aria-hidden="true"></i>             </span>
             </a>
           </header>
           <div *ngIf="collabsOverview">
@@ -81,7 +82,8 @@
             <a (click)="collabsQuery = !collabsQuery" data-action="collapse"
                class="card-header-icon is-hidden-fullscreen" aria-label="more options">
            <span class="icon">
-             <i class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collabsQuery" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collabsQuery" class="fas fa-angle-down" aria-hidden="true"></i>
            </span>
             </a>
           </header>
@@ -107,7 +109,8 @@
             <a (click)="collabsDFilter = !collabsDFilter" data-action="collapse"
                class="card-header-icon is-hidden-fullscreen" aria-label="more options">
               <span class="icon">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                <i *ngIf="collabsDFilter" class="fas fa-angle-up" aria-hidden="true"></i>
+                <i *ngIf="!collabsDFilter" class="fas fa-angle-down" aria-hidden="true"></i>
               </span>
             </a>
           </header>
@@ -203,7 +206,8 @@
         <a (click)="collabsDetails = !collabsDetails" data-action="collapse"
            class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
-            <i class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collabsDetails" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collabsDetails" class="fas fa-angle-down" aria-hidden="true"></i>
           </span>
         </a>
       </header>
@@ -274,7 +278,8 @@
         <a (click)="collabsAnalysis = !collabsAnalysis" data-action="collapse"
            class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
-            <i class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collabsAnalysis" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collabsAnalysis" class="fas fa-angle-down" aria-hidden="true"></i>
           </span>
         </a>
       </header>
@@ -322,7 +327,8 @@
         <a (click)="collabsTask = !collabsTask" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
            aria-label="more options">
           <span class="icon">
-            <i class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collabsSelection" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collabsSelection" class="fas fa-angle-down" aria-hidden="true"></i>
           </span>
         </a>
       </header>
@@ -355,7 +361,8 @@
         <a (click)="collabsSelection = !collabsSelection" data-action="collapse"
            class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
-            <i class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collabsSelection" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collabsSelection" class="fas fa-angle-down" aria-hidden="true"></i>
           </span>
         </a>
       </header>
