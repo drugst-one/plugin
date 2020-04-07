@@ -53,6 +53,12 @@ export interface Task {
 
 export interface QueryItem {
   name: string;
-  type: 'Host Protein' | 'Viral Protein';
-  data: Protein | ViralProtein;
+  type: 'Host Protein' | 'Viral Protein' | 'Drug';
+  data: Protein | ViralProtein | Drug;
+}
+
+export interface Drug {
+  drugId: string;
+  name: string;
+  status: 'approved' | 'investigational';
 }

@@ -23,12 +23,12 @@ declare var vis: any;
 export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public showDetails = false;
-  public selectedProteinName = null;
-  public selectedProteinType = null;
-  public selectedProteinAc = null;
-  public selectedProteinItem = null;
-  public selectedProteinVirus = null;
-  public selectedProteinDataset = null;
+  public selectedName = null;
+  public selectedType = null;
+  public selectedId = null;
+  public selectedItem = null;
+  public selectedVirusName = null;
+  public selectedStatus = null;
   public collabsAnalysis = true;
   public collabsDetails = true;
   public collabsTask = true;
@@ -159,29 +159,29 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public changeInfo(showList: any[]) {
-    this.selectedProteinItem = showList[0];
-    this.selectedProteinName = showList[1];
-    this.selectedProteinType = showList[2];
-    this.selectedProteinAc = showList[3];
-    this.selectedProteinDataset = showList[4];
-    this.selectedProteinVirus = showList[5];
+    this.selectedItem = showList[0];
+    this.selectedName = showList[1];
+    this.selectedType = showList[2];
+    this.selectedId = showList[3];
+    this.selectedVirusName = showList[4];
+    this.selectedStatus = showList[5];
   }
 
   public async openSummary(item: QueryItem, zoom: boolean) {
-    this.selectedProteinAc = null;
-    this.selectedProteinItem = item;
-    this.selectedProteinType = item.type;
-    this.selectedProteinName = item.name;
-    if (this.selectedProteinType === 'Host Protein') {
+    this.selectedId = null;
+    this.selectedItem = item;
+    this.selectedType = item.type;
+    this.selectedName = item.name;
+    if (this.selectedType === 'Host Protein') {
       const hostProtein = item.data as Protein;
-      this.selectedProteinAc = hostProtein.proteinAc;
+      this.selectedId = hostProtein.proteinAc;
       if (zoom) {
         this.zoomToNode(`p_${item.name}`);
       }
     } else if (item.type === 'Viral Protein') {
       const viralProtein = item.data as ViralProtein;
-      this.selectedProteinVirus = viralProtein.virusName;
-      this.selectedProteinDataset = viralProtein.datasetName;
+      this.selectedName = viralProtein.effectName;
+      this.selectedVirusName = viralProtein.virusName;
       if (zoom) {
         this.zoomToNode(`eff_${viralProtein.effectName}_${viralProtein.datasetName}_${viralProtein.virusName}`);
       }
@@ -190,12 +190,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public async closeSummary() {
-    this.selectedProteinItem = null;
-    this.selectedProteinName = null;
-    this.selectedProteinType = null;
-    this.selectedProteinAc = null;
-    this.selectedProteinVirus = null;
-    this.selectedProteinDataset = null;
+    this.selectedItem = null;
+    this.selectedName = null;
+    this.selectedType = null;
+    this.selectedId = null;
+    this.selectedVirusName = null;
+    this.selectedStatus = null;
     this.showDetails = false;
   }
 
@@ -292,14 +292,14 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.network.stabilize();
     }
 
-    if (this.selectedProteinItem) {
-      this.zoomToNode(`p_${this.selectedProteinItem.name}`);
+    if (this.selectedItem) {
+      this.zoomToNode(`p_${this.selectedItem.name}`);
     }
 
     this.queryItems = [];
     this.fillQueryItems(this.proteins, this.effects);
-    if (this.selectedProteinItem) {
-      this.network.selectNodes(['p_' + this.selectedProteinItem.name]);
+    if (this.selectedItem) {
+      this.network.selectNodes(['p_' + this.selectedItem.name]);
     }
   }
 
