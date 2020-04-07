@@ -226,7 +226,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
       const generatedImage1 = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
       const a = document.createElement('a');
       a.href = generatedImage1;
-        a.download = `Resulting_Network.png`;
+      a.download = `Resulting_Network.png`;
       a.click();
 
   });
