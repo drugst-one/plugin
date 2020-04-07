@@ -43,7 +43,7 @@ export class LaunchAnalysisComponent implements OnInit {
 
   public async startTask() {
     const parameters: any = {
-      seeds: this.analysis.getSelection().map((protein) => protein.proteinAc),
+      seeds: this.analysis.getSelection().map((item) => item.name),
     };
 
     if (this.algorithm === 'dummy') {

@@ -5,7 +5,6 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
 import {ProteinViralInteraction, ViralProtein, Protein, QueryItem} from '../../interfaces';
 import {ProteinNetwork, getDatasetFilename} from '../../main-network';
 import {HttpClient, HttpParams} from '@angular/common/http';
@@ -23,6 +22,12 @@ declare var vis: any;
 export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public showDetails = false;
+  public selectedProteinName = null;
+  public selectedProteinType = null;
+  public selectedProteinAc = null;
+  public selectedProteinItem = null;
+  public selectedProteinVirus = null;
+  public selectedProteinDataset = null;
   public collabsAnalysis = true;
   public collabsDetails = true;
   public collabsTask = true;
@@ -31,10 +36,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public collabsQuery = true;
   public collabsData = true;
   public collabsOverview = true;
-  public currentProteinAc = '';
-  public geneNames: Array<string> = [];
-  public proteinNames: Array<string> = [];
-  public proteinAcs: Array<string> = [];
+
 
   public viralProteinCheckboxes: Array<{ checked: boolean; data: ViralProtein }> = [];
 
@@ -66,7 +68,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       data: [['TUM', 'HCoV'], ['TUM', 'SARS-CoV2'], ['Krogan', 'SARS-CoV2']]
     },
     {id: 'HCoV (TUM)', label: 'HCoV', datasets: 'TUM', data: [['TUM', 'HCoV']]},
-    {id: 'CoV2 (TUM & Krogan)', label: 'CoV2', datasets: 'TUM & Krogan', data: [['TUM', 'SARS-CoV2'], ['Krogan', 'SARS-CoV2']]},
+    {
+      id: 'CoV2 (TUM & Krogan)',
+      label: 'CoV2',
+      datasets: 'TUM & Krogan',
+      data: [['TUM', 'SARS-CoV2'], ['Krogan', 'SARS-CoV2']]
+    },
     {id: 'CoV2 (Krogan)', label: 'CoV2', datasets: 'Krogan', data: [['Krogan', 'SARS-CoV2']]},
     {id: 'CoV2 (TUM)', label: 'CoV2', datasets: 'TUM', data: [['TUM', 'SARS-CoV2']]}];
 
@@ -74,45 +81,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 
-  constructor(private http: HttpClient,
-              private route: ActivatedRoute,
-              private router: Router,
-              public analysis: AnalysisService) {
-    this.geneNames.push('IFI16');
-    this.proteinNames.push('Gamma-interface-inducible protein 16');
-    this.proteinAcs.push('Q16666');
+  constructor(private http: HttpClient, public analysis: AnalysisService) {
 
-    this.route.queryParams.subscribe(async (params) => {
-      this.dumpPositions = params.dumpPositions;
-      this.physicsEnabled = !!this.dumpPositions;
+    this.showDetails = false;
 
-      const protein = params.protein;
-      if (!protein) {
-        // In this case, the URL is just `/explorer`
-        // Therefore, we do not show a modal
-        this.showDetails = false;
-        return;
+    this.analysis.subscribe((item, selected) => {
+      let nodeId;
+      if (item.type === 'Host Protein') {
+        nodeId = `p_${item.name}`;
+      } else if (item.type === 'Viral Protein') {
+        nodeId = `eff_${item.name}`;
       }
-
-      // In this case, the URL is `/explorer/<protein>`
-
-      if (this.currentProteinAc === protein) {
-        // The protein group is the same as before, so we do not need to do anything
-        // TODO Also highlight node when reloading the page/sharing the URL
-        return;
-      }
-
-      // We have a new protein id, so we need to load it and show the modal...
-
-      this.currentProteinAc = protein;
-
-      // TODO: Perform call here for 'protein'...
-      // this.zoomToNode(protein)
-      this.showDetails = true;
-    });
-
-    this.analysis.subscribe((protein, selected) => {
-      const nodeId = `p_${protein.proteinAc}`;
       const node = this.nodeData.nodes.get(nodeId);
       if (!node) {
         return;
@@ -122,11 +101,14 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       node.y = pos[nodeId].y;
       if (selected) {
         node.color = '#48C774';
-        this.nodeData.nodes.update(node);
       } else {
-        node.color = '#e2b600';
-        this.nodeData.nodes.update(node);
+        if (item.type === 'Host Protein') {
+          node.color = '#e2b600';
+        } else if (item.type === 'Viral Protein') {
+          node.color = '#118AB2';
+        }
       }
+      this.nodeData.nodes.update(node);
     });
   }
 
@@ -174,15 +156,45 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public async openSummary(protein: Protein, zoom: boolean) {
-    await this.router.navigate(['explorer'], {queryParams: {protein: protein.proteinAc}});
-    if (zoom) {
-      this.zoomToNode(`p_${protein.proteinAc}`);
+  public changeInfo(showList: any[]) {
+    this.selectedProteinItem = showList[0];
+    this.selectedProteinName = showList[1];
+    this.selectedProteinType = showList[2];
+    this.selectedProteinAc = showList[3];
+    this.selectedProteinDataset = showList[4];
+    this.selectedProteinVirus = showList[5];
+  }
+
+  public async openSummary(item: QueryItem, zoom: boolean) {
+    this.selectedProteinAc = null;
+    this.selectedProteinItem = item;
+    this.selectedProteinType = item.type;
+    this.selectedProteinName = item.name;
+    if (this.selectedProteinType === 'Host Protein') {
+      const hostProtein = item.data as Protein;
+      this.selectedProteinAc = hostProtein.proteinAc;
+      if (zoom) {
+        this.zoomToNode(`p_${item.name}`);
+      }
+    } else if (item.type === 'Viral Protein') {
+      const viralProtein = item.data as ViralProtein;
+      this.selectedProteinVirus = viralProtein.virusName;
+      this.selectedProteinDataset = viralProtein.datasetName;
+      if (zoom) {
+        this.zoomToNode(`eff_${viralProtein.effectName}_${viralProtein.datasetName}_${viralProtein.virusName}`);
+      }
     }
+    this.showDetails = true;
   }
 
   public async closeSummary() {
-    await this.router.navigate(['explorer']);
+    this.selectedProteinItem = null;
+    this.selectedProteinName = null;
+    this.selectedProteinType = null;
+    this.selectedProteinAc = null;
+    this.selectedProteinVirus = null;
+    this.selectedProteinDataset = null;
+    this.showDetails = false;
   }
 
   public async createNetwork(dataset: Array<[string, string]>) {
@@ -229,27 +241,44 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         },
       },
     };
-
     this.network = new vis.Network(container, this.nodeData, options);
-    this.network.on('select', (properties) => {
+    this.network.on('selectNode', (properties) => {
       const id: Array<string> = properties.nodes;
       if (id.length > 0) {
-        if (id[0].startsWith('p_')) {
-          const protein = this.proteinData.getProtein(id[0].substr(2));
-          this.openSummary(protein, false);
-          if (properties.event.srcEvent.ctrlKey) {
-            if (this.inSelection(protein.proteinAc) === true) {
-              this.removeFromSelection(protein.proteinAc);
-            } else {
-              this.addToSelection(protein.proteinAc);
-              this.analysis.getCount();
-            }
-          }
-        } else {
-          this.closeSummary();
+        const nodeId = id[0].split('_');
+        let node: QueryItem;
+        if (nodeId[0].startsWith('p')) {
+          node = {
+            name: nodeId[1],
+            type: 'Host Protein',
+            data: this.proteinData.getProtein(nodeId[1])
+          };
+        } else if (nodeId[0].startsWith('e')) {
+          node = {
+            name: nodeId[1] + '_' + nodeId[2] + '_' + nodeId[3],
+            type: 'Viral Protein',
+            data: this.effects.find((eff) => eff.effectName === nodeId[1] && eff.datasetName === nodeId[2] && eff.virusName === nodeId[3])
+          };
         }
+        if (properties.event.srcEvent.ctrlKey) {
+          if (this.analysis.inSelection(node.name) === true) {
+            this.analysis.inSelection(node.name);
+          } else {
+            this.analysis.addItem(node);
+            this.analysis.getCount();
+          }
+          this.openSummary(node, false);
+        } else {
+          this.openSummary(node, false);
+        }
+      } else {
+        this.closeSummary();
       }
     });
+    this.network.on('deselectNode', (properties) => {
+      this.closeSummary();
+    });
+
 
     if (this.dumpPositions) {
       this.network.on('stabilizationIterationsDone', () => {
@@ -261,14 +290,16 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.network.stabilize();
     }
 
-    if (this.currentProteinAc) {
-      this.zoomToNode(`p_${this.currentProteinAc}`);
+    if (this.selectedProteinItem) {
+      this.zoomToNode(`p_${this.selectedProteinItem.name}`);
     }
 
     this.queryItems = [];
     this.fillQueryItems(this.proteins, this.effects);
+    if (this.selectedProteinItem) {
+      this.network.selectNodes(['p_' + this.selectedProteinItem.name]);
+    }
   }
-
 
   fillQueryItems(hostProteins: Protein[], viralProteins: ViralProtein[]) {
     this.queryItems = [];
@@ -307,7 +338,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         }
       });
       viralProteins.forEach((effect) => {
-        const nodeId = `eff_${effect.effectName}_${effect.virusName}_${effect.datasetName}`;
+        const nodeId = `eff_${effect.effectName}_${effect.datasetName}_${effect.effectName}`;
         const found = visibleIds.has(nodeId);
         if ((cb.checked || showAll) && !found) {
           const node = this.mapViralProteinToNode(effect);
@@ -349,14 +380,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public queryAction(item: any) {
     if (item) {
-      if (item.type === 'Host Protein') {
-        this.openSummary(item.data, true);
-      } else if (item.type === 'Viral Protein') {
-        this.zoomToNode(`eff_${item.data.effectName}_${item.data.virusName}_${item.data.datasetName}`
-        );
-      }
+      this.openSummary(item, true);
     }
-
   }
 
   public updatePhysicsEnabled(bool) {
@@ -371,34 +396,38 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private mapHostProteinToNode(protein: Protein): any {
+  private mapHostProteinToNode(hostProtein: Protein): any {
     let color = '#e2b600';
-    if (this.analysis.inSelection(protein)) {
+    if (this.analysis.inSelection(hostProtein.proteinAc)) {
       color = '#48C774';
     }
     return {
-      id: `p_${protein.proteinAc}`,
-      label: `${protein.proteinAc}`,
+      id: `p_${hostProtein.proteinAc}`,
+      label: `${hostProtein.proteinAc}`,
       size: 10, font: '5px', color, shape: 'ellipse', shadow: false,
-      x: protein.x,
-      y: protein.y,
+      x: hostProtein.x,
+      y: hostProtein.y,
     };
   }
 
-  private mapViralProteinToNode(effect: ViralProtein): any {
+  private mapViralProteinToNode(viralProtein: ViralProtein): any {
+    let color = '#118AB2';
+    if (this.analysis.inSelection(`${viralProtein.effectName}_${viralProtein.datasetName}_${viralProtein.virusName}`)) {
+      color = '#48C774';
+    }
     return {
-      id: `eff_${effect.effectName}_${effect.virusName}_${effect.datasetName}`,
-      label: `${effect.effectName} (${effect.virusName}, ${effect.datasetName})`,
-      size: 10, color: '#118AB2', shape: 'box', shadow: true, font: {color: '#FFFFFF'},
-      x: effect.x,
-      y: effect.y,
+      id: `eff_${viralProtein.effectName}_${viralProtein.datasetName}_${viralProtein.virusName}`,
+      label: `${viralProtein.effectName} (${viralProtein.datasetName}, ${viralProtein.virusName})`,
+      size: 10, color, shape: 'box', shadow: true, font: {color: '#FFFFFF'},
+      x: viralProtein.x,
+      y: viralProtein.y,
     };
   }
 
   private mapEdge(edge: ProteinViralInteraction): any {
     return {
       from: `p_${edge.proteinAc}`,
-      to: `eff_${edge.effectName}_${edge.virusName}_${edge.datasetName}`,
+      to: `eff_${edge.effectName}_${edge.datasetName}_${edge.virusName}`,
       color: {color: '#afafaf', highlight: '#854141'},
     };
   }
@@ -430,43 +459,25 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     for (const protein of this.proteinData.proteins) {
       const nodeId = `p_${protein.proteinAc}`;
       const found = visibleIds.has(nodeId);
-      if (found && !this.analysis.inSelection(protein)) {
-        this.analysis.addProtein(protein);
+      if (found && !this.analysis.inSelection(protein.name)) {
+        this.analysis.addItem({name: protein.proteinAc, type: 'Host Protein', data: protein});
       }
     }
   }
 
-  inSelection(proteinAc: string): boolean {
-    if (!this.proteinData || !proteinAc) {
-      return false;
+  public addAllViralProteins() {
+    const visibleIds = new Set<string>(this.nodeData.nodes.getIds());
+    for (const effect of this.proteinData.effects) {
+      const nodeId = `eff_${effect.effectName + '_' + effect.datasetName + '_' + effect.virusName}`;
+      const found = visibleIds.has(nodeId);
+      if (found && !this.analysis.inSelection(effect.effectName + '_' + effect.datasetName + '_' + effect.virusName)) {
+        this.analysis.addItem({
+          name: effect.effectName + '_' + effect.datasetName + '_' + effect.virusName,
+          type: 'Viral Protein',
+          data: effect
+        });
+      }
     }
-    const protein = this.proteinData.getProtein(proteinAc);
-    if (!protein) {
-      return false;
-    }
-    return this.analysis.inSelection(protein);
-  }
-
-  addToSelection(proteinAc: string) {
-    if (!this.proteinData || !proteinAc) {
-      return false;
-    }
-    const protein = this.proteinData.getProtein(proteinAc);
-    if (!protein) {
-      return false;
-    }
-    this.analysis.addProtein(protein);
-  }
-
-  removeFromSelection(proteinAc: string) {
-    if (!this.proteinData || !proteinAc) {
-      return false;
-    }
-    const protein = this.proteinData.getProtein(proteinAc);
-    if (!protein) {
-      return false;
-    }
-    this.analysis.removeProtein(protein);
   }
 
   public toCanvas() {

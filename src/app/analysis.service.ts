@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Protein, Task} from './interfaces';
+import {QueryItem, Task} from './interfaces';
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../environments/environment';
@@ -10,8 +10,8 @@ import {environment} from '../environments/environment';
 
 export class AnalysisService {
 
-  private selectedProteins = new Map<string, Protein>();
-  private selectSubject = new Subject<{ protein: Protein, selected: boolean }>();
+  private selectedItems = new Map<string, QueryItem>();
+  private selectSubject = new Subject<{ item: QueryItem, selected: boolean }>();
 
   public tokens: string[] = [];
   public tasks: Task[] = [];
@@ -44,45 +44,42 @@ export class AnalysisService {
     });
   }
 
-  addProtein(protein: Protein) {
-    if (!this.inSelection(protein)) {
-      this.selectedProteins.set(`${protein.proteinAc}`, protein);
-      this.selectSubject.next({protein, selected: true});
+  public addItem(item: QueryItem) {
+    if (!this.inSelection(item.name)) {
+      this.selectedItems.set(`${item.name}`, item);
+      this.selectSubject.next({item, selected: true});
     }
   }
 
   resetSelection() {
-    const oldSelection = this.selectedProteins.values();
-    for (const protein of oldSelection) {
-      this.removeProtein(protein);
+    const oldSelection = this.selectedItems.values();
+    for (const item of oldSelection) {
+      this.removeItem(item.name);
     }
   }
 
-  inSelection(protein: Protein): boolean {
-    return this.selectedProteins.has(protein.proteinAc);
+  inSelection(itemName: string): boolean {
+    return this.selectedItems.has(itemName);
   }
 
-  idInSelection(id: string): boolean {
-    return this.selectedProteins.has(id);
-  }
-
-  removeProtein(protein: Protein) {
-    if (this.selectedProteins.delete(`${protein.proteinAc}`)) {
-      this.selectSubject.next({protein, selected: false});
+  removeItem(itemName: string) {
+    const item = this.selectedItems.get(itemName);
+    if (this.selectedItems.delete(itemName)) {
+      this.selectSubject.next({item, selected: false});
     }
   }
 
-  getSelection(): Protein[] {
-    return Array.from(this.selectedProteins.values());
+  getSelection(): QueryItem[] {
+    return Array.from(this.selectedItems.values());
   }
 
   getCount(): number {
-    return this.selectedProteins.size;
+    return this.selectedItems.size;
   }
 
-  subscribe(cb: (protein: Protein, selected: boolean) => void) {
+  subscribe(cb: (item: QueryItem, selected: boolean) => void) {
     this.selectSubject.subscribe((event) => {
-      cb(event.protein, event.selected);
+      cb(event.item, event.selected);
     });
   }
 
