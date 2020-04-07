@@ -9,7 +9,7 @@ export interface Protein {
 }
 
 export interface ViralProtein {
-  viralProteinId: string;
+  effectId: string;
   effectName: string;
   virusName: string;
   datasetName: string;

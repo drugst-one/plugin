@@ -10,8 +10,15 @@ div.network {
 
 .tab-content {
   visibility: hidden;
+  position: absolute;
+  width: calc(100% - 50px);
+  height: calc(100vh - 210px - 80px);
 
   &.is-visible {
     visibility: visible;
+  }
+
+  &.scrollable {
+    overflow-y: auto;
   }
 }
