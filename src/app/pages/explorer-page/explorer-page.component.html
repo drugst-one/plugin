@@ -148,8 +148,8 @@
                 <div class="network center image1" #network>
                   <button class="button is-loading center" alt="Snow">Loading</button>
                 </div>
-                <div class="image2" >
-                    <img src="assets/legend.png"  width="160px"/>
+                <div class="image2">
+                  <img src="assets/legend.png" width="160px"/>
                 </div>
               </div>
             </div>
@@ -194,8 +194,11 @@
       <header class="card-header">
         <p class="card-header-title">
           <span class="icon">
-        <i class="fas fa-info" aria-hidden="true"></i>
-      </span> {{ selectedProteinType }}
+        <i *ngIf="!showDetails" class="fas fa-info" aria-hidden="true"></i>
+        <i *ngIf="selectedType === 'Host Protein'" class="fas fa-dna" aria-hidden="true"></i>
+        <i *ngIf="selectedType === 'Viral Protein'" class="fas fa-virus" aria-hidden="true"></i>
+        <i *ngIf="selectedType === 'Drug'" class="fas fa-capsules" aria-hidden="true"></i>
+      </span> {{ selectedType }}
         </p>
         <a (click)="collabsDetails = !collabsDetails" data-action="collapse"
            class="card-header-icon is-hidden-fullscreen" aria-label="more options">
@@ -207,27 +210,44 @@
       <div *ngIf="collabsDetails">
         <div class="card-content">
           <div *ngIf="showDetails">
-            <p *ngIf="selectedProteinName"><b>Name:</b> {{ selectedProteinName }}</p>
-            <p *ngIf="selectedProteinDataset"><b>Virus:</b> {{ selectedProteinVirus }}</p>
-            <p *ngIf="selectedProteinAc"><b>Protein AC:</b>
-              <a href="https://www.uniprot.org/uniprot/{{ selectedProteinAc }}"
-                 target="_blank"> {{ selectedProteinAc }}</a>
+            <p *ngIf="selectedName && selectedType=='Drug'"><b><span>Name:</span></b> {{ selectedName }} <span
+              class="icon is-small">
+                  <i class="fas fa-capsules"></i>
+            </span></p>
+            <p *ngIf="selectedName && selectedType=='Host Protein'"><b><span>Gene Name:</span></b> {{ selectedName }}
+              <span class="icon is-small">
+                  <i class="fas fa-dna"></i>
+            </span></p>
+            <p *ngIf="selectedVirusName"><b><span>Virus:</span></b> {{ selectedVirusName }} <span class="icon is-small">
+                  <i class="fas fa-virus"></i>
+            </span></p>
+            <p *ngIf="selectedName && selectedType=='Viral Protein'"><b>Effect:</b> {{ selectedName }}</p>
+            <p *ngIf="selectedId && selectedType == 'Host Protein'"><b>Uniprot AC:</b>
+              <a href="https://www.uniprot.org/uniprot/{{ selectedId }}"
+                 target="_blank"> {{ selectedId }}</a>
+            </p>
+            <p *ngIf="selectedId && selectedType == 'Drug'"><b>DrugBank ID:</b>
+              <a href="https://www.drugbank.ca/drugs/{{ selectedId }}"
+                 target="_blank"> {{ selectedId }}</a>
+            </p>
+            <p *ngIf="selectedStatus === 'investigational' "><b>Status:</b> Investigational <span class="icon is-small"><i class="fas fa-search investigational"></i></span>
+            <p *ngIf="selectedStatus === 'approved' "><b>Status:</b> Approved <span class="icon is-small"><i class="fas fa-check"></i></span>
             </p>
             <div class="field has-addons add-remove-toggle">
-              <p class="control">
-                <button class="button is-rounded" [class.is-success]="!analysis.inSelection(selectedProteinName)"
-                        [disabled]="analysis.inSelection(selectedProteinName)"
-                        (click)="analysis.addItem(selectedProteinItem)">
+              <p *ngIf="selectedType !== 'Drug'" class="control">
+                <button class="button is-rounded" [class.is-success]="!analysis.inSelection(selectedName)"
+                        [disabled]="analysis.inSelection(selectedName)"
+                        (click)="analysis.addItem(selectedItem)">
                 <span class="icon is-small">
                   <i class="fas fa-plus"></i>
                 </span>
                   <span>Add to Analysis</span>
                 </button>
               </p>
-              <p class="control">
-                <button class="button is-rounded" [class.is-danger]="analysis.inSelection(selectedProteinName)"
-                        [disabled]="!analysis.inSelection(selectedProteinName)"
-                        (click)="analysis.removeItem(selectedProteinName)">
+              <p *ngIf="selectedType !== 'Drug'" class="control">
+                <button class="button is-rounded" [class.is-danger]="analysis.inSelection(selectedName)"
+                        [disabled]="!analysis.inSelection(selectedName)"
+                        (click)="analysis.removeItem(selectedName)">
                   <span>Remove</span>
                   <span class="icon is-small">
                   <i class="fas fa-trash"></i>
