@@ -12,7 +12,7 @@ import {
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {AnalysisService} from '../../analysis.service';
-import {Protein, Task, NodeType, ViralProtein} from '../../interfaces';
+import {Protein, Task, NodeType, ViralProtein, Drug} from '../../interfaces';
 
 declare var vis: any;
 
@@ -71,23 +71,27 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
         const options = {};
 
         this.network = new vis.Network(container, this.nodeData, options);
+        this.network.on('deselectNode', (properties) => {
+          this.showDetailsChange.emit([false, [null, null, null, null, null, null]]);
+        });
         this.network.on('selectNode', (properties) => {
           const selectedNodes = this.nodeData.nodes.get(properties.nodes);
           if (selectedNodes.length > 0) {
-            let selectedProteinItem;
-            let selectedProteinName;
-            let selectedProteinType;
-            let selectedProteinAc;
-            let selectedProteinDataset;
-            let selectedProteinVirus;
+            let selectedItem;
+            let selectedName;
+            let selectedType;
+            let selectedId;
+            let selectedVirusName;
+            let selectedStatus;
             if (selectedNodes[0].nodeType === 'host') {
               const protein: Protein = {name: '', proteinAc: selectedNodes[0].id};
-              selectedProteinName = null;
-              selectedProteinDataset = null;
-              selectedProteinVirus = null;
-              selectedProteinItem = {name: selectedNodes[0].id, type: 'Host Protein', data: protein};
-              selectedProteinAc = protein.proteinAc;
-              selectedProteinType = 'Host Protein';
+              selectedVirusName = null;
+              selectedStatus = null;
+              selectedItem = {name: selectedNodes[0].id, type: 'Host Protein', data: protein};
+              // TODO use gene name here
+              selectedName = protein.proteinAc;
+              selectedId = protein.proteinAc;
+              selectedType = 'Host Protein';
               if (properties.event.srcEvent.ctrlKey) {
                 if (this.analysis.inSelection(protein.proteinAc)) {
                   this.analysis.removeItem(protein.proteinAc);
@@ -97,27 +101,45 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
                 }
               }
             } else if (selectedNodes[0].nodeType === 'virus') {
-              const virus: ViralProtein = {viralProteinId: null, effectName: selectedNodes[0].id, virusName: null, datasetName: null};
-              selectedProteinAc = null;
-              selectedProteinDataset = null;
-              selectedProteinVirus = null;
-              selectedProteinItem = {name: virus.effectName, type: 'Viral Protein', data: virus};
-              selectedProteinName = virus.effectName;
-              selectedProteinType = 'Viral Protein';
+              const virus: ViralProtein = {
+                viralProteinId: null,
+                effectName: selectedNodes[0].id,
+                virusName: null,
+                datasetName: null
+              };
+              selectedId = null;
+              selectedStatus = null;
+              selectedItem = {name: virus.effectName, type: 'Viral Protein', data: virus};
+              selectedVirusName = virus.virusName;
+              selectedName = virus.effectName;
+              selectedType = 'Viral Protein';
               if (properties.event.srcEvent.ctrlKey) {
                 if (this.analysis.inSelection(virus.effectName)) {
                   this.analysis.removeItem(virus.effectName);
                 } else {
-                  this.analysis.addItem(selectedProteinItem);
+                  this.analysis.addItem(selectedItem);
                   this.analysis.getCount();
                 }
               }
+            } else if (selectedNodes[0].nodeType === 'drug') {
+              const drug: Drug = {
+                drugId: selectedNodes[0].details.drugId,
+                name: selectedNodes[0].details.name,
+                status: selectedNodes[0].details.status,
+              };
+              selectedId = drug.drugId;
+              selectedStatus = drug.status;
+              selectedName = drug.name;
+              selectedType = 'Drug';
+              selectedItem = {name: drug.name, type: 'Drug', data: drug};
+              selectedVirusName = null;
             }
-            this.showDetailsChange.emit([true, [selectedProteinItem, selectedProteinName, selectedProteinType, selectedProteinAc,
-              selectedProteinDataset, selectedProteinVirus]]);
+            this.showDetailsChange.emit([true, [selectedItem, selectedName, selectedType,
+              selectedId, selectedVirusName, selectedStatus]]);
           } else {
             this.showDetailsChange.emit([false, [null, null, null, null, null, null]]);
           }
+
         });
 
         this.analysis.subscribe((item, selected) => {
@@ -157,6 +179,8 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   public inferNodeType(nodeId: string): 'host' | 'virus' | 'drug' {
     if (nodeId.indexOf('-') !== -1 || nodeId.indexOf('_') !== -1) {
       return 'virus';
+    } else if (nodeId.startsWith('DB')) {
+      return 'drug';
     }
     return 'host';
   }
@@ -174,9 +198,12 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
       const nodeTypes = attributes.nodeTypes || {};
       const isSeed = attributes.isSeed || {};
       const scores = attributes.scores || {};
+      const details = attributes.details || {};
+
+
 
       for (const node of network.nodes) {
-        nodes.push(this.mapNode(node, nodeTypes[node] || this.inferNodeType(node), isSeed[node], scores[node]));
+        nodes.push(this.mapNode(node, nodeTypes[node] || this.inferNodeType(node), isSeed[node], scores[node], details[node]));
       }
 
       for (const edge of network.edges) {
@@ -225,13 +252,13 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     return {color, shape, size, font, shadow};
   }
 
-  private mapNode(nodeId: any, nodeType?: NodeType, isSeed?: boolean, score?: number): any {
+  private mapNode(nodeId: any, nodeType?: NodeType, isSeed?: boolean, score?: number, details?): any {
     const {shape, color, size, font, shadow} = this.getNodeLooks(nodeId, nodeType, isSeed);
     return {
       id: nodeId,
       label: nodeId,
       size, color, shape, font, shadow,
-      nodeType, isSeed,
+      nodeType, isSeed, details
     };
   }
 

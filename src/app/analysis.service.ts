@@ -106,18 +106,18 @@ export class AnalysisService {
   showToast(task: Task, status: 'DONE' | 'FAILED') {
     let toastMessage;
     let toastType;
-    const startDate = new Date(task.info.startedAt);
-    const finishedDate = new Date(task.info.finishedAt);
+    // const startDate = new Date(task.info.startedAt);
+    // const finishedDate = new Date(task.info.finishedAt);
     if (status === 'DONE') {
-      toastMessage = `Computation finished succesfully.
-              \n- Algorithm: ${task.info.algorithm}
-              \n- Started At: ${startDate.getHours()}:${startDate.getMinutes()}
-              \n- Finished At: ${finishedDate.getHours()}:${finishedDate.getMinutes()}`;
+      toastMessage = 'Computation finished succesfully.';
+              // \n- Algorithm: ${task.info.algorithm}
+              // \n- Started At: ${startDate.getHours()}:${startDate.getMinutes()}
+              // \n- Finished At: ${finishedDate.getHours()}:${finishedDate.getMinutes()}`;
       toastType = 'is-success';
     } else if (status === 'FAILED') {
-      toastMessage = `Computation failed.
-              \n- Algorithm: ${task.info.algorithm}
-              \n- Started At: ${startDate.getHours()}:${startDate.getMinutes()}`;
+      toastMessage = 'Computation failed.';
+              // \n- Algorithm: ${task.info.algorithm}
+              // \n- Started At: ${startDate.getHours()}:${startDate.getMinutes()}`;
       toastType = 'is-danger';
     }
 
