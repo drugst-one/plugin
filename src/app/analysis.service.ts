@@ -60,6 +60,38 @@ export class AnalysisService {
     }
   }
 
+  public addAllHostProteins(nodes, proteins) {
+    const visibleIds = new Set<string>(nodes.getIds());
+    for (const protein of proteins) {
+      const nodeId = protein.proteinAc;
+      const found = visibleIds.has(nodeId) || visibleIds.has('p_' + nodeId);
+      if (found && !this.inSelection(protein.name)) {
+        this.addItem({
+          name: protein.proteinAc,
+          type: 'Host Protein',
+          data: protein
+        });
+      }
+    }
+  }
+
+  public addAllViralProteins(nodes, effects) {
+    const visibleIds = new Set<string>(nodes.getIds());
+    for (const effect of effects) {
+      const nodeId = effect.effectId;
+      const found = visibleIds.has(nodeId) || visibleIds.has('eff_' + effect.effectName + '_' +
+        effect.datasetName + '_' + effect.virusName);
+      if (found && !this.inSelection(effect.effectName + '_' +
+        effect.datasetName + '_' + effect.virusName)) {
+        this.addItem({
+          name: effect.effectId,
+          type: 'Viral Protein',
+          data: effect
+        });
+      }
+    }
+  }
+
   resetSelection() {
     const oldSelection = this.selectedItems.values();
     for (const item of oldSelection) {
@@ -110,14 +142,14 @@ export class AnalysisService {
     // const finishedDate = new Date(task.info.finishedAt);
     if (status === 'DONE') {
       toastMessage = 'Computation finished succesfully.';
-              // \n- Algorithm: ${task.info.algorithm}
-              // \n- Started At: ${startDate.getHours()}:${startDate.getMinutes()}
-              // \n- Finished At: ${finishedDate.getHours()}:${finishedDate.getMinutes()}`;
+      // \n- Algorithm: ${task.info.algorithm}
+      // \n- Started At: ${startDate.getHours()}:${startDate.getMinutes()}
+      // \n- Finished At: ${finishedDate.getHours()}:${finishedDate.getMinutes()}`;
       toastType = 'is-success';
     } else if (status === 'FAILED') {
       toastMessage = 'Computation failed.';
-              // \n- Algorithm: ${task.info.algorithm}
-              // \n- Started At: ${startDate.getHours()}:${startDate.getMinutes()}`;
+      // \n- Algorithm: ${task.info.algorithm}
+      // \n- Started At: ${startDate.getHours()}:${startDate.getMinutes()}`;
       toastType = 'is-danger';
     }
 
@@ -128,7 +160,7 @@ export class AnalysisService {
       pauseOnHover: true,
       type: toastType,
       position: 'top-center',
-      animate: { in: 'fadeIn', out: 'fadeOut' }
+      animate: {in: 'fadeIn', out: 'fadeOut'}
     });
   }
 
