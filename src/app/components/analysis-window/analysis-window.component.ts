@@ -14,6 +14,7 @@ import {environment} from '../../../environments/environment';
 import {AnalysisService} from '../../analysis.service';
 import {Protein, Task, NodeType, ViralProtein, Drug} from '../../interfaces';
 import html2canvas from 'html2canvas';
+import {toast} from 'bulma-toast';
 
 declare var vis: any;
 
@@ -46,12 +47,11 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
 
   private network: any;
   private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
-  private drugNodes = [];
+  private drugNodes: any[] = [];
+  private drugEdges: any[] = [];
   public showDrugs = false;
   public tab = 'network';
   public physicsEnabled = true;
-
-
 
 
   private proteins: any;
@@ -229,10 +229,6 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     this.emitVisibleItems(false);
   }
 
-  discard() {
-
-  }
-
   export() {
 
   }
@@ -371,17 +367,46 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     };
   }
 
-  public toggleDrugs(bool) {
+  public async toggleDrugs(bool: boolean) {
     this.showDrugs = bool;
+    this.nodeData.nodes.remove(this.drugNodes);
+    this.nodeData.edges.remove(this.drugEdges);
+    this.drugNodes = [];
+    this.drugEdges = [];
+    if (this.showDrugs) {
+      const proteinAcs = this.proteins.map((protein) => protein.proteinAc);
+      // tslint:disable-next-line:max-line-length
+      const result = await this.http.get<any>(`${environment.backend}drug_interactions/?proteins=${JSON.stringify(proteinAcs)}`).toPromise();
+      const drugs = result.drugs;
+      const edges = result.edges;
 
-    if (!this.showDrugs) {
-      this.nodeData.nodes.remove(this.drugNodes);
-    } else {
-      this.nodeData.nodes.add(this.drugNodes);
+      if (drugs.length === 0) {
+        toast({
+          message: 'No drugs found.',
+          duration: 5000,
+          dismissible: true,
+          pauseOnHover: true,
+          type: 'is-warning',
+          position: 'top-center',
+          animate: {in: 'fadeIn', out: 'fadeOut'}
+        });
+      } else {
+        for (const drug of drugs) {
+          this.drugNodes.push(this.mapNode(drug.drugId, 'drug', false, null, drug));
+        }
+
+        for (const interaction of edges) {
+          const edge = {from: interaction.proteinAc, to: interaction.drugId};
+          this.drugEdges.push(this.mapEdge(edge));
+        }
+        this.nodeData.nodes.add(Array.from(this.drugNodes.values()));
+        this.nodeData.edges.add(Array.from(this.drugEdges.values()));
+      }
     }
   }
 
-  public updatePhysicsEnabled(bool) {
+
+  public updatePhysicsEnabled(bool: boolean) {
     this.physicsEnabled = bool;
     this.network.setOptions({
       physics: {
@@ -389,9 +414,6 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
         stabilization: {
           enabled: false,
         },
-        // edges : {
-        //    smooth : false
-        // },
       }
     });
   }
