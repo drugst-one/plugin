@@ -175,9 +175,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.selectedItem = item;
     this.selectedType = item.type;
     this.selectedName = item.name;
+
     if (this.selectedType === 'Host Protein') {
       const hostProtein = item.data as Protein;
       this.selectedId = hostProtein.proteinAc;
+      this.selectedName = hostProtein.name;
+
       if (zoom) {
         this.zoomToNode(`p_${item.name}`);
       }
@@ -312,7 +315,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.queryItems = [];
     hostProteins.forEach((protein) => {
       this.queryItems.push({
-        name: protein.proteinAc,
+        name: protein.name,
         type: 'Host Protein',
         data: protein
       });
@@ -409,12 +412,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private mapHostProteinToNode(hostProtein: Protein): any {
     let color = '#e2b600';
-    if (this.analysis.inSelection(hostProtein.proteinAc)) {
+    if (this.analysis.inSelection(hostProtein.name)) {
       color = '#48C774';
     }
     return {
       id: `p_${hostProtein.proteinAc}`,
-      label: `${hostProtein.proteinAc}`,
+      label: `${hostProtein.name}`,
       size: 10, font: '5px', color, shape: 'ellipse', shadow: false,
       x: hostProtein.x,
       y: hostProtein.y,

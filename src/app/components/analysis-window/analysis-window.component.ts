@@ -9,7 +9,7 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {AnalysisService} from '../../analysis.service';
 import {Protein, Task, NodeType, ViralProtein, Drug} from '../../interfaces';
@@ -150,7 +150,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
               selectedStatus = null;
               selectedItem = {name: selectedNodes[0].id, type: 'Host Protein', data: protein};
               // TODO use gene name here
-              selectedName = protein.proteinAc;
+              selectedName = protein.name;
               selectedId = protein.proteinAc;
               selectedType = 'Host Protein';
               if (properties.event.srcEvent.ctrlKey) {
@@ -351,9 +351,15 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
 
   private mapNode(nodeId: any, nodeType?: NodeType, isSeed?: boolean, score?: number, details?): any {
     const {shape, color, size, font, shadow} = this.getNodeLooks(nodeId, nodeType, isSeed);
+    let nodeLabel = nodeId;
+    if (nodeType === 'host') {
+      nodeLabel = details.name;
+    } else if (nodeType === 'drug') {
+      nodeLabel = details.name;
+    }
     return {
       id: nodeId,
-      label: nodeId,
+      label: nodeLabel,
       size, color, shape, font, shadow,
       nodeType, isSeed, details
     };
@@ -376,7 +382,21 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     if (this.showDrugs) {
       const proteinAcs = this.proteins.map((protein) => protein.proteinAc);
       // tslint:disable-next-line:max-line-length
-      const result = await this.http.get<any>(`${environment.backend}drug_interactions/?proteins=${JSON.stringify(proteinAcs)}`).toPromise();
+      const result = await this.http.get<any>(`${environment.backend}drug_interactions/?proteins=${JSON.stringify(proteinAcs)}`).toPromise().catch((err: HttpErrorResponse) => {
+        // simple logging, but you can do a lot more, see below
+        toast({
+          message: 'An error occured while fetching the drugs.',
+          duration: 5000,
+          dismissible: true,
+          pauseOnHover: true,
+          type: 'is-danger',
+          position: 'top-center',
+          animate: {in: 'fadeIn', out: 'fadeOut'}
+        });
+        this.showDrugs = false;
+        return;
+      });
+
       const drugs = result.drugs;
       const edges = result.edges;
 
