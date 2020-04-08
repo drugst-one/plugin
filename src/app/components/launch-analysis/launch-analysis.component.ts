@@ -6,7 +6,6 @@ interface Algorithm {
   name: string;
 }
 
-const DUMMY: Algorithm = {slug: 'dummy', name: 'Dummy'};
 const TRUSTRANK: Algorithm = {slug: 'trustrank', name: 'Trust-Rank'};
 const KEYPATHWAYMINER: Algorithm = {slug: 'keypathwayminer', name: 'KeyPathwayMiner'};
 const MULTISTEINER: Algorithm = {slug: 'multisteiner', name: 'Multi-Steiner'};
@@ -25,7 +24,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   @Output()
   public showChange = new EventEmitter<boolean>();
 
-  public algorithm: 'dummy' | 'trustrank' | 'keypathwayminer' | 'multisteiner';
+  public algorithm: 'trustrank' | 'keypathwayminer' | 'multisteiner';
 
   public algorithms: Array<Algorithm> = [];
 
@@ -52,10 +51,10 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.target === 'drug-target') {
-      this.algorithms = [TRUSTRANK, MULTISTEINER, KEYPATHWAYMINER, DUMMY];
+      this.algorithms = [TRUSTRANK, MULTISTEINER, KEYPATHWAYMINER];
       this.trustrankStrain = 'SARS_CoV2';
     } else if (this.target === 'drug') {
-      this.algorithms = [TRUSTRANK, DUMMY];
+      this.algorithms = [TRUSTRANK];
       this.trustrankStrain = 'drugs';
     }
   }
@@ -70,9 +69,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       seeds: this.analysis.getSelection().map((item) => item.name),
     };
 
-    if (this.algorithm === 'dummy') {
-      // No parameters for dummy
-    } else if (this.algorithm === 'trustrank') {
+    if (this.algorithm === 'trustrank') {
       parameters.strain_or_drugs = this.trustrankStrain;
       parameters.datasets = [];
       parameters.ignored_edge_types = [];
