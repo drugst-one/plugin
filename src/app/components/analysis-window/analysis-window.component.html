@@ -44,10 +44,8 @@
       </div>
       <div class="content tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'network'">
         <div class="card-image">
-          <div class="parent"  id="1">
-            <div class="network center" #network>
-              <button class="button is-loading center">Loading</button>
-            </div>
+          <div class="network center" #network>
+            <button class="button is-loading center">Loading</button>
           </div>
         </div>
         <footer class="card-footer toolbar">
@@ -63,7 +61,7 @@
               </button>
             </p>
             <p class="control">
-              <button (click)="screenshot()" class="button is-primary is-rounded" >
+              <button class="button is-primary is-rounded" [disabled]="true">
             <span class="icon">
               <i class="fas fa-camera" aria-hidden="true"></i>
             </span>
@@ -83,21 +81,23 @@
               </button>
             </p>
           </div>
-          <div class="field has-addons footer-toggle-buttons" *ngIf="false"> <!-- temporarliy disabled -->
-            <p class="control">
-              <button class="button is-rounded" [class.is-primary]="showDrugs" (click)="toggleDrugs(true)">
+              <div class="field has-addons footer-toggle-buttons">
+                <p class="control">
+                  <button class="button is-rounded" [class.is-primary]="physicsEnabled"
+                          (click)="updatePhysicsEnabled(true)">
                 <span class="icon is-small">
-                  <i class="fas fa-capsules"></i>
+                  <i class="fas fa-wind"></i>
                 </span>
-                <span>Drugs On</span>
-              </button>
-            </p>
-            <p class="control">
-              <button class="button is-rounded" [class.is-primary]="!showDrugs" (click)="toggleDrugs(false)">
-                <span>Off</span>
-              </button>
-            </p>
-          </div>
+                    <span>Animation On</span>
+                  </button>
+                </p>
+                <p class="control">
+                  <button class="button is-rounded" [class.is-primary]="!physicsEnabled"
+                          (click)="updatePhysicsEnabled(false)">
+                    <span>Off</span>
+                  </button>
+                </p>
+              </div>
         </footer>
       </div>
       <div class="content tab-content scrollable" *ngIf="task && task.info.done" [class.is-visible]="tab === 'table'">
