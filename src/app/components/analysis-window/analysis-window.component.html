@@ -101,58 +101,101 @@
         </footer>
       </div>
       <div class="content tab-content scrollable" *ngIf="task && task.info.done" [class.is-visible]="tab === 'table'">
-        <h4 class="is-4" *ngIf="tableDrugs.length > 0">Drugs</h4>
+        <div class="field has-addons footer-toggle-buttons" *ngIf="tableHasScores">
+          <p class="control">
+            <button class="button is-rounded" [class.is-primary]="tableNormalize" (click)="toggleNormalization(true)">
+                <span class="icon is-small">
+                  <i class="fa fa-ruler-vertical"></i>
+                </span>
+              <span>Normalization On</span>
+            </button>
+          </p>
+          <p class="control">
+            <button class="button is-rounded" [class.is-primary]="!tableNormalize" (click)="toggleNormalization(false)">
+              <span>Off</span>
+            </button>
+          </p>
+        </div>
+
+        <div *ngIf="tableDrugs.length > 0">
+          <h4 class="is-4">
+            <span class="icon"><i class="fa fa-capsules"></i></span>
+            <span>Drugs</span>
+          </h4>
+          <a [href]="downloadLink('drugs')" class="button is-primary is-outlined is-pulled-right is-small">
+            <span class="icon"><i class="fa fa-download"></i></span>
+            <span>Download</span>
+          </a>
+        </div>
         <table class="table is-striped" *ngIf="tableDrugs.length > 0">
           <thead>
           <tr>
             <td>ID</td>
             <td>Name</td>
             <td>Status</td>
-            <td>Score</td>
+            <td *ngIf="tableHasScores">Score</td>
           </tr>
           </thead>
           <tbody>
           <tr *ngFor="let e of tableDrugs">
-            <td>{{e.drugId}}</td>
+            <td><a href="https://www.drugbank.ca/drugs/{{ e.drugId }}" target="_blank">{{ e.drugId }}</a></td>
             <td>{{e.name}}</td>
             <td>{{e.status}}</td>
-            <td>{{e.score}}</td>
+            <td *ngIf="tableHasScores">{{e.score}}</td>
           </tr>
           </tbody>
         </table>
 
-        <h4 class="is-4" *ngIf="tableProteins.length > 0">Proteins</h4>
+        <div *ngIf="tableProteins.length > 0">
+          <h4 class="is-4">
+            <span class="icon"><i class="fa fa-dna"></i></span>
+            <span>Proteins</span>
+          </h4>
+          <a [href]="downloadLink('proteins')" class="button is-primary is-outlined is-pulled-right is-small">
+            <span class="icon"><i class="fa fa-download"></i></span>
+            <span>Download</span>
+          </a>
+        </div>
         <table class="table is-striped" *ngIf="tableProteins.length > 0">
           <thead>
           <tr>
             <td>AC</td>
             <td>Gene</td>
-            <td>Score</td>
+            <td *ngIf="tableHasScores">Score</td>
           </tr>
           </thead>
           <tbody>
           <tr *ngFor="let e of tableProteins">
-            <td>{{e.proteinAc}}</td>
+            <td><a href="https://www.uniprot.org/uniprot/{{ e.proteinAc }}" target="_blank">{{ e.proteinAc }}</a></td>
             <td>{{e.name}}</td>
-            <td>{{e.score}}</td>
+            <td *ngIf="tableHasScores">{{e.score}}</td>
           </tr>
           </tbody>
         </table>
 
-        <h4 class="is-4" *ngIf="tableViralProteins.length > 0">Viral Proteins</h4>
+        <div *ngIf="tableViralProteins.length > 0">
+          <h4 class="is-4">
+            <span class="icon"><i class="fa fa-virus"></i></span>
+            <span>Viral Proteins</span>
+          </h4>
+          <a [href]="downloadLink('viral_proteins')" class="button is-primary is-outlined is-pulled-right is-small">
+            <span class="icon"><i class="fa fa-download"></i></span>
+            <span>Download</span>
+          </a>
+        </div>
         <table class="table is-striped" *ngIf="tableViralProteins.length > 0">
           <thead>
           <tr>
             <td>Name</td>
             <td>Virus Strain</td>
-            <td>Score</td>
+            <td *ngIf="tableHasScores">Score</td>
           </tr>
           </thead>
           <tbody>
           <tr *ngFor="let e of tableViralProteins">
             <td>{{e.effectName}}</td>
             <td>{{e.virusName}}</td>
-            <td>{{e.score}}</td>
+            <td *ngIf="tableHasScores">{{e.score}}</td>
           </tr>
           </tbody>
         </table>

@@ -17,6 +17,11 @@ import html2canvas from 'html2canvas';
 
 declare var vis: any;
 
+interface Scored {
+  score: number;  // Normalized or unnormalized (whichever user selects, will be displayed in the table)
+  rawScore: number;  // Unnormalized (kept to restore unnormalized value)
+}
+
 @Component({
   selector: 'app-analysis-window',
   templateUrl: './analysis-window.component.html',
@@ -42,9 +47,11 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   public showDrugs = false;
   public tab = 'network';
 
-  public tableDrugs: Array<any> = [];
-  public tableProteins: Array<any> = [];
-  public tableViralProteins: Array<any> = [];
+  public tableDrugs: Array<Drug & Scored> = [];
+  public tableProteins: Array<Protein & Scored> = [];
+  public tableViralProteins: Array<ViralProtein & Scored> = [];
+  public tableNormalize = false;
+  public tableHasScores = false;
 
   constructor(private http: HttpClient, public analysis: AnalysisService) {
   }
@@ -74,45 +81,38 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
         this.nodeData.nodes = new vis.DataSet(nodes);
         this.nodeData.edges = new vis.DataSet(edges);
 
-        // Fill tables
-        result.networks.forEach((network, i) => {
-          const attributes = result.nodeAttributes[i];
-          const nodeTypes = attributes.nodeTypes || {};
-          const nodeDetails = attributes.details || {};
-          const nodeScores = attributes.scores || {};
-          const normalizeScore = network.maxScore || 1.0;
-          network.nodes.forEach((nodeId, j) => {
-            const nodeType = nodeTypes[nodeId] || this.inferNodeType(nodeId);
-            const entry = nodeDetails[nodeId] || {};
-            entry.score = nodeScores[nodeId] || null;
-            if (entry.score) {
-              entry.score /= normalizeScore;
-            }
-            switch (nodeType) {
-              case 'drug':
-                this.tableDrugs.push(entry);
-                break;
-              case 'host':
-                this.tableProteins.push(entry);
-                break;
-              case 'virus':
-                this.tableViralProteins.push(entry);
-                break;
-            }
-          });
-        });
-
-        this.tableDrugs = this.tableDrugs.reverse();
-        this.tableProteins = this.tableProteins.reverse();
-        this.tableViralProteins = this.tableViralProteins.reverse();
-
         const container = this.networkEl.nativeElement;
         const options = {};
 
         this.network = new vis.Network(container, this.nodeData, options);
+
+        const promises: Promise<any>[] = [];
+        promises.push(this.http.get<any>(`${environment.backend}task_result/?token=${this.token}&view=proteins`).toPromise()
+          .then((table) => {
+            this.tableProteins = table;
+            this.tableProteins.forEach((r) => r.rawScore = r.score);
+          }));
+        promises.push(this.http.get<any>(`${environment.backend}task_result/?token=${this.token}&view=viral_proteins`).toPromise()
+          .then((table) => {
+            this.tableViralProteins = table;
+            this.tableViralProteins.forEach((r) => r.rawScore = r.score);
+          }));
+        promises.push(this.http.get<any>(`${environment.backend}task_result/?token=${this.token}&view=drugs`).toPromise()
+          .then((table) => {
+            this.tableDrugs = table;
+            this.tableDrugs.forEach((r) => r.rawScore = r.score);
+          }));
+        await Promise.all(promises);
+
+        this.tableHasScores = this.task.info.algorithm === 'trustrank';
+        if (this.tableHasScores) {
+          this.toggleNormalization(true);
+        }
+
         this.network.on('deselectNode', (properties) => {
           this.showDetailsChange.emit([false, [null, null, null, null, null, null]]);
         });
+
         this.network.on('selectNode', (properties) => {
           const selectedNodes = this.nodeData.nodes.get(properties.nodes);
           if (selectedNodes.length > 0) {
@@ -169,7 +169,6 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
           } else {
             this.showDetailsChange.emit([false, [null, null, null, null, null, null]]);
           }
-
         });
 
         this.analysis.subscribe((item, selected) => {
@@ -204,6 +203,42 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
 
   export() {
 
+  }
+
+  public toggleNormalization(normalize: boolean) {
+    this.tableNormalize = normalize;
+
+    const normalizeFn = (table) => {
+      let max = 0;
+      table.forEach(i => {
+        if (i.rawScore > max) {
+          max = i.rawScore;
+        }
+      });
+      table.forEach(i => {
+        i.score = i.rawScore / max;
+      });
+    };
+
+    const unnormalizeFn = (table) => {
+      table.forEach(i => {
+        i.score = i.rawScore;
+      });
+    };
+
+    if (normalize) {
+      normalizeFn(this.tableDrugs);
+      normalizeFn(this.tableProteins);
+      normalizeFn(this.tableViralProteins);
+    } else {
+      unnormalizeFn(this.tableDrugs);
+      unnormalizeFn(this.tableProteins);
+      unnormalizeFn(this.tableViralProteins);
+    }
+  }
+
+  public downloadLink(view: string): string {
+    return `${environment.backend}task_result/?token=${this.token}&view=${view}&fmt=csv`;
   }
 
   public inferNodeType(nodeId: string): 'host' | 'virus' | 'drug' {
