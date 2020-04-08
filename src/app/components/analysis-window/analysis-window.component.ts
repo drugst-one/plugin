@@ -49,6 +49,9 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   private drugNodes = [];
   public showDrugs = false;
   public tab = 'network';
+  public physicsEnabled = true;
+
+
 
 
   private proteins: any;
@@ -88,7 +91,20 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
         this.nodeData.edges = new vis.DataSet(edges);
 
         const container = this.networkEl.nativeElement;
-        const options = {};
+        const options = {
+          layout: {
+            improvedLayout: false,
+          },
+          edges: {
+            smooth: false,
+          },
+          physics: {
+            enabled: this.physicsEnabled,
+            stabilization: {
+              enabled: false,
+            },
+          },
+        };
 
         this.network = new vis.Network(container, this.nodeData, options);
 
@@ -363,6 +379,21 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     } else {
       this.nodeData.nodes.add(this.drugNodes);
     }
+  }
+
+  public updatePhysicsEnabled(bool) {
+    this.physicsEnabled = bool;
+    this.network.setOptions({
+      physics: {
+        enabled: this.physicsEnabled,
+        stabilization: {
+          enabled: false,
+        },
+        // edges : {
+        //    smooth : false
+        // },
+      }
+    });
   }
 
   public screenshot() {
