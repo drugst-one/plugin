@@ -187,7 +187,9 @@
 
     <div class="analysis-view" *ngIf="selectedAnalysisToken">
       <app-analysis-window [(token)]="selectedAnalysisToken"
-                           (showDetailsChange)="showDetails = $event[0]; changeInfo($event[1])"></app-analysis-window>
+                           (showDetailsChange)="showDetails = $event[0]; changeInfo($event[1])"
+                           (visibleItems)="analysisWindowChanged($event)"
+      ></app-analysis-window>
     </div>
   </div>
 
@@ -398,7 +400,7 @@
           </i>
         </div>
         <footer class="card-footer">
-          <a (click)="addAllHostProteins()" class="card-footer-item has-text-success">
+          <a (click)="analysis.addAllHostProteins(currentViewNodes, currentViewProteins)" class="card-footer-item has-text-success">
           <span class="icon">
             <i class="fa fa-plus"></i>
           </span>
@@ -406,7 +408,7 @@
             Host Proteins
           </span>
           </a>
-          <a (click)="addAllViralProteins()" class="card-footer-item has-text-success">
+          <a (click)="analysis.addAllViralProteins(currentViewNodes, currentViewEffects)" class="card-footer-item has-text-success">
           <span class="icon">
             <i class="fa fa-plus"></i>
           </span>

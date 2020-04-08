@@ -29,6 +29,9 @@ interface Scored {
 })
 export class AnalysisWindowComponent implements OnInit, OnChanges {
 
+  constructor(private http: HttpClient, public analysis: AnalysisService) {
+  }
+
   @Input() token: string | null = null;
 
   @Output() tokenChange = new EventEmitter<string | null>();
@@ -47,14 +50,17 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   public showDrugs = false;
   public tab = 'network';
 
+
+  private proteins: any;
+  public effects: any;
+
   public tableDrugs: Array<Drug & Scored> = [];
   public tableProteins: Array<Protein & Scored> = [];
   public tableViralProteins: Array<ViralProtein & Scored> = [];
   public tableNormalize = false;
   public tableHasScores = false;
 
-  constructor(private http: HttpClient, public analysis: AnalysisService) {
-  }
+  @Output() visibleItems: EventEmitter<any> = new EventEmitter();
 
   async ngOnInit() {
   }
@@ -186,6 +192,15 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
         });
       }
     }
+    this.emitVisibleItems(true);
+  }
+
+  public emitVisibleItems(on: boolean) {
+    if (on) {
+      this.visibleItems.emit([this.nodeData.nodes, [this.proteins, this.effects]]);
+    } else {
+      this.visibleItems.emit(null);
+    }
   }
 
   private async getTask(token: string): Promise<any> {
@@ -195,6 +210,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   close() {
     this.token = null;
     this.tokenChange.emit(this.token);
+    this.emitVisibleItems(false);
   }
 
   discard() {
@@ -256,6 +272,8 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
 
     const nodeAttributes = result.nodeAttributes || [];
 
+    this.proteins = [];
+    this.effects = [];
     for (let i = 0; i < result.networks.length; i++) {
       const network = result.networks[i];
 
@@ -264,9 +282,12 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
       const isSeed = attributes.isSeed || {};
       const scores = attributes.scores || {};
       const details = attributes.details || {};
-
-
       for (const node of network.nodes) {
+        if (nodeTypes[node] === 'host') {
+          this.proteins.push(details[node]);
+        } else if (nodeTypes[node] === 'virus') {
+          this.effects.push(details[node]);
+        }
         nodes.push(this.mapNode(node, nodeTypes[node] || this.inferNodeType(node), isSeed[node], scores[node], details[node]));
       }
 

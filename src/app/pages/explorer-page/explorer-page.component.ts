@@ -47,7 +47,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public edges: any;
 
   private network: any;
-  private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
+  public nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
 
   private dumpPositions = false;
   public physicsEnabled = false;
@@ -60,6 +60,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public currentDataset = [];
   private screenshotArray = [0];
+
+  public currentViewProteins: Protein[];
+  public currentViewEffects: ViralProtein[];
+  public currentViewNodes: Node[];
 
   public datasetItems: Array<{ id: string, label: string, datasets: string, data: Array<[string, string]> }> = [
     {
@@ -321,6 +325,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         data: effect
       });
     });
+
+    this.currentViewNodes = this.nodeData.nodes;
+    this.currentViewProteins = this.proteins;
+    this.currentViewEffects = this.effects;
   }
 
   public async filterNodes() {
@@ -457,32 +465,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     };
   }
 
-  public addAllHostProteins() {
-    const visibleIds = new Set<string>(this.nodeData.nodes.getIds());
-    for (const protein of this.proteinData.proteins) {
-      const nodeId = `p_${protein.proteinAc}`;
-      const found = visibleIds.has(nodeId);
-      if (found && !this.analysis.inSelection(protein.name)) {
-        this.analysis.addItem({name: protein.proteinAc, type: 'Host Protein', data: protein});
-      }
-    }
-  }
-
-  public addAllViralProteins() {
-    const visibleIds = new Set<string>(this.nodeData.nodes.getIds());
-    for (const effect of this.proteinData.effects) {
-      const nodeId = `eff_${effect.effectName + '_' + effect.datasetName + '_' + effect.virusName}`;
-      const found = visibleIds.has(nodeId);
-      if (found && !this.analysis.inSelection(effect.effectName + '_' + effect.datasetName + '_' + effect.virusName)) {
-        this.analysis.addItem({
-          name: effect.effectId,
-          type: 'Viral Protein',
-          data: effect
-        });
-      }
-    }
-  }
-
   public toCanvas() {
     this.screenshotArray.forEach((key, index) => {
       const elem = document.getElementById(index.toString());
@@ -496,4 +478,15 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
+  analysisWindowChanged($event: any) {
+    if ($event) {
+      this.currentViewNodes = $event[0];
+      this.currentViewProteins = $event[1][0];
+      this.currentViewEffects = $event[1][1];
+    } else {
+      this.currentViewNodes = this.nodeData.nodes;
+      this.currentViewProteins = this.proteins;
+      this.currentViewEffects = this.effects;
+    }
+  }
 }
