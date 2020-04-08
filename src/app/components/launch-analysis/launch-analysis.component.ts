@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {AnalysisService} from '../../analysis.service';
 
 interface Algorithm {
-  slug: string;
+  slug: 'trustrank' | 'keypathwayminer' | 'multisteiner';
   name: string;
 }
 
@@ -51,10 +51,12 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.target === 'drug-target') {
-      this.algorithms = [TRUSTRANK, MULTISTEINER, KEYPATHWAYMINER];
+      this.algorithms = [MULTISTEINER, TRUSTRANK, KEYPATHWAYMINER];
+      this.algorithm = MULTISTEINER.slug;
       this.trustrankStrain = 'SARS_CoV2';
     } else if (this.target === 'drug') {
       this.algorithms = [TRUSTRANK];
+      this.algorithm = TRUSTRANK.slug;
       this.trustrankStrain = 'drugs';
     }
   }

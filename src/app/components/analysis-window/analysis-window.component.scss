@@ -20,5 +20,10 @@ div.network {
 
   &.scrollable {
     overflow-y: auto;
+    padding-right: 10px;
+  }
+
+  h4 {
+    margin-top: 60px;
   }
 }
