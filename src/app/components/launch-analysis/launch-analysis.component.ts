@@ -79,7 +79,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.result_size = this.trustrankResultSize;
       parameters.num_threads = this.trustrankNumThreads;
     } else if (this.algorithm === 'keypathwayminer') {
-      // TODO
+      parameters.k = this.keypathwayminerK;
     } else if (this.algorithm === 'multisteiner') {
       parameters.strain = this.multisteinerStrain;
       parameters.num_trees = this.multisteinerNumTrees;
