@@ -6,6 +6,11 @@
 @import "~@ng-select/ng-select/themes/default.theme.css";
 
 $family-sans-serif: "Varela Round", sans-serif;
+$primary: #3070B3;
+$success: #48C774;
+$danger: #EF476F;
+$link: $primary;
+$info: $primary;
 @import "~bulma/bulma.sass";
 @import "~primeng/resources/primeng.css";
 @import "~primeicons/primeicons.css";
@@ -19,24 +24,19 @@ body {
 }
 
 .hero.is-primary {
-  background-color: #118AB2;
-  background-image: url("assets/logo.png"), linear-gradient(to left, #f2fcfe, #118AB2);
+  background-color: $primary;
+  background-image: url("assets/virus_background.png");
+  background-size: cover;
   background-repeat: no-repeat;
-  background-position: 80%;
-  padding: 50px;
 }
 
-.button.is-primary, .button.is-primary:hover, .button.is-primary:disabled {
-  background-color: #118AB2;
-}
-
-.button.is-danger, .button.is-danger:hover, .button.is-danger:disabled {
-  background-color: #EF476F;
-}
-
-.button.is-success, .button.is-success:hover, .button.is-success:disabled {
-  background-color: #48C774;
-}
+//.hero.is-primary {
+//  background-color: $primary;
+//  background-image: linear-gradient(to left, #f2fcfe, $primary);
+//  background-repeat: no-repeat;
+//  background-position: 80%;
+//  padding: 50px;
+//}
 
 div.navbar-menu {
   margin-left: 5px;
@@ -162,23 +162,23 @@ div.field.has-addons.add-remove-toggle {
 }
 
 .fa-check {
-  color: #48C774;
+  color: $success;
 }
 
 .fa-search.investigational {
-  color: #e2b600;
+  color: $warning;
 }
 
 .fa-spinner {
-  color: #e2b600;
+  color: $warning;
 }
 
 .fa-pause {
-  color: #e2b600;
+  color: $warning;
 }
 
 .fa-exclamation-triangle {
-  color: #EF476F;
+  color: $danger;
 }
 
 .footer-toggle-buttons {
