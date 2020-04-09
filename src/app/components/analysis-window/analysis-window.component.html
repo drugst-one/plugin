@@ -138,24 +138,36 @@
             <span>Download</span>
           </a>
         </div>
-        <table class="table is-striped" *ngIf="tableDrugs.length > 0">
-          <thead>
-          <tr>
-            <td>ID</td>
-            <td>Name</td>
-            <td>Status</td>
-            <td *ngIf="tableHasScores">Score</td>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let e of tableDrugs">
-            <td><a href="https://www.drugbank.ca/drugs/{{ e.drugId }}" target="_blank">{{ e.drugId }}</a></td>
-            <td>{{e.name}}</td>
-            <td>{{e.status}}</td>
-            <td *ngIf="tableHasScores">{{e.score}}</td>
-          </tr>
-          </tbody>
-        </table>
+        <p-table *ngIf="tableDrugs.length > 0" [value]="tableDrugs">
+          <ng-template pTemplate="header">
+            <tr>
+              <th [pSortableColumn]="'drugId'">
+                ID
+                <p-sortIcon [field]="'drugId'"></p-sortIcon>
+              </th>
+              <th [pSortableColumn]="'name'">
+                Name
+                <p-sortIcon [field]="'name'"></p-sortIcon>
+              </th>
+              <th [pSortableColumn]="'status'">
+                Status
+                <p-sortIcon [field]="'status'"></p-sortIcon>
+              </th>
+              <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
+                Score
+                <p-sortIcon [field]="'score'"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-e>
+            <tr>
+              <td><a href="https://www.drugbank.ca/drugs/{{ e.drugId }}" target="_blank">{{ e.drugId }}</a></td>
+              <td>{{e.name}}</td>
+              <td>{{e.status}}</td>
+              <td *ngIf="tableHasScores">{{e.score || ''}}</td>
+            </tr>
+          </ng-template>
+        </p-table>
 
         <div *ngIf="tableProteins.length > 0">
           <h4 class="is-4">
@@ -167,22 +179,31 @@
             <span>Download</span>
           </a>
         </div>
-        <table class="table is-striped" *ngIf="tableProteins.length > 0">
-          <thead>
+        <p-table *ngIf="tableProteins.length > 0" [value]="tableProteins">
+          <ng-template pTemplate="header">
           <tr>
-            <td>AC</td>
-            <td>Gene</td>
-            <td *ngIf="tableHasScores">Score</td>
+            <th [pSortableColumn]="'proteinAc'">
+              AC
+              <p-sortIcon [field]="'proteinAc'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'name'">
+              Gene
+              <p-sortIcon [field]="'name'"></p-sortIcon>
+            </th>
+            <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
+              Score
+              <p-sortIcon [field]="'score'"></p-sortIcon>
+            </th>
           </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let e of tableProteins">
+          </ng-template>
+          <ng-template pTemplate="body" let-e>
+          <tr>
             <td><a href="https://www.uniprot.org/uniprot/{{ e.proteinAc }}" target="_blank">{{ e.proteinAc }}</a></td>
             <td>{{e.name}}</td>
-            <td *ngIf="tableHasScores">{{e.score}}</td>
+            <td *ngIf="tableHasScores">{{e.score || ''}}</td>
           </tr>
-          </tbody>
-        </table>
+          </ng-template>
+        </p-table>
 
         <div *ngIf="tableViralProteins.length > 0">
           <h4 class="is-4">
@@ -194,22 +215,31 @@
             <span>Download</span>
           </a>
         </div>
-        <table class="table is-striped" *ngIf="tableViralProteins.length > 0">
-          <thead>
+        <p-table *ngIf="tableViralProteins.length > 0" [value]="tableViralProteins">
+          <ng-template pTemplate="header">
           <tr>
-            <td>Name</td>
-            <td>Virus Strain</td>
-            <td *ngIf="tableHasScores">Score</td>
+            <td [pSortableColumn]="'effectName'">
+              Name
+              <p-sortIcon [field]="'effectName'"></p-sortIcon>
+            </td>
+            <td [pSortableColumn]="'virusName'">
+              Virus Strain
+              <p-sortIcon [field]="'virusName'"></p-sortIcon>
+            </td>
+            <td *ngIf="tableHasScores" [pSortableColumn]="'score'">
+              Score
+              <p-sortIcon [field]="'score'"></p-sortIcon>
+            </td>
           </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let e of tableViralProteins">
+          </ng-template>
+          <ng-template pTemplate="body" let-e>
+          <tr>
             <td>{{e.effectName}}</td>
             <td>{{e.virusName}}</td>
-            <td *ngIf="tableHasScores">{{e.score}}</td>
+            <td *ngIf="tableHasScores">{{e.score || ''}}</td>
           </tr>
-          </tbody>
-        </table>
+          </ng-template>
+        </p-table>
       </div>
     </div>
   </div>

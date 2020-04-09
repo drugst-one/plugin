@@ -4,8 +4,11 @@
 
 @import url('https://fonts.googleapis.com/css?family=Varela+Round');
 @import "~@ng-select/ng-select/themes/default.theme.css";
+
 $family-sans-serif: "Varela Round", sans-serif;
 @import "~bulma/bulma.sass";
+@import "~primeng/resources/primeng.css";
+@import "~primeicons/primeicons.css";
 
 html {
   overflow: hidden;
@@ -117,14 +120,17 @@ div.card.network {
 }
 
 div.network {
-   height: calc(100vh - 210px);
+  height: calc(100vh - 210px);
 }
+
 div.parent {
   position: relative;
 }
+
 div.image1 {
   position: relative;
 }
+
 div.image2 {
   position: absolute;
   bottom: 0px;
@@ -185,5 +191,11 @@ div.field.has-addons.add-remove-toggle {
   border-top: 2px solid #d0d0d0;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
