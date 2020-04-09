@@ -1,14 +1,14 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {AnalysisService} from '../../analysis.service';
-
-interface Algorithm {
-  slug: 'trustrank' | 'keypathwayminer' | 'multisteiner';
-  name: string;
-}
-
-const TRUSTRANK: Algorithm = {slug: 'trustrank', name: 'Trust-Rank'};
-const KEYPATHWAYMINER: Algorithm = {slug: 'keypathwayminer', name: 'KeyPathwayMiner'};
-const MULTISTEINER: Algorithm = {slug: 'multisteiner', name: 'Multi-Steiner'};
+import {
+  Algorithm,
+  AlgorithmType,
+  AnalysisService, CLOSENESS_CENTRALITY,
+  DEGREE_CENTRALITY,
+  KEYPATHWAYMINER,
+  MULTISTEINER,
+  QuickAlgorithmType,
+  TRUSTRANK
+} from '../../analysis.service';
 
 @Component({
   selector: 'app-launch-analysis',
@@ -24,17 +24,27 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   @Output()
   public showChange = new EventEmitter<boolean>();
 
-  public algorithm: 'trustrank' | 'keypathwayminer' | 'multisteiner';
+  public algorithm: AlgorithmType | QuickAlgorithmType;
 
   public algorithms: Array<Algorithm> = [];
 
   // Trustrank Parameters
   public trustrankStrain = 'SARS_CoV2';
+  public trustrankIncludeIndirectDrugs = false;
+  public trustrankIncludeNonApprovedDrugs = false;
   public trustrankDampingFactor = 0.85;
   public trustrankResultSize = 20;
-  public trustrankNumThreads = 1;
-  public trustrankDatasets = [];
-  public trustrankIgnoredEdgeTypes = [];
+
+  // Closeness Parameters
+  public closenessStrain = 'SARS_CoV2';
+  public closenessIncludeIndirectDrugs = false;
+  public closenessIncludeNonApprovedDrugs = false;
+  public closenessResultSize = 20;
+
+  // Degree Parameters
+  public degreeStrain = 'SARS_CoV2';
+  public degreeIncludeNonApprovedDrugs = false;
+  public degreeResultSize = 20;
 
   // Keypathwayminer Parameters
   public keypathwayminerK = 1;
@@ -43,7 +53,13 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public multisteinerStrain = 'SARS_CoV2';
   public multisteinerNumTrees = 5;
 
+  public hasBaits;
+
   constructor(public analysis: AnalysisService) {
+    this.hasBaits = !!analysis.getSelection().find((i) => i.type === 'Viral Protein');
+    analysis.subscribe(() => {
+      this.hasBaits = !!analysis.getSelection().find((i) => i.type === 'Viral Protein');
+    });
   }
 
   ngOnInit(): void {
@@ -51,13 +67,17 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.target === 'drug-target') {
-      this.algorithms = [MULTISTEINER, TRUSTRANK, KEYPATHWAYMINER];
+      this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY];
       this.algorithm = MULTISTEINER.slug;
-      this.trustrankStrain = 'SARS_CoV2';
+      this.trustrankStrain = 'SARS_CoV2';  // TODO: Change once we have multiple datasets
+      this.closenessStrain = 'SARS_CoV2';  // TODO: Change once we have multiple datasets
+      this.degreeStrain = 'SARS_CoV2';  // TODO: Change once we have multiple datasets
     } else if (this.target === 'drug') {
-      this.algorithms = [TRUSTRANK];
+      this.algorithms = [TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY];
       this.algorithm = TRUSTRANK.slug;
       this.trustrankStrain = 'drugs';
+      this.closenessStrain = 'drugs';
+      this.degreeStrain = 'drugs';
     }
   }
 
@@ -73,11 +93,20 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
     if (this.algorithm === 'trustrank') {
       parameters.strain_or_drugs = this.trustrankStrain;
-      parameters.datasets = [];
-      parameters.ignored_edge_types = [];
       parameters.damping_factor = this.trustrankDampingFactor;
+      parameters.include_indirect_drugs = this.trustrankIncludeIndirectDrugs;
+      parameters.include_non_approved_drugs = this.trustrankIncludeNonApprovedDrugs;
       parameters.result_size = this.trustrankResultSize;
-      parameters.num_threads = this.trustrankNumThreads;
+    } else if (this.algorithm === 'closeness') {
+      parameters.strain_or_drugs = this.closenessStrain;
+      parameters.include_indirect_drugs = this.closenessIncludeIndirectDrugs;
+      parameters.include_non_approved_drugs = this.closenessIncludeNonApprovedDrugs;
+      parameters.result_size = this.closenessResultSize;
+    } else if (this.algorithm === 'degree') {
+      parameters.strain_or_drugs = this.degreeStrain;
+      parameters.include_indirect_drugs = this.closenessIncludeIndirectDrugs;
+      parameters.include_non_approved_drugs = this.closenessIncludeNonApprovedDrugs;
+      parameters.result_size = this.closenessResultSize;
     } else if (this.algorithm === 'keypathwayminer') {
       parameters.k = this.keypathwayminerK;
     } else if (this.algorithm === 'multisteiner') {

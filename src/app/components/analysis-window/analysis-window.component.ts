@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
-import {AnalysisService} from '../../analysis.service';
+import {AnalysisService, algorithmNames} from '../../analysis.service';
 import {Protein, Task, NodeType, ViralProtein, Drug} from '../../interfaces';
 import html2canvas from 'html2canvas';
 import {toast} from 'bulma-toast';
@@ -52,6 +52,8 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   public showDrugs = false;
   public tab = 'network';
   public physicsEnabled = true;
+  public drugstatus = true;
+
 
 
   private proteins: any;
@@ -64,6 +66,8 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   public tableHasScores = false;
 
   @Output() visibleItems: EventEmitter<any> = new EventEmitter();
+
+  public algorithmNames = algorithmNames;
 
   async ngOnInit() {
   }
@@ -126,7 +130,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
           }));
         await Promise.all(promises);
 
-        this.tableHasScores = this.task.info.algorithm === 'trustrank' || this.task.info.algorithm === 'quick';
+        this.tableHasScores = ['trustrank', 'closeness', 'degree', 'quick'].indexOf(this.task.info.algorithm) !== -1;
         if (this.tableHasScores) {
           this.toggleNormalization(true);
         }
@@ -282,30 +286,27 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     const nodes = [];
     const edges = [];
 
-    const nodeAttributes = result.nodeAttributes || [];
+    const attributes = result.nodeAttributes || {};
 
     this.proteins = [];
     this.effects = [];
-    for (let i = 0; i < result.networks.length; i++) {
-      const network = result.networks[i];
+    const network = result.network;
 
-      const attributes = nodeAttributes[i] || {};
-      const nodeTypes = attributes.nodeTypes || {};
-      const isSeed = attributes.isSeed || {};
-      const scores = attributes.scores || {};
-      const details = attributes.details || {};
-      for (const node of network.nodes) {
-        if (nodeTypes[node] === 'host') {
-          this.proteins.push(details[node]);
-        } else if (nodeTypes[node] === 'virus') {
-          this.effects.push(details[node]);
-        }
-        nodes.push(this.mapNode(node, nodeTypes[node] || this.inferNodeType(node), isSeed[node], scores[node], details[node]));
+    const nodeTypes = attributes.nodeTypes || {};
+    const isSeed = attributes.isSeed || {};
+    const scores = attributes.scores || {};
+    const details = attributes.details || {};
+    for (const node of network.nodes) {
+      if (nodeTypes[node] === 'host') {
+        this.proteins.push(details[node]);
+      } else if (nodeTypes[node] === 'virus') {
+        this.effects.push(details[node]);
       }
+      nodes.push(this.mapNode(node, nodeTypes[node] || this.inferNodeType(node), isSeed[node], scores[node], details[node]));
+    }
 
-      for (const edge of network.edges) {
-        edges.push(this.mapEdge(edge));
-      }
+    for (const edge of network.edges) {
+      edges.push(this.mapEdge(edge));
     }
 
     return {
@@ -448,6 +449,10 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
       a.click();
 
     });
+  }
+  public updateshowdrugs(bool) {
+    this.drugstatus = bool;
+
   }
 
 }

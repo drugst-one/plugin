@@ -4,11 +4,12 @@
       <div *ngIf="!task.info.startedAt" (click)="open(task.token)">
         <p>
           <span class="is-capitalized"><i class="fa" [class.fa-capsules]="task.info.target === 'drug'"
-                                          [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{task.info.algorithm}}</span>
+                                          [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{algorithmNames[task.info.algorithm]}}</span>
           <span class="icon is-pulled-right"><i class="fas fa-pause" aria-hidden="true"></i></span>
         </p>
         <p>
-          <small>Queue position: {{task.stats.queuePosition}}/{{task.stats.queueLength}}</small>
+          <small *ngIf="task.stats.queueLength > 0">Queue position: {{task.stats.queuePosition}}/{{task.stats.queueLength}}</small>
+          <small *ngIf="task.stats.queueLength === 0">Execution imminent...</small>
           <a (click)="analysis.removeTask(task.token)" class="has-text-danger">
             <span class="icon is-pulled-right">
               <i class="fa fa-trash"></i>
@@ -19,7 +20,7 @@
       <div *ngIf="!task.info.done && !task.info.failed && task.info.startedAt" (click)="open(task.token)">
         <p>
           <span class="is-capitalized"><i class="fa" [class.fa-capsules]="task.info.target === 'drug'"
-                                          [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{task.info.algorithm}}</span>
+                                          [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{algorithmNames[task.info.algorithm]}}</span>
           <span class="icon is-pulled-right"><i class="fas fa-spinner fa-spin" aria-hidden="true"></i></span>
         </p>
         <p>
@@ -35,7 +36,7 @@
       <div *ngIf="task.info.done" (click)="open(task.token)">
         <p>
           <span class="is-capitalized"><i class="fa" [class.fa-capsules]="task.info.target === 'drug'"
-                                          [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{task.info.algorithm}}</span>
+                                          [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{algorithmNames[task.info.algorithm]}}</span>
           <span class="icon is-pulled-right"><i class="fas fa-check" aria-hidden="true"></i></span>
         </p>
         <p>
@@ -50,7 +51,7 @@
       <div *ngIf="task.info.failed && task.info.finishedAt == null">
         <p>
           <span class="is-capitalized"><i class="fa" [class.fa-capsules]="task.info.target === 'drug'"
-                                          [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{task.info.algorithm}}</span>
+                                          [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{algorithmNames[task.info.algorithm]}}</span>
           <span class="icon is-pulled-right"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i></span>
         </p>
         <p class="has-text-danger">

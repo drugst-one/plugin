@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AnalysisService} from '../../analysis.service';
+import {AnalysisService, algorithmNames} from '../../analysis.service';
 
 
 @Component({
@@ -12,6 +12,8 @@ export class TaskListComponent implements OnInit {
 
   @Input() token: string;
   @Output() tokenChange: EventEmitter<string> = new EventEmitter();
+
+  public algorithmNames = algorithmNames;
 
   constructor(public analysis: AnalysisService) {
   }
