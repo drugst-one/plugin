@@ -28,15 +28,16 @@
                                   (selectedDatasetChange)="selectedDataset = $event; createNetwork($event.data)">
 
               </app-select-dataset>
-            <div>
+              <div>
                 <br>
                 <font size="2">
-                <p ><span>Virus: SARS-CoV-2</span>
-                <p ><span>Host/target: Human cell line, HEK-293T kidney cells</span>
-                <p ><span>Method: AP-MS (affinity purification-mass spectrometry)</span>
-                <p ><span>Source:<a href="https://www.biorxiv.org/content/10.1101/2020.03.22.002386v3" target="_blank"> Gordon et al., 2020</a></span></font>
+                  <p><span>Virus: <b>SARS-CoV-2</b></span>
+                  <p><span>Host/target: <b>Human</b>, HEK-293T kidney cells</span>
+                  <p><span>Method: <b>AP-MS</b></span>
+                  <p><span>Source:<a href="https://www.biorxiv.org/content/10.1101/2020.03.22.002386v3" target="_blank"> <b> Gordon et al., 2020</b></a></span>
+                </font>
 
-            </div>
+              </div>
 
             </div>
           </div>
@@ -116,15 +117,15 @@
         <i class="fas fa-filter" aria-hidden="true"></i>
       </span> Filter Viral Proteins
             </p>
-            <a (click)="collapseDFilter = !collapseDFilter" data-action="collapse"
+            <a (click)="collapseBaitFilter = !collapseBaitFilter" data-action="collapse"
                class="card-header-icon is-hidden-fullscreen" aria-label="more options">
               <span class="icon">
-                <i *ngIf="collapseDFilter" class="fas fa-angle-up" aria-hidden="true"></i>
-                <i *ngIf="!collapseDFilter" class="fas fa-angle-down" aria-hidden="true"></i>
+                <i *ngIf="collapseBaitFilter" class="fas fa-angle-up" aria-hidden="true"></i>
+                <i *ngIf="!collapseBaitFilter" class="fas fa-angle-down" aria-hidden="true"></i>
               </span>
             </a>
           </header>
-          <div *ngIf="collapseDFilter">
+          <div *ngIf="collapseBaitFilter">
             <div class="card-content overflow">
               <div *ngFor="let bait of viralProteinCheckboxes">
                 <label class="checkbox">
@@ -181,9 +182,8 @@
 
     <div class="analysis-view" *ngIf="selectedAnalysisToken">
       <app-analysis-window [(token)]="selectedAnalysisToken"
-                           (showDetailsChange)="showDetails = $event[0]; changeInfo($event[1])"
-                           (visibleItems)="analysisWindowChanged($event)"
-      ></app-analysis-window>
+                           (showDetailsChange)="selectedWrapper = $event"
+                           (visibleItems)="analysisWindowChanged($event)"></app-analysis-window>
     </div>
   </div>
 
@@ -193,11 +193,17 @@
       <header class="card-header">
         <p class="card-header-title">
           <span class="icon">
-        <i *ngIf="!showDetails" class="fas fa-info" aria-hidden="true"></i>
-        <i *ngIf="selectedType === 'Host Protein'" class="fas fa-dna" aria-hidden="true"></i>
-        <i *ngIf="selectedType === 'Viral Protein'" class="fas fa-virus" aria-hidden="true"></i>
-        <i *ngIf="selectedType === 'Drug'" class="fas fa-capsules" aria-hidden="true"></i>
-      </span> {{ selectedType }}
+            <i *ngIf="!selectedWrapper" class="fas fa-info" aria-hidden="true"></i>
+            <i *ngIf="selectedWrapper && selectedWrapper.type === 'host'" class="fas fa-dna" aria-hidden="true"></i>
+            <i *ngIf="selectedWrapper && selectedWrapper.type === 'virus'" class="fas fa-virus" aria-hidden="true"></i>
+            <i *ngIf="selectedWrapper && selectedWrapper.type === 'drug'" class="fas fa-capsules" aria-hidden="true"></i>
+          </span>
+          <span *ngIf="!selectedWrapper">No item selected</span>
+          <span *ngIf="selectedWrapper">
+            <span *ngIf="selectedWrapper.type === 'host'">Host</span>
+            <span *ngIf="selectedWrapper.type === 'virus'">Viral Protein</span>
+            <span *ngIf="selectedWrapper.type === 'drug'">Drug</span>
+          </span>
         </p>
         <a (click)="collapseDetails = !collapseDetails" data-action="collapse"
            class="card-header-icon is-hidden-fullscreen" aria-label="more options">
@@ -209,57 +215,7 @@
       </header>
       <div *ngIf="collapseDetails">
         <div class="card-content">
-          <div *ngIf="showDetails">
-            <p *ngIf="selectedName && selectedType=='Drug'"><b><span>Name:</span></b> {{ selectedName }} <span
-              class="icon is-small">
-                  <i class="fas fa-capsules"></i>
-            </span></p>
-            <p *ngIf="selectedName && selectedType=='Host Protein'"><b><span>Gene Name:</span></b> {{ selectedName }}
-              <span class="icon is-small">
-                  <i class="fas fa-dna"></i>
-            </span></p>
-            <p *ngIf="selectedVirusName"><b><span>Virus:</span></b> {{ selectedVirusName }} <span class="icon is-small">
-                  <i class="fas fa-virus"></i>
-            </span></p>
-            <p *ngIf="selectedName && selectedType=='Viral Protein'"><b>Effect:</b> {{ selectedName }}</p>
-            <p *ngIf="selectedId && selectedType == 'Host Protein'"><b>Uniprot AC:</b>
-              <a href="https://www.uniprot.org/uniprot/{{ selectedId }}"
-                 target="_blank"> {{ selectedId }}</a>
-            </p>
-            <p *ngIf="selectedId && selectedType == 'Drug'"><b>DrugBank ID:</b>
-              <a href="https://www.drugbank.ca/drugs/{{ selectedId }}"
-                 target="_blank"> {{ selectedId }}</a>
-            </p>
-            <p *ngIf="selectedStatus === 'investigational' "><b>Status:</b> Investigational <span class="icon is-small"><i class="fas fa-search investigational"></i></span>
-            <p *ngIf="selectedStatus === 'approved' "><b>Status:</b> Approved <span class="icon is-small"><i class="fas fa-check"></i></span>
-            </p>
-            <div class="field has-addons add-remove-toggle">
-              <p *ngIf="selectedType !== 'Drug'" class="control">
-                <button class="button is-rounded" [class.is-success]="!analysis.inSelection(selectedName)"
-                        [disabled]="analysis.inSelection(selectedName)"
-                        (click)="analysis.addItem(selectedItem)">
-                <span class="icon is-small">
-                  <i class="fas fa-plus"></i>
-                </span>
-                  <span>Add to Analysis</span>
-                </button>
-              </p>
-              <p *ngIf="selectedType !== 'Drug'" class="control">
-                <button class="button is-rounded" [class.is-danger]="analysis.inSelection(selectedName)"
-                        [disabled]="!analysis.inSelection(selectedName)"
-                        (click)="analysis.removeItem(selectedName)">
-                  <span>Remove</span>
-                  <span class="icon is-small">
-                  <i class="fas fa-trash"></i>
-                </span>
-                </button>
-              </p>
-            </div>
-          </div>
-          <div *ngIf="!showDetails">
-            Please select a node for further information.
-            <!--          <a (click)="selectedAnalysisToken = 'oy4UsXfBDobTucdQBhN9IUzfnpqKwzqx'"> Open Analysis Window </a>-->
-          </div>
+          <app-info-box [wrapper]="selectedWrapper"></app-info-box>
         </div>
       </div>
     </div>
@@ -422,16 +378,16 @@
             </thead>
             <tbody>
             <tr *ngFor="let p of analysis.getSelection()">
-               <td>
+              <td>
                    <span class="icon">
-                      <i class="fa fa-dna" *ngIf="p.type == 'Host Protein'"></i>
-                      <i class="fa fa-virus" *ngIf="p.type =='Viral Protein'"></i>
+                      <i class="fa fa-dna" *ngIf="p.type == 'host'"></i>
+                      <i class="fa fa-virus" *ngIf="p.type =='virus'"></i>
                     </span>
               </td>
-              <td *ngIf="p.type == 'Viral Protein'">{{p.name}}</td>
-              <td *ngIf="p.type == 'Host Protein'">{{p.data.name}}</td>
+              <td *ngIf="p.type == 'virus'">{{p.data.effectName}}</td>
+              <td *ngIf="p.type == 'host'">{{p.data.name}}</td>
               <td>
-                <button (click)="analysis.removeItem(p.name)" class="button is-small is-danger is-outlined">
+                <button (click)="analysis.removeItem(p)" class="button is-small is-danger is-outlined">
                   <i class="fa fa-trash"></i>
                 </button>
               </td>
@@ -443,7 +399,8 @@
           </i>
         </div>
         <footer class="card-footer">
-          <a (click)="analysis.addAllHostProteins(currentViewNodes, currentViewProteins)" class="card-footer-item has-text-success">
+          <a (click)="analysis.addAllHostProteins(currentViewNodes, currentViewProteins)"
+             class="card-footer-item has-text-success">
           <span class="icon">
             <i class="fa fa-plus"></i>
           </span>
@@ -451,7 +408,8 @@
             Host Proteins
           </span>
           </a>
-          <a (click)="analysis.addAllViralProteins(currentViewNodes, currentViewEffects)" class="card-footer-item has-text-success">
+          <a (click)="analysis.addAllViralProteins(currentViewNodes, currentViewEffects)"
+             class="card-footer-item has-text-success">
           <span class="icon">
             <i class="fa fa-plus"></i>
           </span>

@@ -56,9 +56,9 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public hasBaits;
 
   constructor(public analysis: AnalysisService) {
-    this.hasBaits = !!analysis.getSelection().find((i) => i.type === 'Viral Protein');
+    this.hasBaits = !!analysis.getSelection().find((i) => i.type === 'virus');
     analysis.subscribe(() => {
-      this.hasBaits = !!analysis.getSelection().find((i) => i.type === 'Viral Protein');
+      this.hasBaits = !!analysis.getSelection().find((i) => i.type === 'virus');
     });
   }
 
@@ -88,7 +88,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   public async startTask() {
     const parameters: any = {
-      seeds: this.analysis.getSelection().map((item) => item.name),
+      seeds: this.analysis.getSelection().map((item) => item.backendId),
     };
 
     if (this.algorithm === 'trustrank') {

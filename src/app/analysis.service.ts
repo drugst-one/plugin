@@ -1,4 +1,4 @@
-import {QueryItem, Task} from './interfaces';
+import {Wrapper, Task, getWrapperFromProtein, getWrapperFromViralProtein} from './interfaces';
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../environments/environment';
@@ -33,8 +33,8 @@ export const MULTISTEINER: Algorithm = {slug: 'multisteiner', name: algorithmNam
 })
 export class AnalysisService {
 
-  private selectedItems = new Map<string, QueryItem>();
-  private selectSubject = new Subject<{ item: QueryItem, selected: boolean }>();
+  private selectedItems = new Map<string, Wrapper>();
+  private selectSubject = new Subject<{ item: Wrapper, selected: boolean }>();
 
   public tokens: string[] = [];
   public finishedTokens: string[] = [];
@@ -76,41 +76,31 @@ export class AnalysisService {
     });
   }
 
-  public addItem(item: QueryItem) {
-    if (!this.inSelection(item.name)) {
-      this.selectedItems.set(`${item.name}`, item);
-      this.selectSubject.next({item, selected: true});
+  public addItem(wrapper: Wrapper) {
+    if (!this.inSelection(wrapper)) {
+      this.selectedItems.set(wrapper.nodeId, wrapper);
+      this.selectSubject.next({item: wrapper, selected: true});
     }
   }
 
   public addAllHostProteins(nodes, proteins) {
     const visibleIds = new Set<string>(nodes.getIds());
     for (const protein of proteins) {
-      const nodeId = protein.proteinAc;
-      const found = visibleIds.has(nodeId) || visibleIds.has('p_' + nodeId);
-      if (found && !this.inSelection(protein.name)) {
-        this.addItem({
-          name: protein.proteinAc,
-          type: 'Host Protein',
-          data: protein
-        });
+      const wrapper = getWrapperFromProtein(protein);
+      const found = visibleIds.has(wrapper.nodeId);
+      if (found && !this.inSelection(wrapper)) {
+        this.addItem(wrapper);
       }
     }
   }
 
-  public addAllViralProteins(nodes, effects) {
+  public addAllViralProteins(nodes, viralProteins) {
     const visibleIds = new Set<string>(nodes.getIds());
-    for (const effect of effects) {
-      const nodeId = effect.effectId;
-      const found = visibleIds.has(nodeId) || visibleIds.has('eff_' + effect.effectName + '_' +
-        effect.datasetName + '_' + effect.virusName);
-      if (found && !this.inSelection(effect.effectName + '_' +
-        effect.datasetName + '_' + effect.virusName)) {
-        this.addItem({
-          name: effect.effectId,
-          type: 'Viral Protein',
-          data: effect
-        });
+    for (const viralProtein of viralProteins) {
+      const wrapper = getWrapperFromViralProtein(viralProtein);
+      const found = visibleIds.has(wrapper.nodeId);
+      if (found && !this.inSelection(wrapper)) {
+        this.addItem(wrapper);
       }
     }
   }
@@ -118,22 +108,22 @@ export class AnalysisService {
   resetSelection() {
     const oldSelection = this.selectedItems.values();
     for (const item of oldSelection) {
-      this.removeItem(item.name);
+      this.removeItem(item);
     }
   }
 
-  inSelection(itemName: string): boolean {
-    return this.selectedItems.has(itemName);
+  inSelection(wrapper: Wrapper): boolean {
+    return this.selectedItems.has(wrapper.nodeId);
   }
 
-  removeItem(itemName: string) {
-    const item = this.selectedItems.get(itemName);
-    if (this.selectedItems.delete(itemName)) {
+  removeItem(wrapper: Wrapper) {
+    const item = this.selectedItems.get(wrapper.nodeId);
+    if (this.selectedItems.delete(wrapper.nodeId)) {
       this.selectSubject.next({item, selected: false});
     }
   }
 
-  getSelection(): QueryItem[] {
+  getSelection(): Wrapper[] {
     return Array.from(this.selectedItems.values());
   }
 
@@ -141,7 +131,7 @@ export class AnalysisService {
     return this.selectedItems.size;
   }
 
-  subscribe(cb: (item: QueryItem, selected: boolean) => void) {
+  subscribe(cb: (item: Wrapper, selected: boolean) => void) {
     this.selectSubject.subscribe((event) => {
       cb(event.item, event.selected);
     });
@@ -165,7 +155,7 @@ export class AnalysisService {
       algorithm: 'quick',
       target: 'drug',
       parameters: {
-        seeds: this.getSelection().map((i) => i.name),
+        seeds: this.getSelection().map((i) => i.backendId),
       },
     }).toPromise();
     this.tokens.push(resp.token);

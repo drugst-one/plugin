@@ -5,12 +5,19 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import {ProteinViralInteraction, ViralProtein, Protein, QueryItem} from '../../interfaces';
+import {
+  ProteinViralInteraction,
+  ViralProtein,
+  Protein,
+  Wrapper,
+  getWrapperFromViralProtein, getWrapperFromProtein, getNodeIdsFromPVI, getViralProteinNodeId, getProteinNodeId
+} from '../../interfaces';
 import {ProteinNetwork, getDatasetFilename} from '../../main-network';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {AnalysisService} from '../../analysis.service';
 import html2canvas from 'html2canvas';
 import {environment} from '../../../environments/environment';
+import {NetworkSettings} from '../../network-settings';
 
 
 declare var vis: any;
@@ -23,19 +30,14 @@ declare var vis: any;
 export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public showDetails = false;
-  public selectedName = null;
-  public selectedType = null;
-  public selectedId = null;
-  public selectedItem = null;
-  public selectedVirusName = null;
-  public selectedStatus = null;
+  public selectedWrapper: Wrapper | null = null;
 
   public collapseAnalysisQuick = true;
   public collapseAnalysis = false;
   public collapseDetails = true;
   public collapseTask = true;
   public collapseSelection = true;
-  public collapseDFilter = true;
+  public collapseBaitFilter = true;
   public collapseQuery = true;
   public collapseData = true;
   public collapseOverview = true;
@@ -54,7 +56,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   private dumpPositions = false;
   public physicsEnabled = false;
 
-  public queryItems: QueryItem[] = [];
+  public queryItems: Wrapper[] = [];
   public showAnalysisDialog = false;
   public analysisDialogTarget: 'drug' | 'drug-target';
 
@@ -68,23 +70,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public currentViewNodes: Node[];
 
   public datasetItems: Array<{ id: string, label: string, datasets: string, data: Array<[string, string]> }> = [
-    // {
-    //   id: 'All (TUM & Krogan)',
-    //   label: 'All',
-    //   datasets: 'TUM & Krogan',
-    //   data: [['TUM', 'HCoV'], ['TUM', 'SARS-CoV2'], ['Krogan', 'SARS-CoV2']]
-    // },
-    // {id: 'HCoV (TUM)', label: 'HCoV', datasets: 'TUM', data: [['TUM', 'HCoV']]},
-    // {
-    //   id: 'CoV2 (TUM & Krogan)',
-    //   label: 'CoV2',
-    //   datasets: 'TUM & Krogan',
-    //   data: [['TUM', 'SARS-CoV2'], ['Krogan', 'SARS-CoV2']]
-    // },
-    // tslint:disable-next-line:max-line-length
     {id: 'CoV2 (Gordon et al., 2020)', label: 'CoV2', datasets: 'Gordon et al., 2020', data: [['Krogan', 'SARS-CoV2']]},
-    // {id: 'CoV2 (TUM)', label: 'CoV2', datasets: 'TUM', data: [['TUM', 'SARS-CoV2']]}
-      ];
+  ];
 
   public selectedDataset = this.datasetItems[0];
 
@@ -95,28 +82,14 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.showDetails = false;
 
     this.analysis.subscribe((item, selected) => {
-      let nodeId;
-      if (item.type === 'Host Protein') {
-        nodeId = `p_${item.name}`;
-      } else if (item.type === 'Viral Protein') {
-        nodeId = `eff_${item.name}`;
-      }
-      const node = this.nodeData.nodes.get(nodeId);
+      const node = this.nodeData.nodes.get(item.nodeId);
       if (!node) {
         return;
       }
-      const pos = this.network.getPositions([nodeId]);
-      node.x = pos[nodeId].x;
-      node.y = pos[nodeId].y;
-      if (selected) {
-        node.color = '#48C774';
-      } else {
-        if (item.type === 'Host Protein') {
-          node.color = '#e2b600';
-        } else if (item.type === 'Viral Protein') {
-          node.color = '#118AB2';
-        }
-      }
+      const pos = this.network.getPositions([item.nodeId]);
+      node.x = pos[item.nodeId].x;
+      node.y = pos[item.nodeId].y;
+      Object.assign(node, NetworkSettings.getNodeStyle(node.wrapper.type, false, selected));
       this.nodeData.nodes.update(node);
     });
   }
@@ -124,11 +97,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   ngOnInit() {
   }
 
-
   async ngAfterViewInit() {
     if (!this.network) {
       this.selectedDataset = this.datasetItems[0];
       await this.createNetwork(this.selectedDataset.data);
+      this.physicsEnabled = false;
     }
   }
 
@@ -148,6 +121,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   private zoomToNode(id: string) {
+    this.nodeData.nodes.getIds();
     const coords = this.network.getPositions(id)[id];
     if (!coords) {
       return;
@@ -165,47 +139,25 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public changeInfo(showList: any[]) {
-    this.selectedItem = showList[0];
-    this.selectedName = showList[1];
-    this.selectedType = showList[2];
-    this.selectedId = showList[3];
-    this.selectedVirusName = showList[4];
-    this.selectedStatus = showList[5];
+  public changeInfo(wrapper: Wrapper | null) {
+    // this.selectedItem = showList[0];
+    // this.selectedName = showList[1];
+    // this.selectedType = showList[2];
+    // this.selectedId = showList[3];
+    // this.selectedVirusName = showList[4];
+    // this.selectedStatus = showList[5];
   }
 
-  public async openSummary(item: QueryItem, zoom: boolean) {
-    this.selectedId = null;
-    this.selectedItem = item;
-    this.selectedType = item.type;
-    this.selectedName = item.name;
-
-    if (this.selectedType === 'Host Protein') {
-      const hostProtein = item.data as Protein;
-      this.selectedId = hostProtein.proteinAc;
-      this.selectedName = hostProtein.name;
-
-      if (zoom) {
-        this.zoomToNode(`p_${item.name}`);
-      }
-    } else if (item.type === 'Viral Protein') {
-      const viralProtein = item.data as ViralProtein;
-      this.selectedName = viralProtein.effectName;
-      this.selectedVirusName = viralProtein.virusName;
-      if (zoom) {
-        this.zoomToNode(`eff_${viralProtein.effectName}_${viralProtein.datasetName}_${viralProtein.virusName}`);
-      }
+  public async openSummary(item: Wrapper, zoom: boolean) {
+    this.selectedWrapper = item;
+    if (zoom) {
+      this.zoomToNode(item.nodeId);
     }
     this.showDetails = true;
   }
 
   public async closeSummary() {
-    this.selectedItem = null;
-    this.selectedName = null;
-    this.selectedType = null;
-    this.selectedId = null;
-    this.selectedVirusName = null;
-    this.selectedStatus = null;
+    this.selectedWrapper = null;
     this.showDetails = false;
   }
 
@@ -239,51 +191,23 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.nodeData.edges = new vis.DataSet(edges);
 
     const container = this.networkEl.nativeElement;
-    const options = {
-      layout: {
-        improvedLayout: false,
-      },
-      edges: {
-        smooth: false,
-      },
-      physics: {
-        enabled: this.physicsEnabled,
-        stabilization: {
-          enabled: false,
-        },
-      },
-    };
+    const options = NetworkSettings.getOptions('main');
     this.network = new vis.Network(container, this.nodeData, options);
-    this.network.on('selectNode', (properties) => {
-      const id: Array<string> = properties.nodes;
-      if (id.length > 0) {
-        const nodeId = id[0].split('_');
-        let node: QueryItem;
-        if (nodeId[0].startsWith('p')) {
-          node = {
-            name: nodeId[1],
-            type: 'Host Protein',
-            data: this.proteinData.getProtein(nodeId[1])
-          };
-        } else if (nodeId[0].startsWith('e')) {
-          const effect = this.effects.find((eff) => eff.effectName === nodeId[1] && eff.datasetName === nodeId[2] &&
-            eff.virusName === nodeId[3]);
-          node = {
-            name: effect.effectId,
-            type: 'Viral Protein',
-            data: effect
-          };
-        }
+    this.network.on('click', (properties) => {
+      const nodeIds: Array<string> = properties.nodes;
+      if (nodeIds.length > 0) {
+        const nodeId = nodeIds[0];
+        const node = this.nodeData.nodes.get(nodeId);
+        const wrapper = node.wrapper;
         if (properties.event.srcEvent.ctrlKey) {
-          if (this.analysis.inSelection(node.name) === true) {
-            this.analysis.inSelection(node.name);
+          if (this.analysis.inSelection(wrapper)) {
+            this.analysis.removeItem(wrapper);
           } else {
-            this.analysis.addItem(node);
-            this.analysis.getCount();
+            this.analysis.addItem(wrapper);
           }
-          this.openSummary(node, false);
+          this.openSummary(wrapper, false);
         } else {
-          this.openSummary(node, false);
+          this.openSummary(wrapper, false);
         }
       } else {
         this.closeSummary();
@@ -304,33 +228,25 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.network.stabilize();
     }
 
-    if (this.selectedItem) {
-      this.zoomToNode(`p_${this.selectedItem.name}`);
+    if (this.selectedWrapper) {
+      this.zoomToNode(this.selectedWrapper.nodeId);
     }
 
     this.queryItems = [];
     this.fillQueryItems(this.proteins, this.effects);
-    if (this.selectedItem) {
-      this.network.selectNodes(['p_' + this.selectedItem.name]);
+    if (this.selectedWrapper) {
+      this.network.selectNodes([this.selectedWrapper.nodeId]);
     }
   }
 
   fillQueryItems(hostProteins: Protein[], viralProteins: ViralProtein[]) {
     this.queryItems = [];
     hostProteins.forEach((protein) => {
-      this.queryItems.push({
-        name: protein.name,
-        type: 'Host Protein',
-        data: protein
-      });
+      this.queryItems.push(getWrapperFromProtein(protein));
     });
 
-    viralProteins.forEach((effect) => {
-      this.queryItems.push({
-        name: effect.effectId,
-        type: 'Viral Protein',
-        data: effect
-      });
+    viralProteins.forEach((viralProtein) => {
+      this.queryItems.push(getWrapperFromViralProtein(viralProtein));
     });
 
     this.currentViewNodes = this.nodeData.nodes;
@@ -356,7 +272,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         }
       });
       viralProteins.forEach((effect) => {
-        const nodeId = `eff_${effect.effectName}_${effect.datasetName}_${effect.virusName}`;
+        const nodeId = getViralProteinNodeId(effect);
         const found = visibleIds.has(nodeId);
         if ((cb.checked || showAll) && !found) {
           const node = this.mapViralProteinToNode(effect);
@@ -376,7 +292,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
     const filteredProteins = [];
     for (const protein of this.proteinData.proteins) {
-      const nodeId = `p_${protein.proteinAc}`;
+      const nodeId = getProteinNodeId(protein);
       const contains = connectedProteinAcs.has(protein.proteinAc);
       const found = visibleIds.has(nodeId);
       if (contains) {
@@ -415,38 +331,40 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   private mapHostProteinToNode(hostProtein: Protein): any {
-    let color = '#e2b600';
-    if (this.analysis.inSelection(hostProtein.name)) {
-      color = '#48C774';
+    const wrapper = getWrapperFromProtein(hostProtein);
+    const node = NetworkSettings.getNodeStyle('host', false, this.analysis.inSelection(wrapper));
+    let nodeLabel = hostProtein.name;
+    if (hostProtein.name.length === 0) {
+      nodeLabel = hostProtein.proteinAc;
     }
-    return {
-      id: `p_${hostProtein.proteinAc}`,
-      label: `${hostProtein.name}`,
-      size: 10, font: '5px', color, shape: 'ellipse', shadow: false,
-      x: hostProtein.x,
-      y: hostProtein.y,
-    };
+    node.label = nodeLabel;
+    node.id = wrapper.nodeId;
+    node.x = hostProtein.x;
+    node.y = hostProtein.y;
+    node.wrapper = wrapper;
+    return node;
   }
 
   private mapViralProteinToNode(viralProtein: ViralProtein): any {
-    let color = '#118AB2';
-    if (this.analysis.inSelection(`${viralProtein.effectName}_${viralProtein.datasetName}_${viralProtein.virusName}`)) {
-      color = '#48C774';
-    }
-    return {
-      id: `eff_${viralProtein.effectName}_${viralProtein.datasetName}_${viralProtein.virusName}`,
-      label: `${viralProtein.effectName} (${viralProtein.datasetName}, ${viralProtein.virusName})`,
-      size: 10, color, shape: 'box', shadow: true, font: {color: '#FFFFFF'},
-      x: viralProtein.x,
-      y: viralProtein.y,
-    };
+    const wrapper = getWrapperFromViralProtein(viralProtein);
+    const node = NetworkSettings.getNodeStyle('virus', false, this.analysis.inSelection(wrapper));
+    node.id = wrapper.nodeId;
+    node.label = viralProtein.effectName;
+    node.id = wrapper.nodeId;
+    node.x = viralProtein.x;
+    node.y = viralProtein.y;
+    node.wrapper = wrapper;
+    return node;
   }
 
   private mapEdge(edge: ProteinViralInteraction): any {
+    const {from, to} = getNodeIdsFromPVI(edge);
     return {
-      from: `p_${edge.proteinAc}`,
-      to: `eff_${edge.effectName}_${edge.datasetName}_${edge.virusName}`,
-      color: {color: '#afafaf', highlight: '#854141'},
+      from, to,
+      color: {
+        color: NetworkSettings.getColor('edgeHostVirus'),
+        highlight: NetworkSettings.getColor('edgeHostVirusHighlight')
+      },
     };
   }
 
