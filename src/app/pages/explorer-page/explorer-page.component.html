@@ -387,8 +387,8 @@
         <a (click)="collapseTask = !collapseTask" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
            aria-label="more options">
           <span class="icon">
-            <i *ngIf="collapseSelection" class="fas fa-angle-up" aria-hidden="true"></i>
-            <i *ngIf="!collapseSelection" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collapseTask" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collapseTask" class="fas fa-angle-down" aria-hidden="true"></i>
           </span>
         </a>
       </header>
@@ -416,7 +416,7 @@
         <p class="card-header-title">
                 <span class="icon">
               <i class="fas fa-filter" aria-hidden="true"></i>
-            </span> Selection
+            </span> Selection ({{analysis.getCount()}})
         </p>
         <a (click)="collapseSelection = !collapseSelection" data-action="collapse"
            class="card-header-icon is-hidden-fullscreen" aria-label="more options">
