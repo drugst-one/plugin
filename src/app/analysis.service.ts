@@ -1,14 +1,36 @@
-import {Injectable} from '@angular/core';
 import {QueryItem, Task} from './interfaces';
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../environments/environment';
 import {toast} from 'bulma-toast';
+import {Injectable} from '@angular/core';
+
+export type AlgorithmType = 'trustrank' | 'keypathwayminer' | 'multisteiner' | 'closeness' | 'degree';
+export type QuickAlgorithmType = 'quick';
+
+export const algorithmNames = {
+  trustrank: 'Trust-Rank',
+  keypathwayminer: 'KeyPathwayMiner',
+  multisteiner: 'Multi-Steiner',
+  closeness: 'Closeness Centrality',
+  degree: 'Degree Centrality',
+  quick: 'Quick-Find Drugs',
+};
+
+export interface Algorithm {
+  slug: AlgorithmType | QuickAlgorithmType;
+  name: string;
+}
+
+export const TRUSTRANK: Algorithm = {slug: 'trustrank', name: algorithmNames.trustrank};
+export const CLOSENESS_CENTRALITY: Algorithm = {slug: 'closeness', name: algorithmNames.closeness};
+export const DEGREE_CENTRALITY: Algorithm = {slug: 'degree', name: algorithmNames.degree};
+export const KEYPATHWAYMINER: Algorithm = {slug: 'keypathwayminer', name: algorithmNames.keypathwayminer};
+export const MULTISTEINER: Algorithm = {slug: 'multisteiner', name: algorithmNames.multisteiner};
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class AnalysisService {
 
   private selectedItems = new Map<string, QueryItem>();

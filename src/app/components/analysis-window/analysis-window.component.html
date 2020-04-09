@@ -16,7 +16,7 @@
     <div class="card-content">
       <div class="tabs is-centered">
         <ul>
-          <li [class.is-active]="tab === 'meta'"><a (click)="tab = 'meta'">Meta</a></li>
+          <li [class.is-active]="tab === 'meta'"><a (click)="tab = 'meta'">Parameters</a></li>
           <li [class.is-active]="tab === 'network'"><a (click)="tab = 'network'">Network</a></li>
           <li [class.is-active]="tab === 'table'"><a (click)="tab = 'table'">Table</a></li>
         </ul>
@@ -24,16 +24,38 @@
       <div class="content tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'meta'">
         <div *ngIf="task">
           <p>
-            Algorithm: {{task.info.algorithm}}
+            Algorithm: <strong>{{algorithmNames[task.info.algorithm]}}</strong>
           </p>
-          <div *ngIf="task.info.algorithm === 'trustrank'">
+          <div>
             <table class="table is-narrow">
               <tbody>
-              <tr>
+              <tr *ngIf="task.info.parameters.k">
+                <td>K</td>
+                <td>{{task.info.parameters.k}}</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.numTrees">
+                <td>Number of trees</td>
+                <td>{{task.info.parameters.numTrees}}</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.dampingFactor">
                 <td>Damping Factor</td>
                 <td>{{task.info.parameters.dampingFactor}}</td>
               </tr>
-              <tr>
+              <tr *ngIf="task.info.parameters.includeIndirectDrugs !== undefined && task.info.target === 'drug'">
+                <td>Include indirect drugs</td>
+                <td>
+                  <i *ngIf="task.info.parameters.includeIndirectDrugs" class="fa fa-check"></i>
+                  <i *ngIf="!task.info.parameters.includeIndirectDrugs" class="fa fa-times"></i>
+                </td>
+              </tr>
+              <tr *ngIf="task.info.parameters.includeNonApprovedDrugs !== undefined && task.info.target === 'drug'">
+                <td>Include non-approved drugs</td>
+                <td>
+                  <i *ngIf="task.info.parameters.includeNonApprovedDrugs" class="fa fa-check"></i>
+                  <i *ngIf="!task.info.parameters.includeNonApprovedDrugs" class="fa fa-times"></i>
+                </td>
+              </tr>
+              <tr *ngIf="task.info.parameters.resultSize">
                 <td>Result Size</td>
                 <td>{{task.info.parameters.resultSize}}</td>
               </tr>
@@ -82,41 +104,11 @@
             </p>
           </div>
 
-          <div *ngIf="task.info.target === 'drug-target' " class="field has-addons footer-toggle-buttons">
-            <p class="control">
-              <button class="button is-rounded" [class.is-primary]="showDrugs"
-                      (click)="toggleDrugs(true)">
-                <span class="icon is-small">
-                  <i class="fas fa-capsules"></i>
-                </span>
-                <span>Drugs On</span>
-              </button>
-            </p>
-            <p class="control">
-              <button class="button is-rounded" [class.is-primary]="!showDrugs"
-                      (click)="toggleDrugs(false)">
-                <span>Off</span>
-              </button>
-            </p>
-          </div>
+          <app-toggle *ngIf="task.info.target === 'drug-target'" class="footer-toggle-buttons" textOn="Drugs On" textOff="Off"
+                      [value]="showDrugs" (valueChange)="toggleDrugs($event)" icon="fa-capsules"></app-toggle>
 
-          <div class="field has-addons footer-toggle-buttons">
-            <p class="control">
-              <button class="button is-rounded" [class.is-primary]="physicsEnabled"
-                      (click)="updatePhysicsEnabled(true)">
-                <span class="icon is-small">
-                  <i class="fas fa-wind"></i>
-                </span>
-                <span>Animation On</span>
-              </button>
-            </p>
-            <p class="control">
-              <button class="button is-rounded" [class.is-primary]="!physicsEnabled"
-                      (click)="updatePhysicsEnabled(false)">
-                <span>Off</span>
-              </button>
-            </p>
-          </div>
+          <app-toggle class="footer-toggle-buttons" textOn="Animation On" textOff="Off"
+                      [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)" icon="fa-wind"></app-toggle>
         </footer>
       </div>
       <div class="content tab-content scrollable" *ngIf="task && task.info.done" [class.is-visible]="tab === 'table'">

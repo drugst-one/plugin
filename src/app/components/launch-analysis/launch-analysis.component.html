@@ -21,16 +21,21 @@
         </ul>
       </div>
 
+      <div *ngIf="target === 'drug' && hasBaits">
+        <div class="notification is-warning warning">
+          You have selected <i class="fa fa-virus"></i> viral proteins.
+          When finding drugs, make sure you have selected <i class="fa fa-dna"></i> host proteins only.
+        </div>
+      </div>
+
       <div *ngIf="algorithm==='trustrank'">
-        <div class="field" *ngIf="target === 'drug-target'">
-          <label class="label" for="trustrank-strain">Strain</label>
-          <div  class="control">
-            <div class="select">
-              <select id="trustrank-strain" [(ngModel)]="trustrankStrain">
-                <option [ngValue]="'SARS_CoV2'">SARS Coronavirus 2</option>
-              </select>
-            </div>
-          </div>
+        <div class="field" *ngIf="target === 'drug'">
+          <label class="label">Indirect Drugs</label>
+          <app-toggle textOn="Include" textOff="Ignore" icon="fa-check" [(value)]="trustrankIncludeIndirectDrugs"></app-toggle>
+        </div>
+        <div class="field" *ngIf="target === 'drug'">
+          <label class="label">Non-approved Drugs</label>
+          <app-toggle textOn="Include" textOff="Ignore" icon="fa-check" [(value)]="trustrankIncludeNonApprovedDrugs"></app-toggle>
         </div>
         <div class="field">
           <label class="label" for="trustrank-df">Damping Factor</label>
@@ -45,6 +50,38 @@
           <label class="label" for="trustrank-rs">Result Size</label>
           <div  class="control">
             <input [(ngModel)]="trustrankResultSize" id="trustrank-rs" class="input" type="number"
+                   placeholder="Result size" required>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="algorithm==='closeness'">
+        <div class="field" *ngIf="target === 'drug'">
+          <label class="label">Indirect Drugs</label>
+          <app-toggle textOn="Include" textOff="Ignore" icon="fa-check" [(value)]="closenessIncludeIndirectDrugs"></app-toggle>
+        </div>
+        <div class="field" *ngIf="target === 'drug'">
+          <label class="label">Non-approved Drugs</label>
+          <app-toggle textOn="Include" textOff="Ignore" icon="fa-check" [(value)]="closenessIncludeNonApprovedDrugs"></app-toggle>
+        </div>
+        <div class="field">
+          <label class="label" for="closeness-rs">Result Size</label>
+          <div  class="control">
+            <input [(ngModel)]="closenessResultSize" id="closeness-rs" class="input" type="number"
+                   placeholder="Result size" required>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="algorithm==='degree'">
+        <div class="field" *ngIf="target === 'drug'">
+          <label class="label">Non-approved Drugs</label>
+          <app-toggle textOn="Include" textOff="Ignore" icon="fa-check" [(value)]="degreeIncludeNonApprovedDrugs"></app-toggle>
+        </div>
+        <div class="field">
+          <label class="label" for="degree-rs">Result Size</label>
+          <div  class="control">
+            <input [(ngModel)]="degreeResultSize" id="degree-rs" class="input" type="number"
                    placeholder="Result size" required>
           </div>
         </div>
@@ -99,10 +136,8 @@
     </section>
 
     <footer class="modal-card-foot">
-      <button (click)="startTask(); close()" class="button is-success is-rounded">Launch</button>
+      <button (click)="startTask(); close()" class="button is-success is-rounded" [disabled]="target === 'drug' && hasBaits">Launch</button>
       <button (click)="close()" class="button is-rounded">Close</button>
     </footer>
   </div>
 </div>
-
-
