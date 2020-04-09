@@ -14,7 +14,7 @@ import {environment} from '../../../environments/environment';
 import {AnalysisService, algorithmNames} from '../../analysis.service';
 import {
   Protein, Task, ViralProtein, Drug, Wrapper, WrapperType,
-  getWrapperFromProtein, getWrapperFromDrug, getWrapperFromViralProtein, getNodeIdsFromPPI, getNodeIdsFromPDI
+  getWrapperFromProtein, getWrapperFromDrug, getWrapperFromViralProtein, getNodeIdsFromPDI
 } from '../../interfaces';
 import html2canvas from 'html2canvas';
 import {toast} from 'bulma-toast';
