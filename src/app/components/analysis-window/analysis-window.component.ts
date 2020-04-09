@@ -299,7 +299,8 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
         color: NetworkSettings.getColor('edgeHostVirus'),
         highlight: NetworkSettings.getColor('edgeHostVirusHighlight')
       };
-      const {from, to} = getNodeIdsFromPPI(edge);
+      const from = edge.from.startsWith('DB') ? `d_${edge.from}` : `p_${edge.from}`;
+      const to = edge.to.startsWith('DB') ? `d_${edge.to}` : `p_${edge.to}`;
       return {
         from, to,
         color: edgeColor,
