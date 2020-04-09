@@ -26,7 +26,7 @@ interface Scored {
 @Component({
   selector: 'app-analysis-window',
   templateUrl: './analysis-window.component.html',
-  styleUrls: ['./analysis-window.component.scss']
+  styleUrls: ['./analysis-window.component.scss'],
 })
 export class AnalysisWindowComponent implements OnInit, OnChanges {
 

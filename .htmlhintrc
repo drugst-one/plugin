@@ -8,5 +8,5 @@
   "space-tab-mixed-disabled": true,
   "style-disabled": true,
   "attr-no-duplication": true,
-  "tagname-lowercase": true
+  "tagname-lowercase": false
 }
