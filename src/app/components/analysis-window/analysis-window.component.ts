@@ -12,9 +12,13 @@ import {
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {AnalysisService, algorithmNames} from '../../analysis.service';
-import {Protein, Task, NodeType, ViralProtein, Drug} from '../../interfaces';
+import {
+  Protein, Task, ViralProtein, Drug, Wrapper, WrapperType,
+  getWrapperFromProtein, getWrapperFromDrug, getWrapperFromViralProtein, getNodeIdsFromPPI, getNodeIdsFromPDI
+} from '../../interfaces';
 import html2canvas from 'html2canvas';
 import {toast} from 'bulma-toast';
+import {NetworkSettings} from '../../network-settings';
 
 declare var vis: any;
 
@@ -30,20 +34,16 @@ interface Scored {
 })
 export class AnalysisWindowComponent implements OnInit, OnChanges {
 
-  constructor(private http: HttpClient, public analysis: AnalysisService) {
-  }
+  @ViewChild('network', {static: false}) networkEl: ElementRef;
 
   @Input() token: string | null = null;
 
   @Output() tokenChange = new EventEmitter<string | null>();
-  @Output() showDetailsChange: EventEmitter<any> = new EventEmitter();
-
+  @Output() showDetailsChange = new EventEmitter<Wrapper>();
+  @Output() visibleItems = new EventEmitter<any>();
 
   public task: Task | null = null;
   public indexscreenshot = 1;
-
-
-  @ViewChild('network', {static: false}) networkEl: ElementRef;
 
   private network: any;
   private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
@@ -54,8 +54,6 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   public physicsEnabled = true;
   public drugstatus = true;
 
-
-
   private proteins: any;
   public effects: any;
 
@@ -65,9 +63,10 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   public tableNormalize = false;
   public tableHasScores = false;
 
-  @Output() visibleItems: EventEmitter<any> = new EventEmitter();
-
   public algorithmNames = algorithmNames;
+
+  constructor(private http: HttpClient, public analysis: AnalysisService) {
+  }
 
   async ngOnInit() {
   }
@@ -95,20 +94,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
         this.nodeData.edges = new vis.DataSet(edges);
 
         const container = this.networkEl.nativeElement;
-        const options = {
-          layout: {
-            improvedLayout: false,
-          },
-          edges: {
-            smooth: false,
-          },
-          physics: {
-            enabled: this.physicsEnabled,
-            stabilization: {
-              enabled: false,
-            },
-          },
-        };
+        const options = NetworkSettings.getOptions('analysis');
 
         this.network = new vis.Network(container, this.nodeData, options);
 
@@ -136,78 +122,38 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
         }
 
         this.network.on('deselectNode', (properties) => {
-          this.showDetailsChange.emit([false, [null, null, null, null, null, null]]);
+          this.showDetailsChange.emit(null);
         });
 
-        this.network.on('selectNode', (properties) => {
+        this.network.on('click', (properties) => {
           const selectedNodes = this.nodeData.nodes.get(properties.nodes);
           if (selectedNodes.length > 0) {
-            let selectedItem;
-            let selectedName;
-            let selectedType;
-            let selectedId;
-            let selectedVirusName;
-            let selectedStatus;
-            if (selectedNodes[0].nodeType === 'host') {
-              const protein: Protein = selectedNodes[0].details;
-              selectedVirusName = null;
-              selectedStatus = null;
-              selectedItem = {name: selectedNodes[0].id, type: 'Host Protein', data: protein};
-              // TODO use gene name here
-              selectedName = protein.name;
-              selectedId = protein.proteinAc;
-              selectedType = 'Host Protein';
-              if (properties.event.srcEvent.ctrlKey) {
-                if (this.analysis.inSelection(protein.proteinAc)) {
-                  this.analysis.removeItem(protein.proteinAc);
-                } else {
-                  this.analysis.addItem({name: protein.proteinAc, type: 'Host Protein', data: protein});
-                  this.analysis.getCount();
-                }
+            const selectedNode = selectedNodes[0];
+            const wrapper = selectedNode.wrapper;
+
+            if (properties.event.srcEvent.ctrlKey) {
+              if (this.analysis.inSelection(wrapper)) {
+                this.analysis.removeItem(wrapper);
+              } else {
+                this.analysis.addItem(wrapper);
+                this.analysis.getCount();
               }
-            } else if (selectedNodes[0].nodeType === 'virus') {
-              const virus: ViralProtein = selectedNodes[0].details;
-              selectedId = null;
-              selectedStatus = null;
-              selectedItem = {name: virus.effectId, type: 'Viral Protein', data: virus};
-              selectedVirusName = virus.virusName;
-              selectedName = virus.effectName;
-              selectedType = 'Viral Protein';
-              if (properties.event.srcEvent.ctrlKey) {
-                if (this.analysis.inSelection(virus.effectName)) {
-                  this.analysis.removeItem(virus.effectName);
-                } else {
-                  this.analysis.addItem(selectedItem);
-                  this.analysis.getCount();
-                }
-              }
-            } else if (selectedNodes[0].nodeType === 'drug') {
-              const drug: Drug = selectedNodes[0].details;
-              selectedId = drug.drugId;
-              selectedStatus = drug.status;
-              selectedName = drug.name;
-              selectedType = 'Drug';
-              selectedItem = {name: drug.name, type: 'Drug', data: drug};
-              selectedVirusName = null;
             }
-            this.showDetailsChange.emit([true, [selectedItem, selectedName, selectedType,
-              selectedId, selectedVirusName, selectedStatus]]);
+            this.showDetailsChange.emit(wrapper);
           } else {
-            this.showDetailsChange.emit([false, [null, null, null, null, null, null]]);
+            this.showDetailsChange.emit(null);
           }
         });
 
         this.analysis.subscribe((item, selected) => {
-          const nodeId = item.name;
-          const node = this.nodeData.nodes.get(nodeId);
+          const node = this.nodeData.nodes.get(item.nodeId);
           if (!node) {
             return;
           }
-          const pos = this.network.getPositions([nodeId]);
-          node.x = pos[nodeId].x;
-          node.y = pos[nodeId].y;
-          const {color} = this.getNodeLooks(nodeId, node.nodeType, node.isSeed);
-          node.color = color;
+          const pos = this.network.getPositions([item.nodeId]);
+          node.x = pos[item.nodeId].x;
+          node.y = pos[item.nodeId].y;
+          Object.assign(node, NetworkSettings.getNodeStyle(node.wrapper.type, node.isSeed, selected));
           this.nodeData.nodes.update(node);
         });
       }
@@ -273,7 +219,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     return `${environment.backend}task_result/?token=${this.token}&view=${view}&fmt=csv`;
   }
 
-  public inferNodeType(nodeId: string): 'host' | 'virus' | 'drug' {
+  public inferNodeType(nodeId: string): WrapperType {
     if (nodeId.indexOf('-') !== -1 || nodeId.indexOf('_') !== -1) {
       return 'virus';
     } else if (nodeId.startsWith('DB')) {
@@ -302,12 +248,13 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
       } else if (nodeTypes[node] === 'virus') {
         this.effects.push(details[node]);
       }
-      nodes.push(this.mapNode(node, nodeTypes[node] || this.inferNodeType(node), isSeed[node], scores[node], details[node]));
+      nodes.push(this.mapNode(this.inferNodeType(node), details[node], isSeed[node], scores[node]));
     }
 
     for (const edge of network.edges) {
-      edges.push(this.mapEdge(edge));
+      edges.push(this.mapEdge(edge, 'protein-protein'));
     }
+
 
     return {
       nodes,
@@ -315,63 +262,59 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     };
   }
 
-  private getNodeLooks(nodeId: string, nodeType: NodeType, isSeed: boolean):
-    { color: string, shape: string, size: number, font: any, shadow: boolean } {
-    let color = '';
-    let shape = '';
-    let size = 10;
-    let font = {};
-    let shadow = false;
-
+  private mapNode(nodeType: WrapperType, details: Protein | ViralProtein | Drug, isSeed?: boolean, score?: number): any {
+    let nodeLabel;
+    let wrapper: Wrapper;
     if (nodeType === 'host') {
-      shape = 'ellipse';
-      if (this.analysis.inSelection(nodeId)) {
-        color = '#c7661c';
-      } else {
-        color = '#e2b600';
+      const protein = details as Protein;
+      wrapper = getWrapperFromProtein(protein);
+      nodeLabel = protein.name;
+      if (!protein.name) {
+        nodeLabel = protein.proteinAc;
       }
-      size = 10;
+    } else if (nodeType === 'drug') {
+      const drug = details as Drug;
+      wrapper = getWrapperFromDrug(drug);
+      nodeLabel = drug.name;
     } else if (nodeType === 'virus') {
-      shape = 'box';
-      color = '#118AB2';
-      size = 12;
-      font = {color: 'white'};
-      shadow = true;
-    } else if (nodeType === 'drug') {
-      shape = 'ellipse';
-      color = '#26b28b';
-      size = 6;
+      const viralProtein = details as ViralProtein;
+      wrapper = getWrapperFromViralProtein(viralProtein);
+      nodeLabel = viralProtein.effectName;
     }
 
-    if (isSeed) {
-      color = '#c064c7';
-    }
+    const node = NetworkSettings.getNodeStyle(nodeType, isSeed, this.analysis.inSelection(wrapper));
 
-    return {color, shape, size, font, shadow};
+    node.id = wrapper.nodeId;
+    node.label = nodeLabel;
+    node.nodeType = nodeType;
+    node.isSeed = isSeed;
+    node.wrapper = wrapper;
+    return node;
   }
 
-  private mapNode(nodeId: any, nodeType?: NodeType, isSeed?: boolean, score?: number, details?): any {
-    const {shape, color, size, font, shadow} = this.getNodeLooks(nodeId, nodeType, isSeed);
-    let nodeLabel = nodeId;
-    if (nodeType === 'host') {
-      nodeLabel = details.name;
-    } else if (nodeType === 'drug') {
-      nodeLabel = details.name;
+  private mapEdge(edge: any, type: 'protein-protein' | 'to-drug'): any {
+    let edgeColor;
+    if (type === 'protein-protein') {
+      edgeColor = {
+        color: NetworkSettings.getColor('edgeHostVirus'),
+        highlight: NetworkSettings.getColor('edgeHostVirusHighlight')
+      };
+      const {from, to} = getNodeIdsFromPPI(edge);
+      return {
+        from, to,
+        color: edgeColor,
+      };
+    } else if (type === 'to-drug') {
+      edgeColor = {
+        color: NetworkSettings.getColor('edgeHostDrug'),
+        highlight: NetworkSettings.getColor('edgeHostDrugHighlight')
+      };
+      const {from, to} = getNodeIdsFromPDI(edge);
+      return {
+        from, to,
+        color: edgeColor,
+      };
     }
-    return {
-      id: nodeId,
-      label: nodeLabel,
-      size, color, shape, font, shadow,
-      nodeType, isSeed, details
-    };
-  }
-
-  private mapEdge(edge: any): any {
-    return {
-      from: `${edge.from}`,
-      to: `${edge.to}`,
-      color: {color: '#afafaf', highlight: '#854141'},
-    };
   }
 
   public async toggleDrugs(bool: boolean) {
@@ -413,12 +356,12 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
         });
       } else {
         for (const drug of drugs) {
-          this.drugNodes.push(this.mapNode(drug.drugId, 'drug', false, null, drug));
+          this.drugNodes.push(this.mapNode('drug', drug, false, null));
         }
 
         for (const interaction of edges) {
           const edge = {from: interaction.proteinAc, to: interaction.drugId};
-          this.drugEdges.push(this.mapEdge(edge));
+          this.drugEdges.push(this.mapEdge(edge, 'to-drug'));
         }
         this.nodeData.nodes.add(Array.from(this.drugNodes.values()));
         this.nodeData.edges.add(Array.from(this.drugEdges.values()));
@@ -450,6 +393,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
 
     });
   }
+
   public updateshowdrugs(bool) {
     this.drugstatus = bool;
 

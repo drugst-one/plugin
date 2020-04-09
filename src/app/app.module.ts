@@ -18,6 +18,7 @@ import {SelectDatasetComponent} from './components/select-dataset/select-dataset
 import {AnalysisWindowComponent} from './components/analysis-window/analysis-window.component';
 import {TaskListComponent} from './components/task-list/task-list.component';
 import {ToggleComponent} from './components/toggle/toggle.component';
+import {InfoBoxComponent} from './components/info-box/info-box.component';
 
 import {AnalysisService} from './analysis.service';
 
@@ -34,6 +35,7 @@ import {AnalysisService} from './analysis.service';
     AnalysisWindowComponent,
     TaskListComponent,
     ToggleComponent,
+    InfoBoxComponent,
   ],
   imports: [
     BrowserModule,

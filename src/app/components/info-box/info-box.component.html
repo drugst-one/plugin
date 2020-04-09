@@ -1,0 +1,51 @@
+<div *ngIf="wrapper">
+  <div *ngIf="wrapper.type === 'host'">
+    <p>
+      <b><span>Gene Name:</span></b>
+      {{ wrapper.data.name }}
+      <span class="icon is-small"><i class="fas fa-dna"></i></span>
+    </p>
+    <p>
+      <b><span>Uniprot AC:</span></b>
+      <a href="https://www.uniprot.org/uniprot/{{ wrapper.data.proteinAc }}" target="_blank">
+        {{ wrapper.data.proteinAc }}
+      </a>
+    </p>
+  </div>
+  <div *ngIf="wrapper.type === 'virus'">
+    <p>
+      <b><span>Virus:</span></b>
+      {{ wrapper.data.virusName }}
+      <span class="icon is-small"><i class="fas fa-virus"></i></span>
+    </p>
+    <p>
+      <b><span>Effect:</span></b>
+      {{ wrapper.data.effectName }}
+    </p>
+  </div>
+  <div *ngIf="wrapper.type === 'drug'">
+    <p>
+      <b><span>Name:</span></b>
+      {{ wrapper.data.name }}
+      <span class="icon is-small"><i class="fas fa-capsules"></i></span>
+    </p>
+    <p>
+      <b>DrugBank ID:</b>
+      <a href="https://www.drugbank.ca/drugs/{{ wrapper.data.drugId }}" target="_blank"> {{ wrapper.data.drugId }}</a>
+    </p>
+    <p *ngIf="wrapper.data.status === 'investigational' ">
+      <b>Status:</b> Investigational
+      <span class="icon is-small"><i class="fas fa-search investigational"></i></span>
+    <p *ngIf="wrapper.data.status === 'approved' ">
+      <b>Status:</b> Approved
+      <span class="icon is-small"><i class="fas fa-check"></i></span>
+    </p>
+  </div>
+
+  <div class="field has-addons add-remove-toggle" *ngIf="wrapper.type !== 'drug'">
+    <app-toggle [value]="!analysis.inSelection(wrapper)" (valueChange)="$event ? analysis.addItem(wrapper) : analysis.removeItem(wrapper)" textOn="Add to Analysis" textOff="Remove" icon="fa-plus"></app-toggle>
+  </div>
+</div>
+<div *ngIf="!wrapper">
+  Please select a node for further information.
+</div>
