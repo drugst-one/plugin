@@ -41,6 +41,7 @@ export class AnalysisService {
   public tasks: Task[] = [];
 
   private intervalId: any;
+  private canLaunchNewTask = false;
 
   constructor(private http: HttpClient) {
     const tokens = localStorage.getItem('tokens');
@@ -147,6 +148,19 @@ export class AnalysisService {
   }
 
   async startQuickAnalysis() {
+    if (!this.canLaunchTask()) {
+      toast({
+        message: 'You can only run 3 tasks at once. Please wait for one of them to finish or delete it from the task list.',
+        duration: 5000,
+        dismissible: true,
+        pauseOnHover: true,
+        type: 'is-danger',
+        position: 'top-center',
+        animate: {in: 'fadeIn', out: 'fadeOut'}
+      });
+      return;
+    }
+
     const resp = await this.http.post<any>(`${environment.backend}task/`, {
       algorithm: 'quick',
       target: 'drug',
@@ -171,6 +185,19 @@ export class AnalysisService {
   }
 
   async startAnalysis(algorithm, target: 'drug' | 'drug-target', parameters) {
+    if (!this.canLaunchTask()) {
+      toast({
+        message: 'You can only run 3 tasks at once. Please wait for one of them to finish or delete it from the task list.',
+        duration: 5000,
+        dismissible: true,
+        pauseOnHover: true,
+        type: 'is-danger',
+        position: 'top-center',
+        animate: {in: 'fadeIn', out: 'fadeOut'}
+      });
+      return;
+    }
+
     const resp = await this.http.post<any>(`${environment.backend}task/`, {
       algorithm,
       target,
@@ -203,13 +230,20 @@ export class AnalysisService {
     });
   }
 
+  public canLaunchTask(): boolean {
+    return this.canLaunchNewTask;
+  }
+
   startWatching() {
     const watch = async () => {
       if (this.tokens.length > 0) {
         this.tasks = await this.getTasks();
+        let queuedOrRunningTasks = 0;
         this.tasks.forEach((task) => {
-          if (this.finishedTokens.find((finishedToken) => finishedToken === task.token)) {
-          } else {
+          if (!task.info.done && !task.info.failed) {
+            queuedOrRunningTasks++;
+          }
+          if (!this.finishedTokens.find((finishedToken) => finishedToken === task.token)) {
             if (task.info.done) {
               this.finishedTokens.push(task.token);
               this.showToast(task, 'DONE');
@@ -222,6 +256,9 @@ export class AnalysisService {
             }
           }
         });
+        this.canLaunchNewTask = queuedOrRunningTasks < 3;
+      } else {
+        this.canLaunchNewTask = true;
       }
     };
     watch();
