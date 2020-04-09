@@ -126,7 +126,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
           }));
         await Promise.all(promises);
 
-        this.tableHasScores = this.task.info.algorithm === 'trustrank';
+        this.tableHasScores = this.task.info.algorithm === 'trustrank' || this.task.info.algorithm === 'quick';
         if (this.tableHasScores) {
           this.toggleNormalization(true);
         }

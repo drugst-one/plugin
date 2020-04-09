@@ -13,15 +13,15 @@
         <i class="fas fa-database" aria-hidden="true"></i>
       </span> Choose Dataset
             </p>
-            <a (click)="collabsData = !collabsData" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
+            <a (click)="collapseData = !collapseData" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
                aria-label="more options">
              <span class="icon">
-            <i *ngIf="collabsData" class="fas fa-angle-up" aria-hidden="true"></i>
-            <i *ngIf="!collabsData" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collapseData" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collapseData" class="fas fa-angle-down" aria-hidden="true"></i>
              </span>
             </a>
           </header>
-          <div *ngIf="collabsData">
+          <div *ngIf="collapseData">
 
             <div class="card-content">
               <app-select-dataset [datasetItems]="datasetItems" [selectedDataset]="selectedDataset"
@@ -49,14 +49,14 @@
         <i class="fas fa-info" aria-hidden="true"></i>
       </span> Network Overview
             </p>
-            <a (click)="collabsOverview= !collabsOverview" data-action="collapse"
+            <a (click)="collapseOverview= !collapseOverview" data-action="collapse"
                class="card-header-icon is-hidden-fullscreen" aria-label="more options">
              <span class="icon">
-            <i *ngIf="collabsOverview" class="fas fa-angle-up" aria-hidden="true"></i>
-            <i *ngIf="!collabsOverview" class="fas fa-angle-down" aria-hidden="true"></i>             </span>
+            <i *ngIf="collapseOverview" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collapseOverview" class="fas fa-angle-down" aria-hidden="true"></i>             </span>
             </a>
           </header>
-          <div *ngIf="collabsOverview">
+          <div *ngIf="collapseOverview">
             <div class="card-content">
               <nav class="level" *ngIf="proteinData">
                 <div class="level-item has-text-centered">
@@ -89,15 +89,15 @@
         <i class="fas fa-search" aria-hidden="true"></i>
       </span> Query Protein/Gene
             </p>
-            <a (click)="collabsQuery = !collabsQuery" data-action="collapse"
+            <a (click)="collapseQuery = !collapseQuery" data-action="collapse"
                class="card-header-icon is-hidden-fullscreen" aria-label="more options">
            <span class="icon">
-            <i *ngIf="collabsQuery" class="fas fa-angle-up" aria-hidden="true"></i>
-            <i *ngIf="!collabsQuery" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collapseQuery" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collapseQuery" class="fas fa-angle-down" aria-hidden="true"></i>
            </span>
             </a>
           </header>
-          <div *ngIf="collabsQuery">
+          <div *ngIf="collapseQuery">
             <div class="card-content">
               <div class="field">
                 <div class="control">
@@ -116,15 +116,15 @@
         <i class="fas fa-filter" aria-hidden="true"></i>
       </span> Filter Viral Proteins
             </p>
-            <a (click)="collabsDFilter = !collabsDFilter" data-action="collapse"
+            <a (click)="collapseDFilter = !collapseDFilter" data-action="collapse"
                class="card-header-icon is-hidden-fullscreen" aria-label="more options">
               <span class="icon">
-                <i *ngIf="collabsDFilter" class="fas fa-angle-up" aria-hidden="true"></i>
-                <i *ngIf="!collabsDFilter" class="fas fa-angle-down" aria-hidden="true"></i>
+                <i *ngIf="collapseDFilter" class="fas fa-angle-up" aria-hidden="true"></i>
+                <i *ngIf="!collapseDFilter" class="fas fa-angle-down" aria-hidden="true"></i>
               </span>
             </a>
           </header>
-          <div *ngIf="collabsDFilter">
+          <div *ngIf="collapseDFilter">
             <div class="card-content overflow">
               <div *ngFor="let bait of viralProteinCheckboxes">
                 <label class="checkbox">
@@ -215,15 +215,15 @@
         <i *ngIf="selectedType === 'Drug'" class="fas fa-capsules" aria-hidden="true"></i>
       </span> {{ selectedType }}
         </p>
-        <a (click)="collabsDetails = !collabsDetails" data-action="collapse"
+        <a (click)="collapseDetails = !collapseDetails" data-action="collapse"
            class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
-            <i *ngIf="collabsDetails" class="fas fa-angle-up" aria-hidden="true"></i>
-            <i *ngIf="!collabsDetails" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collapseDetails" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collapseDetails" class="fas fa-angle-down" aria-hidden="true"></i>
           </span>
         </a>
       </header>
-      <div *ngIf="collabsDetails">
+      <div *ngIf="collapseDetails">
         <div class="card-content">
           <div *ngIf="showDetails">
             <p *ngIf="selectedName && selectedType=='Drug'"><b><span>Name:</span></b> {{ selectedName }} <span
@@ -285,17 +285,65 @@
         <p class="card-header-title">
           <span class="icon">
         <i class="fas fa-flask" aria-hidden="true"></i>
-      </span> Analysis
+      </span> Quick Find Drugs
         </p>
-        <a (click)="collabsAnalysis = !collabsAnalysis" data-action="collapse"
+        <a (click)="collapseAnalysisQuick = !collapseAnalysisQuick" data-action="collapse"
            class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
-            <i *ngIf="collabsAnalysis" class="fas fa-angle-up" aria-hidden="true"></i>
-            <i *ngIf="!collabsAnalysis" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collapseAnalysisQuick" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collapseAnalysisQuick" class="fas fa-angle-down" aria-hidden="true"></i>
           </span>
         </a>
       </header>
-      <div *ngIf="collabsAnalysis">
+      <div *ngIf="collapseAnalysisQuick">
+        <div class="card-content quick-find">
+          <div class="field">
+            <div class="control">
+              <div class="tile notification is-info">
+                <div class="align-vmiddle">
+                  <div class="digit" *ngIf="analysis.getCount() == 0">1</div>
+                  <div class="digit" *ngIf="analysis.getCount() > 0"><i class="fa fa-check"></i></div>
+                  <div>
+                    <span>Select Proteins</span>
+                  </div>
+                </div>
+              </div>
+              <div class="tile notification is-info">
+                <div class="align-vmiddle">
+                  <div class="digit">2</div>
+                  <button (click)="analysis.startQuickAnalysis()" [disabled]="analysis.getCount() === 0"
+                          class="button is-white is-rounded">
+                    <span class="icon">
+                      <i class="fa fa-capsules"></i>
+                    </span>
+                    <span>
+                      Find Drugs
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card bar-large">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon">
+        <i class="fas fa-flask" aria-hidden="true"></i>
+      </span> Advanced Analysis
+        </p>
+        <a (click)="collapseAnalysis = !collapseAnalysis" data-action="collapse"
+           class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+          <span class="icon">
+            <i *ngIf="collapseAnalysis" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collapseAnalysis" class="fas fa-angle-down" aria-hidden="true"></i>
+          </span>
+        </a>
+      </header>
+      <div *ngIf="collapseAnalysis">
         <div class="card-content">
           <div class="field">
             <div class="control">
@@ -336,15 +384,15 @@
             <i class="fas fa-filter" aria-hidden="true"></i>
           </span> Tasks
         </p>
-        <a (click)="collabsTask = !collabsTask" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
+        <a (click)="collapseTask = !collapseTask" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
            aria-label="more options">
           <span class="icon">
-            <i *ngIf="collabsSelection" class="fas fa-angle-up" aria-hidden="true"></i>
-            <i *ngIf="!collabsSelection" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collapseSelection" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collapseSelection" class="fas fa-angle-down" aria-hidden="true"></i>
           </span>
         </a>
       </header>
-      <div *ngIf="collabsTask">
+      <div *ngIf="collapseTask">
         <div class="card-content overflow">
           <app-task-list [(token)]="selectedAnalysisToken"></app-task-list>
         </div>
@@ -370,15 +418,15 @@
               <i class="fas fa-filter" aria-hidden="true"></i>
             </span> Selection
         </p>
-        <a (click)="collabsSelection = !collabsSelection" data-action="collapse"
+        <a (click)="collapseSelection = !collapseSelection" data-action="collapse"
            class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
-            <i *ngIf="collabsSelection" class="fas fa-angle-up" aria-hidden="true"></i>
-            <i *ngIf="!collabsSelection" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collapseSelection" class="fas fa-angle-up" aria-hidden="true"></i>
+            <i *ngIf="!collapseSelection" class="fas fa-angle-down" aria-hidden="true"></i>
           </span>
         </a>
       </header>
-      <div *ngIf="collabsSelection">
+      <div *ngIf="collapseSelection">
         <div class="card-content overflow">
           <table class="table" *ngIf="analysis.getCount() > 0">
             <thead>
