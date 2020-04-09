@@ -29,14 +29,16 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public selectedItem = null;
   public selectedVirusName = null;
   public selectedStatus = null;
-  public collabsAnalysis = true;
-  public collabsDetails = true;
-  public collabsTask = true;
-  public collabsSelection = true;
-  public collabsDFilter = true;
-  public collabsQuery = true;
-  public collabsData = true;
-  public collabsOverview = true;
+
+  public collapseAnalysisQuick = true;
+  public collapseAnalysis = false;
+  public collapseDetails = true;
+  public collapseTask = true;
+  public collapseSelection = true;
+  public collapseDFilter = true;
+  public collapseQuery = true;
+  public collapseData = true;
+  public collapseOverview = true;
 
   public viralProteinCheckboxes: Array<{ checked: boolean; data: ViralProtein }> = [];
 

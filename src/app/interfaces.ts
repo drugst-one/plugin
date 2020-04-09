@@ -29,7 +29,7 @@ export interface Task {
   token: string;
   info: {
     target: 'drug' | 'drug-target',
-    algorithm: 'trustrank' | 'multisteiner' | 'keypathwayminer';
+    algorithm: 'trustrank' | 'multisteiner' | 'keypathwayminer' | 'quick';
     parameters?: { [key: string]: any };
 
     workerId?: string;

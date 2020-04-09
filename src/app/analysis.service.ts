@@ -124,6 +124,30 @@ export class AnalysisService {
     });
   }
 
+  async startQuickAnalysis() {
+    const resp = await this.http.post<any>(`${environment.backend}task/`, {
+      algorithm: 'quick',
+      target: 'drug',
+      parameters: {
+        seeds: this.getSelection().map((i) => i.name),
+      },
+    }).toPromise();
+    this.tokens.push(resp.token);
+    localStorage.setItem('tokens', JSON.stringify(this.tokens));
+    this.startWatching();
+
+    toast({
+      message: 'Quick analysis started. This may take a while.' +
+        'Once the computation finished you can view the results in the task list to the right.',
+      duration: 10000,
+      dismissible: true,
+      pauseOnHover: true,
+      type: 'is-success',
+      position: 'top-center',
+      animate: {in: 'fadeIn', out: 'fadeOut'}
+    });
+  }
+
   async startAnalysis(algorithm, target: 'drug' | 'drug-target', parameters) {
     const resp = await this.http.post<any>(`${environment.backend}task/`, {
       algorithm,
@@ -138,18 +162,11 @@ export class AnalysisService {
   showToast(task: Task, status: 'DONE' | 'FAILED') {
     let toastMessage;
     let toastType;
-    // const startDate = new Date(task.info.startedAt);
-    // const finishedDate = new Date(task.info.finishedAt);
     if (status === 'DONE') {
-      toastMessage = 'Computation finished succesfully.';
-      // \n- Algorithm: ${task.info.algorithm}
-      // \n- Started At: ${startDate.getHours()}:${startDate.getMinutes()}
-      // \n- Finished At: ${finishedDate.getHours()}:${finishedDate.getMinutes()}`;
+      toastMessage = 'Computation finished successfully. Click the task in the task list to view the results.';
       toastType = 'is-success';
     } else if (status === 'FAILED') {
       toastMessage = 'Computation failed.';
-      // \n- Algorithm: ${task.info.algorithm}
-      // \n- Started At: ${startDate.getHours()}:${startDate.getMinutes()}`;
       toastType = 'is-danger';
     }
 
@@ -186,6 +203,9 @@ export class AnalysisService {
       }
     };
     watch();
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
     this.intervalId = setInterval(watch, 5000);
   }
 
