@@ -14,7 +14,7 @@ import {environment} from '../../../environments/environment';
 import {AnalysisService, algorithmNames} from '../../analysis.service';
 import {
   Protein, Task, ViralProtein, Drug, Wrapper, WrapperType,
-  getWrapperFromProtein, getWrapperFromDrug, getWrapperFromViralProtein, getNodeIdsFromPDI
+  getWrapperFromProtein, getWrapperFromDrug, getWrapperFromViralProtein, getNodeIdsFromPDI, getNodeIdsFromPPI
 } from '../../interfaces';
 import html2canvas from 'html2canvas';
 import {toast} from 'bulma-toast';
@@ -242,17 +242,26 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     const isSeed = attributes.isSeed || {};
     const scores = attributes.scores || {};
     const details = attributes.details || {};
+    const wrappers: {[key: string]: Wrapper}  = {};
     for (const node of network.nodes) {
       if (nodeTypes[node] === 'host') {
         this.proteins.push(details[node]);
+        wrappers[node] = getWrapperFromProtein(details[node]);
       } else if (nodeTypes[node] === 'virus') {
         this.effects.push(details[node]);
+        wrappers[node] = getWrapperFromViralProtein(details[node]);
+      } else if (nodeTypes[node] === 'drug') {
+        wrappers[node] = getWrapperFromDrug(details[node]);
       }
       nodes.push(this.mapNode(this.inferNodeType(node), details[node], isSeed[node], scores[node]));
     }
 
     for (const edge of network.edges) {
-      edges.push(this.mapEdge(edge, 'protein-protein'));
+      edges.push(this.mapEdge(edge, 'protein-protein', wrappers));
+    }
+
+    for (const edge of network.edges) {
+      edges.push(this.mapEdge(edge, 'protein-protein', wrappers));
     }
 
 
@@ -292,15 +301,14 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     return node;
   }
 
-  private mapEdge(edge: any, type: 'protein-protein' | 'to-drug'): any {
+  private mapEdge(edge: any, type: 'protein-protein' | 'to-drug', wrappers?: {[key: string]: Wrapper}): any {
     let edgeColor;
     if (type === 'protein-protein') {
       edgeColor = {
         color: NetworkSettings.getColor('edgeHostVirus'),
-        highlight: NetworkSettings.getColor('edgeHostVirusHighlight')
+        highlight: NetworkSettings.getColor('edgeHostVirusHighlight'),
       };
-      const from = edge.from.startsWith('DB') ? `d_${edge.from}` : `p_${edge.from}`;
-      const to = edge.to.startsWith('DB') ? `d_${edge.to}` : `p_${edge.to}`;
+      const {from, to} = getNodeIdsFromPPI(edge, wrappers);
       return {
         from, to,
         color: edgeColor,
@@ -308,7 +316,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     } else if (type === 'to-drug') {
       edgeColor = {
         color: NetworkSettings.getColor('edgeHostDrug'),
-        highlight: NetworkSettings.getColor('edgeHostDrugHighlight')
+        highlight: NetworkSettings.getColor('edgeHostDrugHighlight'),
       };
       const {from, to} = getNodeIdsFromPDI(edge);
       return {
