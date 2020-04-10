@@ -74,48 +74,40 @@
           </div>
         </div>
         <footer class="card-footer toolbar">
-          <div class="field has-addons">
-            <p class="control">
-              <button class="button is-rounded is-success is-rounded" [disabled]="true">
-            <span class="icon">
-              <i class="fas fa-cloud-download-alt" aria-hidden="true"></i>
-            </span>
+          <div class="field">
+            <p class="control footer-buttons">
+              <button class="button is-primary is-rounded" (click)="toCanvas()">
+                <span class="icon">
+                  <i class="fas fa-camera" aria-hidden="true"></i>
+                </span>
                 <span>
-              Export Results
-            </span>
+                  Screenshot
+                </span>
               </button>
             </p>
-            <p class="control">
-              <button class="button is-primary is-rounded" [disabled]="true">
-            <span class="icon">
-              <i class="fas fa-camera" aria-hidden="true"></i>
-            </span>
-                <span>
-              Screenshot
-            </span>
-              </button>
-            </p>
-            <p class="control">
+          </div>
+          <div class="field">
+            <p class="control footer-buttons">
               <button class="button is-danger is-rounded" (click)="analysis.removeTask(token); close()">
-            <span class="icon">
-              <i class="fas fa-trash" aria-hidden="true"></i>
-            </span>
+                <span class="icon">
+                  <i class="fas fa-trash" aria-hidden="true"></i>
+                </span>
                 <span>
-              Delete Analysis
-            </span>
+                  Delete Analysis
+                </span>
               </button>
             </p>
           </div>
 
-          <app-toggle *ngIf="task.info.target === 'drug-target'" class="footer-toggle-buttons" textOn="Drugs On" textOff="Off"
+          <app-toggle *ngIf="task.info.target === 'drug-target'" class="footer-buttons" textOn="Drugs On" textOff="Off"
                       [value]="showDrugs" (valueChange)="toggleDrugs($event)" icon="fa-capsules"></app-toggle>
 
-          <app-toggle class="footer-toggle-buttons" textOn="Animation On" textOff="Off"
+          <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off"
                       [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)" icon="fa-wind"></app-toggle>
         </footer>
       </div>
       <div class="content tab-content scrollable" *ngIf="task && task.info.done" [class.is-visible]="tab === 'table'">
-        <div class="field has-addons footer-toggle-buttons" *ngIf="tableHasScores">
+        <div class="field has-addons" *ngIf="tableHasScores">
           <p class="control">
             <button class="button is-rounded" [class.is-primary]="tableNormalize" (click)="toggleNormalization(true)">
                 <span class="icon is-small">
@@ -167,7 +159,7 @@
               <td><a href="https://www.drugbank.ca/drugs/{{ e.drugId }}" target="_blank">{{ e.drugId }}</a></td>
               <td>{{e.name}}</td>
               <td>{{e.status}}</td>
-              <td *ngIf="tableHasScores">{{e.score || ''}}</td>
+              <td *ngIf="tableHasScores">{{e.score ? (e.score | number) : ''}}</td>
             </tr>
           </ng-template>
         </p-table>
@@ -182,11 +174,16 @@
             <span>Download</span>
           </a>
         </div>
-        <p-table *ngIf="tableProteins.length > 0" [value]="tableProteins">
+        <p-table *ngIf="tableProteins.length > 0" selectionMode="multiple"
+                 [value]="tableProteins" [selection]="tableSelectedProteins" dataKey="proteinAc"
+                 (selectionChange)="tableProteinSelection($event)">
           <ng-template pTemplate="header">
           <tr>
+            <th class="checkbox-col">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
             <th [pSortableColumn]="'proteinAc'">
-              AC
+              UniProt Code
               <p-sortIcon [field]="'proteinAc'"></p-sortIcon>
             </th>
             <th [pSortableColumn]="'name'">
@@ -201,9 +198,12 @@
           </ng-template>
           <ng-template pTemplate="body" let-e>
           <tr>
+            <td>
+              <p-tableCheckbox [value]="e"></p-tableCheckbox>
+            </td>
             <td><a href="https://www.uniprot.org/uniprot/{{ e.proteinAc }}" target="_blank">{{ e.proteinAc }}</a></td>
             <td>{{e.name}}</td>
-            <td *ngIf="tableHasScores">{{e.score || ''}}</td>
+            <td *ngIf="tableHasScores">{{e.score ? (e.score | number) : ''}}</td>
           </tr>
           </ng-template>
         </p-table>
@@ -218,28 +218,36 @@
             <span>Download</span>
           </a>
         </div>
-        <p-table *ngIf="tableViralProteins.length > 0" [value]="tableViralProteins">
+        <p-table *ngIf="tableViralProteins.length > 0" selectionMode="multiple"
+                 [value]="tableViralProteins" [selection]="tableSelectedViralProteins" dataKey="effectId"
+                 (selectionChange)="tableViralProteinSelection($event)">
           <ng-template pTemplate="header">
           <tr>
-            <td [pSortableColumn]="'effectName'">
+            <th class="checkbox-col">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th [pSortableColumn]="'effectName'">
               Name
               <p-sortIcon [field]="'effectName'"></p-sortIcon>
-            </td>
-            <td [pSortableColumn]="'virusName'">
+            </th>
+            <th [pSortableColumn]="'virusName'">
               Virus Strain
               <p-sortIcon [field]="'virusName'"></p-sortIcon>
-            </td>
-            <td *ngIf="tableHasScores" [pSortableColumn]="'score'">
+            </th>
+            <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
               Score
               <p-sortIcon [field]="'score'"></p-sortIcon>
-            </td>
+            </th>
           </tr>
           </ng-template>
           <ng-template pTemplate="body" let-e>
           <tr>
+            <td>
+              <p-tableCheckbox [value]="e"></p-tableCheckbox>
+            </td>
             <td>{{e.effectName}}</td>
             <td>{{e.virusName}}</td>
-            <td *ngIf="tableHasScores">{{e.score || ''}}</td>
+            <td *ngIf="tableHasScores">{{e.score ? (e.score | number) : ''}}</td>
           </tr>
           </ng-template>
         </p-table>

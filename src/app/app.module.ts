@@ -48,8 +48,7 @@ import {AnalysisService} from './analysis.service';
     TableModule,
   ],
   providers: [AnalysisService],
-  bootstrap: [AppComponent]
-
+  bootstrap: [AppComponent],
 })
 export class AppModule {
 }

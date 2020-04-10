@@ -1,4 +1,4 @@
-import {Wrapper, Task, getWrapperFromProtein, getWrapperFromViralProtein} from './interfaces';
+import {Wrapper, Task, getWrapperFromProtein, getWrapperFromViralProtein, Protein, ViralProtein} from './interfaces';
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../environments/environment';
@@ -119,6 +119,14 @@ export class AnalysisService {
 
   inSelection(wrapper: Wrapper): boolean {
     return this.selectedItems.has(wrapper.nodeId);
+  }
+
+  proteinInSelection(protein: Protein): boolean {
+    return this.inSelection(getWrapperFromProtein(protein));
+  }
+
+  viralProteinInSelection(viralProtein: ViralProtein): boolean {
+    return this.inSelection(getWrapperFromViralProtein(viralProtein));
   }
 
   removeItem(wrapper: Wrapper) {
