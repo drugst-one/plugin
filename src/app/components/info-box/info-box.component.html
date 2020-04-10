@@ -43,7 +43,9 @@
   </div>
 
   <div class="field has-addons add-remove-toggle" *ngIf="wrapper.type !== 'drug'">
-    <app-toggle [value]="!analysis.inSelection(wrapper)" (valueChange)="$event ? analysis.addItem(wrapper) : analysis.removeItem(wrapper)" textOn="Add to Analysis" textOff="Remove" icon="fa-plus"></app-toggle>
+    <app-toggle [value]="analysis.inSelection(wrapper)"
+                (valueChange)="$event ? analysis.addItem(wrapper) : analysis.removeItem(wrapper)" textOn="Selected"
+                textOff="Deselected" icon="fa-plus"></app-toggle>
   </div>
 </div>
 <div *ngIf="!wrapper">
