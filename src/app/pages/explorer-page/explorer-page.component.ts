@@ -70,23 +70,37 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public datasetItems: Dataset[] = [
     {
-      label: 'CoV2 (Gordon et al., 2020)',
-      strains: 'CoV2',
+      label: 'SARS-CoV-2 (Gordon et al.)',
+      strains: 'SARS-CoV-2',
+      hostTarget: 'Human cell line, HEK-293T kidney cells',
+      method: 'AP-MS (affinity purification-mass spectrometry)',
+      source: ['https://www.biorxiv.org/content/10.1101/2020.03.22.002386v3', 'bioRxiv'],
+      year: 2020,
       datasetNames: 'Gordon et al., 2020',
       backendId: 'SARS_CoV2',
       data: [['Krogan', 'SARS-CoV2']]
     },
     {
-      label: 'CoV1 (Pfefferle)',
-      strains: 'CoV1',
-      datasetNames: 'Pfefferle',
+      label: 'SARS-CoV-1 (Pfefferle et al.)',
+      strains: 'SARS-CoV-1',
+      hostTarget: 'Human brain and fetal brain cDNA libraries in yeast strains',
+      method: 'High-Throughput Yeast Two Hybrid Screen (HTY2H) and validations with Lumier assay, ' +
+        'as well as experimentally validated interactions from 20 publications.',
+      source: null,
+      year: 2011,
+      datasetNames: 'Pfefferle et al., 2011',
       backendId: 'SARS_CoV1',
       data: [['Pfefferle', 'SARS-CoV1']]
     },
     {
-      label: 'CoV1 (VirHostNet)',
-      strains: 'CoV1',
-      datasetNames: 'VirHostNet',
+      label: 'SARS-CoV-1 (VirHostNet 2.0)',
+      strains: 'SARS-CoV-1',
+      hostTarget: 'Different human cell lines',
+      method: 'Literature curation, interactions from 14 publications, which have experimental validation by at ' +
+        'least one of the following assays: co-immunoprecipitation, two hybrid, pull-down, mass spectrometry.',
+      source: null,
+      year: null,
+      datasetNames: 'VirHostNet 2.0',
       backendId: 'SARS_CoV1',
       data: [['VirHostNet', 'SARS-CoV1']]
     },

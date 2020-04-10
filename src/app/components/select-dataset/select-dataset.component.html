@@ -7,18 +7,14 @@
     </ng-template>
   </ng-select>
 
-  <div class="info" *ngIf="selectedDataset && selectedDataset.label === 'CoV2 (Gordon et al., 2020)'">
-    <p>Virus: <b>SARS-CoV-2</b></p>
-    <p>Host/target: <b>Human</b>, HEK-293T kidney cells</p>
-    <p>Method: <b>AP-MS</b></p>
-    <p>Source:<a href="https://www.biorxiv.org/content/10.1101/2020.03.22.002386v3" target="_blank"> <b> Gordon et al., 2020</b></a></p>
-  </div>
-
-  <div class="info" *ngIf="selectedDataset && selectedDataset.label === 'CoV1 (Pfefferle)'">
-    TODO: Put CoV1 (Pfefferle)
-  </div>
-
-  <div class="info" *ngIf="selectedDataset && selectedDataset.label === 'CoV1 (VirHostNet)'">
-    TODO: Put CoV1 (VirHostNet)
+  <div *ngIf="selectedDataset" class="info">
+    <ul>
+      <li *ngIf="selectedDataset.strains"><b>Virus: </b>{{selectedDataset.strains}}</li>
+      <li *ngIf="selectedDataset.hostTarget"><b>Host/Target: </b>{{selectedDataset.hostTarget}}</li>
+      <li *ngIf="selectedDataset.method"><b>Method: </b>{{selectedDataset.method}}</li>
+      <li *ngIf="selectedDataset.source"><b>Source: </b> <a href="{{selectedDataset.source[0]}}"> {{selectedDataset.source[1]}}</a>
+      </li>
+      <li *ngIf="selectedDataset.year"><b>Year: </b>{{selectedDataset.year}}</li>
+    </ul>
   </div>
 </div>
