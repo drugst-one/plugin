@@ -1,4 +1,4 @@
-import {Wrapper, Task, getWrapperFromProtein, getWrapperFromViralProtein, Protein, ViralProtein} from './interfaces';
+import {Wrapper, Task, getWrapperFromProtein, getWrapperFromViralProtein, Protein, ViralProtein, Dataset} from './interfaces';
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../environments/environment';
@@ -14,7 +14,8 @@ export const algorithmNames = {
   multisteiner: 'Multi-Steiner',
   closeness: 'Closeness Centrality',
   degree: 'Degree Centrality',
-  quick: 'Quick-Find Drugs',
+  quick: 'Quick-Find Drugs (custom)',
+  super: 'Quick-Find Drugs',
 };
 
 export interface Algorithm {
@@ -43,7 +44,7 @@ export class AnalysisService {
   public tasks: Task[] = [];
 
   private intervalId: any;
-  private canLaunchNewTask = false;
+  private canLaunchNewTask = true;
 
   private launchingQuick = false;
 
@@ -150,7 +151,7 @@ export class AnalysisService {
     });
   }
 
-  async startQuickAnalysis(dataset: string) {
+  async startQuickAnalysis(isSuper: boolean, dataset: Dataset) {
     if (!this.canLaunchTask()) {
       toast({
         message: `You can only run ${MAX_TASKS} tasks at once. Please wait for one of them to finish or delete it from the task list.`,
@@ -167,11 +168,12 @@ export class AnalysisService {
     this.launchingQuick = true;
 
     const resp = await this.http.post<any>(`${environment.backend}task/`, {
-      algorithm: 'quick',
+      algorithm: isSuper ? 'super' : 'quick',
       target: 'drug',
       parameters: {
-        strain: dataset,
-        seeds: this.getSelection().map((i) => i.backendId),
+        strain: dataset.backendId,
+        datasets: dataset.data,
+        seeds: isSuper ? [] : this.getSelection().map((i) => i.backendId),
       },
     }).toPromise();
     this.tokens.push(resp.token);
