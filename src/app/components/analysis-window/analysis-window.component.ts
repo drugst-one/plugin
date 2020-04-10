@@ -13,8 +13,19 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {AnalysisService, algorithmNames} from '../../analysis.service';
 import {
-  Protein, Task, ViralProtein, Drug, Wrapper, WrapperType,
-  getWrapperFromProtein, getWrapperFromDrug, getWrapperFromViralProtein, getNodeIdsFromPDI, getNodeIdsFromPPI
+  Protein,
+  Task,
+  ViralProtein,
+  Drug,
+  Wrapper,
+  WrapperType,
+  getWrapperFromProtein,
+  getWrapperFromDrug,
+  getWrapperFromViralProtein,
+  getNodeIdsFromPDI,
+  getNodeIdsFromPPI,
+  getViralProteinNodeId,
+  getProteinNodeId
 } from '../../interfaces';
 import html2canvas from 'html2canvas';
 import {toast} from 'bulma-toast';
@@ -59,7 +70,9 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
 
   public tableDrugs: Array<Drug & Scored> = [];
   public tableProteins: Array<Protein & Scored> = [];
+  public tableSelectedProteins: Array<Protein & Scored> = [];
   public tableViralProteins: Array<ViralProtein & Scored> = [];
+  public tableSelectedViralProteins: Array<ViralProtein & Scored> = [];
   public tableNormalize = false;
   public tableHasScores = false;
 
@@ -98,12 +111,17 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
 
         this.network = new vis.Network(container, this.nodeData, options);
 
-
         const promises: Promise<any>[] = [];
         promises.push(this.http.get<any>(`${environment.backend}task_result/?token=${this.token}&view=proteins`).toPromise()
           .then((table) => {
             this.tableProteins = table;
-            this.tableProteins.forEach((r) => r.rawScore = r.score);
+            this.tableSelectedProteins = [];
+            this.tableProteins.forEach((r) => {
+              r.rawScore = r.score;
+              if (this.analysis.proteinInSelection(r)) {
+                this.tableSelectedProteins.push(r);
+              }
+            });
           }));
         promises.push(this.http.get<any>(`${environment.backend}task_result/?token=${this.token}&view=viral_proteins`).toPromise()
           .then((table) => {
@@ -156,8 +174,31 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
           }
         });
 
-
         this.analysis.subscribe((item, selected) => {
+          if (item.type === 'host') {
+            // TODO: Refactor!
+            const found = this.tableSelectedProteins.findIndex((i) => getProteinNodeId(i) === item.nodeId);
+            const tableItem = this.tableProteins.find((i) => getProteinNodeId(i) === item.nodeId);
+            if (selected && found === -1 && tableItem) {
+              this.tableSelectedProteins.push(tableItem);
+            }
+            if (!selected && found !== -1 && tableItem) {
+              this.tableSelectedProteins.splice(found, 1);
+            }
+            this.tableSelectedProteins = [...this.tableSelectedProteins];
+          } else if (item.type === 'virus') {
+            // TODO: Refactor!
+            const found = this.tableSelectedViralProteins.findIndex((i) => getViralProteinNodeId(i) === item.nodeId);
+            const tableItem = this.tableViralProteins.find((i) => getViralProteinNodeId(i) === item.nodeId);
+            if (selected && found === -1 && tableItem) {
+              this.tableSelectedViralProteins.push(tableItem);
+            }
+            if (!selected && found !== -1 && tableItem) {
+              this.tableSelectedViralProteins.splice(found, 1);
+            }
+            this.tableSelectedViralProteins = [...this.tableSelectedViralProteins];
+          }
+
           const node = this.nodeData.nodes.get(item.nodeId);
           if (!node) {
             return;
@@ -190,10 +231,6 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     this.token = null;
     this.tokenChange.emit(this.token);
     this.emitVisibleItems(false);
-  }
-
-  export() {
-
   }
 
   public toggleNormalization(normalize: boolean) {
@@ -351,9 +388,9 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     this.drugNodes = [];
     this.drugEdges = [];
     if (this.showDrugs) {
-      const proteinAcs = this.proteins.map((protein) => protein.proteinAc);
-      // tslint:disable-next-line:max-line-length
-      const result = await this.http.get<any>(`${environment.backend}drug_interactions/?proteins=${JSON.stringify(proteinAcs)}`).toPromise().catch((err: HttpErrorResponse) => {
+      const result = await this.http.get<any>(
+        `${environment.backend}drug_interactions/?token=${this.token}`).toPromise().catch(
+          (err: HttpErrorResponse) => {
         // simple logging, but you can do a lot more, see below
         toast({
           message: 'An error occured while fetching the drugs.',
@@ -396,7 +433,6 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     }
   }
 
-
   public updatePhysicsEnabled(bool: boolean) {
     this.physicsEnabled = bool;
     this.network.setOptions({
@@ -409,21 +445,48 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     });
   }
 
-  public screenshot() {
-    const elem = document.getElementById(this.indexscreenshot.toString());
-    html2canvas(elem).then((canvas) => {
-      const generatedImage1 = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+  public toCanvas() {
+    html2canvas(this.networkEl.nativeElement).then((canvas) => {
+      const generatedImage = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
       const a = document.createElement('a');
-      a.href = generatedImage1;
-      a.download = `Resulting_Network.png`;
+      a.href = generatedImage;
+      a.download = `Network.png`;
       a.click();
-
     });
   }
 
-  public updateshowdrugs(bool) {
-    this.drugstatus = bool;
+  public tableProteinSelection(e) {
+    const oldSelection = [...this.tableSelectedProteins];
+    this.tableSelectedProteins = e;
+    for (const i of this.tableSelectedProteins) {
+      const wrapper = getWrapperFromProtein(i);
+      if (oldSelection.indexOf(i) === -1) {
+        this.analysis.addItem(wrapper);
+      }
+    }
+    for (const i of oldSelection) {
+      const wrapper = getWrapperFromProtein(i);
+      if (this.tableSelectedProteins.indexOf(i) === -1) {
+        this.analysis.removeItem(wrapper);
+      }
+    }
+  }
 
+  public tableViralProteinSelection(e) {
+    const oldSelection = [...this.tableSelectedViralProteins];
+    this.tableSelectedViralProteins = e;
+    for (const i of this.tableSelectedViralProteins) {
+      const wrapper = getWrapperFromViralProtein(i);
+      if (oldSelection.indexOf(i) === -1) {
+        this.analysis.addItem(wrapper);
+      }
+    }
+    for (const i of oldSelection) {
+      const wrapper = getWrapperFromViralProtein(i);
+      if (this.tableSelectedViralProteins.indexOf(i) === -1) {
+        this.analysis.removeItem(wrapper);
+      }
+    }
   }
 
 }

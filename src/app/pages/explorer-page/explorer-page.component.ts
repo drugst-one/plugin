@@ -63,7 +63,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public selectedAnalysisToken: string | null = null;
 
   public currentDataset = [];
-  private screenshotArray = [0];
 
   public currentViewProteins: Protein[];
   public currentViewEffects: ViralProtein[];
@@ -417,15 +416,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public toCanvas() {
-    this.screenshotArray.forEach((key, index) => {
-      const elem = document.getElementById(index.toString());
-      html2canvas(elem).then((canvas) => {
-        const generatedImage = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-        const a = document.createElement('a');
-        a.href = generatedImage;
-        a.download = `Network.png`;
-        a.click();
-      });
+    html2canvas(this.networkEl.nativeElement).then((canvas) => {
+      const generatedImage = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+      const a = document.createElement('a');
+      a.href = generatedImage;
+      a.download = `Network.png`;
+      a.click();
     });
   }
 

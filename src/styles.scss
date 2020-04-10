@@ -12,7 +12,7 @@ $danger: #EF476F;
 $link: $primary;
 $info: $primary;
 @import "~bulma/bulma.sass";
-@import "~primeng/resources/primeng.css";
+@import "~primeng/resources/primeng.min.css";
 @import "~primeicons/primeicons.css";
 
 html {
@@ -174,7 +174,7 @@ div.field.has-addons.add-remove-toggle {
   color: $danger;
 }
 
-.footer-toggle-buttons {
+.footer-buttons {
   margin-left: 20px;
   margin-right: 10px;
 }
@@ -191,4 +191,9 @@ html, body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+.ui-chkbox-box {
+  border: 1px solid black !important;
 }
