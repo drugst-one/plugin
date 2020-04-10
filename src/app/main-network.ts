@@ -1,5 +1,5 @@
 import {HttpClient} from '@angular/common/http';
-import {ProteinViralInteraction, ViralProtein, Protein} from './interfaces';
+import {ProteinViralInteraction, ViralProtein, Protein, getProteinNodeId, getViralProteinNodeId} from './interfaces';
 
 export function getDatasetFilename(dataset: Array<[string, string]>): string {
   return `network-${JSON.stringify(dataset).replace(/[\[\]\",]/g, '')}.json`;
@@ -13,14 +13,14 @@ export class ProteinNetwork {
   public async loadPositions(http: HttpClient, dataset: Array<[string, string]>) {
     const nodePositions = await http.get(`assets/positions/${getDatasetFilename(dataset)}`).toPromise();
     this.proteins.forEach((node) => {
-      const nodePosition = nodePositions[`p_${node.proteinAc}`];
+      const nodePosition = nodePositions[getProteinNodeId(node)];
       if (nodePosition) {
         node.x = nodePosition.x;
         node.y = nodePosition.y;
       }
     });
     this.effects.forEach((node) => {
-      const nodePosition = nodePositions[`eff_${node.effectName}_${node.datasetName}_${node.virusName}`];
+      const nodePosition = nodePositions[getViralProteinNodeId(node)];
       if (nodePosition) {
         node.x = nodePosition.x;
         node.y = nodePosition.y;

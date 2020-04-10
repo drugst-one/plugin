@@ -142,7 +142,7 @@ export class AnalysisService {
     });
   }
 
-  async startQuickAnalysis() {
+  async startQuickAnalysis(dataset: string) {
     if (!this.canLaunchTask()) {
       toast({
         message: `You can only run ${MAX_TASKS} tasks at once. Please wait for one of them to finish or delete it from the task list.`,
@@ -162,6 +162,7 @@ export class AnalysisService {
       algorithm: 'quick',
       target: 'drug',
       parameters: {
+        strain: dataset,
         seeds: this.getSelection().map((i) => i.backendId),
       },
     }).toPromise();

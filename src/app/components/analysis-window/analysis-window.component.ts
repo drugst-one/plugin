@@ -255,7 +255,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     const isSeed = attributes.isSeed || {};
     const scores = attributes.scores || {};
     const details = attributes.details || {};
-    const wrappers: {[key: string]: Wrapper}  = {};
+    const wrappers: { [key: string]: Wrapper } = {};
     for (const node of network.nodes) {
       if (nodeTypes[node] === 'host') {
         this.proteins.push(details[node]);
@@ -286,6 +286,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   private mapNode(nodeType: WrapperType, details: Protein | ViralProtein | Drug, isSeed?: boolean, score?: number): any {
     let nodeLabel;
     let wrapper: Wrapper;
+    let drugType;
     if (nodeType === 'host') {
       const protein = details as Protein;
       wrapper = getWrapperFromProtein(protein);
@@ -296,14 +297,19 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     } else if (nodeType === 'drug') {
       const drug = details as Drug;
       wrapper = getWrapperFromDrug(drug);
-      nodeLabel = drug.name;
+      drugType = drug.status;
+      if (drugType === 'approved') {
+        nodeLabel = drug.name;
+      } else {
+        nodeLabel = drug.drugId;
+      }
     } else if (nodeType === 'virus') {
       const viralProtein = details as ViralProtein;
       wrapper = getWrapperFromViralProtein(viralProtein);
       nodeLabel = viralProtein.effectName;
     }
 
-    const node = NetworkSettings.getNodeStyle(nodeType, isSeed, this.analysis.inSelection(wrapper));
+    const node = NetworkSettings.getNodeStyle(nodeType, isSeed, this.analysis.inSelection(wrapper), drugType);
     node.id = wrapper.nodeId;
     node.label = nodeLabel;
     node.nodeType = nodeType;
@@ -313,7 +319,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     return node;
   }
 
-  private mapEdge(edge: any, type: 'protein-protein' | 'to-drug', wrappers?: {[key: string]: Wrapper}): any {
+  private mapEdge(edge: any, type: 'protein-protein' | 'to-drug', wrappers?: { [key: string]: Wrapper }): any {
     let edgeColor;
     if (type === 'protein-protein') {
       edgeColor = {

@@ -10,7 +10,7 @@ import {
   ViralProtein,
   Protein,
   Wrapper,
-  getWrapperFromViralProtein, getWrapperFromProtein, getNodeIdsFromPVI, getViralProteinNodeId, getProteinNodeId
+  getWrapperFromViralProtein, getWrapperFromProtein, getNodeIdsFromPVI, getViralProteinNodeId, getProteinNodeId, Dataset
 } from '../../interfaces';
 import {ProteinNetwork, getDatasetFilename} from '../../main-network';
 import {HttpClient, HttpParams} from '@angular/common/http';
@@ -69,8 +69,28 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public currentViewEffects: ViralProtein[];
   public currentViewNodes: Node[];
 
-  public datasetItems: Array<{ id: string, label: string, datasets: string, data: Array<[string, string]> }> = [
-    {id: 'CoV2 (Gordon et al., 2020)', label: 'CoV2', datasets: 'Gordon et al., 2020', data: [['Krogan', 'SARS-CoV2']]},
+  public datasetItems: Dataset[] = [
+    {
+      label: 'CoV2 (Gordon et al., 2020)',
+      strains: 'CoV2',
+      datasetNames: 'Gordon et al., 2020',
+      backendId: 'SARS_CoV2',
+      data: [['Krogan', 'SARS-CoV2']]
+    },
+    {
+      label: 'CoV1 (Pfefferle)',
+      strains: 'CoV1',
+      datasetNames: 'Pfefferle',
+      backendId: 'SARS_CoV1',
+      data: [['Pfefferle', 'SARS-CoV1']]
+    },
+    {
+      label: 'CoV1 (VirHostNet)',
+      strains: 'CoV1',
+      datasetNames: 'VirHostNet',
+      backendId: 'SARS_CoV1',
+      data: [['VirHostNet', 'SARS-CoV1']]
+    },
   ];
 
   public selectedDataset = this.datasetItems[0];
@@ -162,6 +182,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public async createNetwork(dataset: Array<[string, string]>) {
+    this.analysis.resetSelection();
     await this.getNetwork(dataset);
     this.proteinData = new ProteinNetwork(this.proteins, this.effects, this.edges);
     if (!this.dumpPositions) {
