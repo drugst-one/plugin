@@ -23,13 +23,12 @@ body {
   overflow: hidden;
 }
 
-.hero.is-primary {
+.landing {
   background-color: $primary;
-  background-image: url("assets/virus_background.png");
+  background-image: url("assets/virus_background.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: 80%;
-  padding: 50px;
+  height: calc(100vh - 82.36px);
 }
 
 div.navbar-menu {

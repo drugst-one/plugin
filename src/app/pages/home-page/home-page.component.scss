@@ -4,3 +4,32 @@ img {
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 25px;
 }
+
+div.scroll {
+  height: calc(100vh - 82.36px);
+  overflow: auto;
+}
+
+h1.subtitle.is-2 {
+  color: #d0d0d0;
+  font-family: "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+h1.subtitle.is-3 {
+  color: #d0d0d0;
+  font-family: "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+div.column.is-6.width100 {
+  width: 100%;
+}
+
+div.container.has-text-centered {
+  margin-top: 10%;
+}
+
+.centered {
+  position: fixed; /* or absolute */
+  top: 50%;
+  left: 50%;
+}

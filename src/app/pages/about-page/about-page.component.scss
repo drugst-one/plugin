@@ -1,0 +1,9 @@
+i {
+  width: 30px;
+}
+
+div.scroll{
+
+  height: calc(100vh - 102px);
+  overflow: auto;
+}
