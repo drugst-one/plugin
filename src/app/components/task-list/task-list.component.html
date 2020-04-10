@@ -40,7 +40,7 @@
         </p>
         <progress class="progress is-success" [value]="task.info.progress * 100" max="100">Test</progress>
       </div>
-      <div *ngIf="task.info.done" (click)="open(task.token)">
+      <div *ngIf="task.info.done" (click)="open(task.token)" data-tooltip="Show analysis results">
         <p>
           <span class="is-capitalized"><i class="fa" [class.fa-capsules]="task.info.target === 'drug'"
                                           [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{algorithmNames[task.info.algorithm]}}</span>

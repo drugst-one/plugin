@@ -27,6 +27,7 @@
     "@ng-select/ng-select": "^3.7.3",
     "bulma": "^0.8.1",
     "bulma-toast": "^1.5.4",
+    "bulma-tooltip": "^3.0.2",
     "html2canvas": "^1.0.0-rc.5",
     "primeicons": "^2.0.0",
     "primeng": "^9.0.5",

@@ -1,6 +1,6 @@
 <div class="content">
   <ng-select [items]="datasetItems" bindLabel="label" [virtualScroll]="true" class="custom"
-             placeholder="Select..." [ngModel]="selectedDataset" (ngModelChange)="select($event)">
+             placeholder="Select..." [ngModel]="selectedDataset" (ngModelChange)="select($event)" data-tooltip="Choose the dataset you want to explore.">
     <ng-template ng-option-tmp let-item="item">
       {{item.strains}} <br/>
       <small>{{item.datasetNames}}</small>
