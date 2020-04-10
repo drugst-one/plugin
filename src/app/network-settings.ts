@@ -5,9 +5,10 @@ export class NetworkSettings {
   // Node color
   private static hostColor = '#123456';
   private static virusColor = '#BE093C';
-  private static drugColor = '#F8981D';
-  private static seedHostColor = '#3070B3';
-  private static seedVirusColor = '#3070B3';
+  private static approvedDrugColor = '#48C774';
+  private static unapprovedDrugColor = '#F8981D';
+  private static nonSeedHostColor = '#3070B3';
+  private static nonSeedVirusColor = '#87082c';
 
   private static selectedBorderColor = '#F8981D';
   private static selectBorderHighlightColor = '#F8981D';
@@ -100,25 +101,27 @@ export class NetworkSettings {
     }
   }
 
-  static getColor(color: 'host' | 'virus' | 'drug' | 'hostFont' | 'virusFont' | 'drugFont' |
-    'seedHost' | 'seedVirus' | 'selectedForAnalysis' | 'selectedForAnalysisText' |
+  static getColor(color: 'host' | 'virus' | 'approvedDrug' | 'unapprovedDrug' | 'hostFont' | 'virusFont' | 'drugFont' |
+    'nonSeedHost' | 'nonSeedVirus' | 'selectedForAnalysis' | 'selectedForAnalysisText' |
     'edgeHostVirus' | 'edgeHostVirusHighlight' | 'edgeHostDrug' | 'edgeHostDrugHighlight') {
     if (color === 'host') {
       return this.hostColor;
     } else if (color === 'virus') {
       return this.virusColor;
-    } else if (color === 'drug') {
-      return this.drugColor;
+    } else if (color === 'approvedDrug') {
+      return this.approvedDrugColor;
+    } else if (color === 'unapprovedDrug') {
+      return this.unapprovedDrugColor;
     } else if (color === 'hostFont') {
       return this.hostFontColor;
     } else if (color === 'virusFont') {
       return this.virusFontColor;
     } else if (color === 'drugFont') {
       return this.drugFontColor;
-    } else if (color === 'seedHost') {
-      return this.seedHostColor;
-    } else if (color === 'seedVirus') {
-      return this.seedVirusColor;
+    } else if (color === 'nonSeedHost') {
+      return this.nonSeedHostColor;
+    } else if (color === 'nonSeedVirus') {
+      return this.nonSeedVirusColor;
     } else if (color === 'edgeHostVirus') {
       return this.edgeHostVirusColor;
     } else if (color === 'edgeHostDrug') {
@@ -140,7 +143,7 @@ export class NetworkSettings {
     }
   }
 
-  static getNodeStyle(nodeType: WrapperType, isSeed: boolean, isSelected: boolean): any {
+  static getNodeStyle(nodeType: WrapperType, isSeed: boolean, isSelected: boolean, drugType?: string): any {
     let nodeColor;
     let nodeShape;
     let nodeSize;
@@ -152,28 +155,48 @@ export class NetworkSettings {
     if (nodeType === 'host') {
       nodeColor = NetworkSettings.getColor(nodeType);
       nodeFont = NetworkSettings.getFont('host');
-      if (isSeed) {
-        nodeColor = NetworkSettings.getColor('seedHost');
+      if (!isSeed) {
+        nodeColor = NetworkSettings.getColor('nonSeedHost');
       }
     } else if (nodeType === 'virus') {
       nodeColor = NetworkSettings.getColor(nodeType);
       if (nodeType === 'virus') {
         nodeFont = NetworkSettings.getFont('virus');
-        if (isSeed) {
-          nodeColor = NetworkSettings.getColor('seedVirus');
+        if (!isSeed) {
+          nodeColor = NetworkSettings.getColor('nonSeedVirus');
         }
       }
     } else if (nodeType === 'drug') {
-      nodeColor = NetworkSettings.getColor(nodeType);
+      if (drugType === 'approved') {
+        nodeColor = NetworkSettings.getColor('approvedDrug');
+      } else {
+        nodeColor = NetworkSettings.getColor('unapprovedDrug');
+      }
     }
 
-    const node: any = {size: nodeSize, color: nodeColor, shape: nodeShape, font: nodeFont, shadow: nodeShadow};
+    const node: any = {
+      size: nodeSize,
+      shape: nodeShape,
+      font: nodeFont,
+      shadow: nodeShadow,
+    };
 
     if (isSelected) {
-      node.color = {color: node.color, border: this.selectedBorderColor, highlight: {border: this.selectBorderHighlightColor}};
+      node.color = {
+        background: nodeColor,
+        border: this.selectedBorderColor,
+        highlight: {
+          border: this.selectBorderHighlightColor,
+          background: nodeColor,
+        },
+      };
+
       node.borderWidth = this.selectedBorderWidth;
       node.borderWidthSelected = this.selectedBorderWidthSelected;
+    } else {
+      node.color = nodeColor;
     }
+
     return node;
   }
 }

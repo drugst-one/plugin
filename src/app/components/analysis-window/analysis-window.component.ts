@@ -98,6 +98,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
 
         this.network = new vis.Network(container, this.nodeData, options);
 
+
         const promises: Promise<any>[] = [];
         promises.push(this.http.get<any>(`${environment.backend}task_result/?token=${this.token}&view=proteins`).toPromise()
           .then((table) => {
@@ -130,6 +131,9 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
           if (nodeIds.length > 0) {
             const nodeId = nodeIds[0];
             const node = this.nodeData.nodes.get(nodeId);
+            if (node.nodeType === 'drug') {
+              return;
+            }
             const wrapper = node.wrapper;
             if (this.analysis.inSelection(wrapper)) {
               this.analysis.removeItem(wrapper);
@@ -152,6 +156,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
           }
         });
 
+
         this.analysis.subscribe((item, selected) => {
           const node = this.nodeData.nodes.get(item.nodeId);
           if (!node) {
@@ -166,6 +171,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
       }
     }
     this.emitVisibleItems(true);
+
   }
 
   public emitVisibleItems(on: boolean) {
@@ -271,7 +277,6 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
       edges.push(this.mapEdge(edge, 'protein-protein', wrappers));
     }
 
-
     return {
       nodes,
       edges,
@@ -299,12 +304,12 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     }
 
     const node = NetworkSettings.getNodeStyle(nodeType, isSeed, this.analysis.inSelection(wrapper));
-
     node.id = wrapper.nodeId;
     node.label = nodeLabel;
     node.nodeType = nodeType;
     node.isSeed = isSeed;
     node.wrapper = wrapper;
+
     return node;
   }
 

@@ -69,9 +69,10 @@ export class AnalysisService {
   }
 
   removeAllTasks() {
-    this.tasks.forEach((task) => {
-      this.removeTask(task.token);
-    });
+    this.tasks = [];
+    this.finishedTokens = [];
+    this.tokens = [];
+    localStorage.removeItem('tokens');
   }
 
   async getTasks() {
