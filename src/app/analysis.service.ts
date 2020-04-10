@@ -28,6 +28,8 @@ export const DEGREE_CENTRALITY: Algorithm = {slug: 'degree', name: algorithmName
 export const KEYPATHWAYMINER: Algorithm = {slug: 'keypathwayminer', name: algorithmNames.keypathwayminer};
 export const MULTISTEINER: Algorithm = {slug: 'multisteiner', name: algorithmNames.multisteiner};
 
+export const MAX_TASKS = 3;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -140,7 +142,7 @@ export class AnalysisService {
   async startQuickAnalysis() {
     if (!this.canLaunchTask()) {
       toast({
-        message: 'You can only run 3 tasks at once. Please wait for one of them to finish or delete it from the task list.',
+        message: `You can only run ${MAX_TASKS} tasks at once. Please wait for one of them to finish or delete it from the task list.`,
         duration: 5000,
         dismissible: true,
         pauseOnHover: true,
@@ -177,7 +179,7 @@ export class AnalysisService {
   async startAnalysis(algorithm, target: 'drug' | 'drug-target', parameters) {
     if (!this.canLaunchTask()) {
       toast({
-        message: 'You can only run 3 tasks at once. Please wait for one of them to finish or delete it from the task list.',
+        message: `You can only run ${MAX_TASKS} tasks at once. Please wait for one of them to finish or delete it from the task list.`,
         duration: 5000,
         dismissible: true,
         pauseOnHover: true,
@@ -246,7 +248,7 @@ export class AnalysisService {
             }
           }
         });
-        this.canLaunchNewTask = queuedOrRunningTasks < 3;
+        this.canLaunchNewTask = queuedOrRunningTasks < MAX_TASKS;
       } else {
         this.canLaunchNewTask = true;
       }

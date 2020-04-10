@@ -30,7 +30,7 @@
 
       <div *ngIf="!analysis.canLaunchTask()">
         <div class="notification is-warning warning">
-          You can only run 3 tasks at once. Please wait for one of them to finish or delete it from the task list.
+          You can only run {{maxTasks}} tasks at once. Please wait for one of them to finish or delete it from the task list.
         </div>
       </div>
 

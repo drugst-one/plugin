@@ -4,7 +4,7 @@ import {
   AlgorithmType,
   AnalysisService, CLOSENESS_CENTRALITY,
   DEGREE_CENTRALITY,
-  KEYPATHWAYMINER,
+  KEYPATHWAYMINER, MAX_TASKS,
   MULTISTEINER,
   QuickAlgorithmType,
   TRUSTRANK
@@ -54,6 +54,8 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public multisteinerNumTrees = 5;
 
   public hasBaits;
+
+  public maxTasks = MAX_TASKS;
 
   constructor(public analysis: AnalysisService) {
     this.hasBaits = !!analysis.getSelection().find((i) => i.type === 'virus');
