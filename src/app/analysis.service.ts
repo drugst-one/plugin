@@ -45,6 +45,8 @@ export class AnalysisService {
   private intervalId: any;
   private canLaunchNewTask = false;
 
+  private launchingQuick = false;
+
   constructor(private http: HttpClient) {
     const tokens = localStorage.getItem('tokens');
     const finishedTokens = localStorage.getItem('finishedTokens');
@@ -153,6 +155,8 @@ export class AnalysisService {
       return;
     }
 
+    this.launchingQuick = true;
+
     const resp = await this.http.post<any>(`${environment.backend}task/`, {
       algorithm: 'quick',
       target: 'drug',
@@ -198,6 +202,10 @@ export class AnalysisService {
     this.tokens.push(resp.token);
     localStorage.setItem('tokens', JSON.stringify(this.tokens));
     this.startWatching();
+  }
+
+  public isLaunchingQuick(): boolean {
+    return this.launchingQuick;
   }
 
   showToast(task: Task, status: 'DONE' | 'FAILED') {
@@ -252,6 +260,7 @@ export class AnalysisService {
       } else {
         this.canLaunchNewTask = true;
       }
+      this.launchingQuick = false;
     };
     watch();
     if (this.intervalId) {
