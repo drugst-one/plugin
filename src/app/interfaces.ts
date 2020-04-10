@@ -75,10 +75,10 @@ export function getNodeIdsFromPVI(pvi: ProteinViralInteraction) {
   };
 }
 
-export function getNodeIdsFromPPI(edge: NetworkEdge) {
+export function getNodeIdsFromPPI(edge: NetworkEdge, wrappers: {[key: string]: Wrapper}) {
   return {
-    from: `p_${edge.from}`,
-    to: `p_${edge.to}`,
+    from: wrappers[edge.from].nodeId,
+    to: wrappers[edge.to].nodeId,
   };
 }
 
