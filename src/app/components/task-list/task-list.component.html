@@ -8,13 +8,13 @@
           <span class="icon is-pulled-right"><i class="fas fa-pause" aria-hidden="true"></i></span>
         </p>
         <p>
-          <small *ngIf="task.stats.queuePosition === 1">
+          <small *ngIf="task.stats.queueLength > 0 && task.stats.queuePosition === 1">
             Queued: 1 other task to finish
           </small>
-          <small *ngIf="task.stats.queuePosition > 1">
+          <small *ngIf="task.stats.queueLength > 0 && task.stats.queuePosition > 1">
             Queued: {{task.stats.queuePosition}} other tasks to finish
           </small>
-          <small *ngIf="task.stats.queuePosition === 0">
+          <small *ngIf="task.stats.queueLength === 0 || task.stats.queuePosition === 0">
             Execution imminent...
           </small>
           <a (click)="analysis.removeTask(task.token)" class="has-text-danger">

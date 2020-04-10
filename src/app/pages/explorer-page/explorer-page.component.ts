@@ -89,7 +89,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       const pos = this.network.getPositions([item.nodeId]);
       node.x = pos[item.nodeId].x;
       node.y = pos[item.nodeId].y;
-      Object.assign(node, NetworkSettings.getNodeStyle(node.wrapper.type, false, selected));
+      Object.assign(node, NetworkSettings.getNodeStyle(node.wrapper.type, true, selected));
       this.nodeData.nodes.update(node);
     });
   }
@@ -337,7 +337,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private mapHostProteinToNode(hostProtein: Protein): any {
     const wrapper = getWrapperFromProtein(hostProtein);
-    const node = NetworkSettings.getNodeStyle('host', false, this.analysis.inSelection(wrapper));
+    const node = NetworkSettings.getNodeStyle('host', true, this.analysis.inSelection(wrapper));
     let nodeLabel = hostProtein.name;
     if (hostProtein.name.length === 0) {
       nodeLabel = hostProtein.proteinAc;
@@ -352,7 +352,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private mapViralProteinToNode(viralProtein: ViralProtein): any {
     const wrapper = getWrapperFromViralProtein(viralProtein);
-    const node = NetworkSettings.getNodeStyle('virus', false, this.analysis.inSelection(wrapper));
+    const node = NetworkSettings.getNodeStyle('virus', true, this.analysis.inSelection(wrapper));
     node.id = wrapper.nodeId;
     node.label = viralProtein.effectName;
     node.id = wrapper.nodeId;
