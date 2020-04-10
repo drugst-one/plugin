@@ -230,6 +230,25 @@
         <div class="card-content quick-find">
           <div class="field">
             <div class="control">
+              <div class="tile notification is-danger">
+                <div class="align-vmiddle">
+                  <div class="digit"><i class="fa fa-fast-forward"></i></div>
+                  <button (click)="analysis.startQuickAnalysis(true, selectedDataset)"
+                          [disabled]="analysis.isLaunchingQuick()"
+                          class="button is-white is-rounded">
+                    <span class="icon">
+                      <i class="fa fa-capsules" *ngIf="!analysis.isLaunchingQuick()"></i>
+                      <i class="fa fa-spin fa-spinner" *ngIf="analysis.isLaunchingQuick()"></i>
+                    </span>
+                    <span>
+                      Quick Find
+                    </span>
+                  </button>
+                </div>
+              </div>
+              <div class="divisor-rapid">
+                &mdash; or &mdash;
+              </div>
               <div class="tile notification is-info">
                 <div class="align-vmiddle">
                   <div class="digit" *ngIf="analysis.getCount() == 0">1</div>
@@ -242,7 +261,7 @@
               <div class="tile notification is-info">
                 <div class="align-vmiddle">
                   <div class="digit">2</div>
-                  <button (click)="analysis.startQuickAnalysis(selectedDataset.backendId)"
+                  <button (click)="analysis.startQuickAnalysis(false, selectedDataset)"
                           [disabled]="analysis.getCount() === 0 || analysis.isLaunchingQuick()"
                           class="button is-white is-rounded">
                     <span class="icon">
