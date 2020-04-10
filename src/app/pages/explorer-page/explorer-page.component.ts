@@ -193,22 +193,27 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     const container = this.networkEl.nativeElement;
     const options = NetworkSettings.getOptions('main');
     this.network = new vis.Network(container, this.nodeData, options);
+    this.network.on('doubleClick', (properties) => {
+      const nodeIds: Array<string> = properties.nodes;
+      if (nodeIds.length > 0) {
+        const nodeId = nodeIds[0];
+        const node = this.nodeData.nodes.get(nodeId);
+        const wrapper = node.wrapper;
+        if (this.analysis.inSelection(wrapper)) {
+          this.analysis.removeItem(wrapper);
+        } else {
+          this.analysis.addItem(wrapper);
+        }
+      }
+    });
+
     this.network.on('click', (properties) => {
       const nodeIds: Array<string> = properties.nodes;
       if (nodeIds.length > 0) {
         const nodeId = nodeIds[0];
         const node = this.nodeData.nodes.get(nodeId);
         const wrapper = node.wrapper;
-        if (properties.event.srcEvent.ctrlKey) {
-          if (this.analysis.inSelection(wrapper)) {
-            this.analysis.removeItem(wrapper);
-          } else {
-            this.analysis.addItem(wrapper);
-          }
-          this.openSummary(wrapper, false);
-        } else {
-          this.openSummary(wrapper, false);
-        }
+        this.openSummary(wrapper, false);
       } else {
         this.closeSummary();
       }

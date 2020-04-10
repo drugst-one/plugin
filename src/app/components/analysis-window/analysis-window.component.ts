@@ -125,20 +125,27 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
           this.showDetailsChange.emit(null);
         });
 
+        this.network.on('doubleClick', (properties) => {
+          const nodeIds: Array<string> = properties.nodes;
+          if (nodeIds.length > 0) {
+            const nodeId = nodeIds[0];
+            const node = this.nodeData.nodes.get(nodeId);
+            const wrapper = node.wrapper;
+            if (this.analysis.inSelection(wrapper)) {
+              this.analysis.removeItem(wrapper);
+              this.analysis.getCount();
+            } else {
+              this.analysis.addItem(wrapper);
+              this.analysis.getCount();
+            }
+          }
+        });
+
         this.network.on('click', (properties) => {
           const selectedNodes = this.nodeData.nodes.get(properties.nodes);
           if (selectedNodes.length > 0) {
             const selectedNode = selectedNodes[0];
             const wrapper = selectedNode.wrapper;
-
-            if (properties.event.srcEvent.ctrlKey) {
-              if (this.analysis.inSelection(wrapper)) {
-                this.analysis.removeItem(wrapper);
-              } else {
-                this.analysis.addItem(wrapper);
-                this.analysis.getCount();
-              }
-            }
             this.showDetailsChange.emit(wrapper);
           } else {
             this.showDetailsChange.emit(null);
