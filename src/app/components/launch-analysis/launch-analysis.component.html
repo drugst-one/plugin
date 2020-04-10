@@ -35,6 +35,13 @@
         </div>
       </div>
 
+      <div *ngIf="algorithm === 'keypathwayminer' && hasBaits">
+        <div class="notification is-warning warning">
+          You have selected <i class="fa fa-virus"></i> viral proteins.
+          If you want to use KeyPathwayMiner, please remove them because it cannot process them.
+        </div>
+      </div>
+
       <div *ngIf="algorithm==='trustrank'">
         <div class="field" *ngIf="target === 'drug'">
           <label class="label">Indirect Drugs</label>
@@ -145,10 +152,15 @@
     <footer class="modal-card-foot">
       <button (click)="startTask(); close()" class="button is-success is-rounded has-tooltip"
               data-tooltip="Run the analysis."
-              [disabled]="(target === 'drug' && hasBaits) || !analysis.canLaunchTask()">Launch
+              [disabled]="(target === 'drug' && hasBaits) || !analysis.canLaunchTask() || (algorithm === 'keypathwayminer' && hasBaits)">
+        <span class="icon">
+          <i class="fa fa-rocket"></i>
+        </span>
+        <span>
+          Launch
+        </span>
       </button>
-      <button (click)="close()" class="button is-rounded has-tooltip" data-tooltip="Close the current window.">Close
-      </button>
+      <button (click)="close()" class="button is-rounded has-tooltip" data-tooltip="Close the current window.">Close</button>
     </footer>
   </div>
 </div>
