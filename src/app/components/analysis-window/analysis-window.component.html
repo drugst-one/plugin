@@ -76,7 +76,8 @@
         <footer class="card-footer toolbar">
           <div class="field">
             <p class="control footer-buttons">
-              <button class="button is-primary is-rounded" (click)="toCanvas()">
+              <button class="button is-primary is-rounded has-tooltip"
+                      data-tooltip="Take a screenshot of the current network." (click)="toCanvas()">
                 <span class="icon">
                   <i class="fas fa-camera" aria-hidden="true"></i>
                 </span>
@@ -88,7 +89,8 @@
           </div>
           <div class="field">
             <p class="control footer-buttons">
-              <button class="button is-danger is-rounded" (click)="analysis.removeTask(token); close()">
+              <button class="button is-danger is-rounded has-tooltip" data-tooltip="Delete the current analysis."
+                      (click)="analysis.removeTask(token); close()">
                 <span class="icon">
                   <i class="fas fa-trash" aria-hidden="true"></i>
                 </span>
@@ -100,16 +102,19 @@
           </div>
 
           <app-toggle *ngIf="task.info.target === 'drug-target'" class="footer-buttons" textOn="Drugs On" textOff="Off"
+                      tooltipOn="Display drugs in the network" tooltipOff="Hide drugs in the network"
                       [value]="showDrugs" (valueChange)="toggleDrugs($event)" icon="fa-capsules"></app-toggle>
 
           <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off"
+                      tooltipOn="Enable the network animation." tooltipOff="Disable the network animation and freeze nodes."
                       [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)" icon="fa-wind"></app-toggle>
         </footer>
       </div>
       <div class="content tab-content scrollable" *ngIf="task && task.info.done" [class.is-visible]="tab === 'table'">
         <div class="field has-addons" *ngIf="tableHasScores">
           <p class="control">
-            <button class="button is-rounded" [class.is-primary]="tableNormalize" (click)="toggleNormalization(true)">
+            <button class="button is-rounded has-tooltip" data-tooltip="Normalize the scores"
+                    [class.is-primary]="tableNormalize" (click)="toggleNormalization(true)">
                 <span class="icon is-small">
                   <i class="fa fa-ruler-vertical"></i>
                 </span>
@@ -117,7 +122,8 @@
             </button>
           </p>
           <p class="control">
-            <button class="button is-rounded" [class.is-primary]="!tableNormalize" (click)="toggleNormalization(false)">
+            <button class="button is-rounded has-tooltip" data-tooltip="Disable normalization of the scores."
+                    [class.is-primary]="!tableNormalize" (click)="toggleNormalization(false)">
               <span>Off</span>
             </button>
           </p>
@@ -178,33 +184,33 @@
                  [value]="tableProteins" [selection]="tableSelectedProteins" dataKey="proteinAc"
                  (selectionChange)="tableProteinSelection($event)">
           <ng-template pTemplate="header">
-          <tr>
-            <th class="checkbox-col">
-              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-            </th>
-            <th [pSortableColumn]="'proteinAc'">
-              UniProt Code
-              <p-sortIcon [field]="'proteinAc'"></p-sortIcon>
-            </th>
-            <th [pSortableColumn]="'name'">
-              Gene
-              <p-sortIcon [field]="'name'"></p-sortIcon>
-            </th>
-            <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
-              Score
-              <p-sortIcon [field]="'score'"></p-sortIcon>
-            </th>
-          </tr>
+            <tr>
+              <th class="checkbox-col">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th [pSortableColumn]="'proteinAc'">
+                UniProt Code
+                <p-sortIcon [field]="'proteinAc'"></p-sortIcon>
+              </th>
+              <th [pSortableColumn]="'name'">
+                Gene
+                <p-sortIcon [field]="'name'"></p-sortIcon>
+              </th>
+              <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
+                Score
+                <p-sortIcon [field]="'score'"></p-sortIcon>
+              </th>
+            </tr>
           </ng-template>
           <ng-template pTemplate="body" let-e>
-          <tr>
-            <td>
-              <p-tableCheckbox [value]="e"></p-tableCheckbox>
-            </td>
-            <td><a href="https://www.uniprot.org/uniprot/{{ e.proteinAc }}" target="_blank">{{ e.proteinAc }}</a></td>
-            <td>{{e.name}}</td>
-            <td *ngIf="tableHasScores">{{e.score ? (e.score | number) : ''}}</td>
-          </tr>
+            <tr>
+              <td>
+                <p-tableCheckbox [value]="e"></p-tableCheckbox>
+              </td>
+              <td><a href="https://www.uniprot.org/uniprot/{{ e.proteinAc }}" target="_blank">{{ e.proteinAc }}</a></td>
+              <td>{{e.name}}</td>
+              <td *ngIf="tableHasScores">{{e.score ? (e.score | number) : ''}}</td>
+            </tr>
           </ng-template>
         </p-table>
 
@@ -222,33 +228,33 @@
                  [value]="tableViralProteins" [selection]="tableSelectedViralProteins" dataKey="effectId"
                  (selectionChange)="tableViralProteinSelection($event)">
           <ng-template pTemplate="header">
-          <tr>
-            <th class="checkbox-col">
-              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-            </th>
-            <th [pSortableColumn]="'effectName'">
-              Name
-              <p-sortIcon [field]="'effectName'"></p-sortIcon>
-            </th>
-            <th [pSortableColumn]="'virusName'">
-              Virus Strain
-              <p-sortIcon [field]="'virusName'"></p-sortIcon>
-            </th>
-            <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
-              Score
-              <p-sortIcon [field]="'score'"></p-sortIcon>
-            </th>
-          </tr>
+            <tr>
+              <th class="checkbox-col">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th [pSortableColumn]="'effectName'">
+                Name
+                <p-sortIcon [field]="'effectName'"></p-sortIcon>
+              </th>
+              <th [pSortableColumn]="'virusName'">
+                Virus Strain
+                <p-sortIcon [field]="'virusName'"></p-sortIcon>
+              </th>
+              <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
+                Score
+                <p-sortIcon [field]="'score'"></p-sortIcon>
+              </th>
+            </tr>
           </ng-template>
           <ng-template pTemplate="body" let-e>
-          <tr>
-            <td>
-              <p-tableCheckbox [value]="e"></p-tableCheckbox>
-            </td>
-            <td>{{e.effectName}}</td>
-            <td>{{e.virusName}}</td>
-            <td *ngIf="tableHasScores">{{e.score ? (e.score | number) : ''}}</td>
-          </tr>
+            <tr>
+              <td>
+                <p-tableCheckbox [value]="e"></p-tableCheckbox>
+              </td>
+              <td>{{e.effectName}}</td>
+              <td>{{e.virusName}}</td>
+              <td *ngIf="tableHasScores">{{e.score ? (e.score | number) : ''}}</td>
+            </tr>
           </ng-template>
         </p-table>
       </div>

@@ -11,6 +11,8 @@ export class ToggleComponent implements OnInit {
 
   @Input() textOn = 'On';
   @Input() textOff = 'Off';
+  @Input() tooltipOn: string;
+  @Input() tooltipOff: string;
 
   @Input() value: boolean;
   @Output() valueChange = new EventEmitter<boolean>();

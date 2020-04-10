@@ -12,6 +12,7 @@ $danger: #EF476F;
 $link: $primary;
 $info: $primary;
 @import "~bulma/bulma.sass";
+@import '~bulma-tooltip';
 @import "~primeng/resources/primeng.min.css";
 @import "~primeicons/primeicons.css";
 

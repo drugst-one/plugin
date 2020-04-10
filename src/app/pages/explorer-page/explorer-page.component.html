@@ -16,7 +16,8 @@
         <i class="fas fa-database" aria-hidden="true"></i>
       </span> Choose Dataset
             </p>
-            <a (click)="collapseData = !collapseData" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
+            <a (click)="collapseData = !collapseData" data-action="collapse"
+               class="card-header-icon is-hidden-fullscreen"
                aria-label="more options">
              <span class="icon">
             <i *ngIf="collapseData" class="fas fa-angle-up" aria-hidden="true"></i>
@@ -127,7 +128,7 @@
               </div>
             </div>
             <footer class="card-footer">
-              <a (click)="reset($event);" class="card-footer-item has-text-danger">
+              <a (click)="reset($event);" class="card-footer-item has-text-danger" data-tooltip="Remove filter and show all proteins.">
               <span class="icon">
               <i class="fa fa-refresh"></i>
             </span>
@@ -151,7 +152,7 @@
             <div class="card-image" id="canvas-content">
               <div class="parent">
                 <div class="network center image1" #network>
-                  <button class="button is-loading center" alt="Snow">Loading</button>
+                  <button class="button is-loading center" alt="loading...">Loading</button>
                 </div>
                 <div class="image2">
                   <img src="assets/legend1.png" width="160px"/>
@@ -159,12 +160,16 @@
               </div>
             </div>
             <footer class="card-footer toolbar">
-              <button (click)="toCanvas()" class="button is-primary is-rounded">
+              <button (click)="toCanvas()" class="button is-primary is-rounded has-tooltip"
+                      data-tooltip="Take a screenshot of the current network.">
                 <span class="icon">
                   <i class="fas fa-camera" aria-hidden="true"></i>
                 </span> <span>Screenshot</span>
               </button>
-              <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off" [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)" icon="fa-wind"></app-toggle>
+              <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off"
+                          tooltipOn="Enable the network animation." tooltipOff="Disable the network animation and freeze nodes."
+                          [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"
+                          icon="fa-wind"></app-toggle>
             </footer>
           </div>
         </div>
@@ -187,7 +192,8 @@
             <i *ngIf="!selectedWrapper" class="fas fa-info" aria-hidden="true"></i>
             <i *ngIf="selectedWrapper && selectedWrapper.type === 'host'" class="fas fa-dna" aria-hidden="true"></i>
             <i *ngIf="selectedWrapper && selectedWrapper.type === 'virus'" class="fas fa-virus" aria-hidden="true"></i>
-            <i *ngIf="selectedWrapper && selectedWrapper.type === 'drug'" class="fas fa-capsules" aria-hidden="true"></i>
+            <i *ngIf="selectedWrapper && selectedWrapper.type === 'drug'" class="fas fa-capsules"
+               aria-hidden="true"></i>
           </span>
           <span *ngIf="!selectedWrapper">No item selected</span>
           <span *ngIf="selectedWrapper">
@@ -235,7 +241,7 @@
                   <div class="digit"><i class="fa fa-fast-forward"></i></div>
                   <button (click)="analysis.startQuickAnalysis(true, selectedDataset)"
                           [disabled]="analysis.isLaunchingQuick()"
-                          class="button is-white is-rounded">
+                          class="button is-white is-rounded has-tooltip" data-tooltip="Find drugs for all proteins.">
                     <span class="icon">
                       <i class="fa fa-capsules" *ngIf="!analysis.isLaunchingQuick()"></i>
                       <i class="fa fa-spin fa-spinner" *ngIf="analysis.isLaunchingQuick()"></i>
@@ -263,7 +269,8 @@
                   <div class="digit">2</div>
                   <button (click)="analysis.startQuickAnalysis(false, selectedDataset)"
                           [disabled]="analysis.getCount() === 0 || analysis.isLaunchingQuick()"
-                          class="button is-white is-rounded">
+                          class="button is-white is-rounded has-tooltip"
+                          data-tooltip="Find drugs for the selected proteins.">
                     <span class="icon">
                       <i class="fa fa-capsules" *ngIf="!analysis.isLaunchingQuick()"></i>
                       <i class="fa fa-spin fa-spinner" *ngIf="analysis.isLaunchingQuick()"></i>
@@ -300,7 +307,8 @@
           <div class="field">
             <div class="control">
               <button (click)="analysisDialogTarget = 'drug-target'; showAnalysisDialog = true;"
-                      class="button is-primary is-fullwidth is-rounded"
+                      class="button is-primary is-fullwidth is-rounded has-tooltip"
+                      data-tooltip="Find drug targets for the selected proteins."
                       [disabled]="analysis.getCount() === 0">
               <span class="icon">
                 <i class="fa fa-crosshairs"></i>
@@ -314,7 +322,8 @@
           <div class="field">
             <div class="control">
               <button (click)="analysisDialogTarget = 'drug'; showAnalysisDialog = true;"
-                      class="button is-primary is-fullwidth is-rounded"
+                      class="button is-primary is-fullwidth is-rounded has-tooltip"
+                      data-tooltip="Find drugs for the selected proteins."
                       [disabled]="analysis.getCount() === 0">
               <span class="icon">
                 <i class="fa fa-capsules"></i>
@@ -350,7 +359,7 @@
         </div>
         <footer class="card-footer">
           <a (click)="analysis.removeAllTasks(); selectedAnalysisToken = null;"
-             class="card-footer-item has-text-danger">
+             class="card-footer-item has-text-danger" data-tooltip="Delete all tasks.">
             <span class="icon">
                 <i class="fa fa-trash"></i>
               </span>
@@ -399,7 +408,8 @@
               <td *ngIf="p.type == 'virus'">{{p.data.effectName}}</td>
               <td *ngIf="p.type == 'host'">{{p.data.name}}</td>
               <td>
-                <button (click)="analysis.removeItem(p)" class="button is-small is-danger is-outlined">
+                <button (click)="analysis.removeItem(p)" class="button is-small is-danger is-outlined has-tooltip"
+                        data-tooltip="Remove from selection.">
                   <i class="fa fa-trash"></i>
                 </button>
               </td>
@@ -412,7 +422,7 @@
         </div>
         <footer class="card-footer">
           <a (click)="analysis.addAllHostProteins(currentViewNodes, currentViewProteins)"
-             class="card-footer-item has-text-success">
+             class="card-footer-item has-text-success" data-tooltip="Add all visible host proteins.">
           <span class="icon">
             <i class="fa fa-plus"></i>
           </span>
@@ -421,7 +431,7 @@
           </span>
           </a>
           <a (click)="analysis.addAllViralProteins(currentViewNodes, currentViewEffects)"
-             class="card-footer-item has-text-success">
+             class="card-footer-item has-text-success" data-tooltip="Add all visible viral proteins.">
           <span class="icon">
             <i class="fa fa-plus"></i>
           </span>
@@ -431,7 +441,8 @@
           </a>
         </footer>
         <footer class="card-footer">
-          <a (click)="analysis.resetSelection()" class="card-footer-item has-text-danger">
+          <a (click)="analysis.resetSelection()" class="card-footer-item has-text-danger"
+             data-tooltip="Remove all entries of the selection.">
           <span class="icon">
             <i class="fa fa-refresh"></i>
           </span>
