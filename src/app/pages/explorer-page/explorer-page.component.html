@@ -1,4 +1,7 @@
-<app-launch-analysis [(show)]="showAnalysisDialog" [target]="analysisDialogTarget"></app-launch-analysis>
+<app-launch-analysis [(show)]="showAnalysisDialog"
+                     [target]="analysisDialogTarget"
+                     [dataset]="selectedDataset.backendId">
+</app-launch-analysis>
 
 <div class="covex explorer">
 
@@ -26,19 +29,7 @@
             <div class="card-content">
               <app-select-dataset [datasetItems]="datasetItems" [selectedDataset]="selectedDataset"
                                   (selectedDatasetChange)="selectedDataset = $event; createNetwork($event.data)">
-
               </app-select-dataset>
-              <div>
-                <br>
-                <font size="2">
-                  <p><span>Virus: <b>SARS-CoV-2</b></span>
-                  <p><span>Host/target: <b>Human</b>, HEK-293T kidney cells</span>
-                  <p><span>Method: <b>AP-MS</b></span>
-                  <p><span>Source:<a href="https://www.biorxiv.org/content/10.1101/2020.03.22.002386v3" target="_blank"> <b> Gordon et al., 2020</b></a></span>
-                </font>
-
-              </div>
-
             </div>
           </div>
         </div>
@@ -251,7 +242,8 @@
               <div class="tile notification is-info">
                 <div class="align-vmiddle">
                   <div class="digit">2</div>
-                  <button (click)="analysis.startQuickAnalysis()" [disabled]="analysis.getCount() === 0 || analysis.isLaunchingQuick()"
+                  <button (click)="analysis.startQuickAnalysis(selectedDataset.backendId)"
+                          [disabled]="analysis.getCount() === 0 || analysis.isLaunchingQuick()"
                           class="button is-white is-rounded">
                     <span class="icon">
                       <i class="fa fa-capsules" *ngIf="!analysis.isLaunchingQuick()"></i>

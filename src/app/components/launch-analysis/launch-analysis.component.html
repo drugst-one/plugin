@@ -112,16 +112,6 @@
 
       <div *ngIf="algorithm==='multisteiner'">
         <div class="field">
-          <label class="label" for="multisteiner-strain">Virus Strain</label>
-          <div  class="control">
-            <div class="select">
-              <select id="multisteiner-strain" [(ngModel)]="multisteinerStrain">
-                <option [ngValue]="'SARS_CoV2'">SARS Coronavirus 2</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="field">
           <label class="label" for="multisteiner-numtrees">Number of Steiner trees to return</label>
           <div  class="control">
             <div class="select">

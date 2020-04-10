@@ -21,6 +21,8 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public show = false;
   @Input()
   public target: 'drug' | 'drug-target';
+  @Input()
+  public dataset;
   @Output()
   public showChange = new EventEmitter<boolean>();
 
@@ -29,20 +31,17 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public algorithms: Array<Algorithm> = [];
 
   // Trustrank Parameters
-  public trustrankStrain = 'SARS_CoV2';
   public trustrankIncludeIndirectDrugs = false;
   public trustrankIncludeNonApprovedDrugs = false;
   public trustrankDampingFactor = 0.85;
   public trustrankResultSize = 20;
 
   // Closeness Parameters
-  public closenessStrain = 'SARS_CoV2';
   public closenessIncludeIndirectDrugs = false;
   public closenessIncludeNonApprovedDrugs = false;
   public closenessResultSize = 20;
 
   // Degree Parameters
-  public degreeStrain = 'SARS_CoV2';
   public degreeIncludeNonApprovedDrugs = false;
   public degreeResultSize = 20;
 
@@ -50,7 +49,6 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public keypathwayminerK = 1;
 
   // Multisteiner Parameters
-  public multisteinerStrain = 'SARS_CoV2';
   public multisteinerNumTrees = 5;
 
   public hasBaits;
@@ -71,15 +69,9 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     if (this.target === 'drug-target') {
       this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY];
       this.algorithm = MULTISTEINER.slug;
-      this.trustrankStrain = 'SARS_CoV2';  // TODO: Change once we have multiple datasets
-      this.closenessStrain = 'SARS_CoV2';  // TODO: Change once we have multiple datasets
-      this.degreeStrain = 'SARS_CoV2';  // TODO: Change once we have multiple datasets
     } else if (this.target === 'drug') {
       this.algorithms = [TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY];
       this.algorithm = TRUSTRANK.slug;
-      this.trustrankStrain = 'drugs';
-      this.closenessStrain = 'drugs';
-      this.degreeStrain = 'drugs';
     }
   }
 
@@ -94,25 +86,25 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     };
 
     if (this.algorithm === 'trustrank') {
-      parameters.strain_or_drugs = this.trustrankStrain;
+      parameters.strain_or_drugs = this.target === 'drug' ? 'drugs' : this.dataset;
       parameters.damping_factor = this.trustrankDampingFactor;
       parameters.include_indirect_drugs = this.trustrankIncludeIndirectDrugs;
       parameters.include_non_approved_drugs = this.trustrankIncludeNonApprovedDrugs;
       parameters.result_size = this.trustrankResultSize;
     } else if (this.algorithm === 'closeness') {
-      parameters.strain_or_drugs = this.closenessStrain;
+      parameters.strain_or_drugs = this.target === 'drug' ? 'drugs' : this.dataset;
       parameters.include_indirect_drugs = this.closenessIncludeIndirectDrugs;
       parameters.include_non_approved_drugs = this.closenessIncludeNonApprovedDrugs;
       parameters.result_size = this.closenessResultSize;
     } else if (this.algorithm === 'degree') {
-      parameters.strain_or_drugs = this.degreeStrain;
+      parameters.strain_or_drugs = this.target === 'drug' ? 'drugs' : this.dataset;
       parameters.include_indirect_drugs = this.closenessIncludeIndirectDrugs;
       parameters.include_non_approved_drugs = this.closenessIncludeNonApprovedDrugs;
       parameters.result_size = this.closenessResultSize;
     } else if (this.algorithm === 'keypathwayminer') {
       parameters.k = this.keypathwayminerK;
     } else if (this.algorithm === 'multisteiner') {
-      parameters.strain = this.multisteinerStrain;
+      parameters.strain = this.dataset;
       parameters.num_trees = this.multisteinerNumTrees;
     }
 

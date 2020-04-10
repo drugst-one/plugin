@@ -75,7 +75,7 @@ export function getNodeIdsFromPVI(pvi: ProteinViralInteraction) {
   };
 }
 
-export function getNodeIdsFromPPI(edge: NetworkEdge, wrappers: {[key: string]: Wrapper}) {
+export function getNodeIdsFromPPI(edge: NetworkEdge, wrappers: { [key: string]: Wrapper }) {
   return {
     from: wrappers[edge.from].nodeId,
     to: wrappers[edge.to].nodeId,
@@ -153,4 +153,12 @@ export interface Drug {
   drugId: string;
   name: string;
   status: 'approved' | 'investigational';
+}
+
+export interface Dataset {
+  label: string;
+  strains: string;
+  datasetNames: string;
+  backendId: string;
+  data: Array<[string, string]>;
 }

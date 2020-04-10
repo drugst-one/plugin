@@ -33,8 +33,8 @@
       <b>DrugBank ID:</b>
       <a href="https://www.drugbank.ca/drugs/{{ wrapper.data.drugId }}" target="_blank"> {{ wrapper.data.drugId }}</a>
     </p>
-    <p *ngIf="wrapper.data.status === 'investigational' ">
-      <b>Status:</b> Investigational
+    <p *ngIf="wrapper.data.status === 'unapproved' ">
+      <b>Status:</b> Unapproved
       <span class="icon is-small"><i class="fas fa-search investigational"></i></span>
     <p *ngIf="wrapper.data.status === 'approved' ">
       <b>Status:</b> Approved
