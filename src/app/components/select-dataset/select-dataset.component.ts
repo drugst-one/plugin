@@ -9,7 +9,7 @@ import {Dataset} from '../../interfaces';
 
 export class SelectDatasetComponent {
 
-  @Input() selectedDataset;
+  @Input() selectedDataset: Dataset;
   @Output() selectedDatasetChange: EventEmitter<any> = new EventEmitter();
 
   @Input() datasetItems: Dataset[];

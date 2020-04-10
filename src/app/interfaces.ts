@@ -158,6 +158,10 @@ export interface Drug {
 export interface Dataset {
   label: string;
   strains: string;
+  hostTarget: string;
+  method: string;
+  source: Array<string> | null;
+  year: number;
   datasetNames: string;
   backendId: string;
   data: Array<[string, string]>;

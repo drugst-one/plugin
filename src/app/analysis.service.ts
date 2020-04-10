@@ -172,7 +172,7 @@ export class AnalysisService {
 
     toast({
       message: 'Quick analysis started. This may take a while.' +
-        'Once the computation finished you can view the results in the task list to the right.',
+        ' Once the computation finished you can view the results in the task list to the right.',
       duration: 10000,
       dismissible: true,
       pauseOnHover: true,
