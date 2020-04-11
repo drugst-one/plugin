@@ -86,7 +86,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       hostTarget: 'Human brain and fetal brain cDNA libraries in yeast strains',
       method: 'High-Throughput Yeast Two Hybrid Screen (HTY2H) and validations with Lumier assay, ' +
         'as well as experimentally validated interactions from 20 publications.',
-      source: null,
+      source: ['https://www.ncbi.nlm.nih.gov/pubmed/22046132', 'NCBI'],
       year: 2011,
       datasetNames: 'Pfefferle et al., 2011',
       backendId: 'SARS_CoV1',
@@ -98,8 +98,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       hostTarget: 'Different human cell lines',
       method: 'Literature curation, interactions from 14 publications, which have experimental validation by at ' +
         'least one of the following assays: co-immunoprecipitation, two hybrid, pull-down, mass spectrometry.',
-      source: null,
-      year: null,
+      source: ['http://virhostnet.prabi.fr/', 'VirHostNet 2.0'],
+      year: 2014,
       datasetNames: 'VirHostNet 2.0',
       backendId: 'SARS_CoV1',
       data: [['VirHostNet', 'SARS-CoV1']]
