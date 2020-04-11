@@ -20,8 +20,8 @@
                class="card-header-icon is-hidden-fullscreen"
                aria-label="more options">
              <span class="icon">
-            <i *ngIf="collapseData" class="fas fa-angle-up" aria-hidden="true"></i>
-            <i *ngIf="!collapseData" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collapseData" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="!collapseData" class="fas fa-angle-left" aria-hidden="true"></i>
              </span>
             </a>
           </header>
@@ -44,8 +44,8 @@
             <a (click)="collapseOverview= !collapseOverview" data-action="collapse"
                class="card-header-icon is-hidden-fullscreen" aria-label="more options">
              <span class="icon">
-            <i *ngIf="collapseOverview" class="fas fa-angle-up" aria-hidden="true"></i>
-            <i *ngIf="!collapseOverview" class="fas fa-angle-down" aria-hidden="true"></i>             </span>
+            <i *ngIf="collapseOverview" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="!collapseOverview" class="fas fa-angle-left" aria-hidden="true"></i>             </span>
             </a>
           </header>
           <div *ngIf="collapseOverview">
@@ -84,8 +84,8 @@
             <a (click)="collapseQuery = !collapseQuery" data-action="collapse"
                class="card-header-icon is-hidden-fullscreen" aria-label="more options">
            <span class="icon">
-            <i *ngIf="collapseQuery" class="fas fa-angle-up" aria-hidden="true"></i>
-            <i *ngIf="!collapseQuery" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collapseQuery" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="!collapseQuery" class="fas fa-angle-left" aria-hidden="true"></i>
            </span>
             </a>
           </header>
@@ -111,8 +111,8 @@
             <a (click)="collapseBaitFilter = !collapseBaitFilter" data-action="collapse"
                class="card-header-icon is-hidden-fullscreen" aria-label="more options">
               <span class="icon">
-                <i *ngIf="collapseBaitFilter" class="fas fa-angle-up" aria-hidden="true"></i>
-                <i *ngIf="!collapseBaitFilter" class="fas fa-angle-down" aria-hidden="true"></i>
+                <i *ngIf="collapseBaitFilter" class="fas fa-angle-down" aria-hidden="true"></i>
+                <i *ngIf="!collapseBaitFilter" class="fas fa-angle-left" aria-hidden="true"></i>
               </span>
             </a>
           </header>
@@ -202,8 +202,8 @@
         <a (click)="collapseDetails = !collapseDetails" data-action="collapse"
            class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
-            <i *ngIf="collapseDetails" class="fas fa-angle-up" aria-hidden="true"></i>
-            <i *ngIf="!collapseDetails" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collapseDetails" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="!collapseDetails" class="fas fa-angle-left" aria-hidden="true"></i>
           </span>
         </a>
       </header>
@@ -224,8 +224,8 @@
         <a (click)="collapseAnalysisQuick = !collapseAnalysisQuick" data-action="collapse"
            class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
-            <i *ngIf="collapseAnalysisQuick" class="fas fa-angle-up" aria-hidden="true"></i>
-            <i *ngIf="!collapseAnalysisQuick" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collapseAnalysisQuick" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="!collapseAnalysisQuick" class="fas fa-angle-left" aria-hidden="true"></i>
           </span>
         </a>
       </header>
@@ -294,8 +294,8 @@
         <a (click)="collapseAnalysis = !collapseAnalysis" data-action="collapse"
            class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
-            <i *ngIf="collapseAnalysis" class="fas fa-angle-up" aria-hidden="true"></i>
-            <i *ngIf="!collapseAnalysis" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collapseAnalysis" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="!collapseAnalysis" class="fas fa-angle-left" aria-hidden="true"></i>
           </span>
         </a>
       </header>
@@ -340,22 +340,23 @@
         <p class="card-header-title">
           <span class="icon">
             <i class="fas fa-filter" aria-hidden="true"></i>
-          </span> Tasks ({{analysis.tasks.length}})
+          </span>
+          Tasks ({{analysis.tasks.length}})
         </p>
         <a (click)="collapseTask = !collapseTask" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
            aria-label="more options">
           <span class="icon">
-            <i *ngIf="collapseTask" class="fas fa-angle-up" aria-hidden="true"></i>
-            <i *ngIf="!collapseTask" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collapseTask" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="!collapseTask" class="fas fa-angle-left" aria-hidden="true"></i>
           </span>
         </a>
       </header>
       <div *ngIf="collapseTask">
-        <div class="card-content overflow">
+        <div class="card-content overflow" *ngIf="analysis.tasks && analysis.tasks.length > 0">
           <app-task-list [(token)]="selectedAnalysisToken"></app-task-list>
         </div>
         <footer class="card-footer">
-          <a (click)="analysis.removeAllTasks(); selectedAnalysisToken = null;"
+          <a *ngIf="analysis.tasks && analysis.tasks.length > 0" (click)="analysis.removeAllTasks(); selectedAnalysisToken = null;"
              class="card-footer-item has-text-danger" data-tooltip="Delete all tasks.">
             <span class="icon">
                 <i class="fa fa-trash"></i>
@@ -378,8 +379,8 @@
         <a (click)="collapseSelection = !collapseSelection" data-action="collapse"
            class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
-            <i *ngIf="collapseSelection" class="fas fa-angle-up" aria-hidden="true"></i>
-            <i *ngIf="!collapseSelection" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="collapseSelection" class="fas fa-angle-down" aria-hidden="true"></i>
+            <i *ngIf="!collapseSelection" class="fas fa-angle-left" aria-hidden="true"></i>
           </span>
         </a>
       </header>
