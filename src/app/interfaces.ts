@@ -1,3 +1,5 @@
+import {AlgorithmType, QuickAlgorithmType} from './analysis.service';
+
 export type NodeType = 'host' | 'virus' | 'drug';
 
 export interface Protein {
@@ -34,7 +36,7 @@ export interface Task {
   token: string;
   info: {
     target: 'drug' | 'drug-target',
-    algorithm: 'trustrank' | 'multisteiner' | 'keypathwayminer' | 'quick';
+    algorithm: AlgorithmType | QuickAlgorithmType;
     parameters?: { [key: string]: any };
 
     workerId?: string;

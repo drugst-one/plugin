@@ -50,6 +50,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   // Multisteiner Parameters
   public multisteinerNumTrees = 5;
+  public multisteinerTolerance = 10;
 
   public hasBaits;
 
@@ -106,6 +107,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     } else if (this.algorithm === 'multisteiner') {
       parameters.strain_or_drugs = this.dataset;
       parameters.num_trees = this.multisteinerNumTrees;
+      parameters.tolerance = this.multisteinerTolerance;
     }
 
     await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
