@@ -6,7 +6,7 @@ import {toast} from 'bulma-toast';
 import {Injectable} from '@angular/core';
 
 export type AlgorithmType = 'trustrank' | 'keypathwayminer' | 'multisteiner' | 'closeness' | 'degree';
-export type QuickAlgorithmType = 'quick';
+export type QuickAlgorithmType = 'quick' | 'super';
 
 export const algorithmNames = {
   trustrank: 'Trust-Rank',
