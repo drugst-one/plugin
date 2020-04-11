@@ -80,7 +80,7 @@
       </div>
 
       <div *ngIf="algorithm==='closeness'">
-        <p class="help info"> <span class="icon"><i class="fa fa-info"></i></span>
+        <p class="help info"><span class="icon"><i class="fa fa-info"></i></span>
           <a href="https://en.wikipedia.org/wiki/Closeness_centrality" target="_blank">Closeness Centrality</a>
           is a node centrality measure that ranks the nodes in a network based on the lengths of their shortest paths
           to all other nodes in the network (Kaczprowski, Doncheva, and Albrecht 2013).
@@ -107,9 +107,10 @@
       </div>
 
       <div *ngIf="algorithm==='degree'">
-        <p class="help info"> <span class="icon"><i class="fa fa-info"></i></span>
+        <p class="help info"><span class="icon"><i class="fa fa-info"></i></span>
           <a href="https://en.wikipedia.org/wiki/Centrality#Degree_centrality" target="_blank">Degree Centrality</a>
-          assigns an importance score based simply on the number of links held by each node.
+          assigns an importance score based simply on the number of links held by each node. In CoVex, we use a modified
+          version which does not consider all links but only the neighbouring seeds.
         </p>
         <div class="field" *ngIf="target === 'drug'">
           <label class="label">Non-approved Drugs</label>
@@ -127,7 +128,7 @@
       </div>
 
       <div *ngIf="algorithm==='keypathwayminer'">
-        <p class="help info"> <span class="icon"><i class="fa fa-info"></i></span>
+        <p class="help info"><span class="icon"><i class="fa fa-info"></i></span>
           <a href="https://keypathwayminer.compbio.sdu.dk/keypathwayminer/">KeyPathwayMiner</a>
           is a network enrichment tool that identifies condition-specific sub-networks (key pathways)
           (Alcaraz et al. 2016).
@@ -149,7 +150,7 @@
       </div>
 
       <div *ngIf="algorithm==='multisteiner'">
-        <p class="help info"> <span class="icon"><i class="fa fa-info"></i></span>
+        <p class="help info"><span class="icon"><i class="fa fa-info"></i></span>
           The <a href="https://en.wikipedia.org/wiki/Steiner_tree_problem">Steiner tree</a>
           problem is a classical combinatorial optimization problem. It asks to find a sub-graph
           of minimum size connecting a given set of seed nodes.
@@ -185,7 +186,8 @@
           Launch
         </span>
       </button>
-      <button (click)="close()" class="button is-rounded has-tooltip" data-tooltip="Close the current window.">Close</button>
+      <button (click)="close()" class="button is-rounded has-tooltip" data-tooltip="Close the current window.">Close
+      </button>
     </footer>
   </div>
 </div>
