@@ -13,14 +13,6 @@
       <button (click)="close()" class="delete" aria-label="close"></button>
     </header>
     <section class="modal-card-body">
-      <div class="tabs is-toggle is-small is-fullwidth is-rounded has-tooltip">
-        <ul>
-          <li [class.is-active]="algorithm === algo.slug" *ngFor="let algo of algorithms">
-            <a (click)="algorithm = algo.slug" class="is-boxed is-medium">{{algo.name}}</a>
-          </li>
-        </ul>
-      </div>
-
       <div *ngIf="target === 'drug' && hasBaits">
         <div class="notification is-warning warning">
           You have selected <i class="fa fa-virus"></i> viral proteins.
@@ -42,7 +34,21 @@
         </div>
       </div>
 
+      <div class="tabs is-toggle is-small is-fullwidth is-rounded has-tooltip">
+        <ul>
+          <li [class.is-active]="algorithm === algo.slug" *ngFor="let algo of algorithms">
+            <a (click)="algorithm = algo.slug" class="is-boxed is-medium">{{algo.name}}</a>
+          </li>
+        </ul>
+      </div>
+
       <div *ngIf="algorithm==='trustrank'">
+        <p class="help info">
+          <span class="icon"><i class="fa fa-info"></i></span>
+          <a href="https://en.wikipedia.org/wiki/TrustRank" target="_blank">TrustRank</a>
+          is a node centrality measure that ranks nodes in a network based on how well they are connected to a
+          (trusted) set of seed nodes (Gyöngyi, Garcia-Molina, and Pedersen 2004).
+        </p>
         <div class="field" *ngIf="target === 'drug'">
           <label class="label">Indirect Drugs</label>
           <app-toggle textOn="Include" textOff="Ignore" tooltipOn="Include indirect drugs."
@@ -74,6 +80,11 @@
       </div>
 
       <div *ngIf="algorithm==='closeness'">
+        <p class="help info"> <span class="icon"><i class="fa fa-info"></i></span>
+          <a href="https://en.wikipedia.org/wiki/Closeness_centrality" target="_blank">Closeness Centrality</a>
+          is a node centrality measure that ranks the nodes in a network based on the lengths of their shortest paths
+          to all other nodes in the network (Kaczprowski, Doncheva, and Albrecht 2013).
+        </p>
         <div class="field" *ngIf="target === 'drug'">
           <label class="label">Indirect Drugs</label>
           <app-toggle textOn="Include" textOff="Ignore" tooltipOn="Include indirect drugs."
@@ -96,6 +107,10 @@
       </div>
 
       <div *ngIf="algorithm==='degree'">
+        <p class="help info"> <span class="icon"><i class="fa fa-info"></i></span>
+          <a href="https://en.wikipedia.org/wiki/Centrality#Degree_centrality" target="_blank">Degree Centrality</a>
+          assigns an importance score based simply on the number of links held by each node.
+        </p>
         <div class="field" *ngIf="target === 'drug'">
           <label class="label">Non-approved Drugs</label>
           <app-toggle textOn="Include" textOff="Ignore" tooltipOn="Include non-approved drugs."
@@ -112,6 +127,11 @@
       </div>
 
       <div *ngIf="algorithm==='keypathwayminer'">
+        <p class="help info"> <span class="icon"><i class="fa fa-info"></i></span>
+          <a href="https://keypathwayminer.compbio.sdu.dk/keypathwayminer/">KeyPathwayMiner</a>
+          is a network enrichment tool that identifies condition-specific sub-networks (key pathways)
+          (Alcaraz et al. 2016).
+        </p>
         <div class="field">
           <label class="label" for="keypathwayminer-k">K</label>
           <div class="control">
@@ -129,6 +149,11 @@
       </div>
 
       <div *ngIf="algorithm==='multisteiner'">
+        <p class="help info"> <span class="icon"><i class="fa fa-info"></i></span>
+          The <a href="https://en.wikipedia.org/wiki/Steiner_tree_problem">Steiner tree</a>
+          problem is a classical combinatorial optimization problem. It asks to find a sub-graph
+          of minimum size connecting a given set of seed nodes.
+        </p>
         <div class="field">
           <label class="label" for="multisteiner-numtrees">Number of Steiner trees to return</label>
           <div class="control">
