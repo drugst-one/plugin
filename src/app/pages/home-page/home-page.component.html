@@ -1,31 +1,49 @@
 <!--htmlhint inline-style-disabled:false -->
 <div class="content landing scroll">
   <div class="container has-text-centered">
-    <div class="column is-6 width100">
+    <div class="column">
+      <div class="logo-box is-hidden-mobile">
+        <img src="assets/covex_logo.png" style="height: 200px; width: 600px">
+      </div>
 
-      <img src="assets/covex_logo.png" style="height: 200px; width: 600px">
+      <div class="has-text-centered video-box">
+        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/H9pbYQFlt6U" frameborder="0"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+        </iframe>
+      </div>
 
-      <h1 class="subtitle is-2">
-        <i>Explore the </i> <b> virus-host interactome</b>
-      </h1>
-      <h1 class="subtitle is-2">
-        <i>Find</i> <b> putative drug targets</b>
-      </h1>
-      <h1 class="subtitle is-2">
-        <i>Repurpose</i> <b> drugs </b>
-      </h1>
-      <h1 class="subtitle is-3">
-        <i>All in one </i><b>web-tool</b>
-      </h1>
+      <div class="button-box is-hidden-mobile">
+        <button class="button has-text-info is-large is-rounded">
+          <a routerLink="/explorer" routerLinkActive="is-active">
+            <span class="icon"><i class="fa fa-project-diagram has-text-info"></i></span>
+            <span>Start App</span>
+          </a>
+        </button>
+      </div>
 
-      <button class="button has-text-info is-large is-rounded ">
-        <a routerLink="/explorer" routerLinkActive="is-active">
-          <span class="icon"><i class="fa fa-project-diagram has-text-info"></i></span>
-          <span>Start now!</span>
-        </a>
-      </button>
+      <div class="button-box is-hidden-tablet">
+        <button class="button has-text-info is-large is-rounded">
+          <a routerLink="/explorer" routerLinkActive="is-active">
+            <span class="icon"><i class="fa fa-project-diagram has-text-info"></i></span>
+            <span>Open Desktop App</span>
+          </a>
+        </button>
+      </div>
 
+      <div class="text-box is-hidden-mobile">
+        <h1 class="subtitle is-3">
+          Explore the virus-host interactome
+        </h1>
+        <h1 class="subtitle is-3">
+          Find putative drug targets
+        </h1>
+        <h1 class="subtitle is-3">
+          Repurpose drugs
+        </h1>
+        <h1 class="subtitle is-3">
+          All in one web-tool
+        </h1>
+      </div>
     </div>
   </div>
 </div>
-
