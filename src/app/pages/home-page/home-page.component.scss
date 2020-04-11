@@ -6,32 +6,33 @@ img {
   border-radius: 25px;
 }
 
-
-div.scroll{
+div.scroll {
   overflow: auto;
   height: calc(100vh - 60px);
 }
 
-h1.subtitle.is-2 {
-  color: #d0d0d0;
-  font-family: "Open Sans", "Helvetica Neue", sans-serif;
+.logo-box {
+  maring-top: 20px;
+  maring-bottom: 20px;
 }
 
-h1.subtitle.is-3 {
-  color: #d0d0d0;
-  font-family: "Open Sans", "Helvetica Neue", sans-serif;
+.text-box {
+  .subtitle {
+    color: #c8c8c8;
+  }
 }
 
-div.column.is-6.width100 {
+.video-box {
+  margin-top: 40px;
+  margin-bottom: 40px;
   width: 100%;
+
+  iframe {
+    max-width: 100%;
+  }
 }
 
-div.container.has-text-centered {
-  margin-top: 10%;
-}
-
-.centered {
-  position: fixed; /* or absolute */
-  top: 50%;
-  left: 50%;
+.button-box {
+  maring-top: 40px;
+  margin-bottom: 40px;
 }
