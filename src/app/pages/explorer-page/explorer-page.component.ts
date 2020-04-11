@@ -194,15 +194,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public changeInfo(wrapper: Wrapper | null) {
-    // this.selectedItem = showList[0];
-    // this.selectedName = showList[1];
-    // this.selectedType = showList[2];
-    // this.selectedId = showList[3];
-    // this.selectedVirusName = showList[4];
-    // this.selectedStatus = showList[5];
-  }
-
   public async openSummary(item: Wrapper, zoom: boolean) {
     this.selectedWrapper = item;
     if (zoom) {
@@ -218,6 +209,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public async createNetwork(dataset: Array<[string, string]>) {
     this.analysis.resetSelection();
+    this.selectedWrapper = null;
     await this.getNetwork(dataset);
     this.proteinData = new ProteinNetwork(this.proteins, this.effects, this.edges);
     if (!this.dumpPositions) {
