@@ -154,10 +154,10 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
             }
             const wrapper = node.wrapper;
             if (this.analysis.inSelection(wrapper)) {
-              this.analysis.removeItem(wrapper);
+              this.analysis.removeItems([wrapper]);
               this.analysis.getCount();
             } else {
-              this.analysis.addItem(wrapper);
+              this.analysis.addItems([wrapper]);
               this.analysis.getCount();
             }
           }
@@ -174,40 +174,78 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
           }
         });
 
-        this.analysis.subscribe((item, selected) => {
-          if (item.type === 'host') {
-            // TODO: Refactor!
-            const found = this.tableSelectedProteins.findIndex((i) => getProteinNodeId(i) === item.nodeId);
-            const tableItem = this.tableProteins.find((i) => getProteinNodeId(i) === item.nodeId);
-            if (selected && found === -1 && tableItem) {
-              this.tableSelectedProteins.push(tableItem);
+        this.analysis.subscribeList((items, selected) => {
+          if (selected !== null) {
+            const updatedNodes = [];
+            for (const item of items) {
+              const node = this.nodeData.nodes.get(item.nodeId);
+              if (!node) {
+                continue;
+              }
+              const pos = this.network.getPositions([item.nodeId]);
+              node.x = pos[item.nodeId].x;
+              node.y = pos[item.nodeId].y;
+              Object.assign(node, NetworkSettings.getNodeStyle(node.wrapper.type, node.isSeed, selected));
+              updatedNodes.push(node);
             }
-            if (!selected && found !== -1 && tableItem) {
-              this.tableSelectedProteins.splice(found, 1);
-            }
-            this.tableSelectedProteins = [...this.tableSelectedProteins];
-          } else if (item.type === 'virus') {
-            // TODO: Refactor!
-            const found = this.tableSelectedViralProteins.findIndex((i) => getViralProteinNodeId(i) === item.nodeId);
-            const tableItem = this.tableViralProteins.find((i) => getViralProteinNodeId(i) === item.nodeId);
-            if (selected && found === -1 && tableItem) {
-              this.tableSelectedViralProteins.push(tableItem);
-            }
-            if (!selected && found !== -1 && tableItem) {
-              this.tableSelectedViralProteins.splice(found, 1);
-            }
-            this.tableSelectedViralProteins = [...this.tableSelectedViralProteins];
-          }
+            this.nodeData.nodes.update(updatedNodes);
 
-          const node = this.nodeData.nodes.get(item.nodeId);
-          if (!node) {
-            return;
+            const proteinSelection = this.tableSelectedProteins;
+            const viralProteinSelection = this.tableSelectedViralProteins;
+            for (const item of items) {
+              if (item.type === 'host') {
+                // TODO: Refactor!
+                const found = proteinSelection.findIndex((i) => getProteinNodeId(i) === item.nodeId);
+                const tableItem = this.tableProteins.find((i) => getProteinNodeId(i) === item.nodeId);
+                if (selected && found === -1 && tableItem) {
+                  proteinSelection.push(tableItem);
+                }
+                if (!selected && found !== -1 && tableItem) {
+                  proteinSelection.splice(found, 1);
+                }
+              } else if (item.type === 'virus') {
+                // TODO: Refactor!
+                const found = viralProteinSelection.findIndex((i) => getViralProteinNodeId(i) === item.nodeId);
+                const tableItem = this.tableViralProteins.find((i) => getViralProteinNodeId(i) === item.nodeId);
+                if (selected && found === -1 && tableItem) {
+                  viralProteinSelection.push(tableItem);
+                }
+                if (!selected && found !== -1 && tableItem) {
+                  viralProteinSelection.splice(found, 1);
+                }
+              }
+            }
+            this.tableSelectedProteins = [...proteinSelection];
+            this.tableSelectedViralProteins = [...viralProteinSelection];
+          } else {
+            const updatedNodes = [];
+            this.nodeData.nodes.forEach((node) => {
+              const nodeSelected = this.analysis.idInSelection(node.id);
+              if (selected !== nodeSelected) {
+                Object.assign(node, NetworkSettings.getNodeStyle(node.wrapper.type, true, selected));
+                updatedNodes.push(node);
+              }
+            });
+            this.nodeData.nodes.update(updatedNodes);
+
+            const proteinSelection = [];
+            const viralProteinSelection = [];
+            for (const item of items) {
+              if (item.type === 'host') {
+                const tableItem = this.tableProteins.find((i) => getProteinNodeId(i) === item.nodeId);
+                if (tableItem) {
+                  proteinSelection.push(tableItem);
+                }
+              } else if (item.type === 'virus') {
+                const tableItem = this.tableViralProteins.find((i) => getViralProteinNodeId(i) === item.nodeId);
+                if (tableItem) {
+                  viralProteinSelection.push(tableItem);
+                }
+              }
+            }
+            this.tableSelectedProteins = [...proteinSelection];
+            this.tableSelectedViralProteins = [...viralProteinSelection];
           }
-          const pos = this.network.getPositions([item.nodeId]);
-          node.x = pos[item.nodeId].x;
-          node.y = pos[item.nodeId].y;
-          Object.assign(node, NetworkSettings.getNodeStyle(node.wrapper.type, node.isSeed, selected));
-          this.nodeData.nodes.update(node);
         });
       }
     }
@@ -390,20 +428,20 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     if (this.showDrugs) {
       const result = await this.http.get<any>(
         `${environment.backend}drug_interactions/?token=${this.token}`).toPromise().catch(
-          (err: HttpErrorResponse) => {
-        // simple logging, but you can do a lot more, see below
-        toast({
-          message: 'An error occured while fetching the drugs.',
-          duration: 5000,
-          dismissible: true,
-          pauseOnHover: true,
-          type: 'is-danger',
-          position: 'top-center',
-          animate: {in: 'fadeIn', out: 'fadeOut'}
+        (err: HttpErrorResponse) => {
+          // simple logging, but you can do a lot more, see below
+          toast({
+            message: 'An error occured while fetching the drugs.',
+            duration: 5000,
+            dismissible: true,
+            pauseOnHover: true,
+            type: 'is-danger',
+            position: 'top-center',
+            animate: {in: 'fadeIn', out: 'fadeOut'}
+          });
+          this.showDrugs = false;
+          return;
         });
-        this.showDrugs = false;
-        return;
-      });
 
       const drugs = result.drugs;
       const edges = result.edges;
@@ -458,35 +496,43 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   public tableProteinSelection(e) {
     const oldSelection = [...this.tableSelectedProteins];
     this.tableSelectedProteins = e;
+    const addItems = [];
+    const removeItems = [];
     for (const i of this.tableSelectedProteins) {
       const wrapper = getWrapperFromProtein(i);
       if (oldSelection.indexOf(i) === -1) {
-        this.analysis.addItem(wrapper);
+        addItems.push(wrapper);
       }
     }
     for (const i of oldSelection) {
       const wrapper = getWrapperFromProtein(i);
       if (this.tableSelectedProteins.indexOf(i) === -1) {
-        this.analysis.removeItem(wrapper);
+        removeItems.push(wrapper);
       }
     }
+    this.analysis.addItems(addItems);
+    this.analysis.removeItems(removeItems);
   }
 
   public tableViralProteinSelection(e) {
     const oldSelection = [...this.tableSelectedViralProteins];
     this.tableSelectedViralProteins = e;
+    const addItems = [];
+    const removeItems = [];
     for (const i of this.tableSelectedViralProteins) {
       const wrapper = getWrapperFromViralProtein(i);
       if (oldSelection.indexOf(i) === -1) {
-        this.analysis.addItem(wrapper);
+        addItems.push(wrapper);
       }
     }
     for (const i of oldSelection) {
       const wrapper = getWrapperFromViralProtein(i);
       if (this.tableSelectedViralProteins.indexOf(i) === -1) {
-        this.analysis.removeItem(wrapper);
+        removeItems.push(wrapper);
       }
     }
+    this.analysis.addItems(addItems);
+    this.analysis.removeItems(removeItems);
   }
 
 }

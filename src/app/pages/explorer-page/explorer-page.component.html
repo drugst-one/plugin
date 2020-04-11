@@ -26,7 +26,6 @@
             </a>
           </header>
           <div *ngIf="collapseData">
-
             <div class="card-content">
               <app-select-dataset [datasetItems]="datasetItems" [selectedDataset]="selectedDataset"
                                   (selectedDatasetChange)="selectedDataset = $event; createNetwork($event.data)">
@@ -371,7 +370,6 @@
       </div>
     </div>
 
-
     <div class="card bar-large">
       <header class="card-header">
         <p class="card-header-title">
@@ -408,7 +406,7 @@
               <td *ngIf="p.type == 'virus'">{{p.data.effectName}}</td>
               <td *ngIf="p.type == 'host'">{{p.data.name}}</td>
               <td>
-                <button (click)="analysis.removeItem(p)" class="button is-small is-danger is-outlined has-tooltip"
+                <button (click)="analysis.removeItems([p])" class="button is-small is-danger is-outlined has-tooltip"
                         data-tooltip="Remove from selection.">
                   <i class="fa fa-trash"></i>
                 </button>

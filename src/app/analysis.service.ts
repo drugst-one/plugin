@@ -37,7 +37,7 @@ export const MAX_TASKS = 3;
 export class AnalysisService {
 
   private selectedItems = new Map<string, Wrapper>();
-  private selectSubject = new Subject<{ item: Wrapper, selected: boolean }>();
+  private selectListSubject = new Subject<{ items: Wrapper[], selected: boolean | null }>();
 
   public tokens: string[] = [];
   public finishedTokens: string[] = [];
@@ -82,40 +82,62 @@ export class AnalysisService {
     });
   }
 
-  public addItem(wrapper: Wrapper) {
-    if (!this.inSelection(wrapper)) {
-      this.selectedItems.set(wrapper.nodeId, wrapper);
-      this.selectSubject.next({item: wrapper, selected: true});
+  public addItems(wrappers: Wrapper[]) {
+    const addedWrappers: Wrapper[] = [];
+    for (const wrapper of wrappers) {
+      if (!this.inSelection(wrapper)) {
+        addedWrappers.push(wrapper);
+        this.selectedItems.set(wrapper.nodeId, wrapper);
+      }
     }
+    this.selectListSubject.next({items: addedWrappers, selected: true});
+  }
+
+  public removeItems(wrappers: Wrapper[]) {
+    const removedWrappers: Wrapper[] = [];
+    for (const wrapper of wrappers) {
+      if (this.selectedItems.delete(wrapper.nodeId)) {
+        removedWrappers.push(wrapper);
+      }
+    }
+    this.selectListSubject.next({items: removedWrappers, selected: false});
   }
 
   public addAllHostProteins(nodes, proteins) {
+    const items: Wrapper[] = [];
     const visibleIds = new Set<string>(nodes.getIds());
     for (const protein of proteins) {
       const wrapper = getWrapperFromProtein(protein);
       const found = visibleIds.has(wrapper.nodeId);
       if (found && !this.inSelection(wrapper)) {
-        this.addItem(wrapper);
+        items.push(wrapper);
+        this.selectedItems.set(wrapper.nodeId, wrapper);
       }
     }
+    this.selectListSubject.next({items, selected: true});
   }
 
   public addAllViralProteins(nodes, viralProteins) {
+    const items: Wrapper[] = [];
     const visibleIds = new Set<string>(nodes.getIds());
     for (const viralProtein of viralProteins) {
       const wrapper = getWrapperFromViralProtein(viralProtein);
       const found = visibleIds.has(wrapper.nodeId);
       if (found && !this.inSelection(wrapper)) {
-        this.addItem(wrapper);
+        items.push(wrapper);
+        this.selectedItems.set(wrapper.nodeId, wrapper);
       }
     }
+    this.selectListSubject.next({items, selected: true});
   }
 
   resetSelection() {
-    const oldSelection = this.selectedItems.values();
-    for (const item of oldSelection) {
-      this.removeItem(item);
-    }
+    this.selectListSubject.next({items: [], selected: null});
+    this.selectedItems.clear();
+  }
+
+  idInSelection(nodeId: string): boolean {
+    return this.selectedItems.has(nodeId);
   }
 
   inSelection(wrapper: Wrapper): boolean {
@@ -130,13 +152,6 @@ export class AnalysisService {
     return this.inSelection(getWrapperFromViralProtein(viralProtein));
   }
 
-  removeItem(wrapper: Wrapper) {
-    const item = this.selectedItems.get(wrapper.nodeId);
-    if (this.selectedItems.delete(wrapper.nodeId)) {
-      this.selectSubject.next({item, selected: false});
-    }
-  }
-
   getSelection(): Wrapper[] {
     return Array.from(this.selectedItems.values());
   }
@@ -145,9 +160,9 @@ export class AnalysisService {
     return this.selectedItems.size;
   }
 
-  subscribe(cb: (item: Wrapper, selected: boolean) => void) {
-    this.selectSubject.subscribe((event) => {
-      cb(event.item, event.selected);
+  subscribeList(cb: (items: Array<Wrapper>, selected: boolean | null) => void) {
+    this.selectListSubject.subscribe((event) => {
+      cb(event.items, event.selected);
     });
   }
 

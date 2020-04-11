@@ -114,16 +114,38 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     this.showDetails = false;
 
-    this.analysis.subscribe((item, selected) => {
-      const node = this.nodeData.nodes.get(item.nodeId);
-      if (!node) {
+    this.analysis.subscribeList((items, selected) => {
+      if (!this.nodeData.nodes) {
         return;
       }
-      const pos = this.network.getPositions([item.nodeId]);
-      node.x = pos[item.nodeId].x;
-      node.y = pos[item.nodeId].y;
-      Object.assign(node, NetworkSettings.getNodeStyle(node.wrapper.type, true, selected));
-      this.nodeData.nodes.update(node);
+      if (selected !== null) {
+        if (items.length === 0) {
+          return;
+        }
+        const updatedNodes = [];
+        for (const item of items) {
+          const node = this.nodeData.nodes.get(item.nodeId);
+          if (!node) {
+            continue;
+          }
+          const pos = this.network.getPositions([item.nodeId]);
+          node.x = pos[item.nodeId].x;
+          node.y = pos[item.nodeId].y;
+          Object.assign(node, NetworkSettings.getNodeStyle(node.wrapper.type, true, selected));
+          updatedNodes.push(node);
+        }
+        this.nodeData.nodes.update(updatedNodes);
+      } else {
+        const updatedNodes = [];
+        this.nodeData.nodes.forEach((node) => {
+          const nodeSelected = this.analysis.idInSelection(node.id);
+          if (selected !== nodeSelected) {
+            Object.assign(node, NetworkSettings.getNodeStyle(node.wrapper.type, true, selected));
+            updatedNodes.push(node);
+          }
+        });
+        this.nodeData.nodes.update(updatedNodes);
+      }
     });
   }
 
@@ -234,9 +256,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         const node = this.nodeData.nodes.get(nodeId);
         const wrapper = node.wrapper;
         if (this.analysis.inSelection(wrapper)) {
-          this.analysis.removeItem(wrapper);
+          this.analysis.removeItems([wrapper]);
         } else {
-          this.analysis.addItem(wrapper);
+          this.analysis.addItems([wrapper]);
         }
       }
     });
