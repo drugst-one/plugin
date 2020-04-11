@@ -2,16 +2,16 @@
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <img routerLink="/" src="assets/covex_logo.png" class="menu-icon is-hoverable navbar-item logo" alt="logo"/>
-      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false">
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" (click)="toggleMobileMenu()">
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
       </a>
     </div>
 
-    <div class="navbar-menu">
+    <div class="navbar-menu" [class.is-active]="mobileWindowExpanded">
       <div class="navbar-start">
-        <a routerLink="/" routerLinkActive="is-active" class="navbar-item is-hoverable">
+        <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{exact: true}" class="navbar-item is-hoverable">
           <span class="icon"><i class="fa fa-home"></i></span>
           <span>Home</span>
         </a>
