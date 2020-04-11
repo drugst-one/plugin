@@ -220,7 +220,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
             this.nodeData.nodes.forEach((node) => {
               const nodeSelected = this.analysis.idInSelection(node.id);
               if (selected !== nodeSelected) {
-                Object.assign(node, NetworkSettings.getNodeStyle(node.wrapper.type, true, selected));
+                Object.assign(node, NetworkSettings.getNodeStyle(node.wrapper.type, node.isSeed, selected));
                 updatedNodes.push(node);
               }
             });

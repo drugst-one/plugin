@@ -104,7 +104,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     } else if (this.algorithm === 'keypathwayminer') {
       parameters.k = this.keypathwayminerK;
     } else if (this.algorithm === 'multisteiner') {
-      parameters.strain = this.dataset;
+      parameters.strain_or_drugs = this.dataset;
       parameters.num_trees = this.multisteinerNumTrees;
     }
 

@@ -186,8 +186,8 @@ export class AnalysisService {
       algorithm: isSuper ? 'super' : 'quick',
       target: 'drug',
       parameters: {
-        strain: dataset.backendId,
-        datasets: dataset.data,
+        strain_or_drugs: dataset.backendId,
+        bait_datasets: dataset.data,
         seeds: isSuper ? [] : this.getSelection().map((i) => i.backendId),
       },
     }).toPromise();

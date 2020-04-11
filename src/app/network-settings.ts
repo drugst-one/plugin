@@ -12,14 +12,19 @@ export class NetworkSettings {
 
   private static selectedBorderColor = '#F8981D';
   private static selectBorderHighlightColor = '#F8981D';
-  private static selectedBorderWidth = 3;
-  private static selectedBorderWidthSelected = 3.2;
 
   // Edge color
   private static edgeHostVirusColor = '#686868';
   private static edgeHostVirusHighlightColor = '#686868';
   private static edgeHostDrugColor = '#686868';
   private static edgeHostDrugHighlightColor = '#686868';
+
+  // Border width
+  private static selectedBorderWidth = 3;
+  private static selectedBorderWidthSelected = 3;
+
+  private static borderWidth = 1;
+  private static borderWidthSelected = 3;
 
   // Node Font
   private static hostFontSize = 20;
@@ -195,6 +200,9 @@ export class NetworkSettings {
       node.borderWidthSelected = this.selectedBorderWidthSelected;
     } else {
       node.color = nodeColor;
+
+      node.borderWidth = this.borderWidth;
+      node.borderWidthSelected = this.borderWidthSelected;
     }
 
     return node;
