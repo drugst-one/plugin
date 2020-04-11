@@ -265,6 +265,9 @@ export class AnalysisService {
     const watch = async () => {
       if (this.tokens.length > 0) {
         this.tasks = await this.getTasks();
+        if (!this.tasks) {
+          return;
+        }
         let queuedOrRunningTasks = 0;
         this.tasks.forEach((task) => {
           if (!task.info.done && !task.info.failed) {
