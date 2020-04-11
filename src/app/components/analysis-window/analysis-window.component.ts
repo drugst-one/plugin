@@ -54,16 +54,14 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
   @Output() visibleItems = new EventEmitter<any>();
 
   public task: Task | null = null;
-  public indexscreenshot = 1;
 
   private network: any;
   private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
   private drugNodes: any[] = [];
   private drugEdges: any[] = [];
   public showDrugs = false;
-  public tab = 'network';
+  public tab: 'meta' | 'network' | 'table' = 'table';
   public physicsEnabled = true;
-  public drugstatus = true;
 
   private proteins: any;
   public effects: any;
