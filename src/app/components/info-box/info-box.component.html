@@ -1,12 +1,12 @@
 <div *ngIf="wrapper">
   <div *ngIf="wrapper.type === 'host'">
     <p>
-      <b><span>Gene Name:</span></b>
+      <b><span>Gene Name: </span></b>
       {{ wrapper.data.name }}
       <span class="icon is-small"><i class="fas fa-dna"></i></span>
     </p>
     <p>
-      <b><span>Uniprot AC:</span></b>
+      <b><span>Uniprot AC :</span></b>
       <a href="https://www.uniprot.org/uniprot/{{ wrapper.data.proteinAc }}" target="_blank">
         {{ wrapper.data.proteinAc }}
       </a>
@@ -19,26 +19,31 @@
       <span class="icon is-small"><i class="fas fa-virus"></i></span>
     </p>
     <p>
-      <b><span>Effect:</span></b>
+      <b><span>Effect: </span></b>
       {{ wrapper.data.effectName }}
     </p>
   </div>
   <div *ngIf="wrapper.type === 'drug'">
     <p>
-      <b><span>Name:</span></b>
+      <b><span>Name: </span></b>
       {{ wrapper.data.name }}
       <span class="icon is-small"><i class="fas fa-capsules"></i></span>
     </p>
     <p>
-      <b>DrugBank ID:</b>
+      <b>DrugBank ID: </b>
       <a href="https://www.drugbank.ca/drugs/{{ wrapper.data.drugId }}" target="_blank"> {{ wrapper.data.drugId }}</a>
     </p>
     <p *ngIf="wrapper.data.status === 'unapproved' ">
-      <b>Status:</b> Unapproved
+      <b>Status: </b> Unapproved
       <span class="icon is-small"><i class="fas fa-search investigational"></i></span>
     <p *ngIf="wrapper.data.status === 'approved' ">
-      <b>Status:</b> Approved
+      <b>Status: </b> Approved
       <span class="icon is-small"><i class="fas fa-check"></i></span>
+    </p>
+    <p *ngIf="wrapper.data.inTrial">
+      <b>In Trial: </b> <span class="icon is-small"><i class="fas fa-check"></i></span>
+    <p *ngIf="!wrapper.data.inTrial">
+      <b>In Trial: </b> <span class="icon is-small"><i class="fas fa-times"></i></span>
     </p>
   </div>
 

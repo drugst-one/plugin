@@ -33,6 +33,7 @@ export class NetworkSettings {
   private static hostFontColor = '#FFFFFF';
   private static virusFontColor = '#FFFFFF';
   private static drugFontColor = '#FFFFFF';
+  private static drugInTrialFontColor = 'black';
 
   // Network Layout
   private static analysisLayout = {
@@ -68,7 +69,8 @@ export class NetworkSettings {
   // Node shape
   private static hostShape = 'ellipse';
   private static virusShape = 'ellipse';
-  private static drugShape = 'box';
+  private static drugNotInTrialShape = 'box';
+  private static drugInTrialShape = 'triangle';
 
   static getNodeSize(wrapperType: WrapperType) {
     if (wrapperType === 'host') {
@@ -80,13 +82,17 @@ export class NetworkSettings {
     }
   }
 
-  static getNodeShape(wrapperType: WrapperType) {
+  static getNodeShape(wrapperType: WrapperType, drugInTrial?: boolean) {
     if (wrapperType === 'host') {
       return this.hostShape;
     } else if (wrapperType === 'virus') {
       return this.virusShape;
     } else if (wrapperType === 'drug') {
-      return this.drugShape;
+      if (drugInTrial) {
+        return this.drugInTrialShape;
+      } else {
+        return this.drugNotInTrialShape;
+      }
     }
   }
 
@@ -138,17 +144,21 @@ export class NetworkSettings {
     }
   }
 
-  static getFont(wrapperType: WrapperType) {
+  static getFont(wrapperType: WrapperType, drugInTrial?: boolean) {
     if (wrapperType === 'host') {
       return {color: this.hostFontColor, size: this.hostFontSize};
     } else if (wrapperType === 'virus') {
       return {color: this.virusFontColor, size: this.virusFontSize};
     } else if (wrapperType === 'drug') {
-      return {color: this.drugFontColor, size: this.drugFontSize};
+      if (!drugInTrial) {
+        return {color: this.drugFontColor, size: this.drugFontSize};
+      } else {
+        return {color: this.drugInTrialFontColor, size: this.drugFontSize};
+      }
     }
   }
 
-  static getNodeStyle(nodeType: WrapperType, isSeed: boolean, isSelected: boolean, drugType?: string): any {
+  static getNodeStyle(nodeType: WrapperType, isSeed: boolean, isSelected: boolean, drugType?: string, drugInTrial?: boolean): any {
     let nodeColor;
     let nodeShape;
     let nodeSize;
@@ -176,6 +186,12 @@ export class NetworkSettings {
         nodeColor = NetworkSettings.getColor('approvedDrug');
       } else {
         nodeColor = NetworkSettings.getColor('unapprovedDrug');
+      }
+      if (drugInTrial) {
+        nodeShape = NetworkSettings.getNodeShape('drug', true);
+        nodeFont = NetworkSettings.getFont('drug', true);
+      } else {
+        nodeShape = NetworkSettings.getNodeShape('drug', false);
       }
     }
 

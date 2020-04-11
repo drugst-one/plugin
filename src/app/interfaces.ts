@@ -155,6 +155,7 @@ export interface Drug {
   drugId: string;
   name: string;
   status: 'approved' | 'investigational';
+  inTrial: boolean;
 }
 
 export interface Dataset {
