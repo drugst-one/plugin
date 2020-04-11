@@ -15,7 +15,7 @@
   <div *ngIf="wrapper.type === 'virus'">
     <p>
       <b><span>Virus:</span></b>
-      {{ wrapper.data.virusName }}
+      {{ wrapper.data.virusName.replace('V', 'V-') }}
       <span class="icon is-small"><i class="fas fa-virus"></i></span>
     </p>
     <p>

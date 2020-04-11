@@ -6,7 +6,7 @@
       <b *ngIf="item.type == 'virus'"> {{item.data.effectName}}</b> <br/>
       <span><small *ngIf="item.type === 'virus'">Viral Protein</small><small *ngIf="item.type === 'host'">Host Protein</small> | </span>
       <span *ngIf="item.type == 'host'"><small>AC: <b>{{item.data.proteinAc}}</b></small> </span>
-      <span *ngIf="item.type == 'virus'"><small><b>{{item.data.virusName}}</b></small></span>
+      <span *ngIf="item.type == 'virus'"><small><b>{{item.data.virusName.replace('V', 'V-')}}</b></small></span>
     </ng-template>
   </ng-select>
 </div>
