@@ -74,18 +74,19 @@ input.checkbox {
   margin-left: 15px;
 }
 
+div.covex.sidebar {
+  height: calc(100vh - 70px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 350px;
+}
+
 div.covex.bar-left {
   float: left;
-  width: 350px;
-  height: calc(100vh - 102px);
-  overflow: auto;
 }
 
 div.covex.bar-right {
   float: right;
-  width: 350px;
-  height: calc(100vh - 102px);
-  overflow: auto;
 }
 
 div.card.bar-small {
@@ -107,7 +108,7 @@ div.card.bar-large {
 
 div.card-content.overflow {
   overflow: auto;
-  max-height: 500px;
+  max-height: 350px;
 }
 
 div.covex.left-window {

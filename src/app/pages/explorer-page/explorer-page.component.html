@@ -7,7 +7,7 @@
 
   <div class="covex left-window">
     <div>
-      <div class="covex bar-left">
+      <div class="covex sidebar bar-left">
 
         <div class="card bar-large">
           <header class="card-header">
@@ -182,8 +182,7 @@
     </div>
   </div>
 
-  <div class="covex bar-right">
-
+  <div class="covex sidebar bar-right">
     <div class="card bar-large">
       <header class="card-header">
         <p class="card-header-title">
@@ -373,9 +372,9 @@
     <div class="card bar-large">
       <header class="card-header">
         <p class="card-header-title">
-                <span class="icon">
-              <i class="fas fa-filter" aria-hidden="true"></i>
-            </span> Selection ({{analysis.getCount()}})
+          <span class="icon">
+            <i class="fas fa-filter" aria-hidden="true"></i>
+          </span> Selection ({{analysis.getCount()}})
         </p>
         <a (click)="collapseSelection = !collapseSelection" data-action="collapse"
            class="card-header-icon is-hidden-fullscreen" aria-label="more options">
@@ -387,7 +386,7 @@
       </header>
       <div *ngIf="collapseSelection">
         <div class="card-content overflow">
-          <table class="table" *ngIf="analysis.getCount() > 0">
+          <table class="table selection-table" *ngIf="analysis.getCount() > 0">
             <thead>
             <tr>
               <td>Type</td>
@@ -398,10 +397,10 @@
             <tbody>
             <tr *ngFor="let p of analysis.getSelection()">
               <td>
-                   <span class="icon">
-                      <i class="fa fa-dna" *ngIf="p.type == 'host'"></i>
-                      <i class="fa fa-virus" *ngIf="p.type =='virus'"></i>
-                    </span>
+                 <span class="icon">
+                    <i class="fa fa-dna" *ngIf="p.type == 'host'"></i>
+                    <i class="fa fa-virus" *ngIf="p.type =='virus'"></i>
+                  </span>
               </td>
               <td *ngIf="p.type == 'virus'">{{p.data.effectName}}</td>
               <td *ngIf="p.type == 'host'">{{p.data.name}}</td>
@@ -421,37 +420,35 @@
         <footer class="card-footer">
           <a (click)="analysis.addAllHostProteins(currentViewNodes, currentViewProteins)"
              class="card-footer-item has-text-success" data-tooltip="Add all visible host proteins.">
-          <span class="icon">
-            <i class="fa fa-plus"></i>
-          </span>
+            <span class="icon">
+              <i class="fa fa-plus"></i>
+            </span>
             <span>
-            Host Proteins
-          </span>
+              Host Proteins
+            </span>
           </a>
           <a (click)="analysis.addAllViralProteins(currentViewNodes, currentViewEffects)"
              class="card-footer-item has-text-success" data-tooltip="Add all visible viral proteins.">
-          <span class="icon">
-            <i class="fa fa-plus"></i>
-          </span>
+            <span class="icon">
+              <i class="fa fa-plus"></i>
+            </span>
             <span>
-            Viral Proteins
-          </span>
+              Viral Proteins
+            </span>
           </a>
         </footer>
         <footer class="card-footer">
           <a (click)="analysis.resetSelection()" class="card-footer-item has-text-danger"
              data-tooltip="Remove all entries of the selection.">
-          <span class="icon">
-            <i class="fa fa-refresh"></i>
-          </span>
+            <span class="icon">
+              <i class="fa fa-refresh"></i>
+            </span>
             <span>
-            Reset
-          </span>
+              Reset
+            </span>
           </a>
         </footer>
       </div>
     </div>
-
   </div>
-
 </div>
