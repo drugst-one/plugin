@@ -26,12 +26,26 @@ body {
   height: 100%;
 }
 
+nav.navbar {
+  height: 60px;
+}
+
+img.menu-icon.is-hoverable.navbar-item.logo {
+  height: 45px;
+  width: 125px;
+  padding-top: 5px;
+  padding-bottom: 10px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
 .landing {
   background-color: $primary;
   background-image: url("assets/virus_background.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-  height: calc(100vh - 82.36px);
+  height: calc(100vh - 60px);
+  width: 100vw;
 }
 
 div.navbar-menu {
@@ -112,11 +126,11 @@ div.covex.network {
 
 div.card.network {
   width: 100%;
-  height: calc(100vh - 85px);
+  height: calc(100vh - 75px);
 }
 
 div.network {
-  height: calc(100vh - 210px);
+  height: calc(100vh - 200px);
 }
 
 div.parent {
@@ -141,9 +155,9 @@ div.center {
 
 
 div.covex.explorer {
-  height: calc(100vh - 90px);
-  margin-left: 20px;
-  margin-right: 20px;
+  height: calc(100vh - 70px);
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .analysis-view {

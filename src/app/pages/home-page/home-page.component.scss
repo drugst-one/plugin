@@ -1,13 +1,15 @@
 img {
   width: 600px;
+  height: 200px;
   padding: 30px;
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 25px;
 }
 
-div.scroll {
-  height: calc(100vh - 82.36px);
+
+div.scroll{
   overflow: auto;
+  height: calc(100vh - 60px);
 }
 
 h1.subtitle.is-2 {
