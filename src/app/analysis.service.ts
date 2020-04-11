@@ -9,7 +9,7 @@ export type AlgorithmType = 'trustrank' | 'keypathwayminer' | 'multisteiner' | '
 export type QuickAlgorithmType = 'quick' | 'super';
 
 export const algorithmNames = {
-  trustrank: 'Trust-Rank',
+  trustrank: 'TrustRank',
   keypathwayminer: 'KeyPathwayMiner',
   multisteiner: 'Multi-Steiner',
   closeness: 'Closeness Centrality',
