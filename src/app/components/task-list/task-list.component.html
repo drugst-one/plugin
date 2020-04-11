@@ -1,7 +1,7 @@
 <div class="content">
   <div class="list is-hoverable">
     <a *ngFor="let task of analysis.tasks" class="list-item" [class.is-active]="task.token === token">
-      <div *ngIf="!task.info.startedAt" (click)="open(task.token)">
+      <div *ngIf="!task.info.startedAt">
         <p>
           <span class="is-capitalized"><i class="fa" [class.fa-capsules]="task.info.target === 'drug'"
                                           [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{algorithmNames[task.info.algorithm]}}</span>
@@ -24,7 +24,7 @@
           </a>
         </p>
       </div>
-      <div *ngIf="!task.info.done && !task.info.failed && task.info.startedAt" (click)="open(task.token)">
+      <div *ngIf="!task.info.done && !task.info.failed && task.info.startedAt">
         <p>
           <span class="is-capitalized"><i class="fa" [class.fa-capsules]="task.info.target === 'drug'"
                                           [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{algorithmNames[task.info.algorithm]}}</span>
@@ -38,7 +38,7 @@
             </span>
           </a>
         </p>
-        <progress class="progress is-success" [value]="task.info.progress * 100" max="100">Test</progress>
+        <progress class="progress is-success" [value]="task.info.progress * 100" max="100"></progress>
       </div>
       <div *ngIf="task.info.done" (click)="open(task.token)" data-tooltip="Show analysis results">
         <p>
@@ -55,14 +55,14 @@
           </a>
         </p>
       </div>
-      <div *ngIf="task.info.failed && task.info.finishedAt == null">
+      <div *ngIf="task.info.failed">
         <p>
           <span class="is-capitalized"><i class="fa" [class.fa-capsules]="task.info.target === 'drug'"
                                           [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{algorithmNames[task.info.algorithm]}}</span>
           <span class="icon is-pulled-right"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i></span>
         </p>
         <p class="has-text-danger">
-          <small>{{task.info.status}}</small>
+          <small class="status-field">{{task.info.status}}</small>
           <a (click)="analysis.removeTask(task.token)" class="is-pulled-right has-text-danger">
             <span class="icon is-pulled-right">
               <i class="fa fa-trash"></i>
