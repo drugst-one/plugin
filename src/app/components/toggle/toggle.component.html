@@ -2,7 +2,7 @@
   <p class="control has-tooltip">
     <button class="button is-rounded has-tooltip" [attr.data-tooltip]="tooltipOn" [class.is-primary]="value" (click)="toggle(true)">
       <span class="icon is-small">
-        <i class="fa {{icon}}"></i>
+        <i class="fa {{iconOn}}"></i>
       </span>
       <span>{{textOn}}</span>
     </button>
@@ -10,6 +10,9 @@
   <p class="control">
     <button class="button is-rounded has-tooltip" [attr.data-tooltip]="tooltipOff" [class.is-primary]="!value" (click)="toggle(false)">
       <span>{{textOff}}</span>
+      <span *ngIf="iconOff" class="icon is-small">
+        <i class="fa {{iconOff}}"></i>
+      </span>
     </button>
   </p>
 </div>

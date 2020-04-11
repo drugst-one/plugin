@@ -7,7 +7,8 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 })
 export class ToggleComponent implements OnInit {
 
-  @Input() icon = 'fa-check';
+  @Input() iconOn = 'fa-check';
+  @Input() iconOff = 'fa-times';
 
   @Input() textOn = 'On';
   @Input() textOff = 'Off';
