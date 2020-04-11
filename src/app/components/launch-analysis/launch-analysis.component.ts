@@ -57,7 +57,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   constructor(public analysis: AnalysisService) {
     this.hasBaits = !!analysis.getSelection().find((i) => i.type === 'virus');
-    analysis.subscribe(() => {
+    analysis.subscribeList(() => {
       this.hasBaits = !!analysis.getSelection().find((i) => i.type === 'virus');
     });
   }
