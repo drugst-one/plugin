@@ -213,7 +213,7 @@
               <td><a href="https://www.drugbank.ca/drugs/{{ e.drugId }}" target="_blank">{{ e.drugId }}</a></td>
               <td>{{e.name}}</td>
               <td>{{e.status}}</td>
-              <td *ngIf="tableHasScores">{{e.score ? (e.score | number) : ''}}</td>
+              <td *ngIf="tableHasScores">{{e.score | number}}</td>
             </tr>
           </ng-template>
         </p-table>
@@ -257,7 +257,7 @@
               </td>
               <td><a href="https://www.uniprot.org/uniprot/{{ e.proteinAc }}" target="_blank">{{ e.proteinAc }}</a></td>
               <td>{{e.name}}</td>
-              <td *ngIf="tableHasScores">{{e.score ? (e.score | number) : ''}}</td>
+              <td *ngIf="tableHasScores">{{e.score | number}}</td>
             </tr>
           </ng-template>
         </p-table>
@@ -301,7 +301,7 @@
               </td>
               <td>{{e.effectName}}</td>
               <td>{{e.virusName}}</td>
-              <td *ngIf="tableHasScores">{{e.score ? (e.score | number) : ''}}</td>
+              <td *ngIf="tableHasScores">{{e.score | number}}</td>
             </tr>
           </ng-template>
         </p-table>
