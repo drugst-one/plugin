@@ -14,8 +14,8 @@ export const algorithmNames = {
   multisteiner: 'Multi-Steiner',
   closeness: 'Closeness Centrality',
   degree: 'Degree Centrality',
-  quick: 'Quick-Find Drugs (custom)',
-  super: 'Quick-Find Drugs',
+  quick: 'Simple',
+  super: 'Quick-Start',
 };
 
 export interface Algorithm {
