@@ -16,9 +16,9 @@
     <div class="card-content">
       <div class="tabs is-centered">
         <ul>
-          <li [class.is-active]="tab === 'meta'"><a (click)="tab = 'meta'">Parameters</a></li>
-          <li [class.is-active]="tab === 'network'"><a (click)="tab = 'network'">Network</a></li>
           <li [class.is-active]="tab === 'table'"><a (click)="tab = 'table'">Table</a></li>
+          <li [class.is-active]="tab === 'network'"><a (click)="tab = 'network'">Network</a></li>
+          <li [class.is-active]="tab === 'meta'"><a (click)="tab = 'meta'">Parameters</a></li>
         </ul>
       </div>
       <div class="content tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'meta'">
