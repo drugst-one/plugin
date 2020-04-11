@@ -171,6 +171,23 @@
             </div>
           </div>
         </div>
+        <div class="field">
+          <label class="label" for="multisteiner-numtrees">Tolerance for trees</label>
+          <div class="control">
+            <div class="select">
+              <select id="multisteiner-tolerance" [(ngModel)]="multisteinerTolerance">
+                <option [ngValue]="0">0</option>
+                <option [ngValue]="1">1</option>
+                <option [ngValue]="2">2</option>
+                <option [ngValue]="3">3</option>
+                <option [ngValue]="5">5</option>
+                <option [ngValue]="10">10</option>
+                <option [ngValue]="15">15</option>
+                <option [ngValue]="20">20</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 

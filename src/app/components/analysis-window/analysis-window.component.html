@@ -21,9 +21,9 @@
           <li [class.is-active]="tab === 'meta'"><a (click)="tab = 'meta'">Parameters</a></li>
         </ul>
       </div>
-      <div class="content tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'meta'">
+      <div class="content tab-content meta" *ngIf="task && task.info.done" [class.is-visible]="tab === 'meta'">
         <div *ngIf="task">
-          <p>
+          <p *ngIf="task.info.algorithm !== 'quick' && task.info.algorithm !== 'super'">
             Algorithm: <strong>{{algorithmNames[task.info.algorithm]}}</strong>
           </p>
           <div>
@@ -36,6 +36,10 @@
               <tr *ngIf="task.info.parameters.numTrees">
                 <td>Number of trees</td>
                 <td>{{task.info.parameters.numTrees}}</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.tolerance || task.info.parameters.tolerance === 0">
+                <td>Tolerance</td>
+                <td>{{task.info.parameters.tolerance}}</td>
               </tr>
               <tr *ngIf="task.info.parameters.dampingFactor">
                 <td>Damping Factor</td>
@@ -58,6 +62,50 @@
               <tr *ngIf="task.info.parameters.resultSize">
                 <td>Result Size</td>
                 <td>{{task.info.parameters.resultSize}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="task.info.algorithm === 'quick' || task.info.algorithm === 'super'">
+            <p>
+              Algorithm: <strong>{{algorithmNames['multisteiner']}}</strong>
+            </p>
+            <table class="table is-narrow">
+              <tbody>
+              <tr>
+                <td>Number of Trees</td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <td>Tolerance</td>
+                <td>10</td>
+              </tr>
+              </tbody>
+            </table>
+            <p>
+              Algorithm: <strong>{{algorithmNames['trustrank']}}</strong>
+            </p>
+            <table class="table is-narrow">
+              <tbody>
+              <tr>
+                <td>Damping Factor</td>
+                <td>0.85</td>
+              </tr>
+              <tr>
+                <td>Include indirect drugs</td>
+                <td>
+                  <i class="fa fa-times"></i>
+                </td>
+              </tr>
+              <tr>
+                <td>Include non-approved drugs</td>
+                <td>
+                  <i class="fa fa-times"></i>
+                </td>
+              </tr>
+              <tr>
+                <td>Result Size</td>
+                <td>30</td>
               </tr>
               </tbody>
             </table>
