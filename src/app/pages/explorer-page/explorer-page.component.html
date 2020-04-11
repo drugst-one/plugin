@@ -1,9 +1,10 @@
-<app-launch-analysis [(show)]="showAnalysisDialog"
-                     [target]="analysisDialogTarget"
-                     [dataset]="selectedDataset.backendId">
-</app-launch-analysis>
+<div class="is-hidden-mobile">
+  <app-launch-analysis [(show)]="showAnalysisDialog"
+                       [target]="analysisDialogTarget"
+                       [dataset]="selectedDataset.backendId">
+  </app-launch-analysis>
 
-<div class="covex explorer">
+  <div class="covex explorer">
 
   <div class="covex left-window">
     <div>
@@ -453,4 +454,11 @@
       </div>
     </div>
   </div>
+</div>
+</div>
+
+<div class="is-hidden-tablet mobile-fallback">
+  Sorry, CoVex is not available for mobile phones.
+  To find information about CoVex, please check the <a routerLink="/about">About</a> page or visit this page
+  with another device with a larger screen.
 </div>

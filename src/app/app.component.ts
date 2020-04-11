@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'covid19';
+  mobileWindowExpanded = false;
+
+  public toggleMobileMenu() {
+    this.mobileWindowExpanded = !this.mobileWindowExpanded;
+  }
 }
