@@ -360,6 +360,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     let nodeLabel;
     let wrapper: Wrapper;
     let drugType;
+    let drugInTrial;
     if (nodeType === 'host') {
       const protein = details as Protein;
       wrapper = getWrapperFromProtein(protein);
@@ -371,6 +372,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
       const drug = details as Drug;
       wrapper = getWrapperFromDrug(drug);
       drugType = drug.status;
+      drugInTrial = drug.inTrial;
       if (drugType === 'approved') {
         nodeLabel = drug.name;
       } else {
@@ -382,7 +384,7 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
       nodeLabel = viralProtein.effectName;
     }
 
-    const node = NetworkSettings.getNodeStyle(nodeType, isSeed, this.analysis.inSelection(wrapper), drugType);
+    const node = NetworkSettings.getNodeStyle(nodeType, isSeed, this.analysis.inSelection(wrapper), drugType, drugInTrial);
     node.id = wrapper.nodeId;
     node.label = nodeLabel;
     node.nodeType = nodeType;
