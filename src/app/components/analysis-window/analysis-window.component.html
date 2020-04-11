@@ -103,11 +103,11 @@
 
           <app-toggle *ngIf="task.info.target === 'drug-target'" class="footer-buttons" textOn="Drugs On" textOff="Off"
                       tooltipOn="Display drugs in the network" tooltipOff="Hide drugs in the network"
-                      [value]="showDrugs" (valueChange)="toggleDrugs($event)" icon="fa-capsules"></app-toggle>
+                      [value]="showDrugs" (valueChange)="toggleDrugs($event)"></app-toggle>
 
           <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off"
                       tooltipOn="Enable the network animation." tooltipOff="Disable the network animation and freeze nodes."
-                      [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)" icon="fa-wind"></app-toggle>
+                      [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
         </footer>
       </div>
       <div class="content tab-content scrollable" *ngIf="task && task.info.done" [class.is-visible]="tab === 'table'">
