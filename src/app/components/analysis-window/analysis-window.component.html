@@ -135,6 +135,7 @@
               </button>
             </p>
           </div>
+
           <div class="field">
             <p class="control footer-buttons">
               <button class="button is-danger is-rounded has-tooltip" data-tooltip="Delete the current analysis."
@@ -156,6 +157,19 @@
           <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off"
                       tooltipOn="Enable the network animation." tooltipOff="Disable the network animation and freeze nodes."
                       [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
+
+          <div class="field">
+            <p class="control footer-buttons">
+              <a [href]="graphmlLink()" class="button is-success is-rounded has-tooltip" data-tooltip="Export this network as .graphml file.">
+                <span class="icon">
+                  <i class="fas fa-download" aria-hidden="true"></i>
+                </span>
+                <span>
+                  Export as .graphml
+                </span>
+              </a>
+            </p>
+          </div>
         </footer>
       </div>
       <div class="content tab-content scrollable" *ngIf="task && task.info.done" [class.is-visible]="tab === 'table'">
