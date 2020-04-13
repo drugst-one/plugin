@@ -305,6 +305,10 @@ export class AnalysisWindowComponent implements OnInit, OnChanges {
     return `${environment.backend}task_result/?token=${this.token}&view=${view}&fmt=csv`;
   }
 
+  public graphmlLink(): string {
+    return `${environment.backend}graph_export/?token=${this.token}`;
+  }
+
   public inferNodeType(nodeId: string): WrapperType {
     if (nodeId.indexOf('-') !== -1 || nodeId.indexOf('_') !== -1) {
       return 'virus';
