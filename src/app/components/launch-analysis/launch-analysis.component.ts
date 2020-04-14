@@ -33,16 +33,19 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   // Trustrank Parameters
   public trustrankIncludeIndirectDrugs = false;
   public trustrankIncludeNonApprovedDrugs = false;
+  public trustrankIncludeViralNonSeeds = true;
   public trustrankDampingFactor = 0.85;
   public trustrankResultSize = 20;
 
   // Closeness Parameters
   public closenessIncludeIndirectDrugs = false;
   public closenessIncludeNonApprovedDrugs = false;
+  public closenessIncludeViralNonSeeds = true;
   public closenessResultSize = 20;
 
   // Degree Parameters
   public degreeIncludeNonApprovedDrugs = false;
+  public degreeIncludeViralNonSeeds = true;
   public degreeResultSize = 20;
 
   // Keypathwayminer Parameters
@@ -51,6 +54,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   // Multisteiner Parameters
   public multisteinerNumTrees = 5;
   public multisteinerTolerance = 10;
+  public multisteinerIncludeViralNonSeeds = true;
 
   public hasBaits;
 
@@ -91,16 +95,18 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.damping_factor = this.trustrankDampingFactor;
       parameters.include_indirect_drugs = this.trustrankIncludeIndirectDrugs;
       parameters.include_non_approved_drugs = this.trustrankIncludeNonApprovedDrugs;
+      parameters.ignore_non_seed_baits = !this.trustrankIncludeViralNonSeeds;
       parameters.result_size = this.trustrankResultSize;
     } else if (this.algorithm === 'closeness') {
       parameters.strain_or_drugs = this.target === 'drug' ? 'drugs' : this.dataset;
       parameters.include_indirect_drugs = this.closenessIncludeIndirectDrugs;
       parameters.include_non_approved_drugs = this.closenessIncludeNonApprovedDrugs;
+      parameters.ignore_non_seed_baits = !this.closenessIncludeViralNonSeeds;
       parameters.result_size = this.closenessResultSize;
     } else if (this.algorithm === 'degree') {
       parameters.strain_or_drugs = this.target === 'drug' ? 'drugs' : this.dataset;
-      parameters.include_indirect_drugs = this.closenessIncludeIndirectDrugs;
-      parameters.include_non_approved_drugs = this.closenessIncludeNonApprovedDrugs;
+      parameters.include_non_approved_drugs = this.degreeIncludeNonApprovedDrugs;
+      parameters.ignore_non_seed_baits = !this.degreeIncludeViralNonSeeds;
       parameters.result_size = this.closenessResultSize;
     } else if (this.algorithm === 'keypathwayminer') {
       parameters.k = this.keypathwayminerK;
@@ -108,6 +114,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.strain_or_drugs = this.dataset;
       parameters.num_trees = this.multisteinerNumTrees;
       parameters.tolerance = this.multisteinerTolerance;
+      parameters.ignore_non_seed_baits = !this.multisteinerIncludeViralNonSeeds;
     }
 
     await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
