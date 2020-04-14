@@ -59,6 +59,13 @@
                   <i *ngIf="!task.info.parameters.includeNonApprovedDrugs" class="fa fa-times"></i>
                 </td>
               </tr>
+              <tr *ngIf="task.info.parameters.ignoreNonSeedBaits !== undefined && task.info.target === 'drug-target'">
+                <td>Include non-seed viral proteins</td>
+                <td>
+                  <i *ngIf="!task.info.parameters.ignoreNonSeedBaits" class="fa fa-check"></i>
+                  <i *ngIf="task.info.parameters.ignoreNonSeedBaits" class="fa fa-times"></i>
+                </td>
+              </tr>
               <tr *ngIf="task.info.parameters.resultSize">
                 <td>Result Size</td>
                 <td>{{task.info.parameters.resultSize}}</td>
