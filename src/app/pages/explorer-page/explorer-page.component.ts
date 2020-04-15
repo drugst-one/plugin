@@ -67,8 +67,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public currentDataset = [];
 
   public currentViewProteins: Protein[];
-  public currentViewEffects: ViralProtein[];
-  public currentViewNodes: Node[];
+  public currentViewViralProteins: ViralProtein[];
+  public currentViewNodes: any[];
 
   public datasetItems: Dataset[] = [
     {
@@ -306,7 +306,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     this.currentViewNodes = this.nodeData.nodes;
     this.currentViewProteins = this.proteins;
-    this.currentViewEffects = this.effects;
+    this.currentViewViralProteins = this.effects;
   }
 
   public async filterNodes() {
@@ -459,11 +459,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if ($event) {
       this.currentViewNodes = $event[0];
       this.currentViewProteins = $event[1][0];
-      this.currentViewEffects = $event[1][1];
+      this.currentViewViralProteins = $event[1][1];
     } else {
       this.currentViewNodes = this.nodeData.nodes;
       this.currentViewProteins = this.proteins;
-      this.currentViewEffects = this.effects;
+      this.currentViewViralProteins = this.effects;
     }
   }
 }

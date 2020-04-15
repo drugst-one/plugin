@@ -4,7 +4,7 @@
                        [dataset]="selectedDataset.backendId">
   </app-launch-analysis>
 
-  <app-custom-proteins [(show)]="showCustomProteinsDialog">
+  <app-custom-proteins [(show)]="showCustomProteinsDialog" [visibleNodes]="currentViewNodes">
   </app-custom-proteins>
 
   <div class="covex explorer">
@@ -433,7 +433,7 @@
               Host Proteins
             </span>
           </a>
-          <a (click)="analysis.addVisibleViralProteins(currentViewNodes, currentViewEffects)"
+          <a (click)="analysis.addVisibleViralProteins(currentViewNodes, currentViewViralProteins)"
              class="card-footer-item has-text-success" data-tooltip="Add all visible viral proteins.">
             <span class="icon">
               <i class="fa fa-eye"></i>

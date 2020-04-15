@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
-import {getWrapperFromProtein, Wrapper} from '../../interfaces';
+import {getWrapperFromProtein, Protein, Wrapper} from '../../interfaces';
 import {AnalysisService} from '../../analysis.service';
 
 @Component({
@@ -15,11 +15,15 @@ export class CustomProteinsComponent implements OnInit {
   public show = false;
   @Output()
   public showChange = new EventEmitter<boolean>();
+  @Input()
+  public visibleNodes: Array<any> = [];
 
   public textList = '';
   public proteins: Array<string> = [];
   public notFound: Array<string> = [];
-  public itemsAdded: Array<Wrapper> = [];
+  public itemsFound: Array<Wrapper> = [];
+  public addedCount = 0;
+  public selectOnly = false;
 
   constructor(private http: HttpClient, private analysis: AnalysisService) { }
 
@@ -28,12 +32,18 @@ export class CustomProteinsComponent implements OnInit {
 
   public close() {
     this.show = false;
+    this.textList = '';
+    this.proteins = [];
+    this.notFound = [];
+    this.itemsFound = [];
     this.showChange.emit(this.show);
+    this.addedCount = 0;
+    this.selectOnly = false;
   }
 
   public async addProteins() {
     this.notFound = [];
-    this.itemsAdded = [];
+    this.itemsFound = [];
     const proteins = this.proteins;
     this.changeTextList('');
     const result = await this.http.post<any>(`${environment.backend}query_proteins/`, proteins).toPromise();
@@ -43,8 +53,28 @@ export class CustomProteinsComponent implements OnInit {
     for (const detail of details) {
       items.push(getWrapperFromProtein(detail));
     }
-    this.itemsAdded = items;
-    this.analysis.addItems(items);
+    this.itemsFound = items;
+    this.addedCount = this.analysis.addItems(items);
+    this.selectOnly = false;
+  }
+
+  public async addVisibleProteins() {
+    this.notFound = [];
+    this.itemsFound = [];
+    const proteins = this.proteins;
+    this.changeTextList('');
+    const result = await this.http.post<any>(`${environment.backend}query_proteins/`, proteins).toPromise();
+    this.notFound = result.notFound;
+    const details = result.details;
+    const proteinItems = [];
+    const items = [];
+    for (const detail of details) {
+      proteinItems.push(detail as Protein);
+      items.push(getWrapperFromProtein(detail));
+    }
+    this.itemsFound = items;
+    this.addedCount = this.analysis.addVisibleHostProteins(this.visibleNodes, proteinItems);
+    this.selectOnly = true;
   }
 
   public changeTextList(textList) {

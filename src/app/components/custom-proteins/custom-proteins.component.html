@@ -9,10 +9,24 @@
       <button (click)="close()" class="delete" aria-label="close"></button>
     </header>
     <section class="modal-card-body">
-      <div class="notification is-success" *ngIf="itemsAdded.length > 0">
-        {{itemsAdded.length}} host proteins have been added to the selection.
+      <div class="notification is-success" *ngIf="addedCount > 0">
+        {{addedCount}} host proteins have been added to the selection.
+        <div *ngIf="itemsFound.length > addedCount && !selectOnly">
+          {{itemsFound.length - addedCount}} proteins have already been selected before.
+        </div>
+        <div *ngIf="itemsFound.length > addedCount && selectOnly">
+          {{itemsFound.length - addedCount}} proteins either have been selected already or did not appear in the current graph.
+        </div>
       </div>
-      <div class="notification is-warning" *ngIf="notFound.length > 0">
+      <div class="notification is-warning" *ngIf="itemsFound.length > 0 && addedCount === 0">
+        <div *ngIf="itemsFound.length > addedCount && !selectOnly">
+          {{itemsFound.length - addedCount}} proteins have already been selected before.
+        </div>
+        <div *ngIf="itemsFound.length > addedCount && selectOnly">
+          {{itemsFound.length - addedCount}} proteins either have been selected already or did not appear in the current graph.
+        </div>
+      </div>
+      <div class="notification is-danger" *ngIf="notFound.length > 0">
         The following {{notFound.length}} Uniprot IDs could not be found and have been ignored:
         <ul><li class="not-found" *ngFor="let nf of notFound">{{nf}}</li></ul>
       </div>
@@ -28,13 +42,23 @@
     </section>
     <footer class="modal-card-foot">
       <button (click)="addProteins();" class="button is-success is-rounded has-tooltip"
-              data-tooltip="Add list of proteins to the selection."
+              data-tooltip="Add all to the selection."
               [disabled]="proteins.length === 0">
         <span class="icon">
           <i class="fa fa-plus"></i>
         </span>
         <span>
           Add
+        </span>
+      </button>
+      <button (click)="addVisibleProteins();" class="button is-success is-rounded has-tooltip"
+              data-tooltip="Add to selection if they appear in the current network."
+              [disabled]="proteins.length === 0">
+        <span class="icon">
+          <i class="fas fa-expand"></i>
+        </span>
+        <span>
+          Select
         </span>
       </button>
       <button (click)="close()" class="button is-rounded has-tooltip" data-tooltip="Close the current window.">Close
