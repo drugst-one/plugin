@@ -119,7 +119,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.include_non_approved_drugs = this.degreeIncludeNonApprovedDrugs;
       parameters.ignore_non_seed_baits = !this.degreeIncludeViralNonSeeds;
       parameters.max_deg = this.degreeMaxDeg;
-      parameters.result_size = this.closenessResultSize;
+      parameters.result_size = this.degreeResultSize;
     } else if (this.algorithm === 'keypathwayminer') {
       parameters.k = this.keypathwayminerK;
     } else if (this.algorithm === 'multisteiner') {
