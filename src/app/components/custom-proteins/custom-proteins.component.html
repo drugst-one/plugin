@@ -1,0 +1,44 @@
+<div class="modal" [class.is-active]="show">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">
+        <span class="icon"><i class="fa fa-dna"></i></span>
+        Add Custom Proteins
+      </p>
+      <button (click)="close()" class="delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <div class="notification is-success" *ngIf="itemsAdded.length > 0">
+        {{itemsAdded.length}} host proteins have been added to the selection.
+      </div>
+      <div class="notification is-warning" *ngIf="notFound.length > 0">
+        The following {{notFound.length}} Uniprot IDs could not be found and have been ignored:
+        <ul><li class="not-found" *ngFor="let nf of notFound">{{nf}}</li></ul>
+      </div>
+      <div class="field">
+        <label class="label" for="protein-list">List of Uniprot IDs</label>
+        <div class="control">
+          <textarea class="input" [ngModel]="textList" (ngModelChange)="changeTextList($event)" id="protein-list"></textarea>
+        </div>
+      </div>
+      <p *ngIf="proteins">
+        Proteins parsed: {{proteins.length}}
+      </p>
+    </section>
+    <footer class="modal-card-foot">
+      <button (click)="addProteins();" class="button is-success is-rounded has-tooltip"
+              data-tooltip="Add list of proteins to the selection."
+              [disabled]="proteins.length === 0">
+        <span class="icon">
+          <i class="fa fa-plus"></i>
+        </span>
+        <span>
+          Add
+        </span>
+      </button>
+      <button (click)="close()" class="button is-rounded has-tooltip" data-tooltip="Close the current window.">Close
+      </button>
+    </footer>
+  </div>
+</div>
