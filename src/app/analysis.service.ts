@@ -103,7 +103,7 @@ export class AnalysisService {
     this.selectListSubject.next({items: removedWrappers, selected: false});
   }
 
-  public addAllHostProteins(nodes, proteins) {
+  public addVisibleHostProteins(nodes, proteins) {
     const items: Wrapper[] = [];
     const visibleIds = new Set<string>(nodes.getIds());
     for (const protein of proteins) {
@@ -117,7 +117,7 @@ export class AnalysisService {
     this.selectListSubject.next({items, selected: true});
   }
 
-  public addAllViralProteins(nodes, viralProteins) {
+  public addVisibleViralProteins(nodes, viralProteins) {
     const items: Wrapper[] = [];
     const visibleIds = new Set<string>(nodes.getIds());
     for (const viralProtein of viralProteins) {
@@ -129,6 +129,22 @@ export class AnalysisService {
       }
     }
     this.selectListSubject.next({items, selected: true});
+  }
+
+  public removeAllHostProteins() {
+    const items: Wrapper[] = Array.from(this.selectedItems.values()).filter(p => p.type === 'host');
+    for (const wrapper of items) {
+      this.selectedItems.delete(wrapper.nodeId);
+    }
+    this.selectListSubject.next({items, selected: false});
+  }
+
+  public removeAllViralProteins() {
+    const items: Wrapper[] = Array.from(this.selectedItems.values()).filter(p => p.type === 'virus');
+    for (const wrapper of items) {
+      this.selectedItems.delete(wrapper.nodeId);
+    }
+    this.selectListSubject.next({items, selected: false});
   }
 
   resetSelection() {

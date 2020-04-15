@@ -60,6 +60,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public showAnalysisDialog = false;
   public analysisDialogTarget: 'drug' | 'drug-target';
 
+  public showCustomProteinsDialog = false;
+
   public selectedAnalysisToken: string | null = null;
 
   public currentDataset = [];

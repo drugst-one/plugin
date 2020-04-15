@@ -4,6 +4,9 @@
                        [dataset]="selectedDataset.backendId">
   </app-launch-analysis>
 
+  <app-custom-proteins [(show)]="showCustomProteinsDialog">
+  </app-custom-proteins>
+
   <div class="covex explorer">
 
   <div class="covex left-window">
@@ -387,7 +390,7 @@
           </span>
         </a>
       </header>
-      <div *ngIf="collapseSelection">
+      <div *ngIf="collapseSelection" class="seed-selection">
         <div class="card-content overflow">
           <table class="table selection-table" *ngIf="analysis.getCount() > 0">
             <thead>
@@ -421,22 +424,53 @@
           </i>
         </div>
         <footer class="card-footer">
-          <a (click)="analysis.addAllHostProteins(currentViewNodes, currentViewProteins)"
+          <a (click)="analysis.addVisibleHostProteins(currentViewNodes, currentViewProteins)"
              class="card-footer-item has-text-success" data-tooltip="Add all visible host proteins.">
             <span class="icon">
-              <i class="fa fa-plus"></i>
+              <i class="fa fa-eye"></i>
             </span>
             <span>
               Host Proteins
             </span>
           </a>
-          <a (click)="analysis.addAllViralProteins(currentViewNodes, currentViewEffects)"
+          <a (click)="analysis.addVisibleViralProteins(currentViewNodes, currentViewEffects)"
              class="card-footer-item has-text-success" data-tooltip="Add all visible viral proteins.">
             <span class="icon">
-              <i class="fa fa-plus"></i>
+              <i class="fa fa-eye"></i>
             </span>
             <span>
               Viral Proteins
+            </span>
+          </a>
+        </footer>
+        <footer class="card-footer">
+          <a (click)="analysis.removeAllHostProteins()"
+             class="card-footer-item has-text-danger" data-tooltip="Remove all host proteins.">
+            <span class="icon">
+              <i class="fa fa-minus"></i>
+            </span>
+            <span>
+              Host Proteins
+            </span>
+          </a>
+          <a (click)="analysis.removeAllViralProteins()"
+             class="card-footer-item has-text-danger" data-tooltip="Remove all viral proteins.">
+            <span class="icon">
+              <i class="fa fa-minus"></i>
+            </span>
+            <span>
+              Viral Proteins
+            </span>
+          </a>
+        </footer>
+        <footer class="card-footer">
+          <a (click)="showCustomProteinsDialog = true" class="card-footer-item has-text-primary"
+             data-tooltip="Add a custom list of proteins.">
+            <span class="icon">
+              <i class="fa fa-upload"></i>
+            </span>
+            <span>
+              Custom Proteins
             </span>
           </a>
         </footer>
