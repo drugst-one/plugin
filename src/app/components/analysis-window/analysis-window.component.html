@@ -29,23 +29,23 @@
           <div>
             <table class="table is-narrow">
               <tbody>
-              <tr *ngIf="task.info.parameters.resultSize">
+              <tr *ngIf="task.info.parameters.resultSize !== undefined">
                 <td>Result Size</td>
                 <td>{{task.info.parameters.resultSize}}</td>
               </tr>
-              <tr *ngIf="task.info.parameters.k">
+              <tr *ngIf="task.info.parameters.k !== undefined">
                 <td>K</td>
                 <td>{{task.info.parameters.k}}</td>
               </tr>
-              <tr *ngIf="task.info.parameters.numTrees">
+              <tr *ngIf="task.info.parameters.numTrees !== undefined">
                 <td>Number of trees</td>
                 <td>{{task.info.parameters.numTrees}}</td>
               </tr>
-              <tr *ngIf="task.info.parameters.tolerance || task.info.parameters.tolerance === 0">
+              <tr *ngIf="task.info.parameters.tolerance !== undefined">
                 <td>Tolerance</td>
                 <td>{{task.info.parameters.tolerance}}</td>
               </tr>
-              <tr *ngIf="task.info.parameters.dampingFactor">
+              <tr *ngIf="task.info.parameters.dampingFactor !== undefined">
                 <td>Damping Factor</td>
                 <td>{{task.info.parameters.dampingFactor}}</td>
               </tr>
