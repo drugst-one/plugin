@@ -35,17 +35,22 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public trustrankIncludeNonApprovedDrugs = false;
   public trustrankIncludeViralNonSeeds = true;
   public trustrankDampingFactor = 0.85;
+  public trustrankMaxDeg = 1.0;
+  public trustrankHubPenalty = 0.0;
   public trustrankResultSize = 20;
 
   // Closeness Parameters
   public closenessIncludeIndirectDrugs = false;
   public closenessIncludeNonApprovedDrugs = false;
   public closenessIncludeViralNonSeeds = true;
+  public closenessMaxDeg = 1.0;
+  public closenessHubPenalty = 0.0;
   public closenessResultSize = 20;
 
   // Degree Parameters
   public degreeIncludeNonApprovedDrugs = false;
   public degreeIncludeViralNonSeeds = true;
+  public degreeMaxDeg = 1.0;
   public degreeResultSize = 20;
 
   // Keypathwayminer Parameters
@@ -55,6 +60,8 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public multisteinerNumTrees = 5;
   public multisteinerTolerance = 10;
   public multisteinerIncludeViralNonSeeds = true;
+  public multisteinerMaxDeg = 1.0;
+  public multisteinerHubPenalty = 0.0;
 
   public hasBaits;
 
@@ -96,17 +103,22 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.include_indirect_drugs = this.trustrankIncludeIndirectDrugs;
       parameters.include_non_approved_drugs = this.trustrankIncludeNonApprovedDrugs;
       parameters.ignore_non_seed_baits = !this.trustrankIncludeViralNonSeeds;
+      parameters.max_deg = this.trustrankMaxDeg;
+      parameters.hub_penalty = this.trustrankHubPenalty;
       parameters.result_size = this.trustrankResultSize;
     } else if (this.algorithm === 'closeness') {
       parameters.strain_or_drugs = this.target === 'drug' ? 'drugs' : this.dataset;
       parameters.include_indirect_drugs = this.closenessIncludeIndirectDrugs;
       parameters.include_non_approved_drugs = this.closenessIncludeNonApprovedDrugs;
       parameters.ignore_non_seed_baits = !this.closenessIncludeViralNonSeeds;
+      parameters.max_deg = this.closenessMaxDeg;
+      parameters.hub_penalty = this.closenessHubPenalty;
       parameters.result_size = this.closenessResultSize;
     } else if (this.algorithm === 'degree') {
       parameters.strain_or_drugs = this.target === 'drug' ? 'drugs' : this.dataset;
       parameters.include_non_approved_drugs = this.degreeIncludeNonApprovedDrugs;
       parameters.ignore_non_seed_baits = !this.degreeIncludeViralNonSeeds;
+      parameters.max_deg = this.degreeMaxDeg;
       parameters.result_size = this.closenessResultSize;
     } else if (this.algorithm === 'keypathwayminer') {
       parameters.k = this.keypathwayminerK;
@@ -115,6 +127,8 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.num_trees = this.multisteinerNumTrees;
       parameters.tolerance = this.multisteinerTolerance;
       parameters.ignore_non_seed_baits = !this.multisteinerIncludeViralNonSeeds;
+      parameters.max_deg = this.multisteinerMaxDeg;
+      parameters.hub_penalty = this.multisteinerHubPenalty;
     }
 
     await this.analysis.startAnalysis(this.algorithm, this.target, parameters);

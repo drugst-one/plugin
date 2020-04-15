@@ -29,6 +29,10 @@
           <div>
             <table class="table is-narrow">
               <tbody>
+              <tr *ngIf="task.info.parameters.resultSize">
+                <td>Result Size</td>
+                <td>{{task.info.parameters.resultSize}}</td>
+              </tr>
               <tr *ngIf="task.info.parameters.k">
                 <td>K</td>
                 <td>{{task.info.parameters.k}}</td>
@@ -44,6 +48,14 @@
               <tr *ngIf="task.info.parameters.dampingFactor">
                 <td>Damping Factor</td>
                 <td>{{task.info.parameters.dampingFactor}}</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.maxDeg !== undefined">
+                <td>Maximum Degree</td>
+                <td>{{task.info.parameters.maxDeg}}</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.hubPenalty !== undefined">
+                <td>Hub Penality</td>
+                <td>{{task.info.parameters.hubPenalty}}</td>
               </tr>
               <tr *ngIf="task.info.parameters.includeIndirectDrugs !== undefined && task.info.target === 'drug'">
                 <td>Include indirect drugs</td>
@@ -65,10 +77,6 @@
                   <i *ngIf="!task.info.parameters.ignoreNonSeedBaits" class="fa fa-check"></i>
                   <i *ngIf="task.info.parameters.ignoreNonSeedBaits" class="fa fa-times"></i>
                 </td>
-              </tr>
-              <tr *ngIf="task.info.parameters.resultSize">
-                <td>Result Size</td>
-                <td>{{task.info.parameters.resultSize}}</td>
               </tr>
               </tbody>
             </table>

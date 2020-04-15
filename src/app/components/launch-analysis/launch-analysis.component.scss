@@ -1,5 +1,6 @@
 .modal-card {
-  height: 600px;
+  height: 800px;
+  max-height: 80vh;
 }
 
 .modal-card-body {
@@ -13,4 +14,8 @@
 
 .help.info {
   margin-bottom: 20px;
+
+  .icon {
+    background-color: blue;
+  }
 }
