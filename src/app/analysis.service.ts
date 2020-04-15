@@ -82,7 +82,7 @@ export class AnalysisService {
     });
   }
 
-  public addItems(wrappers: Wrapper[]) {
+  public addItems(wrappers: Wrapper[]): number {
     const addedWrappers: Wrapper[] = [];
     for (const wrapper of wrappers) {
       if (!this.inSelection(wrapper)) {
@@ -91,6 +91,7 @@ export class AnalysisService {
       }
     }
     this.selectListSubject.next({items: addedWrappers, selected: true});
+    return addedWrappers.length;
   }
 
   public removeItems(wrappers: Wrapper[]) {
@@ -103,7 +104,7 @@ export class AnalysisService {
     this.selectListSubject.next({items: removedWrappers, selected: false});
   }
 
-  public addVisibleHostProteins(nodes, proteins) {
+  public addVisibleHostProteins(nodes, proteins): number {
     const items: Wrapper[] = [];
     const visibleIds = new Set<string>(nodes.getIds());
     for (const protein of proteins) {
@@ -115,9 +116,10 @@ export class AnalysisService {
       }
     }
     this.selectListSubject.next({items, selected: true});
+    return items.length;
   }
 
-  public addVisibleViralProteins(nodes, viralProteins) {
+  public addVisibleViralProteins(nodes, viralProteins): number {
     const items: Wrapper[] = [];
     const visibleIds = new Set<string>(nodes.getIds());
     for (const viralProtein of viralProteins) {
@@ -129,6 +131,7 @@ export class AnalysisService {
       }
     }
     this.selectListSubject.next({items, selected: true});
+    return items.length;
   }
 
   public removeAllHostProteins() {
