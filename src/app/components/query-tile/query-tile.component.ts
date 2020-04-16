@@ -2,11 +2,11 @@ import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {Protein, Wrapper, ViralProtein} from '../../interfaces';
 
 @Component({
-  selector: 'app-query-component',
-  templateUrl: './query.component.html',
-  styleUrls: ['./query.component.scss']
+  selector: 'app-query-tile-component',
+  templateUrl: './query-tile.component.html',
+  styleUrls: ['./query-tile.component.scss']
 })
-export class QueryComponent {
+export class QueryTileComponent {
 
 
   @Output() selectItem: EventEmitter<any> = new EventEmitter();

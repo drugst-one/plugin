@@ -231,6 +231,10 @@
                 Status
                 <p-sortIcon [field]="'status'"></p-sortIcon>
               </th>
+              <th [pSortableColumn]="'inTrial'">
+                Trial
+                <p-sortIcon [field]="'inTrial'"></p-sortIcon>
+              </th>
               <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
                 Score
                 <p-sortIcon [field]="'score'"></p-sortIcon>
@@ -241,7 +245,22 @@
             <tr>
               <td><a href="https://www.drugbank.ca/drugs/{{ e.drugId }}" target="_blank">{{ e.drugId }}</a></td>
               <td>{{e.name}}</td>
-              <td>{{e.status}}</td>
+              <td>
+                <span *ngIf="e.status === 'approved'">
+                  <i class="fa fa-check"></i>
+                  approved
+                </span>
+                <span *ngIf="e.status === 'unapproved'">
+                  <i class="fa fa-times"></i>
+                  not approved
+                </span>
+              </td>
+              <td>
+                <span *ngIf="e.inTrial">
+                  <i class="fa fa-microscope has-text-primary"></i>
+                  in Trial
+                </span>
+              </td>
               <td *ngIf="tableHasScores">{{e.score | number}}</td>
             </tr>
           </ng-template>

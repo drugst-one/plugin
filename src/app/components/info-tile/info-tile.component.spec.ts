@@ -1,22 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { InfoBoxComponent } from './info-box.component';
+import { InfoTileComponent } from './info-tile.component';
 import {HttpClientModule} from '@angular/common/http';
 
 describe('InfoBoxComponent', () => {
-  let component: InfoBoxComponent;
-  let fixture: ComponentFixture<InfoBoxComponent>;
+  let component: InfoTileComponent;
+  let fixture: ComponentFixture<InfoTileComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InfoBoxComponent ],
+      declarations: [ InfoTileComponent ],
       imports: [HttpClientModule],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InfoBoxComponent);
+    fixture = TestBed.createComponent(InfoTileComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
