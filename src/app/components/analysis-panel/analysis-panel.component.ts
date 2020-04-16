@@ -39,11 +39,11 @@ interface Scored {
 }
 
 @Component({
-  selector: 'app-analysis-window',
-  templateUrl: './analysis-window.component.html',
-  styleUrls: ['./analysis-window.component.scss'],
+  selector: 'app-analysis-panel',
+  templateUrl: './analysis-panel.component.html',
+  styleUrls: ['./analysis-panel.component.scss'],
 })
-export class AnalysisWindowComponent implements OnInit, OnChanges {
+export class AnalysisPanelComponent implements OnInit, OnChanges {
 
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 

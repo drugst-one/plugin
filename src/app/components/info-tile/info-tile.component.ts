@@ -3,11 +3,11 @@ import {Wrapper} from '../../interfaces';
 import {AnalysisService} from '../../analysis.service';
 
 @Component({
-  selector: 'app-info-box',
-  templateUrl: './info-box.component.html',
-  styleUrls: ['./info-box.component.scss']
+  selector: 'app-info-tile',
+  templateUrl: './info-tile.component.html',
+  styleUrls: ['./info-tile.component.scss']
 })
-export class InfoBoxComponent implements OnInit {
+export class InfoTileComponent implements OnInit {
 
   @Input()
   public wrapper: Wrapper;

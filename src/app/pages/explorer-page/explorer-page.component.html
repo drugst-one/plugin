@@ -31,9 +31,9 @@
           </header>
           <div *ngIf="collapseData">
             <div class="card-content">
-              <app-select-dataset [datasetItems]="datasetItems" [selectedDataset]="selectedDataset"
+              <app-dataset-tile [datasetItems]="datasetItems" [selectedDataset]="selectedDataset"
                                   (selectedDatasetChange)="selectedDataset = $event; createNetwork($event.data)">
-              </app-select-dataset>
+              </app-dataset-tile>
             </div>
           </div>
         </div>
@@ -97,8 +97,8 @@
             <div class="card-content">
               <div class="field">
                 <div class="control">
-                  <app-query-component [queryItems]="queryItems"
-                                       (selectItem)="queryAction($event)"></app-query-component>
+                  <app-query-tile-component [queryItems]="queryItems"
+                                       (selectItem)="queryAction($event)"></app-query-tile-component>
                 </div>
               </div>
             </div>
@@ -179,9 +179,9 @@
     </div>
 
     <div class="analysis-view" *ngIf="selectedAnalysisToken">
-      <app-analysis-window [(token)]="selectedAnalysisToken"
+      <app-analysis-panel [(token)]="selectedAnalysisToken"
                            (showDetailsChange)="selectedWrapper = $event"
-                           (visibleItems)="analysisWindowChanged($event)"></app-analysis-window>
+                           (visibleItems)="analysisWindowChanged($event)"></app-analysis-panel>
     </div>
   </div>
 
@@ -213,7 +213,7 @@
       </header>
       <div *ngIf="collapseDetails">
         <div class="card-content">
-          <app-info-box [wrapper]="selectedWrapper"></app-info-box>
+          <app-info-tile [wrapper]="selectedWrapper"></app-info-tile>
         </div>
       </div>
     </div>

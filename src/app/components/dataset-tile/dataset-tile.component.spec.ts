@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { QueryComponent } from './query.component';
+import { DatasetTileComponent } from './dataset-tile.component';
 
-describe('QueryComponent', () => {
-  let component: QueryComponent;
-  let fixture: ComponentFixture<QueryComponent>;
+describe('SelectDatasetComponent', () => {
+  let component: DatasetTileComponent;
+  let fixture: ComponentFixture<DatasetTileComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ QueryComponent ]
+      declarations: [ DatasetTileComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(QueryComponent);
+    fixture = TestBed.createComponent(DatasetTileComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

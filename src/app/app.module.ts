@@ -12,14 +12,14 @@ import {AppRoutingModule} from './app-routing.module';
 import {ExplorerPageComponent} from './pages/explorer-page/explorer-page.component';
 import {AboutPageComponent} from './pages/about-page/about-page.component';
 import {HomePageComponent} from './pages/home-page/home-page.component';
-import {QueryComponent} from './components/query/query.component';
-import {LaunchAnalysisComponent} from './components/launch-analysis/launch-analysis.component';
-import {SelectDatasetComponent} from './components/select-dataset/select-dataset.component';
-import {AnalysisWindowComponent} from './components/analysis-window/analysis-window.component';
+import {QueryTileComponent} from './components/query-tile/query-tile.component';
+import {LaunchAnalysisComponent} from './dialogs/launch-analysis/launch-analysis.component';
+import {DatasetTileComponent} from './components/dataset-tile/dataset-tile.component';
+import {AnalysisPanelComponent} from './components/analysis-panel/analysis-panel.component';
 import {TaskListComponent} from './components/task-list/task-list.component';
 import {ToggleComponent} from './components/toggle/toggle.component';
-import {InfoBoxComponent} from './components/info-box/info-box.component';
-import {CustomProteinsComponent} from './components/custom-proteins/custom-proteins.component';
+import {InfoTileComponent} from './components/info-tile/info-tile.component';
+import {CustomProteinsComponent} from './dialogs/custom-proteins/custom-proteins.component';
 
 import {AnalysisService} from './analysis.service';
 
@@ -30,13 +30,13 @@ import {AnalysisService} from './analysis.service';
     ExplorerPageComponent,
     AboutPageComponent,
     HomePageComponent,
-    QueryComponent,
+    QueryTileComponent,
     LaunchAnalysisComponent,
-    SelectDatasetComponent,
-    AnalysisWindowComponent,
+    DatasetTileComponent,
+    AnalysisPanelComponent,
     TaskListComponent,
     ToggleComponent,
-    InfoBoxComponent,
+    InfoTileComponent,
     CustomProteinsComponent,
   ],
   imports: [

@@ -2,12 +2,12 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Dataset} from '../../interfaces';
 
 @Component({
-  selector: 'app-select-dataset',
-  templateUrl: './select-dataset.component.html',
-  styleUrls: ['./select-dataset.component.scss']
+  selector: 'app-dataset-tile',
+  templateUrl: './dataset-tile.component.html',
+  styleUrls: ['./dataset-tile.component.scss']
 })
 
-export class SelectDatasetComponent {
+export class DatasetTileComponent {
 
   @Input() selectedDataset: Dataset;
   @Output() selectedDatasetChange: EventEmitter<any> = new EventEmitter();
