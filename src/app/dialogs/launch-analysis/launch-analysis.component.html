@@ -82,7 +82,7 @@
                    placeholder="Maximum degree" min="0" max="1" required>
           </div>
           <p class="help">
-            All nodes with degree greater than this value times number of vertices will be ignored.
+            All nodes with degree greater than this value times number of vertices will be ignored. Disabled if equal to 0.
           </p>
         </div>
 
@@ -162,7 +162,7 @@
                    placeholder="Maximum degree" min="0" max="1" required>
           </div>
           <p class="help">
-            All nodes with degree greater than this value times number of vertices will be ignored.
+            All nodes with degree greater than this value times number of vertices will be ignored. Disabled if equal to 0.
           </p>
         </div>
 
@@ -229,7 +229,7 @@
                    placeholder="Maximum degree" min="0" max="1" required>
           </div>
           <p class="help">
-            All nodes with degree greater than this value times number of vertices will be ignored.
+            All nodes with degree greater than this value times number of vertices will be ignored. Disabled if equal to 0.
           </p>
         </div>
 
@@ -273,18 +273,27 @@
         </div>
 
         <div class="field">
-          <label class="label" for="keypathwayminer-k">K</label>
+          <label class="label" for="keypathwayminer-k">Additional proteins</label>
           <div class="control">
             <div class="select">
               <select id="keypathwayminer-k" [(ngModel)]="keypathwayminerK">
                 <option [ngValue]="1">1</option>
                 <option [ngValue]="2">2</option>
                 <option [ngValue]="3">3</option>
-                <option [ngValue]="4">4</option>
                 <option [ngValue]="5">5</option>
+                <option [ngValue]="10">10</option>
+                <option [ngValue]="15">15</option>
+                <option [ngValue]="20">20</option>
+                <option [ngValue]="25">25</option>
+                <option [ngValue]="30">30</option>
+                <option [ngValue]="40">40</option>
+                <option [ngValue]="50">50</option>
               </select>
             </div>
           </div>
+          <p class="help">
+            Number of new proteins to be found.
+          </p>
         </div>
 
         <div class="box">
@@ -352,7 +361,7 @@
                    placeholder="Maximum degree" min="0" max="1" required>
           </div>
           <p class="help">
-            All nodes with degree greater than this value times number of vertices will be ignored.
+            All nodes with degree greater than this value times number of vertices will be ignored. Disabled if equal to 0.
           </p>
         </div>
 

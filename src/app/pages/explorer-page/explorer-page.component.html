@@ -1,7 +1,7 @@
 <div class="is-hidden-mobile">
   <app-launch-analysis [(show)]="showAnalysisDialog"
                        [target]="analysisDialogTarget"
-                       [dataset]="selectedDataset.backendId">
+                       [dataset]="selectedDataset">
   </app-launch-analysis>
 
   <app-custom-proteins [(show)]="showCustomProteinsDialog" [visibleNodes]="currentViewNodes">
@@ -133,7 +133,7 @@
             <footer class="card-footer">
               <a (click)="reset($event);" class="card-footer-item has-text-danger" data-tooltip="Remove filter and show all proteins.">
               <span class="icon">
-              <i class="fa fa-refresh"></i>
+              <i class="fa fa-broom"></i>
             </span>
                 <span>
               Reset
@@ -313,12 +313,12 @@
                       class="button is-primary is-fullwidth is-rounded has-tooltip"
                       data-tooltip="Find drug targets for the selected proteins."
                       [disabled]="analysis.getCount() === 0">
-              <span class="icon">
-                <i class="fa fa-crosshairs"></i>
-              </span>
+                <span class="icon">
+                  <i class="fa fa-crosshairs"></i>
+                </span>
                 <span>
-                Find Drug Targets
-              </span>
+                  Find Drug Targets
+                </span>
               </button>
             </div>
           </div>
@@ -328,13 +328,37 @@
                       class="button is-primary is-fullwidth is-rounded has-tooltip"
                       data-tooltip="Find drugs for the selected proteins."
                       [disabled]="analysis.getCount() === 0">
-              <span class="icon">
-                <i class="fa fa-capsules"></i>
-              </span>
+                <span class="icon">
+                  <i class="fa fa-capsules"></i>
+                </span>
                 <span>
-                Find Drugs
-              </span>
+                  Find Drugs
+                </span>
               </button>
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <a *ngIf="analysis.getCount() > 0" [href]="gProfilerLink()" target="_blank"
+                 class="button is-primary is-fullwidth is-rounded has-tooltip"
+                      data-tooltip="Use enrichment analysis via g:Profiler (external).">
+                <span class="icon">
+                  <i class="fa fa-external-link-alt"></i>
+                </span>
+                <span>
+                  Enrichment Analysis
+                </span>
+              </a>
+              <a *ngIf="analysis.getCount() === 0" disabled
+                 class="button is-primary is-fullwidth is-rounded has-tooltip"
+                 data-tooltip="Use enrichment analysis via g:Profiler (external).">
+                <span class="icon">
+                  <i class="fa fa-external-link-alt"></i>
+                </span>
+                <span>
+                  Enrichment Analysis
+                </span>
+              </a>
             </div>
           </div>
         </div>
@@ -368,7 +392,7 @@
                 <i class="fa fa-trash"></i>
               </span>
             <span>
-                Delete All
+                Delete all
               </span>
           </a>
         </footer>
@@ -423,34 +447,36 @@
             Double-click on a protein to select it for the analysis.
           </i>
         </div>
+
         <footer class="card-footer">
           <a (click)="analysis.addVisibleHostProteins(currentViewNodes, currentViewProteins)"
              class="card-footer-item has-text-success" data-tooltip="Add all visible host proteins.">
             <span class="icon">
-              <i class="fa fa-eye"></i>
+              <i class="fa fa-plus"></i>
             </span>
             <span>
-              Host Proteins
+              Add host proteins
             </span>
           </a>
-          <a (click)="analysis.addVisibleViralProteins(currentViewNodes, currentViewViralProteins)"
-             class="card-footer-item has-text-success" data-tooltip="Add all visible viral proteins.">
-            <span class="icon">
-              <i class="fa fa-eye"></i>
-            </span>
-            <span>
-              Viral Proteins
-            </span>
-          </a>
-        </footer>
-        <footer class="card-footer">
           <a (click)="analysis.removeAllHostProteins()"
              class="card-footer-item has-text-danger" data-tooltip="Remove all host proteins.">
             <span class="icon">
               <i class="fa fa-minus"></i>
             </span>
             <span>
-              Host Proteins
+              Remove host proteins
+            </span>
+          </a>
+        </footer>
+
+        <footer class="card-footer">
+          <a (click)="analysis.addVisibleViralProteins(currentViewNodes, currentViewViralProteins)"
+             class="card-footer-item has-text-success" data-tooltip="Add all visible viral proteins.">
+            <span class="icon">
+              <i class="fa fa-plus"></i>
+            </span>
+            <span>
+              Add viral proteins
             </span>
           </a>
           <a (click)="analysis.removeAllViralProteins()"
@@ -459,10 +485,32 @@
               <i class="fa fa-minus"></i>
             </span>
             <span>
-              Viral Proteins
+              Remove viral proteins
             </span>
           </a>
         </footer>
+
+        <footer class="card-footer" *ngIf="selectedAnalysisToken">
+          <a (click)="analysis.addSeeds(currentViewNodes)"
+             class="card-footer-item has-text-success" data-tooltip="Add all visible seeds.">
+            <span class="icon">
+              <i class="fa fa-plus"></i>
+            </span>
+            <span>
+              Add seeds
+            </span>
+          </a>
+          <a (click)="analysis.removeSeeds(currentViewNodes)"
+             class="card-footer-item has-text-danger" data-tooltip="Remove all seeds.">
+            <span class="icon">
+              <i class="fa fa-minus"></i>
+            </span>
+            <span>
+              Remove seeds
+            </span>
+          </a>
+        </footer>
+
         <footer class="card-footer">
           <a (click)="showCustomProteinsDialog = true" class="card-footer-item has-text-primary"
              data-tooltip="Add a custom list of proteins.">
@@ -470,21 +518,32 @@
               <i class="fa fa-upload"></i>
             </span>
             <span>
-              Custom Proteins
+              Custom proteins
             </span>
           </a>
         </footer>
+
         <footer class="card-footer">
-          <a (click)="analysis.resetSelection()" class="card-footer-item has-text-danger"
-             data-tooltip="Remove all entries of the selection.">
+          <a (click)="analysis.invertSelection(currentViewNodes)" class="card-footer-item has-text-primary"
+             data-tooltip="Invert the current selection.">
             <span class="icon">
-              <i class="fa fa-refresh"></i>
+              <i class="fa fa-sync"></i>
+            </span>
+            <span>
+              Invert
+            </span>
+          </a>
+          <a (click)="analysis.resetSelection()" class="card-footer-item has-text-danger"
+             data-tooltip="Remove all entries from the selection.">
+            <span class="icon">
+              <i class="fa fa-broom"></i>
             </span>
             <span>
               Reset
             </span>
           </a>
         </footer>
+
       </div>
     </div>
   </div>

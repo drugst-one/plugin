@@ -93,19 +93,19 @@
               </tr>
               <tr>
                 <td>Tolerance</td>
-                <td>10</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>Hub Penality</td>
+                <td>1</td>
               </tr>
               </tbody>
             </table>
             <p>
-              Algorithm: <strong>{{algorithmNames['trustrank']}}</strong>
+              Algorithm: <strong>{{algorithmNames['closeness']}}</strong>
             </p>
             <table class="table is-narrow">
               <tbody>
-              <tr>
-                <td>Damping Factor</td>
-                <td>0.85</td>
-              </tr>
               <tr>
                 <td>Include indirect drugs</td>
                 <td>
@@ -115,12 +115,16 @@
               <tr>
                 <td>Include non-approved drugs</td>
                 <td>
-                  <i class="fa fa-times"></i>
+                  <i class="fa fa-check"></i>
                 </td>
               </tr>
               <tr>
+                <td>Hub Penality</td>
+                <td>1</td>
+              </tr>
+              <tr>
                 <td>Result Size</td>
-                <td>30</td>
+                <td>10</td>
               </tr>
               </tbody>
             </table>
@@ -228,16 +232,27 @@
                 <p-sortIcon [field]="'name'"></p-sortIcon>
               </th>
               <th [pSortableColumn]="'status'">
-                Status
+                Approved
                 <p-sortIcon [field]="'status'"></p-sortIcon>
               </th>
               <th [pSortableColumn]="'inTrial'">
-                Trial
+                In Trial
                 <p-sortIcon [field]="'inTrial'"></p-sortIcon>
+              </th>
+              <th [pSortableColumn]="'inLiterature'">
+                In Literature
+                <p-sortIcon [field]="'inLiterature'"></p-sortIcon>
               </th>
               <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
                 Score
                 <p-sortIcon [field]="'score'"></p-sortIcon>
+              </th>
+              <th>
+                Closest viral proteins
+              </th>
+              <th [pSortableColumn]="'closestDistance'">
+                Viral protein distance
+                <p-sortIcon [field]="'closestDistance'"></p-sortIcon>
               </th>
             </tr>
           </ng-template>
@@ -248,20 +263,37 @@
               <td>
                 <span *ngIf="e.status === 'approved'">
                   <i class="fa fa-check"></i>
-                  approved
+                  Approved
                 </span>
                 <span *ngIf="e.status === 'unapproved'">
                   <i class="fa fa-times"></i>
-                  not approved
                 </span>
               </td>
               <td>
                 <span *ngIf="e.inTrial">
                   <i class="fa fa-microscope has-text-primary"></i>
-                  in Trial
+                  Trial
+                </span>
+                <span *ngIf="!e.inTrial">
+                  <i class="fa fa-times"></i>
+                </span>
+              </td>
+              <td>
+                <span *ngIf="e.inLiterature">
+                  <i class="fa fa-book has-text-primary"></i>
+                  Literature
+                </span>
+                <span *ngIf="!e.inLiterature">
+                  <i class="fa fa-times"></i>
                 </span>
               </td>
               <td *ngIf="tableHasScores">{{e.score | number}}</td>
+              <td title="{{previewStringArray(e.closestViralProteins, 100)}}">
+                {{previewStringArray(e.closestViralProteins, 3)}}
+              </td>
+              <td>
+                {{e.closestDistance}}
+              </td>
             </tr>
           </ng-template>
         </p-table>
@@ -292,9 +324,24 @@
                 Gene
                 <p-sortIcon [field]="'name'"></p-sortIcon>
               </th>
+              <th [pSortableColumn]="'proteinName'">
+                Name
+                <p-sortIcon [field]="'proteinName'"></p-sortIcon>
+              </th>
               <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
                 Score
                 <p-sortIcon [field]="'score'"></p-sortIcon>
+              </th>
+              <th [pSortableColumn]="'isSeed'">
+                Seed
+                <p-sortIcon [field]="'isSeed'"></p-sortIcon>
+              </th>
+              <th>
+                Closest viral proteins
+              </th>
+              <th [pSortableColumn]="'closestDistance'">
+                Closest distance
+                <p-sortIcon [field]="'closestDistance'"></p-sortIcon>
               </th>
             </tr>
           </ng-template>
@@ -305,7 +352,23 @@
               </td>
               <td><a href="https://www.uniprot.org/uniprot/{{ e.proteinAc }}" target="_blank">{{ e.proteinAc }}</a></td>
               <td>{{e.name}}</td>
+              <td>{{e.proteinName}}</td>
               <td *ngIf="tableHasScores">{{e.score | number}}</td>
+              <td>
+                <span *ngIf="e.isSeed">
+                  <i class="fa fa-check"></i>
+                  Seed
+                </span>
+                <span *ngIf="!e.isSeed">
+                  <i class="fa fa-times"></i>
+                </span>
+              </td>
+              <td title="{{previewStringArray(e.closestViralProteins, 100)}}">
+                {{previewStringArray(e.closestViralProteins, 3)}}
+              </td>
+              <td>
+                {{e.closestDistance}}
+              </td>
             </tr>
           </ng-template>
         </p-table>
@@ -340,6 +403,10 @@
                 Score
                 <p-sortIcon [field]="'score'"></p-sortIcon>
               </th>
+              <th [pSortableColumn]="'isSeed'">
+                Seed
+                <p-sortIcon [field]="'isSeed'"></p-sortIcon>
+              </th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-e>
@@ -350,6 +417,15 @@
               <td>{{e.effectName}}</td>
               <td>{{e.virusName}}</td>
               <td *ngIf="tableHasScores">{{e.score | number}}</td>
+              <td>
+                <span *ngIf="e.isSeed">
+                  <i class="fa fa-asterisk has-text-primary"></i>
+                  Seed
+                </span>
+                <span *ngIf="!e.isSeed">
+                  <i class="fa fa-times"></i>
+                </span>
+              </td>
             </tr>
           </ng-template>
         </p-table>

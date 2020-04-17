@@ -36,8 +36,12 @@ export const MAX_TASKS = 3;
 })
 export class AnalysisService {
 
+  private selection = 'main';
+
   private selectedItems = new Map<string, Wrapper>();
   private selectListSubject = new Subject<{ items: Wrapper[], selected: boolean | null }>();
+
+  private selections = new Map<string, Map<string, Wrapper>>();
 
   public tokens: string[] = [];
   public finishedTokens: string[] = [];
@@ -51,7 +55,6 @@ export class AnalysisService {
   constructor(private http: HttpClient) {
     const tokens = localStorage.getItem('tokens');
     const finishedTokens = localStorage.getItem('finishedTokens');
-
 
     if (tokens) {
       this.tokens = JSON.parse(tokens);
@@ -82,6 +85,17 @@ export class AnalysisService {
     });
   }
 
+  public switchSelection(id: string) {
+    this.selections.set(this.selection, this.selectedItems);
+    if (this.selections.has(id)) {
+      this.selectedItems = this.selections.get(id);
+    } else {
+      this.selectedItems = new Map<string, Wrapper>();
+    }
+    this.selectListSubject.next({items: Array.from(this.selectedItems.values()), selected: null});
+    this.selection = id;
+  }
+
   public addItems(wrappers: Wrapper[]): number {
     const addedWrappers: Wrapper[] = [];
     for (const wrapper of wrappers) {
@@ -102,6 +116,47 @@ export class AnalysisService {
       }
     }
     this.selectListSubject.next({items: removedWrappers, selected: false});
+  }
+
+  public addSeeds(nodes) {
+    const addedWrappers: Wrapper[] = [];
+    nodes.forEach((node) => {
+      const wrapper: Wrapper = node.wrapper;
+      if (node.isSeed === true && !this.inSelection(wrapper)) {
+        addedWrappers.push(wrapper);
+        this.selectedItems.set(wrapper.nodeId, wrapper);
+      }
+    });
+    this.selectListSubject.next({items: addedWrappers, selected: true});
+  }
+
+  public removeSeeds(nodes) {
+    const removedWrappers: Wrapper[] = [];
+    nodes.forEach((node) => {
+      const wrapper: Wrapper = node.wrapper;
+      if (node.isSeed === true && this.inSelection(wrapper)) {
+        removedWrappers.push(wrapper);
+        this.selectedItems.delete(wrapper.nodeId);
+      }
+    });
+    this.selectListSubject.next({items: removedWrappers, selected: false});
+  }
+
+  public invertSelection(nodes) {
+    const newSelection = [];
+    nodes.forEach((node) => {
+      const wrapper: Wrapper = node.wrapper;
+      if (wrapper.type === 'host' || wrapper.type === 'virus') {
+        if (!this.inSelection(wrapper)) {
+          newSelection.push(wrapper);
+        }
+      }
+    });
+    this.selectedItems.clear();
+    for (const wrapper of newSelection) {
+      this.selectedItems.set(wrapper.nodeId, wrapper);
+    }
+    this.selectListSubject.next({items: newSelection, selected: null});
   }
 
   public addVisibleHostProteins(nodes, proteins): number {
@@ -151,8 +206,8 @@ export class AnalysisService {
   }
 
   resetSelection() {
-    this.selectListSubject.next({items: [], selected: null});
     this.selectedItems.clear();
+    this.selectListSubject.next({items: [], selected: null});
   }
 
   idInSelection(nodeId: string): boolean {
