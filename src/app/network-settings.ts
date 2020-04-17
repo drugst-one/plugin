@@ -49,6 +49,9 @@ export class NetworkSettings {
       enabled: true,
     },
   };
+  private static analysisBigPhysics = {
+    enabled: false,
+  };
 
   private static mainLayout = {
     improvedLayout: false,
@@ -96,7 +99,7 @@ export class NetworkSettings {
     }
   }
 
-  static getOptions(network: 'main' | 'analysis') {
+  static getOptions(network: 'main' | 'analysis' | 'analysis-big') {
     if (network === 'main') {
       return {
         layout: this.mainLayout,
@@ -108,6 +111,12 @@ export class NetworkSettings {
         layout: this.analysisLayout,
         edges: this.analysisEdges,
         physics: this.analysisPhysics,
+      };
+    } else if (network === 'analysis-big') {
+      return {
+        layout: this.analysisLayout,
+        edges: this.analysisEdges,
+        physics: this.analysisBigPhysics,
       };
     }
   }
