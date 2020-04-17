@@ -38,6 +38,15 @@ interface Scored {
   rawScore: number;  // Unnormalized (kept to restore unnormalized value)
 }
 
+interface Seeded {
+  isSeed: boolean;
+}
+
+interface Baited {
+  closestViralProteins: string[];
+  closestDistance: number;
+}
+
 @Component({
   selector: 'app-analysis-panel',
   templateUrl: './analysis-panel.component.html',
@@ -66,11 +75,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   private proteins: any;
   public effects: any;
 
-  public tableDrugs: Array<Drug & Scored> = [];
-  public tableProteins: Array<Protein & Scored> = [];
-  public tableSelectedProteins: Array<Protein & Scored> = [];
-  public tableViralProteins: Array<ViralProtein & Scored> = [];
-  public tableSelectedViralProteins: Array<ViralProtein & Scored> = [];
+  public tableDrugs: Array<Drug & Scored & Baited> = [];
+  public tableProteins: Array<Protein & Scored & Seeded & Baited> = [];
+  public tableSelectedProteins: Array<Protein & Scored & Seeded & Baited> = [];
+  public tableViralProteins: Array<ViralProtein & Scored & Seeded> = [];
+  public tableSelectedViralProteins: Array<ViralProtein & Scored & Seeded> = [];
   public tableNormalize = false;
   public tableHasScores = false;
 
@@ -89,9 +98,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   private async refresh() {
     if (this.token) {
       this.task = await this.getTask(this.token);
+      this.analysis.switchSelection(this.token);
 
       if (this.task && this.task.info.done) {
         const result = await this.http.get<any>(`${environment.backend}task_result/?token=${this.token}`).toPromise();
+        const nodeAttributes = result.nodeAttributes || {};
+        const isSeed: {[key: string]: boolean} = nodeAttributes.isSeed || {};
 
         // Reset
         this.nodeData = {nodes: null, edges: null};
@@ -112,12 +124,22 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         this.network = new vis.Network(container, this.nodeData, options);
 
         const promises: Promise<any>[] = [];
+        promises.push(this.http.get<any>(`${environment.backend}task_result/?token=${this.token}&view=drugs`).toPromise()
+          .then((table) => {
+            this.tableDrugs = table;
+            this.tableDrugs.forEach((r) => {
+              r.rawScore = r.score;
+              r.closestViralProteins = (r.closestViralProteins as any).split(',');
+            });
+          }));
         promises.push(this.http.get<any>(`${environment.backend}task_result/?token=${this.token}&view=proteins`).toPromise()
           .then((table) => {
             this.tableProteins = table;
             this.tableSelectedProteins = [];
             this.tableProteins.forEach((r) => {
               r.rawScore = r.score;
+              r.isSeed = isSeed[r.proteinAc];
+              r.closestViralProteins = (r.closestViralProteins as any).split(',');
               if (this.analysis.proteinInSelection(r)) {
                 this.tableSelectedProteins.push(r);
               }
@@ -126,12 +148,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         promises.push(this.http.get<any>(`${environment.backend}task_result/?token=${this.token}&view=viral_proteins`).toPromise()
           .then((table) => {
             this.tableViralProteins = table;
-            this.tableViralProteins.forEach((r) => r.rawScore = r.score);
-          }));
-        promises.push(this.http.get<any>(`${environment.backend}task_result/?token=${this.token}&view=drugs`).toPromise()
-          .then((table) => {
-            this.tableDrugs = table;
-            this.tableDrugs.forEach((r) => r.rawScore = r.score);
+            this.tableViralProteins.forEach((r) => {
+              r.rawScore = r.score;
+              r.isSeed = isSeed[r.effectId];
+            });
           }));
         await Promise.all(promises);
 
@@ -221,10 +241,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
             const updatedNodes = [];
             this.nodeData.nodes.forEach((node) => {
               const nodeSelected = this.analysis.idInSelection(node.id);
-              if (selected !== nodeSelected) {
-                Object.assign(node, NetworkSettings.getNodeStyle(node.wrapper.type, node.isSeed, selected));
-                updatedNodes.push(node);
-              }
+              Object.assign(node, NetworkSettings.getNodeStyle(node.wrapper.type, node.isSeed, nodeSelected));
+              updatedNodes.push(node);
             });
             this.nodeData.nodes.update(updatedNodes);
 
@@ -266,6 +284,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   }
 
   close() {
+    this.analysis.switchSelection('main');
     this.token = null;
     this.tokenChange.emit(this.token);
     this.emitVisibleItems(false);
@@ -541,4 +560,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     this.analysis.removeItems(removeItems);
   }
 
+  public previewStringArray(arr: string[], count: number): string {
+    if (arr.length < count) {
+      return arr.join(', ');
+    } else {
+      return arr.slice(0, count).join(', ') + `, ... (${arr.length})`;
+    }
+  }
 }
+
+

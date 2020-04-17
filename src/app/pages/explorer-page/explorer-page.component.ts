@@ -141,10 +141,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         const updatedNodes = [];
         this.nodeData.nodes.forEach((node) => {
           const nodeSelected = this.analysis.idInSelection(node.id);
-          if (selected !== nodeSelected) {
-            Object.assign(node, NetworkSettings.getNodeStyle(node.wrapper.type, true, selected));
-            updatedNodes.push(node);
-          }
+          Object.assign(node, NetworkSettings.getNodeStyle(node.wrapper.type, true, nodeSelected));
+          updatedNodes.push(node);
         });
         this.nodeData.nodes.update(updatedNodes);
       }
@@ -466,4 +464,26 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.currentViewViralProteins = this.effects;
     }
   }
+
+  gProfilerLink(): string {
+    const queryString = this.analysis.getSelection()
+      .filter(wrapper => wrapper.type === 'host')
+      .map(wrapper => wrapper.data.proteinAc)
+      .join('%0A');
+    return 'http://biit.cs.ut.ee/gprofiler/gost?' +
+      'organism=hsapiens&' +
+      `query=${queryString}&` +
+      'ordered=false&' +
+      'all_results=false&' +
+      'no_iea=false&' +
+      'combined=false&' +
+      'measure_underrepresentation=false&' +
+      'domain_scope=annotated&' +
+      'significance_threshold_method=g_SCS&' +
+      'user_threshold=0.05&' +
+      'numeric_namespace=ENTREZGENE_ACC&' +
+      'sources=GO:MF,GO:CC,GO:BP,KEGG,TF,REAC,MIRNA,HPA,CORUM,HP,WP&' +
+      'background=';
+  }
+
 }

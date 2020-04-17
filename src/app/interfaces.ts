@@ -1,10 +1,9 @@
 import {AlgorithmType, QuickAlgorithmType} from './analysis.service';
 
-export type NodeType = 'host' | 'virus' | 'drug';
-
 export interface Protein {
   name: string;
   proteinAc: string;
+  proteinName: string;
   effects?: ViralProtein[];
   x?: number;
   y?: number;
@@ -132,22 +131,10 @@ export function getWrapperFromDrug(drug: Drug): Wrapper {
 
 export type WrapperType = 'host' | 'virus' | 'drug';
 
-export function getTypeFromNodeId(nodeId: string): WrapperType {
-  if (nodeId.startsWith('p_')) {
-    return 'host';
-  }
-  if (nodeId.startsWith('v_')) {
-    return 'virus';
-  }
-  if (nodeId.startsWith('d_')) {
-    return 'drug';
-  }
-}
-
 export interface Wrapper {
   backendId: string;
   nodeId: string;
-  type: 'host' | 'virus' | 'drug';
+  type: WrapperType;
   data: any;
 }
 
@@ -156,6 +143,7 @@ export interface Drug {
   name: string;
   status: 'approved' | 'investigational';
   inTrial: boolean;
+  inLiterature: boolean;
 }
 
 export interface Dataset {

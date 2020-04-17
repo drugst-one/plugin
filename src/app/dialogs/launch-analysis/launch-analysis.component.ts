@@ -9,6 +9,7 @@ import {
   QuickAlgorithmType,
   TRUSTRANK
 } from '../../analysis.service';
+import {Dataset} from '../../interfaces';
 
 @Component({
   selector: 'app-launch-analysis',
@@ -22,7 +23,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   @Input()
   public target: 'drug' | 'drug-target';
   @Input()
-  public dataset;
+  public dataset: Dataset;
   @Output()
   public showChange = new EventEmitter<boolean>();
 
@@ -35,7 +36,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public trustrankIncludeNonApprovedDrugs = false;
   public trustrankIncludeViralNonSeeds = true;
   public trustrankDampingFactor = 0.85;
-  public trustrankMaxDeg = 1.0;
+  public trustrankMaxDeg = 0;
   public trustrankHubPenalty = 0.0;
   public trustrankResultSize = 20;
 
@@ -43,24 +44,24 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public closenessIncludeIndirectDrugs = false;
   public closenessIncludeNonApprovedDrugs = false;
   public closenessIncludeViralNonSeeds = true;
-  public closenessMaxDeg = 1.0;
+  public closenessMaxDeg = 0;
   public closenessHubPenalty = 0.0;
   public closenessResultSize = 20;
 
   // Degree Parameters
   public degreeIncludeNonApprovedDrugs = false;
   public degreeIncludeViralNonSeeds = true;
-  public degreeMaxDeg = 1.0;
+  public degreeMaxDeg = 0;
   public degreeResultSize = 20;
 
   // Keypathwayminer Parameters
-  public keypathwayminerK = 1;
+  public keypathwayminerK = 5;
 
   // Multisteiner Parameters
   public multisteinerNumTrees = 5;
   public multisteinerTolerance = 10;
   public multisteinerIncludeViralNonSeeds = true;
-  public multisteinerMaxDeg = 1.0;
+  public multisteinerMaxDeg = 0;
   public multisteinerHubPenalty = 0.0;
 
   public hasBaits;
@@ -97,37 +98,44 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       seeds: this.analysis.getSelection().map((item) => item.backendId),
     };
 
+    parameters.strain_or_drugs = this.target === 'drug' ? 'drugs' : this.dataset.backendId;
+    parameters.bait_datasets = this.dataset.data;
+
     if (this.algorithm === 'trustrank') {
-      parameters.strain_or_drugs = this.target === 'drug' ? 'drugs' : this.dataset;
       parameters.damping_factor = this.trustrankDampingFactor;
       parameters.include_indirect_drugs = this.trustrankIncludeIndirectDrugs;
       parameters.include_non_approved_drugs = this.trustrankIncludeNonApprovedDrugs;
       parameters.ignore_non_seed_baits = !this.trustrankIncludeViralNonSeeds;
-      parameters.max_deg = this.trustrankMaxDeg;
+      if (this.trustrankMaxDeg && this.trustrankMaxDeg > 0) {
+        parameters.max_deg = this.trustrankMaxDeg;
+      }
       parameters.hub_penalty = this.trustrankHubPenalty;
       parameters.result_size = this.trustrankResultSize;
     } else if (this.algorithm === 'closeness') {
-      parameters.strain_or_drugs = this.target === 'drug' ? 'drugs' : this.dataset;
       parameters.include_indirect_drugs = this.closenessIncludeIndirectDrugs;
       parameters.include_non_approved_drugs = this.closenessIncludeNonApprovedDrugs;
       parameters.ignore_non_seed_baits = !this.closenessIncludeViralNonSeeds;
-      parameters.max_deg = this.closenessMaxDeg;
+      if (this.closenessMaxDeg && this.closenessMaxDeg > 0) {
+        parameters.max_deg = this.closenessMaxDeg;
+      }
       parameters.hub_penalty = this.closenessHubPenalty;
       parameters.result_size = this.closenessResultSize;
     } else if (this.algorithm === 'degree') {
-      parameters.strain_or_drugs = this.target === 'drug' ? 'drugs' : this.dataset;
       parameters.include_non_approved_drugs = this.degreeIncludeNonApprovedDrugs;
       parameters.ignore_non_seed_baits = !this.degreeIncludeViralNonSeeds;
-      parameters.max_deg = this.degreeMaxDeg;
+      if (this.degreeMaxDeg && this.degreeMaxDeg > 0) {
+        parameters.max_deg = this.degreeMaxDeg;
+      }
       parameters.result_size = this.degreeResultSize;
     } else if (this.algorithm === 'keypathwayminer') {
       parameters.k = this.keypathwayminerK;
     } else if (this.algorithm === 'multisteiner') {
-      parameters.strain_or_drugs = this.dataset;
       parameters.num_trees = this.multisteinerNumTrees;
       parameters.tolerance = this.multisteinerTolerance;
       parameters.ignore_non_seed_baits = !this.multisteinerIncludeViralNonSeeds;
-      parameters.max_deg = this.multisteinerMaxDeg;
+      if (this.multisteinerMaxDeg && this.multisteinerMaxDeg > 0) {
+        parameters.max_deg = this.multisteinerMaxDeg;
+      }
       parameters.hub_penalty = this.multisteinerHubPenalty;
     }
 
