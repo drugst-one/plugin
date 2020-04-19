@@ -371,10 +371,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       edges.push(this.mapEdge(edge, 'protein-protein', wrappers));
     }
 
-    for (const edge of network.edges) {
-      edges.push(this.mapEdge(edge, 'protein-protein', wrappers));
-    }
-
     return {
       nodes,
       edges,

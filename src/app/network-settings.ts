@@ -41,13 +41,16 @@ export class NetworkSettings {
   };
   private static analysisEdges = {
     smooth: false,
-    length: 400,
   };
   private static analysisPhysics = {
     enabled: true,
     stabilization: {
       enabled: true,
     },
+    repulsion: {
+      centralGravity: 0,
+    },
+    solver: 'repulsion',
   };
   private static analysisBigPhysics = {
     enabled: false,
