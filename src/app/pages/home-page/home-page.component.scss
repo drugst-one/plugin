@@ -20,17 +20,23 @@ div.scroll {
   }
 }
 
-.video-box {
-  margin-top: 40px;
-  margin-bottom: 40px;
-  width: 100%;
-
-  iframe {
-    max-width: 100%;
-  }
-}
-
 .button-box {
   maring-top: 40px;
   margin-bottom: 40px;
+}
+
+.video-container {
+  margin-top: 40px;
+  margin-bottom: 40px;
+
+  .video-box {
+    display: inline-block;
+    width: 100%;
+    max-width: 560px;
+    margin: 5px;
+
+    iframe {
+      max-width: 100%;
+    }
+  }
 }
