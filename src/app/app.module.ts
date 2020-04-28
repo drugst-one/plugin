@@ -22,6 +22,7 @@ import {InfoTileComponent} from './components/info-tile/info-tile.component';
 import {CustomProteinsComponent} from './dialogs/custom-proteins/custom-proteins.component';
 
 import {AnalysisService} from './analysis.service';
+import { CitationPageComponent } from './pages/citation-page/citation-page.component';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import {AnalysisService} from './analysis.service';
     ToggleComponent,
     InfoTileComponent,
     CustomProteinsComponent,
+    CitationPageComponent,
   ],
   imports: [
     BrowserModule,
