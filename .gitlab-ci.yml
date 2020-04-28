@@ -45,7 +45,7 @@ build:
     - check:lint
     - check:test
 
-deploy_dev:
+deploy:dev:
   image: docker
   stage: deploy
   only:
@@ -63,7 +63,7 @@ deploy_dev:
   dependencies:
     - build
 
-deploy_prod:
+deploy:prod:
   image: docker
   stage: deploy
   only:
