@@ -45,7 +45,7 @@ build:
     - check:lint
     - check:test
 
-deploy:
+deploy_dev:
   image: docker
   stage: deploy
   only:
@@ -58,7 +58,26 @@ deploy:
     - docker info
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker build -t gitlab.lrz.de:5005/covid-19/frontend .
-    - docker push gitlab.lrz.de:5005/covid-19/frontend
+    - docker build -t gitlab.lrz.de:5005/covid-19/frontend:dev -f ./Dockerfile.dev .
+    - docker push gitlab.lrz.de:5005/covid-19/frontend:dev
+  dependencies:
+    - build
+
+deploy_prod:
+  image: docker
+  stage: deploy
+  only:
+    - master
+  when: manual
+  services:
+    - docker:dind
+  variables:
+    CONTAINER_HOSTNAME: docker
+  before_script:
+    - docker info
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build -t gitlab.lrz.de:5005/covid-19/frontend:prod -f ./Dockerfile.prod .
+    - docker push gitlab.lrz.de:5005/covid-19/frontend:prod
   dependencies:
     - build
