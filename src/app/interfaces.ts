@@ -7,6 +7,12 @@ export interface Protein {
   effects?: ViralProtein[];
   x?: number;
   y?: number;
+  expressionLevel?: number;
+}
+
+export interface Tissue {
+  id: number;
+  name: string;
 }
 
 export interface ViralProtein {
@@ -144,6 +150,7 @@ export interface Drug {
   status: 'approved' | 'investigational';
   inTrial: boolean;
   inLiterature: boolean;
+  trialLinks: string[];
 }
 
 export interface Dataset {

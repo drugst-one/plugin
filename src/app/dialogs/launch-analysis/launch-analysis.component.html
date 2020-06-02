@@ -82,7 +82,7 @@
                    placeholder="Maximum degree" min="0" max="1" required>
           </div>
           <p class="help">
-            All nodes with degree greater than this value times number of vertices will be ignored. Disabled if equal to 0.
+            All nodes with degree greater than this value will be ignored. Disabled if equal to 0.
           </p>
         </div>
 
@@ -162,7 +162,7 @@
                    placeholder="Maximum degree" min="0" max="1" required>
           </div>
           <p class="help">
-            All nodes with degree greater than this value times number of vertices will be ignored. Disabled if equal to 0.
+            All nodes with degree greater than this value will be ignored. Disabled if equal to 0.
           </p>
         </div>
 
@@ -229,7 +229,7 @@
                    placeholder="Maximum degree" min="0" max="1" required>
           </div>
           <p class="help">
-            All nodes with degree greater than this value times number of vertices will be ignored. Disabled if equal to 0.
+            All nodes with degree greater than this value will be ignored. Disabled if equal to 0.
           </p>
         </div>
 
@@ -263,8 +263,70 @@
 
       </div>
 
-      <div *ngIf="algorithm==='keypathwayminer'">
+      <div *ngIf="algorithm==='proximity'">
 
+        <div class="field">
+          <label class="label" for="proximity-rs">Result size</label>
+          <div class="control">
+            <input [(ngModel)]="proximityResultSize" id="proximity-rs" class="input" type="number"
+                   placeholder="Result size" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Non-approved drugs</label>
+          <app-toggle textOn="Include" textOff="Ignore" tooltipOn="Include non-approved drugs."
+                      tooltipOff="Exclude non-approved drugs from the result."
+                      [(value)]="proximityIncludeNonApprovedDrugs"></app-toggle>
+        </div>
+
+        <div class="field">
+          <label class="label" for="proximity-rss">No. of random seed sets</label>
+          <div class="control">
+            <input [(ngModel)]="proximityNumRandomSeedSets" id="proximity-rss" class="input" type="number"
+                   placeholder="Maximum degree" min="0" max="1" required>
+          </div>
+          <p class="help">
+            Number of random seed sets for computing Z-scores.
+          </p>
+        </div>
+
+        <div class="field">
+          <label class="label" for="proximity-rdts">No. of random drug target sets</label>
+          <div class="control">
+            <input [(ngModel)]="proximityNumRandomDrugTargetSets" id="proximity-rdts" class="input" type="number"
+                   placeholder="Maximum degree" min="0" max="1" required>
+          </div>
+          <p class="help">
+            Number of random drug target sets for computing Z-scores.
+          </p>
+        </div>
+
+        <div class="field">
+          <label class="label" for="proximity-md">Maximum degree</label>
+          <div class="control">
+            <input [(ngModel)]="proximityMaxDeg" id="proximity-md" class="input" type="number"
+                   placeholder="Maximum degree" required>
+          </div>
+          <p class="help">
+            All nodes with degree greater than this value will be ignored. Disabled if equal to 0.
+          </p>
+        </div>
+
+        <div class="field">
+          <label class="label" for="proximity-hp">Hub penalty</label>
+          <div class="control">
+            <input [(ngModel)]="proximityHubPenalty" id="proximity-hp" class="input" type="number"
+                   placeholder="Maximum degree" min="0" max="1" required>
+          </div>
+          <p class="help">
+            Penalty parameter for hubs.
+          </p>
+        </div>
+
+      </div>
+
+      <div *ngIf="algorithm==='keypathwayminer'">
         <div *ngIf="hasBaits">
           <div class="notification is-warning warning">
             You have selected <i class="fa fa-virus"></i> viral proteins.
@@ -361,7 +423,7 @@
                    placeholder="Maximum degree" min="0" max="1" required>
           </div>
           <p class="help">
-            All nodes with degree greater than this value times number of vertices will be ignored. Disabled if equal to 0.
+            All nodes with degree greater than this value will be ignored. Disabled if equal to 0.
           </p>
         </div>
 

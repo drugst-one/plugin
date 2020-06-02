@@ -27,17 +27,18 @@
         </div>
       </div>
       <div class="notification is-danger" *ngIf="notFound.length > 0">
-        The following {{notFound.length}} Uniprot IDs could not be found and have been ignored:
+        The following {{notFound.length}} items could not be found and have been ignored:
         <ul><li class="not-found" *ngFor="let nf of notFound">{{nf}}</li></ul>
       </div>
       <div class="field">
-        <label class="label" for="protein-list">List of Uniprot IDs</label>
+        <label class="label" for="protein-list">List of items (Uniprot ids or Drugbank ids)</label>
         <div class="control">
-          <textarea class="input" [ngModel]="textList" (ngModelChange)="changeTextList($event)" id="protein-list"></textarea>
+          <textarea class="input" [ngModel]="textList" (ngModelChange)="changeTextList($event)" id="protein-list">
+          </textarea>
         </div>
       </div>
       <p *ngIf="proteins">
-        Proteins parsed: {{proteins.length}}
+        Items parsed: {{proteins.length}}
       </p>
     </section>
     <footer class="modal-card-foot">

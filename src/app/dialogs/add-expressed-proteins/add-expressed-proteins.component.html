@@ -1,0 +1,39 @@
+<div class="modal" [class.is-active]="show">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">
+        <span class="icon"><i class="fa fa-dna"></i></span>
+        Add Expressed Proteins
+      </p>
+      <button (click)="close()" class="delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <div class="field">
+        <label class="label" for="threshold">Threshold</label>
+        <div class="control">
+          <input [ngModel]="threshold" (ngModelChange)="setThreshold($event)" id="threshold" class="input" type="number"
+                 placeholder="Threshold" required>
+        </div>
+        <p class="help">
+          All proteins above this threshold.
+        </p>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <button (click)="addVisibleProteins();" class="button is-success is-rounded has-tooltip"
+              data-tooltip="Add to selection if they appear in the current network."
+              [disabled]="proteins.length === 0">
+        <span class="icon">
+          <i class="fas fa-expand"></i>
+        </span>
+        <span>
+          Select {{proteins.length}} proteins
+        </span>
+      </button>
+      <button (click)="close()" class="button is-rounded has-tooltip" data-tooltip="Close the current window.">
+        Close
+      </button>
+    </footer>
+  </div>
+</div>

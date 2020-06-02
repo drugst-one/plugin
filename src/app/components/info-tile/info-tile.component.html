@@ -15,6 +15,10 @@
       <b><span>Name: </span></b>
       {{ wrapper.data.proteinName }}
     </p>
+    <p *ngIf="wrapper.data.expressionLevel">
+      <b><span>Expression level: </span></b>
+      {{ wrapper.data.expressionLevel|number }}
+    </p>
   </div>
   <div *ngIf="wrapper.type === 'virus'">
     <p>
@@ -45,10 +49,13 @@
       <span class="icon is-small"><i class="fas fa-check"></i></span>
     </p>
     <p *ngIf="wrapper.data.inTrial">
-      <b>In Trial: </b> <span class="icon is-small"><i class="fas fa-check"></i></span>
-    <p *ngIf="!wrapper.data.inTrial">
-      <b>In Trial: </b> <span class="icon is-small"><i class="fas fa-times"></i></span>
+      <b>In trial(s) </b> <span class="icon is-small"><i class="fas fa-check"></i></span>
     </p>
+    <div *ngIf="wrapper.data.trialLinks.length > 0" class="list">
+      <div *ngFor="let link of wrapper.data.trialLinks" class="list-item">
+        <a [href]="link" target="_blank">{{beautify(link)}}</a>
+      </div>
+    </div>
   </div>
 
   <div class="field has-addons add-remove-toggle" *ngIf="wrapper.type !== 'drug'">
