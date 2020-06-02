@@ -25,7 +25,7 @@ import {
   getNodeIdsFromPDI,
   getNodeIdsFromPPI,
   getViralProteinNodeId,
-  getProteinNodeId
+  getProteinNodeId, Tissue
 } from '../../interfaces';
 import html2canvas from 'html2canvas';
 import {toast} from 'bulma-toast';
@@ -60,7 +60,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
   @Output() tokenChange = new EventEmitter<string | null>();
   @Output() showDetailsChange = new EventEmitter<Wrapper>();
-  @Output() visibleItems = new EventEmitter<any>();
+  @Output() visibleItems = new EventEmitter<[any[], [Protein[], ViralProtein[], Drug[]]]>();
 
   public task: Task | null = null;
 
@@ -83,7 +83,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   public tableNormalize = false;
   public tableHasScores = false;
 
+  public expressionExpanded = false;
+  public selectedTissue: Tissue | null = null;
+
   public algorithmNames = algorithmNames;
+
+  public tableDrugScoreTooltip = '';
+  public tableProteinScoreTooltip = '';
 
   constructor(private http: HttpClient, public analysis: AnalysisService) {
   }
@@ -100,10 +106,40 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       this.task = await this.getTask(this.token);
       this.analysis.switchSelection(this.token);
 
+      if (this.task.info.algorithm === 'degree') {
+        this.tableDrugScoreTooltip =
+          'Normalized number of direct interactions of the drug with the seeds. ' +
+          'The higher the score, the more relevant the drug.';
+        this.tableProteinScoreTooltip =
+          'Normalized number of direct interactions of the protein with the seeds. ' +
+          'The higher the score, the more relevant the protein.';
+      } else if (this.task.info.algorithm === 'closeness' || this.task.info.algorithm === 'quick' || this.task.info.algorithm === 'super') {
+        this.tableDrugScoreTooltip =
+          'Normalized inverse mean distance of the drug to the seeds. ' +
+          'The higher the score, the more relevant the drug.';
+        this.tableProteinScoreTooltip =
+          'Normalized inverse mean distance of the protein to the seeds. ' +
+          'The higher the score, the more relevant the protein.';
+      } else if (this.task.info.algorithm === 'trustrank') {
+        this.tableDrugScoreTooltip =
+          'Amount of ‘trust’ on the drug at termination of the algorithm. ' +
+          'The higher the score, the more relevant the drug.';
+        this.tableProteinScoreTooltip =
+          'Amount of ‘trust’ on the protein at termination of the algorithm. ' +
+          'The higher the score, the more relevant the protein.';
+      } else if (this.task.info.algorithm === 'proximity') {
+        this.tableDrugScoreTooltip =
+          'Empirical z-score of mean minimum distance between the drug’s targets and the seeds. ' +
+          'The lower the score, the more relevant the drug.';
+        this.tableProteinScoreTooltip =
+          'Empirical z-score of mean minimum distance between the drug’s targets and the seeds. ' +
+          'The lower the score, the more relevant the drug.';
+      }
+
       if (this.task && this.task.info.done) {
         const result = await this.http.get<any>(`${environment.backend}task_result/?token=${this.token}`).toPromise();
         const nodeAttributes = result.nodeAttributes || {};
-        const isSeed: {[key: string]: boolean} = nodeAttributes.isSeed || {};
+        const isSeed: { [key: string]: boolean } = nodeAttributes.isSeed || {};
 
         // Reset
         this.nodeData = {nodes: null, edges: null};
@@ -202,10 +238,22 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
               if (!node) {
                 continue;
               }
+              let drugType;
+              let drugInTrial;
+              if (item.type === 'drug') {
+                drugType = item.data.status;
+                drugInTrial = item.data.inTrial;
+              }
               const pos = this.network.getPositions([item.nodeId]);
               node.x = pos[item.nodeId].x;
               node.y = pos[item.nodeId].y;
-              Object.assign(node, NetworkSettings.getNodeStyle(node.wrapper.type, node.isSeed, selected));
+              Object.assign(node, NetworkSettings.getNodeStyle(
+                node.wrapper.type,
+                node.isSeed,
+                selected,
+                drugType,
+                drugInTrial,
+                node.gradient));
               updatedNodes.push(node);
             }
             this.nodeData.nodes.update(updatedNodes);
@@ -241,7 +289,19 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
             const updatedNodes = [];
             this.nodeData.nodes.forEach((node) => {
               const nodeSelected = this.analysis.idInSelection(node.id);
-              Object.assign(node, NetworkSettings.getNodeStyle(node.wrapper.type, node.isSeed, nodeSelected));
+              let drugType;
+              let drugInTrial;
+              if (node.wrapper.type === 'drug') {
+                drugType = node.wrapper.data.status;
+                drugInTrial = node.wrapper.data.inTrial;
+              }
+              Object.assign(node, NetworkSettings.getNodeStyle(
+                node.wrapper.type,
+                node.isSeed,
+                nodeSelected,
+                drugType,
+                drugInTrial,
+                node.gradient));
               updatedNodes.push(node);
             });
             this.nodeData.nodes.update(updatedNodes);
@@ -268,12 +328,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       }
     }
     this.emitVisibleItems(true);
-
   }
 
   public emitVisibleItems(on: boolean) {
     if (on) {
-      this.visibleItems.emit([this.nodeData.nodes, [this.proteins, this.effects]]);
+      this.visibleItems.emit([this.nodeData.nodes, [this.proteins, this.effects, []]]);
     } else {
       this.visibleItems.emit(null);
     }
@@ -563,6 +622,75 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       return arr.slice(0, count).join(', ') + `, ... (${arr.length})`;
     }
   }
+
+  public selectTissue(tissue: Tissue | null) {
+    if (!tissue) {
+      this.selectedTissue = null;
+      const updatedNodes = [];
+      for (const protein of this.proteins) {
+        const item = getWrapperFromProtein(protein);
+        const node = this.nodeData.nodes.get(item.nodeId);
+        if (!node) {
+          continue;
+        }
+        const pos = this.network.getPositions([item.nodeId]);
+        node.x = pos[item.nodeId].x;
+        node.y = pos[item.nodeId].y;
+        Object.assign(node,
+          NetworkSettings.getNodeStyle(
+            node.wrapper.type,
+            node.isSeed,
+            this.analysis.inSelection(item),
+            undefined,
+            undefined,
+            1.0));
+        node.wrapper = item;
+        node.gradient = 1.0;
+        protein.expressionLevel = undefined;
+        (node.wrapper.data as Protein).expressionLevel = undefined;
+        updatedNodes.push(node);
+      }
+      this.nodeData.nodes.update(updatedNodes);
+      return;
+    }
+
+    this.selectedTissue = tissue;
+
+    const minExp = 0.3;
+
+    this.http.get<Array<{ protein: Protein, level: number }>>(
+      `${environment.backend}tissue_expression/?tissue=${tissue.id}&token=${this.token}`)
+      .subscribe((levels) => {
+        const updatedNodes = [];
+        const maxExpr = Math.max(...levels.map(lvl => lvl.level));
+        for (const lvl of levels) {
+          const item = getWrapperFromProtein(lvl.protein);
+          const node = this.nodeData.nodes.get(item.nodeId);
+          if (!node) {
+            continue;
+          }
+          const gradient = lvl.level !== null ? (Math.pow(lvl.level / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
+          const pos = this.network.getPositions([item.nodeId]);
+          node.x = pos[item.nodeId].x;
+          node.y = pos[item.nodeId].y;
+          Object.assign(node,
+            NetworkSettings.getNodeStyle(
+              node.wrapper.type,
+              node.isSeed,
+              this.analysis.inSelection(item),
+              undefined,
+              undefined,
+              gradient));
+          node.wrapper = item;
+          node.gradient = gradient;
+          this.proteins.find(prot => getProteinNodeId(prot) === item.nodeId).expressionLevel = lvl.level;
+          (node.wrapper.data as Protein).expressionLevel = lvl.level;
+          updatedNodes.push(node);
+        }
+        this.nodeData.nodes.update(updatedNodes);
+      });
+  }
+
 }
 
 

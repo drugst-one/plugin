@@ -1,4 +1,5 @@
 import {WrapperType} from './interfaces';
+import {getGradientColor} from './utils';
 
 export class NetworkSettings {
 
@@ -170,7 +171,15 @@ export class NetworkSettings {
     }
   }
 
-  static getNodeStyle(nodeType: WrapperType, isSeed: boolean, isSelected: boolean, drugType?: string, drugInTrial?: boolean): any {
+  static getNodeStyle(nodeType: WrapperType,
+                      isSeed: boolean,
+                      isSelected: boolean,
+                      drugType?: string,
+                      drugInTrial?: boolean,
+                      gradient?: number): any {
+    if (!gradient) {
+      gradient = 1.0;
+    }
     let nodeColor;
     let nodeShape;
     let nodeSize;
@@ -205,6 +214,12 @@ export class NetworkSettings {
       } else {
         nodeShape = NetworkSettings.getNodeShape('drug', false);
       }
+    }
+
+    if (gradient === -1) {
+      nodeColor = '#A0A0A0';
+    } else {
+      nodeColor = getGradientColor('#FFFFFF', nodeColor, gradient);
     }
 
     const node: any = {

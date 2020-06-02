@@ -1,6 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { DatasetTileComponent } from './dataset-tile.component';
+import {DatasetTileComponent} from './dataset-tile.component';
+import {NgSelectModule} from '@ng-select/ng-select';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 describe('SelectDatasetComponent', () => {
   let component: DatasetTileComponent;
@@ -8,9 +10,10 @@ describe('SelectDatasetComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DatasetTileComponent ]
+      declarations: [DatasetTileComponent],
+      imports: [NgSelectModule, FormsModule, ReactiveFormsModule],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

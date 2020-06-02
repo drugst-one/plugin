@@ -7,6 +7,11 @@
   <app-custom-proteins [(show)]="showCustomProteinsDialog" [visibleNodes]="currentViewNodes">
   </app-custom-proteins>
 
+  <app-add-expressed-proteins [(show)]="showThresholdDialog"
+                              [visibleNodes]="currentViewNodes"
+                              [currentViewProteins]="currentViewProteins">
+  </app-add-expressed-proteins>
+
   <div class="covex explorer">
 
   <div class="covex left-window">
@@ -162,6 +167,7 @@
                 </div>
               </div>
             </div>
+
             <footer class="card-footer toolbar">
               <button (click)="toCanvas()" class="button is-primary is-rounded has-tooltip"
                       data-tooltip="Take a screenshot of the current network.">
@@ -169,6 +175,40 @@
                   <i class="fas fa-camera" aria-hidden="true"></i>
                 </span> <span>Screenshot</span>
               </button>
+
+              <div class="footer-buttons dropdown is-up" [class.is-active]="expressionExpanded">
+                <div class="dropdown-trigger">
+                  <button (click)="expressionExpanded=!expressionExpanded"
+                          class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
+                          aria-haspopup="true" aria-controls="dropdown-menu">
+                    <span *ngIf="!selectedTissue">Tissue</span>
+                    <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
+                    <span class="icon is-small">
+                      <i class="fas"
+                         [class.fa-angle-up]="expressionExpanded"
+                         [class.fa-angle-left]="!expressionExpanded" aria-hidden="true"></i>
+                    </span>
+                  </button>
+                </div>
+                <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                  <div class="dropdown-content tissue-dropdown">
+                    <div class="scroll-area">
+                      <a (click)="selectTissue(null)"
+                         [class.is-active]="!selectedTissue"
+                         class="dropdown-item">
+                        None
+                      </a>
+                      <a *ngFor="let tissue of analysis.getTissues()"
+                         (click)="selectTissue(tissue)"
+                         [class.is-active]="selectedTissue && tissue.id === selectedTissue.id"
+                         class="dropdown-item">
+                        {{tissue.name}}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off"
                           tooltipOn="Enable the network animation." tooltipOff="Disable the network animation and freeze nodes."
                           [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
@@ -512,13 +552,24 @@
         </footer>
 
         <footer class="card-footer">
-          <a (click)="showCustomProteinsDialog = true" class="card-footer-item has-text-primary"
+          <a (click)="showCustomProteinsDialog = true"
+             class="card-footer-item has-text-primary"
              data-tooltip="Add a custom list of proteins.">
             <span class="icon">
               <i class="fa fa-upload"></i>
             </span>
             <span>
               Custom proteins
+            </span>
+          </a>
+          <a (click)="showThresholdDialog = true"
+             class="card-footer-item has-text-primary"
+             data-tooltip="Add proteins expressed in the tissue.">
+            <span class="icon">
+              <i class="fa fa-angle-double-up"></i>
+            </span>
+            <span>
+              Expressed proteins
             </span>
           </a>
         </footer>

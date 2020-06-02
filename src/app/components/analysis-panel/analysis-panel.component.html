@@ -157,28 +157,6 @@
 
           <div class="field">
             <p class="control footer-buttons">
-              <button class="button is-danger is-rounded has-tooltip" data-tooltip="Delete the current analysis."
-                      (click)="analysis.removeTask(token); close()">
-                <span class="icon">
-                  <i class="fas fa-trash" aria-hidden="true"></i>
-                </span>
-                <span>
-                  Delete Analysis
-                </span>
-              </button>
-            </p>
-          </div>
-
-          <app-toggle *ngIf="task.info.target === 'drug-target'" class="footer-buttons" textOn="Drugs On" textOff="Off"
-                      tooltipOn="Display drugs in the network" tooltipOff="Hide drugs in the network"
-                      [value]="showDrugs" (valueChange)="toggleDrugs($event)"></app-toggle>
-
-          <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off"
-                      tooltipOn="Enable the network animation." tooltipOff="Disable the network animation and freeze nodes."
-                      [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
-
-          <div class="field">
-            <p class="control footer-buttons">
               <a [href]="graphmlLink()" class="button is-success is-rounded has-tooltip" data-tooltip="Export this network as .graphml file.">
                 <span class="icon">
                   <i class="fas fa-download" aria-hidden="true"></i>
@@ -189,6 +167,61 @@
               </a>
             </p>
           </div>
+
+<!--          <div class="field">-->
+<!--            <p class="control footer-buttons">-->
+<!--              <button class="button is-danger is-rounded has-tooltip" data-tooltip="Delete the current analysis."-->
+<!--                      (click)="analysis.removeTask(token); close()">-->
+<!--                <span class="icon">-->
+<!--                  <i class="fas fa-trash" aria-hidden="true"></i>-->
+<!--                </span>-->
+<!--                <span>-->
+<!--                  Delete Analysis-->
+<!--                </span>-->
+<!--              </button>-->
+<!--            </p>-->
+<!--          </div>-->
+
+          <div class="footer-buttons dropdown is-up" [class.is-active]="expressionExpanded">
+            <div class="dropdown-trigger">
+              <button (click)="expressionExpanded=!expressionExpanded"
+                      class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
+                      aria-haspopup="true" aria-controls="dropdown-menu">
+                <span *ngIf="!selectedTissue">Tissue</span>
+                <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
+                <span class="icon is-small">
+                  <i class="fas"
+                     [class.fa-angle-up]="expressionExpanded"
+                     [class.fa-angle-left]="!expressionExpanded" aria-hidden="true"></i>
+                </span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+              <div class="dropdown-content tissue-dropdown">
+                <div class="scroll-area">
+                  <a (click)="selectTissue(null)"
+                     [class.is-active]="!selectedTissue"
+                     class="dropdown-item">
+                    None
+                  </a>
+                  <a *ngFor="let tissue of analysis.getTissues()"
+                     (click)="selectTissue(tissue)"
+                     [class.is-active]="selectedTissue && tissue.id === selectedTissue.id"
+                     class="dropdown-item">
+                    {{tissue.name}}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <app-toggle *ngIf="task.info.target === 'drug-target'" class="footer-buttons" textOn="Drugs On" textOff="Off"
+                      tooltipOn="Display drugs in the network" tooltipOff="Hide drugs in the network"
+                      [value]="showDrugs" (valueChange)="toggleDrugs($event)"></app-toggle>
+
+          <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off"
+                      tooltipOn="Enable the network animation." tooltipOff="Disable the network animation and freeze nodes."
+                      [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
         </footer>
       </div>
       <div class="content tab-content scrollable" *ngIf="task && task.info.done" [class.is-visible]="tab === 'table'">
@@ -210,6 +243,9 @@
           </p>
         </div>
 
+        <div *ngIf="tableDrugs.length === 0 && task.info.target === 'drug'">
+          <i>No drugs have been found.</i>
+        </div>
         <div *ngIf="tableDrugs.length > 0" class="table-header">
           <h4 class="is-4">
             <span class="icon"><i class="fa fa-capsules"></i></span>
@@ -245,6 +281,10 @@
               </th>
               <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
                 Score
+                <button class="button is-light has-tooltip tooltip-button"
+                        [attr.data-tooltip]="tableDrugScoreTooltip">
+                  ?
+                </button>
                 <p-sortIcon [field]="'score'"></p-sortIcon>
               </th>
               <th>
@@ -330,6 +370,10 @@
               </th>
               <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
                 Score
+                <button class="button is-light has-tooltip tooltip-button"
+                        [attr.data-tooltip]="tableProteinScoreTooltip">
+                  ?
+                </button>
                 <p-sortIcon [field]="'score'"></p-sortIcon>
               </th>
               <th [pSortableColumn]="'isSeed'">

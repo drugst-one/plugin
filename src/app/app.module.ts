@@ -23,6 +23,7 @@ import {CustomProteinsComponent} from './dialogs/custom-proteins/custom-proteins
 
 import {AnalysisService} from './analysis.service';
 import { CitationPageComponent } from './pages/citation-page/citation-page.component';
+import { AddExpressedProteinsComponent } from './dialogs/add-expressed-proteins/add-expressed-proteins.component';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { CitationPageComponent } from './pages/citation-page/citation-page.compo
     InfoTileComponent,
     CustomProteinsComponent,
     CitationPageComponent,
+    AddExpressedProteinsComponent,
   ],
   imports: [
     BrowserModule,

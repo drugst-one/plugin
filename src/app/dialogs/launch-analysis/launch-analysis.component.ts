@@ -5,7 +5,7 @@ import {
   AnalysisService, CLOSENESS_CENTRALITY,
   DEGREE_CENTRALITY,
   KEYPATHWAYMINER, MAX_TASKS,
-  MULTISTEINER,
+  MULTISTEINER, NETWORK_PROXIMITY,
   QuickAlgorithmType,
   TRUSTRANK
 } from '../../analysis.service';
@@ -54,6 +54,14 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public degreeMaxDeg = 0;
   public degreeResultSize = 20;
 
+  // Network proximity
+  public proximityIncludeNonApprovedDrugs = false;
+  public proximityMaxDeg = 0;
+  public proximityHubPenalty = 0.0;
+  public proximityNumRandomSeedSets = 32;
+  public proximityNumRandomDrugTargetSets = 32;
+  public proximityResultSize = 20;
+
   // Keypathwayminer Parameters
   public keypathwayminerK = 5;
 
@@ -83,7 +91,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY];
       this.algorithm = MULTISTEINER.slug;
     } else if (this.target === 'drug') {
-      this.algorithms = [TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY];
+      this.algorithms = [TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, NETWORK_PROXIMITY];
       this.algorithm = TRUSTRANK.slug;
     }
   }
@@ -127,6 +135,15 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
         parameters.max_deg = this.degreeMaxDeg;
       }
       parameters.result_size = this.degreeResultSize;
+    } else if (this.algorithm === 'proximity') {
+      parameters.include_non_approved_drugs = this.proximityIncludeNonApprovedDrugs;
+      if (this.proximityMaxDeg && this.proximityMaxDeg > 0) {
+        parameters.max_deg = this.proximityMaxDeg;
+      }
+      parameters.hub_penalty = this.proximityHubPenalty;
+      parameters.num_random_seed_sets = this.proximityNumRandomSeedSets;
+      parameters.num_random_drug_target_sets = this.proximityNumRandomDrugTargetSets;
+      parameters.result_size = this.proximityResultSize;
     } else if (this.algorithm === 'keypathwayminer') {
       parameters.k = this.keypathwayminerK;
     } else if (this.algorithm === 'multisteiner') {

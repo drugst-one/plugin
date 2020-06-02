@@ -201,6 +201,13 @@ div.field.has-addons.add-remove-toggle {
 .toolbar {
   padding: 5px;
   border-top: 2px solid #d0d0d0;
+
+  .field {
+    margin-bottom: 0;
+    .control {
+      margin-bottom: 0;
+    }
+  }
 }
 
 html, body {
@@ -215,4 +222,15 @@ body {
 
 .ui-chkbox-box {
   border: 1px solid black !important;
+}
+
+.tissue-dropdown {
+  padding: 5px;
+  background-color: rgba(255.0, 255.0, 255.0, 0.85);
+
+  .scroll-area {
+    max-height: 600px;
+    overflow-y: scroll;
+    padding-right: 5px;
+  }
 }

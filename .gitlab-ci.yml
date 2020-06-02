@@ -23,14 +23,14 @@ check:lint:
   dependencies:
     - setup
 
-check:test:
-  image: trion/ng-cli-karma
-  stage: check
-  script:
-    - npm install
-    - ng test
-  dependencies:
-    - setup
+#check:test:
+#  image: trion/ng-cli-karma
+#  stage: check
+#  script:
+#    - npm install
+#    - ng test
+#  dependencies:
+#    - setup
 
 build:
   image: trion/ng-cli-karma
@@ -43,7 +43,7 @@ build:
     - npm run build
   dependencies:
     - check:lint
-    - check:test
+#    - check:test
 
 deploy:dev:
   image: docker
