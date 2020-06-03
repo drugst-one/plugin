@@ -60,7 +60,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
   @Output() tokenChange = new EventEmitter<string | null>();
   @Output() showDetailsChange = new EventEmitter<Wrapper>();
-  @Output() visibleItems = new EventEmitter<[any[], [Protein[], ViralProtein[], Drug[]]]>();
+  @Output() visibleItems = new EventEmitter<[any[], [Protein[], ViralProtein[], Tissue]]>();
 
   public task: Task | null = null;
 
@@ -332,7 +332,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
   public emitVisibleItems(on: boolean) {
     if (on) {
-      this.visibleItems.emit([this.nodeData.nodes, [this.proteins, this.effects, []]]);
+      this.visibleItems.emit([this.nodeData.nodes, [this.proteins, this.effects, this.selectedTissue]]);
     } else {
       this.visibleItems.emit(null);
     }
@@ -651,44 +651,42 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         updatedNodes.push(node);
       }
       this.nodeData.nodes.update(updatedNodes);
-      return;
-    }
-
-    this.selectedTissue = tissue;
-
-    const minExp = 0.3;
-
-    this.http.get<Array<{ protein: Protein, level: number }>>(
-      `${environment.backend}tissue_expression/?tissue=${tissue.id}&token=${this.token}`)
-      .subscribe((levels) => {
-        const updatedNodes = [];
-        const maxExpr = Math.max(...levels.map(lvl => lvl.level));
-        for (const lvl of levels) {
-          const item = getWrapperFromProtein(lvl.protein);
-          const node = this.nodeData.nodes.get(item.nodeId);
-          if (!node) {
-            continue;
+    } else {
+      this.selectedTissue = tissue;
+      const minExp = 0.3;
+      this.http.get<Array<{ protein: Protein, level: number }>>(
+        `${environment.backend}tissue_expression/?tissue=${tissue.id}&token=${this.token}`)
+        .subscribe((levels) => {
+          const updatedNodes = [];
+          const maxExpr = Math.max(...levels.map(lvl => lvl.level));
+          for (const lvl of levels) {
+            const item = getWrapperFromProtein(lvl.protein);
+            const node = this.nodeData.nodes.get(item.nodeId);
+            if (!node) {
+              continue;
+            }
+            const gradient = lvl.level !== null ? (Math.pow(lvl.level / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
+            const pos = this.network.getPositions([item.nodeId]);
+            node.x = pos[item.nodeId].x;
+            node.y = pos[item.nodeId].y;
+            Object.assign(node,
+              NetworkSettings.getNodeStyle(
+                node.wrapper.type,
+                node.isSeed,
+                this.analysis.inSelection(item),
+                undefined,
+                undefined,
+                gradient));
+            node.wrapper = item;
+            node.gradient = gradient;
+            this.proteins.find(prot => getProteinNodeId(prot) === item.nodeId).expressionLevel = lvl.level;
+            (node.wrapper.data as Protein).expressionLevel = lvl.level;
+            updatedNodes.push(node);
           }
-          const gradient = lvl.level !== null ? (Math.pow(lvl.level / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
-          const pos = this.network.getPositions([item.nodeId]);
-          node.x = pos[item.nodeId].x;
-          node.y = pos[item.nodeId].y;
-          Object.assign(node,
-            NetworkSettings.getNodeStyle(
-              node.wrapper.type,
-              node.isSeed,
-              this.analysis.inSelection(item),
-              undefined,
-              undefined,
-              gradient));
-          node.wrapper = item;
-          node.gradient = gradient;
-          this.proteins.find(prot => getProteinNodeId(prot) === item.nodeId).expressionLevel = lvl.level;
-          (node.wrapper.data as Protein).expressionLevel = lvl.level;
-          updatedNodes.push(node);
-        }
-        this.nodeData.nodes.update(updatedNodes);
-      });
+          this.nodeData.nodes.update(updatedNodes);
+        });
+    }
+    this.emitVisibleItems(true);
   }
 
 }

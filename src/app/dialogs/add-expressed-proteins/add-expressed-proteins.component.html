@@ -4,31 +4,56 @@
     <header class="modal-card-head">
       <p class="modal-card-title">
         <span class="icon"><i class="fa fa-dna"></i></span>
-        Add Expressed Proteins
+        Add Tissue Proteins
       </p>
       <button (click)="close()" class="delete" aria-label="close"></button>
     </header>
     <section class="modal-card-body">
-      <div class="field">
-        <label class="label" for="threshold">Threshold</label>
+      <div class="notification is-warning" *ngIf="addedCount === 0">
+        No host proteins have been selected or added.
+      </div>
+      <div class="notification is-warning" *ngIf="addedCount > 0">
+        {{addedCount}} host proteins have been selected or added.
+      </div>
+      <p *ngIf="!selectedTissue">
+        <i>
+          In order to add proteins expressed in specific tissues,
+          please select a tissue in the main network window to the bottom.
+        </i>
+      </p>
+      <p *ngIf="selectedTissue" class="mb-3">
+        Currently selected tissue: <strong>{{selectedTissue.name}}</strong>
+      </p>
+      <div class="field" *ngIf="selectedTissue">
+        <label class="label" for="threshold">Threshold (TPM)</label>
         <div class="control">
           <input [ngModel]="threshold" (ngModelChange)="setThreshold($event)" id="threshold" class="input" type="number"
                  placeholder="Threshold" required>
         </div>
         <p class="help">
-          All proteins above this threshold.
+          All proteins above this threshold in transcripts per million (TPM) will be added or selected.
         </p>
       </div>
     </section>
     <footer class="modal-card-foot">
+      <button (click)="addProteins();" class="button is-success is-rounded has-tooltip"
+              data-tooltip="Add all to the selection."
+              [disabled]="proteins.length === 0 || !selectedTissue || loading">
+        <span class="icon">
+          <i class="fas fa-plus"></i>
+        </span>
+        <span>
+          Add proteins
+        </span>
+      </button>
       <button (click)="addVisibleProteins();" class="button is-success is-rounded has-tooltip"
               data-tooltip="Add to selection if they appear in the current network."
-              [disabled]="proteins.length === 0">
+              [disabled]="proteins.length === 0 || !selectedTissue || loading">
         <span class="icon">
           <i class="fas fa-expand"></i>
         </span>
         <span>
-          Select {{proteins.length}} proteins
+          Select proteins ({{proteins.length}})
         </span>
       </button>
       <button (click)="close()" class="button is-rounded has-tooltip" data-tooltip="Close the current window.">

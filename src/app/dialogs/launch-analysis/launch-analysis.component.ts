@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {
   Algorithm,
   AlgorithmType,
-  AnalysisService, CLOSENESS_CENTRALITY,
+  AnalysisService, BETWEENNESS_CENTRALITY, CLOSENESS_CENTRALITY,
   DEGREE_CENTRALITY,
   KEYPATHWAYMINER, MAX_TASKS,
   MULTISTEINER, NETWORK_PROXIMITY,
@@ -58,9 +58,10 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public proximityIncludeNonApprovedDrugs = false;
   public proximityMaxDeg = 0;
   public proximityHubPenalty = 0.0;
-  public proximityNumRandomSeedSets = 32;
-  public proximityNumRandomDrugTargetSets = 32;
   public proximityResultSize = 20;
+
+  // Betweenness Parameters
+  public betweennessResultSize = 20;
 
   // Keypathwayminer Parameters
   public keypathwayminerK = 5;
@@ -88,7 +89,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.target === 'drug-target') {
-      this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY];
+      this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, BETWEENNESS_CENTRALITY];
       this.algorithm = MULTISTEINER.slug;
     } else if (this.target === 'drug') {
       this.algorithms = [TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, NETWORK_PROXIMITY];
@@ -141,9 +142,9 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
         parameters.max_deg = this.proximityMaxDeg;
       }
       parameters.hub_penalty = this.proximityHubPenalty;
-      parameters.num_random_seed_sets = this.proximityNumRandomSeedSets;
-      parameters.num_random_drug_target_sets = this.proximityNumRandomDrugTargetSets;
       parameters.result_size = this.proximityResultSize;
+    } else if (this.algorithm === 'betweenness') {
+      parameters.result_size = this.betweennessResultSize;
     } else if (this.algorithm === 'keypathwayminer') {
       parameters.k = this.keypathwayminerK;
     } else if (this.algorithm === 'multisteiner') {

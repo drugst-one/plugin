@@ -69,6 +69,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public currentViewProteins: Protein[];
   public currentViewViralProteins: ViralProtein[];
+  public currentViewSelectedTissue: Tissue | null = null;
   public currentViewNodes: any[];
 
   public expressionExpanded = false;
@@ -471,15 +472,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  analysisWindowChanged($event: any) {
+  analysisWindowChanged($event: [any[], [Protein[], ViralProtein[], Tissue]]) {
     if ($event) {
       this.currentViewNodes = $event[0];
       this.currentViewProteins = $event[1][0];
       this.currentViewViralProteins = $event[1][1];
+      this.currentViewSelectedTissue = $event[1][2];
     } else {
       this.currentViewNodes = this.nodeData.nodes;
       this.currentViewProteins = this.proteins;
       this.currentViewViralProteins = this.effects;
+      this.currentViewSelectedTissue = this.selectedTissue;
     }
   }
 
@@ -505,6 +508,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public selectTissue(tissue: Tissue | null) {
+    this.expressionExpanded = false;
     if (!tissue) {
       this.selectedTissue = null;
       const updatedNodes = [];
@@ -532,45 +536,47 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         updatedNodes.push(node);
       }
       this.nodeData.nodes.update(updatedNodes);
-      return;
+    } else {
+      this.selectedTissue = tissue;
+
+      const minExp = 0.3;
+
+      const params = new HttpParams().set('tissue', `${tissue.id}`).set('data', JSON.stringify(this.currentDataset));
+      this.http.get<any>(
+        `${environment.backend}tissue_expression/`, {params})
+        .subscribe((levels) => {
+          const updatedNodes = [];
+          const maxExpr = Math.max(...levels.map(lvl => lvl.level));
+          for (const lvl of levels) {
+            const item = getWrapperFromProtein(lvl.protein);
+            const node = this.nodeData.nodes.get(item.nodeId);
+            if (!node) {
+              continue;
+            }
+            const gradient = lvl.level !== null ? (Math.pow(lvl.level / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
+            const pos = this.network.getPositions([item.nodeId]);
+            node.x = pos[item.nodeId].x;
+            node.y = pos[item.nodeId].y;
+            Object.assign(node,
+              NetworkSettings.getNodeStyle(
+                node.wrapper.type,
+                node.isSeed,
+                this.analysis.inSelection(item),
+                undefined,
+                undefined,
+                gradient));
+            node.wrapper = item;
+            node.gradient = gradient;
+            this.proteins.find(prot => getProteinNodeId(prot) === item.nodeId).expressionLevel = lvl.level;
+            (node.wrapper.data as Protein).expressionLevel = lvl.level;
+            updatedNodes.push(node);
+          }
+          this.nodeData.nodes.update(updatedNodes);
+        });
+
     }
 
-    this.selectedTissue = tissue;
-
-    const minExp = 0.3;
-
-    const params = new HttpParams().set('tissue', `${tissue.id}`).set('data', JSON.stringify(this.currentDataset));
-    this.http.get<any>(
-      `${environment.backend}tissue_expression/`, {params})
-      .subscribe((levels) => {
-        const updatedNodes = [];
-        const maxExpr = Math.max(...levels.map(lvl => lvl.level));
-        for (const lvl of levels) {
-          const item = getWrapperFromProtein(lvl.protein);
-          const node = this.nodeData.nodes.get(item.nodeId);
-          if (!node) {
-            continue;
-          }
-          const gradient = lvl.level !== null ? (Math.pow(lvl.level / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
-          const pos = this.network.getPositions([item.nodeId]);
-          node.x = pos[item.nodeId].x;
-          node.y = pos[item.nodeId].y;
-          Object.assign(node,
-            NetworkSettings.getNodeStyle(
-              node.wrapper.type,
-              node.isSeed,
-              this.analysis.inSelection(item),
-              undefined,
-              undefined,
-              gradient));
-          node.wrapper = item;
-          node.gradient = gradient;
-          this.proteins.find(prot => getProteinNodeId(prot) === item.nodeId).expressionLevel = lvl.level;
-          (node.wrapper.data as Protein).expressionLevel = lvl.level;
-          updatedNodes.push(node);
-        }
-        this.nodeData.nodes.update(updatedNodes);
-      });
+    this.currentViewSelectedTissue = this.selectedTissue;
   }
 
 }
