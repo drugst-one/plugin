@@ -191,7 +191,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
           }));
         await Promise.all(promises);
 
-        this.tableHasScores = ['trustrank', 'closeness', 'degree', 'quick', 'super'].indexOf(this.task.info.algorithm) !== -1;
+        this.tableHasScores = ['trustrank', 'closeness', 'degree', 'proximity', 'betweenness', 'quick', 'super']
+          .indexOf(this.task.info.algorithm) !== -1;
         if (this.tableHasScores) {
           this.toggleNormalization(true);
         }
