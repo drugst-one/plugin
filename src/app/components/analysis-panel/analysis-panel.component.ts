@@ -194,7 +194,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         this.tableHasScores = ['trustrank', 'closeness', 'degree', 'proximity', 'betweenness', 'quick', 'super']
           .indexOf(this.task.info.algorithm) !== -1;
         if (this.tableHasScores) {
-          this.toggleNormalization(true);
+          if (this.task.info.algorithm !== 'proximity') {
+            this.toggleNormalization(true);
+          } else {
+            this.toggleNormalization(false);
+          }
         }
 
         this.network.on('deselectNode', (properties) => {
