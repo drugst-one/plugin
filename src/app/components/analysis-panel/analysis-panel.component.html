@@ -225,7 +225,7 @@
         </footer>
       </div>
       <div class="content tab-content scrollable" *ngIf="task && task.info.done" [class.is-visible]="tab === 'table'">
-        <div class="field has-addons" *ngIf="tableHasScores">
+        <div class="field has-addons" *ngIf="tableHasScores && task.info.algorithm !== 'proximity'">
           <p class="control">
             <button class="button is-rounded has-tooltip" data-tooltip="Normalize the scores"
                     [class.is-primary]="tableNormalize" (click)="toggleNormalization(true)">
