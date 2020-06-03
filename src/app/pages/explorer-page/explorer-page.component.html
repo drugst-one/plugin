@@ -8,6 +8,7 @@
   </app-custom-proteins>
 
   <app-add-expressed-proteins [(show)]="showThresholdDialog"
+                              [selectedTissue]="currentViewSelectedTissue"
                               [visibleNodes]="currentViewNodes"
                               [currentViewProteins]="currentViewProteins">
   </app-add-expressed-proteins>
@@ -180,7 +181,8 @@
                 <div class="dropdown-trigger">
                   <button (click)="expressionExpanded=!expressionExpanded"
                           class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
-                          aria-haspopup="true" aria-controls="dropdown-menu">
+                          aria-haspopup="true" aria-controls="dropdown-menu"
+                          data-tooltip="Tissue expression data is provided by the GTEx project.">
                     <span *ngIf="!selectedTissue">Tissue</span>
                     <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
                     <span class="icon is-small">
@@ -569,7 +571,7 @@
               <i class="fa fa-angle-double-up"></i>
             </span>
             <span>
-              Expressed proteins
+              Tissue proteins
             </span>
           </a>
         </footer>

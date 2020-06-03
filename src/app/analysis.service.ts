@@ -5,7 +5,7 @@ import {environment} from '../environments/environment';
 import {toast} from 'bulma-toast';
 import {Injectable} from '@angular/core';
 
-export type AlgorithmType = 'trustrank' | 'keypathwayminer' | 'multisteiner' | 'closeness' | 'degree' | 'proximity';
+export type AlgorithmType = 'trustrank' | 'keypathwayminer' | 'multisteiner' | 'closeness' | 'degree' | 'proximity' | 'betweenness';
 export type QuickAlgorithmType = 'quick' | 'super';
 
 export const algorithmNames = {
@@ -15,6 +15,7 @@ export const algorithmNames = {
   closeness: 'Closeness Centrality',
   degree: 'Degree Centrality',
   proximity: 'Network Proximity',
+  betweenness: 'Betweenness Centrality',
   quick: 'Simple',
   super: 'Quick-Start',
 };
@@ -28,6 +29,7 @@ export const TRUSTRANK: Algorithm = {slug: 'trustrank', name: algorithmNames.tru
 export const CLOSENESS_CENTRALITY: Algorithm = {slug: 'closeness', name: algorithmNames.closeness};
 export const DEGREE_CENTRALITY: Algorithm = {slug: 'degree', name: algorithmNames.degree};
 export const NETWORK_PROXIMITY: Algorithm = {slug: 'proximity', name: algorithmNames.proximity};
+export const BETWEENNESS_CENTRALITY: Algorithm = {slug: 'betweenness', name: algorithmNames.betweenness};
 export const KEYPATHWAYMINER: Algorithm = {slug: 'keypathwayminer', name: algorithmNames.keypathwayminer};
 export const MULTISTEINER: Algorithm = {slug: 'multisteiner', name: algorithmNames.multisteiner};
 

@@ -24,6 +24,7 @@ export class CustomProteinsComponent implements OnInit {
   public itemsFound: Array<Wrapper> = [];
   public addedCount = 0;
   public selectOnly = false;
+  public loading = false;
 
   constructor(private http: HttpClient, private analysis: AnalysisService) { }
 
@@ -42,6 +43,7 @@ export class CustomProteinsComponent implements OnInit {
   }
 
   public async addProteins() {
+    this.loading = true;
     this.notFound = [];
     this.itemsFound = [];
     const proteins = this.proteins;
@@ -56,9 +58,11 @@ export class CustomProteinsComponent implements OnInit {
     this.itemsFound = items;
     this.addedCount = this.analysis.addItems(items);
     this.selectOnly = false;
+    this.loading = false;
   }
 
   public async addVisibleProteins() {
+    this.loading = true;
     this.notFound = [];
     this.itemsFound = [];
     const proteins = this.proteins;
@@ -75,6 +79,7 @@ export class CustomProteinsComponent implements OnInit {
     this.itemsFound = items;
     this.addedCount = this.analysis.addVisibleHostProteins(this.visibleNodes, proteinItems);
     this.selectOnly = true;
+    this.loading = false;
   }
 
   public changeTextList(textList) {

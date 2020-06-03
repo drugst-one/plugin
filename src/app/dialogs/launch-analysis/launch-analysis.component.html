@@ -115,9 +115,13 @@
               <div class="content">
                 <h6 class="is-6">About TrustRank</h6>
                 <p>
-                  <a href="https://en.wikipedia.org/wiki/TrustRank" target="_blank">TrustRank</a>
-                  is a node centrality measure that ranks nodes in a network based on how well they are connected to a
-                  (trusted) set of seed nodes (Gyöngyi, Garcia-Molina, and Pedersen 2004).
+                  TrustRank is a node centrality measure that ranks nodes in a network based on how well they are
+                  connected to a (trusted) set of seed nodes.
+                </p>
+                <p>
+                  <a href="https://docs.google.com/document/d/1_SRnIx_UC8FR59rMyrf_r45fCIt3naP4t1qefYNp9vk" target="_blank">
+                    Check the documentation for more info
+                  </a>
                 </p>
               </div>
             </div>
@@ -194,9 +198,8 @@
               <div class="content">
                 <h6 class="is-6">About Closeness Centrality</h6>
                 <p>
-                  <a href="https://en.wikipedia.org/wiki/Closeness_centrality" target="_blank">Closeness Centrality</a>
-                  is a node centrality measure that ranks the nodes in a network based on the lengths of their shortest
-                  paths to all other nodes in the network (Kaczprowski, Doncheva, and Albrecht 2013).
+                  Closeness Centrality is a node centrality measure that ranks the nodes in a network based on the
+                  lengths of their shortest paths to all other nodes in the network.
                 </p>
               </div>
             </div>
@@ -250,11 +253,8 @@
               <div class="content">
                 <h6 class="is-6">About Degree Centrality</h6>
                 <p>
-                  <a href="https://en.wikipedia.org/wiki/Centrality#Degree_centrality" target="_blank">
-                    Degree Centrality
-                  </a>
-                  assigns an importance score based simply on the number of links held by each node. In CoVex, we use
-                  a modified version which does not consider all links but only the neighbouring seeds.
+                  Degree Centrality assigns an importance score based simply on the number of links held by each node.
+                  In CoVex, we use a modified version which does not consider all links but only the neighbouring seeds.
                 </p>
               </div>
             </div>
@@ -281,28 +281,6 @@
         </div>
 
         <div class="field">
-          <label class="label" for="proximity-rss">No. of random seed sets</label>
-          <div class="control">
-            <input [(ngModel)]="proximityNumRandomSeedSets" id="proximity-rss" class="input" type="number"
-                   placeholder="Maximum degree" min="0" max="1" required>
-          </div>
-          <p class="help">
-            Number of random seed sets for computing Z-scores.
-          </p>
-        </div>
-
-        <div class="field">
-          <label class="label" for="proximity-rdts">No. of random drug target sets</label>
-          <div class="control">
-            <input [(ngModel)]="proximityNumRandomDrugTargetSets" id="proximity-rdts" class="input" type="number"
-                   placeholder="Maximum degree" min="0" max="1" required>
-          </div>
-          <p class="help">
-            Number of random drug target sets for computing Z-scores.
-          </p>
-        </div>
-
-        <div class="field">
           <label class="label" for="proximity-md">Maximum degree</label>
           <div class="control">
             <input [(ngModel)]="proximityMaxDeg" id="proximity-md" class="input" type="number"
@@ -322,6 +300,52 @@
           <p class="help">
             Penalty parameter for hubs.
           </p>
+        </div>
+
+        <div class="box">
+          <article class="media">
+            <div class="media-left">
+              <span class="icon"><i class="fa fa-info"></i></span>
+            </div>
+            <div class="media-content">
+              <div class="content">
+                <h6 class="is-6">About Degree Centrality</h6>
+                <p>
+                  Degree Centrality uses the average minimum distance from the drug’s targets to all of the selected
+                  seeds as a measure of proximity.
+                </p>
+              </div>
+            </div>
+          </article>
+        </div>
+
+      </div>
+
+      <div *ngIf="algorithm==='betweenness'">
+
+        <div class="field">
+          <label class="label" for="proximity-rs">Result size</label>
+          <div class="control">
+            <input [(ngModel)]="betweennessResultSize" id="betweenness-rs" class="input" type="number"
+                   placeholder="Result size" required>
+          </div>
+        </div>
+
+        <div class="box">
+          <article class="media">
+            <div class="media-left">
+              <span class="icon"><i class="fa fa-info"></i></span>
+            </div>
+            <div class="media-content">
+              <div class="content">
+                <h6 class="is-6">About Betweenness Centrality</h6>
+                <p>
+                  Betweenness Centrality ranks the proteins in a network based on how many shortest paths pass through
+                  them.
+                </p>
+              </div>
+            </div>
+          </article>
         </div>
 
       </div>
@@ -367,9 +391,8 @@
               <div class="content">
                 <h6 class="is-6">About KeyPathwayMiner</h6>
                 <p>
-                  <a href="https://keypathwayminer.compbio.sdu.dk/keypathwayminer/">KeyPathwayMiner</a>
-                  is a network enrichment tool that identifies condition-specific sub-networks (key pathways)
-                  (Alcaraz et al. 2016).
+                  KeyPathwayMiner is a network enrichment tool that identifies condition-specific sub-networks
+                  (key pathways) (Alcaraz et al. 2016).
                 </p>
               </div>
             </div>
@@ -446,25 +469,13 @@
                       [(value)]="multisteinerIncludeViralNonSeeds"></app-toggle>
         </div>
 
-        <div class="box">
-          <article class="media">
-            <div class="media-left">
-              <span class="icon"><i class="fa fa-info"></i></span>
-            </div>
-            <div class="media-content">
-              <div class="content">
-                <h6 class="is-6">About Multi-Steiner</h6>
-                <p>
-                  The <a href="https://en.wikipedia.org/wiki/Steiner_tree_problem">Steiner tree</a>
-                  problem is a classical combinatorial optimization problem. It asks to find a sub-graph
-                  of minimum size connecting a given set of seed nodes.
-                </p>
-              </div>
-            </div>
-          </article>
-        </div>
-
       </div>
+
+      <p class="doc-link">
+        <a href="https://docs.google.com/document/d/1_SRnIx_UC8FR59rMyrf_r45fCIt3naP4t1qefYNp9vk" target="_blank">
+          Check the documentation for more info
+        </a>
+      </p>
     </section>
 
     <footer class="modal-card-foot">

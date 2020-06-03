@@ -44,7 +44,7 @@
     <footer class="modal-card-foot">
       <button (click)="addProteins();" class="button is-success is-rounded has-tooltip"
               data-tooltip="Add all to the selection."
-              [disabled]="proteins.length === 0">
+              [disabled]="proteins.length === 0 || loading">
         <span class="icon">
           <i class="fa fa-plus"></i>
         </span>
@@ -54,7 +54,7 @@
       </button>
       <button (click)="addVisibleProteins();" class="button is-success is-rounded has-tooltip"
               data-tooltip="Add to selection if they appear in the current network."
-              [disabled]="proteins.length === 0">
+              [disabled]="proteins.length === 0 || loading">
         <span class="icon">
           <i class="fas fa-expand"></i>
         </span>
