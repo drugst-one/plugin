@@ -51,7 +51,7 @@
     <p *ngIf="wrapper.data.inTrial">
       <b>In trial(s) </b> <span class="icon is-small"><i class="fas fa-check"></i></span>
     </p>
-    <div *ngIf="wrapper.data.trialLinks.length > 0" class="list">
+    <div *ngIf="wrapper.data.inTrial && wrapper.data.trialLinks.length > 0" class="list">
       <div *ngFor="let link of wrapper.data.trialLinks" class="list-item">
         <a [href]="link" target="_blank">{{beautify(link)}}</a>
       </div>

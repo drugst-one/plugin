@@ -61,6 +61,9 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public proximityResultSize = 20;
 
   // Betweenness Parameters
+  public betweennessIncludeViralNonSeeds = true;
+  public betweennessMaxDeg = 0;
+  public betweennessHubPenalty = 0.0;
   public betweennessResultSize = 20;
 
   // Keypathwayminer Parameters
@@ -144,6 +147,11 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.hub_penalty = this.proximityHubPenalty;
       parameters.result_size = this.proximityResultSize;
     } else if (this.algorithm === 'betweenness') {
+      parameters.ignore_non_seed_baits = !this.betweennessIncludeViralNonSeeds;
+      if (this.betweennessMaxDeg && this.betweennessMaxDeg > 0) {
+        parameters.max_deg = this.betweennessMaxDeg;
+      }
+      parameters.hub_penalty = this.betweennessHubPenalty;
       parameters.result_size = this.betweennessResultSize;
     } else if (this.algorithm === 'keypathwayminer') {
       parameters.k = this.keypathwayminerK;
