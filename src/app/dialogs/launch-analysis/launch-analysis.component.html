@@ -331,6 +331,36 @@
           </div>
         </div>
 
+        <div class="field">
+          <label class="label" for="betweenness-md">Maximum degree</label>
+          <div class="control">
+            <input [(ngModel)]="betweennessMaxDeg" id="betweenness-md" class="input" type="number"
+                   placeholder="Maximum degree" min="0" max="1" required>
+          </div>
+          <p class="help">
+            All nodes with degree greater than this value will be ignored. Disabled if equal to 0.
+          </p>
+        </div>
+
+        <div class="field">
+          <label class="label" for="betweenness-hp">Hub penalty</label>
+          <div class="control">
+            <input [(ngModel)]="betweennessHubPenalty" id="betweenness-hp" class="input" type="number"
+                   placeholder="Maximum degree" min="0" max="1" required>
+          </div>
+          <p class="help">
+            Penalty parameter for hubs.
+          </p>
+        </div>
+
+        <div class="field">
+          <label class="label">Include non-seed viral proteins</label>
+          <app-toggle textOn="Include" textOff="Ignore"
+                      tooltipOn="Include viral proteins that are not seeds."
+                      tooltipOff="Exclude viral proteins that are not seeds."
+                      [(value)]="betweennessIncludeViralNonSeeds"></app-toggle>
+        </div>
+
         <div class="box">
           <article class="media">
             <div class="media-left">
