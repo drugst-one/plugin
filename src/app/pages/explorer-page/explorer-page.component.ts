@@ -1,7 +1,7 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef,
+  ElementRef, Input,
   OnInit,
   ViewChild
 } from '@angular/core';
@@ -74,6 +74,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public expressionExpanded = false;
   public selectedTissue: Tissue | null = null;
+
+  @Input()
+  public textColor = 'red';
 
   public datasetItems: Dataset[] = [
     {
