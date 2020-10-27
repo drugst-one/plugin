@@ -10,7 +10,13 @@ import {
   ViralProtein,
   Protein,
   Wrapper,
-  getWrapperFromViralProtein, getWrapperFromProtein, getNodeIdsFromPVI, getViralProteinNodeId, getProteinNodeId, Dataset, Tissue
+  getWrapperFromViralProtein,
+  getWrapperFromProtein,
+  getNodeIdsFromPVI,
+  getViralProteinNodeId,
+  getProteinNodeId,
+  Dataset,
+  Tissue
 } from '../../interfaces';
 import {ProteinNetwork, getDatasetFilename} from '../../main-network';
 import {HttpClient, HttpParams} from '@angular/common/http';
@@ -28,6 +34,23 @@ declare var vis: any;
   styleUrls: ['./explorer-page.component.scss'],
 })
 export class ExplorerPageComponent implements OnInit, AfterViewInit {
+
+  private networkJSON = '{"nodes": [], "edges": []}';
+
+  @Input()
+  public set network(network: string | undefined) {
+    if (typeof network === 'undefined') {
+      return;
+    }
+
+    this.networkJSON = network;
+
+    this.createNetwork();
+  }
+
+  public get network() {
+    return this.networkJSON;
+  }
 
   public showDetails = false;
   public selectedWrapper: Wrapper | null = null;
@@ -50,7 +73,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public effects: any;
   public edges: any;
 
-  private network: any;
+  private networkInternal: any;
   public nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
 
   private dumpPositions = false;
@@ -78,46 +101,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   @Input()
   public textColor = 'red';
 
-  public datasetItems: Dataset[] = [
-    {
-      label: 'SARS-CoV-2 (Gordon et al.)',
-      strains: 'SARS-CoV-2',
-      hostTarget: 'Human cell line, HEK-293T kidney cells',
-      method: 'AP-MS (affinity purification-mass spectrometry)',
-      source: ['https://www.biorxiv.org/content/10.1101/2020.03.22.002386v3', 'bioRxiv'],
-      year: 2020,
-      datasetNames: 'Gordon et al., 2020',
-      backendId: 'SARS_CoV2',
-      data: [['Krogan', 'SARS-CoV2']]
-    },
-    {
-      label: 'SARS-CoV-1 (Pfefferle et al.)',
-      strains: 'SARS-CoV-1',
-      hostTarget: 'Human brain and fetal brain cDNA libraries in yeast strains',
-      method: 'High-Throughput Yeast Two Hybrid Screen (HTY2H) and validations with Lumier assay, ' +
-        'as well as experimentally validated interactions from 20 publications.',
-      source: ['https://www.ncbi.nlm.nih.gov/pubmed/22046132', 'NCBI'],
-      year: 2011,
-      datasetNames: 'Pfefferle et al., 2011',
-      backendId: 'SARS_CoV1',
-      data: [['Pfefferle', 'SARS-CoV1']]
-    },
-    {
-      label: 'SARS-CoV-1 (VirHostNet 2.0)',
-      strains: 'SARS-CoV-1',
-      hostTarget: 'Different human cell lines',
-      method: 'Literature curation, interactions from 14 publications, which have experimental validation by at ' +
-        'least one of the following assays: co-immunoprecipitation, two hybrid, pull-down, mass spectrometry.',
-      source: ['http://virhostnet.prabi.fr/', 'VirHostNet 2.0'],
-      year: 2014,
-      datasetNames: 'VirHostNet 2.0',
-      backendId: 'SARS_CoV1',
-      data: [['VirHostNet', 'SARS-CoV1']]
-    },
-  ];
-
-  public selectedDataset = this.datasetItems[0];
-
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 
   constructor(private http: HttpClient, public analysis: AnalysisService) {
@@ -138,7 +121,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           if (!node) {
             continue;
           }
-          const pos = this.network.getPositions([item.nodeId]);
+          const pos = this.networkInternal.getPositions([item.nodeId]);
           node.x = pos[item.nodeId].x;
           node.y = pos[item.nodeId].y;
           node.x = pos[item.nodeId].x;
@@ -175,20 +158,15 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   async ngAfterViewInit() {
-    if (!this.network) {
-      this.selectedDataset = this.datasetItems[0];
-      await this.createNetwork(this.selectedDataset.data);
-      this.physicsEnabled = false;
-    }
+    this.createNetwork();
   }
 
-  private async getNetwork(dataset: Array<[string, string]>) {
-    this.currentDataset = dataset;
-    const params = new HttpParams().set('data', JSON.stringify(dataset));
-    const data = await this.http.get<any>(`${environment.backend}network/`, {params}).toPromise();
-    this.proteins = data.proteins;
-    this.effects = data.effects;
-    this.edges = data.edges;
+  private getNetwork() {
+    const network = JSON.parse(this.networkJSON);
+
+    this.proteins = network.nodes;
+    this.effects = [];
+    this.edges = network.edges;
   }
 
   public reset(event) {
@@ -199,7 +177,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private zoomToNode(id: string) {
     this.nodeData.nodes.getIds();
-    const coords = this.network.getPositions(id)[id];
+    const coords = this.networkInternal.getPositions(id)[id];
     if (!coords) {
       return;
     }
@@ -209,7 +187,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     } else {
       zoomScale = 3.0;
     }
-    this.network.moveTo({
+    this.networkInternal.moveTo({
       position: {x: coords.x, y: coords.y},
       scale: zoomScale,
       animation: true,
@@ -229,14 +207,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.showDetails = false;
   }
 
-  public async createNetwork(dataset: Array<[string, string]>) {
+  public async createNetwork() {
     this.analysis.resetSelection();
     this.selectedWrapper = null;
-    await this.getNetwork(dataset);
+    this.getNetwork();
     this.proteinData = new ProteinNetwork(this.proteins, this.effects, this.edges);
-    if (!this.dumpPositions) {
-      await this.proteinData.loadPositions(this.http, dataset);
-    }
     this.proteinData.linkNodes();
 
     // Populate baits
@@ -262,8 +237,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     const container = this.networkEl.nativeElement;
     const options = NetworkSettings.getOptions('main');
-    this.network = new vis.Network(container, this.nodeData, options);
-    this.network.on('doubleClick', (properties) => {
+    this.networkInternal = new vis.Network(container, this.nodeData, options);
+    this.networkInternal.on('doubleClick', (properties) => {
       const nodeIds: Array<string> = properties.nodes;
       if (nodeIds.length > 0) {
         const nodeId = nodeIds[0];
@@ -277,7 +252,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.network.on('click', (properties) => {
+    this.networkInternal.on('click', (properties) => {
       const nodeIds: Array<string> = properties.nodes;
       if (nodeIds.length > 0) {
         const nodeId = nodeIds[0];
@@ -288,20 +263,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.closeSummary();
       }
     });
-    this.network.on('deselectNode', (properties) => {
+    this.networkInternal.on('deselectNode', (properties) => {
       this.closeSummary();
     });
-
-
-    if (this.dumpPositions) {
-      this.network.on('stabilizationIterationsDone', () => {
-        // tslint:disable-next-line:no-console
-        console.log(`${getDatasetFilename(dataset)}`);
-        // tslint:disable-next-line:no-console
-        console.log(JSON.stringify(this.network.getPositions()));
-      });
-      this.network.stabilize();
-    }
 
     if (this.selectedWrapper) {
       this.zoomToNode(this.selectedWrapper.nodeId);
@@ -310,7 +274,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.queryItems = [];
     this.fillQueryItems(this.proteins, this.effects);
     if (this.selectedWrapper) {
-      this.network.selectNodes([this.selectedWrapper.nodeId]);
+      this.networkInternal.selectNodes([this.selectedWrapper.nodeId]);
     }
   }
 
@@ -395,7 +359,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public updatePhysicsEnabled(bool) {
     this.physicsEnabled = bool;
-    this.network.setOptions({
+    this.networkInternal.setOptions({
       physics: {
         enabled: this.physicsEnabled,
         stabilization: {
@@ -521,7 +485,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         if (!node) {
           continue;
         }
-        const pos = this.network.getPositions([item.nodeId]);
+        const pos = this.networkInternal.getPositions([item.nodeId]);
         node.x = pos[item.nodeId].x;
         node.y = pos[item.nodeId].y;
         Object.assign(node,
@@ -544,38 +508,38 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
       const minExp = 0.3;
 
-      const params = new HttpParams().set('tissue', `${tissue.id}`).set('data', JSON.stringify(this.currentDataset));
-      this.http.get<any>(
-        `${environment.backend}tissue_expression/`, {params})
-        .subscribe((levels) => {
-          const updatedNodes = [];
-          const maxExpr = Math.max(...levels.map(lvl => lvl.level));
-          for (const lvl of levels) {
-            const item = getWrapperFromProtein(lvl.protein);
-            const node = this.nodeData.nodes.get(item.nodeId);
-            if (!node) {
-              continue;
-            }
-            const gradient = lvl.level !== null ? (Math.pow(lvl.level / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
-            const pos = this.network.getPositions([item.nodeId]);
-            node.x = pos[item.nodeId].x;
-            node.y = pos[item.nodeId].y;
-            Object.assign(node,
-              NetworkSettings.getNodeStyle(
-                node.wrapper.type,
-                node.isSeed,
-                this.analysis.inSelection(item),
-                undefined,
-                undefined,
-                gradient));
-            node.wrapper = item;
-            node.gradient = gradient;
-            this.proteins.find(prot => getProteinNodeId(prot) === item.nodeId).expressionLevel = lvl.level;
-            (node.wrapper.data as Protein).expressionLevel = lvl.level;
-            updatedNodes.push(node);
-          }
-          this.nodeData.nodes.update(updatedNodes);
-        });
+      // const params = new HttpParams().set('tissue', `${tissue.id}`).set('data', JSON.stringify(this.currentDataset));
+      // this.http.get<any>(
+      //   `${environment.backend}tissue_expression/`, {params})
+      //   .subscribe((levels) => {
+      //     const updatedNodes = [];
+      //     const maxExpr = Math.max(...levels.map(lvl => lvl.level));
+      //     for (const lvl of levels) {
+      //       const item = getWrapperFromProtein(lvl.protein);
+      //       const node = this.nodeData.nodes.get(item.nodeId);
+      //       if (!node) {
+      //         continue;
+      //       }
+      //       const gradient = lvl.level !== null ? (Math.pow(lvl.level / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
+      //       const pos = this.network.getPositions([item.nodeId]);
+      //       node.x = pos[item.nodeId].x;
+      //       node.y = pos[item.nodeId].y;
+      //       Object.assign(node,
+      //         NetworkSettings.getNodeStyle(
+      //           node.wrapper.type,
+      //           node.isSeed,
+      //           this.analysis.inSelection(item),
+      //           undefined,
+      //           undefined,
+      //           gradient));
+      //       node.wrapper = item;
+      //       node.gradient = gradient;
+      //       this.proteins.find(prot => getProteinNodeId(prot) === item.nodeId).expressionLevel = lvl.level;
+      //       (node.wrapper.data as Protein).expressionLevel = lvl.level;
+      //       updatedNodes.push(node);
+      //     }
+      //     this.nodeData.nodes.update(updatedNodes);
+      //   });
 
     }
 

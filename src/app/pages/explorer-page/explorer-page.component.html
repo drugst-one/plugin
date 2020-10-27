@@ -1,7 +1,6 @@
 <div class="is-hidden-mobile" [style.color]="textColor">
   <app-launch-analysis [(show)]="showAnalysisDialog"
-                       [target]="analysisDialogTarget"
-                       [dataset]="selectedDataset">
+                       [target]="analysisDialogTarget">
   </app-launch-analysis>
 
   <app-custom-proteins [(show)]="showCustomProteinsDialog" [visibleNodes]="currentViewNodes">
@@ -18,31 +17,6 @@
   <div class="covex left-window">
     <div>
       <div class="covex sidebar bar-left">
-
-        <div class="card bar-large">
-          <header class="card-header">
-            <p class="card-header-title">
-          <span class="icon">
-        <i class="fas fa-database" aria-hidden="true"></i>
-      </span> Choose Dataset
-            </p>
-            <a (click)="collapseData = !collapseData" data-action="collapse"
-               class="card-header-icon is-hidden-fullscreen"
-               aria-label="more options">
-             <span class="icon">
-            <i *ngIf="collapseData" class="fas fa-angle-down" aria-hidden="true"></i>
-            <i *ngIf="!collapseData" class="fas fa-angle-left" aria-hidden="true"></i>
-             </span>
-            </a>
-          </header>
-          <div *ngIf="collapseData">
-            <div class="card-content">
-              <app-dataset-tile [datasetItems]="datasetItems" [selectedDataset]="selectedDataset"
-                                  (selectedDatasetChange)="selectedDataset = $event; createNetwork($event.data)">
-              </app-dataset-tile>
-            </div>
-          </div>
-        </div>
 
         <div class="card bar-large">
           <header class="card-header">
@@ -283,7 +257,7 @@
               <div class="tile notification is-danger">
                 <div class="align-vmiddle">
                   <div class="digit"><i class="fa fa-fast-forward"></i></div>
-                  <button (click)="analysis.startQuickAnalysis(true, selectedDataset)"
+                  <button (click)="analysis.startQuickAnalysis(true, null)"
                           [disabled]="analysis.isLaunchingQuick()"
                           class="button is-white is-rounded has-tooltip" data-tooltip="Find drugs for all proteins.">
                     <span class="icon">
@@ -311,7 +285,7 @@
               <div class="tile notification is-info">
                 <div class="align-vmiddle">
                   <div class="digit">2</div>
-                  <button (click)="analysis.startQuickAnalysis(false, selectedDataset)"
+                  <button (click)="analysis.startQuickAnalysis(false, null)"
                           [disabled]="analysis.getCount() === 0 || analysis.isLaunchingQuick()"
                           class="button is-white is-rounded has-tooltip"
                           data-tooltip="Find drugs for the selected proteins.">

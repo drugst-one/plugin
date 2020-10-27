@@ -14,6 +14,40 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 </head>
 <body>
-  <app-root></app-root>
+<app-root></app-root>
+<button onclick="setNetwork('netexp1')">Set Network 1</button>
+<button onclick="setNetwork('netexp2')">Set Network 2</button>
+<div style="border: 3px solid red">
+  <network-expander id="netexp1"></network-expander>
+</div>
+<div style="border: 3px solid red">
+  <network-expander id="netexp2"></network-expander>
+</div>
+<script>
+  function setNetwork(nw) {
+    const netexp = document.getElementById(nw);
+
+    netexp.setAttribute('network', JSON.stringify({
+      nodes: [
+        {
+          name: "SIRT5",
+          proteinAc: "Q9NXA8",
+          proteinName: "NAD-dependent protein deacylase sirtuin-5"
+        },
+        {
+          name: "RPL36",
+          proteinAc: "Q9Y3U8",
+          proteinName: "60S ribosomal protein L36"
+        },
+        {
+          name: "G3BP2",
+          proteinAc: "Q9UN86",
+          proteinName: "Ras GTPase-activating protein-binding protein 2"
+        }
+      ],
+      edges: []
+    }));
+  }
+</script>
 </body>
 </html>

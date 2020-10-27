@@ -14,7 +14,7 @@ export class AppComponent {
     // Convert `PopupComponent` to a custom element.
     const NetworkExpander = createCustomElement(ExplorerPageComponent, {injector});
     // Register the custom element with the browser.
-    customElements.define('explorer-element', NetworkExpander);
+    customElements.define('network-expander', NetworkExpander);
   }
 
   public toggleMobileMenu() {
