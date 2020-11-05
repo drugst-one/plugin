@@ -21,6 +21,7 @@
 </style>
 <button onclick="setNetwork('netexp1')">Set Network 1</button>
 <button onclick="setNetwork('netexp2')">Set Network 2</button>
+<button onclick="changeConfig()">Hide sidebar</button>
 <div style="border: 3px solid red">
   <network-expander id="netexp1" config='{"legendClass": "my-legend-1"}' onload="init1()"></network-expander>
 </div>
@@ -30,6 +31,11 @@
 <script>
   function init1() {
     document.getElementsByClassName('my-legend-1')[0].onclick = function() {this.remove()};
+  }
+
+  function changeConfig() {
+    const netexp = document.getElementById('netexp1');
+    netexp.setAttribute('config', '{"showLeftSidebar": false}');
   }
 
   function setNetwork(nw) {
