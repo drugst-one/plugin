@@ -26,15 +26,6 @@ img.menu-icon.is-hoverable.navbar-item.logo {
   padding: 0;
 }
 
-.landing {
-  background-color: $primary;
-  background-image: url("assets/virus_background.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  height: calc(100vh - 60px);
-  width: 100vw;
-}
-
 div.navbar-menu {
   margin-left: 5px;
 }
@@ -62,7 +53,7 @@ input.checkbox {
 }
 
 div.covex.sidebar {
-  height: calc(100vh - 70px);
+  height: calc(100% - 70px);
   overflow-y: auto;
   overflow-x: hidden;
   width: 340px;
@@ -106,7 +97,7 @@ div.covex.left-window {
 
 div.covex.network {
   width: calc(100% - 350px - 40px);
-  height: calc(100vh - 100px);
+  height: calc(100% - 100px);
   margin-left: 20px;
   margin-right: 20px;
   float: right;
@@ -114,11 +105,11 @@ div.covex.network {
 
 div.card.network {
   width: 100%;
-  height: calc(100vh - 75px);
+  height: calc(100% - 75px);
 }
 
 div.network {
-  height: calc(100vh - 200px);
+  height: calc(100% - 200px);
 }
 
 div.parent {
@@ -129,7 +120,7 @@ div.image1 {
   position: relative;
 }
 
-div.image2 {
+img.image2 {
   position: absolute;
   bottom: 0px;
   right: 0px;
@@ -143,7 +134,7 @@ div.center {
 
 
 div.covex.explorer {
-  height: calc(100vh - 70px);
+  height: calc(100% - 70px);
   margin-left: 10px;
   margin-right: 10px;
 }

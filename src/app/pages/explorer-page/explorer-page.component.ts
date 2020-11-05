@@ -24,6 +24,7 @@ import {AnalysisService} from '../../analysis.service';
 import html2canvas from 'html2canvas';
 import {environment} from '../../../environments/environment';
 import {NetworkSettings} from '../../network-settings';
+import {defaultConfig, IConfig} from "../../config";
 
 
 declare var vis: any;
@@ -36,6 +37,24 @@ declare var vis: any;
 export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private networkJSON = '{"nodes": [], "edges": []}';
+
+  public myConfig: IConfig = defaultConfig;
+
+  @Input()
+  public onload: undefined | string;
+
+  @Input()
+  public set config(config: string | undefined) {
+    if (typeof config === 'undefined') {
+      return;
+    }
+
+    const configObj = JSON.parse(config);
+    this.myConfig = JSON.parse(JSON.stringify(defaultConfig));
+    for (const key of Object.keys(configObj)) {
+      this.myConfig[key] = configObj[key];
+    }
+  }
 
   @Input()
   public set network(network: string | undefined) {
@@ -159,6 +178,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   async ngAfterViewInit() {
     this.createNetwork();
+
+    if (this.onload) {
+      // tslint:disable-next-line:no-eval
+      eval(this.onload);
+    }
   }
 
   private getNetwork() {

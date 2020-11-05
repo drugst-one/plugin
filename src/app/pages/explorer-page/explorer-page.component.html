@@ -137,9 +137,7 @@
                 <div class="network center image1" #network>
                   <button class="button is-loading center" alt="loading...">Loading</button>
                 </div>
-                <div class="image2">
-                  <img src="assets/leg1.png" width="180px"/>
-                </div>
+                <img class="image2" [src]="myConfig.legendUrl" [ngClass]="myConfig.legendClass"/>
               </div>
             </div>
 

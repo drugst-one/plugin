@@ -57,4 +57,6 @@ export class AppModule {
     customElements.define('network-expander', NetworkExpander);
   }
 
+  ngDoBootstrap() {}
+
 }
