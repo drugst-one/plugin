@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {Injector, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {NgSelectModule} from '@ng-select/ng-select';
 import {CommonModule} from '@angular/common';
@@ -20,6 +20,7 @@ import {CustomProteinsComponent} from './dialogs/custom-proteins/custom-proteins
 
 import {AnalysisService} from './analysis.service';
 import { AddExpressedProteinsComponent } from './dialogs/add-expressed-proteins/add-expressed-proteins.component';
+import {createCustomElement} from '@angular/elements';
 
 
 @NgModule({
@@ -46,7 +47,14 @@ import { AddExpressedProteinsComponent } from './dialogs/add-expressed-proteins/
     TableModule,
   ],
   providers: [AnalysisService],
-  bootstrap: [AppComponent],
 })
 export class AppModule {
+
+  constructor(injector: Injector) {
+    // Convert `PopupComponent` to a custom element.
+    const NetworkExpander = createCustomElement(ExplorerPageComponent, {injector});
+    // Register the custom element with the browser.
+    customElements.define('network-expander', NetworkExpander);
+  }
+
 }

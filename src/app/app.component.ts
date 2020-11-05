@@ -10,13 +10,6 @@ import {createCustomElement} from '@angular/elements';
 export class AppComponent {
   mobileWindowExpanded = false;
 
-  constructor(injector: Injector) {
-    // Convert `PopupComponent` to a custom element.
-    const NetworkExpander = createCustomElement(ExplorerPageComponent, {injector});
-    // Register the custom element with the browser.
-    customElements.define('network-expander', NetworkExpander);
-  }
-
   public toggleMobileMenu() {
     this.mobileWindowExpanded = !this.mobileWindowExpanded;
   }
