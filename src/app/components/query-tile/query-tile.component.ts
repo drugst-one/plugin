@@ -16,7 +16,7 @@ export class QueryTileComponent {
     term = term.toLowerCase();
     if (item.type === 'host') {
       const data = item.data as Protein;
-      return data.name.toLowerCase().indexOf(term) > -1 || data.proteinAc.toLowerCase().indexOf(term) > -1 ||
+      return data.name.toLowerCase().indexOf(term) > -1 || data.proteinName.toLowerCase().indexOf(term) > -1 ||
         item.type.toLowerCase().indexOf(term) > -1;
     } else {
       const data = item.data as ViralProtein;

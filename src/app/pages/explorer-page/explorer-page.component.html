@@ -81,8 +81,8 @@
             <div class="card-content">
               <div class="field">
                 <div class="control">
-                  <app-query-tile-component [queryItems]="queryItems"
-                                       (selectItem)="queryAction($event)"></app-query-tile-component>
+                  <app-query-tile-component (selectItem)="queryAction($event)"
+                                            [queryItems]="queryItems"></app-query-tile-component>
                 </div>
               </div>
             </div>
@@ -110,7 +110,7 @@
                 <label class="checkbox">
                   <input type="checkbox" class="checkbox" [ngModel]="bait.checked"
                          (ngModelChange)="bait.checked = $event; filterNodes()">
-                  {{ bait.data.effectName }}
+                  {{ bait.data["effectName"] }}
                 </label>
               </div>
             </div>
