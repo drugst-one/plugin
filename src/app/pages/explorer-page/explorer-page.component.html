@@ -203,7 +203,7 @@
     </div>
   </div>
 
-  <div class="covex sidebar bar-right">
+  <div *ngIf="myConfig.showItemSelector"  class="covex sidebar bar-right">
     <div class="card bar-large">
       <header class="card-header">
         <p class="card-header-title">
@@ -236,7 +236,7 @@
       </div>
     </div>
 
-    <div class="card bar-large">
+    <div *ngIf="myConfig.showSimpleAnalysis" class="card bar-large">
       <header class="card-header">
         <p class="card-header-title">
           <span class="icon">
@@ -296,7 +296,7 @@
                       <i class="fa fa-spin fa-spinner" *ngIf="analysis.isLaunchingQuick()"></i>
                     </span>
                     <span>
-                      Find Drugs
+                      {{ myConfig.taskName }}
                     </span>
                   </button>
                 </div>
@@ -307,7 +307,7 @@
       </div>
     </div>
 
-    <div class="card bar-large">
+    <div *ngIf="myConfig.showAdvAnalysis" class="card bar-large">
       <header class="card-header">
         <p class="card-header-title">
           <span class="icon">
@@ -350,7 +350,7 @@
                   <i class="fa fa-capsules"></i>
                 </span>
                 <span>
-                  Find Drugs
+                  {{myConfig.taskName}}
                 </span>
               </button>
             </div>
@@ -383,7 +383,7 @@
       </div>
     </div>
 
-    <div class="card bar-large">
+    <div *ngIf="myConfig.showTasks"  class="card bar-large">
       <header class="card-header">
         <p class="card-header-title">
           <span class="icon">
@@ -417,7 +417,7 @@
       </div>
     </div>
 
-    <div class="card bar-large">
+    <div  *ngIf="myConfig.showSelection" class="card bar-large">
       <header class="card-header">
         <p class="card-header-title">
           <span class="icon">
