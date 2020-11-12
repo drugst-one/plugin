@@ -16,9 +16,9 @@
 
   <div class="covex left-window">
     <div>
-      <div *ngIf="myConfig.showLeftSidebar" class="covex sidebar bar-left">
+      <div  class="covex sidebar bar-left">
 
-        <div class="card bar-large">
+        <div *ngIf="myConfig.showOverview" class="card bar-large">
           <header class="card-header">
             <p class="card-header-title">
           <span class="icon">
@@ -35,21 +35,25 @@
           <div *ngIf="collapseOverview">
             <div class="card-content">
               <nav class="level" *ngIf="proteinData">
+
+                <!-- TO DO  : CHANGE THIS LATER
+               <div class="level-item has-text-centered">
+                 <div>
+                   <p class="heading">Viral<br>Proteins</p>
+                   <p class="title"> {{ proteinData.effects.length }}</p>
+                 </div>
+               </div>
+               -->
+
                 <div class="level-item has-text-centered">
                   <div>
-                    <p class="heading">Viral<br>Proteins</p>
-                    <p class="title"> {{ proteinData.effects.length }}</p>
-                  </div>
-                </div>
-                <div class="level-item has-text-centered">
-                  <div>
-                    <p class="heading">Host<br>Proteins</p>
+                    <p class="heading">Proteins</p>
                     <p class="title">{{ proteinData.proteins.length }}</p>
                   </div>
                 </div>
                 <div class="level-item has-text-centered">
                   <div>
-                    <p class="heading">Virus-Host<br>Interactions</p>
+                    <p class="heading">Interactions</p>
                     <p class="title">{{ proteinData.edges.length }}</p>
                   </div>
                 </div>
@@ -58,7 +62,7 @@
           </div>
         </div>
 
-        <div class="card bar-large">
+        <div *ngIf="myConfig.showQuery"  class="card bar-large">
           <header class="card-header">
             <p class="card-header-title">
           <span class="icon">
@@ -85,12 +89,12 @@
           </div>
         </div>
 
-        <div class="card bar-large">
+        <div *ngIf="myConfig.showFilter"  class="card bar-large">
           <header class="card-header">
             <p class="card-header-title">
           <span class="icon">
         <i class="fas fa-filter" aria-hidden="true"></i>
-      </span> Filter Viral Proteins
+      </span> Filter Proteins
             </p>
             <a (click)="collapseBaitFilter = !collapseBaitFilter" data-action="collapse"
                class="card-header-icon is-hidden-fullscreen" aria-label="more options">
@@ -141,7 +145,7 @@
               </div>
             </div>
 
-            <footer class="card-footer toolbar">
+            <footer *ngIf="myConfig.showFooter" class="card-footer toolbar">
               <button (click)="toCanvas()" class="button is-primary is-rounded has-tooltip"
                       data-tooltip="Take a screenshot of the current network.">
                 <span class="icon">

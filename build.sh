@@ -1,1 +1,1 @@
-ng build --prod --output-path /usr/share/nginx/html/
+ng build --prod --output-path /var/www/html

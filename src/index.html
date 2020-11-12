@@ -18,16 +18,32 @@
   .my-legend-2 {
     width: 10%;
   }
+  .my-legend-1{
+    width: 10%;
+
+
+  }
 </style>
 <button onclick="setNetwork('netexp1')">Set Network 1</button>
 <button onclick="setNetwork('netexp2')">Set Network 2</button>
 <button onclick="changeConfig()">Hide sidebar</button>
+
 <div style="border: 3px solid red">
   <network-expander id="netexp1" config='{"legendClass": "my-legend-1"}' onload="init1()"></network-expander>
 </div>
-<div style="border: 3px solid red">
+
+
+                                                                                                                                                                                                                                                                                               <br>
+                                                                                                                                                                                                                                                                                               <br>
+                                                                                                                                                                                                                                                                                               <br>
+<!--
+                                                                                                                                                                                                                                                                                               <div style="border: 3px solid red">
   <network-expander id="netexp2" config='{"legendUrl": "https://i.pinimg.com/originals/ff/72/80/ff72801189f650f11672915cda0f1bdf.png", "legendClass": "my-legend-2"}'></network-expander>
 </div>
+-->
+
+
+
 <script>
   function init1() {
     document.getElementsByClassName('my-legend-1')[0].onclick = function() {this.remove()};
