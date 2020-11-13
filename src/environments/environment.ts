@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  backend: 'http://localhost:8000/',
+  backend: 'https://exbio.wzw.tum.de/netex_dev/api/',
 };
 
 /*

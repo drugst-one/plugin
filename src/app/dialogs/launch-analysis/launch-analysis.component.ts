@@ -22,8 +22,6 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public show = false;
   @Input()
   public target: 'drug' | 'drug-target';
-  @Input()
-  public dataset: Dataset;
   @Output()
   public showChange = new EventEmitter<boolean>();
 
@@ -110,8 +108,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       seeds: this.analysis.getSelection().map((item) => item.backendId),
     };
 
-    parameters.strain_or_drugs = this.target === 'drug' ? 'drugs' : this.dataset.backendId;
-    parameters.bait_datasets = this.dataset.data;
+    parameters.target_or_drugs = this.target === 'drug' ? 'drugs' : 'PPI';
 
     if (this.algorithm === 'trustrank') {
       parameters.damping_factor = this.trustrankDampingFactor;

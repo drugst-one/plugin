@@ -2,6 +2,7 @@ export interface IConfig {
   legendUrl: string;
   legendClass: string;
   taskName: string;
+  showLeftSidebar: boolean;
   showOverview: boolean;
   showQuery: boolean;
   showFilter: boolean;
@@ -15,13 +16,14 @@ export interface IConfig {
 
 export const defaultConfig: IConfig = {
   legendUrl: 'https://exbio.wzw.tum.de/covex/assets/leg1.png',
-  taskName: 'Run Task X',
   legendClass: 'legend',
+  taskName: 'Run Task X',
+  showLeftSidebar: true,
   showOverview: true,
   showQuery: true,
   showFilter: true,
   showItemSelector: true,
-  showSimpleAnalysis:false,
+  showSimpleAnalysis: false,
   showAdvAnalysis: true,
   showSelection: true,
   showTasks: false,

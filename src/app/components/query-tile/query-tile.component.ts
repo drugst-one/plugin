@@ -14,15 +14,9 @@ export class QueryTileComponent {
 
   querySearch(term: string, item: Wrapper) {
     term = term.toLowerCase();
-    if (item.type === 'host') {
-      const data = item.data as Protein;
-      return data.name.toLowerCase().indexOf(term) > -1 || data.proteinName.toLowerCase().indexOf(term) > -1 ||
-        item.type.toLowerCase().indexOf(term) > -1;
-    } else {
-      const data = item.data as ViralProtein;
-      return data.effectName.toLowerCase().indexOf(term) > -1 || data.virusName.toLowerCase().indexOf(term) > -1 ||
-        item.type.toLowerCase().indexOf(term) > -1;
-    }
+    const data = item.data as Protein;
+    return data.name.toLowerCase().indexOf(term) > -1 || data.proteinName.toLowerCase().indexOf(term) > -1 ||
+      item.type.toLowerCase().indexOf(term) > -1;
   }
 
   select(item) {

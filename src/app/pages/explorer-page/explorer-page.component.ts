@@ -38,7 +38,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private networkJSON = '{"nodes": [], "edges": []}';
 
-  public myConfig: IConfig = defaultConfig;
+  public myConfig: IConfig = JSON.parse(JSON.stringify(defaultConfig));
 
   @Input()
   public onload: undefined | string;
@@ -50,7 +50,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
 
     const configObj = JSON.parse(config);
-    this.myConfig = JSON.parse(JSON.stringify(defaultConfig));
     for (const key of Object.keys(configObj)) {
       this.myConfig[key] = configObj[key];
     }
