@@ -15,16 +15,13 @@ import {AnalysisService, algorithmNames} from '../../analysis.service';
 import {
   Protein,
   Task,
-  ViralProtein,
   Drug,
   Wrapper,
   WrapperType,
   getWrapperFromProtein,
   getWrapperFromDrug,
-  getWrapperFromViralProtein,
   getNodeIdsFromPDI,
   getNodeIdsFromPPI,
-  getViralProteinNodeId,
   getProteinNodeId, Tissue
 } from '../../interfaces';
 import html2canvas from 'html2canvas';
@@ -60,7 +57,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
   @Output() tokenChange = new EventEmitter<string | null>();
   @Output() showDetailsChange = new EventEmitter<Wrapper>();
-  @Output() visibleItems = new EventEmitter<[any[], [Protein[], ViralProtein[], Tissue]]>();
+  @Output() visibleItems = new EventEmitter<[any[], [Protein[], Tissue]]>();
 
   public task: Task | null = null;
 
@@ -78,8 +75,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   public tableDrugs: Array<Drug & Scored & Baited> = [];
   public tableProteins: Array<Protein & Scored & Seeded & Baited> = [];
   public tableSelectedProteins: Array<Protein & Scored & Seeded & Baited> = [];
-  public tableViralProteins: Array<ViralProtein & Scored & Seeded> = [];
-  public tableSelectedViralProteins: Array<ViralProtein & Scored & Seeded> = [];
+  public tableViralProteins: Array<Scored & Seeded> = [];
+  public tableSelectedViralProteins: Array<Scored & Seeded> = [];
   public tableNormalize = false;
   public tableHasScores = false;
 
@@ -181,14 +178,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
               }
             });
           }));
-        promises.push(this.http.get<any>(`${environment.backend}task_result/?token=${this.token}&view=viral_proteins`).toPromise()
-          .then((table) => {
-            this.tableViralProteins = table;
-            this.tableViralProteins.forEach((r) => {
-              r.rawScore = r.score;
-              r.isSeed = isSeed[r.effectId];
-            });
-          }));
         await Promise.all(promises);
 
         this.tableHasScores = ['trustrank', 'closeness', 'degree', 'proximity', 'betweenness', 'quick', 'super']
@@ -276,16 +265,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
                 if (!selected && found !== -1 && tableItem) {
                   proteinSelection.splice(found, 1);
                 }
-              } else if (item.type === 'virus') {
-                // TODO: Refactor!
-                const found = viralProteinSelection.findIndex((i) => getViralProteinNodeId(i) === item.nodeId);
-                const tableItem = this.tableViralProteins.find((i) => getViralProteinNodeId(i) === item.nodeId);
-                if (selected && found === -1 && tableItem) {
-                  viralProteinSelection.push(tableItem);
-                }
-                if (!selected && found !== -1 && tableItem) {
-                  viralProteinSelection.splice(found, 1);
-                }
               }
             }
             this.tableSelectedProteins = [...proteinSelection];
@@ -319,11 +298,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
                 if (tableItem) {
                   proteinSelection.push(tableItem);
                 }
-              } else if (item.type === 'virus') {
-                const tableItem = this.tableViralProteins.find((i) => getViralProteinNodeId(i) === item.nodeId);
-                if (tableItem) {
-                  viralProteinSelection.push(tableItem);
-                }
               }
             }
             this.tableSelectedProteins = [...proteinSelection];
@@ -337,7 +311,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
   public emitVisibleItems(on: boolean) {
     if (on) {
-      this.visibleItems.emit([this.nodeData.nodes, [this.proteins, this.effects, this.selectedTissue]]);
+      this.visibleItems.emit([this.nodeData.nodes, [this.proteins, this.selectedTissue]]);
     } else {
       this.visibleItems.emit(null);
     }
@@ -422,9 +396,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       if (nodeTypes[node] === 'host') {
         this.proteins.push(details[node]);
         wrappers[node] = getWrapperFromProtein(details[node]);
-      } else if (nodeTypes[node] === 'virus') {
-        this.effects.push(details[node]);
-        wrappers[node] = getWrapperFromViralProtein(details[node]);
       } else if (nodeTypes[node] === 'drug') {
         wrappers[node] = getWrapperFromDrug(details[node]);
       }
@@ -441,7 +412,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     };
   }
 
-  private mapNode(nodeType: WrapperType, details: Protein | ViralProtein | Drug, isSeed?: boolean, score?: number): any {
+  private mapNode(nodeType: WrapperType, details: Protein | Drug, isSeed?: boolean, score?: number): any {
     let nodeLabel;
     let wrapper: Wrapper;
     let drugType;
@@ -463,10 +434,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       } else {
         nodeLabel = drug.drugId;
       }
-    } else if (nodeType === 'virus') {
-      const viralProtein = details as ViralProtein;
-      wrapper = getWrapperFromViralProtein(viralProtein);
-      nodeLabel = viralProtein.effectName;
     }
 
     const node = NetworkSettings.getNodeStyle(nodeType, isSeed, this.analysis.inSelection(wrapper), drugType, drugInTrial);
@@ -592,27 +559,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     for (const i of oldSelection) {
       const wrapper = getWrapperFromProtein(i);
       if (this.tableSelectedProteins.indexOf(i) === -1) {
-        removeItems.push(wrapper);
-      }
-    }
-    this.analysis.addItems(addItems);
-    this.analysis.removeItems(removeItems);
-  }
-
-  public tableViralProteinSelection(e) {
-    const oldSelection = [...this.tableSelectedViralProteins];
-    this.tableSelectedViralProteins = e;
-    const addItems = [];
-    const removeItems = [];
-    for (const i of this.tableSelectedViralProteins) {
-      const wrapper = getWrapperFromViralProtein(i);
-      if (oldSelection.indexOf(i) === -1) {
-        addItems.push(wrapper);
-      }
-    }
-    for (const i of oldSelection) {
-      const wrapper = getWrapperFromViralProtein(i);
-      if (this.tableSelectedViralProteins.indexOf(i) === -1) {
         removeItems.push(wrapper);
       }
     }

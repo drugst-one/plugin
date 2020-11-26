@@ -88,44 +88,6 @@
             </div>
           </div>
         </div>
-
-        <div *ngIf="myConfig.showFilter"  class="card bar-large">
-          <header class="card-header">
-            <p class="card-header-title">
-          <span class="icon">
-        <i class="fas fa-filter" aria-hidden="true"></i>
-      </span> Filter Proteins
-            </p>
-            <a (click)="collapseBaitFilter = !collapseBaitFilter" data-action="collapse"
-               class="card-header-icon is-hidden-fullscreen" aria-label="more options">
-              <span class="icon">
-                <i *ngIf="collapseBaitFilter" class="fas fa-angle-down" aria-hidden="true"></i>
-                <i *ngIf="!collapseBaitFilter" class="fas fa-angle-left" aria-hidden="true"></i>
-              </span>
-            </a>
-          </header>
-          <div *ngIf="collapseBaitFilter">
-            <div class="card-content overflow">
-              <div *ngFor="let bait of viralProteinCheckboxes">
-                <label class="checkbox">
-                  <input type="checkbox" class="checkbox" [ngModel]="bait.checked"
-                         (ngModelChange)="bait.checked = $event; filterNodes()">
-                  {{ bait.data["effectName"] }}
-                </label>
-              </div>
-            </div>
-            <footer class="card-footer">
-              <a (click)="reset($event);" class="card-footer-item has-text-danger" data-tooltip="Remove filter and show all proteins.">
-              <span class="icon">
-              <i class="fa fa-broom"></i>
-            </span>
-                <span>
-              Reset
-            </span>
-              </a>
-            </footer>
-          </div>
-        </div>
       </div>
 
       <div class="covex network">
@@ -483,27 +445,6 @@
             </span>
             <span>
               Remove host proteins
-            </span>
-          </a>
-        </footer>
-
-        <footer class="card-footer">
-          <a (click)="analysis.addVisibleViralProteins(currentViewNodes, currentViewViralProteins)"
-             class="card-footer-item has-text-success" data-tooltip="Add all visible viral proteins.">
-            <span class="icon">
-              <i class="fa fa-plus"></i>
-            </span>
-            <span>
-              Add viral proteins
-            </span>
-          </a>
-          <a (click)="analysis.removeAllViralProteins()"
-             class="card-footer-item has-text-danger" data-tooltip="Remove all viral proteins.">
-            <span class="icon">
-              <i class="fa fa-minus"></i>
-            </span>
-            <span>
-              Remove viral proteins
             </span>
           </a>
         </footer>

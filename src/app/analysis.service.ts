@@ -1,4 +1,4 @@
-import {Wrapper, Task, getWrapperFromProtein, getWrapperFromViralProtein, Protein, ViralProtein, Dataset, Tissue} from './interfaces';
+import {Wrapper, Task, getWrapperFromProtein, Protein, Dataset, Tissue} from './interfaces';
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../environments/environment';
@@ -203,21 +203,6 @@ export class AnalysisService {
     return items.length;
   }
 
-  public addVisibleViralProteins(nodes, viralProteins: ViralProtein[]): number {
-    const items: Wrapper[] = [];
-    const visibleIds = new Set<string>(nodes.getIds());
-    for (const viralProtein of viralProteins) {
-      const wrapper = getWrapperFromViralProtein(viralProtein);
-      const found = visibleIds.has(wrapper.nodeId);
-      if (found && !this.inSelection(wrapper)) {
-        items.push(wrapper);
-        this.selectedItems.set(wrapper.nodeId, wrapper);
-      }
-    }
-    this.selectListSubject.next({items, selected: true});
-    return items.length;
-  }
-
   public removeAllHostProteins() {
     const items: Wrapper[] = Array.from(this.selectedItems.values()).filter(p => p.type === 'host');
     for (const wrapper of items) {
@@ -249,10 +234,6 @@ export class AnalysisService {
 
   proteinInSelection(protein: Protein): boolean {
     return this.inSelection(getWrapperFromProtein(protein));
-  }
-
-  viralProteinInSelection(viralProtein: ViralProtein): boolean {
-    return this.inSelection(getWrapperFromViralProtein(viralProtein));
   }
 
   getSelection(): Wrapper[] {

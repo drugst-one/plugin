@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  backend: 'https://exbio.wzw.tum.de/netex_dev/api/',
+  backend: 'https://exbio.wzw.tum.de/drugstone/api/',
 };
 
 /*

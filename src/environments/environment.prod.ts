@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  backend: 'https://exbio.wzw.tum.de/covex/api/',
+  backend: 'https://exbio.wzw.tum.de/drugstone/api/',
 };

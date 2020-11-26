@@ -4,7 +4,7 @@ export interface Protein {
   name: string;
   proteinAc: string;
   proteinName: string;
-  effects?: ViralProtein[];
+  interactions?: Protein[];
   x?: number;
   y?: number;
   expressionLevel?: number;
@@ -15,21 +15,9 @@ export interface Tissue {
   name: string;
 }
 
-export interface ViralProtein {
-  effectId: string;
-  effectName: string;
-  virusName: string;
-  datasetName: string;
-  proteins?: Protein[];
-  x?: number;
-  y?: number;
-}
-
-export interface ProteinViralInteraction {
-  effectName: string;
-  virusName: string;
-  datasetName: string;
-  proteinAc: string;
+export interface ProteinProteinInteraction {
+  from: string;
+  to: string;
 }
 
 export interface NetworkEdge {
@@ -71,14 +59,10 @@ export function getProteinBackendId(protein: Protein) {
   return protein.proteinAc;
 }
 
-export function getViralProteinNodeId(viralProtein: ViralProtein) {
-  return `v_${viralProtein.effectName}_${viralProtein.virusName}`;
-}
-
-export function getNodeIdsFromPVI(pvi: ProteinViralInteraction) {
+export function getNodeIdsFromI(pvi: ProteinProteinInteraction) {
   return {
-    from: `p_${pvi.proteinAc}`,
-    to: `v_${pvi.effectName}_${pvi.virusName}`,
+    from: `p_${pvi.from}`,
+    to: `p_${pvi.to}`,
   };
 }
 
@@ -96,10 +80,6 @@ export function getNodeIdsFromPDI(edge: NetworkEdge) {
   };
 }
 
-export function getViralProteinBackendId(viralProtein: ViralProtein) {
-  return viralProtein.effectId;
-}
-
 export function getDrugNodeId(drug: Drug) {
   return `d_${drug.drugId}`;
 }
@@ -114,15 +94,6 @@ export function getWrapperFromProtein(protein: Protein): Wrapper {
     nodeId: getProteinNodeId(protein),
     type: 'host',
     data: protein,
-  };
-}
-
-export function getWrapperFromViralProtein(viralProtein: ViralProtein): Wrapper {
-  return {
-    backendId: getViralProteinBackendId(viralProtein),
-    nodeId: getViralProteinNodeId(viralProtein),
-    type: 'virus',
-    data: viralProtein,
   };
 }
 

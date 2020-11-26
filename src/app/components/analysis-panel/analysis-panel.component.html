@@ -416,63 +416,6 @@
             </tr>
           </ng-template>
         </p-table>
-
-        <div *ngIf="tableViralProteins.length > 0" class="table-header">
-          <h4 class="is-4">
-            <span class="icon"><i class="fa fa-virus"></i></span>
-            <span>Viral Proteins</span>
-          </h4>
-          <a [href]="downloadLink('viral_proteins')" class="button is-primary is-outlined is-pulled-right is-small">
-            <span class="icon"><i class="fa fa-download"></i></span>
-            <span>Download</span>
-          </a>
-        </div>
-        <p-table *ngIf="tableViralProteins.length > 0" selectionMode="multiple"
-                 [value]="tableViralProteins" [selection]="tableSelectedViralProteins" dataKey="effectId"
-                 (selectionChange)="tableViralProteinSelection($event)">
-          <ng-template pTemplate="header">
-            <tr>
-              <th class="checkbox-col">
-                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-              </th>
-              <th [pSortableColumn]="'effectName'">
-                Name
-                <p-sortIcon [field]="'effectName'"></p-sortIcon>
-              </th>
-              <th [pSortableColumn]="'virusName'">
-                Virus Strain
-                <p-sortIcon [field]="'virusName'"></p-sortIcon>
-              </th>
-              <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
-                Score
-                <p-sortIcon [field]="'score'"></p-sortIcon>
-              </th>
-              <th [pSortableColumn]="'isSeed'">
-                Seed
-                <p-sortIcon [field]="'isSeed'"></p-sortIcon>
-              </th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-e>
-            <tr>
-              <td>
-                <p-tableCheckbox [value]="e"></p-tableCheckbox>
-              </td>
-              <td>{{e.effectName}}</td>
-              <td>{{e.virusName}}</td>
-              <td *ngIf="tableHasScores">{{e.score | number}}</td>
-              <td>
-                <span *ngIf="e.isSeed">
-                  <i class="fa fa-asterisk has-text-primary"></i>
-                  Seed
-                </span>
-                <span *ngIf="!e.isSeed">
-                  <i class="fa fa-times"></i>
-                </span>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
       </div>
     </div>
   </div>

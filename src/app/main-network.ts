@@ -1,5 +1,5 @@
 import {HttpClient} from '@angular/common/http';
-import {ProteinViralInteraction, ViralProtein, Protein, getProteinNodeId, getViralProteinNodeId} from './interfaces';
+import {ProteinProteinInteraction, Protein, getProteinNodeId} from './interfaces';
 
 export function getDatasetFilename(dataset: Array<[string, string]>): string {
   return `network-${JSON.stringify(dataset).replace(/[\[\]\",]/g, '')}.json`;
@@ -7,7 +7,7 @@ export function getDatasetFilename(dataset: Array<[string, string]>): string {
 
 export class ProteinNetwork {
 
-  constructor(public proteins: Protein[], public effects: ViralProtein[], public edges: ProteinViralInteraction[]) {
+  constructor(public proteins: Protein[], public edges: ProteinProteinInteraction[]) {
   }
 
   public async loadPositions(http: HttpClient, dataset: Array<[string, string]>) {
@@ -19,36 +19,22 @@ export class ProteinNetwork {
         node.y = nodePosition.y;
       }
     });
-    this.effects.forEach((node) => {
-      const nodePosition = nodePositions[getViralProteinNodeId(node)];
-      if (nodePosition) {
-        node.x = nodePosition.x;
-        node.y = nodePosition.y;
-      }
-    });
   }
 
   public getProtein(ac: string): Protein | undefined {
     return this.proteins.find((p) => p.proteinAc === ac);
   }
 
-  public getEffect(name: string, virus: string, dataset: string): ViralProtein | undefined {
-    return this.effects.find((eff) => eff.effectName === name && eff.virusName === virus && eff.datasetName === dataset);
-  }
-
   public linkNodes() {
     this.proteins.forEach((pg) => {
-      pg.effects = [];
-    });
-    this.effects.forEach((eff) => {
-      eff.proteins = [];
+      pg.interactions = [];
     });
     this.edges.forEach((edge) => {
-      const proteinGroup = this.getProtein(edge.proteinAc);
-      const effect = this.getEffect(edge.effectName, edge.virusName, edge.datasetName);
-      if (proteinGroup && effect) {
-        proteinGroup.effects.push(effect);
-        effect.proteins.push(proteinGroup);
+      const protein1 = this.getProtein(edge.from);
+      const protein2 = this.getProtein(edge.to);
+      if (protein1 && protein2) {
+        protein1.interactions.push(protein2);
+        protein2.interactions.push(protein1);
       }
     });
   }

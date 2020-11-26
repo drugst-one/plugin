@@ -6,25 +6,18 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  ProteinViralInteraction,
-  ViralProtein,
+  ProteinProteinInteraction,
   Protein,
   Wrapper,
-  getWrapperFromViralProtein,
   getWrapperFromProtein,
-  getNodeIdsFromPVI,
-  getViralProteinNodeId,
-  getProteinNodeId,
-  Dataset,
-  Tissue
+  Tissue, getNodeIdsFromI
 } from '../../interfaces';
-import {ProteinNetwork, getDatasetFilename} from '../../main-network';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {ProteinNetwork} from '../../main-network';
+import {HttpClient} from '@angular/common/http';
 import {AnalysisService} from '../../analysis.service';
 import html2canvas from 'html2canvas';
-import {environment} from '../../../environments/environment';
 import {NetworkSettings} from '../../network-settings';
-import {defaultConfig, IConfig} from "../../config";
+import {defaultConfig, IConfig} from '../../config';
 
 
 declare var vis: any;
@@ -83,12 +76,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public collapseData = true;
   public collapseOverview = true;
 
-  public viralProteinCheckboxes: Array<{ checked: boolean; data: ViralProtein }> = [];
-
   public proteinData: ProteinNetwork;
 
   public proteins: any;
-  public effects: any;
   public edges: any;
 
   private networkInternal: any;
@@ -109,7 +99,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public currentDataset = [];
 
   public currentViewProteins: Protein[];
-  public currentViewViralProteins: ViralProtein[];
   public currentViewSelectedTissue: Tissue | null = null;
   public currentViewNodes: any[];
 
@@ -188,14 +177,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     const network = JSON.parse(this.networkJSON);
 
     this.proteins = network.nodes;
-    this.effects = [];
     this.edges = network.edges;
-  }
-
-  public reset(event) {
-    const checked = event.target.checked;
-    this.viralProteinCheckboxes.forEach(item => item.checked = checked);
-    this.filterNodes();
   }
 
   private zoomToNode(id: string) {
@@ -234,25 +216,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.analysis.resetSelection();
     this.selectedWrapper = null;
     this.getNetwork();
-    this.proteinData = new ProteinNetwork(this.proteins, this.effects, this.edges);
+    this.proteinData = new ProteinNetwork(this.proteins, this.edges);
     this.proteinData.linkNodes();
 
     // Populate baits
     const effectNames = [];
-    this.proteinData.effects.sort((a, b) => {
-      return a.effectName.localeCompare(b.effectName);
-    });
-    this.viralProteinCheckboxes = [];
-    this.proteinData.effects.forEach((effect) => {
-      const effectName = effect.effectName;
-      if (effectNames.indexOf(effectName) === -1) {
-        effectNames.push(effectName);
-        this.viralProteinCheckboxes.push({
-          checked: false,
-          data: effect,
-        });
-      }
-    });
 
     const {nodes, edges} = this.mapDataToNodes(this.proteinData);
     this.nodeData.nodes = new vis.DataSet(nodes);
@@ -295,83 +263,20 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
 
     this.queryItems = [];
-    this.fillQueryItems(this.proteins, this.effects);
+    this.fillQueryItems(this.proteins);
     if (this.selectedWrapper) {
       this.networkInternal.selectNodes([this.selectedWrapper.nodeId]);
     }
   }
 
-  fillQueryItems(hostProteins: Protein[], viralProteins: ViralProtein[]) {
+  fillQueryItems(hostProteins: Protein[]) {
     this.queryItems = [];
     hostProteins.forEach((protein) => {
       this.queryItems.push(getWrapperFromProtein(protein));
     });
 
-    viralProteins.forEach((viralProtein) => {
-      this.queryItems.push(getWrapperFromViralProtein(viralProtein));
-    });
-
     this.currentViewNodes = this.nodeData.nodes;
     this.currentViewProteins = this.proteins;
-    this.currentViewViralProteins = this.effects;
-  }
-
-  public async filterNodes() {
-    const visibleIds = new Set<string>(this.nodeData.nodes.getIds());
-
-    const removeIds = new Set<string>();
-    const addNodes = new Map<string, Node>();
-
-    const showAll = !this.viralProteinCheckboxes.find((eff) => eff.checked);
-    const connectedProteinAcs = new Set<string>();
-
-    const filteredViralProteins = [];
-    this.viralProteinCheckboxes.forEach((cb) => {
-      const viralProteins: Array<ViralProtein> = [];
-      this.proteinData.effects.forEach((effect) => {
-        if (effect.effectName === cb.data.effectName) {
-          viralProteins.push(effect);
-        }
-      });
-      viralProteins.forEach((effect) => {
-        const nodeId = getViralProteinNodeId(effect);
-        const found = visibleIds.has(nodeId);
-        if ((cb.checked || showAll) && !found) {
-          const node = this.mapViralProteinToNode(effect);
-          // this.nodeData.nodes.add(node);
-          addNodes.set(node.id, node);
-        } else if ((!showAll && !cb.checked) && found) {
-          // this.nodeData.nodes.remove(nodeId);
-          removeIds.add(nodeId);
-        }
-        if (cb.checked || showAll) {
-          filteredViralProteins.push(effect);
-          effect.proteins.forEach((pg) => {
-            connectedProteinAcs.add(pg.proteinAc);
-          });
-        }
-      });
-    });
-    const filteredProteins = [];
-    for (const protein of this.proteinData.proteins) {
-      const nodeId = getProteinNodeId(protein);
-      const contains = connectedProteinAcs.has(protein.proteinAc);
-      const found = visibleIds.has(nodeId);
-      if (contains) {
-        filteredProteins.push(protein);
-
-        if (!found) {
-          const node = this.mapHostProteinToNode(protein);
-          addNodes.set(node.id, node);
-        }
-      } else if (found) {
-        removeIds.add(nodeId);
-      }
-    }
-
-    this.nodeData.nodes.remove(Array.from(removeIds.values()));
-    this.nodeData.nodes.add(Array.from(addNodes.values()));
-    this.fillQueryItems(filteredProteins, filteredViralProteins);
   }
 
   public queryAction(item: any) {
@@ -407,20 +312,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     return node;
   }
 
-  private mapViralProteinToNode(viralProtein: ViralProtein): any {
-    const wrapper = getWrapperFromViralProtein(viralProtein);
-    const node = NetworkSettings.getNodeStyle('virus', true, this.analysis.inSelection(wrapper));
-    node.id = wrapper.nodeId;
-    node.label = viralProtein.effectName;
-    node.id = wrapper.nodeId;
-    node.x = viralProtein.x;
-    node.y = viralProtein.y;
-    node.wrapper = wrapper;
-    return node;
-  }
-
-  private mapEdge(edge: ProteinViralInteraction): any {
-    const {from, to} = getNodeIdsFromPVI(edge);
+  private mapEdge(edge: ProteinProteinInteraction): any {
+    const {from, to} = getNodeIdsFromI(edge);
     return {
       from, to,
       color: {
@@ -436,10 +329,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     for (const protein of data.proteins) {
       nodes.push(this.mapHostProteinToNode(protein));
-    }
-
-    for (const effect of data.effects) {
-      nodes.push(this.mapViralProteinToNode(effect));
     }
 
     for (const edge of data.edges) {
@@ -462,16 +351,14 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  analysisWindowChanged($event: [any[], [Protein[], ViralProtein[], Tissue]]) {
+  analysisWindowChanged($event: [any[], [Protein[], Tissue]]) {
     if ($event) {
       this.currentViewNodes = $event[0];
       this.currentViewProteins = $event[1][0];
-      this.currentViewViralProteins = $event[1][1];
-      this.currentViewSelectedTissue = $event[1][2];
+      this.currentViewSelectedTissue = $event[1][1];
     } else {
       this.currentViewNodes = this.nodeData.nodes;
       this.currentViewProteins = this.proteins;
-      this.currentViewViralProteins = this.effects;
       this.currentViewSelectedTissue = this.selectedTissue;
     }
   }

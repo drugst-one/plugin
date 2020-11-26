@@ -1,5 +1,5 @@
 import {Component, Input, Output, EventEmitter} from '@angular/core';
-import {Protein, Wrapper, ViralProtein} from '../../interfaces';
+import {Protein, Wrapper} from '../../interfaces';
 
 @Component({
   selector: 'app-query-tile-component',
