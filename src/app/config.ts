@@ -26,6 +26,6 @@ export const defaultConfig: IConfig = {
   showSimpleAnalysis: false,
   showAdvAnalysis: true,
   showSelection: true,
-  showTasks: false,
+  showTasks: true,
   showFooter: true,
 };
