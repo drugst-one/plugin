@@ -92,7 +92,7 @@ export function getWrapperFromProtein(protein: Protein): Wrapper {
   return {
     backendId: getProteinBackendId(protein),
     nodeId: getProteinNodeId(protein),
-    type: 'host',
+    type: 'protein',
     data: protein,
   };
 }
@@ -106,7 +106,7 @@ export function getWrapperFromDrug(drug: Drug): Wrapper {
   };
 }
 
-export type WrapperType = 'host' | 'virus' | 'drug';
+export type WrapperType = 'protein' | 'drug';
 
 export interface Wrapper {
   backendId: string;
