@@ -67,7 +67,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public selectedWrapper: Wrapper | null = null;
 
   public collapseAnalysisQuick = true;
-  public collapseAnalysis = false;
+  public collapseAnalysis = true;
   public collapseDetails = true;
   public collapseTask = true;
   public collapseSelection = true;

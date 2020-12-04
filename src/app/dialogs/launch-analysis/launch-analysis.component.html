@@ -90,15 +90,6 @@
           </p>
         </div>
 
-        <div class="field" *ngIf="target === 'drug-target'">
-          <label class="label">Include non-seed viral proteins</label>
-          <app-toggle textOn="Include" textOff="Ignore"
-                      tooltipOn="Include viral proteins that are not seeds."
-                      tooltipOff="Exclude viral proteins that are not seeds."
-                      [(value)]="trustrankIncludeViralNonSeeds">
-          </app-toggle>
-        </div>
-
         <div class="box">
           <article class="media">
             <div class="media-left">
@@ -174,14 +165,6 @@
           </p>
         </div>
 
-        <div class="field" *ngIf="target === 'drug-target'">
-          <label class="label">Include non-seed viral proteins</label>
-          <app-toggle textOn="Include" textOff="Ignore"
-                      tooltipOn="Include viral proteins that are not seeds."
-                      tooltipOff="Exclude viral proteins that are not seeds."
-                      [(value)]="closenessIncludeViralNonSeeds"></app-toggle>
-        </div>
-
         <div class="box">
           <article class="media">
             <div class="media-left">
@@ -227,14 +210,6 @@
           <p class="help">
             All nodes with degree greater than this value will be ignored. Disabled if equal to 0.
           </p>
-        </div>
-
-        <div class="field" *ngIf="target === 'drug-target'">
-          <label class="label">Include non-seed viral proteins</label>
-          <app-toggle textOn="Include" textOff="Ignore"
-                      tooltipOn="Include viral proteins that are not seeds."
-                      tooltipOff="Exclude viral proteins that are not seeds."
-                      [(value)]="degreeIncludeViralNonSeeds"></app-toggle>
         </div>
 
         <div class="box">
@@ -344,14 +319,6 @@
           <p class="help">
             Penalty parameter for hubs.
           </p>
-        </div>
-
-        <div class="field">
-          <label class="label">Include non-seed viral proteins</label>
-          <app-toggle textOn="Include" textOff="Ignore"
-                      tooltipOn="Include viral proteins that are not seeds."
-                      tooltipOff="Exclude viral proteins that are not seeds."
-                      [(value)]="betweennessIncludeViralNonSeeds"></app-toggle>
         </div>
 
         <div class="box">
@@ -475,14 +442,6 @@
           <p class="help">
             Penalty parameter for hubs.
           </p>
-        </div>
-
-        <div class="field" *ngIf="target === 'drug-target'">
-          <label class="label">Include non-seed viral proteins</label>
-          <app-toggle textOn="Include" textOff="Ignore"
-                      tooltipOn="Include viral proteins that are not seeds."
-                      tooltipOff="Exclude viral proteins that are not seeds."
-                      [(value)]="multisteinerIncludeViralNonSeeds"></app-toggle>
         </div>
 
       </div>
