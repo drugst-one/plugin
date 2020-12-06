@@ -178,8 +178,7 @@
           </span>
           <span *ngIf="!selectedWrapper">No item selected</span>
           <span *ngIf="selectedWrapper">
-            <span *ngIf="selectedWrapper.type === 'host'">Host Protein</span>
-            <span *ngIf="selectedWrapper.type === 'virus'">Viral Protein</span>
+            <span *ngIf="selectedWrapper.type === 'host'">Protein</span>
             <span *ngIf="selectedWrapper.type === 'drug'">Drug</span>
           </span>
         </p>
@@ -430,21 +429,21 @@
 
         <footer class="card-footer">
           <a (click)="analysis.addVisibleHostProteins(currentViewNodes, currentViewProteins)"
-             class="card-footer-item has-text-success" data-tooltip="Add all visible host proteins.">
+             class="card-footer-item has-text-success" data-tooltip="Add all visible proteins.">
             <span class="icon">
               <i class="fa fa-plus"></i>
             </span>
             <span>
-              Add host proteins
+              Add proteins
             </span>
           </a>
           <a (click)="analysis.removeAllHostProteins()"
-             class="card-footer-item has-text-danger" data-tooltip="Remove all host proteins.">
+             class="card-footer-item has-text-danger" data-tooltip="Remove all  proteins.">
             <span class="icon">
               <i class="fa fa-minus"></i>
             </span>
             <span>
-              Remove host proteins
+              Remove proteins
             </span>
           </a>
         </footer>
