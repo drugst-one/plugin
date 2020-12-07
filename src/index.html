@@ -1,14 +1,6 @@
 <!doctype html>
 <html lang="en">
 <head>
-<style>
-  .my-legend-1{
-    width: 10%;
-  }
-</style>
-
-
-
   <meta charset="utf-8">
   <title>Network Expander</title>
   <base href="/">
@@ -25,16 +17,14 @@
 
 <input type="checkbox" onclick=changeConfigStr('{"showOverview":'+this.checked+'}') checked /> Show overview<br>
 <input type="checkbox" onclick=changeConfigStr('{"showQuery":'+this.checked+'}') /> Show query<br>
-<input type="checkbox" onclick=changeConfigStr('{"showFilter":'+this.checked+'}') /> Show filter<br>
 <input type="checkbox" onclick=changeConfigStr('{"showLeftSidebar":'+this.checked+'}') checked /> Show sidebar<br>
 
 <br>
 
-<button onclick="changeConfig()">Hide sidebar</button>
 <button onclick="setNetwork('netexp1')">Add proteins</button>
 
-<div style="border: 3px solid red">
-  <network-expander id="netexp1" config='{"legendClass": "my-legend-1", "showQuery": false, "showFilter": false}' onload="init1()" style="height: 100vh"></network-expander>
+<div>
+  <network-expander id="netexp1" config='{"legendClass": "my-legend-1", "showQuery": false}' onload="init1()" style="height: 100vh"></network-expander>
 </div>
 
 <!--
@@ -42,8 +32,6 @@
   <network-expander id="netexp2" config='{"legendUrl": "https://i.pinimg.com/originals/ff/72/80/ff72801189f650f11672915cda0f1bdf.png", "legendClass": "my-legend-2"}'></network-expander>
 </div>
 -->
-
-
 
 <script>
   function init1() {

@@ -171,14 +171,13 @@
         <p class="card-header-title">
           <span class="icon">
             <i *ngIf="!selectedWrapper" class="fas fa-info" aria-hidden="true"></i>
-            <i *ngIf="selectedWrapper && selectedWrapper.type === 'host'" class="fas fa-dna" aria-hidden="true"></i>
-            <i *ngIf="selectedWrapper && selectedWrapper.type === 'virus'" class="fas fa-virus" aria-hidden="true"></i>
+            <i *ngIf="selectedWrapper && selectedWrapper.type === 'protein'" class="fas fa-dna" aria-hidden="true"></i>
             <i *ngIf="selectedWrapper && selectedWrapper.type === 'drug'" class="fas fa-capsules"
                aria-hidden="true"></i>
           </span>
           <span *ngIf="!selectedWrapper">No item selected</span>
           <span *ngIf="selectedWrapper">
-            <span *ngIf="selectedWrapper.type === 'host'">Protein</span>
+            <span *ngIf="selectedWrapper.type === 'protein'">Host Protein</span>
             <span *ngIf="selectedWrapper.type === 'drug'">Drug</span>
           </span>
         </p>
@@ -274,7 +273,7 @@
           <span class="icon">
             <i class="fas fa-flask" aria-hidden="true"></i>
           </span>
-          Advanced Analysis
+          Analysis
         </p>
         <a (click)="collapseAnalysis = !collapseAnalysis" data-action="collapse"
            class="card-header-icon is-hidden-fullscreen" aria-label="more options">
@@ -407,12 +406,10 @@
             <tr *ngFor="let p of analysis.getSelection()">
               <td>
                  <span class="icon">
-                    <i class="fa fa-dna" *ngIf="p.type == 'host'"></i>
-                    <i class="fa fa-virus" *ngIf="p.type =='virus'"></i>
+                    <i class="fa fa-dna" *ngIf="p.type == 'protein'"></i>
                   </span>
               </td>
-              <td *ngIf="p.type == 'virus'">{{p.data.effectName}}</td>
-              <td *ngIf="p.type == 'host'">{{p.data.name}}</td>
+              <td *ngIf="p.type == 'protein'">{{p.data.name}}</td>
               <td>
                 <button (click)="analysis.removeItems([p])" class="button is-small is-danger is-outlined has-tooltip"
                         data-tooltip="Remove from selection.">

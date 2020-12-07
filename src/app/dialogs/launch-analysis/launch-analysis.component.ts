@@ -9,7 +9,6 @@ import {
   QuickAlgorithmType,
   TRUSTRANK
 } from '../../analysis.service';
-import {Dataset} from '../../interfaces';
 
 @Component({
   selector: 'app-launch-analysis',
@@ -74,15 +73,9 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public multisteinerMaxDeg = 0;
   public multisteinerHubPenalty = 0.0;
 
-  public hasBaits;
-
   public maxTasks = MAX_TASKS;
 
   constructor(public analysis: AnalysisService) {
-    this.hasBaits = !!analysis.getSelection().find((i) => i.type === 'virus');
-    analysis.subscribeList(() => {
-      this.hasBaits = !!analysis.getSelection().find((i) => i.type === 'virus');
-    });
   }
 
   ngOnInit(): void {
@@ -108,7 +101,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       seeds: this.analysis.getSelection().map((item) => item.backendId),
     };
 
-    parameters.target_or_drugs = this.target === 'drug' ? 'drugs' : 'PPI';
+    parameters.target_or_drugs = this.target === 'drug' ? 'PPDr' : 'PPI';
 
     if (this.algorithm === 'trustrank') {
       parameters.damping_factor = this.trustrankDampingFactor;

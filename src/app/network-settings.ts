@@ -80,20 +80,16 @@ export class NetworkSettings {
   private static drugInTrialShape = 'triangle';
 
   static getNodeSize(wrapperType: WrapperType) {
-    if (wrapperType === 'host') {
+    if (wrapperType === 'protein') {
       return this.hostSize;
-    } else if (wrapperType === 'virus') {
-      return this.virusSize;
     } else if (wrapperType === 'drug') {
       return this.drugSize;
     }
   }
 
   static getNodeShape(wrapperType: WrapperType, drugInTrial?: boolean) {
-    if (wrapperType === 'host') {
+    if (wrapperType === 'protein') {
       return this.hostShape;
-    } else if (wrapperType === 'virus') {
-      return this.virusShape;
     } else if (wrapperType === 'drug') {
       if (drugInTrial) {
         return this.drugInTrialShape;
@@ -125,13 +121,11 @@ export class NetworkSettings {
     }
   }
 
-  static getColor(color: 'host' | 'virus' | 'approvedDrug' | 'unapprovedDrug' | 'hostFont' | 'virusFont' | 'drugFont' |
+  static getColor(color: 'protein' | 'approvedDrug' | 'unapprovedDrug' | 'hostFont' | 'virusFont' | 'drugFont' |
     'nonSeedHost' | 'nonSeedVirus' | 'selectedForAnalysis' | 'selectedForAnalysisText' |
     'edgeHostVirus' | 'edgeHostVirusHighlight' | 'edgeHostDrug' | 'edgeHostDrugHighlight') {
-    if (color === 'host') {
+    if (color === 'protein') {
       return this.hostColor;
-    } else if (color === 'virus') {
-      return this.virusColor;
     } else if (color === 'approvedDrug') {
       return this.approvedDrugColor;
     } else if (color === 'unapprovedDrug') {
@@ -158,10 +152,8 @@ export class NetworkSettings {
   }
 
   static getFont(wrapperType: WrapperType, drugInTrial?: boolean) {
-    if (wrapperType === 'host') {
+    if (wrapperType === 'protein') {
       return {color: this.hostFontColor, size: this.hostFontSize};
-    } else if (wrapperType === 'virus') {
-      return {color: this.virusFontColor, size: this.virusFontSize};
     } else if (wrapperType === 'drug') {
       if (!drugInTrial) {
         return {color: this.drugFontColor, size: this.drugFontSize};
@@ -188,19 +180,11 @@ export class NetworkSettings {
     nodeShape = NetworkSettings.getNodeShape(nodeType);
     nodeSize = NetworkSettings.getNodeSize(nodeType);
     nodeFont = NetworkSettings.getFont(nodeType);
-    if (nodeType === 'host') {
+    if (nodeType === 'protein') {
       nodeColor = NetworkSettings.getColor(nodeType);
-      nodeFont = NetworkSettings.getFont('host');
+      nodeFont = NetworkSettings.getFont('protein');
       if (!isSeed) {
         nodeColor = NetworkSettings.getColor('nonSeedHost');
-      }
-    } else if (nodeType === 'virus') {
-      nodeColor = NetworkSettings.getColor(nodeType);
-      if (nodeType === 'virus') {
-        nodeFont = NetworkSettings.getFont('virus');
-        if (!isSeed) {
-          nodeColor = NetworkSettings.getColor('nonSeedVirus');
-        }
       }
     } else if (nodeType === 'drug') {
       if (drugType === 'approved') {

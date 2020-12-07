@@ -67,7 +67,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public selectedWrapper: Wrapper | null = null;
 
   public collapseAnalysisQuick = true;
-  public collapseAnalysis = false;
+  public collapseAnalysis = true;
   public collapseDetails = true;
   public collapseTask = true;
   public collapseSelection = true;
@@ -299,7 +299,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private mapHostProteinToNode(hostProtein: Protein): any {
     const wrapper = getWrapperFromProtein(hostProtein);
-    const node = NetworkSettings.getNodeStyle('host', true, this.analysis.inSelection(wrapper));
+    const node = NetworkSettings.getNodeStyle('protein', true, this.analysis.inSelection(wrapper));
     let nodeLabel = hostProtein.name;
     if (hostProtein.name.length === 0) {
       nodeLabel = hostProtein.proteinAc;
@@ -365,7 +365,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   gProfilerLink(): string {
     const queryString = this.analysis.getSelection()
-      .filter(wrapper => wrapper.type === 'host')
+      .filter(wrapper => wrapper.type === 'protein')
       .map(wrapper => wrapper.data.proteinAc)
       .join('%0A');
     return 'http://biit.cs.ut.ee/gprofiler/gost?' +

@@ -5,7 +5,6 @@ export interface IConfig {
   showLeftSidebar: boolean;
   showOverview: boolean;
   showQuery: boolean;
-  showFilter: boolean;
   showItemSelector: boolean;
   showSimpleAnalysis: boolean;
   showAdvAnalysis: boolean;
@@ -21,7 +20,6 @@ export const defaultConfig: IConfig = {
   showLeftSidebar: true,
   showOverview: true,
   showQuery: true,
-  showFilter: true,
   showItemSelector: true,
   showSimpleAnalysis: false,
   showAdvAnalysis: true,

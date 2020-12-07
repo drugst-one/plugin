@@ -1,5 +1,5 @@
 <div *ngIf="wrapper">
-  <div *ngIf="wrapper.type === 'host'">
+  <div *ngIf="wrapper.type === 'protein'">
     <p>
       <b><span>Gene Name: </span></b>
       {{ wrapper.data.name }}
@@ -18,17 +18,6 @@
     <p *ngIf="wrapper.data.expressionLevel">
       <b><span>Expression level: </span></b>
       {{ wrapper.data.expressionLevel|number }}
-    </p>
-  </div>
-  <div *ngIf="wrapper.type === 'virus'">
-    <p>
-      <b><span>Virus:</span></b>
-      {{ wrapper.data.virusName.replace('V', 'V-') }}
-      <span class="icon is-small"><i class="fas fa-virus"></i></span>
-    </p>
-    <p>
-      <b><span>Effect: </span></b>
-      {{ wrapper.data.effectName }}
     </p>
   </div>
   <div *ngIf="wrapper.type === 'drug'">

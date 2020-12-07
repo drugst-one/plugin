@@ -255,7 +255,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
             const proteinSelection = this.tableSelectedProteins;
             const viralProteinSelection = this.tableSelectedViralProteins;
             for (const item of items) {
-              if (item.type === 'host') {
+              if (item.type === 'protein') {
                 // TODO: Refactor!
                 const found = proteinSelection.findIndex((i) => getProteinNodeId(i) === item.nodeId);
                 const tableItem = this.tableProteins.find((i) => getProteinNodeId(i) === item.nodeId);
@@ -293,7 +293,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
             const proteinSelection = [];
             const viralProteinSelection = [];
             for (const item of items) {
-              if (item.type === 'host') {
+              if (item.type === 'protein') {
                 const tableItem = this.tableProteins.find((i) => getProteinNodeId(i) === item.nodeId);
                 if (tableItem) {
                   proteinSelection.push(tableItem);
@@ -369,12 +369,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   }
 
   public inferNodeType(nodeId: string): WrapperType {
-    if (nodeId.indexOf('-') !== -1 || nodeId.indexOf('_') !== -1) {
-      return 'virus';
-    } else if (nodeId.startsWith('DB')) {
+    if (nodeId.startsWith('DB')) {
       return 'drug';
     }
-    return 'host';
+    return 'protein';
   }
 
   public createNetwork(result: any): { edges: any[], nodes: any[] } {
@@ -393,7 +391,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     const details = attributes.details || {};
     const wrappers: { [key: string]: Wrapper } = {};
     for (const node of network.nodes) {
-      if (nodeTypes[node] === 'host') {
+      if (nodeTypes[node] === 'protein') {
         this.proteins.push(details[node]);
         wrappers[node] = getWrapperFromProtein(details[node]);
       } else if (nodeTypes[node] === 'drug') {
@@ -417,7 +415,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     let wrapper: Wrapper;
     let drugType;
     let drugInTrial;
-    if (nodeType === 'host') {
+    if (nodeType === 'protein') {
       const protein = details as Protein;
       wrapper = getWrapperFromProtein(protein);
       nodeLabel = protein.name;

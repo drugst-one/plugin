@@ -160,7 +160,7 @@ export class AnalysisService {
     const newSelection = [];
     nodes.forEach((node) => {
       const wrapper: Wrapper = node.wrapper;
-      if (wrapper.type === 'host' || wrapper.type === 'virus') {
+      if (wrapper.type === 'protein') {
         if (!this.inSelection(wrapper)) {
           newSelection.push(wrapper);
         }
@@ -204,15 +204,7 @@ export class AnalysisService {
   }
 
   public removeAllHostProteins() {
-    const items: Wrapper[] = Array.from(this.selectedItems.values()).filter(p => p.type === 'host');
-    for (const wrapper of items) {
-      this.selectedItems.delete(wrapper.nodeId);
-    }
-    this.selectListSubject.next({items, selected: false});
-  }
-
-  public removeAllViralProteins() {
-    const items: Wrapper[] = Array.from(this.selectedItems.values()).filter(p => p.type === 'virus');
+    const items: Wrapper[] = Array.from(this.selectedItems.values()).filter(p => p.type === 'protein');
     for (const wrapper of items) {
       this.selectedItems.delete(wrapper.nodeId);
     }

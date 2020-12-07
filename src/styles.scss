@@ -16,6 +16,8 @@ $info: $primary;
 @import "~primeng/resources/primeng.min.css";
 @import "~primeicons/primeicons.css";
 
+$height: '1000px';
+
 nav.navbar {
   height: 60px;
 }
@@ -53,7 +55,7 @@ input.checkbox {
 }
 
 div.covex.sidebar {
-  height: calc(100% - 70px);
+  height: calc(#{$height} - 70px);
   overflow-y: auto;
   overflow-x: hidden;
   width: 340px;
@@ -109,7 +111,7 @@ div.card.network {
 }
 
 div.network {
-  height: calc(100% - 200px);
+  height: calc(#{$height} - 200px);
 }
 
 div.parent {
@@ -134,7 +136,7 @@ div.center {
 
 
 div.covex.explorer {
-  height: calc(100% - 70px);
+  height: calc(#{$height} - 70px);
   margin-left: 10px;
   margin-right: 10px;
 }
