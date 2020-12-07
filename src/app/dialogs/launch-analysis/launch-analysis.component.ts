@@ -101,7 +101,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       seeds: this.analysis.getSelection().map((item) => item.backendId),
     };
 
-    parameters.target_or_drugs = this.target === 'drug' ? 'drugs' : 'PPI';
+    parameters.target_or_drugs = this.target === 'drug' ? 'PPDr' : 'PPI';
 
     if (this.algorithm === 'trustrank') {
       parameters.damping_factor = this.trustrankDampingFactor;

@@ -23,6 +23,7 @@ RUN cp -r website/* /usr/share/nginx/html/
 RUN mkdir /usr/share/nginx/html/lib
 RUN cp dist/covid19/bundle-es2015.js /usr/share/nginx/html/lib/
 RUN cp dist/covid19/bundle-es5.js /usr/share/nginx/html/lib/
+RUN cp dist/covid19/styles.scss /usr/share/nginx/html/lib/
 
 COPY nginx/default.conf /etc/nginx/conf.d/
 COPY nginx/htpasswd /etc/nginx/htpasswd
