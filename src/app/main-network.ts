@@ -1,5 +1,5 @@
 import {HttpClient} from '@angular/common/http';
-import {ProteinProteinInteraction, Protein, getProteinNodeId} from './interfaces';
+import {NodeInteraction, Node, getProteinNodeId} from './interfaces';
 
 export function getDatasetFilename(dataset: Array<[string, string]>): string {
   return `network-${JSON.stringify(dataset).replace(/[\[\]\",]/g, '')}.json`;
@@ -7,7 +7,7 @@ export function getDatasetFilename(dataset: Array<[string, string]>): string {
 
 export class ProteinNetwork {
 
-  constructor(public proteins: Protein[], public edges: ProteinProteinInteraction[]) {
+  constructor(public proteins: Node[], public edges: NodeInteraction[]) {
   }
 
   public async loadPositions(http: HttpClient, dataset: Array<[string, string]>) {
@@ -21,8 +21,8 @@ export class ProteinNetwork {
     });
   }
 
-  public getProtein(ac: string): Protein | undefined {
-    return this.proteins.find((p) => p.proteinAc === ac);
+  public getProtein(ac: string): Node | undefined {
+    return this.proteins.find((p) => p.id === ac);
   }
 
   public linkNodes() {

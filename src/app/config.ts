@@ -1,3 +1,14 @@
+// export interface NodeGroup {
+//   fill: string;
+// }
+//
+// export interface EdgeGroup {
+//   color: string;
+// }
+
+type NodeGroup = any;
+type EdgeGroup = any;
+
 export interface IConfig {
   legendUrl: string;
   legendClass: string;
@@ -11,6 +22,8 @@ export interface IConfig {
   showTasks: boolean;
   showSelection: boolean;
   showFooter: boolean;
+  nodeGroups: { [key: string]: NodeGroup };
+  edgeGroups: { [key: string]: EdgeGroup };
 }
 
 export const defaultConfig: IConfig = {
@@ -26,4 +39,20 @@ export const defaultConfig: IConfig = {
   showSelection: true,
   showTasks: true,
   showFooter: true,
+  nodeGroups: {
+    default: {
+      color: 'white'
+    },
+    protein: {
+      color: 'red'
+    },
+    drug: {
+      color: 'green'
+    }
+  },
+  edgeGroups: {
+    default: {
+      color: 'black'
+    }
+  },
 };

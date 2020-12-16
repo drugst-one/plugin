@@ -6,8 +6,8 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  ProteinProteinInteraction,
-  Protein,
+  NodeInteraction,
+  Node,
   Wrapper,
   getWrapperFromProtein,
   Tissue, getNodeIdsFromI
@@ -44,6 +44,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     const configObj = JSON.parse(config);
     for (const key of Object.keys(configObj)) {
+      if (key === 'nodeGroups' || key === 'edgeGroups') {
+        this.myConfig[key] = {...this.myConfig[key], ...configObj[key]};
+        continue;
+      }
       this.myConfig[key] = configObj[key];
     }
   }
@@ -98,7 +102,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public currentDataset = [];
 
-  public currentViewProteins: Protein[];
+  public currentViewProteins: Node[];
   public currentViewSelectedTissue: Tissue | null = null;
   public currentViewNodes: any[];
 
@@ -133,13 +137,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           node.y = pos[item.nodeId].y;
           node.x = pos[item.nodeId].x;
           node.y = pos[item.nodeId].y;
-          Object.assign(node, NetworkSettings.getNodeStyle(
-            node.wrapper.type,
-            true,
-            selected,
-            undefined,
-            undefined,
-            node.gradient));
+          Object.assign(node, this.myConfig.nodeGroups[node.wrapper.data.group]);
           updatedNodes.push(node);
         }
         this.nodeData.nodes.update(updatedNodes);
@@ -147,14 +145,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         const updatedNodes = [];
         this.nodeData.nodes.forEach((node) => {
           const nodeSelected = this.analysis.idInSelection(node.id);
-          Object.assign(node, NetworkSettings.getNodeStyle(
-            node.wrapper.type,
-            true,
-            nodeSelected,
-            undefined,
-            undefined,
-            node.gradient));
-          updatedNodes.push(node);
+          Object.assign(node, this.myConfig.nodeGroups[node.wrapper.data.group]);
         });
         this.nodeData.nodes.update(updatedNodes);
       }
@@ -269,7 +260,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  fillQueryItems(hostProteins: Protein[]) {
+  fillQueryItems(hostProteins: Node[]) {
     this.queryItems = [];
     hostProteins.forEach((protein) => {
       this.queryItems.push(getWrapperFromProtein(protein));
@@ -297,30 +288,32 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private mapHostProteinToNode(hostProtein: Protein): any {
-    const wrapper = getWrapperFromProtein(hostProtein);
-    const node = NetworkSettings.getNodeStyle('protein', true, this.analysis.inSelection(wrapper));
-    let nodeLabel = hostProtein.name;
-    if (hostProtein.name.length === 0) {
-      nodeLabel = hostProtein.proteinAc;
+  private mapCustomNode(customNode: Node): any {
+    let group = customNode.group;
+    if (typeof group === 'undefined' || typeof this.myConfig.nodeGroups[group] === 'undefined') {
+      group = 'default';
+    }
+    const node = JSON.parse(JSON.stringify(this.myConfig.nodeGroups[group]));
+    let nodeLabel = customNode.name;
+    if (customNode.name.length === 0) {
+      nodeLabel = customNode.id;
     }
     node.label = nodeLabel;
-    node.id = wrapper.nodeId;
-    node.x = hostProtein.x;
-    node.y = hostProtein.y;
-    node.wrapper = wrapper;
+    node.id = customNode.id;
+    node.x = customNode.x;
+    node.y = customNode.y;
     return node;
   }
 
-  private mapEdge(edge: ProteinProteinInteraction): any {
-    const {from, to} = getNodeIdsFromI(edge);
-    return {
-      from, to,
-      color: {
-        color: NetworkSettings.getColor('edgeHostVirus'),
-        highlight: NetworkSettings.getColor('edgeHostVirusHighlight')
-      },
-    };
+  private mapCustomEdge(customEdge: NodeInteraction): any {
+    let group = customEdge.group;
+    if (typeof group === 'undefined' || typeof this.myConfig.edgeGroups[group] === 'undefined') {
+      group = 'default';
+    }
+    const edge = JSON.parse(JSON.stringify(this.myConfig.edgeGroups[group]));
+    edge.from = customEdge.from;
+    edge.to = customEdge.to;
+    return edge;
   }
 
   private mapDataToNodes(data: ProteinNetwork): { nodes: any[], edges: any[] } {
@@ -328,11 +321,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     const edges = [];
 
     for (const protein of data.proteins) {
-      nodes.push(this.mapHostProteinToNode(protein));
+      nodes.push(this.mapCustomNode(protein));
     }
 
     for (const edge of data.edges) {
-      edges.push(this.mapEdge(edge));
+      edges.push(this.mapCustomEdge(edge));
     }
 
     return {
@@ -351,7 +344,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  analysisWindowChanged($event: [any[], [Protein[], Tissue]]) {
+  analysisWindowChanged($event: [any[], [Node[], Tissue]]) {
     if ($event) {
       this.currentViewNodes = $event[0];
       this.currentViewProteins = $event[1][0];
@@ -409,7 +402,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         node.wrapper = item;
         node.gradient = 1.0;
         protein.expressionLevel = undefined;
-        (node.wrapper.data as Protein).expressionLevel = undefined;
+        (node.wrapper.data as Node).expressionLevel = undefined;
         updatedNodes.push(node);
       }
       this.nodeData.nodes.update(updatedNodes);

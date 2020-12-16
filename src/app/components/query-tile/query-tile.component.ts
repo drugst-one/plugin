@@ -1,5 +1,5 @@
 import {Component, Input, Output, EventEmitter} from '@angular/core';
-import {Protein, Wrapper} from '../../interfaces';
+import {Node, Wrapper} from '../../interfaces';
 
 @Component({
   selector: 'app-query-tile-component',
@@ -14,9 +14,8 @@ export class QueryTileComponent {
 
   querySearch(term: string, item: Wrapper) {
     term = term.toLowerCase();
-    const data = item.data as Protein;
-    return data.name.toLowerCase().indexOf(term) > -1 || data.proteinName.toLowerCase().indexOf(term) > -1 ||
-      item.type.toLowerCase().indexOf(term) > -1;
+    const data = item.data as Node;
+    return data.name.toLowerCase().indexOf(term) > -1 || item.type.toLowerCase().indexOf(term) > -1;
   }
 
   select(item) {

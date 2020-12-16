@@ -1,4 +1,4 @@
-import {Wrapper, Task, getWrapperFromProtein, Protein, Dataset, Tissue} from './interfaces';
+import {Wrapper, Task, getWrapperFromProtein, Node, Dataset, Tissue} from './interfaces';
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../environments/environment';
@@ -173,7 +173,7 @@ export class AnalysisService {
     this.selectListSubject.next({items: newSelection, selected: null});
   }
 
-  public addExpressedHostProteins(nodes, proteins: Protein[], threshold: number): number {
+  public addExpressedHostProteins(nodes, proteins: Node[], threshold: number): number {
     const items: Wrapper[] = [];
     const visibleIds = new Set<string>(nodes.getIds());
     for (const protein of proteins) {
@@ -188,7 +188,7 @@ export class AnalysisService {
     return items.length;
   }
 
-  public addVisibleHostProteins(nodes, proteins: Protein[]): number {
+  public addVisibleHostProteins(nodes, proteins: Node[]): number {
     const items: Wrapper[] = [];
     const visibleIds = new Set<string>(nodes.getIds());
     for (const protein of proteins) {
@@ -224,7 +224,7 @@ export class AnalysisService {
     return this.selectedItems.has(wrapper.nodeId);
   }
 
-  proteinInSelection(protein: Protein): boolean {
+  proteinInSelection(protein: Node): boolean {
     return this.inSelection(getWrapperFromProtein(protein));
   }
 

@@ -24,7 +24,7 @@
 <button onclick="setNetwork('netexp1')">Add proteins</button>
 
 <div>
-  <network-expander id="netexp1" config='{"legendClass": "my-legend-1", "showQuery": false}' onload="init1()" style="height: 100vh"></network-expander>
+  <network-expander id="netexp1" config='{"showQuery": false, "nodeGroups": {"default": {"color": "grey"}}, "edgeGroups":{"default": {"color": "grey"}, "custom": {"color": "red"}}}' onload="init1()" style="height: 100vh"></network-expander>
 </div>
 
 <!--
@@ -55,29 +55,32 @@
     netexp.setAttribute('network', JSON.stringify({
       nodes: [
         {
-          name: "SIRT5",
-          proteinAc: "Q9NXA8",
-          proteinName: "NAD-dependent protein deacylase sirtuin-5"
+          name: "Protein 1",
+          id: "1",
+          access: "A",
+          group: "protein"
         },
         {
-          name: "RPL36",
-          proteinAc: "Q9Y3U8",
-          proteinName: "60S ribosomal protein L36"
+          name: "Unknown type",
+          id: "2",
+          access: "B"
         },
         {
-          name: "G3BP2",
-          proteinAc: "Q9UNAA86",
-          proteinName: "Ras GTPase-activating protein-binding protein 2"
+          name: "Drug 123",
+          id: "3",
+          access: "C",
+          group: "drug"
         }
       ],
       edges: [
         {
-          from: 'Q9NXA8',
-          to: 'Q9Y3U8',
+          from: '1',
+          to: '2',
         },
         {
-          from: 'Q9Y3U8',
-          to: 'Q9UN86',
+          from: '2',
+          to: '3',
+          group: 'custom'
         }
       ]
     }));

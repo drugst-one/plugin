@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {AnalysisService} from '../../analysis.service';
-import {getWrapperFromProtein, Protein, Tissue} from '../../interfaces';
+import {getWrapperFromProtein, Node, Tissue} from '../../interfaces';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 
@@ -18,7 +18,7 @@ export class AddExpressedProteinsComponent implements OnChanges {
   @Input()
   public visibleNodes: Array<any> = [];
   @Input()
-  public currentViewProteins: Array<Protein> = [];
+  public currentViewProteins: Array<Node> = [];
   @Input()
   public selectedTissue: Tissue | null = null;
 

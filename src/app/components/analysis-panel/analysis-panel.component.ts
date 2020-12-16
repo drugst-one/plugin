@@ -13,7 +13,7 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {AnalysisService, algorithmNames} from '../../analysis.service';
 import {
-  Protein,
+  Node,
   Task,
   Drug,
   Wrapper,
@@ -57,7 +57,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
   @Output() tokenChange = new EventEmitter<string | null>();
   @Output() showDetailsChange = new EventEmitter<Wrapper>();
-  @Output() visibleItems = new EventEmitter<[any[], [Protein[], Tissue]]>();
+  @Output() visibleItems = new EventEmitter<[any[], [Node[], Tissue]]>();
 
   public task: Task | null = null;
 
@@ -73,8 +73,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   public effects: any;
 
   public tableDrugs: Array<Drug & Scored & Baited> = [];
-  public tableProteins: Array<Protein & Scored & Seeded & Baited> = [];
-  public tableSelectedProteins: Array<Protein & Scored & Seeded & Baited> = [];
+  public tableProteins: Array<Node & Scored & Seeded & Baited> = [];
+  public tableSelectedProteins: Array<Node & Scored & Seeded & Baited> = [];
   public tableViralProteins: Array<Scored & Seeded> = [];
   public tableSelectedViralProteins: Array<Scored & Seeded> = [];
   public tableNormalize = false;
@@ -171,7 +171,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
             this.tableSelectedProteins = [];
             this.tableProteins.forEach((r) => {
               r.rawScore = r.score;
-              r.isSeed = isSeed[r.proteinAc];
+              r.isSeed = isSeed[r.id];
               r.closestViralProteins = (r.closestViralProteins as any).split(',');
               if (this.analysis.proteinInSelection(r)) {
                 this.tableSelectedProteins.push(r);
@@ -410,17 +410,17 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     };
   }
 
-  private mapNode(nodeType: WrapperType, details: Protein | Drug, isSeed?: boolean, score?: number): any {
+  private mapNode(nodeType: WrapperType, details: Node | Drug, isSeed?: boolean, score?: number): any {
     let nodeLabel;
     let wrapper: Wrapper;
     let drugType;
     let drugInTrial;
     if (nodeType === 'protein') {
-      const protein = details as Protein;
+      const protein = details as Node;
       wrapper = getWrapperFromProtein(protein);
       nodeLabel = protein.name;
       if (!protein.name) {
-        nodeLabel = protein.proteinAc;
+        nodeLabel = protein.id;
       }
     } else if (nodeType === 'drug') {
       const drug = details as Drug;
@@ -596,14 +596,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         node.wrapper = item;
         node.gradient = 1.0;
         protein.expressionLevel = undefined;
-        (node.wrapper.data as Protein).expressionLevel = undefined;
+        (node.wrapper.data as Node).expressionLevel = undefined;
         updatedNodes.push(node);
       }
       this.nodeData.nodes.update(updatedNodes);
     } else {
       this.selectedTissue = tissue;
       const minExp = 0.3;
-      this.http.get<Array<{ protein: Protein, level: number }>>(
+      this.http.get<Array<{ protein: Node, level: number }>>(
         `${environment.backend}tissue_expression/?tissue=${tissue.id}&token=${this.token}`)
         .subscribe((levels) => {
           const updatedNodes = [];
@@ -629,7 +629,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
             node.wrapper = item;
             node.gradient = gradient;
             this.proteins.find(prot => getProteinNodeId(prot) === item.nodeId).expressionLevel = lvl.level;
-            (node.wrapper.data as Protein).expressionLevel = lvl.level;
+            (node.wrapper.data as Node).expressionLevel = lvl.level;
             updatedNodes.push(node);
           }
           this.nodeData.nodes.update(updatedNodes);

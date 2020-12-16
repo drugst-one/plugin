@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
-import {getWrapperFromProtein, Protein, Wrapper} from '../../interfaces';
+import {getWrapperFromProtein, Node, Wrapper} from '../../interfaces';
 import {AnalysisService} from '../../analysis.service';
 
 @Component({
@@ -73,7 +73,7 @@ export class CustomProteinsComponent implements OnInit {
     const proteinItems = [];
     const items = [];
     for (const detail of details) {
-      proteinItems.push(detail as Protein);
+      proteinItems.push(detail as Node);
       items.push(getWrapperFromProtein(detail));
     }
     this.itemsFound = items;

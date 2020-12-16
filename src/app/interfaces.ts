@@ -1,10 +1,12 @@
 import {AlgorithmType, QuickAlgorithmType} from './analysis.service';
 
-export interface Protein {
+export interface Node {
   name: string;
-  proteinAc: string;
-  proteinName: string;
-  interactions?: Protein[];
+  id: string;
+  access: string;
+  group?: string;
+
+  interactions?: Node[];
   x?: number;
   y?: number;
   expressionLevel?: number;
@@ -15,9 +17,10 @@ export interface Tissue {
   name: string;
 }
 
-export interface ProteinProteinInteraction {
+export interface NodeInteraction {
   from: string;
   to: string;
+  group?: string;
 }
 
 export interface NetworkEdge {
@@ -51,15 +54,15 @@ export interface Task {
   };
 }
 
-export function getProteinNodeId(protein: Protein) {
-  return `p_${protein.proteinAc}`;
+export function getProteinNodeId(protein: Node) {
+  return `p_${protein.id}`;
 }
 
-export function getProteinBackendId(protein: Protein) {
-  return protein.proteinAc;
+export function getProteinBackendId(protein: Node) {
+  return protein.id;
 }
 
-export function getNodeIdsFromI(pvi: ProteinProteinInteraction) {
+export function getNodeIdsFromI(pvi: NodeInteraction) {
   return {
     from: `p_${pvi.from}`,
     to: `p_${pvi.to}`,
@@ -88,7 +91,7 @@ export function getDrugBackendId(drug: Drug) {
   return drug.drugId;
 }
 
-export function getWrapperFromProtein(protein: Protein): Wrapper {
+export function getWrapperFromProtein(protein: Node): Wrapper {
   return {
     backendId: getProteinBackendId(protein),
     nodeId: getProteinNodeId(protein),
