@@ -41,7 +41,7 @@ export const defaultConfig: IConfig = {
   showFooter: true,
   nodeGroups: {
     default: {
-      color: 'white'
+      color: 'blue'
     },
     protein: {
       color: 'red'

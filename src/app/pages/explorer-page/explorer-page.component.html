@@ -103,7 +103,7 @@
                 <div class="network center image1" #network>
                   <button class="button is-loading center" alt="loading...">Loading</button>
                 </div>
-                <img class="image2" [src]="myConfig.legendUrl" [ngClass]="myConfig.legendClass"/>
+<!--                <img class="image2" [src]="myConfig.legendUrl" [ngClass]="myConfig.legendClass"/>-->
               </div>
             </div>
 
@@ -405,11 +405,8 @@
             <tbody>
             <tr *ngFor="let p of analysis.getSelection()">
               <td>
-                 <span class="icon">
-                    <i class="fa fa-dna" *ngIf="p.type == 'protein'"></i>
-                  </span>
               </td>
-              <td *ngIf="p.type == 'protein'">{{p.data.name}}</td>
+              <td>{{p.name}}</td>
               <td>
                 <button (click)="analysis.removeItems([p])" class="button is-small is-danger is-outlined has-tooltip"
                         data-tooltip="Remove from selection.">
@@ -423,27 +420,6 @@
             Double-click on a protein to select it for the analysis.
           </i>
         </div>
-
-        <footer class="card-footer">
-          <a (click)="analysis.addVisibleHostProteins(currentViewNodes, currentViewProteins)"
-             class="card-footer-item has-text-success" data-tooltip="Add all visible proteins.">
-            <span class="icon">
-              <i class="fa fa-plus"></i>
-            </span>
-            <span>
-              Add proteins
-            </span>
-          </a>
-          <a (click)="analysis.removeAllHostProteins()"
-             class="card-footer-item has-text-danger" data-tooltip="Remove all  proteins.">
-            <span class="icon">
-              <i class="fa fa-minus"></i>
-            </span>
-            <span>
-              Remove proteins
-            </span>
-          </a>
-        </footer>
 
         <footer class="card-footer" *ngIf="selectedAnalysisToken">
           <a (click)="analysis.addSeeds(currentViewNodes)"

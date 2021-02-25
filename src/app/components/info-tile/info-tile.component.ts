@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Wrapper} from '../../interfaces';
+import {Node} from '../../interfaces';
 import {AnalysisService} from '../../analysis.service';
 
 @Component({
@@ -10,7 +10,7 @@ import {AnalysisService} from '../../analysis.service';
 export class InfoTileComponent implements OnInit {
 
   @Input()
-  public wrapper: Wrapper;
+  public wrapper: Node;
 
   constructor(public analysis: AnalysisService) { }
 

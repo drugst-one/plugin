@@ -10,7 +10,7 @@ import {
   Node,
   Wrapper,
   getWrapperFromProtein,
-  Tissue, getNodeIdsFromI
+  Tissue
 } from '../../interfaces';
 import {ProteinNetwork} from '../../main-network';
 import {HttpClient} from '@angular/common/http';
@@ -128,16 +128,16 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         }
         const updatedNodes = [];
         for (const item of items) {
-          const node = this.nodeData.nodes.get(item.nodeId);
+          const node = this.nodeData.nodes.get(item.id);
           if (!node) {
             continue;
           }
-          const pos = this.networkInternal.getPositions([item.nodeId]);
-          node.x = pos[item.nodeId].x;
-          node.y = pos[item.nodeId].y;
-          node.x = pos[item.nodeId].x;
-          node.y = pos[item.nodeId].y;
-          Object.assign(node, this.myConfig.nodeGroups[node.wrapper.data.group]);
+          const pos = this.networkInternal.getPositions([item.id]);
+          node.x = pos[item.id].x;
+          node.y = pos[item.id].y;
+          node.x = pos[item.id].x;
+          node.y = pos[item.id].y;
+          Object.assign(node, this.myConfig.nodeGroups[node.group]);
           updatedNodes.push(node);
         }
         this.nodeData.nodes.update(updatedNodes);
@@ -145,7 +145,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         const updatedNodes = [];
         this.nodeData.nodes.forEach((node) => {
           const nodeSelected = this.analysis.idInSelection(node.id);
-          Object.assign(node, this.myConfig.nodeGroups[node.wrapper.data.group]);
+          Object.assign(node, this.myConfig.nodeGroups[node.group]);
         });
         this.nodeData.nodes.update(updatedNodes);
       }
@@ -225,11 +225,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (nodeIds.length > 0) {
         const nodeId = nodeIds[0];
         const node = this.nodeData.nodes.get(nodeId);
-        const wrapper = node.wrapper;
-        if (this.analysis.inSelection(wrapper)) {
-          this.analysis.removeItems([wrapper]);
+        if (this.analysis.inSelection(node)) {
+          this.analysis.removeItems([node]);
         } else {
-          this.analysis.addItems([wrapper]);
+          this.analysis.addItems([node]);
         }
       }
     });
@@ -358,8 +357,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   gProfilerLink(): string {
     const queryString = this.analysis.getSelection()
-      .filter(wrapper => wrapper.type === 'protein')
-      .map(wrapper => wrapper.data.proteinAc)
+      .filter(wrapper => wrapper.group === 'protein')
+      .map(wrapper => wrapper.access)
       .join('%0A');
     return 'http://biit.cs.ut.ee/gprofiler/gost?' +
       'organism=hsapiens&' +
@@ -382,8 +381,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (!tissue) {
       this.selectedTissue = null;
       const updatedNodes = [];
-      for (const protein of this.proteins) {
-        const item = getWrapperFromProtein(protein);
+      for (const item of this.proteins) {
         const node = this.nodeData.nodes.get(item.nodeId);
         if (!node) {
           continue;
@@ -401,7 +399,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
             1.0));
         node.wrapper = item;
         node.gradient = 1.0;
-        protein.expressionLevel = undefined;
+        // protein.expressionLevel = undefined;
         (node.wrapper.data as Node).expressionLevel = undefined;
         updatedNodes.push(node);
       }

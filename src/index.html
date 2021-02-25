@@ -24,18 +24,12 @@
 <button onclick="setNetwork('netexp1')">Add proteins</button>
 
 <div>
-  <network-expander id="netexp1" config='{"showQuery": false, "nodeGroups": {"default": {"color": "grey"}}, "edgeGroups":{"default": {"color": "grey"}, "custom": {"color": "red"}}}' onload="init1()" style="height: 100vh"></network-expander>
+  <network-expander id="netexp1" config='{"showQuery": false, "nodeGroups": {"custom": {"color": "yellow"}}, "edgeGroups":{"default": {"color": "red"}}}' onload="init1()" style="height: 100vh">
+  </network-expander>
 </div>
-
-<!--
-<div>                                                                                                                                                                                                                                                                                  <div style="border: 3px solid red">
-  <network-expander id="netexp2" config='{"legendUrl": "https://i.pinimg.com/originals/ff/72/80/ff72801189f650f11672915cda0f1bdf.png", "legendClass": "my-legend-2"}'></network-expander>
-</div>
--->
 
 <script>
   function init1() {
-    document.getElementsByClassName('my-legend-1')[0].onclick = function() {this.remove()};
   }
 
   function changeConfig() {
@@ -63,7 +57,14 @@
         {
           name: "Unknown type",
           id: "2",
-          access: "B"
+          access: "B",
+          group: "custom"
+        },
+        {
+          name: "Unknown type",
+          id: "4",
+          access: "B",
+          group: "custom"
         },
         {
           name: "Drug 123",
@@ -79,8 +80,7 @@
         },
         {
           from: '2',
-          to: '3',
-          group: 'custom'
+          to: '3'
         }
       ]
     }));

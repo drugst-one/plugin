@@ -77,7 +77,7 @@ export class CustomProteinsComponent implements OnInit {
       items.push(getWrapperFromProtein(detail));
     }
     this.itemsFound = items;
-    this.addedCount = this.analysis.addVisibleHostProteins(this.visibleNodes, proteinItems);
+    // this.addedCount = this.analysis.addVisibleHostProteins(this.visibleNodes, proteinItems);
     this.selectOnly = true;
     this.loading = false;
   }

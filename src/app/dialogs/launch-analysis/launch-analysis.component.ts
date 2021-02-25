@@ -98,7 +98,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   public async startTask() {
     const parameters: any = {
-      seeds: this.analysis.getSelection().map((item) => item.backendId),
+      seeds: this.analysis.getSelection().map((item) => item.id),
     };
 
     parameters.target_or_drugs = this.target === 'drug' ? 'PPDr' : 'PPI';

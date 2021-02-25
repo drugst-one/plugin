@@ -2,25 +2,19 @@
   <div>
     <p>
       <b><span>Name:</span></b>
-      {{ wrapper.data.name }}
+      {{ wrapper.name }}
     </p>
     <p>
       <b><span>Access:</span></b>
-      <a href="https://www.uniprot.org/uniprot/{{ wrapper.data.proteinAc }}" target="_blank">
-        {{ wrapper.data.access }}
+      <a href="https://www.uniprot.org/uniprot/{{ wrapper.access }}" target="_blank">
+        {{ wrapper.access }}
       </a>
-    </p>
-    <p *ngIf="wrapper.data.expressionLevel">
-      <b><span>Expression level: </span></b>
-      {{ wrapper.data.expressionLevel|number }}
     </p>
   </div>
 
-  <div class="field has-addons add-remove-toggle" *ngIf="wrapper.type !== 'drug'">
-    <app-toggle [value]="analysis.inSelection(wrapper)"
-                (valueChange)="$event ? analysis.addItems([wrapper]) : analysis.removeItems([wrapper])" textOn="Selected"
-                textOff="Deselected" tooltipOn="Add protein to selection." tooltipOff="Remove protein from selection."></app-toggle>
-  </div>
+  <app-toggle [value]="analysis.inSelection(wrapper)"
+              (valueChange)="$event ? analysis.addItems([wrapper]) : analysis.removeItems([wrapper])" textOn="Selected"
+              textOff="Deselected" tooltipOn="Add protein to selection." tooltipOff="Remove protein from selection."></app-toggle>
 </div>
 <div *ngIf="!wrapper">
   Please select a node for further information.
