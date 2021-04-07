@@ -1,10 +1,14 @@
 @import "~src/variables";
 
+
 div.legend {
   position: absolute;
   bottom: $network-footer-height;
   &.right {
     right: 0;
+  }
+  img {
+    max-width: 20vw;
   }
   tr.list-item{
     padding: 0;
@@ -13,7 +17,7 @@ div.legend {
       height: $legend-circle-size;
       vertical-align: middle !important;
       padding: 0 !important;
-      .round{
+      .circle{
         background: $legend-default-background-color;
         border-radius: 50%;
         width: $legend-circle-size;
@@ -28,13 +32,45 @@ div.legend {
         border-bottom: $legend-circle-size solid black;
         display: inline-block;
       }
-      .rectangle{
-        background: $legend-default-background-color;
-        border-radius: $legend-rectangle-radius;
-        width: $legend-rectangle-width;
-        height: $legend-rectangle-height;
-        margin-bottom: calc((#{$legend-rectangle-height} - #{$legend-rectangle-width}) / 2);
+      .star {
+        position: relative;
         display: inline-block;
+        width: 0;
+        height: 0;
+        margin-left: .5em;
+        margin-right: .9em;
+        margin-bottom: 1.2em;
+        border-right:  .3em solid transparent;
+        border-bottom: .7em  solid $legend-star-color;
+        border-left:   .3em solid transparent;
+        /* Controlls the size of the stars. */
+        font-size: $legend-star-size;
+        &:before, &:after {
+          content: '';
+          display: block;
+          width: 0;
+          height: 0;
+          position: absolute;
+          top: .6em;
+          left: -1em;
+          border-right:  1em solid transparent;
+          border-bottom: .7em  solid;
+          border-left:   1em solid transparent;
+          transform: rotate(-35deg);
+        }
+        &:after {
+          transform: rotate(35deg);
+        }
+      }
+      .square{
+        background: $legend-default-background-color;
+        width: $legend-square-width;
+        height: $legend-square-width;
+        display: inline-block;
+      }
+      .legend-icon {
+        width: $legend-circle-size;
+        height: $legend-circle-size;
       }
       .edge{
         width: $legend-edge-width;

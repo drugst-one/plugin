@@ -5,7 +5,6 @@ export interface Node {
   id: string;
   access: string;
   group?: string;
-
   interactions?: Node[];
   x?: number;
   y?: number;

@@ -9,8 +9,9 @@
 export interface NodeGroup {
   name: string;
   color: string;
-  shape: 'round' | 'triangle' | 'rectangle';
+  shape: 'circle' | 'triangle' | 'star' | 'square' | 'image';
   type: 'gene' | 'protein' | 'drug';
+  image?: string;
 }
 
 export interface EdgeGroup {
@@ -67,13 +68,13 @@ export const defaultConfig: IConfig = {
     protein: {
       name: 'Resulting Proteins',
       color: 'red',
-      shape: 'round',
+      shape: 'circle',
       type: 'protein',
     },
     drug: {
       name: 'Possible Drugs',
       color: 'green',
-      shape: 'rectangle',
+      shape: 'star',
       type: 'drug',
     }
   },

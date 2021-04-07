@@ -208,6 +208,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.selectedWrapper = null;
     this.getNetwork();
     this.proteinData = new ProteinNetwork(this.proteins, this.edges);
+    console.log(this.proteinData)
     this.proteinData.linkNodes();
 
     // Populate baits
@@ -303,6 +304,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     let nodeLabel = customNode.name;
     if (customNode.name.length === 0) {
       nodeLabel = customNode.id;
+    }
+    if (node.image) {
+      node.shape = 'image';
     }
     node.label = nodeLabel;
     node.id = customNode.id;
