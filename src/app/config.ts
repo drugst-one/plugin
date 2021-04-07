@@ -6,12 +6,22 @@
 //   color: string;
 // }
 
-type NodeGroup = any;
-type EdgeGroup = any;
+export interface NodeGroup {
+  name: string;
+  color: string;
+  shape: 'round' | 'triangle' | 'rectangle';
+  type: 'gene' | 'protein' | 'drug';
+}
+
+export interface EdgeGroup {
+  name: string;
+  color: string;
+}
 
 export interface IConfig {
   legendUrl: string;
   legendClass: string;
+  legendPos: 'left' | 'right';
   taskName: string;
   showLeftSidebar: boolean;
   showOverview: boolean;
@@ -22,14 +32,21 @@ export interface IConfig {
   showTasks: boolean;
   showSelection: boolean;
   showFooter: boolean;
+  showLegend: boolean;
+  showLegendNodes: boolean;
+  showLegendEdges: boolean;
   nodeGroups: { [key: string]: NodeGroup };
   edgeGroups: { [key: string]: EdgeGroup };
+
 }
 
 export const defaultConfig: IConfig = {
-  legendUrl: 'https://exbio.wzw.tum.de/covex/assets/leg1.png',
+  legendUrl: '', // 'https://exbio.wzw.tum.de/covex/assets/leg1.png' show legend image if set, otherwise default legend
   legendClass: 'legend',
+  legendPos: 'left',
   taskName: 'Run Task X',
+  showLegendNodes: true,
+  showLegendEdges: true,
   showLeftSidebar: true,
   showOverview: true,
   showQuery: true,
@@ -39,19 +56,30 @@ export const defaultConfig: IConfig = {
   showSelection: true,
   showTasks: true,
   showFooter: true,
+  showLegend: true,
   nodeGroups: {
     default: {
-      color: 'white'
+      name: 'Default Group',
+      color: 'yellow',
+      shape: 'triangle',
+      type: 'gene',
     },
     protein: {
-      color: 'red'
+      name: 'Resulting Proteins',
+      color: 'red',
+      shape: 'round',
+      type: 'protein',
     },
     drug: {
-      color: 'green'
+      name: 'Possible Drugs',
+      color: 'green',
+      shape: 'rectangle',
+      type: 'drug',
     }
   },
   edgeGroups: {
     default: {
+      name: 'Edgy edges',
       color: 'black'
     }
   },

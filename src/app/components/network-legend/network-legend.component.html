@@ -1,0 +1,32 @@
+<div class="legend" [class.right]="this.config.legendPos === 'right'">
+
+  <!-- default legend in html -->
+  <table *ngIf="!this.config.legendUrl.length">
+    <ng-container *ngIf="this.config.showLegendNodes">
+      <tr *ngFor="let nodeGroup of this.config.nodeGroups | keyvalue" class="list-item">
+        <td *ngIf="nodeGroup.value.shape !== 'triangle'">
+          <span class="node {{ nodeGroup.value.shape }}" [style.background-color]=nodeGroup.value.color>
+          </span>
+        </td>
+        <td *ngIf="nodeGroup.value.shape === 'triangle'">
+          <span class="node {{ nodeGroup.value.shape }}" [style.border-bottom-color]=nodeGroup.value.color>
+          </span>
+        </td>
+        <td>&nbsp;{{ nodeGroup.value.name }}</td>
+      </tr>
+    </ng-container>
+
+    <ng-container *ngIf="this.config.showLegendEdges">
+      <tr *ngFor="let edgeGroup of this.config.edgeGroups | keyvalue" class="list-item">
+        <td>
+          <hr class="edge" [style.background-color]=edgeGroup.value.color >
+        </td>
+        <td>&nbsp;{{ edgeGroup.value.name }}</td>
+      </tr>
+    </ng-container>
+  </table>
+
+
+  <!-- custom legend image if url given by user -->
+  <img *ngIf="this.config.legendUrl.length" [src]="this.config.legendUrl" [ngClass]="this.config.legendClass"/>
+</div>

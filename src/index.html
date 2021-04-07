@@ -18,19 +18,35 @@
 <input type="checkbox" onclick=changeConfigStr('{"showOverview":'+this.checked+'}') checked /> Show overview<br>
 <input type="checkbox" onclick=changeConfigStr('{"showQuery":'+this.checked+'}') /> Show query<br>
 <input type="checkbox" onclick=changeConfigStr('{"showLeftSidebar":'+this.checked+'}') checked /> Show sidebar<br>
+<input type="checkbox" onclick=changeConfigStr('{"showItemSelector":'+this.checked+'}') checked /> Show ItemSelector<br>
+<input type="checkbox" onclick=changeConfigStr('{"showSimpleAnalysis":'+this.checked+'}') /> Show SimpleAnalysis<br>
+<input type="checkbox" onclick=changeConfigStr('{"showAdvAnalysis":'+this.checked+'}') checked /> Show Advanced Analysis<br>
+<input type="checkbox" onclick=changeConfigStr('{"showTasks":'+this.checked+'}') checked /> Show Tasks<br>
+<input type="checkbox" onclick=changeConfigStr('{"showSelection":'+this.checked+'}') checked /> Show Selection<br>
+<input type="checkbox" onclick=changeConfigStr('{"showFooter":'+this.checked+'}') checked /> Show Footer<br>
+<input type="checkbox" onclick=changeConfigStr('{"showLegend":'+this.checked+'}') checked /> Show Legend<br>
+<!--<input type="checkbox" onclick=changeConfigStr('{"showSimpleAnalysis":'+this.checked+'}') checked /> Show SimpleAnalysis<br>-->
 
 <br>
 
 <button onclick="setNetwork('netexp1')">Add proteins</button>
 
+
+<!--  "legendUrl": "https://exbio.wzw.tum.de/covex/assets/leg1.png",-->
 <div>
-  <network-expander id="netexp1" config='{"showQuery": false, "nodeGroups": {"default": {"color": "grey"}}, "edgeGroups":{"default": {"color": "grey"}, "custom": {"color": "red"}}}' onload="init1()" style="height: 100vh"></network-expander>
+  <network-expander id="netexp1" config='{
+  "showQuery": false,
+  "legendPos": "right",
+  "nodeGroups": {"default": {"color": "grey", "name": "Default Group", "shape": "triangle"}},
+  "edgeGroups":{"default": {"color": "grey", "name": "Default Edge Group"}, "custom": {"color": "red", "name": "Custom Edge Group"}}
+  }' onload="init1()" style="height: 100vh"></network-expander>
 </div>
 
 <!--
-<div>                                                                                                                                                                                                                                                                                  <div style="border: 3px solid red">
+<div>                                                                                                                                                                                                                                                                        <div style="border: 3px solid red">
   <network-expander id="netexp2" config='{"legendUrl": "https://i.pinimg.com/originals/ff/72/80/ff72801189f650f11672915cda0f1bdf.png", "legendClass": "my-legend-2"}'></network-expander>
 </div>
+
 -->
 
 <script>

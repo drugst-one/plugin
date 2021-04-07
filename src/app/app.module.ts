@@ -21,6 +21,7 @@ import {CustomProteinsComponent} from './dialogs/custom-proteins/custom-proteins
 import {AnalysisService} from './analysis.service';
 import { AddExpressedProteinsComponent } from './dialogs/add-expressed-proteins/add-expressed-proteins.component';
 import {createCustomElement} from '@angular/elements';
+import { NetworkLegendComponent } from './components/network-legend/network-legend.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import {createCustomElement} from '@angular/elements';
     InfoTileComponent,
     CustomProteinsComponent,
     AddExpressedProteinsComponent,
+    NetworkLegendComponent,
   ],
   imports: [
     BrowserModule,

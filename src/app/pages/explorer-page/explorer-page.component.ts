@@ -10,14 +10,14 @@ import {
   Node,
   Wrapper,
   getWrapperFromProtein,
-  Tissue, getNodeIdsFromI
+  Tissue
 } from '../../interfaces';
 import {ProteinNetwork} from '../../main-network';
 import {HttpClient} from '@angular/common/http';
 import {AnalysisService} from '../../analysis.service';
 import html2canvas from 'html2canvas';
 import {NetworkSettings} from '../../network-settings';
-import {defaultConfig, IConfig} from '../../config';
+import {defaultConfig, EdgeGroup, IConfig, NodeGroup} from '../../config';
 
 
 declare var vis: any;
@@ -286,6 +286,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         },
       }
     });
+  }
+
+  public setConfigEdgeGroup(key: string, values: EdgeGroup) {
+    // make sure all keys are set
+
+    this.myConfig[key] = {...this.myConfig[key], ...values};
   }
 
   private mapCustomNode(customNode: Node): any {

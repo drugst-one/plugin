@@ -68,7 +68,7 @@ export class AnalysisService {
     if (finishedTokens) {
       this.finishedTokens = JSON.parse(finishedTokens);
     }
-    this.startWatching();
+    // this.startWatching();
 
     this.http.get<Tissue[]>(`${environment.backend}tissues/`).subscribe((tissues) => {
       this.tissues = tissues;
@@ -269,7 +269,7 @@ export class AnalysisService {
     }).toPromise();
     this.tokens.push(resp.token);
     localStorage.setItem('tokens', JSON.stringify(this.tokens));
-    this.startWatching();
+    // this.startWatching();
 
     toast({
       message: 'Quick analysis started. This may take a while.' +
@@ -304,7 +304,7 @@ export class AnalysisService {
     }).toPromise();
     this.tokens.push(resp.token);
     localStorage.setItem('tokens', JSON.stringify(this.tokens));
-    this.startWatching();
+    // this.startWatching();
   }
 
   public isLaunchingQuick(): boolean {

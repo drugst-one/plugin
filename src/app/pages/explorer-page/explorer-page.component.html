@@ -12,508 +12,522 @@
                               [currentViewProteins]="currentViewProteins">
   </app-add-expressed-proteins>
 
+  <!-- Start explorer -->
   <div class="covex explorer">
 
-  <div class="covex left-window">
-    <div>
-      <div  class="covex sidebar bar-left">
+    <!-- Start left window -->
+    <div class="covex left-window">
+      <div>
 
-        <div *ngIf="myConfig.showOverview" class="card bar-large">
-          <header class="card-header">
-            <p class="card-header-title">
-          <span class="icon">
-        <i class="fas fa-info" aria-hidden="true"></i>
-      </span> Network Overview
-            </p>
-            <a (click)="collapseOverview= !collapseOverview" data-action="collapse"
-               class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+        <!-- Start left sidebar -->
+        <div class="covex sidebar bar-left">
+
+          <div *ngIf="myConfig.showOverview" class="card bar-large">
+            <header class="card-header">
+              <p class="card-header-title">
+                <span class="icon">
+                  <i class="fas fa-info" aria-hidden="true"></i>
+                </span> Network Overview
+              </p>
+              <a (click)="collapseOverview= !collapseOverview" data-action="collapse"
+                 class="card-header-icon is-hidden-fullscreen" aria-label="more options">
              <span class="icon">
             <i *ngIf="collapseOverview" class="fas fa-angle-down" aria-hidden="true"></i>
             <i *ngIf="!collapseOverview" class="fas fa-angle-left" aria-hidden="true"></i>             </span>
-            </a>
-          </header>
-          <div *ngIf="collapseOverview">
-            <div class="card-content">
-              <nav class="level" *ngIf="proteinData">
+              </a>
+            </header>
+            <div *ngIf="collapseOverview">
+              <div class="card-content">
+                <nav class="level" *ngIf="proteinData">
 
-                <!-- TO DO  : CHANGE THIS LATER
-               <div class="level-item has-text-centered">
-                 <div>
-                   <p class="heading">Viral<br>Proteins</p>
-                   <p class="title"> {{ proteinData.effects.length }}</p>
+                  <!-- TO DO  : CHANGE THIS LATER
+                 <div class="level-item has-text-centered">
+                   <div>
+                     <p class="heading">Viral<br>Proteins</p>
+                     <p class="title"> {{ proteinData.effects.length }}</p>
+                   </div>
                  </div>
-               </div>
-               -->
+                 -->
 
-                <div class="level-item has-text-centered">
-                  <div>
-                    <p class="heading">Proteins</p>
-                    <p class="title">{{ proteinData.proteins.length }}</p>
+                  <div class="level-item has-text-centered">
+                    <div>
+                      <p class="heading">Proteins</p>
+                      <p class="title">{{ proteinData.proteins.length }}</p>
+                    </div>
                   </div>
-                </div>
-                <div class="level-item has-text-centered">
-                  <div>
-                    <p class="heading">Interactions</p>
-                    <p class="title">{{ proteinData.edges.length }}</p>
+                  <div class="level-item has-text-centered">
+                    <div>
+                      <p class="heading">Interactions</p>
+                      <p class="title">{{ proteinData.edges.length }}</p>
+                    </div>
                   </div>
-                </div>
-              </nav>
+                </nav>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div *ngIf="myConfig.showQuery"  class="card bar-large">
-          <header class="card-header">
-            <p class="card-header-title">
-          <span class="icon">
-        <i class="fas fa-search" aria-hidden="true"></i>
-      </span> Query Protein/Gene
-            </p>
-            <a (click)="collapseQuery = !collapseQuery" data-action="collapse"
-               class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+          <div *ngIf="myConfig.showQuery" class="card bar-large">
+            <header class="card-header">
+              <p class="card-header-title">
+                <span class="icon">
+                  <i class="fas fa-search" aria-hidden="true"></i>
+                </span> Query Protein/Gene
+              </p>
+              <a (click)="collapseQuery = !collapseQuery" data-action="collapse"
+                 class="card-header-icon is-hidden-fullscreen" aria-label="more options">
            <span class="icon">
             <i *ngIf="collapseQuery" class="fas fa-angle-down" aria-hidden="true"></i>
             <i *ngIf="!collapseQuery" class="fas fa-angle-left" aria-hidden="true"></i>
            </span>
-            </a>
-          </header>
-          <div *ngIf="collapseQuery">
-            <div class="card-content">
-              <div class="field">
-                <div class="control">
-                  <app-query-tile-component (selectItem)="queryAction($event)"
-                                            [queryItems]="queryItems"></app-query-tile-component>
+              </a>
+            </header>
+            <div *ngIf="collapseQuery">
+              <div class="card-content">
+                <div class="field">
+                  <div class="control">
+                    <app-query-tile-component (selectItem)="queryAction($event)"
+                                              [queryItems]="queryItems"></app-query-tile-component>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="covex network">
-        <div class="card network">
-          <header class="card-header">
-            <p class="card-header-title">
-              Protein-Protein Interaction Network
-            </p>
-          </header>
-          <div class="card-content">
-            <div class="card-image" id="canvas-content">
-              <div class="parent">
-                <div class="network center image1" #network>
-                  <button class="button is-loading center" alt="loading...">Loading</button>
-                </div>
-                <img class="image2" [src]="myConfig.legendUrl" [ngClass]="myConfig.legendClass"/>
-              </div>
+        <!-- Start network block -->
+        <div class="covex network">
+          <div class="card network">
+
+            <div *ngIf="myConfig.showLegend">
+              <app-network-legend [config]="myConfig"></app-network-legend>
             </div>
 
-            <footer *ngIf="myConfig.showFooter" class="card-footer toolbar">
-              <button (click)="toCanvas()" class="button is-primary is-rounded has-tooltip"
-                      data-tooltip="Take a screenshot of the current network.">
-                <span class="icon">
-                  <i class="fas fa-camera" aria-hidden="true"></i>
-                </span> <span>Screenshot</span>
-              </button>
 
-              <div class="footer-buttons dropdown is-up" [class.is-active]="expressionExpanded">
-                <div class="dropdown-trigger">
-                  <button (click)="expressionExpanded=!expressionExpanded"
-                          class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
-                          aria-haspopup="true" aria-controls="dropdown-menu"
-                          data-tooltip="Tissue expression data is provided by the GTEx project.">
-                    <span *ngIf="!selectedTissue">Tissue</span>
-                    <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
-                    <span class="icon is-small">
-                      <i class="fas"
-                         [class.fa-angle-up]="expressionExpanded"
-                         [class.fa-angle-left]="!expressionExpanded" aria-hidden="true"></i>
-                    </span>
-                  </button>
-                </div>
-                <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                  <div class="dropdown-content tissue-dropdown">
-                    <div class="scroll-area">
-                      <a (click)="selectTissue(null)"
-                         [class.is-active]="!selectedTissue"
-                         class="dropdown-item">
-                        None
-                      </a>
-                      <a *ngFor="let tissue of analysis.getTissues()"
-                         (click)="selectTissue(tissue)"
-                         [class.is-active]="selectedTissue && tissue.id === selectedTissue.id"
-                         class="dropdown-item">
-                        {{tissue.name}}
-                      </a>
-                    </div>
+            <header class="card-header">
+              <p class="card-header-title">
+                Protein-Protein Interaction Network
+              </p>
+            </header>
+            <div class="card-content">
+              <div class="card-image" id="canvas-content">
+                <div class="parent">
+                  <div class="network center image1" #network>
+                    <button class="button is-loading center" alt="loading...">Loading</button>
                   </div>
                 </div>
               </div>
 
-              <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off"
-                          tooltipOn="Enable the network animation." tooltipOff="Disable the network animation and freeze nodes."
-                          [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
-            </footer>
+              <footer *ngIf="myConfig.showFooter" class="card-footer toolbar">
+                <button (click)="toCanvas()" class="button is-primary is-rounded has-tooltip"
+                        data-tooltip="Take a screenshot of the current network.">
+                <span class="icon">
+                  <i class="fas fa-camera" aria-hidden="true"></i>
+                </span> <span>Screenshot</span>
+                </button>
+
+                <div class="footer-buttons dropdown is-up" [class.is-active]="expressionExpanded">
+                  <div class="dropdown-trigger">
+                    <button (click)="expressionExpanded=!expressionExpanded"
+                            class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
+                            aria-haspopup="true" aria-controls="dropdown-menu"
+                            data-tooltip="Tissue expression data is provided by the GTEx project.">
+                      <span *ngIf="!selectedTissue">Tissue</span>
+                      <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
+                      <span class="icon is-small">
+                      <i class="fas"
+                         [class.fa-angle-up]="expressionExpanded"
+                         [class.fa-angle-left]="!expressionExpanded" aria-hidden="true"></i>
+                    </span>
+                    </button>
+                  </div>
+                  <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                    <div class="dropdown-content tissue-dropdown">
+                      <div class="scroll-area">
+                        <a (click)="selectTissue(null)"
+                           [class.is-active]="!selectedTissue"
+                           class="dropdown-item">
+                          None
+                        </a>
+                        <a *ngFor="let tissue of analysis.getTissues()"
+                           (click)="selectTissue(tissue)"
+                           [class.is-active]="selectedTissue && tissue.id === selectedTissue.id"
+                           class="dropdown-item">
+                          {{tissue.name}}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off"
+                            tooltipOn="Enable the network animation."
+                            tooltipOff="Disable the network animation and freeze nodes."
+                            [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
+              </footer>
+            </div>
           </div>
         </div>
+
+        <!-- End  network block -->
+      </div>
+
+      <div class="analysis-view" *ngIf="selectedAnalysisToken">
+        <app-analysis-panel [(token)]="selectedAnalysisToken"
+                            (showDetailsChange)="selectedWrapper = $event"
+                            (visibleItems)="analysisWindowChanged($event)"></app-analysis-panel>
       </div>
     </div>
 
-    <div class="analysis-view" *ngIf="selectedAnalysisToken">
-      <app-analysis-panel [(token)]="selectedAnalysisToken"
-                           (showDetailsChange)="selectedWrapper = $event"
-                           (visibleItems)="analysisWindowChanged($event)"></app-analysis-panel>
-    </div>
-  </div>
-
-  <div *ngIf="myConfig.showLeftSidebar"  class="covex sidebar bar-right">
-    <div *ngIf="myConfig.showItemSelector" class="card bar-large">
-      <header class="card-header">
-        <p class="card-header-title">
+    <div *ngIf="myConfig.showLeftSidebar" class="covex sidebar bar-right">
+      <div *ngIf="myConfig.showItemSelector" class="card bar-large">
+        <header class="card-header">
+          <p class="card-header-title">
           <span class="icon">
             <i *ngIf="!selectedWrapper" class="fas fa-info" aria-hidden="true"></i>
             <i *ngIf="selectedWrapper && selectedWrapper.type === 'protein'" class="fas fa-dna" aria-hidden="true"></i>
             <i *ngIf="selectedWrapper && selectedWrapper.type === 'drug'" class="fas fa-capsules"
                aria-hidden="true"></i>
           </span>
-          <span *ngIf="!selectedWrapper">No item selected</span>
-          <span *ngIf="selectedWrapper">
+            <span *ngIf="!selectedWrapper">No item selected</span>
+            <span *ngIf="selectedWrapper">
             <span *ngIf="selectedWrapper.type === 'protein'">Host Protein</span>
             <span *ngIf="selectedWrapper.type === 'drug'">Drug</span>
           </span>
-        </p>
-        <a (click)="collapseDetails = !collapseDetails" data-action="collapse"
-           class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+          </p>
+          <a (click)="collapseDetails = !collapseDetails" data-action="collapse"
+             class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
             <i *ngIf="collapseDetails" class="fas fa-angle-down" aria-hidden="true"></i>
             <i *ngIf="!collapseDetails" class="fas fa-angle-left" aria-hidden="true"></i>
           </span>
-        </a>
-      </header>
-      <div *ngIf="collapseDetails">
-        <div class="card-content">
-          <app-info-tile [wrapper]="selectedWrapper"></app-info-tile>
+          </a>
+        </header>
+        <div *ngIf="collapseDetails">
+          <div class="card-content">
+            <app-info-tile [wrapper]="selectedWrapper"></app-info-tile>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div *ngIf="myConfig.showSimpleAnalysis" class="card bar-large">
-      <header class="card-header">
-        <p class="card-header-title">
+      <div *ngIf="myConfig.showSimpleAnalysis" class="card bar-large">
+        <header class="card-header">
+          <p class="card-header-title">
           <span class="icon">
             <i class="fas fa-flask" aria-hidden="true"></i>
           </span>
-          Simple Analysis
-        </p>
-        <a (click)="collapseAnalysisQuick = !collapseAnalysisQuick" data-action="collapse"
-           class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+            Simple Analysis
+          </p>
+          <a (click)="collapseAnalysisQuick = !collapseAnalysisQuick" data-action="collapse"
+             class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
             <i *ngIf="collapseAnalysisQuick" class="fas fa-angle-down" aria-hidden="true"></i>
             <i *ngIf="!collapseAnalysisQuick" class="fas fa-angle-left" aria-hidden="true"></i>
           </span>
-        </a>
-      </header>
-      <div *ngIf="collapseAnalysisQuick">
-        <div class="card-content quick-find">
-          <div class="field">
-            <div class="control">
-              <div class="tile notification is-danger">
-                <div class="align-vmiddle">
-                  <div class="digit"><i class="fa fa-fast-forward"></i></div>
-                  <button (click)="analysis.startQuickAnalysis(true, null)"
-                          [disabled]="analysis.isLaunchingQuick()"
-                          class="button is-white is-rounded has-tooltip" data-tooltip="Find drugs for all proteins.">
+          </a>
+        </header>
+        <div *ngIf="collapseAnalysisQuick">
+          <div class="card-content quick-find">
+            <div class="field">
+              <div class="control">
+                <div class="tile notification is-danger">
+                  <div class="align-vmiddle">
+                    <div class="digit"><i class="fa fa-fast-forward"></i></div>
+                    <button (click)="analysis.startQuickAnalysis(true, null)"
+                            [disabled]="analysis.isLaunchingQuick()"
+                            class="button is-white is-rounded has-tooltip" data-tooltip="Find drugs for all proteins.">
                     <span class="icon">
                       <i class="fa fa-capsules" *ngIf="!analysis.isLaunchingQuick()"></i>
                       <i class="fa fa-spin fa-spinner" *ngIf="analysis.isLaunchingQuick()"></i>
                     </span>
-                    <span>
+                      <span>
                       Quick Start
                     </span>
-                  </button>
-                </div>
-              </div>
-              <div class="divisor-rapid">
-                &mdash; or &mdash;
-              </div>
-              <div class="tile notification is-info">
-                <div class="align-vmiddle">
-                  <div class="digit" *ngIf="analysis.getCount() == 0">1</div>
-                  <div class="digit" *ngIf="analysis.getCount() > 0"><i class="fa fa-check"></i></div>
-                  <div>
-                    <span>Select Proteins</span>
+                    </button>
                   </div>
                 </div>
-              </div>
-              <div class="tile notification is-info">
-                <div class="align-vmiddle">
-                  <div class="digit">2</div>
-                  <button (click)="analysis.startQuickAnalysis(false, null)"
-                          [disabled]="analysis.getCount() === 0 || analysis.isLaunchingQuick()"
-                          class="button is-white is-rounded has-tooltip"
-                          data-tooltip="Find drugs for the selected proteins.">
+                <div class="divisor-rapid">
+                  &mdash; or &mdash;
+                </div>
+                <div class="tile notification is-info">
+                  <div class="align-vmiddle">
+                    <div class="digit" *ngIf="analysis.getCount() == 0">1</div>
+                    <div class="digit" *ngIf="analysis.getCount() > 0"><i class="fa fa-check"></i></div>
+                    <div>
+                      <span>Select Proteins</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="tile notification is-info">
+                  <div class="align-vmiddle">
+                    <div class="digit">2</div>
+                    <button (click)="analysis.startQuickAnalysis(false, null)"
+                            [disabled]="analysis.getCount() === 0 || analysis.isLaunchingQuick()"
+                            class="button is-white is-rounded has-tooltip"
+                            data-tooltip="Find drugs for the selected proteins.">
                     <span class="icon">
                       <i class="fa fa-capsules" *ngIf="!analysis.isLaunchingQuick()"></i>
                       <i class="fa fa-spin fa-spinner" *ngIf="analysis.isLaunchingQuick()"></i>
                     </span>
-                    <span>
+                      <span>
                       {{ myConfig.taskName }}
                     </span>
-                  </button>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div *ngIf="myConfig.showAdvAnalysis" class="card bar-large">
-      <header class="card-header">
-        <p class="card-header-title">
+      <div *ngIf="myConfig.showAdvAnalysis" class="card bar-large">
+        <header class="card-header">
+          <p class="card-header-title">
           <span class="icon">
             <i class="fas fa-flask" aria-hidden="true"></i>
           </span>
-          Analysis
-        </p>
-        <a (click)="collapseAnalysis = !collapseAnalysis" data-action="collapse"
-           class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+            Analysis
+          </p>
+          <a (click)="collapseAnalysis = !collapseAnalysis" data-action="collapse"
+             class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
             <i *ngIf="collapseAnalysis" class="fas fa-angle-down" aria-hidden="true"></i>
             <i *ngIf="!collapseAnalysis" class="fas fa-angle-left" aria-hidden="true"></i>
           </span>
-        </a>
-      </header>
-      <div *ngIf="collapseAnalysis">
-        <div class="card-content">
-          <div class="field">
-            <div class="control">
-              <button (click)="analysisDialogTarget = 'drug-target'; showAnalysisDialog = true;"
-                      class="button is-primary is-fullwidth is-rounded has-tooltip"
-                      data-tooltip="Find drug targets for the selected proteins."
-                      [disabled]="analysis.getCount() === 0">
+          </a>
+        </header>
+        <div *ngIf="collapseAnalysis">
+          <div class="card-content">
+            <div class="field">
+              <div class="control">
+                <button (click)="analysisDialogTarget = 'drug-target'; showAnalysisDialog = true;"
+                        class="button is-primary is-fullwidth is-rounded has-tooltip"
+                        data-tooltip="Find drug targets for the selected proteins."
+                        [disabled]="analysis.getCount() === 0">
                 <span class="icon">
                   <i class="fa fa-crosshairs"></i>
                 </span>
-                <span>
+                  <span>
                   Find Drug Targets
                 </span>
-              </button>
+                </button>
+              </div>
             </div>
-          </div>
-          <div class="field">
-            <div class="control">
-              <button (click)="analysisDialogTarget = 'drug'; showAnalysisDialog = true;"
-                      class="button is-primary is-fullwidth is-rounded has-tooltip"
-                      data-tooltip="Find drugs for the selected proteins."
-                      [disabled]="analysis.getCount() === 0">
+            <div class="field">
+              <div class="control">
+                <button (click)="analysisDialogTarget = 'drug'; showAnalysisDialog = true;"
+                        class="button is-primary is-fullwidth is-rounded has-tooltip"
+                        data-tooltip="Find drugs for the selected proteins."
+                        [disabled]="analysis.getCount() === 0">
                 <span class="icon">
                   <i class="fa fa-capsules"></i>
                 </span>
-                <span>
+                  <span>
                   {{myConfig.taskName}}
                 </span>
-              </button>
+                </button>
+              </div>
             </div>
-          </div>
-          <div class="field">
-            <div class="control">
-              <a *ngIf="analysis.getCount() > 0" [href]="gProfilerLink()" target="_blank"
-                 class="button is-primary is-fullwidth is-rounded has-tooltip"
-                      data-tooltip="Use enrichment analysis via g:Profiler (external).">
+            <div class="field">
+              <div class="control">
+                <a *ngIf="analysis.getCount() > 0" [href]="gProfilerLink()" target="_blank"
+                   class="button is-primary is-fullwidth is-rounded has-tooltip"
+                   data-tooltip="Use enrichment analysis via g:Profiler (external).">
                 <span class="icon">
                   <i class="fa fa-external-link-alt"></i>
                 </span>
-                <span>
+                  <span>
                   Enrichment Analysis
                 </span>
-              </a>
-              <a *ngIf="analysis.getCount() === 0" disabled
-                 class="button is-primary is-fullwidth is-rounded has-tooltip"
-                 data-tooltip="Use enrichment analysis via g:Profiler (external).">
+                </a>
+                <a *ngIf="analysis.getCount() === 0" disabled
+                   class="button is-primary is-fullwidth is-rounded has-tooltip"
+                   data-tooltip="Use enrichment analysis via g:Profiler (external).">
                 <span class="icon">
                   <i class="fa fa-external-link-alt"></i>
                 </span>
-                <span>
+                  <span>
                   Enrichment Analysis
                 </span>
-              </a>
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div *ngIf="myConfig.showTasks"  class="card bar-large">
-      <header class="card-header">
-        <p class="card-header-title">
+      <div *ngIf="myConfig.showTasks" class="card bar-large">
+        <header class="card-header">
+          <p class="card-header-title">
           <span class="icon">
             <i class="fas fa-tasks" aria-hidden="true"></i>
           </span>
-          Tasks ({{analysis.tasks.length}})
-        </p>
-        <a (click)="collapseTask = !collapseTask" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
-           aria-label="more options">
+            Tasks ({{analysis.tasks.length}})
+          </p>
+          <a (click)="collapseTask = !collapseTask" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
+             aria-label="more options">
           <span class="icon">
             <i *ngIf="collapseTask" class="fas fa-angle-down" aria-hidden="true"></i>
             <i *ngIf="!collapseTask" class="fas fa-angle-left" aria-hidden="true"></i>
           </span>
-        </a>
-      </header>
-      <div *ngIf="collapseTask">
-        <div class="card-content overflow" *ngIf="analysis.tasks && analysis.tasks.length > 0">
-          <app-task-list [(token)]="selectedAnalysisToken"></app-task-list>
-        </div>
-        <footer class="card-footer">
-          <a *ngIf="analysis.tasks && analysis.tasks.length > 0" (click)="analysis.removeAllTasks(); selectedAnalysisToken = null;"
-             class="card-footer-item has-text-danger" data-tooltip="Delete all tasks.">
+          </a>
+        </header>
+        <div *ngIf="collapseTask">
+          <div class="card-content overflow" *ngIf="analysis.tasks && analysis.tasks.length > 0">
+            <app-task-list [(token)]="selectedAnalysisToken"></app-task-list>
+          </div>
+          <footer class="card-footer">
+            <a *ngIf="analysis.tasks && analysis.tasks.length > 0"
+               (click)="analysis.removeAllTasks(); selectedAnalysisToken = null;"
+               class="card-footer-item has-text-danger" data-tooltip="Delete all tasks.">
             <span class="icon">
                 <i class="fa fa-trash"></i>
               </span>
-            <span>
+              <span>
                 Delete all
               </span>
-          </a>
-        </footer>
+            </a>
+          </footer>
+        </div>
       </div>
-    </div>
 
-    <div  *ngIf="myConfig.showSelection" class="card bar-large">
-      <header class="card-header">
-        <p class="card-header-title">
+      <div *ngIf="myConfig.showSelection" class="card bar-large">
+        <header class="card-header">
+          <p class="card-header-title">
           <span class="icon">
             <i class="fas fa-filter" aria-hidden="true"></i>
           </span> Selection ({{analysis.getCount()}})
-        </p>
-        <a (click)="collapseSelection = !collapseSelection" data-action="collapse"
-           class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+          </p>
+          <a (click)="collapseSelection = !collapseSelection" data-action="collapse"
+             class="card-header-icon is-hidden-fullscreen" aria-label="more options">
           <span class="icon">
             <i *ngIf="collapseSelection" class="fas fa-angle-down" aria-hidden="true"></i>
             <i *ngIf="!collapseSelection" class="fas fa-angle-left" aria-hidden="true"></i>
           </span>
-        </a>
-      </header>
-      <div *ngIf="collapseSelection" class="seed-selection">
-        <div class="card-content overflow">
-          <table class="table selection-table" *ngIf="analysis.getCount() > 0">
-            <thead>
-            <tr>
-              <td>Type</td>
-              <td>Name</td>
-              <td>Actions</td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let p of analysis.getSelection()">
-              <td>
+          </a>
+        </header>
+        <div *ngIf="collapseSelection" class="seed-selection">
+          <div class="card-content overflow">
+            <table class="table selection-table" *ngIf="analysis.getCount() > 0">
+              <thead>
+              <tr>
+                <td>Type</td>
+                <td>Name</td>
+                <td>Actions</td>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let p of analysis.getSelection()">
+                <td>
                  <span class="icon">
                     <i class="fa fa-dna" *ngIf="p.type == 'protein'"></i>
                   </span>
-              </td>
-              <td *ngIf="p.type == 'protein'">{{p.data.name}}</td>
-              <td>
-                <button (click)="analysis.removeItems([p])" class="button is-small is-danger is-outlined has-tooltip"
-                        data-tooltip="Remove from selection.">
-                  <i class="fa fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-          <i *ngIf="analysis.getCount() === 0">
-            Double-click on a protein to select it for the analysis.
-          </i>
-        </div>
+                </td>
+                <td *ngIf="p.type == 'protein'">{{p.data.name}}</td>
+                <td>
+                  <button (click)="analysis.removeItems([p])" class="button is-small is-danger is-outlined has-tooltip"
+                          data-tooltip="Remove from selection.">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <i *ngIf="analysis.getCount() === 0">
+              Double-click on a protein to select it for the analysis.
+            </i>
+          </div>
 
-        <footer class="card-footer">
-          <a (click)="analysis.addVisibleHostProteins(currentViewNodes, currentViewProteins)"
-             class="card-footer-item has-text-success" data-tooltip="Add all visible proteins.">
+          <footer class="card-footer">
+            <a (click)="analysis.addVisibleHostProteins(currentViewNodes, currentViewProteins)"
+               class="card-footer-item has-text-success" data-tooltip="Add all visible proteins.">
             <span class="icon">
               <i class="fa fa-plus"></i>
             </span>
-            <span>
+              <span>
               Add proteins
             </span>
-          </a>
-          <a (click)="analysis.removeAllHostProteins()"
-             class="card-footer-item has-text-danger" data-tooltip="Remove all  proteins.">
+            </a>
+            <a (click)="analysis.removeAllHostProteins()"
+               class="card-footer-item has-text-danger" data-tooltip="Remove all  proteins.">
             <span class="icon">
               <i class="fa fa-minus"></i>
             </span>
-            <span>
+              <span>
               Remove proteins
             </span>
-          </a>
-        </footer>
+            </a>
+          </footer>
 
-        <footer class="card-footer" *ngIf="selectedAnalysisToken">
-          <a (click)="analysis.addSeeds(currentViewNodes)"
-             class="card-footer-item has-text-success" data-tooltip="Add all visible seeds.">
+          <footer class="card-footer" *ngIf="selectedAnalysisToken">
+            <a (click)="analysis.addSeeds(currentViewNodes)"
+               class="card-footer-item has-text-success" data-tooltip="Add all visible seeds.">
             <span class="icon">
               <i class="fa fa-plus"></i>
             </span>
-            <span>
+              <span>
               Add seeds
             </span>
-          </a>
-          <a (click)="analysis.removeSeeds(currentViewNodes)"
-             class="card-footer-item has-text-danger" data-tooltip="Remove all seeds.">
+            </a>
+            <a (click)="analysis.removeSeeds(currentViewNodes)"
+               class="card-footer-item has-text-danger" data-tooltip="Remove all seeds.">
             <span class="icon">
               <i class="fa fa-minus"></i>
             </span>
-            <span>
+              <span>
               Remove seeds
             </span>
-          </a>
-        </footer>
+            </a>
+          </footer>
 
-        <footer class="card-footer">
-          <a (click)="showCustomProteinsDialog = true"
-             class="card-footer-item has-text-primary"
-             data-tooltip="Add a custom list of proteins.">
+          <footer class="card-footer">
+            <a (click)="showCustomProteinsDialog = true"
+               class="card-footer-item has-text-primary"
+               data-tooltip="Add a custom list of proteins.">
             <span class="icon">
               <i class="fa fa-upload"></i>
             </span>
-            <span>
+              <span>
               Custom proteins
             </span>
-          </a>
-          <a (click)="showThresholdDialog = true"
-             class="card-footer-item has-text-primary"
-             data-tooltip="Add proteins expressed in the tissue.">
+            </a>
+            <a (click)="showThresholdDialog = true"
+               class="card-footer-item has-text-primary"
+               data-tooltip="Add proteins expressed in the tissue.">
             <span class="icon">
               <i class="fa fa-angle-double-up"></i>
             </span>
-            <span>
+              <span>
               Tissue proteins
             </span>
-          </a>
-        </footer>
+            </a>
+          </footer>
 
-        <footer class="card-footer">
-          <a (click)="analysis.invertSelection(currentViewNodes)" class="card-footer-item has-text-primary"
-             data-tooltip="Invert the current selection.">
+          <footer class="card-footer">
+            <a (click)="analysis.invertSelection(currentViewNodes)" class="card-footer-item has-text-primary"
+               data-tooltip="Invert the current selection.">
             <span class="icon">
               <i class="fa fa-sync"></i>
             </span>
-            <span>
+              <span>
               Invert
             </span>
-          </a>
-          <a (click)="analysis.resetSelection()" class="card-footer-item has-text-danger"
-             data-tooltip="Remove all entries from the selection.">
+            </a>
+            <a (click)="analysis.resetSelection()" class="card-footer-item has-text-danger"
+               data-tooltip="Remove all entries from the selection.">
             <span class="icon">
               <i class="fa fa-broom"></i>
             </span>
-            <span>
+              <span>
               Reset
             </span>
-          </a>
-        </footer>
+            </a>
+          </footer>
 
+        </div>
       </div>
     </div>
   </div>
-</div>
 </div>
 
 <div class="is-hidden-tablet mobile-fallback">

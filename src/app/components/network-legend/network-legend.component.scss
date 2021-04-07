@@ -1,0 +1,47 @@
+@import "~src/variables";
+
+div.legend {
+  position: absolute;
+  bottom: $network-footer-height;
+  &.right {
+    right: 0;
+  }
+  tr.list-item{
+    padding: 0;
+    height: 40px;
+    td{
+      height: $legend-circle-size;
+      vertical-align: middle !important;
+      padding: 0 !important;
+      .round{
+        background: $legend-default-background-color;
+        border-radius: 50%;
+        width: $legend-circle-size;
+        height: $legend-circle-size;
+        display: inline-block;
+      }
+      .triangle{
+        width: 0;
+        height: 0;
+        border-left: calc(#{$legend-circle-size} / 2) solid transparent;
+        border-right: calc(#{$legend-circle-size} / 2) solid transparent;
+        border-bottom: $legend-circle-size solid black;
+        display: inline-block;
+      }
+      .rectangle{
+        background: $legend-default-background-color;
+        border-radius: $legend-rectangle-radius;
+        width: $legend-rectangle-width;
+        height: $legend-rectangle-height;
+        margin-bottom: calc((#{$legend-rectangle-height} - #{$legend-rectangle-width}) / 2);
+        display: inline-block;
+      }
+      .edge{
+        width: $legend-edge-width;
+        height: $legend-edge-height;
+      }
+    }
+
+  }
+}
+
