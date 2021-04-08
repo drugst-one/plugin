@@ -42,10 +42,10 @@ export class AnalysisService {
 
   private selection = 'main';
 
-  private selectedItems = new Map<string, Wrapper>();
-  private selectListSubject = new Subject<{ items: Wrapper[], selected: boolean | null }>();
+  private selectedItems = new Map<string, Node>();
+  private selectListSubject = new Subject<{ items: Node[], selected: boolean | null }>();
 
-  private selections = new Map<string, Map<string, Wrapper>>();
+  private selections = new Map<string, Map<string, Node>>();
 
   public tokens: string[] = [];
   public finishedTokens: string[] = [];
@@ -104,28 +104,28 @@ export class AnalysisService {
     if (this.selections.has(id)) {
       this.selectedItems = this.selections.get(id);
     } else {
-      this.selectedItems = new Map<string, Wrapper>();
+      this.selectedItems = new Map<string, Node>();
     }
     this.selectListSubject.next({items: Array.from(this.selectedItems.values()), selected: null});
     this.selection = id;
   }
 
-  public addItems(wrappers: Wrapper[]): number {
-    const addedWrappers: Wrapper[] = [];
+  public addItems(wrappers: Node[]): number {
+    const addedWrappers: Node[] = [];
     for (const wrapper of wrappers) {
       if (!this.inSelection(wrapper)) {
         addedWrappers.push(wrapper);
-        this.selectedItems.set(wrapper.nodeId, wrapper);
+        this.selectedItems.set(wrapper.id, wrapper);
       }
     }
     this.selectListSubject.next({items: addedWrappers, selected: true});
     return addedWrappers.length;
   }
 
-  public removeItems(wrappers: Wrapper[]) {
-    const removedWrappers: Wrapper[] = [];
+  public removeItems(wrappers: Node[]) {
+    const removedWrappers: Node[] = [];
     for (const wrapper of wrappers) {
-      if (this.selectedItems.delete(wrapper.nodeId)) {
+      if (this.selectedItems.delete(wrapper.id)) {
         removedWrappers.push(wrapper);
       }
     }
@@ -133,24 +133,22 @@ export class AnalysisService {
   }
 
   public addSeeds(nodes) {
-    const addedWrappers: Wrapper[] = [];
+    const addedWrappers: Node[] = [];
     nodes.forEach((node) => {
-      const wrapper: Wrapper = node.wrapper;
-      if (node.isSeed === true && !this.inSelection(wrapper)) {
-        addedWrappers.push(wrapper);
-        this.selectedItems.set(wrapper.nodeId, wrapper);
+      if (node.isSeed === true && !this.inSelection(node)) {
+        addedWrappers.push(node);
+        this.selectedItems.set(node.id, node);
       }
     });
     this.selectListSubject.next({items: addedWrappers, selected: true});
   }
 
   public removeSeeds(nodes) {
-    const removedWrappers: Wrapper[] = [];
+    const removedWrappers: Node[] = [];
     nodes.forEach((node) => {
-      const wrapper: Wrapper = node.wrapper;
-      if (node.isSeed === true && this.inSelection(wrapper)) {
-        removedWrappers.push(wrapper);
-        this.selectedItems.delete(wrapper.nodeId);
+      if (node.isSeed === true && this.inSelection(node)) {
+        removedWrappers.push(node);
+        this.selectedItems.delete(node.id);
       }
     });
     this.selectListSubject.next({items: removedWrappers, selected: false});
@@ -159,11 +157,8 @@ export class AnalysisService {
   public invertSelection(nodes) {
     const newSelection = [];
     nodes.forEach((node) => {
-      const wrapper: Wrapper = node.wrapper;
-      if (wrapper.type === 'protein') {
-        if (!this.inSelection(wrapper)) {
-          newSelection.push(wrapper);
-        }
+      if (!this.inSelection(node)) {
+        newSelection.push(node);
       }
     });
     this.selectedItems.clear();
@@ -173,7 +168,7 @@ export class AnalysisService {
     this.selectListSubject.next({items: newSelection, selected: null});
   }
 
-  public addExpressedHostProteins(nodes, proteins: Node[], threshold: number): number {
+  /*public addExpressedHostProteins(nodes, proteins: Node[], threshold: number): number {
     const items: Wrapper[] = [];
     const visibleIds = new Set<string>(nodes.getIds());
     for (const protein of proteins) {
@@ -209,7 +204,7 @@ export class AnalysisService {
       this.selectedItems.delete(wrapper.nodeId);
     }
     this.selectListSubject.next({items, selected: false});
-  }
+  }*/
 
   resetSelection() {
     this.selectedItems.clear();
@@ -220,15 +215,11 @@ export class AnalysisService {
     return this.selectedItems.has(nodeId);
   }
 
-  inSelection(wrapper: Wrapper): boolean {
-    return this.selectedItems.has(wrapper.nodeId);
+  inSelection(wrapper: Node): boolean {
+    return this.selectedItems.has(wrapper.id);
   }
 
-  proteinInSelection(protein: Node): boolean {
-    return this.inSelection(getWrapperFromProtein(protein));
-  }
-
-  getSelection(): Wrapper[] {
+  getSelection(): Node[] {
     return Array.from(this.selectedItems.values());
   }
 
@@ -236,7 +227,7 @@ export class AnalysisService {
     return this.selectedItems.size;
   }
 
-  subscribeList(cb: (items: Array<Wrapper>, selected: boolean | null) => void) {
+  subscribeList(cb: (items: Array<Node>, selected: boolean | null) => void) {
     this.selectListSubject.subscribe((event) => {
       cb(event.items, event.selected);
     });
@@ -264,7 +255,7 @@ export class AnalysisService {
       parameters: {
         strain_or_drugs: dataset.backendId,
         bait_datasets: dataset.data,
-        seeds: isSuper ? [] : this.getSelection().map((i) => i.backendId),
+        seeds: isSuper ? [] : this.getSelection().map((i) => i.id),
       },
     }).toPromise();
     this.tokens.push(resp.token);

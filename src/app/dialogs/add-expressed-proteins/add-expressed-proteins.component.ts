@@ -48,7 +48,7 @@ export class AddExpressedProteinsComponent implements OnChanges {
 
   public addVisibleProteins() {
     this.loading = true;
-    this.addedCount = this.analysis.addExpressedHostProteins(this.visibleNodes, this.currentViewProteins, this.threshold);
+    // this.addedCount = this.analysis.addExpressedHostProteins(this.visibleNodes, this.currentViewProteins, this.threshold);
     this.loading = false;
   }
 

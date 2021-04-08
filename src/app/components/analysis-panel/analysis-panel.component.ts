@@ -173,7 +173,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
               r.rawScore = r.score;
               r.isSeed = isSeed[r.id];
               r.closestViralProteins = (r.closestViralProteins as any).split(',');
-              if (this.analysis.proteinInSelection(r)) {
+              if (this.analysis.inSelection(r)) {
                 this.tableSelectedProteins.push(r);
               }
             });
@@ -228,26 +228,17 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
           if (selected !== null) {
             const updatedNodes = [];
             for (const item of items) {
-              const node = this.nodeData.nodes.get(item.nodeId);
+              const node = this.nodeData.nodes.get(item.id);
               if (!node) {
                 continue;
               }
-              let drugType;
-              let drugInTrial;
-              if (item.type === 'drug') {
-                drugType = item.data.status;
-                drugInTrial = item.data.inTrial;
-              }
-              const pos = this.network.getPositions([item.nodeId]);
-              node.x = pos[item.nodeId].x;
-              node.y = pos[item.nodeId].y;
+              const pos = this.network.getPositions([item.id]);
+              node.x = pos[item.id].x;
+              node.y = pos[item.id].y;
               Object.assign(node, NetworkSettings.getNodeStyle(
                 node.wrapper.type,
                 node.isSeed,
-                selected,
-                drugType,
-                drugInTrial,
-                node.gradient));
+                selected));
               updatedNodes.push(node);
             }
             this.nodeData.nodes.update(updatedNodes);
@@ -255,16 +246,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
             const proteinSelection = this.tableSelectedProteins;
             const viralProteinSelection = this.tableSelectedViralProteins;
             for (const item of items) {
-              if (item.type === 'protein') {
-                // TODO: Refactor!
-                const found = proteinSelection.findIndex((i) => getProteinNodeId(i) === item.nodeId);
-                const tableItem = this.tableProteins.find((i) => getProteinNodeId(i) === item.nodeId);
-                if (selected && found === -1 && tableItem) {
-                  proteinSelection.push(tableItem);
-                }
-                if (!selected && found !== -1 && tableItem) {
-                  proteinSelection.splice(found, 1);
-                }
+              // TODO: Refactor!
+              const found = proteinSelection.findIndex((i) => getProteinNodeId(i) === item.id);
+              const tableItem = this.tableProteins.find((i) => getProteinNodeId(i) === item.id);
+              if (selected && found === -1 && tableItem) {
+                proteinSelection.push(tableItem);
+              }
+              if (!selected && found !== -1 && tableItem) {
+                proteinSelection.splice(found, 1);
               }
             }
             this.tableSelectedProteins = [...proteinSelection];
@@ -293,11 +282,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
             const proteinSelection = [];
             const viralProteinSelection = [];
             for (const item of items) {
-              if (item.type === 'protein') {
-                const tableItem = this.tableProteins.find((i) => getProteinNodeId(i) === item.nodeId);
-                if (tableItem) {
-                  proteinSelection.push(tableItem);
-                }
+              const tableItem = this.tableProteins.find((i) => getProteinNodeId(i) === item.id);
+              if (tableItem) {
+                proteinSelection.push(tableItem);
               }
             }
             this.tableSelectedProteins = [...proteinSelection];
@@ -410,21 +397,21 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     };
   }
 
-  private mapNode(nodeType: WrapperType, details: Node | Drug, isSeed?: boolean, score?: number): any {
-    let nodeLabel;
-    let wrapper: Wrapper;
+  private mapNode(nodeType: WrapperType, details: Node, isSeed?: boolean, score?: number): any {
+    /*let nodeLabel;
+    // let wrapper: Wrapper;
     let drugType;
-    let drugInTrial;
-    if (nodeType === 'protein') {
+    let drugInTrial;*/
+    /*if (nodeType === 'protein') {
       const protein = details as Node;
-      wrapper = getWrapperFromProtein(protein);
+      // wrapper = getWrapperFromProtein(protein);
       nodeLabel = protein.name;
       if (!protein.name) {
         nodeLabel = protein.id;
       }
     } else if (nodeType === 'drug') {
-      const drug = details as Drug;
-      wrapper = getWrapperFromDrug(drug);
+      // const drug = details as Drug;
+      // wrapper = getWrapperFromDrug(drug);
       drugType = drug.status;
       drugInTrial = drug.inTrial;
       if (drugType === 'approved') {
@@ -432,14 +419,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       } else {
         nodeLabel = drug.drugId;
       }
-    }
+    }*/
 
-    const node = NetworkSettings.getNodeStyle(nodeType, isSeed, this.analysis.inSelection(wrapper), drugType, drugInTrial);
-    node.id = wrapper.nodeId;
-    node.label = nodeLabel;
+    const node = NetworkSettings.getNodeStyle('protein', isSeed, this.analysis.inSelection(details));
+    node.id = details.id;
+    node.label = details.name;
     node.nodeType = nodeType;
     node.isSeed = isSeed;
-    node.wrapper = wrapper;
+    node.wrapper = details;
 
     return node;
   }
@@ -573,7 +560,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   }
 
   public selectTissue(tissue: Tissue | null) {
-    if (!tissue) {
+    /*if (!tissue) {
       this.selectedTissue = null;
       const updatedNodes = [];
       for (const protein of this.proteins) {
@@ -635,7 +622,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
           this.nodeData.nodes.update(updatedNodes);
         });
     }
-    this.emitVisibleItems(true);
+    this.emitVisibleItems(true);*/
   }
 
 }
