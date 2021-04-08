@@ -38,7 +38,7 @@ export interface IConfig {
   showLegendEdges: boolean;
   nodeGroups: { [key: string]: NodeGroup };
   edgeGroups: { [key: string]: EdgeGroup };
-
+  interactions?: 'omnipath';
 }
 
 export const defaultConfig: IConfig = {

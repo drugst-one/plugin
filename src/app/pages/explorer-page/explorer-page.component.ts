@@ -15,6 +15,7 @@ import {
 import {ProteinNetwork} from '../../main-network';
 import {HttpClient} from '@angular/common/http';
 import {AnalysisService} from '../../services/analysis/analysis.service';
+import {OmnipathControllerService} from '../../services/omnipath-controller/omnipath-controller.service';
 import html2canvas from 'html2canvas';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, NodeGroup} from '../../config';
@@ -46,6 +47,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     for (const key of Object.keys(configObj)) {
       if (key === 'nodeGroups' || key === 'edgeGroups') {
         this.myConfig[key] = {...this.myConfig[key], ...configObj[key]};
+        continue;
+      }
+      if (key === 'interactions') {
+        this.getInteractions();
         continue;
       }
       this.myConfig[key] = configObj[key];
@@ -114,7 +119,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 
-  constructor(private http: HttpClient, public analysis: AnalysisService) {
+  constructor(public omnipath: OmnipathControllerService, public analysis: AnalysisService) {
 
     this.showDetails = false;
 
@@ -164,6 +169,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
   }
 
+  async getInteractions() {
+    const names = this.nodeData.nodes.map( (node) => node.label);
+    const interactions = await this.omnipath.getInteractions(names);
+    console.log(interactions)
+  }
+
   private getNetwork() {
     const network = JSON.parse(this.networkJSON);
 
@@ -208,7 +219,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.selectedWrapper = null;
     this.getNetwork();
     this.proteinData = new ProteinNetwork(this.proteins, this.edges);
-    console.log(this.proteinData)
     this.proteinData.linkNodes();
 
     // Populate baits

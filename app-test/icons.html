@@ -42,7 +42,7 @@
   "legendPos": "right",
   "nodeGroups": {"default": {"color": "grey", "name": "Default Group", "shape": "triangle", "image": "https://i.ibb.co/vmLV1tB/dna.png"}, "pug-group": {"color": "grey", "name": "Pug Group", "shape": "triangle", "image": "https://static.raymondcamden.com/images/2016/11/pug.png"} },
   "edgeGroups":{"default": {"color": "grey", "name": "Default Edge Group"}, "custom": {"color": "red", "name": "Custom Edge Group"}}
-  }' onload="init1()" style="height: 100vh"></network-expander>
+  }' style="height: 100vh"></network-expander>
 </div>
 
 <!--
@@ -53,9 +53,6 @@
 -->
 
 <script>
-  function init1() {
-    document.getElementsByClassName('my-legend-1')[0].onclick = function() {this.remove()};
-  }
 
   function changeConfig() {
     const netexp = document.getElementById('netexp1');

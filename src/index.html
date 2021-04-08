@@ -1,20 +1,94 @@
-
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
+  <meta charset="utf-8">
+  <title>Network Expander</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/ico" href="src/assets/covex_logo_small.png">
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+
+<!--  <link rel="stylesheet" href="netex-build/styles.css">-->
+<!--  <script type="text/javascript" src="netex-build/netex.js"></script>-->
+
 </head>
 <body>
 
-here
-<div id="example">
+<input type="checkbox" onclick=changeConfigStr('{"showOverview":'+this.checked+'}') checked /> Show overview<br>
+<input type="checkbox" onclick=changeConfigStr('{"showQuery":'+this.checked+'}') /> Show query<br>
+<input type="checkbox" onclick=changeConfigStr('{"showLeftSidebar":'+this.checked+'}') checked /> Show sidebar<br>
+<input type="checkbox" onclick=changeConfigStr('{"showItemSelector":'+this.checked+'}') checked /> Show ItemSelector<br>
+<input type="checkbox" onclick=changeConfigStr('{"showSimpleAnalysis":'+this.checked+'}') /> Show SimpleAnalysis<br>
+<input type="checkbox" onclick=changeConfigStr('{"showAdvAnalysis":'+this.checked+'}') checked /> Show Advanced Analysis<br>
+<input type="checkbox" onclick=changeConfigStr('{"showTasks":'+this.checked+'}') checked /> Show Tasks<br>
+<input type="checkbox" onclick=changeConfigStr('{"showSelection":'+this.checked+'}') checked /> Show Selection<br>
+<input type="checkbox" onclick=changeConfigStr('{"showFooter":'+this.checked+'}') checked /> Show Footer<br>
+<input type="checkbox" onclick=changeConfigStr('{"showLegend":'+this.checked+'}') checked /> Show Legend<br>
+<button onclick=changeConfigStr('{"legendPos":"left"}') > Legend to Left </button> <br>
+<button onclick=changeConfigStr('{"legendPos":"right"}') > Legend to Right </button> <br>
+<button onclick=changeConfigStr('{"interactions":"omnipath"}') >Get Omnipath Interactions </button> <br>
 
+<!--<input type="checkbox" onclick=changeConfigStr('{"showSimpleAnalysis":'+this.checked+'}') checked /> Show SimpleAnalysis<br>-->
+
+<br>
+
+<button onclick="setNetwork('netexp1')">Add nodes</button>
+
+
+<div>
+  <network-expander id="netexp1"
+                    config='{
+  "showQuery": false,
+  "legendPos": "right",
+  "nodeGroups": {"genes": {"type": "gene", "color": "blue", "name": "Genes", "shape": "round"} },
+  "edgeGroups":{"default": {"color": "grey", "name": "Default Edge Group"}, "custom": {"color": "red", "name": "Custom Edge Group"} },
+  "lookupInteractions": true
+  }'
+                    style="height: 100vh"></network-expander>
 </div>
 
+
+<script>
+
+  function changeConfig() {
+    const netexp = document.getElementById('netexp1');
+    netexp.setAttribute('config', '{"showLeftSidebar": false}');
+  }
+
+  function changeConfigStr(config) {
+    console.log(config);
+    const netexp = document.getElementById('netexp1');
+    netexp.setAttribute('config', config);
+  }
+
+  function setNetwork(nw) {
+    const netexp = document.getElementById(nw);
+
+    netexp.setAttribute('network', JSON.stringify({
+      nodes: [
+        {
+          name: "PTEN",
+          id: "1",
+          access: "A",
+          group: "genes"
+        },
+        {
+          name: "TP53",
+          id: "2",
+          access: "B",
+          group: "genes"
+        }
+      ],
+      edges: [
+        {
+          from: '1',
+          to: '2',
+        }
+      ]
+    }));
+  }
+
+</script>
 </body>
 </html>
-
-
-
