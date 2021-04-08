@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Network Expander</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/ico" href="src/assets/covex_logo_small.png">
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+
+  <link rel="stylesheet" href="netex-build/styles.css">
+  <script type="text/javascript" src="netex-build/netex.js"></script>
+
+</head>
+<body>
+
+<input type="checkbox" onclick=changeConfigStr('{"showOverview":'+this.checked+'}') checked /> Show overview<br>
+<input type="checkbox" onclick=changeConfigStr('{"showQuery":'+this.checked+'}') /> Show query<br>
+<input type="checkbox" onclick=changeConfigStr('{"showLeftSidebar":'+this.checked+'}') checked /> Show sidebar<br>
+<input type="checkbox" onclick=changeConfigStr('{"showItemSelector":'+this.checked+'}') checked /> Show ItemSelector<br>
+<input type="checkbox" onclick=changeConfigStr('{"showSimpleAnalysis":'+this.checked+'}') /> Show SimpleAnalysis<br>
+<input type="checkbox" onclick=changeConfigStr('{"showAdvAnalysis":'+this.checked+'}') checked /> Show Advanced Analysis<br>
+<input type="checkbox" onclick=changeConfigStr('{"showTasks":'+this.checked+'}') checked /> Show Tasks<br>
+<input type="checkbox" onclick=changeConfigStr('{"showSelection":'+this.checked+'}') checked /> Show Selection<br>
+<input type="checkbox" onclick=changeConfigStr('{"showFooter":'+this.checked+'}') checked /> Show Footer<br>
+<input type="checkbox" onclick=changeConfigStr('{"showLegend":'+this.checked+'}') checked /> Show Legend<br>
+<!--<input type="checkbox" onclick=changeConfigStr('{"showSimpleAnalysis":'+this.checked+'}') checked /> Show SimpleAnalysis<br>-->
+
+<br>
+
+<button onclick="setNetwork('netexp1')">Add proteins</button>
+
+
+
+
+<!--  "legendUrl": "https://exbio.wzw.tum.de/covex/assets/leg1.png",-->
+
+<div>
+  <network-expander id="netexp1" config='{
+  "showQuery": false,
+  "legendPos": "right",
+  "nodeGroups": {"default": {"color": "grey", "name": "Default Group", "shape": "triangle", "image": "https://i.ibb.co/vmLV1tB/dna.png"}, "pug-group": {"color": "grey", "name": "Pug Group", "shape": "triangle", "image": "https://static.raymondcamden.com/images/2016/11/pug.png"} },
+  "edgeGroups":{"default": {"color": "grey", "name": "Default Edge Group"}, "custom": {"color": "red", "name": "Custom Edge Group"}}
+  }' onload="init1()" style="height: 100vh"></network-expander>
+</div>
+
+<!--
+<div>                                                                                                                                                                                                                                                                        <div style="border: 3px solid red">
+  <network-expander id="netexp2" config='{"legendUrl": "https://i.pinimg.com/originals/ff/72/80/ff72801189f650f11672915cda0f1bdf.png", "legendClass": "my-legend-2"}'></network-expander>
+</div>
+
+-->
+
+<script>
+  function init1() {
+    document.getElementsByClassName('my-legend-1')[0].onclick = function() {this.remove()};
+  }
+
+  function changeConfig() {
+    const netexp = document.getElementById('netexp1');
+    netexp.setAttribute('config', '{"showLeftSidebar": false}');
+  }
+
+  function changeConfigStr(config) {
+    console.log(config);
+    const netexp = document.getElementById('netexp1');
+    netexp.setAttribute('config', config);
+  }
+
+  function setNetwork(nw) {
+    const netexp = document.getElementById(nw);
+
+    netexp.setAttribute('network', JSON.stringify({
+      nodes: [
+        {
+          name: "Protein 1",
+          id: "1",
+          access: "A",
+          group: "protein"
+        },
+        {
+          name: "Unknown type",
+          id: "2",
+          access: "B"
+        },
+        {
+          name: "Drug 123",
+          id: "3",
+          access: "C",
+          group: "drug"
+        },
+        {
+          name: "Gene abz",
+          id: "4",
+          access: "D",
+          group: "default"
+        },
+        {
+          name: "Pug abz",
+          id: "5",
+          access: "D",
+          group: "pug-group"
+        }
+      ],
+      edges: [
+        {
+          from: '1',
+          to: '2',
+        },
+        {
+          from: '2',
+          to: '3',
+          group: 'custom'
+        }
+      ]
+    }));
+  }
+</script>
+</body>
+</html>

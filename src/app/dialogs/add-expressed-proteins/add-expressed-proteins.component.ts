@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {AnalysisService} from '../../analysis.service';
+import {AnalysisService} from '../../services/analysis/analysis.service';
 import {getWrapperFromProtein, Node, Tissue} from '../../interfaces';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';

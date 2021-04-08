@@ -14,7 +14,7 @@ import {
 } from '../../interfaces';
 import {ProteinNetwork} from '../../main-network';
 import {HttpClient} from '@angular/common/http';
-import {AnalysisService} from '../../analysis.service';
+import {AnalysisService} from '../../services/analysis/analysis.service';
 import html2canvas from 'html2canvas';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, NodeGroup} from '../../config';

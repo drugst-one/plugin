@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AnalysisService, algorithmNames} from '../../analysis.service';
+import {AnalysisService, algorithmNames} from '../../services/analysis/analysis.service';
 
 
 @Component({

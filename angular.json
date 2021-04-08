@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "covid19": {
+    "netex": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/covid19",
+            "outputPath": "dist/netex",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -67,18 +67,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "covid19:build"
+            "browserTarget": "netex:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "covid19:build:production"
+              "browserTarget": "netex:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "covid19:build"
+            "browserTarget": "netex:build"
           }
         },
         "test": {
@@ -90,7 +90,8 @@
             "karmaConfig": "karma.conf.js",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/app-test"
             ],
             "styles": [
               "src/styles.scss"
@@ -115,18 +116,18 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "covid19:serve"
+            "devServerTarget": "netex:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "covid19:serve:production"
+              "devServerTarget": "netex:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "covid19",
+  "defaultProject": "netex",
   "cli": {
     "analytics": "bb00cc29-2ec5-4bd5-9235-62ac2e9e51b5"
   }

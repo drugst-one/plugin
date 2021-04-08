@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Wrapper} from '../../interfaces';
-import {AnalysisService} from '../../analysis.service';
+import {AnalysisService} from '../../services/analysis/analysis.service';
 
 @Component({
   selector: 'app-info-tile',

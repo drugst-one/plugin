@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {getWrapperFromProtein, Node, Wrapper} from '../../interfaces';
-import {AnalysisService} from '../../analysis.service';
+import {AnalysisService} from '../../services/analysis/analysis.service';
 
 @Component({
   selector: 'app-custom-proteins',

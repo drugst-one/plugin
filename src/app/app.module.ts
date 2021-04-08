@@ -18,7 +18,7 @@ import {ToggleComponent} from './components/toggle/toggle.component';
 import {InfoTileComponent} from './components/info-tile/info-tile.component';
 import {CustomProteinsComponent} from './dialogs/custom-proteins/custom-proteins.component';
 
-import {AnalysisService} from './analysis.service';
+import {AnalysisService} from './services/analysis/analysis.service';
 import { AddExpressedProteinsComponent } from './dialogs/add-expressed-proteins/add-expressed-proteins.component';
 import {createCustomElement} from '@angular/elements';
 import { NetworkLegendComponent } from './components/network-legend/network-legend.component';
@@ -37,7 +37,7 @@ import { NetworkLegendComponent } from './components/network-legend/network-lege
     InfoTileComponent,
     CustomProteinsComponent,
     AddExpressedProteinsComponent,
-    NetworkLegendComponent,
+    NetworkLegendComponent
   ],
   imports: [
     BrowserModule,

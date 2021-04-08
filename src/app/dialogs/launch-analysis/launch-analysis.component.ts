@@ -8,7 +8,7 @@ import {
   MULTISTEINER, NETWORK_PROXIMITY,
   QuickAlgorithmType,
   TRUSTRANK
-} from '../../analysis.service';
+} from '../../services/analysis/analysis.service';
 
 @Component({
   selector: 'app-launch-analysis',

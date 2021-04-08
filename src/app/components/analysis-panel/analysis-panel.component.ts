@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
-import {AnalysisService, algorithmNames} from '../../analysis.service';
+import {AnalysisService, algorithmNames} from '../../services/analysis/analysis.service';
 import {
   Node,
   Task,

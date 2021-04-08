@@ -1,4 +1,4 @@
-import {AlgorithmType, QuickAlgorithmType} from './analysis.service';
+import {AlgorithmType, QuickAlgorithmType} from './services/analysis/analysis.service';
 
 export interface Node {
   name: string;
