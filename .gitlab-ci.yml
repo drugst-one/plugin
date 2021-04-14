@@ -67,7 +67,7 @@ deploy:prod:
   image: docker
   stage: deploy
   only:
-    - master
+    - production
   when: manual
   services:
     - docker:dind

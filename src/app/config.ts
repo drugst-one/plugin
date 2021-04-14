@@ -19,6 +19,10 @@ export interface EdgeGroup {
   color: string;
 }
 
+export type Identifier = 'hugo'|'uniprot';
+
+export type InteractionDatabase = 'omnipath';
+
 export interface IConfig {
   legendUrl: string;
   legendClass: string;
@@ -38,7 +42,8 @@ export interface IConfig {
   showLegendEdges: boolean;
   nodeGroups: { [key: string]: NodeGroup };
   edgeGroups: { [key: string]: EdgeGroup };
-  interactions?: 'omnipath';
+  interactions?: InteractionDatabase;
+  identifier?: Identifier;
 }
 
 export const defaultConfig: IConfig = {
@@ -58,6 +63,7 @@ export const defaultConfig: IConfig = {
   showTasks: true,
   showFooter: true,
   showLegend: true,
+  identifier: 'hugo',
   nodeGroups: {
     default: {
       name: 'Default Group',

@@ -19,6 +19,7 @@ import {OmnipathControllerService} from '../../services/omnipath-controller/omni
 import html2canvas from 'html2canvas';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, NodeGroup} from '../../config';
+import {Subscription} from "rxjs";
 
 
 declare var vis: any;
@@ -52,6 +53,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (key === 'interactions') {
         this.getInteractions();
         continue;
+      }
+      if (key === 'colorPrimary') {
+        this.setColorPrimary(configObj[key]);
       }
       this.myConfig[key] = configObj[key];
     }
@@ -169,10 +173,18 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
   }
 
+  private setColorPrimary(color: string) {
+    console.log(color);
+    document.documentElement.style.setProperty('$primary', color);
+  }
+
   async getInteractions() {
     const names = this.nodeData.nodes.map( (node) => node.label);
-    const interactions = await this.omnipath.getInteractions(names);
-    console.log(interactions)
+    const nameToNetworkId = {};
+    this.nodeData.nodes.map( (node) => nameToNetworkId[node.label] = node.id);
+    const edges = await this.omnipath.getInteractions(names, this.myConfig.identifier, nameToNetworkId);
+
+    this.nodeData.edges.update(edges);
   }
 
   private getNetwork() {
@@ -220,9 +232,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.getNetwork();
     this.proteinData = new ProteinNetwork(this.proteins, this.edges);
     this.proteinData.linkNodes();
-
-    // Populate baits
-    const effectNames = [];
 
     const {nodes, edges} = this.mapDataToNodes(this.proteinData);
     this.nodeData.nodes = new vis.DataSet(nodes);

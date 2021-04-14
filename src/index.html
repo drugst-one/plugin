@@ -42,9 +42,10 @@
                     config='{
   "showQuery": false,
   "legendPos": "right",
-  "nodeGroups": {"genes": {"type": "gene", "color": "blue", "name": "Genes", "shape": "round"} },
+  "nodeGroups": {"genes": {"type": "gene", "color": "blue", "name": "Genes", "shape": "circle"} },
   "edgeGroups":{"default": {"color": "grey", "name": "Default Edge Group"}, "custom": {"color": "red", "name": "Custom Edge Group"} },
-  "lookupInteractions": true
+  "lookupInteractions": true,
+  "colorPrimary": "#0000ff"
   }'
                     style="height: 100vh"></network-expander>
 </div>
@@ -83,10 +84,7 @@
         }
       ],
       edges: [
-        {
-          from: '1',
-          to: '2',
-        }
+
       ]
     }));
   }
