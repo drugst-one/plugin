@@ -19,7 +19,6 @@ import {OmnipathControllerService} from '../../services/omnipath-controller/omni
 import html2canvas from 'html2canvas';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, NodeGroup} from '../../config';
-import {Subscription} from "rxjs";
 
 
 declare var vis: any;
@@ -177,6 +176,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     console.log(color);
     document.documentElement.style.setProperty('$primary', color);
   }
+
+
 
   async getInteractions() {
     const names = this.nodeData.nodes.map( (node) => node.label);
