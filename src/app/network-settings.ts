@@ -5,7 +5,6 @@ export class NetworkSettings {
 
   // Node color
   private static hostColor = '#123456';
-  private static virusColor = '#BE093C';
   private static approvedDrugColor = '#48C774';
   private static unapprovedDrugColor = '#F8981D';
   private static nonSeedHostColor = '#3070B3';
@@ -19,6 +18,9 @@ export class NetworkSettings {
   private static edgeHostVirusHighlightColor = '#686868';
   private static edgeHostDrugColor = '#686868';
   private static edgeHostDrugHighlightColor = '#686868';
+  private static edgeGeneGeneColor = '#686868';
+  private static edgeGeneGeneHighlightColor = '#686868';
+
 
   // Border width
   private static selectedBorderWidth = 3;
@@ -29,10 +31,8 @@ export class NetworkSettings {
 
   // Node Font
   private static hostFontSize = 20;
-  private static virusFontSize = 50;
   private static drugFontSize = 30;
   private static hostFontColor = '#FFFFFF';
-  private static virusFontColor = '#FFFFFF';
   private static drugFontColor = '#FFFFFF';
   private static drugInTrialFontColor = 'black';
 
@@ -70,17 +70,15 @@ export class NetworkSettings {
 
   // Node size
   private static hostSize = 20;
-  private static virusSize = 30;
   private static drugSize = 15;
 
   // Node shape
   private static hostShape = 'ellipse';
-  private static virusShape = 'ellipse';
   private static drugNotInTrialShape = 'box';
   private static drugInTrialShape = 'triangle';
 
   static getNodeSize(wrapperType: WrapperType) {
-    if (wrapperType === 'protein') {
+    if (wrapperType === 'gene') {
       return this.hostSize;
     } else if (wrapperType === 'drug') {
       return this.drugSize;
@@ -88,7 +86,7 @@ export class NetworkSettings {
   }
 
   static getNodeShape(wrapperType: WrapperType, drugInTrial?: boolean) {
-    if (wrapperType === 'protein') {
+    if (wrapperType === 'gene') {
       return this.hostShape;
     } else if (wrapperType === 'drug') {
       if (drugInTrial) {
@@ -121,10 +119,14 @@ export class NetworkSettings {
     }
   }
 
-  static getColor(color: 'protein' | 'approvedDrug' | 'unapprovedDrug' | 'hostFont' | 'virusFont' | 'drugFont' |
-    'nonSeedHost' | 'nonSeedVirus' | 'selectedForAnalysis' | 'selectedForAnalysisText' |
-    'edgeHostVirus' | 'edgeHostVirusHighlight' | 'edgeHostDrug' | 'edgeHostDrugHighlight') {
-    if (color === 'protein') {
+  static getColor(color: 'gene' | 'approvedDrug' | 'unapprovedDrug' | 'hostFont' | 'drugFont' |
+    'nonSeedHost' | 'selectedForAnalysis' | 'selectedForAnalysisText' |
+    'edgeHostDrug' | 'edgeHostDrugHighlight' | 'edgeGeneGene' | 'edgeGeneGeneHighlight') 
+    /**
+     * Collection of all colors per use-case
+     */
+    {
+    if (color === 'gene') {
       return this.hostColor;
     } else if (color === 'approvedDrug') {
       return this.approvedDrugColor;
@@ -132,27 +134,23 @@ export class NetworkSettings {
       return this.unapprovedDrugColor;
     } else if (color === 'hostFont') {
       return this.hostFontColor;
-    } else if (color === 'virusFont') {
-      return this.virusFontColor;
     } else if (color === 'drugFont') {
       return this.drugFontColor;
     } else if (color === 'nonSeedHost') {
       return this.nonSeedHostColor;
-    } else if (color === 'nonSeedVirus') {
-      return this.nonSeedVirusColor;
-    } else if (color === 'edgeHostVirus') {
-      return this.edgeHostVirusColor;
     } else if (color === 'edgeHostDrug') {
       return this.edgeHostDrugColor;
-    } else if (color === 'edgeHostVirusHighlight') {
-      return this.edgeHostVirusHighlightColor;
     } else if (color === 'edgeHostDrugHighlight') {
       return this.edgeHostDrugHighlightColor;
+    } else if (color === 'edgeGeneGene') {
+      return this.edgeGeneGeneColor;
+    } else if (color === 'edgeGeneGeneHighlight') {
+      return this.edgeGeneGeneHighlightColor;
     }
   }
 
   static getFont(wrapperType: WrapperType, drugInTrial?: boolean) {
-    if (wrapperType === 'protein') {
+    if (wrapperType === 'gene') {
       return {color: this.hostFontColor, size: this.hostFontSize};
     } else if (wrapperType === 'drug') {
       if (!drugInTrial) {
@@ -180,9 +178,9 @@ export class NetworkSettings {
     nodeShape = NetworkSettings.getNodeShape(nodeType);
     nodeSize = NetworkSettings.getNodeSize(nodeType);
     nodeFont = NetworkSettings.getFont(nodeType);
-    if (nodeType === 'protein') {
+    if (nodeType === 'gene') {
       nodeColor = NetworkSettings.getColor(nodeType);
-      nodeFont = NetworkSettings.getFont('protein');
+      nodeFont = NetworkSettings.getFont('gene');
       if (!isSeed) {
         nodeColor = NetworkSettings.getColor('nonSeedHost');
       }

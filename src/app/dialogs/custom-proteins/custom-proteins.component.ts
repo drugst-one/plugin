@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
-import {getWrapperFromProtein, Node, Wrapper} from '../../interfaces';
+import {getWrapperFromNode, Node, Wrapper} from '../../interfaces';
 import {AnalysisService} from '../../services/analysis/analysis.service';
 
 @Component({
@@ -53,7 +53,7 @@ export class CustomProteinsComponent implements OnInit {
     const details = result.details;
     const items = [];
     for (const detail of details) {
-      items.push(getWrapperFromProtein(detail));
+      items.push(getWrapperFromNode(detail));
     }
     this.itemsFound = items;
     this.addedCount = this.analysis.addItems(items);
@@ -74,7 +74,7 @@ export class CustomProteinsComponent implements OnInit {
     const items = [];
     for (const detail of details) {
       proteinItems.push(detail as Node);
-      items.push(getWrapperFromProtein(detail));
+      items.push(getWrapperFromNode(detail));
     }
     this.itemsFound = items;
     // this.addedCount = this.analysis.addVisibleHostProteins(this.visibleNodes, proteinItems);

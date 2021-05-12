@@ -18,7 +18,7 @@ import {
   Drug,
   Wrapper,
   WrapperType,
-  getWrapperFromProtein,
+  getWrapperFromNode,
   getWrapperFromDrug,
   getNodeIdsFromPDI,
   getNodeIdsFromPPI,
@@ -359,7 +359,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     if (nodeId.startsWith('DB')) {
       return 'drug';
     }
-    return 'protein';
+    return 'gene';
   }
 
   public createNetwork(result: any): { edges: any[], nodes: any[] } {
@@ -380,7 +380,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     for (const node of network.nodes) {
       if (nodeTypes[node] === 'protein') {
         this.proteins.push(details[node]);
-        wrappers[node] = getWrapperFromProtein(details[node]);
+        wrappers[node] = getWrapperFromNode(details[node]);
       } else if (nodeTypes[node] === 'drug') {
         wrappers[node] = getWrapperFromDrug(details[node]);
       }
@@ -404,7 +404,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     let drugInTrial;*/
     /*if (nodeType === 'protein') {
       const protein = details as Node;
-      // wrapper = getWrapperFromProtein(protein);
+      // wrapper = getWrapperFromNode(protein);
       nodeLabel = protein.name;
       if (!protein.name) {
         nodeLabel = protein.id;
@@ -421,7 +421,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       }
     }*/
 
-    const node = NetworkSettings.getNodeStyle('protein', isSeed, this.analysis.inSelection(details));
+    const node = NetworkSettings.getNodeStyle('gene', isSeed, this.analysis.inSelection(details));
     node.id = details.id;
     node.label = details.name;
     node.nodeType = nodeType;
@@ -435,8 +435,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     let edgeColor;
     if (type === 'protein-protein') {
       edgeColor = {
-        color: NetworkSettings.getColor('edgeHostVirus'),
-        highlight: NetworkSettings.getColor('edgeHostVirusHighlight'),
+        color: NetworkSettings.getColor('edgeGeneGene'),
+        highlight: NetworkSettings.getColor('edgeGeneGeneHighlight'),
       };
       const {from, to} = getNodeIdsFromPPI(edge, wrappers);
       return {
@@ -536,13 +536,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     const addItems = [];
     const removeItems = [];
     for (const i of this.tableSelectedProteins) {
-      const wrapper = getWrapperFromProtein(i);
+      const wrapper = getWrapperFromNode(i);
       if (oldSelection.indexOf(i) === -1) {
         addItems.push(wrapper);
       }
     }
     for (const i of oldSelection) {
-      const wrapper = getWrapperFromProtein(i);
+      const wrapper = getWrapperFromNode(i);
       if (this.tableSelectedProteins.indexOf(i) === -1) {
         removeItems.push(wrapper);
       }
@@ -564,7 +564,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       this.selectedTissue = null;
       const updatedNodes = [];
       for (const protein of this.proteins) {
-        const item = getWrapperFromProtein(protein);
+        const item = getWrapperFromNode(protein);
         const node = this.nodeData.nodes.get(item.nodeId);
         if (!node) {
           continue;
@@ -596,7 +596,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
           const updatedNodes = [];
           const maxExpr = Math.max(...levels.map(lvl => lvl.level));
           for (const lvl of levels) {
-            const item = getWrapperFromProtein(lvl.protein);
+            const item = getWrapperFromNode(lvl.protein);
             const node = this.nodeData.nodes.get(item.nodeId);
             if (!node) {
               continue;

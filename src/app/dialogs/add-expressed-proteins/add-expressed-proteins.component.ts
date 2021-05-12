@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {AnalysisService} from '../../services/analysis/analysis.service';
-import {getWrapperFromProtein, Node, Tissue} from '../../interfaces';
+import {getWrapperFromNode, Node, Tissue} from '../../interfaces';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 
@@ -40,7 +40,7 @@ export class AddExpressedProteinsComponent implements OnChanges {
       {tissueId: this.selectedTissue.id, threshold: this.threshold}).toPromise();
     const items = [];
     for (const detail of result) {
-      items.push(getWrapperFromProtein(detail));
+      items.push(getWrapperFromNode(detail));
     }
     this.addedCount = this.analysis.addItems(items);
     this.loading = false;

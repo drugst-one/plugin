@@ -9,7 +9,7 @@ import {
   NodeInteraction,
   Node,
   Wrapper,
-  getWrapperFromProtein,
+  getWrapperFromNode,
   Tissue
 } from '../../interfaces';
 import {ProteinNetwork} from '../../main-network';
@@ -65,6 +65,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (typeof network === 'undefined') {
       return;
     }
+
+    console.log(network)
+
+    console.log( this.myConfig)
 
     this.networkJSON = network;
 
@@ -216,6 +220,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public async openSummary(item: Wrapper, zoom: boolean) {
     this.selectedWrapper = item;
+    console.log(this.selectedWrapper)
     if (zoom) {
       this.zoomToNode(item.nodeId);
     }
@@ -233,6 +238,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.getNetwork();
     this.proteinData = new ProteinNetwork(this.proteins, this.edges);
     this.proteinData.linkNodes();
+
+    console.log(this.proteinData)
 
     const {nodes, edges} = this.mapDataToNodes(this.proteinData);
     this.nodeData.nodes = new vis.DataSet(nodes);
@@ -259,6 +266,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (nodeIds.length > 0) {
         const nodeId = nodeIds[0];
         const node = this.nodeData.nodes.get(nodeId);
+        console.log(node)
         const wrapper = node.wrapper;
         this.openSummary(wrapper, false);
       } else {
@@ -283,7 +291,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   fillQueryItems(hostProteins: Node[]) {
     this.queryItems = [];
     hostProteins.forEach((protein) => {
-      this.queryItems.push(getWrapperFromProtein(protein));
+      this.queryItems.push(getWrapperFromNode(protein));
     });
 
     this.currentViewNodes = this.nodeData.nodes;
@@ -315,6 +323,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   private mapCustomNode(customNode: Node): any {
+    const wrapper = getWrapperFromNode(customNode);
     let group = customNode.group;
     if (typeof group === 'undefined' || typeof this.myConfig.nodeGroups[group] === 'undefined') {
       group = 'default';
@@ -331,6 +340,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     node.id = customNode.id;
     node.x = customNode.x;
     node.y = customNode.y;
+    node.wrapper = wrapper;
     return node;
   }
 
@@ -446,7 +456,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       //     const updatedNodes = [];
       //     const maxExpr = Math.max(...levels.map(lvl => lvl.level));
       //     for (const lvl of levels) {
-      //       const item = getWrapperFromProtein(lvl.protein);
+      //       const item = getWrapperFromNode(lvl.protein);
       //       const node = this.nodeData.nodes.get(item.nodeId);
       //       if (!node) {
       //         continue;

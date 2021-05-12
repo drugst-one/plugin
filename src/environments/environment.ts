@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  backend: 'https://exbio.wzw.tum.de/drugstone/api/',
+  backend: 'http://10.162.163.20/',
 };
 
 /*

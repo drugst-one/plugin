@@ -1,4 +1,4 @@
-import {Wrapper, Task, getWrapperFromProtein, Node, Dataset, Tissue} from '../../interfaces';
+import {Wrapper, Task, getWrapperFromNode, Node, Dataset, Tissue} from '../../interfaces';
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
@@ -172,7 +172,7 @@ export class AnalysisService {
     const items: Wrapper[] = [];
     const visibleIds = new Set<string>(nodes.getIds());
     for (const protein of proteins) {
-      const wrapper = getWrapperFromProtein(protein);
+      const wrapper = getWrapperFromNode(protein);
       const found = visibleIds.has(wrapper.nodeId);
       if (found && !this.inSelection(wrapper) && protein.expressionLevel > threshold) {
         items.push(wrapper);
@@ -187,7 +187,7 @@ export class AnalysisService {
     const items: Wrapper[] = [];
     const visibleIds = new Set<string>(nodes.getIds());
     for (const protein of proteins) {
-      const wrapper = getWrapperFromProtein(protein);
+      const wrapper = getWrapperFromNode(protein);
       const found = visibleIds.has(wrapper.nodeId);
       if (found && !this.inSelection(wrapper)) {
         items.push(wrapper);

@@ -90,14 +90,33 @@ export function getDrugBackendId(drug: Drug) {
   return drug.drugId;
 }
 
-export function getWrapperFromProtein(protein: Node): Wrapper {
+export function getGeneBackendId(gene: Node) {
+  /**
+   * Returns backend_id of Gene object
+   */
+  return gene.id.toString();
+}
+
+export function getGeneNodeId(gene: Node) {
+  /**
+   * Returns the network node id based on a given gene
+   */
+  return `${gene.id}`;
+}
+
+
+export function getWrapperFromNode(gene: Node): Wrapper {
+  /**
+   * Constructs wrapper interface for gene
+   */
   return {
-    backendId: getProteinBackendId(protein),
-    nodeId: getProteinNodeId(protein),
-    type: 'protein',
-    data: protein,
+    backendId: getGeneBackendId(gene),
+    nodeId: getGeneNodeId(gene),
+    type: 'gene',
+    data: gene,
   };
 }
+
 
 export function getWrapperFromDrug(drug: Drug): Wrapper {
   return {
@@ -108,7 +127,7 @@ export function getWrapperFromDrug(drug: Drug): Wrapper {
   };
 }
 
-export type WrapperType = 'protein' | 'drug';
+export type WrapperType = 'gene' | 'drug';
 
 export interface Wrapper {
   backendId: string;

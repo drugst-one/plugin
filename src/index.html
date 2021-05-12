@@ -25,6 +25,7 @@
 <input type="checkbox" onclick=changeConfigStr('{"showSelection":'+this.checked+'}') checked /> Show Selection<br>
 <input type="checkbox" onclick=changeConfigStr('{"showFooter":'+this.checked+'}') checked /> Show Footer<br>
 <input type="checkbox" onclick=changeConfigStr('{"showLegend":'+this.checked+'}') checked /> Show Legend<br>
+<input id="new_color" type="text" /> <button onclick=changeColor(document.getElementById("new_color").value) >Set Color </button> <br>
 <button onclick=changeConfigStr('{"legendPos":"left"}') > Legend to Left </button> <br>
 <button onclick=changeConfigStr('{"legendPos":"right"}') > Legend to Right </button> <br>
 <button onclick=changeConfigStr('{"interactions":"omnipath"}') >Get Omnipath Interactions </button> <br>
@@ -87,6 +88,18 @@
 
       ]
     }));
+  }
+
+  function changeColor(hexacode) {
+    console.log(hexacode)
+    const elements_background_color = document.getElementsByClassName('is-primary');
+    for(var i = 0; i < elements_background_color.length; i++){
+      elements_background_color[i].setAttribute('style', `background-color: ${hexacode} !important; color: white !important; border-color: ${hexacode} !important`);
+    }
+    const elements_text = document.getElementsByClassName('has-text-primary');
+    for(var i = 0; i < elements_text.length; i++){
+      elements_text[i].setAttribute('style', `color: ${hexacode} !important`);
+    }
   }
 
 </script>
