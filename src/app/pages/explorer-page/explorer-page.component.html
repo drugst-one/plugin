@@ -1,4 +1,6 @@
 <div class="is-hidden-mobile" [style.color]="textColor">
+
+
   <app-launch-analysis [(show)]="showAnalysisDialog"
                        [target]="analysisDialogTarget">
   </app-launch-analysis>
@@ -151,7 +153,7 @@
                         </a>
                         <a *ngFor="let tissue of analysis.getTissues()"
                            (click)="selectTissue(tissue)"
-                           [class.is-active]="selectedTissue && tissue.id === selectedTissue.id"
+                           [class.is-active]="selectedTissue && tissue.netexId === selectedTissue.netexId"
                            class="dropdown-item">
                           {{tissue.name}}
                         </a>
@@ -420,9 +422,8 @@
               </thead>
               <tbody>
               <tr *ngFor="let p of analysis.getSelection()">
-                <td>
-                </td>
-                <td>{{p.name}}</td>
+                <td><p class="is-capitalized">{{p.type}}</p></td>
+                <td><p class="is-capitalized">{{p.data.label}}</p></td>
                 <td>
                   <button (click)="analysis.removeItems([p])" class="button is-small is-danger is-outlined has-tooltip"
                           data-tooltip="Remove from selection.">

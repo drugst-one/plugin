@@ -199,7 +199,7 @@
                   </a>
                   <a *ngFor="let tissue of analysis.getTissues()"
                      (click)="selectTissue(tissue)"
-                     [class.is-active]="selectedTissue && tissue.id === selectedTissue.id"
+                     [class.is-active]="selectedTissue && tissue.netexId === selectedTissue.netexId"
                      class="dropdown-item">
                     {{tissue.name}}
                   </a>

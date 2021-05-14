@@ -4,6 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {toast} from 'bulma-toast';
 import {Injectable} from '@angular/core';
+import { NetexControllerService } from '../netex-controller/netex-controller.service';
 
 export type AlgorithmType = 'trustrank' | 'keypathwayminer' | 'multisteiner' | 'closeness' | 'degree' | 'proximity' | 'betweenness';
 export type QuickAlgorithmType = 'quick' | 'super';
@@ -42,10 +43,10 @@ export class AnalysisService {
 
   private selection = 'main';
 
-  private selectedItems = new Map<string, Node>();
-  private selectListSubject = new Subject<{ items: Node[], selected: boolean | null }>();
+  private selectedItems = new Map<string, Wrapper>();
+  private selectListSubject = new Subject<{ items: Wrapper[], selected: boolean | null }>();
 
-  private selections = new Map<string, Map<string, Node>>();
+  private selections = new Map<string, Map<string, Wrapper>>();
 
   public tokens: string[] = [];
   public finishedTokens: string[] = [];
@@ -58,7 +59,7 @@ export class AnalysisService {
 
   private tissues: Tissue[] = [];
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, public netex: NetexControllerService) {
     const tokens = localStorage.getItem('tokens');
     const finishedTokens = localStorage.getItem('finishedTokens');
 
@@ -68,7 +69,7 @@ export class AnalysisService {
     if (finishedTokens) {
       this.finishedTokens = JSON.parse(finishedTokens);
     }
-    // this.startWatching();
+    this.startWatching();
 
     this.http.get<Tissue[]>(`${environment.backend}tissues/`).subscribe((tissues) => {
       this.tissues = tissues;
@@ -90,7 +91,7 @@ export class AnalysisService {
   }
 
   async getTasks() {
-    return await this.http.get<any>(`${environment.backend}tasks/?tokens=${JSON.stringify(this.tokens)}`).toPromise().catch((e) => {
+    return await this.netex.getTasks(this.tokens).catch((e) => {
       clearInterval(this.intervalId);
     });
   }
@@ -104,14 +105,14 @@ export class AnalysisService {
     if (this.selections.has(id)) {
       this.selectedItems = this.selections.get(id);
     } else {
-      this.selectedItems = new Map<string, Node>();
+      this.selectedItems = new Map<string, Wrapper>();
     }
     this.selectListSubject.next({items: Array.from(this.selectedItems.values()), selected: null});
     this.selection = id;
   }
 
-  public addItems(wrappers: Node[]): number {
-    const addedWrappers: Node[] = [];
+  public addItems(wrappers: Wrapper[]): number {
+    const addedWrappers: Wrapper[] = [];
     for (const wrapper of wrappers) {
       if (!this.inSelection(wrapper)) {
         addedWrappers.push(wrapper);
@@ -122,8 +123,8 @@ export class AnalysisService {
     return addedWrappers.length;
   }
 
-  public removeItems(wrappers: Node[]) {
-    const removedWrappers: Node[] = [];
+  public removeItems(wrappers: Wrapper[]) {
+    const removedWrappers: Wrapper[] = [];
     for (const wrapper of wrappers) {
       if (this.selectedItems.delete(wrapper.id)) {
         removedWrappers.push(wrapper);
@@ -133,7 +134,7 @@ export class AnalysisService {
   }
 
   public addSeeds(nodes) {
-    const addedWrappers: Node[] = [];
+    const addedWrappers: Wrapper[] = [];
     nodes.forEach((node) => {
       if (node.isSeed === true && !this.inSelection(node)) {
         addedWrappers.push(node);
@@ -144,7 +145,7 @@ export class AnalysisService {
   }
 
   public removeSeeds(nodes) {
-    const removedWrappers: Node[] = [];
+    const removedWrappers: Wrapper[] = [];
     nodes.forEach((node) => {
       if (node.isSeed === true && this.inSelection(node)) {
         removedWrappers.push(node);
@@ -215,11 +216,11 @@ export class AnalysisService {
     return this.selectedItems.has(nodeId);
   }
 
-  inSelection(wrapper: Node): boolean {
+  inSelection(wrapper: Wrapper): boolean {
     return this.selectedItems.has(wrapper.id);
   }
 
-  getSelection(): Node[] {
+  getSelection(): Wrapper[] {
     return Array.from(this.selectedItems.values());
   }
 
@@ -227,7 +228,7 @@ export class AnalysisService {
     return this.selectedItems.size;
   }
 
-  subscribeList(cb: (items: Array<Node>, selected: boolean | null) => void) {
+  subscribeList(cb: (items: Array<Wrapper>, selected: boolean | null) => void) {
     this.selectListSubject.subscribe((event) => {
       cb(event.items, event.selected);
     });
@@ -253,14 +254,14 @@ export class AnalysisService {
       algorithm: isSuper ? 'super' : 'quick',
       target: 'drug',
       parameters: {
-        strain_or_drugs: dataset.backendId,
+        strain_or_drugs: dataset.id,
         bait_datasets: dataset.data,
         seeds: isSuper ? [] : this.getSelection().map((i) => i.id),
       },
     }).toPromise();
     this.tokens.push(resp.token);
     localStorage.setItem('tokens', JSON.stringify(this.tokens));
-    // this.startWatching();
+    this.startWatching();
 
     toast({
       message: 'Quick analysis started. This may take a while.' +
@@ -293,9 +294,10 @@ export class AnalysisService {
       target,
       parameters,
     }).toPromise();
+
     this.tokens.push(resp.token);
     localStorage.setItem('tokens', JSON.stringify(this.tokens));
-    // this.startWatching();
+    this.startWatching();
   }
 
   public isLaunchingQuick(): boolean {

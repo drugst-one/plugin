@@ -19,6 +19,7 @@ import {OmnipathControllerService} from '../../services/omnipath-controller/omni
 import html2canvas from 'html2canvas';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, NodeGroup} from '../../config';
+import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
 
 
 declare var vis: any;
@@ -65,13 +66,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (typeof network === 'undefined') {
       return;
     }
-
-    console.log(network)
-
-    console.log( this.myConfig)
-
     this.networkJSON = network;
-
     this.createNetwork();
   }
 
@@ -98,6 +93,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public edges: any;
 
   private networkInternal: any;
+  // this will store the vis Dataset
   public nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
 
   private dumpPositions = false;
@@ -116,7 +112,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public currentViewProteins: Node[];
   public currentViewSelectedTissue: Tissue | null = null;
-  public currentViewNodes: any[];
+  public currentViewNodes: Node[];
 
   public expressionExpanded = false;
   public selectedTissue: Tissue | null = null;
@@ -126,7 +122,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 
-  constructor(public omnipath: OmnipathControllerService, public analysis: AnalysisService) {
+  constructor(
+    public omnipath: OmnipathControllerService, 
+    public analysis: AnalysisService, 
+    public netex: NetexControllerService) {
 
     this.showDetails = false;
 
@@ -145,8 +144,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
             continue;
           }
           const pos = this.networkInternal.getPositions([item.id]);
-          node.x = pos[item.id].x;
-          node.y = pos[item.id].y;
           node.x = pos[item.id].x;
           node.y = pos[item.id].y;
           Object.assign(node, this.myConfig.nodeGroups[node.group]);
@@ -177,12 +174,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   private setColorPrimary(color: string) {
-    console.log(color);
     document.documentElement.style.setProperty('$primary', color);
   }
 
-
-
+  
   async getInteractions() {
     const names = this.nodeData.nodes.map( (node) => node.label);
     const nameToNetworkId = {};
@@ -192,8 +187,18 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.nodeData.edges.update(edges);
   }
 
-  private getNetwork() {
+  private async getNetwork() {
     const network = JSON.parse(this.networkJSON);
+
+    // map data to nodes in backend
+    console.log('before') 
+    console.log( this.myConfig.identifier)
+    console.log(network.nodes)
+    if (network.nodes.length) {
+      network.nodes = await this.netex.mapNodes(network.nodes, this.myConfig.identifier)
+    }
+    console.log('after')
+    console.log(network.nodes)
 
     this.proteins = network.nodes;
     this.edges = network.edges;
@@ -220,7 +225,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public async openSummary(item: Wrapper, zoom: boolean) {
     this.selectedWrapper = item;
-    console.log(this.selectedWrapper)
     if (zoom) {
       this.zoomToNode(item.nodeId);
     }
@@ -235,13 +239,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public async createNetwork() {
     this.analysis.resetSelection();
     this.selectedWrapper = null;
-    this.getNetwork();
+    await this.getNetwork();
     this.proteinData = new ProteinNetwork(this.proteins, this.edges);
     this.proteinData.linkNodes();
 
-    console.log(this.proteinData)
-
     const {nodes, edges} = this.mapDataToNodes(this.proteinData);
+
     this.nodeData.nodes = new vis.DataSet(nodes);
     this.nodeData.edges = new vis.DataSet(edges);
 
@@ -253,10 +256,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (nodeIds.length > 0) {
         const nodeId = nodeIds[0];
         const node = this.nodeData.nodes.get(nodeId);
+        const wrapper = getWrapperFromNode(node);
         if (this.analysis.inSelection(node)) {
-          this.analysis.removeItems([node]);
+          this.analysis.removeItems([wrapper]);
         } else {
-          this.analysis.addItems([node]);
+          this.analysis.addItems([wrapper]);
         }
       }
     });
@@ -266,8 +270,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (nodeIds.length > 0) {
         const nodeId = nodeIds[0];
         const node = this.nodeData.nodes.get(nodeId);
-        console.log(node)
-        const wrapper = node.wrapper;
+        const wrapper = getWrapperFromNode(node);
         this.openSummary(wrapper, false);
       } else {
         this.closeSummary();
@@ -322,17 +325,29 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.myConfig[key] = {...this.myConfig[key], ...values};
   }
 
-  private mapCustomNode(customNode: Node): any {
-    const wrapper = getWrapperFromNode(customNode);
+  /** Convert input nodes into node objects 
+   * 
+   * @param customNode 
+   * @returns 
+   */
+  private mapCustomNode(customNode: any): Node {
     let group = customNode.group;
     if (typeof group === 'undefined' || typeof this.myConfig.nodeGroups[group] === 'undefined') {
       group = 'default';
     }
     const node = JSON.parse(JSON.stringify(this.myConfig.nodeGroups[group]));
+
+    // label is only used for network visualization
     let nodeLabel = customNode.name;
     if (customNode.name.length === 0) {
-      nodeLabel = customNode.id;
+      nodeLabel = customNode.userId;
     }
+
+    // node.name is actually group name since it comes from the group configuration
+    // this property is already stored in the wrapper object
+    // instead, node.name should reflect the actual node name
+    node.name = customNode.name;
+
     if (node.image) {
       node.shape = 'image';
     }
@@ -340,7 +355,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     node.id = customNode.id;
     node.x = customNode.x;
     node.y = customNode.y;
-    node.wrapper = wrapper;
+    node.uniprotAc = customNode.uniprotAc
+    console.log(node)
     return node;
   }
 
@@ -397,8 +413,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   gProfilerLink(): string {
     const queryString = this.analysis.getSelection()
-      .filter(wrapper => wrapper.group === 'protein')
-      .map(wrapper => wrapper.access)
+      .filter(wrapper => wrapper.type === 'gene')
+      .map(wrapper => wrapper.data.uniprotAc)
       .join('%0A');
     return 'http://biit.cs.ut.ee/gprofiler/gost?' +
       'organism=hsapiens&' +

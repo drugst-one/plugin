@@ -1,15 +1,24 @@
 <div *ngIf="wrapper">
   <div>
-    <p>
+    <p *ngIf="wrapper.data.name">
       <b><span>Name:</span></b>
-      {{ wrapper.name }}
+      <span class="is-capitalized"> {{ wrapper.data.name }}</span>
     </p>
-    <p>
+    <p *ngIf="wrapper.type">
+      <b><span>Type:</span></b>
+      <span class="is-capitalized"> {{ wrapper.type }}</span>
+    </p>
+    <p *ngIf="wrapper.data.group">
+      <b><span>Group:</span></b>
+      <span class="is-capitalized"> {{ wrapper.data.group }}</span>
+    </p>
+    <p *ngIf="wrapper.data.uniprotAc">
       <b><span>Access:</span></b>
-      <a href="https://www.uniprot.org/uniprot/{{ wrapper.access }}" target="_blank">
-        {{ wrapper.access }}
+      <a href="https://www.uniprot.org/uniprot/{{ wrapper.data.uniprotAc }}" target="_blank">
+        <span class="is-capitalized"> {{ wrapper.data.uniprotAc }}</span>
       </a>
     </p>
+
   </div>
 
   <app-toggle [value]="analysis.inSelection(wrapper)"

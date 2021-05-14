@@ -37,7 +37,7 @@ export class AddExpressedProteinsComponent implements OnChanges {
   public async addProteins() {
     this.loading = true;
     const result = await this.http.post<any>(`${environment.backend}query_tissue_proteins/`,
-      {tissueId: this.selectedTissue.id, threshold: this.threshold}).toPromise();
+      {tissueId: this.selectedTissue.netexId, threshold: this.threshold}).toPromise();
     const items = [];
     for (const detail of result) {
       items.push(getWrapperFromNode(detail));

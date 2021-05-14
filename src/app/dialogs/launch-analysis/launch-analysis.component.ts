@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
 import {
   Algorithm,
   AlgorithmType,

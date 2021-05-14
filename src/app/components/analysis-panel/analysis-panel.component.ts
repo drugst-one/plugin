@@ -162,7 +162,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
             this.tableDrugs = table;
             this.tableDrugs.forEach((r) => {
               r.rawScore = r.score;
-              r.closestViralProteins = (r.closestViralProteins as any).split(',');
             });
           }));
         promises.push(this.http.get<any>(`${environment.backend}task_result/?token=${this.token}&view=proteins`).toPromise()
@@ -172,8 +171,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
             this.tableProteins.forEach((r) => {
               r.rawScore = r.score;
               r.isSeed = isSeed[r.id];
-              r.closestViralProteins = (r.closestViralProteins as any).split(',');
-              if (this.analysis.inSelection(r)) {
+              const wrapper = getWrapperFromNode(r)
+              if (this.analysis.inSelection(wrapper)) {
                 this.tableSelectedProteins.push(r);
               }
             });
@@ -378,6 +377,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     const details = attributes.details || {};
     const wrappers: { [key: string]: Wrapper } = {};
     for (const node of network.nodes) {
+
       if (nodeTypes[node] === 'protein') {
         this.proteins.push(details[node]);
         wrappers[node] = getWrapperFromNode(details[node]);
@@ -420,14 +420,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         nodeLabel = drug.drugId;
       }
     }*/
-
-    const node = NetworkSettings.getNodeStyle('gene', isSeed, this.analysis.inSelection(details));
+    const wrapper = getWrapperFromNode(details)
+    const node = NetworkSettings.getNodeStyle('gene', isSeed, this.analysis.inSelection(wrapper));
     node.id = details.id;
     node.label = details.name;
     node.nodeType = nodeType;
     node.isSeed = isSeed;
     node.wrapper = details;
-
     return node;
   }
 

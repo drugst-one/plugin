@@ -5,9 +5,10 @@
   <title>Network Expander</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/ico" href="src/assets/covex_logo_small.png">
-  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <script src="https://kit.fontawesome.com/3ad4fe992f.js" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <!--  <link rel="stylesheet" href="netex-build/styles.css">-->
 <!--  <script type="text/javascript" src="netex-build/netex.js"></script>-->
@@ -72,15 +73,13 @@
     netexp.setAttribute('network', JSON.stringify({
       nodes: [
         {
-          name: "PTEN",
-          id: "1",
-          access: "A",
+          label: "PTEN",
+          id: "PTEN",
           group: "genes"
         },
         {
-          name: "TP53",
-          id: "2",
-          access: "B",
+          label: "TP53",
+          id: "TP53",
           group: "genes"
         }
       ],

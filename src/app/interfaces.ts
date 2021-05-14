@@ -3,16 +3,20 @@ import {AlgorithmType, QuickAlgorithmType} from './services/analysis/analysis.se
 export interface Node {
   name: string;
   id: string;
-  access: string;
+  netexId?: string;
+  uniprotAc?: string;
   group?: string;
+  color?: string;
+  shape?: string;
   interactions?: Node[];
   x?: number;
   y?: number;
   expressionLevel?: number;
+  label?: string;
 }
 
 export interface Tissue {
-  id: number;
+  netexId: number;
   name: string;
 }
 
@@ -83,18 +87,18 @@ export function getNodeIdsFromPDI(edge: NetworkEdge) {
 }
 
 export function getDrugNodeId(drug: Drug) {
-  return `d_${drug.drugId}`;
+  return `d_${drug.id}`;
 }
 
 export function getDrugBackendId(drug: Drug) {
-  return drug.drugId;
+  return drug.id;
 }
 
-export function getGeneBackendId(gene: Node) {
+export function getNodeId(node: Node) {
   /**
    * Returns backend_id of Gene object
    */
-  return gene.id.toString();
+  return node.id.toString();
 }
 
 export function getGeneNodeId(gene: Node) {
@@ -110,7 +114,7 @@ export function getWrapperFromNode(gene: Node): Wrapper {
    * Constructs wrapper interface for gene
    */
   return {
-    backendId: getGeneBackendId(gene),
+    id: getNodeId(gene),
     nodeId: getGeneNodeId(gene),
     type: 'gene',
     data: gene,
@@ -120,7 +124,7 @@ export function getWrapperFromNode(gene: Node): Wrapper {
 
 export function getWrapperFromDrug(drug: Drug): Wrapper {
   return {
-    backendId: getDrugBackendId(drug),
+    id: getDrugBackendId(drug),
     nodeId: getDrugNodeId(drug),
     type: 'drug',
     data: drug,
@@ -130,19 +134,38 @@ export function getWrapperFromDrug(drug: Drug): Wrapper {
 export type WrapperType = 'gene' | 'drug';
 
 export interface Wrapper {
-  backendId: string;
+  id: string;
   nodeId: string;
   type: WrapperType;
-  data: any;
+  data: {
+    id: string;
+    name: string;
+    netexId?: string;
+    shape?: string;
+    color?: string;
+    interactions?: any;
+    group?: string;
+    uniprotAc?: string;
+    label?: string;
+    expressionLevel?: number;
+    x?: number;
+    y?: number;
+    drugId?: string;
+    status?: 'approved' | 'investigational';
+    inTrial?: boolean;
+    inLiterature?: boolean;
+    trialLinks?: string[];
+  };
 }
 
 export interface Drug {
-  drugId: string;
+  id: string;
   name: string;
   status: 'approved' | 'investigational';
   inTrial: boolean;
   inLiterature: boolean;
   trialLinks: string[];
+  netexId: string;
 }
 
 export interface Dataset {
@@ -153,6 +176,6 @@ export interface Dataset {
   source: Array<string> | null;
   year: number;
   datasetNames: string;
-  backendId: string;
+  id: string;
   data: Array<[string, string]>;
 }
