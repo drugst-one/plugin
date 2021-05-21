@@ -1,6 +1,3 @@
-$sidebar-width: 38vw;
-$sidebar-width-max: 665px;
-$navbar-height: 80px;
 $row-data-selector-height: auto;
 $network-footer-height: 75px;
 
@@ -12,4 +9,10 @@ $legend-edge-width: 20px;
 $legend-edge-height: 3px;
 $legend-star-color: #FC0;
 
-$height: 1000px;
+$height: 100%;
+
+
+$sidebar-right-width: 25%;
+$sidebar-left-width: 18%;
+$main-width: calc(100% - #{$sidebar-left-width} - #{$sidebar-right-width});
+

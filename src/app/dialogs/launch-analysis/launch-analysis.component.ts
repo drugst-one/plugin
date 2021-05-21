@@ -10,6 +10,7 @@ import {
   QuickAlgorithmType,
   TRUSTRANK
 } from '../../services/analysis/analysis.service';
+import {Wrapper} from '../../interfaces';
 
 @Component({
   selector: 'app-launch-analysis',
@@ -98,8 +99,9 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   }
 
   public async startTask() {
+    console.log(this.analysis.getSelection());
     const parameters: any = {
-      seeds: this.analysis.getSelection().map((item) => item.id),
+      seeds: this.analysis.getSelection().map((item) => item.data.netexId),
     };
 
     parameters.target_or_drugs = this.target === 'drug' ? 'PPDr' : 'PPI';

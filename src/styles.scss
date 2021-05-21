@@ -18,6 +18,19 @@ $info: $primary;
 
 @import "variables";
 
+.fullheight {
+  height: 100%;
+}
+
+#canvas-content {
+  height: calc(100% - #{$network-footer-height});
+}
+
+.explorer-footer{
+  position: absolute;
+  bottom: 0;
+}
+
 nav.navbar {
   height: 60px;
 }
@@ -39,7 +52,6 @@ span.icon {
 img.inline {
   height: 30px;
   align: middle;
-
 }
 
 button.i {
@@ -51,18 +63,30 @@ input.checkbox {
 }
 
 div.covex.sidebar {
-  height: calc(#{$height} - 70px);
+  height: $height;
   overflow-y: auto;
   overflow-x: hidden;
-  width: 340px;
 }
 
 div.covex.bar-left {
   float: left;
+  width: $sidebar-left-width;
+  height: 100%;
+
 }
 
 div.covex.bar-right {
-  float: right;
+  float: left;
+  width: $sidebar-right-width;
+  
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  
 }
 
 div.card.bar-small {
@@ -87,27 +111,24 @@ div.card-content.overflow {
   max-height: 350px;
 }
 
-div.covex.left-window {
-  float: left;
-  width: calc(100vw - 350px - 2 * 20px);
-  height: 100%;
-}
-
 div.covex.network {
-  width: calc(100% - 350px - 40px);
-  height: calc(100% - 100px);
-  margin-left: 20px;
-  margin-right: 20px;
-  float: right;
+  width: $main-width;
+  height: 100%;
+  float: left;
+  &.leftgone{
+    width: calc(#{$main-width} + #{$sidebar-left-width});
+  }
+  &.rightgone{
+    width: calc(#{$main-width} + #{$sidebar-right-width});
+  }
+  &.rightgone.leftgone{
+    width: calc(#{$main-width} + #{$sidebar-left-width} + #{$sidebar-right-width});
+  }
 }
 
 div.card.network {
   width: 100%;
-  height: calc(100% - #{$network-footer-height});
-}
-
-div.network {
-  height: calc(#{$height} - #{$network-footer-height} - #{$navbar-height} - 48px);
+  height: $height;
 }
 
 div.parent {
@@ -126,7 +147,7 @@ div.center {
 
 
 div.covex.explorer {
-  height: calc(#{$height} - #{$navbar-height});
+  height: #{$height};
   margin-left: 10px;
   margin-right: 10px;
 }

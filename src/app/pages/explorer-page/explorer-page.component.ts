@@ -50,13 +50,31 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.myConfig[key] = {...this.myConfig[key], ...configObj[key]};
         continue;
       }
-      if (key === 'interactions') {
+      else if (key === 'interactions') {
         this.getInteractions();
         continue;
       }
-      if (key === 'colorPrimary') {
-        this.setColorPrimary(configObj[key]);
+      else if (key === 'showLeftSidebar') {
+        if (configObj[key]) {
+          // shrink main column
+          document.getElementById('main-column').classList.remove('leftgone')
+        } else {
+          // extend main column
+          document.getElementById('main-column').classList.add('leftgone')
+        }
       }
+      else if (key === 'showRightSidebar') {
+        if (configObj[key]) {
+          // shrink main column
+          document.getElementById('main-column').classList.remove('rightgone')
+        } else {
+          // extend main column
+          document.getElementById('main-column').classList.add('rightgone')
+        }
+  
+
+      }
+      
       this.myConfig[key] = configObj[key];
     }
   }
@@ -172,11 +190,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       eval(this.onload);
     }
   }
-
-  private setColorPrimary(color: string) {
-    document.documentElement.style.setProperty('$primary', color);
-  }
-
   
   async getInteractions() {
     const names = this.nodeData.nodes.map( (node) => node.label);
@@ -356,6 +369,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     node.x = customNode.x;
     node.y = customNode.y;
     node.uniprotAc = customNode.uniprotAc
+    node.netexId = customNode.netexId
     console.log(node)
     return node;
   }

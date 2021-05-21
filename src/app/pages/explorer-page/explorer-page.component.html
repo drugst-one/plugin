@@ -1,4 +1,4 @@
-<div class="is-hidden-mobile" [style.color]="textColor">
+<div class="is-hidden-mobile fullheight" [style.color]="textColor">
 
 
   <app-launch-analysis [(show)]="showAnalysisDialog"
@@ -17,12 +17,8 @@
   <!-- Start explorer -->
   <div class="covex explorer">
 
-    <!-- Start left window -->
-    <div class="covex left-window">
-      <div>
-
         <!-- Start left sidebar -->
-        <div class="covex sidebar bar-left">
+        <div *ngIf="myConfig.showLeftSidebar"  class="covex sidebar bar-left">
 
           <div *ngIf="myConfig.showOverview" class="card bar-large">
             <header class="card-header">
@@ -96,84 +92,79 @@
           </div>
         </div>
 
-        <!-- Start network block -->
-        <div class="covex network">
-          <div class="card network">
+    <!-- Start network block -->
+    <div class="covex network" id="main-column">
+      <div class="card network">
 
-            <div *ngIf="myConfig.showLegend">
-              <app-network-legend [config]="myConfig"></app-network-legend>
-            </div>
-
-
-            <header class="card-header">
-              <p class="card-header-title">
-                Protein-Protein Interaction Network
-              </p>
-            </header>
-            <div class="card-content">
-              <div class="card-image" id="canvas-content">
-                <div class="parent">
-                  <div class="network center image1" #network>
-                    <button class="button is-loading center" alt="loading...">Loading</button>
-                  </div>
-                </div>
-
-              </div>
-
-              <footer *ngIf="myConfig.showFooter" class="card-footer toolbar">
-                <button (click)="toCanvas()" class="button is-primary is-rounded has-tooltip"
-                        data-tooltip="Take a screenshot of the current network.">
-                <span class="icon">
-                  <i class="fas fa-camera" aria-hidden="true"></i>
-                </span> <span>Screenshot</span>
-                </button>
-
-                <div class="footer-buttons dropdown is-up" [class.is-active]="expressionExpanded">
-                  <div class="dropdown-trigger">
-                    <button (click)="expressionExpanded=!expressionExpanded"
-                            class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
-                            aria-haspopup="true" aria-controls="dropdown-menu"
-                            data-tooltip="Tissue expression data is provided by the GTEx project.">
-                      <span *ngIf="!selectedTissue">Tissue</span>
-                      <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
-                      <span class="icon is-small">
-                      <i class="fas"
-                         [class.fa-angle-up]="expressionExpanded"
-                         [class.fa-angle-left]="!expressionExpanded" aria-hidden="true"></i>
-                    </span>
-                    </button>
-                  </div>
-                  <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                    <div class="dropdown-content tissue-dropdown">
-                      <div class="scroll-area">
-                        <a (click)="selectTissue(null)"
-                           [class.is-active]="!selectedTissue"
-                           class="dropdown-item">
-                          None
-                        </a>
-                        <a *ngFor="let tissue of analysis.getTissues()"
-                           (click)="selectTissue(tissue)"
-                           [class.is-active]="selectedTissue && tissue.netexId === selectedTissue.netexId"
-                           class="dropdown-item">
-                          {{tissue.name}}
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off"
-                            tooltipOn="Enable the network animation."
-                            tooltipOff="Disable the network animation and freeze nodes."
-                            [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
-              </footer>
-            </div>
-          </div>
+        <div *ngIf="myConfig.showLegend">
+          <app-network-legend [config]="myConfig"></app-network-legend>
         </div>
 
-        <!-- End  network block -->
-      </div>
 
+        <header class="card-header">
+          <p class="card-header-title">
+            Protein-Protein Interaction Network
+          </p>
+        </header>
+        <div class="card-content fullheight">
+          <div class="card-image" id="canvas-content">
+            <div class="parent fullheight">
+              <div class="center image1 fullheight" #network>
+                <button class="button is-loading center" alt="loading...">Loading</button>
+              </div>
+            </div>
+
+          </div>
+
+          <footer *ngIf="myConfig.showFooter" class="card-footer toolbar explorer-footer">
+            <button (click)="toCanvas()" class="button is-primary is-rounded has-tooltip"
+                    data-tooltip="Take a screenshot of the current network.">
+            <span class="icon">
+              <i class="fas fa-camera" aria-hidden="true"></i>
+            </span> <span>Screenshot</span>
+            </button>
+
+            <div class="footer-buttons dropdown is-up" [class.is-active]="expressionExpanded">
+              <div class="dropdown-trigger">
+                <button (click)="expressionExpanded=!expressionExpanded"
+                        class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
+                        aria-haspopup="true" aria-controls="dropdown-menu"
+                        data-tooltip="Tissue expression data is provided by the GTEx project.">
+                  <span *ngIf="!selectedTissue">Tissue</span>
+                  <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
+                  <span class="icon is-small">
+                  <i class="fas"
+                     [class.fa-angle-up]="expressionExpanded"
+                     [class.fa-angle-left]="!expressionExpanded" aria-hidden="true"></i>
+                </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content tissue-dropdown">
+                  <div class="scroll-area">
+                    <a (click)="selectTissue(null)"
+                       [class.is-active]="!selectedTissue"
+                       class="dropdown-item">
+                      None
+                    </a>
+                    <a *ngFor="let tissue of analysis.getTissues()"
+                       (click)="selectTissue(tissue)"
+                       [class.is-active]="selectedTissue && tissue.netexId === selectedTissue.netexId"
+                       class="dropdown-item">
+                      {{tissue.name}}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off"
+                        tooltipOn="Enable the network animation."
+                        tooltipOff="Disable the network animation and freeze nodes."
+                        [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
+          </footer>
+        </div>
+      </div>
       <div class="analysis-view" *ngIf="selectedAnalysisToken">
         <app-analysis-panel [(token)]="selectedAnalysisToken"
                             (showDetailsChange)="selectedWrapper = $event"
@@ -181,7 +172,9 @@
       </div>
     </div>
 
-    <div *ngIf="myConfig.showLeftSidebar" class="covex sidebar bar-right">
+    <!-- End  network block -->
+
+    <div *ngIf="myConfig.showRightSidebar" class="covex sidebar bar-right">
       <div *ngIf="myConfig.showItemSelector" class="card bar-large">
         <header class="card-header">
           <p class="card-header-title">

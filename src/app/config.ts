@@ -29,6 +29,7 @@ export interface IConfig {
   legendPos: 'left' | 'right';
   taskName: string;
   showLeftSidebar: boolean;
+  showRightSidebar: boolean;
   showOverview: boolean;
   showQuery: boolean;
   showItemSelector: boolean;
@@ -54,6 +55,7 @@ export const defaultConfig: IConfig = {
   showLegendNodes: true,
   showLegendEdges: true,
   showLeftSidebar: true,
+  showRightSidebar: true,
   showOverview: true,
   showQuery: true,
   showItemSelector: true,
