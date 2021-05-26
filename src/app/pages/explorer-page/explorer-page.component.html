@@ -94,6 +94,13 @@
 
     <!-- Start network block -->
     <div class="covex network" id="main-column">
+      
+      <div class="analysis-view" *ngIf="selectedAnalysisToken">
+        <app-analysis-panel [(token)]="selectedAnalysisToken"
+                            (showDetailsChange)="selectedWrapper = $event"
+                            (visibleItems)="analysisWindowChanged($event)"></app-analysis-panel>
+      </div>
+
       <div class="card network">
 
         <div *ngIf="myConfig.showLegend">
@@ -164,11 +171,6 @@
                         [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
           </footer>
         </div>
-      </div>
-      <div class="analysis-view" *ngIf="selectedAnalysisToken">
-        <app-analysis-panel [(token)]="selectedAnalysisToken"
-                            (showDetailsChange)="selectedWrapper = $event"
-                            (visibleItems)="analysisWindowChanged($event)"></app-analysis-panel>
       </div>
     </div>
 

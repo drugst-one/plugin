@@ -115,6 +115,7 @@ div.covex.network {
   width: $main-width;
   height: 100%;
   float: left;
+  position: relative;
   &.leftgone{
     width: calc(#{$main-width} + #{$sidebar-left-width});
   }
@@ -155,8 +156,9 @@ div.covex.explorer {
 .analysis-view {
   height: 100%;
   width: calc(100% - 20px);
-  position: relative;
+  position: absolute;
   margin-top: 0;
+  z-index: 10;
 }
 
 div.field.has-addons.add-remove-toggle {
