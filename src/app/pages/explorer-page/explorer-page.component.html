@@ -103,11 +103,6 @@
 
       <div class="card network">
 
-        <div *ngIf="myConfig.showLegend">
-          <app-network-legend [config]="myConfig"></app-network-legend>
-        </div>
-
-
         <header class="card-header">
           <p class="card-header-title">
             Protein-Protein Interaction Network
@@ -115,6 +110,9 @@
         </header>
         <div class="card-content fullheight">
           <div class="card-image" id="canvas-content">
+            <div *ngIf="myConfig.showLegend">
+              <app-network-legend [config]="myConfig"></app-network-legend>
+            </div>
             <div class="parent fullheight">
               <div class="center image1 fullheight" #network>
                 <button class="button is-loading center" alt="loading...">Loading</button>
