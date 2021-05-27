@@ -27,7 +27,9 @@ $info: $primary;
 }
 
 .explorer-footer{
-  position: absolute;
+  //position: absolute;
+  //overflow: auto;
+  width: $main-width;
   bottom: 0;
 }
 
@@ -71,6 +73,8 @@ div.covex.sidebar {
 div.covex.bar-left {
   float: left;
   width: $sidebar-left-width;
+  max-width:300px;
+  min-width:$sidebar-left-min-width;
   height: 100%;
 
 }
@@ -78,7 +82,8 @@ div.covex.bar-left {
 div.covex.bar-right {
   float: left;
   width: $sidebar-right-width;
-  
+  max-width:450px;
+  min-width:$sidebar-right-min-width;
   /* Hide scrollbar for Chrome, Safari and Opera */
   &::-webkit-scrollbar {
     display: none;
@@ -86,7 +91,7 @@ div.covex.bar-right {
   /* Hide scrollbar for IE, Edge and Firefox */
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
-  
+
 }
 
 div.card.bar-small {
@@ -112,18 +117,22 @@ div.card-content.overflow {
 }
 
 div.covex.network {
-  width: $main-width;
   height: 100%;
   float: left;
   position: relative;
+
+}
+
+.center-panel{
+  width: $main-width;
   &.leftgone{
-    width: calc(#{$main-width} + #{$sidebar-left-width});
+    width: calc(#{$main-width} + max(#{$sidebar-left-width},#{$sidebar-left-min-width}));
   }
   &.rightgone{
-    width: calc(#{$main-width} + #{$sidebar-right-width});
+    width: calc(#{$main-width} + max(#{$sidebar-right-width},#{$sidebar-right-min-width}));
   }
   &.rightgone.leftgone{
-    width: calc(#{$main-width} + #{$sidebar-left-width} + #{$sidebar-right-width});
+    width: calc(#{$main-width} +  max(#{$sidebar-left-width},#{$sidebar-left-min-width}) + max(#{$sidebar-right-width},#{$sidebar-right-min-width}));
   }
 }
 

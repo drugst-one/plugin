@@ -1,15 +1,15 @@
 <div class="field has-addons">
   <p class="control has-tooltip">
-    <button class="button is-rounded has-tooltip" [attr.data-tooltip]="tooltipOn" [class.is-primary]="value" (click)="toggle(true)">
+    <button class="button is-rounded has-tooltip" [attr.data-tooltip]="tooltipOn" [class.is-primary]="value" (click)="toggle(true)" [ngClass]="{'button-small':smallStyle}">
       <span class="icon is-small">
         <i class="fa {{iconOn}}"></i>
       </span>
-      <span>{{textOn}}</span>
+      <span [ngClass]="{'text-small':smallStyle}" >{{textOn}}</span>
     </button>
   </p>
   <p class="control">
-    <button class="button is-rounded has-tooltip" [attr.data-tooltip]="tooltipOff" [class.is-primary]="!value" (click)="toggle(false)">
-      <span>{{textOff}}</span>
+    <button class="button is-rounded has-tooltip" [attr.data-tooltip]="tooltipOff" [class.is-primary]="!value" (click)="toggle(false)" [ngClass]="{'button-small':smallStyle}">
+      <span [ngClass]="{'text-small':smallStyle}">{{textOff}}</span>
       <span *ngIf="iconOff" class="icon is-small">
         <i class="fa {{iconOff}}"></i>
       </span>

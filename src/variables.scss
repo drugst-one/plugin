@@ -13,6 +13,8 @@ $height: 100%;
 
 
 $sidebar-right-width: 25%;
+$sidebar-right-min-width: 210px;
 $sidebar-left-width: 18%;
-$main-width: calc(100% - #{$sidebar-left-width} - #{$sidebar-right-width});
+$sidebar-left-min-width: 200px;
+$main-width: calc(100% - (max(#{$sidebar-left-width},#{$sidebar-left-min-width}) + max(#{$sidebar-right-width},#{$sidebar-right-min-width})));
 

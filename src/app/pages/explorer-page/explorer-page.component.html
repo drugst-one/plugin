@@ -1,4 +1,4 @@
-<div class="is-hidden-mobile fullheight" [style.color]="textColor">
+<div id="appWindow" class="is-hidden-mobile fullheight" [style.color]="textColor" (window:resize)="onResize($event)">
 
 
   <app-launch-analysis [(show)]="showAnalysisDialog"
@@ -17,84 +17,84 @@
   <!-- Start explorer -->
   <div class="covex explorer">
 
-        <!-- Start left sidebar -->
-        <div *ngIf="myConfig.showLeftSidebar"  class="covex sidebar bar-left">
+    <!-- Start left sidebar -->
+    <div *ngIf="myConfig.showLeftSidebar" class="covex sidebar bar-left">
 
-          <div *ngIf="myConfig.showOverview" class="card bar-large">
-            <header class="card-header">
-              <p class="card-header-title">
+      <div *ngIf="myConfig.showOverview" class="card bar-large" [ngClass]="{'b-text-small':smallStyle}">
+        <header class="card-header">
+          <p class="card-header-title">
                 <span class="icon">
                   <i class="fas fa-info" aria-hidden="true"></i>
                 </span> Network Overview
-              </p>
-              <a (click)="collapseOverview= !collapseOverview" data-action="collapse"
-                 class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+          </p>
+          <a (click)="collapseOverview= !collapseOverview" data-action="collapse"
+             class="card-header-icon is-hidden-fullscreen" aria-label="more options">
              <span class="icon">
             <i *ngIf="collapseOverview" class="fas fa-angle-down" aria-hidden="true"></i>
             <i *ngIf="!collapseOverview" class="fas fa-angle-left" aria-hidden="true"></i>             </span>
-              </a>
-            </header>
-            <div *ngIf="collapseOverview">
-              <div class="card-content">
-                <nav class="level" *ngIf="proteinData">
+          </a>
+        </header>
+        <div *ngIf="collapseOverview">
+          <div class="card-content">
+            <nav class="level" *ngIf="proteinData">
 
-                  <!-- TO DO  : CHANGE THIS LATER
-                 <div class="level-item has-text-centered">
-                   <div>
-                     <p class="heading">Viral<br>Proteins</p>
-                     <p class="title"> {{ proteinData.effects.length }}</p>
-                   </div>
-                 </div>
-                 -->
+              <!-- TO DO  : CHANGE THIS LATER
+             <div class="level-item has-text-centered">
+               <div>
+                 <p class="heading">Viral<br>Proteins</p>
+                 <p class="title"> {{ proteinData.effects.length }}</p>
+               </div>
+             </div>
+             -->
 
-                  <div class="level-item has-text-centered">
-                    <div>
-                      <p class="heading">Proteins</p>
-                      <p class="title">{{ proteinData.proteins.length }}</p>
-                    </div>
-                  </div>
-                  <div class="level-item has-text-centered">
-                    <div>
-                      <p class="heading">Interactions</p>
-                      <p class="title">{{ proteinData.edges.length }}</p>
-                    </div>
-                  </div>
-                </nav>
+              <div class="level-item has-text-centered">
+                <div>
+                  <p class="heading">Proteins</p>
+                  <p class="title">{{ proteinData.proteins.length }}</p>
+                </div>
               </div>
-            </div>
+              <div class="level-item has-text-centered">
+                <div>
+                  <p class="heading">Interactions</p>
+                  <p class="title">{{ proteinData.edges.length }}</p>
+                </div>
+              </div>
+            </nav>
           </div>
+        </div>
+      </div>
 
-          <div *ngIf="myConfig.showQuery" class="card bar-large">
-            <header class="card-header">
-              <p class="card-header-title">
+      <div *ngIf="myConfig.showQuery" class="card bar-large" [ngClass]="{'b-text-small':smallStyle}">
+        <header class="card-header">
+          <p class="card-header-title">
                 <span class="icon">
                   <i class="fas fa-search" aria-hidden="true"></i>
                 </span> Query Protein/Gene
-              </p>
-              <a (click)="collapseQuery = !collapseQuery" data-action="collapse"
-                 class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+          </p>
+          <a (click)="collapseQuery = !collapseQuery" data-action="collapse"
+             class="card-header-icon is-hidden-fullscreen" aria-label="more options">
            <span class="icon">
             <i *ngIf="collapseQuery" class="fas fa-angle-down" aria-hidden="true"></i>
             <i *ngIf="!collapseQuery" class="fas fa-angle-left" aria-hidden="true"></i>
            </span>
-              </a>
-            </header>
-            <div *ngIf="collapseQuery">
-              <div class="card-content">
-                <div class="field">
-                  <div class="control">
-                    <app-query-tile-component (selectItem)="queryAction($event)"
-                                              [queryItems]="queryItems"></app-query-tile-component>
-                  </div>
-                </div>
+          </a>
+        </header>
+        <div *ngIf="collapseQuery">
+          <div class="card-content">
+            <div class="field">
+              <div class="control">
+                <app-query-tile-component (selectItem)="queryAction($event)"
+                                          [queryItems]="queryItems"></app-query-tile-component>
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
     <!-- Start network block -->
-    <div class="covex network" id="main-column">
-      
+    <div class="covex network center-panel" id="main-column">
+
       <div class="analysis-view" *ngIf="selectedAnalysisToken">
         <app-analysis-panel [(token)]="selectedAnalysisToken"
                             (showDetailsChange)="selectedWrapper = $event"
@@ -123,12 +123,13 @@
 
           </div>
 
-          <footer *ngIf="myConfig.showFooter" class="card-footer toolbar explorer-footer">
+          <footer *ngIf="myConfig.showFooter" class="card-footer toolbar explorer-footer center-panel" [ngClass]="{'footer-small':smallStyle}">
             <button (click)="toCanvas()" class="button is-primary is-rounded has-tooltip"
                     data-tooltip="Take a screenshot of the current network.">
             <span class="icon">
               <i class="fas fa-camera" aria-hidden="true"></i>
-            </span> <span>Screenshot</span>
+            </span>
+              <span [ngClass]="{'text-normal':smallStyle}">Screenshot</span>
             </button>
 
             <div class="footer-buttons dropdown is-up" [class.is-active]="expressionExpanded">
@@ -136,8 +137,8 @@
                 <button (click)="expressionExpanded=!expressionExpanded"
                         class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
                         aria-haspopup="true" aria-controls="dropdown-menu"
-                        data-tooltip="Tissue expression data is provided by the GTEx project.">
-                  <span *ngIf="!selectedTissue">Tissue</span>
+                        data-tooltip="Tissue expression data is provided by the GTEx project." [ngClass]="{'button-small':smallStyle}">
+                  <span *ngIf="!selectedTissue" [ngClass]="{'text-small':smallStyle}">Tissue</span>
                   <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
                   <span class="icon is-small">
                   <i class="fas"
@@ -168,6 +169,7 @@
             <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off"
                         tooltipOn="Enable the network animation."
                         tooltipOff="Disable the network animation and freeze nodes."
+                        [smallStyle]="smallStyle"
                         [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
           </footer>
         </div>
@@ -178,7 +180,7 @@
 
     <div *ngIf="myConfig.showRightSidebar" class="covex sidebar bar-right">
       <div *ngIf="myConfig.showItemSelector" class="card bar-large">
-        <header class="card-header">
+        <header class="card-header" [ngClass]="{'b-text-small':smallStyle}">
           <p class="card-header-title">
           <span class="icon">
             <i *ngIf="!selectedWrapper" class="fas fa-info" aria-hidden="true"></i>
@@ -208,7 +210,7 @@
       </div>
 
       <div *ngIf="myConfig.showSimpleAnalysis" class="card bar-large">
-        <header class="card-header">
+        <header class="card-header" [ngClass]="{'b-text-small':smallStyle}">
           <p class="card-header-title">
           <span class="icon">
             <i class="fas fa-flask" aria-hidden="true"></i>
@@ -237,7 +239,7 @@
                       <i class="fa fa-capsules" *ngIf="!analysis.isLaunchingQuick()"></i>
                       <i class="fa fa-spin fa-spinner" *ngIf="analysis.isLaunchingQuick()"></i>
                     </span>
-                      <span>
+                      <span [ngClass]="{'text-normal':smallStyle}">
                       Quick Start
                     </span>
                     </button>
@@ -251,7 +253,7 @@
                     <div class="digit" *ngIf="analysis.getCount() == 0">1</div>
                     <div class="digit" *ngIf="analysis.getCount() > 0"><i class="fa fa-check"></i></div>
                     <div>
-                      <span>Select Proteins</span>
+                      <span [ngClass]="{'text-normal':smallStyle}">Select Proteins</span>
                     </div>
                   </div>
                 </div>
@@ -266,7 +268,7 @@
                       <i class="fa fa-capsules" *ngIf="!analysis.isLaunchingQuick()"></i>
                       <i class="fa fa-spin fa-spinner" *ngIf="analysis.isLaunchingQuick()"></i>
                     </span>
-                      <span>
+                      <span [ngClass]="{'text-normal':smallStyle}">
                       {{ myConfig.taskName }}
                     </span>
                     </button>
@@ -279,7 +281,7 @@
       </div>
 
       <div *ngIf="myConfig.showAdvAnalysis" class="card bar-large">
-        <header class="card-header">
+        <header class="card-header" [ngClass]="{'b-text-small':smallStyle}">
           <p class="card-header-title">
           <span class="icon">
             <i class="fas fa-flask" aria-hidden="true"></i>
@@ -301,7 +303,7 @@
                 <button (click)="analysisDialogTarget = 'drug-target'; showAnalysisDialog = true;"
                         class="button is-primary is-fullwidth is-rounded has-tooltip"
                         data-tooltip="Find drug targets for the selected proteins."
-                        [disabled]="analysis.getCount() === 0">
+                        [disabled]="analysis.getCount() === 0" [ngClass]="{'text-small':smallStyle}">
                 <span class="icon">
                   <i class="fa fa-crosshairs"></i>
                 </span>
@@ -316,7 +318,7 @@
                 <button (click)="analysisDialogTarget = 'drug'; showAnalysisDialog = true;"
                         class="button is-primary is-fullwidth is-rounded has-tooltip"
                         data-tooltip="Find drugs for the selected proteins."
-                        [disabled]="analysis.getCount() === 0">
+                        [disabled]="analysis.getCount() === 0" [ngClass]="{'text-small':smallStyle}">
                 <span class="icon">
                   <i class="fa fa-capsules"></i>
                 </span>
@@ -334,7 +336,7 @@
                 <span class="icon">
                   <i class="fa fa-external-link-alt"></i>
                 </span>
-                  <span>
+                  <span [ngClass]="{'text-small':smallStyle}">
                   Enrichment Analysis
                 </span>
                 </a>
@@ -344,7 +346,7 @@
                 <span class="icon">
                   <i class="fa fa-external-link-alt"></i>
                 </span>
-                  <span>
+                  <span [ngClass]="{'text-small':smallStyle}">
                   Enrichment Analysis
                 </span>
                 </a>
@@ -355,7 +357,7 @@
       </div>
 
       <div *ngIf="myConfig.showTasks" class="card bar-large">
-        <header class="card-header">
+        <header class="card-header" [ngClass]="{'b-text-small':smallStyle}">
           <p class="card-header-title">
           <span class="icon">
             <i class="fas fa-tasks" aria-hidden="true"></i>
@@ -390,7 +392,7 @@
       </div>
 
       <div *ngIf="myConfig.showSelection" class="card bar-large">
-        <header class="card-header">
+        <header class="card-header" [ngClass]="{'b-text-small':smallStyle}">
           <p class="card-header-title">
           <span class="icon">
             <i class="fas fa-filter" aria-hidden="true"></i>
@@ -405,7 +407,7 @@
 
           </a>
         </header>
-        <div *ngIf="collapseSelection" class="seed-selection">
+        <div *ngIf="collapseSelection" class="seed-selection" [ngClass]="{'text-normal':smallStyle}">
           <div class="card-content overflow">
             <table class="table selection-table" *ngIf="analysis.getCount() > 0">
               <thead>

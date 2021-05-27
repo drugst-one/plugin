@@ -37,7 +37,7 @@ import { NetworkLegendComponent } from './components/network-legend/network-lege
     InfoTileComponent,
     CustomProteinsComponent,
     AddExpressedProteinsComponent,
-    NetworkLegendComponent
+    NetworkLegendComponent,
   ],
   imports: [
     BrowserModule,

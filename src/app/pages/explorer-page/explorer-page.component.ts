@@ -1,7 +1,7 @@
 import {
   AfterViewInit,
-  Component,
-  ElementRef, Input,
+  Component, Directive,
+  ElementRef, HostListener, Input,
   OnInit,
   ViewChild
 } from '@angular/core';
@@ -19,7 +19,7 @@ import {OmnipathControllerService} from '../../services/omnipath-controller/omni
 import html2canvas from 'html2canvas';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, NodeGroup} from '../../config';
-import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
+import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 
 
 declare var vis: any;
@@ -29,6 +29,7 @@ declare var vis: any;
   templateUrl: './explorer-page.component.html',
   styleUrls: ['./explorer-page.component.scss'],
 })
+
 export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private networkJSON = '{"nodes": [], "edges": []}';
@@ -49,32 +50,29 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (key === 'nodeGroups' || key === 'edgeGroups') {
         this.myConfig[key] = {...this.myConfig[key], ...configObj[key]};
         continue;
-      }
-      else if (key === 'interactions') {
+      } else if (key === 'interactions') {
         this.getInteractions();
         continue;
-      }
-      else if (key === 'showLeftSidebar') {
+      } else if (key === 'showLeftSidebar') {
         if (configObj[key]) {
           // shrink main column
-          document.getElementById('main-column').classList.remove('leftgone')
+          document.getElementById('main-column').classList.remove('leftgone');
         } else {
           // extend main column
-          document.getElementById('main-column').classList.add('leftgone')
+          document.getElementById('main-column').classList.add('leftgone');
         }
-      }
-      else if (key === 'showRightSidebar') {
+      } else if (key === 'showRightSidebar') {
         if (configObj[key]) {
           // shrink main column
-          document.getElementById('main-column').classList.remove('rightgone')
+          document.getElementById('main-column').classList.remove('rightgone');
         } else {
           // extend main column
-          document.getElementById('main-column').classList.add('rightgone')
+          document.getElementById('main-column').classList.add('rightgone');
         }
-  
+
 
       }
-      
+
       this.myConfig[key] = configObj[key];
     }
   }
@@ -91,6 +89,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public get network() {
     return this.networkJSON;
   }
+
+  public windowWidth = 0;
+  public smallStyle = false;
 
   public showDetails = false;
   public selectedWrapper: Wrapper | null = null;
@@ -141,8 +142,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   @ViewChild('network', {static: false}) networkEl: ElementRef;
 
   constructor(
-    public omnipath: OmnipathControllerService, 
-    public analysis: AnalysisService, 
+    public omnipath: OmnipathControllerService,
+    public analysis: AnalysisService,
     public netex: NetexControllerService) {
 
     this.showDetails = false;
@@ -179,7 +180,13 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.setWindowWidth(event.target.innerWidth);
+  }
+
   ngOnInit() {
+    this.setWindowWidth(document.getElementById('appWindow').getBoundingClientRect().width);
   }
 
   async ngAfterViewInit() {
@@ -190,11 +197,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       eval(this.onload);
     }
   }
-  
+
   async getInteractions() {
-    const names = this.nodeData.nodes.map( (node) => node.label);
+    const names = this.nodeData.nodes.map((node) => node.label);
     const nameToNetworkId = {};
-    this.nodeData.nodes.map( (node) => nameToNetworkId[node.label] = node.id);
+    this.nodeData.nodes.map((node) => nameToNetworkId[node.label] = node.id);
     const edges = await this.omnipath.getInteractions(names, this.myConfig.identifier, nameToNetworkId);
 
     this.nodeData.edges.update(edges);
@@ -204,17 +211,22 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     const network = JSON.parse(this.networkJSON);
 
     // map data to nodes in backend
-    console.log('before') 
+    console.log('before')
     console.log( this.myConfig.identifier)
     console.log(network.nodes)
     if (network.nodes.length) {
-      network.nodes = await this.netex.mapNodes(network.nodes, this.myConfig.identifier)
+      network.nodes = await this.netex.mapNodes(network.nodes, this.myConfig.identifier);
     }
     console.log('after')
     console.log(network.nodes)
 
     this.proteins = network.nodes;
     this.edges = network.edges;
+  }
+
+  private setWindowWidth(width: number) {
+    this.windowWidth = width;
+    this.smallStyle = this.windowWidth < 1250;
   }
 
   private zoomToNode(id: string) {
@@ -338,10 +350,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.myConfig[key] = {...this.myConfig[key], ...values};
   }
 
-  /** Convert input nodes into node objects 
-   * 
-   * @param customNode 
-   * @returns 
+  /** Convert input nodes into node objects
+   *
+   * @param customNode
+   * @returns
    */
   private mapCustomNode(customNode: any): Node {
     let group = customNode.group;
@@ -368,9 +380,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     node.id = customNode.id;
     node.x = customNode.x;
     node.y = customNode.y;
-    node.uniprotAc = customNode.uniprotAc
-    node.netexId = customNode.netexId
-    console.log(node)
+    node.uniprotAc = customNode.uniprotAc;
+    node.netexId = customNode.netexId;
+    // console.log(node)
     return node;
   }
 
@@ -385,7 +397,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     return edge;
   }
 
-  private mapDataToNodes(data: ProteinNetwork): { nodes: any[], edges: any[] } {
+  private mapDataToNodes(data: ProteinNetwork): { nodes: any[], edges: any[]; } {
     const nodes = [];
     const edges = [];
 

@@ -1,9 +1,9 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Directive, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-toggle',
   templateUrl: './toggle.component.html',
-  styleUrls: ['./toggle.component.scss']
+  styleUrls: ['./toggle.component.scss', '../../pages/explorer-page/explorer-page.component.scss']
 })
 export class ToggleComponent implements OnInit {
 
@@ -14,6 +14,8 @@ export class ToggleComponent implements OnInit {
   @Input() textOff = 'Off';
   @Input() tooltipOn: string;
   @Input() tooltipOff: string;
+
+  @Input() smallStyle: boolean;
 
   @Input() value: boolean;
   @Output() valueChange = new EventEmitter<boolean>();
