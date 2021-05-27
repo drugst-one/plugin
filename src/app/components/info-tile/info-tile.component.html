@@ -1,18 +1,18 @@
 <div *ngIf="wrapper">
   <div>
-    <p *ngIf="wrapper.data.name">
+    <p *ngIf="wrapper.data.name" [ngClass]="{'text-normal':smallStyle}">
       <b><span>Name:</span></b>
       <span class="is-capitalized"> {{ wrapper.data.name }}</span>
     </p>
-    <p *ngIf="wrapper.type">
+    <p *ngIf="wrapper.type" [ngClass]="{'text-normal':smallStyle}">
       <b><span>Type:</span></b>
       <span class="is-capitalized"> {{ wrapper.type }}</span>
     </p>
-    <p *ngIf="wrapper.data.group">
+    <p *ngIf="wrapper.data.group" [ngClass]="{'text-normal':smallStyle}">
       <b><span>Group:</span></b>
       <span class="is-capitalized"> {{ wrapper.data.group }}</span>
     </p>
-    <p *ngIf="wrapper.data.uniprotAc">
+    <p *ngIf="wrapper.data.uniprotAc" [ngClass]="{'text-normal':smallStyle}">
       <b><span>Access:</span></b>
       <a href="https://www.uniprot.org/uniprot/{{ wrapper.data.uniprotAc }}" target="_blank">
         <span class="is-capitalized"> {{ wrapper.data.uniprotAc }}</span>
@@ -21,10 +21,10 @@
 
   </div>
 
-  <app-toggle [value]="analysis.inSelection(wrapper)"
+  <app-toggle [value]="analysis.inSelection(wrapper)" [smallStyle]="smallStyle"
               (valueChange)="$event ? analysis.addItems([wrapper]) : analysis.removeItems([wrapper])" textOn="Selected"
               textOff="Deselected" tooltipOn="Add protein to selection." tooltipOff="Remove protein from selection."></app-toggle>
 </div>
-<div *ngIf="!wrapper">
+<div *ngIf="!wrapper" [ngClass]="{'text-normal':smallStyle}" >
   Please select a node for further information.
 </div>

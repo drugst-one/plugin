@@ -123,7 +123,7 @@
 
           </div>
 
-          <footer *ngIf="myConfig.showFooter" class="card-footer toolbar explorer-footer center-panel" [ngClass]="{'footer-small':smallStyle}">
+          <footer *ngIf="myConfig.showFooter" class="card-footer toolbar explorer-footer" [ngClass]="{'footer-small':smallStyle}">
             <button (click)="toCanvas()" class="button is-primary is-rounded has-tooltip"
                     data-tooltip="Take a screenshot of the current network.">
             <span class="icon">
@@ -204,7 +204,7 @@
         </header>
         <div *ngIf="collapseDetails">
           <div class="card-content">
-            <app-info-tile [wrapper]="selectedWrapper"></app-info-tile>
+            <app-info-tile [wrapper]="selectedWrapper" [smallStyle]="smallStyle"></app-info-tile>
           </div>
         </div>
       </div>
