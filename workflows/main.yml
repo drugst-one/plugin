@@ -1,0 +1,55 @@
+name: CI
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v2
+     - name: set up nodeJS
+       uses: actions/setup-node@v2.1.5
+       with: 
+        node-version: 10.19.0
+     - name: Run ng build
+       uses: colbyhill21/angular-full-ci@v1.0
+       with: 
+        command: run build:netex
+     - name: Rename
+       run: mv drugstone-build/styles.css drugstone-build/drugstone.css
+     - name: Save Release
+       uses: actions/upload-artifact@master
+       with:
+        name: Release
+        path: drugstone-build/drugstone.*
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Getting releases
+        uses: actions/download-artifact@master
+        with:
+          name: Release
+      - name: Publish
+        env: 
+          GITHUB_TOKEN: "${{ secrets.RELEASE_REPO_SECRET }}"
+        run: |
+          APP_NAME=drugstone
+          VERSION_NAME="v9.0.1"
+          FILENAME="$APP_NAME-v$VERSION_NAME"
+          TAG="v{VERSION_NAME}
+          TAG="latest-master"
+          echo $APP_NAME
+          echo $VERSION_NAME
+          echo $FILENAME
+          echo $TAG
+          git clone https://github.com/AndiMajore/drugstone-releases.git
+          cd releases
+          gh release delete "{$TAG}"
+          gh release create -a "../${APP_NAME}.*" -m "Latest release of drugsTone: ${FILENAME} -p "${TAG}"
