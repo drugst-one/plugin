@@ -13,6 +13,8 @@ setup:
   stage: setup
   script:
     - npm install
+  tags:
+    - drugstone
 
 check:lint:
   image: trion/ng-cli-karma
@@ -22,6 +24,8 @@ check:lint:
     - npm run lint
   dependencies:
     - setup
+  tags:
+    - drugstone
 
 #check:test:
 #  image: trion/ng-cli-karma
@@ -43,6 +47,8 @@ build:
     - npm run build:netex
   dependencies:
     - check:lint
+  tags:
+    - drugstone
 #    - check:test
 
 deploy:release:
@@ -70,6 +76,8 @@ deploy:release:
     - cd releases
     - gh release delete $TAG
     - gh release create -a ../$APP_NAME.* -m "Latest release of drugsTone $FILENAME -p $TAG"
+  tags:
+    - drugstone
 
 deploy:dev:
   image: docker
@@ -88,6 +96,8 @@ deploy:dev:
     - docker push gitlab.lrz.de:5005/netex/frontend:dev
   dependencies:
     - build
+  tags:
+    - drugstone
 
 deploy:prod:
   image: docker
@@ -107,3 +117,5 @@ deploy:prod:
     - docker push gitlab.lrz.de:5005/netex/frontend:prod
   dependencies:
     - build
+  tags:
+    - drugstone
