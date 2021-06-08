@@ -3,7 +3,8 @@
   "version": "0.4.2",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --configuration=dev",
+    "start:local": "ng serve --configuration=local",
+    "start:remote": "ng serve --configuration=remote",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint && htmlhint",
@@ -31,6 +32,8 @@
     "@angular/router": "~9.0.2",
     "@fortawesome/angular-fontawesome": "^0.6.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
+    "@fortawesome/free-brands-svg-icons": "^5.13.0",
+    "@fortawesome/free-regular-svg-icons": "^5.13.0",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@ng-select/ng-select": "^3.7.3",
     "bulma": "^0.8.1",

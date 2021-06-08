@@ -34,13 +34,15 @@
             "crossOrigin": "use-credentials"
           },
           "configurations": {
-            "dev": {
+            "local": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.dev.ts"
                 }
               ]
+            },
+            "remote": {
             },
             "development": {
               "fileReplacements": [
@@ -103,8 +105,11 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
-            "dev": {
-              "browserTarget": "netex:build:dev"
+            "local": {
+              "browserTarget": "netex:build:local"
+            },
+            "remote": {
+              "browserTarget": "netex:build:remote"
             },
             "production": {
               "browserTarget": "netex:build:production"
