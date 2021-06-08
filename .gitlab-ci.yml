@@ -40,10 +40,36 @@ build:
       - dist
   script:
     - npm install
-    - npm run build
+    - npm run build:netex
   dependencies:
     - check:lint
 #    - check:test
+
+deploy:release:
+  image: alpine/git
+  stage: deploy
+  when: manual
+  variables:
+    GITHUB_TOKEN: "$DRUGSTONE_DEPLOY_KEY"
+  dependencies:
+    - build
+  before_script:
+    - APP_NAME=drugstone
+    - ERSION_NAME="v9.0.1"
+    - FILENAME="$APP_NAME-v$VERSION_NAME"
+    - TAG="v{VERSION_NAME}
+    - TAG="latest-master"
+  script:
+    - echo $APP_NAME
+    - echo $VERSION_NAME
+    - echo $FILENAME
+    - echo $TAG
+    - mv drugstone-build/* ./
+    - mv styles.css drugstone.css
+    - git clone https://github.com/AndiMajore/drugstone-releases.git
+    - cd releases
+    - gh release delete $TAG
+    - gh release create -a ../$APP_NAME.* -m "Latest release of drugsTone $FILENAME -p $TAG"
 
 deploy:dev:
   image: docker
