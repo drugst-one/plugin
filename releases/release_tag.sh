@@ -16,27 +16,23 @@ fi
 VERSION=v$1
 MESSAGE=$2
 
-cd ../
-if [ -z "$3" ]
-then
-  echo "Building..."
-  npm run build:netex
-else
-  echo "Building dev..."
-  npm run build:netex-dev
-  VERSION=$VERSION
-fi
-
-cd ../
+cd ../../
 echo "Cloning Release Repo..."
 git clone git@github.com:AndiMajore/drugstone-releases.git
 echo "Updating Repo..."
-if [ -z "$3" ]
-then
-  cp frontend/drugsTone-build/* drugstone-releases/releases/
-else
-  cp frontend/drugsTone-build/* drugstone-releases/dev/
-fi
+
+echo "Building release..."
+cd frontend || exit
+npm run build:netex
+cd ../
+cp frontend/drugsTone-build/* drugstone-releases/releases/
+
+echo "Building dev..."
+cd frontend || exit
+npm run build:netex-dev
+cd ../
+cp frontend/drugsTone-build/* drugstone-releases/dev/
+
 cd drugstone-releases || echo "Error!" exit
 git commit -am "$VERSION commit: $MESSAGE"
 git push
