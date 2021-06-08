@@ -24,6 +24,7 @@ import {createCustomElement} from '@angular/elements';
 import { NetworkLegendComponent } from './components/network-legend/network-legend.component';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -57,6 +58,7 @@ export class AppModule {
     const NetworkExpander = createCustomElement(ExplorerPageComponent, {injector});
     // Register the custom element with the browser.
     customElements.define('network-expander', NetworkExpander);
+
   }
 
   ngDoBootstrap() {}

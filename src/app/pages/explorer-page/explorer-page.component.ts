@@ -20,9 +20,13 @@ import html2canvas from 'html2canvas';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, NodeGroup} from '../../config';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
-
-
+// import * as 'vis' from 'vis-network';
+// import {DataSet} from 'vis-data';
+// import {vis} from 'src/app/scripts/vis-network.min.js';
 declare var vis: any;
+// import {Network, Data} from 'vis-network';
+// declare var DataSet: any;
+// declare var Network: any;
 
 @Component({
   selector: 'app-explorer-page',
@@ -145,6 +149,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     public omnipath: OmnipathControllerService,
     public analysis: AnalysisService,
     public netex: NetexControllerService) {
+
 
     this.showDetails = false;
 
@@ -272,7 +277,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     this.nodeData.nodes = new vis.DataSet(nodes);
     this.nodeData.edges = new vis.DataSet(edges);
-
+    console.log(this.nodeData);
     const container = this.networkEl.nativeElement;
     const options = NetworkSettings.getOptions('main');
     this.networkInternal = new vis.Network(container, this.nodeData, options);

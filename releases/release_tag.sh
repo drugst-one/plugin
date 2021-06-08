@@ -16,9 +16,12 @@ fi
 VERSION=v$1
 MESSAGE=$2
 
-echo "Building..."
 cd ../
-npm run build:netex
+if [ -z "$3" ]
+then
+  echo "Building..."
+  npm run build:netex
+fi
 cd ../
 echo "Cloning Release Repo..."
 git clone git@github.com:AndiMajore/drugstone-releases.git

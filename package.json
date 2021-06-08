@@ -1,6 +1,6 @@
 {
   "name": "netex",
-  "version": "0.0.0",
+  "version": "0.4.2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --configuration=dev",
@@ -9,10 +9,12 @@
     "lint": "ng lint && htmlhint",
     "e2e": "ng e2e",
     "build-prod": "ng build --prod --output-hashing=none",
+    "build-dev": "ng build --configuration=development --output-hashing=none",
     "package-es5": "cd dist/netex && cat runtime-es5.js polyfills-es5.js main-es5.js > bundle-es5.js",
     "package-es2015": "cd dist/netex && cat runtime-es2015.js polyfills-es2015.js main-es2015.js > bundle-es2015.js",
     "bundle": "npm run build-prod netex && npm run package-es5 && npm run package-es2015",
-    "build:netex": "npm run build-prod netex && node build-netex.js"
+    "build:netex": "npm run build-prod netex && node build-netex.js",
+    "build:netex-dev": "npm run build-dev netex && node build-netex.js"
   },
   "private": true,
   "dependencies": {
@@ -42,7 +44,6 @@
     "python-shell": "^1.0.8",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
-    "vis-data": "^6.5.1",
     "vis-network": "^7.4.2",
     "zone.js": "~0.10.2"
   },
