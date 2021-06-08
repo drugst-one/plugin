@@ -30,3 +30,12 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ## Create exportable js and css
 
 `npm run build:netex`
+
+## Create and release js and css
+
+`cd releases && ./release_tag.sh $VERSION $MESSAGE`
+e.g.
+`cd releases && ./release_tag.sh 0.9.4-beta "This release features new layouting"`
+
+## Delete release from repository
+`cd releases && ./delete_tag.sh $VERSION`
