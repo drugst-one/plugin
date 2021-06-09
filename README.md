@@ -35,7 +35,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 `cd releases && ./release_tag.sh $VERSION $MESSAGE`
 e.g.
-`cd releases && ./release_tag.sh 0.9.4-beta "This release features new layouting"`
+`cd releases && ./release_tag.sh 0.9.4 "This release features new layouting"`
 
 ## Delete release from repository
 `cd releases && ./delete_tag.sh $VERSION`
