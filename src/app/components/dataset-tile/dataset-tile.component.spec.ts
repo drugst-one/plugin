@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {DatasetTileComponent} from './dataset-tile.component';
 import {NgSelectModule} from '@ng-select/ng-select';
@@ -8,7 +8,7 @@ describe('SelectDatasetComponent', () => {
   let component: DatasetTileComponent;
   let fixture: ComponentFixture<DatasetTileComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [DatasetTileComponent],
       imports: [NgSelectModule, FormsModule, ReactiveFormsModule],
