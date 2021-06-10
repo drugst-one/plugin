@@ -216,15 +216,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     const network = JSON.parse(this.networkJSON);
 
     // map data to nodes in backend
-    console.log('before')
-    console.log( this.myConfig.identifier)
-    console.log(network.nodes)
     if (network.nodes.length) {
       network.nodes = await this.netex.mapNodes(network.nodes, this.myConfig.identifier);
     }
-    console.log('after')
-    console.log(network.nodes)
-
     this.proteins = network.nodes;
     this.edges = network.edges;
   }
@@ -277,7 +271,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     this.nodeData.nodes = new vis.DataSet(nodes);
     this.nodeData.edges = new vis.DataSet(edges);
-    console.log(this.nodeData);
     const container = this.networkEl.nativeElement;
     const options = NetworkSettings.getOptions('main');
     this.networkInternal = new vis.Network(container, this.nodeData, options);

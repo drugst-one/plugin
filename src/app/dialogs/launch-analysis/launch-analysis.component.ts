@@ -23,6 +23,8 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public show = false;
   @Input()
   public target: 'drug' | 'drug-target';
+  @Input()
+  public inputNetwork: {nodes: any, edges: any};
   @Output()
   public showChange = new EventEmitter<boolean>();
 
@@ -99,12 +101,17 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   }
 
   public async startTask() {
-    console.log(this.analysis.getSelection());
     const parameters: any = {
       seeds: this.analysis.getSelection().map((item) => item.data.netexId),
     };
 
-    parameters.target_or_drugs = this.target === 'drug' ? 'PPDr' : 'PPI';
+    parameters.target_or_drugs = this.target === 'drug' ? 'drug' : 'protein';
+    // pass network data to reconstruct network in analysis result to connect non-proteins to results
+    // drop interactions in nodes beforehand to no cause cyclic error, information is contained in edges
+    this.inputNetwork.nodes.forEach(node => {
+      delete node.interactions
+    });
+    parameters.input_network = this.inputNetwork;
 
     if (this.algorithm === 'trustrank') {
       parameters.damping_factor = this.trustrankDampingFactor;

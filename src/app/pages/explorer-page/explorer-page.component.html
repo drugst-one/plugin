@@ -2,7 +2,8 @@
 
 
   <app-launch-analysis [(show)]="showAnalysisDialog"
-                       [target]="analysisDialogTarget">
+                       [target]="analysisDialogTarget"
+                       [inputNetwork]="{nodes:proteins, edges:edges}">
   </app-launch-analysis>
 
   <app-custom-proteins [(show)]="showCustomProteinsDialog" [visibleNodes]="currentViewNodes">

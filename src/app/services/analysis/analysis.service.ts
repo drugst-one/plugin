@@ -288,7 +288,6 @@ export class AnalysisService {
       });
       return;
     }
-
     const resp = await this.http.post<any>(`${environment.backend}task/`, {
       algorithm,
       target,

@@ -27,6 +27,7 @@ import {
 import html2canvas from 'html2canvas';
 import {toast} from 'bulma-toast';
 import {NetworkSettings} from '../../network-settings';
+import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
 
 declare var vis: any;
 
@@ -88,7 +89,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   public tableDrugScoreTooltip = '';
   public tableProteinScoreTooltip = '';
 
-  constructor(private http: HttpClient, public analysis: AnalysisService) {
+  constructor(private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService) {
   }
 
   async ngOnInit() {
@@ -134,7 +135,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       }
 
       if (this.task && this.task.info.done) {
-        const result = await this.http.get<any>(`${environment.backend}task_result/?token=${this.token}`).toPromise();
+        const result = await this.netex.getTaskResult(this.token)
+        console.log(result)
         const nodeAttributes = result.nodeAttributes || {};
         const isSeed: { [key: string]: boolean } = nodeAttributes.isSeed || {};
 
