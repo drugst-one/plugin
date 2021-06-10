@@ -22,7 +22,6 @@ import {AnalysisService} from './services/analysis/analysis.service';
 import { AddExpressedProteinsComponent } from './dialogs/add-expressed-proteins/add-expressed-proteins.component';
 import {createCustomElement} from '@angular/elements';
 import { NetworkLegendComponent } from './components/network-legend/network-legend.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 
@@ -49,7 +48,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     HttpClientModule,
     BrowserAnimationsModule,
     TableModule,
-    FontAwesomeModule,
   ],
   providers: [AnalysisService],
 })
