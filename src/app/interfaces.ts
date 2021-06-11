@@ -98,10 +98,14 @@ export function getNodeId(node: Node) {
   /**
    * Returns backend_id of Gene object
    */
-  return node.id.toString();
+   if ('netexId' in node) {
+     return node['netexId']
+   } else {
+     return node.id
+   }
 }
 
-export function getGeneNodeId(gene: Node) {
+export function getId(gene: Node) {
   /**
    * Returns the network node id based on a given gene
    */
@@ -115,7 +119,7 @@ export function getWrapperFromNode(gene: Node): Wrapper {
    */
   return {
     id: getNodeId(gene),
-    nodeId: getGeneNodeId(gene),
+    nodeId: getNodeId(gene),
     type: 'gene',
     data: gene,
   };

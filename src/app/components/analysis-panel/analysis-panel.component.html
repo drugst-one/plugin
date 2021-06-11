@@ -329,16 +329,16 @@
           </a>
         </div>
         <p-table *ngIf="tableProteins.length > 0" selectionMode="multiple"
-                 [value]="tableProteins" [selection]="tableSelectedProteins" dataKey="proteinAc"
+                 [value]="tableProteins" [selection]="tableSelectedProteins" dataKey="uniprotAc"
                  (selectionChange)="tableProteinSelection($event)">
           <ng-template pTemplate="header">
             <tr>
               <th class="checkbox-col">
                 <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
               </th>
-              <th [pSortableColumn]="'proteinAc'">
+              <th [pSortableColumn]="'uniprotAc'">
                 UniProt Code
-                <p-sortIcon [field]="'proteinAc'"></p-sortIcon>
+                <p-sortIcon [field]="'uniprotAc'"></p-sortIcon>
               </th>
               <th [pSortableColumn]="'name'">
                 Gene
@@ -367,7 +367,7 @@
               <td>
                 <p-tableCheckbox [value]="e"></p-tableCheckbox>
               </td>
-              <td><a href="https://www.uniprot.org/uniprot/{{ e.proteinAc }}" target="_blank">{{ e.proteinAc }}</a></td>
+              <td><a href="https://www.uniprot.org/uniprot/{{ e.uniprotAc }}" target="_blank">{{ e.uniprotAc }}</a></td>
               <td>{{e.name}}</td>
               <td>{{e.proteinName}}</td>
               <td *ngIf="tableHasScores">{{e.score | number}}</td>

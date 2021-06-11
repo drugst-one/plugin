@@ -379,56 +379,33 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     const details = attributes.details || {};
     const wrappers: { [key: string]: Wrapper } = {};
     for (const node of network.nodes) {
-
-      if (nodeTypes[node] === 'protein') {
-        this.proteins.push(details[node]);
-        wrappers[node] = getWrapperFromNode(details[node]);
-      } else if (nodeTypes[node] === 'drug') {
-        wrappers[node] = getWrapperFromDrug(details[node]);
+      // backend converts object keys to PascalCase: p_123 --> p123
+      const nodeObjectKey = node.split('_').join('')
+      if (nodeTypes[nodeObjectKey] === 'protein') {
+        this.proteins.push(details[nodeObjectKey]);
+        wrappers[node] = getWrapperFromNode(details[nodeObjectKey]);
+      } else if (nodeTypes[nodeObjectKey] === 'drug') {
+        wrappers[node] = getWrapperFromDrug(details[nodeObjectKey]);
       }
-      nodes.push(this.mapNode(this.inferNodeType(node), details[node], isSeed[node], scores[node]));
-    }
 
+      nodes.push(this.mapNode(this.inferNodeType(node), wrappers[node], isSeed[nodeObjectKey], scores[nodeObjectKey]));
+    }
     for (const edge of network.edges) {
       edges.push(this.mapEdge(edge, 'protein-protein', wrappers));
     }
-
     return {
       nodes,
       edges,
     };
   }
 
-  private mapNode(nodeType: WrapperType, details: Node, isSeed?: boolean, score?: number): any {
-    /*let nodeLabel;
-    // let wrapper: Wrapper;
-    let drugType;
-    let drugInTrial;*/
-    /*if (nodeType === 'protein') {
-      const protein = details as Node;
-      // wrapper = getWrapperFromNode(protein);
-      nodeLabel = protein.name;
-      if (!protein.name) {
-        nodeLabel = protein.id;
-      }
-    } else if (nodeType === 'drug') {
-      // const drug = details as Drug;
-      // wrapper = getWrapperFromDrug(drug);
-      drugType = drug.status;
-      drugInTrial = drug.inTrial;
-      if (drugType === 'approved') {
-        nodeLabel = drug.name;
-      } else {
-        nodeLabel = drug.drugId;
-      }
-    }*/
-    const wrapper = getWrapperFromNode(details)
+  private mapNode(nodeType: WrapperType, wrapper: Wrapper, isSeed?: boolean, score?: number): any {
     const node = NetworkSettings.getNodeStyle('gene', isSeed, this.analysis.inSelection(wrapper));
-    node.id = details.id;
-    node.label = details.name;
+    node.id = wrapper.id;
+    node.label = wrapper.data.name;
     node.nodeType = nodeType;
     node.isSeed = isSeed;
-    node.wrapper = details;
+    node.wrapper = wrapper;
     return node;
   }
 
@@ -500,7 +477,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         }
 
         for (const interaction of edges) {
-          const edge = {from: interaction.proteinAc, to: interaction.drugId};
+          console.log(interaction)
+          const edge = {from: interaction.uniprotAc, to: interaction.drugId};
           this.drugEdges.push(this.mapEdge(edge, 'to-drug'));
         }
         this.nodeData.nodes.add(Array.from(this.drugNodes.values()));

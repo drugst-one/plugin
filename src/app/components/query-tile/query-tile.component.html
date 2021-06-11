@@ -4,7 +4,7 @@
     <ng-template ng-option-tmp let-item="item">
       <b *ngIf="item.type == 'protein'"> {{item.data.name}}</b>
       <span><small *ngIf="item.type === 'protein'">Host Protein</small> | </span>
-      <span *ngIf="item.type == 'protein'"><small>AC: <b>{{item.data.proteinAc}}</b></small> </span>
+      <span *ngIf="item.type == 'protein'"><small>AC: <b>{{item.data.uniprotAc}}</b></small> </span>
     </ng-template>
   </ng-select>
 </div>

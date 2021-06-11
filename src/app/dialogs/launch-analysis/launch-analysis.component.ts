@@ -11,6 +11,7 @@ import {
   TRUSTRANK
 } from '../../services/analysis/analysis.service';
 import {Wrapper} from '../../interfaces';
+import { IConfig } from 'src/app/config';
 
 @Component({
   selector: 'app-launch-analysis',
@@ -25,6 +26,8 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public target: 'drug' | 'drug-target';
   @Input()
   public inputNetwork: {nodes: any, edges: any};
+  @Input()
+  public config: IConfig;
   @Output()
   public showChange = new EventEmitter<boolean>();
 
@@ -103,15 +106,17 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public async startTask() {
     const parameters: any = {
       seeds: this.analysis.getSelection().map((item) => item.data.netexId),
+      config: this.config,
+      input_network: this.inputNetwork
     };
 
-    parameters.target_or_drugs = this.target === 'drug' ? 'drug' : 'protein';
+    parameters.target = this.target === 'drug' ? 'drug' : 'drug-target';
     // pass network data to reconstruct network in analysis result to connect non-proteins to results
     // drop interactions in nodes beforehand to no cause cyclic error, information is contained in edges
     this.inputNetwork.nodes.forEach(node => {
       delete node.interactions
     });
-    parameters.input_network = this.inputNetwork;
+    console.log(this.inputNetwork)
 
     if (this.algorithm === 'trustrank') {
       parameters.damping_factor = this.trustrankDampingFactor;
