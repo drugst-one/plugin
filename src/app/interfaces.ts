@@ -81,17 +81,20 @@ export function getNodeIdsFromPPI(edge: NetworkEdge, wrappers: { [key: string]: 
 
 export function getNodeIdsFromPDI(edge: NetworkEdge) {
   return {
-    from: `p_${edge.from}`,
-    to: `d_${edge.to}`,
+    from: `${edge.from}`,
+    to: `${edge.to}`,
   };
 }
 
 export function getDrugNodeId(drug: Drug) {
-  return `d_${drug.id}`;
+  /**
+   * Returns backend_id of Drug object
+   */
+  return drug.netexId
 }
 
 export function getDrugBackendId(drug: Drug) {
-  return drug.id;
+  return drug.netexId;
 }
 
 export function getNodeId(node: Node) {
@@ -120,7 +123,7 @@ export function getWrapperFromNode(gene: Node): Wrapper {
   return {
     id: getNodeId(gene),
     nodeId: getNodeId(gene),
-    type: 'gene',
+    type: 'protein',
     data: gene,
   };
 }
@@ -135,7 +138,8 @@ export function getWrapperFromDrug(drug: Drug): Wrapper {
   };
 }
 
-export type WrapperType = 'gene' | 'drug';
+export type WrapperType = 'protein' | 'drug';
+export type EdgeType = 'protein-protein' | 'protein-drug';
 
 export interface Wrapper {
   id: string;

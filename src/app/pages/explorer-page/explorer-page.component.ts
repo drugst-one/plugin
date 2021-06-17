@@ -437,7 +437,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   gProfilerLink(): string {
     const queryString = this.analysis.getSelection()
-      .filter(wrapper => wrapper.type === 'gene')
+      .filter(wrapper => wrapper.type === 'protein')
       .map(wrapper => wrapper.data.uniprotAc)
       .join('%0A');
     return 'http://biit.cs.ut.ee/gprofiler/gost?' +

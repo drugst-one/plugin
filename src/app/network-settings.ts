@@ -78,7 +78,7 @@ export class NetworkSettings {
   private static drugInTrialShape = 'triangle';
 
   static getNodeSize(wrapperType: WrapperType) {
-    if (wrapperType === 'gene') {
+    if (wrapperType === 'protein') {
       return this.hostSize;
     } else if (wrapperType === 'drug') {
       return this.drugSize;
@@ -86,7 +86,7 @@ export class NetworkSettings {
   }
 
   static getNodeShape(wrapperType: WrapperType, drugInTrial?: boolean) {
-    if (wrapperType === 'gene') {
+    if (wrapperType === 'protein') {
       return this.hostShape;
     } else if (wrapperType === 'drug') {
       if (drugInTrial) {
@@ -119,14 +119,14 @@ export class NetworkSettings {
     }
   }
 
-  static getColor(color: 'gene' | 'approvedDrug' | 'unapprovedDrug' | 'hostFont' | 'drugFont' |
+  static getColor(color: 'protein' | 'approvedDrug' | 'unapprovedDrug' | 'hostFont' | 'drugFont' |
     'nonSeedHost' | 'selectedForAnalysis' | 'selectedForAnalysisText' |
     'edgeHostDrug' | 'edgeHostDrugHighlight' | 'edgeGeneGene' | 'edgeGeneGeneHighlight') 
     /**
      * Collection of all colors per use-case
      */
     {
-    if (color === 'gene') {
+    if (color === 'protein') {
       return this.hostColor;
     } else if (color === 'approvedDrug') {
       return this.approvedDrugColor;
@@ -150,7 +150,7 @@ export class NetworkSettings {
   }
 
   static getFont(wrapperType: WrapperType, drugInTrial?: boolean) {
-    if (wrapperType === 'gene') {
+    if (wrapperType === 'protein') {
       return {color: this.hostFontColor, size: this.hostFontSize};
     } else if (wrapperType === 'drug') {
       if (!drugInTrial) {
@@ -178,9 +178,9 @@ export class NetworkSettings {
     nodeShape = NetworkSettings.getNodeShape(nodeType);
     nodeSize = NetworkSettings.getNodeSize(nodeType);
     nodeFont = NetworkSettings.getFont(nodeType);
-    if (nodeType === 'gene') {
+    if (nodeType === 'protein') {
       nodeColor = NetworkSettings.getColor(nodeType);
-      nodeFont = NetworkSettings.getFont('gene');
+      nodeFont = NetworkSettings.getFont('protein');
       if (!isSeed) {
         nodeColor = NetworkSettings.getColor('nonSeedHost');
       }

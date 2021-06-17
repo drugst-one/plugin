@@ -78,7 +78,7 @@ export const defaultConfig: IConfig = {
       name: 'Default Group',
       color: 'yellow',
       shape: 'triangle',
-      type: 'gene',
+      type: 'protein',
     },
     protein: {
       name: 'Resulting Proteins',

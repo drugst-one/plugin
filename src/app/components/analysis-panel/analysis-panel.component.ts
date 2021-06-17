@@ -22,7 +22,9 @@ import {
   getWrapperFromDrug,
   getNodeIdsFromPDI,
   getNodeIdsFromPPI,
-  getProteinNodeId, Tissue
+  getProteinNodeId, 
+  Tissue,
+  EdgeType,
 } from '../../interfaces';
 import html2canvas from 'html2canvas';
 import {toast} from 'bulma-toast';
@@ -356,11 +358,18 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     return `${environment.backend}graph_export/?token=${this.token}`;
   }
 
+  public inferEdgeType(edge: object): EdgeType {
+    if (edge['to'].startsWith('d')) {
+      return 'protein-drug';
+    }
+    return 'protein-protein';
+  }
+
   public inferNodeType(nodeId: string): WrapperType {
-    if (nodeId.startsWith('DB')) {
+    if (nodeId.startsWith('d')) {
       return 'drug';
     }
-    return 'gene';
+    return 'protein';
   }
 
   public createNetwork(result: any): { edges: any[], nodes: any[] } {
@@ -391,7 +400,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       nodes.push(this.mapNode(this.inferNodeType(node), wrappers[node], isSeed[nodeObjectKey], scores[nodeObjectKey]));
     }
     for (const edge of network.edges) {
-      edges.push(this.mapEdge(edge, 'protein-protein', wrappers));
+      edges.push(this.mapEdge(edge, this.inferEdgeType(edge), wrappers));
     }
     return {
       nodes,
@@ -400,7 +409,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   }
 
   private mapNode(nodeType: WrapperType, wrapper: Wrapper, isSeed?: boolean, score?: number): any {
-    const node = NetworkSettings.getNodeStyle('gene', isSeed, this.analysis.inSelection(wrapper));
+    const node = NetworkSettings.getNodeStyle('protein', isSeed, this.analysis.inSelection(wrapper));
     node.id = wrapper.id;
     node.label = wrapper.data.name;
     node.nodeType = nodeType;
@@ -409,7 +418,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     return node;
   }
 
-  private mapEdge(edge: any, type: 'protein-protein' | 'to-drug', wrappers?: { [key: string]: Wrapper }): any {
+  private mapEdge(edge: any, type: 'protein-protein' | 'protein-drug', wrappers?: { [key: string]: Wrapper }): any {
     let edgeColor;
     if (type === 'protein-protein') {
       edgeColor = {
@@ -421,7 +430,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         from, to,
         color: edgeColor,
       };
-    } else if (type === 'to-drug') {
+    } else if (type === 'protein-drug') {
       edgeColor = {
         color: NetworkSettings.getColor('edgeHostDrug'),
         highlight: NetworkSettings.getColor('edgeHostDrugHighlight'),
@@ -479,7 +488,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         for (const interaction of edges) {
           console.log(interaction)
           const edge = {from: interaction.uniprotAc, to: interaction.drugId};
-          this.drugEdges.push(this.mapEdge(edge, 'to-drug'));
+          this.drugEdges.push(this.mapEdge(edge, 'protein-drug'));
         }
         this.nodeData.nodes.add(Array.from(this.drugNodes.values()));
         this.nodeData.edges.add(Array.from(this.drugEdges.values()));
