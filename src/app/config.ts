@@ -19,8 +19,11 @@ export interface EdgeGroup {
   color: string;
 }
 
-export type Identifier = 'hugo'|'uniprot';
+export type Identifier = 'hugo'|'uniprot'|'ensg';
+export type InteractionDrugProteinDB = 'DrugBank'|'Chembl'|'DGIdb';
+export type InteractionProteinProteinDB = 'STRING'|'BioGRID'|'APID';
 
+// TODO: should this be external or integrated in the backend?
 export type InteractionDatabase = 'omnipath';
 
 export interface IConfig {
@@ -43,6 +46,8 @@ export interface IConfig {
   showLegendEdges: boolean;
   nodeGroups: { [key: string]: NodeGroup };
   edgeGroups: { [key: string]: EdgeGroup };
+  interactionDrugProtein: InteractionDrugProteinDB;
+  interactionProteinProtein: InteractionProteinProteinDB;
   interactions?: InteractionDatabase;
   identifier?: Identifier;
 }
@@ -66,6 +71,8 @@ export const defaultConfig: IConfig = {
   showFooter: true,
   showLegend: true,
   identifier: 'hugo',
+  interactionDrugProtein: 'DrugBank',
+  interactionProteinProtein: 'STRING',
   nodeGroups: {
     default: {
       name: 'Default Group',

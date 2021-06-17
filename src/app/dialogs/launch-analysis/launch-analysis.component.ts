@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
 import {
   Algorithm,
   AlgorithmType,
@@ -10,7 +9,6 @@ import {
   QuickAlgorithmType,
   TRUSTRANK
 } from '../../services/analysis/analysis.service';
-import {Wrapper} from '../../interfaces';
 import { IConfig } from 'src/app/config';
 
 @Component({
@@ -110,6 +108,8 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       input_network: this.inputNetwork
     };
 
+    parameters.ppi_dataset = this.config.interactionProteinProtein;
+    parameters.pdi_dataset = this.config.interactionDrugProtein;
     parameters.target = this.target === 'drug' ? 'drug' : 'drug-target';
     // pass network data to reconstruct network in analysis result to connect non-proteins to results
     // drop interactions in nodes beforehand to no cause cyclic error, information is contained in edges
