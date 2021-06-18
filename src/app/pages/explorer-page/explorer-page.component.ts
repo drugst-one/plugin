@@ -73,8 +73,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           // extend main column
           document.getElementById('main-column').classList.add('rightgone');
         }
-
-
       }
 
       this.myConfig[key] = configObj[key];
@@ -267,7 +265,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.proteinData = new ProteinNetwork(this.proteins, this.edges);
     this.proteinData.linkNodes();
 
-    const {nodes, edges} = this.mapDataToNodes(this.proteinData);
+    const {nodes, edges} = this.proteinData.mapDataToNodes(this.myConfig);
 
     this.nodeData.nodes = new vis.DataSet(nodes);
     this.nodeData.edges = new vis.DataSet(edges);
@@ -346,71 +344,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     // make sure all keys are set
 
     this.myConfig[key] = {...this.myConfig[key], ...values};
-  }
-
-  /** Convert input nodes into node objects
-   *
-   * @param customNode
-   * @returns
-   */
-  private mapCustomNode(customNode: any): Node {
-    let group = customNode.group;
-    if (typeof group === 'undefined' || typeof this.myConfig.nodeGroups[group] === 'undefined') {
-      group = 'default';
-    }
-    const node = JSON.parse(JSON.stringify(this.myConfig.nodeGroups[group]));
-
-    // label is only used for network visualization
-    let nodeLabel = customNode.name;
-    if (customNode.name.length === 0) {
-      nodeLabel = customNode.userId;
-    }
-
-    // node.name is actually group name since it comes from the group configuration
-    // this property is already stored in the wrapper object
-    // instead, node.name should reflect the actual node name
-    node.name = customNode.name;
-
-    if (node.image) {
-      node.shape = 'image';
-    }
-    node.label = nodeLabel;
-    node.id = customNode.id;
-    node.x = customNode.x;
-    node.y = customNode.y;
-    node.uniprotAc = customNode.uniprotAc;
-    node.netexId = customNode.netexId;
-    // console.log(node)
-    return node;
-  }
-
-  private mapCustomEdge(customEdge: NodeInteraction): any {
-    let group = customEdge.group;
-    if (typeof group === 'undefined' || typeof this.myConfig.edgeGroups[group] === 'undefined') {
-      group = 'default';
-    }
-    const edge = JSON.parse(JSON.stringify(this.myConfig.edgeGroups[group]));
-    edge.from = customEdge.from;
-    edge.to = customEdge.to;
-    return edge;
-  }
-
-  private mapDataToNodes(data: ProteinNetwork): { nodes: any[], edges: any[]; } {
-    const nodes = [];
-    const edges = [];
-
-    for (const protein of data.proteins) {
-      nodes.push(this.mapCustomNode(protein));
-    }
-
-    for (const edge of data.edges) {
-      edges.push(this.mapCustomEdge(edge));
-    }
-
-    return {
-      nodes,
-      edges,
-    };
   }
 
   public toCanvas() {

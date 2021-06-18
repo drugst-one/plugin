@@ -30,6 +30,8 @@ import html2canvas from 'html2canvas';
 import {toast} from 'bulma-toast';
 import {NetworkSettings} from '../../network-settings';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
+import { IConfig } from 'src/app/config';
+import { config } from 'rxjs';
 
 declare var vis: any;
 
@@ -137,7 +139,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       }
 
       if (this.task && this.task.info.done) {
-        const result = await this.netex.getTaskResult(this.token)
+        const result = await this.netex.getTaskResult(this.token);
         console.log(result)
         const nodeAttributes = result.nodeAttributes || {};
         const isSeed: { [key: string]: boolean } = nodeAttributes.isSeed || {};
@@ -358,21 +360,35 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     return `${environment.backend}graph_export/?token=${this.token}`;
   }
 
-  public inferEdgeType(edge: object): EdgeType {
+  public inferEdgeGroup(edge: object): EdgeType {
     if (edge['to'].startsWith('d')) {
       return 'protein-drug';
     }
     return 'protein-protein';
   }
 
-  public inferNodeType(nodeId: string): WrapperType {
-    if (nodeId.startsWith('d')) {
+  /**
+   * Infers wrapper type of node returned from backend.
+   * Node can only be either an input node from the user with a defined group,
+   * a drug found in the backend with either user defined type or default drug group,
+   * or an intermediate protein added by the shortest path to the found drug. 
+   * For the third case, fall back to a default case which can also be set by user.
+   */
+  public inferNodeGroup(wrapper: Wrapper): string {
+    if (wrapper.data.group !== undefined) {
+      return wrapper.data.group
+    }
+    else if (wrapper.data.netexId !== undefined && wrapper.data.netexId.startsWith('d')) {
       return 'drug';
     }
-    return 'protein';
+    else if (wrapper.data.netexId !== undefined && wrapper.data.netexId.startsWith('p')) {
+      return 'protein';
+    }
   }
 
   public createNetwork(result: any): { edges: any[], nodes: any[] } {
+    const config = result.parameters.config;
+
     const nodes = [];
     const edges = [];
 
@@ -396,11 +412,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       } else if (nodeTypes[nodeObjectKey] === 'drug') {
         wrappers[node] = getWrapperFromDrug(details[nodeObjectKey]);
       }
-
-      nodes.push(this.mapNode(this.inferNodeType(node), wrappers[node], isSeed[nodeObjectKey], scores[nodeObjectKey]));
+      nodes.push(this.mapNode(config, wrappers[node], isSeed[nodeObjectKey], scores[nodeObjectKey]));
     }
     for (const edge of network.edges) {
-      edges.push(this.mapEdge(edge, this.inferEdgeType(edge), wrappers));
+      edges.push(this.mapEdge(edge, this.inferEdgeGroup(edge), wrappers));
     }
     return {
       nodes,
@@ -408,11 +423,18 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     };
   }
 
-  private mapNode(nodeType: WrapperType, wrapper: Wrapper, isSeed?: boolean, score?: number): any {
-    const node = NetworkSettings.getNodeStyle('protein', isSeed, this.analysis.inSelection(wrapper));
+  private mapNode(config: IConfig, wrapper: Wrapper, isSeed?: boolean, score?: number): any {
+    // const node = NetworkSettings.getNodeStyle(nodeType, isSeed, this.analysis.inSelection(wrapper));
+    console.log(wrapper)
+    let group = this.inferNodeGroup(wrapper);
+    if (typeof group === 'undefined' || typeof config.nodeGroups[group] === 'undefined') {
+      group = 'default';
+    }
+    console.log(group)
+    const node = JSON.parse(JSON.stringify(config.nodeGroups[group]));
     node.id = wrapper.id;
     node.label = wrapper.data.name;
-    node.nodeType = nodeType;
+    node.nodeType = group;
     node.isSeed = isSeed;
     node.wrapper = wrapper;
     return node;
@@ -481,9 +503,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
           animate: {in: 'fadeIn', out: 'fadeOut'}
         });
       } else {
-        for (const drug of drugs) {
-          this.drugNodes.push(this.mapNode('drug', drug, false, null));
-        }
+        // for (const drug of drugs) {
+        //   this.drugNodes.push(this.mapNode(config, 'drug', drug, false, null));
+        // }
 
         for (const interaction of edges) {
           console.log(interaction)
