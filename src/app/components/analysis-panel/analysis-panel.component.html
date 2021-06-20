@@ -256,9 +256,9 @@
                 ID
                 <p-sortIcon [field]="'drugId'"></p-sortIcon>
               </th>
-              <th [pSortableColumn]="'name'">
-                Name
-                <p-sortIcon [field]="'name'"></p-sortIcon>
+              <th [pSortableColumn]="'label'">
+                Label
+                <p-sortIcon [field]="'label'"></p-sortIcon>
               </th>
               <th [pSortableColumn]="'status'">
                 Approved
@@ -285,7 +285,7 @@
           <ng-template pTemplate="body" let-e>
             <tr>
               <td><a href="https://www.drugbank.ca/drugs/{{ e.drugId }}" target="_blank">{{ e.drugId }}</a></td>
-              <td>{{e.name}}</td>
+              <td>{{e.label}}</td>
               <td>
                 <span *ngIf="e.status === 'approved'">
                   <i class="fa fa-check"></i>
@@ -340,9 +340,9 @@
                 UniProt Code
                 <p-sortIcon [field]="'uniprotAc'"></p-sortIcon>
               </th>
-              <th [pSortableColumn]="'name'">
-                Gene
-                <p-sortIcon [field]="'name'"></p-sortIcon>
+              <th [pSortableColumn]="'symbol'">
+                Symbol
+                <p-sortIcon [field]="'symbol'"></p-sortIcon>
               </th>
               <th [pSortableColumn]="'proteinName'">
                 Name
@@ -368,7 +368,7 @@
                 <p-tableCheckbox [value]="e"></p-tableCheckbox>
               </td>
               <td><a href="https://www.uniprot.org/uniprot/{{ e.uniprotAc }}" target="_blank">{{ e.uniprotAc }}</a></td>
-              <td>{{e.name}}</td>
+              <td>{{e.symbol}}</td>
               <td>{{e.proteinName}}</td>
               <td *ngIf="tableHasScores">{{e.score | number}}</td>
               <td>

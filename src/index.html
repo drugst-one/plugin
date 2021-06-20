@@ -38,13 +38,13 @@
 
   <network-expander id="netexp1"
                     config='{
-                      "nodeGroups": {"0.5": {"type": "gene", "color": "rgb(204, 255, 51)", "name": "0.5", "shape": "circle"}, "1.5": {"type": "gene", "color": "rgb(102, 255, 51)", "name": "1.5", "shape": "circle"}, "2.0": {"type": "gene", "color": "rgb(51, 204, 51)", "name": "2.0", "shape": "circle"}, "-2.0": {"type": "gene", "color": "rgb(255, 0, 0)", "name": "-2.0", "shape": "circle"}},
+                      "nodeGroups": {"0.5": {"type": "gene", "color": "rgb(204, 255, 51)", "name": "0.5", "shape": "circle"}, "patient_group": {"type": "patient", "color": "red", "name": "patient group", "shape": "circle"}, "2.0": {"type": "gene", "color": "rgb(51, 204, 51)", "name": "2.0", "shape": "circle"}, "-2.0": {"type": "gene", "color": "rgb(255, 0, 0)", "name": "-2.0", "shape": "circle"}},
                       "edgeGroups": {"custom": {"color": "black", "name": "Custom Group"}}, 
-                      "identifier": "ensg",
+                      "identifier": "symbol",
                       "legendUrl": "https://exbio.wzw.tum.de/covex/assets/leg1.png"
                     }'
                     network='{
-                      "nodes": [{"id": "ENSG00000171862", "group": "0.5"}, {"label": "ENSG00000284792", "id": "ENSG00000284792", "group": 0.5}],
+                      "nodes": [{"id": "TP53", "group": "0.5"}, {"id": "C5", "group": "0.5"}, {"id": "Patient", "group": "patient_group"}, {"label": "PTEN", "id": "PTEN", "group": 0.5}],
                       "edges": []
                     }'
                     style="height: 100%; width: 100vw; display: block;"

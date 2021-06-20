@@ -34,7 +34,7 @@ export class OmnipathControllerService {
         // entry 1 is always source uniprot ID, entry 2 always target uniprot ID
         source =  lineValues[0];
         target = lineValues[1];
-      } else if (identifier === 'hugo') {
+      } else if (identifier === 'symbol') {
         // entry 3 is always source name, entry 4 always target name
         source =  lineValues[2];
         target = lineValues[3];

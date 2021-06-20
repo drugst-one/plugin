@@ -33,6 +33,7 @@ import {NetworkSettings} from '../../network-settings';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
 import { IConfig } from 'src/app/config';
 import { config } from 'rxjs';
+import { wrapReference } from '@angular/compiler/src/render3/util';
 
 declare var vis: any;
 
@@ -387,6 +388,26 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     }
   }
 
+  public inferNodeLabel(config: IConfig, wrapper: Wrapper): string {
+    if (wrapper.data.label) {
+      return wrapper.data.label;
+    }
+    const identifier = config.identifier;
+    if (identifier === 'uniprot'){
+      return wrapper.data.uniprotAc;
+    } else if (identifier === 'symbol') {
+      return wrapper.data.symbol;
+    } else if (identifier === 'ensg') {
+      // heuristc to find most important ensg is to look for smallest id
+      // parse ensg numbers to integers
+      const ensg_numbers = wrapper.data.ensg.map(x => parseInt(x));
+      // get index of smalles number
+      const i = ensg_numbers.reduce((iMin, x, i, arr) => x < arr[iMin] ? i : iMin, 0);
+      // return ensg-ID
+      return wrapper.data.ensg[i];
+    }
+  }
+
 
   /**
    * Maps analysis result returned from database to valid Vis.js network input
@@ -411,6 +432,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     const scores = attributes.scores || {};
     const details = attributes.details || {};
     const wrappers: { [key: string]: Wrapper } = {};
+    
     for (const node of network.nodes) {
       // backend converts object keys to PascalCase: p_123 --> p123
       const nodeObjectKey = node.split('_').join('');
@@ -438,6 +460,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     };
   }
 
+  /**
+   * maps node object returned from backend to frontend node, i.e. input to vis.js
+   * @param config 
+   * @param wrapper 
+   * @param isSeed 
+   * @param score 
+   * @returns 
+   */
   private mapNode(config: IConfig, wrapper: Wrapper, isSeed?: boolean, score?: number): any {
     // const node = NetworkSettings.getNodeStyle(nodeType, isSeed, this.analysis.inSelection(wrapper));
     let group = this.inferNodeGroup(wrapper);
@@ -446,7 +476,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     }
     const node = JSON.parse(JSON.stringify(config.nodeGroups[group]));
     node.id = wrapper.id;
-    node.label = wrapper.data.symbol;
+    node.label = this.inferNodeLabel(config, wrapper);
     node.nodeType = group;
     node.isSeed = isSeed;
     node.wrapper = wrapper;

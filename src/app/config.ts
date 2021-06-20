@@ -19,7 +19,7 @@ export interface EdgeGroup {
   color: string;
 }
 
-export type Identifier = 'hugo'|'uniprot'|'ensg';
+export type Identifier = 'symbol'|'uniprot'|'ensg';
 export type InteractionDrugProteinDB = 'DrugBank'|'Chembl'|'DGIdb';
 export type InteractionProteinProteinDB = 'STRING'|'BioGRID'|'APID';
 
@@ -70,7 +70,7 @@ export const defaultConfig: IConfig = {
   showTasks: true,
   showFooter: true,
   showLegend: true,
-  identifier: 'hugo',
+  identifier: 'symbol',
   interactionDrugProtein: 'DrugBank',
   interactionProteinProtein: 'STRING',
   nodeGroups: {

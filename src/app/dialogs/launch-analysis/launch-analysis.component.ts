@@ -102,8 +102,14 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   }
 
   public async startTask() {
+    // filter out all seed nodes that do not have a netex_Id, hence do not 
+    // exist in the backend
+    const seeds = this.analysis.getSelection().map((item) => item.data.netexId)
+    const seedsFiltered = seeds.filter(function (el) {
+      return el != null;
+    });
     const parameters: any = {
-      seeds: this.analysis.getSelection().map((item) => item.data.netexId),
+      seeds: seedsFiltered,
       config: this.config,
       input_network: this.inputNetwork
     };
@@ -117,7 +123,6 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     this.inputNetwork.nodes.forEach(node => {
       delete node.interactions
     });
-    console.log(this.inputNetwork)
 
     if (this.algorithm === 'trustrank') {
       parameters.damping_factor = this.trustrankDampingFactor;
@@ -170,7 +175,9 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       }
       parameters.hub_penalty = this.multisteinerHubPenalty;
     }
+    console.log('parameters')
 
+    console.log(parameters)
     await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
   }
 

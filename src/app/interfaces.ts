@@ -1,7 +1,7 @@
 import {AlgorithmType, QuickAlgorithmType} from './services/analysis/analysis.service';
 
 export interface Node {
-  name: string;
+  label: string;
   symbol: string;
   id: string;
   netexId?: string;
@@ -14,7 +14,6 @@ export interface Node {
   x?: number;
   y?: number;
   expressionLevel?: number;
-  label?: string;
 }
 
 export interface Tissue {
@@ -121,6 +120,8 @@ export function getWrapperFromCustom(gene: Node): Wrapper {
   /**
    * Constructs wrapper interface for gene
    */
+  // if gene.label is undefined, set it to id
+  gene.label = gene.label ? gene.label : gene.id
   return {
     id: getNodeId(gene),
     nodeId: getNodeId(gene),
@@ -163,7 +164,7 @@ export interface Wrapper {
   type: WrapperType;
   data: {
     id: string;
-    name: string;
+    label: string;
     symbol?: string;
     netexId?: string;
     ensg?: Array<string>;
@@ -172,7 +173,6 @@ export interface Wrapper {
     interactions?: any;
     group?: string;
     uniprotAc?: string;
-    label?: string;
     expressionLevel?: number;
     x?: number;
     y?: number;
@@ -186,7 +186,7 @@ export interface Wrapper {
 
 export interface Drug {
   id: string;
-  name: string;
+  label: string;
   status: 'approved' | 'investigational';
   inTrial: boolean;
   inLiterature: boolean;
