@@ -53,6 +53,9 @@ export class ProteinNetwork {
     }
     let node = JSON.parse(JSON.stringify(config.nodeGroups[group]));
 
+    // remove group name
+    delete node.name
+
     // node.name is actually group name since it comes from the group configuration
     // this property is already stored in the wrapper object
     // instead, node.name should reflect the actual node name
@@ -64,22 +67,12 @@ export class ProteinNetwork {
     }
 
     // label is only used for network visualization
-    let nodeLabel = customNode.name;
-    if (customNode.name.length === 0) {
-      nodeLabel = customNode.userId;
-    }
+    node.label = customNode.label ? customNode.label : customNode.id;
 
     if (node.image) {
       node.shape = 'image';
     }
-    node.label = nodeLabel;
-    // node.id = customNode.id;
-    // node.x = customNode.x;
-    // node.y = customNode.y;
-    // node.uniprotAc = customNode.uniprotAc;
-    // node.netexId = customNode.netexId;
-    // node.ensg = customNode.ensg;
-    // console.log(node)
+    
     return node;
   }
 
