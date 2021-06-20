@@ -51,7 +51,17 @@ export class ProteinNetwork {
     if (typeof group === 'undefined' || typeof config.nodeGroups[group] === 'undefined') {
       group = 'default';
     }
-    const node = JSON.parse(JSON.stringify(config.nodeGroups[group]));
+    let node = JSON.parse(JSON.stringify(config.nodeGroups[group]));
+
+    // node.name is actually group name since it comes from the group configuration
+    // this property is already stored in the wrapper object
+    // instead, node.name should reflect the actual node name
+    // "node.name = customNode.name";
+    // update the node with custom node properties, including values fetched from backend
+    node = {
+      ... node,
+      ... customNode
+    }
 
     // label is only used for network visualization
     let nodeLabel = customNode.name;
@@ -59,20 +69,16 @@ export class ProteinNetwork {
       nodeLabel = customNode.userId;
     }
 
-    // node.name is actually group name since it comes from the group configuration
-    // this property is already stored in the wrapper object
-    // instead, node.name should reflect the actual node name
-    node.name = customNode.name;
-
     if (node.image) {
       node.shape = 'image';
     }
     node.label = nodeLabel;
-    node.id = customNode.id;
-    node.x = customNode.x;
-    node.y = customNode.y;
-    node.uniprotAc = customNode.uniprotAc;
-    node.netexId = customNode.netexId;
+    // node.id = customNode.id;
+    // node.x = customNode.x;
+    // node.y = customNode.y;
+    // node.uniprotAc = customNode.uniprotAc;
+    // node.netexId = customNode.netexId;
+    // node.ensg = customNode.ensg;
     // console.log(node)
     return node;
   }

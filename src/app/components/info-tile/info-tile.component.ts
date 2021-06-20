@@ -18,6 +18,10 @@ export class InfoTileComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  public print(x) {
+    console.log(x)
+  }
+
   public beautify(url: string): string {
     if (url.startsWith('https://')) {
       url = url.substr('https://'.length);

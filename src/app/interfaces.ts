@@ -2,9 +2,11 @@ import {AlgorithmType, QuickAlgorithmType} from './services/analysis/analysis.se
 
 export interface Node {
   name: string;
+  symbol: string;
   id: string;
   netexId?: string;
   uniprotAc?: string;
+  ensg?: Array<string>;
   group?: string;
   color?: string;
   shape?: string;
@@ -115,6 +117,17 @@ export function getId(gene: Node) {
   return `${gene.id}`;
 }
 
+export function getWrapperFromCustom(gene: Node): Wrapper {
+  /**
+   * Constructs wrapper interface for gene
+   */
+  return {
+    id: getNodeId(gene),
+    nodeId: getNodeId(gene),
+    type: 'custom',
+    data: gene,
+  };
+}
 
 export function getWrapperFromNode(gene: Node): Wrapper {
   /**
@@ -138,7 +151,10 @@ export function getWrapperFromDrug(drug: Drug): Wrapper {
   };
 }
 
-export type WrapperType = 'protein' | 'drug';
+// protein = node that exists as protein in backend
+// drug = drug from backend, found in analysis
+// custom = custom node from user that could not be mapped to protein
+export type WrapperType = 'protein' | 'drug' | 'custom';
 export type EdgeType = 'protein-protein' | 'protein-drug';
 
 export interface Wrapper {
@@ -148,7 +164,9 @@ export interface Wrapper {
   data: {
     id: string;
     name: string;
+    symbol?: string;
     netexId?: string;
+    ensg?: Array<string>;
     shape?: string;
     color?: string;
     interactions?: any;

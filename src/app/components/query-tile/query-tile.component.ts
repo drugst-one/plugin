@@ -15,7 +15,7 @@ export class QueryTileComponent {
   querySearch(term: string, item: Wrapper) {
     term = term.toLowerCase();
     const data = item.data as Node;
-    return data.name.toLowerCase().indexOf(term) > -1 || item.type.toLowerCase().indexOf(term) > -1;
+    return data.symbol.toLowerCase().indexOf(term) > -1 || item.type.toLowerCase().indexOf(term) > -1;
   }
 
   select(item) {

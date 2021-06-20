@@ -20,6 +20,7 @@ import {
   WrapperType,
   getWrapperFromNode,
   getWrapperFromDrug,
+  getWrapperFromCustom,
   getNodeIdsFromPDI,
   getNodeIdsFromPPI,
   getProteinNodeId, 
@@ -386,6 +387,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     }
   }
 
+
+  /**
+   * Maps analysis result returned from database to valid Vis.js network input
+   * 
+   * @param result 
+   * @returns 
+   */
   public createNetwork(result: any): { edges: any[], nodes: any[] } {
     const config = result.parameters.config;
 
@@ -405,12 +413,19 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     const wrappers: { [key: string]: Wrapper } = {};
     for (const node of network.nodes) {
       // backend converts object keys to PascalCase: p_123 --> p123
-      const nodeObjectKey = node.split('_').join('')
+      const nodeObjectKey = node.split('_').join('');
+      console.log(nodeObjectKey)
       if (nodeTypes[nodeObjectKey] === 'protein') {
+        // node is protein from database, has been mapped on init to backend protein from backend
+        // or was found during analysis
         this.proteins.push(details[nodeObjectKey]);
         wrappers[node] = getWrapperFromNode(details[nodeObjectKey]);
       } else if (nodeTypes[nodeObjectKey] === 'drug') {
+        // node is drug, was found during analysis
         wrappers[node] = getWrapperFromDrug(details[nodeObjectKey]);
+      } else {
+        // node is custom input from user, could not be mapped to backend protein
+        wrappers[node] = getWrapperFromCustom(details[nodeObjectKey]);
       }
       nodes.push(this.mapNode(config, wrappers[node], isSeed[nodeObjectKey], scores[nodeObjectKey]));
     }
@@ -425,15 +440,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
   private mapNode(config: IConfig, wrapper: Wrapper, isSeed?: boolean, score?: number): any {
     // const node = NetworkSettings.getNodeStyle(nodeType, isSeed, this.analysis.inSelection(wrapper));
-    console.log(wrapper)
     let group = this.inferNodeGroup(wrapper);
     if (typeof group === 'undefined' || typeof config.nodeGroups[group] === 'undefined') {
       group = 'default';
     }
-    console.log(group)
     const node = JSON.parse(JSON.stringify(config.nodeGroups[group]));
     node.id = wrapper.id;
-    node.label = wrapper.data.name;
+    node.label = wrapper.data.symbol;
     node.nodeType = group;
     node.isSeed = isSeed;
     node.wrapper = wrapper;

@@ -4,6 +4,10 @@
       <b><span>Name:</span></b>
       <span class="is-capitalized"> {{ wrapper.data.name }}</span>
     </p>
+    <p *ngIf="wrapper.data.symbol" [ngClass]="{'text-normal':smallStyle}">
+      <b><span>Symbol:</span></b>
+      <span class="is-capitalized"> {{ wrapper.data.symbol }}</span>
+    </p>
     <p *ngIf="wrapper.type" [ngClass]="{'text-normal':smallStyle}">
       <b><span>Type:</span></b>
       <span class="is-capitalized"> {{ wrapper.type }}</span>
@@ -22,6 +26,14 @@
       <b><span>Access:</span></b>
       <a href="https://www.uniprot.org/uniprot/{{ wrapper.data.uniprotAc }}" target="_blank">
         <span class="is-capitalized"> {{ wrapper.data.uniprotAc }}</span>
+      </a>
+    </p>
+    <p *ngIf="wrapper.data.ensg" [ngClass]="{'text-normal':smallStyle}">
+      <b><span>Ensembl:</span></b>
+      <a 
+        *ngFor="let ensg of wrapper.data.ensg"
+        href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={{ ensg }}" target="_blank">
+        <span class="is-capitalized"> {{ ensg }}</span>
       </a>
     </p>
 

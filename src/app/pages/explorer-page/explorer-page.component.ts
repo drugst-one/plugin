@@ -74,7 +74,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           document.getElementById('main-column').classList.add('rightgone');
         }
       }
-
+      console.log(key)
       this.myConfig[key] = configObj[key];
     }
   }
@@ -193,7 +193,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   async ngAfterViewInit() {
-    this.createNetwork();
+    // TODO find out if this had a function? we were loading the network twice
+    // this.createNetwork();
 
     if (this.onload) {
       // tslint:disable-next-line:no-eval
@@ -211,6 +212,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   private async getNetwork() {
+
     const network = JSON.parse(this.networkJSON);
 
     // map data to nodes in backend
