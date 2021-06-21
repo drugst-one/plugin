@@ -33,6 +33,13 @@ npm run build:netex-dev
 cd ../
 cp frontend/drugsTone-build/* drugstone-releases/dev/
 
+echo "Building remote..."
+cd frontend || exit
+npm run build:netex-remote
+cd ../
+cp frontend/drugsTone-build/* drugstone-releases/remote/
+
+
 cd drugstone-releases || echo "Error!" exit
 git commit -am "$VERSION commit: $MESSAGE"
 git push

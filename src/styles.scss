@@ -11,11 +11,13 @@ $success: #3070B3;
 $danger: #EF476F;
 $link: $primary;
 $info: $primary;
+@import "./theme.scss";
 @import "~bulma/bulma.sass";
 @import '~bulma-tooltip';
 @import "~primeng/resources/primeng.min.css";
 @import "~primeicons/primeicons.css";
 @import "~animate.css/animate.min";
+
 
 @import "variables";
 
