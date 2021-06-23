@@ -190,7 +190,7 @@
           </span>
             <span *ngIf="!selectedWrapper">No item selected</span>
             <span *ngIf="selectedWrapper">
-              <span>selectedWrapper.data.type</span>
+              <span>{{ selectedWrapper.data.type }}</span>
             </span>
           </p>
           <a (click)="collapseDetails = !collapseDetails" data-action="collapse"
@@ -418,7 +418,7 @@
               </thead>
               <tbody>
               <tr *ngFor="let p of analysis.getSelection()">
-                <td><p class="is-capitalized">{{p.type}}</p></td>
+                <td><p class="is-capitalized">{{p.data.type}}</p></td>
                 <td><p class="is-capitalized">{{p.data.label}}</p></td>
                 <td>
                   <button (click)="analysis.removeItems([p])" class="button is-small is-danger is-outlined has-tooltip"
