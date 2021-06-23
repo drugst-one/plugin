@@ -128,7 +128,6 @@ export function getWrapperFromCustom(gene: Node): Wrapper {
   return {
     id: getNodeId(gene),
     nodeId: getNodeId(gene),
-    type: 'custom',
     data: gene,
   };
 }
@@ -140,7 +139,6 @@ export function getWrapperFromNode(gene: Node): Wrapper {
   return {
     id: getNodeId(gene),
     nodeId: getNodeId(gene),
-    type: 'protein',
     data: gene,
   };
 }
@@ -150,21 +148,15 @@ export function getWrapperFromDrug(drug: Drug): Wrapper {
   return {
     id: getDrugBackendId(drug),
     nodeId: getDrugNodeId(drug),
-    type: 'drug',
     data: drug,
   };
 }
 
-// protein = node that exists as protein in backend
-// drug = drug from backend, found in analysis
-// custom = custom node from user that could not be mapped to protein
-export type WrapperType = 'protein' | 'drug' | 'custom';
 export type EdgeType = 'protein-protein' | 'protein-drug';
 
 export interface Wrapper {
   id: string;
   nodeId: string;
-  type: WrapperType;
   data: {
     id: string;
     label: string;

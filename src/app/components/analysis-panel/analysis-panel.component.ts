@@ -17,7 +17,6 @@ import {
   Task,
   Drug,
   Wrapper,
-  WrapperType,
   getWrapperFromNode,
   getWrapperFromDrug,
   getWrapperFromCustom,
@@ -32,8 +31,6 @@ import {toast} from 'bulma-toast';
 import {NetworkSettings} from '../../network-settings';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
 import { IConfig } from 'src/app/config';
-import { config } from 'rxjs';
-import { wrapReference } from '@angular/compiler/src/render3/util';
 
 declare var vis: any;
 
@@ -242,10 +239,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
               const pos = this.network.getPositions([item.id]);
               node.x = pos[item.id].x;
               node.y = pos[item.id].y;
-              Object.assign(node, NetworkSettings.getNodeStyle(
-                node.wrapper.type,
-                node.isSeed,
-                selected));
+              // Object.assign(node, NetworkSettings.getNodeStyle(
+              //   node.wrapper.type,
+              //   node.isSeed,
+              //   selected));
               updatedNodes.push(node);
             }
             this.nodeData.nodes.update(updatedNodes);
@@ -271,17 +268,17 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
               const nodeSelected = this.analysis.idInSelection(node.id);
               let drugType;
               let drugInTrial;
-              if (node.wrapper.type === 'drug') {
+              if (node.wrapper.data.netexId && node.wrapper.data.netexId.startswith('d')) {
                 drugType = node.wrapper.data.status;
                 drugInTrial = node.wrapper.data.inTrial;
               }
-              Object.assign(node, NetworkSettings.getNodeStyle(
-                node.wrapper.type,
-                node.isSeed,
-                nodeSelected,
-                drugType,
-                drugInTrial,
-                node.gradient));
+              // Object.assign(node, NetworkSettings.getNodeStyle(
+              //   node.wrapper.type,
+              //   node.isSeed,
+              //   nodeSelected,
+              //   drugType,
+              //   drugInTrial,
+              //   node.gradient));
               updatedNodes.push(node);
             });
             this.nodeData.nodes.update(updatedNodes);
@@ -468,20 +465,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
    * @returns 
    */
   private mapNode(config: IConfig, wrapper: Wrapper, isSeed?: boolean, score?: number): any {
-    // const node = NetworkSettings.getNodeStyle(nodeType, isSeed, this.analysis.inSelection(wrapper));
-    let group = this.inferNodeGroup(wrapper);
-    if (typeof group === 'undefined' || typeof config.nodeGroups[group] === 'undefined') {
-      group = 'default';
-    }
-    console.log("node group")
-    console.log(group)
-    console.log(config.nodeGroups)
-    console.log(config.nodeGroups[group]);
 
-    const node = JSON.parse(JSON.stringify(config.nodeGroups[group]));
+    console.log("node group")
+    console.log(config.nodeGroups)
+    console.log(config.nodeGroups[wrapper.data.group]);
+
+    const node = JSON.parse(JSON.stringify(config.nodeGroups[wrapper.data.group]));
     node.id = wrapper.id;
     node.label = this.inferNodeLabel(config, wrapper);
-    node.nodeType = group;
     node.isSeed = isSeed;
     node.wrapper = wrapper;
     return node;

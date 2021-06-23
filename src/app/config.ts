@@ -2,7 +2,6 @@ export interface NodeGroup {
   groupName: string;
   color: string;
   shape: 'circle' | 'triangle' | 'star' | 'square' | 'image';
-  type?: string;
   image?: string;
   detailShowLabel?: boolean;
 }
@@ -11,7 +10,7 @@ export interface EdgeGroup {
   groupName: string;
   color: string;
   // see https://visjs.github.io/vis-network/docs/network/edges.html
-  dashes?: false | Array<number>; 
+  dashed?: false | Array<number>; 
 }
 
 export type Identifier = 'symbol'|'uniprot'|'ensg';
@@ -78,20 +77,17 @@ export const defaultConfig: IConfig = {
       groupName: 'Default Node Group',
       color: 'yellow',
       shape: 'triangle',
-      type: 'protein',
       detailShowLabel: false,
     },
     default_protein: {
       groupName: 'Resulting Proteins',
       color: 'red',
       shape: 'circle',
-      type: 'protein',
     },
     default_drug: {
       groupName: 'Possible Drugs',
       color: 'green',
       shape: 'star',
-      type: 'drug',
     }
   },
   edgeGroups: {
@@ -99,7 +95,7 @@ export const defaultConfig: IConfig = {
       // this default group is used for default edge group values
       groupName: 'Default Edge Group',
       color: 'black',
-      dashes: false
+      dashed: false
     }
   },
 };

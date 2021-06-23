@@ -1,4 +1,3 @@
-import {WrapperType} from './interfaces';
 import {getGradientColor} from './utils';
 
 export class NetworkSettings {
@@ -77,25 +76,25 @@ export class NetworkSettings {
   private static drugNotInTrialShape = 'box';
   private static drugInTrialShape = 'triangle';
 
-  static getNodeSize(wrapperType: WrapperType) {
-    if (wrapperType === 'protein') {
-      return this.hostSize;
-    } else if (wrapperType === 'drug') {
-      return this.drugSize;
-    }
-  }
+  // static getNodeSize(wrapperType: WrapperType) {
+  //   if (wrapperType === 'protein') {
+  //     return this.hostSize;
+  //   } else if (wrapperType === 'drug') {
+  //     return this.drugSize;
+  //   }
+  // }
 
-  static getNodeShape(wrapperType: WrapperType, drugInTrial?: boolean) {
-    if (wrapperType === 'protein') {
-      return this.hostShape;
-    } else if (wrapperType === 'drug') {
-      if (drugInTrial) {
-        return this.drugInTrialShape;
-      } else {
-        return this.drugNotInTrialShape;
-      }
-    }
-  }
+  // static getNodeShape(wrapperType: WrapperType, drugInTrial?: boolean) {
+  //   if (wrapperType === 'protein') {
+  //     return this.hostShape;
+  //   } else if (wrapperType === 'drug') {
+  //     if (drugInTrial) {
+  //       return this.drugInTrialShape;
+  //     } else {
+  //       return this.drugNotInTrialShape;
+  //     }
+  //   }
+  // }
 
   static getOptions(network: 'main' | 'analysis' | 'analysis-big') {
     if (network === 'main') {
@@ -149,88 +148,88 @@ export class NetworkSettings {
     }
   }
 
-  static getFont(wrapperType: WrapperType, drugInTrial?: boolean) {
-    if (wrapperType === 'protein') {
-      return {color: this.hostFontColor, size: this.hostFontSize};
-    } else if (wrapperType === 'drug') {
-      if (!drugInTrial) {
-        return {color: this.drugFontColor, size: this.drugFontSize};
-      } else {
-        return {color: this.drugInTrialFontColor, size: this.drugFontSize};
-      }
-    }
-  }
+  // static getFont(wrapperType: WrapperType, drugInTrial?: boolean) {
+  //   if (wrapperType === 'protein') {
+  //     return {color: this.hostFontColor, size: this.hostFontSize};
+  //   } else if (wrapperType === 'drug') {
+  //     if (!drugInTrial) {
+  //       return {color: this.drugFontColor, size: this.drugFontSize};
+  //     } else {
+  //       return {color: this.drugInTrialFontColor, size: this.drugFontSize};
+  //     }
+  //   }
+  // }
 
-  static getNodeStyle(nodeType: WrapperType,
-                      isSeed: boolean,
-                      isSelected: boolean,
-                      drugType?: string,
-                      drugInTrial?: boolean,
-                      gradient?: number): any {
-    if (!gradient) {
-      gradient = 1.0;
-    }
-    let nodeColor;
-    let nodeShape;
-    let nodeSize;
-    let nodeFont;
-    const nodeShadow = true;
-    nodeShape = NetworkSettings.getNodeShape(nodeType);
-    nodeSize = NetworkSettings.getNodeSize(nodeType);
-    nodeFont = NetworkSettings.getFont(nodeType);
-    if (nodeType === 'protein') {
-      nodeColor = NetworkSettings.getColor(nodeType);
-      nodeFont = NetworkSettings.getFont('protein');
-      if (!isSeed) {
-        nodeColor = NetworkSettings.getColor('nonSeedHost');
-      }
-    } else if (nodeType === 'drug') {
-      if (drugType === 'approved') {
-        nodeColor = NetworkSettings.getColor('approvedDrug');
-      } else {
-        nodeColor = NetworkSettings.getColor('unapprovedDrug');
-      }
-      if (drugInTrial) {
-        nodeShape = NetworkSettings.getNodeShape('drug', true);
-        nodeFont = NetworkSettings.getFont('drug', true);
-      } else {
-        nodeShape = NetworkSettings.getNodeShape('drug', false);
-      }
-    }
+  // static getNodeStyle(nodeType: WrapperType,
+  //                     isSeed: boolean,
+  //                     isSelected: boolean,
+  //                     drugType?: string,
+  //                     drugInTrial?: boolean,
+  //                     gradient?: number): any {
+  //   if (!gradient) {
+  //     gradient = 1.0;
+  //   }
+  //   let nodeColor;
+  //   let nodeShape;
+  //   let nodeSize;
+  //   let nodeFont;
+  //   const nodeShadow = true;
+  //   nodeShape = NetworkSettings.getNodeShape(nodeType);
+  //   nodeSize = NetworkSettings.getNodeSize(nodeType);
+  //   nodeFont = NetworkSettings.getFont(nodeType);
+  //   if (nodeType === 'protein') {
+  //     nodeColor = NetworkSettings.getColor(nodeType);
+  //     nodeFont = NetworkSettings.getFont('protein');
+  //     if (!isSeed) {
+  //       nodeColor = NetworkSettings.getColor('nonSeedHost');
+  //     }
+  //   } else if (nodeType === 'drug') {
+  //     if (drugType === 'approved') {
+  //       nodeColor = NetworkSettings.getColor('approvedDrug');
+  //     } else {
+  //       nodeColor = NetworkSettings.getColor('unapprovedDrug');
+  //     }
+  //     if (drugInTrial) {
+  //       nodeShape = NetworkSettings.getNodeShape('drug', true);
+  //       nodeFont = NetworkSettings.getFont('drug', true);
+  //     } else {
+  //       nodeShape = NetworkSettings.getNodeShape('drug', false);
+  //     }
+  //   }
 
-    if (gradient === -1) {
-      nodeColor = '#A0A0A0';
-    } else {
-      nodeColor = getGradientColor('#FFFFFF', nodeColor, gradient);
-    }
+  //   if (gradient === -1) {
+  //     nodeColor = '#A0A0A0';
+  //   } else {
+  //     nodeColor = getGradientColor('#FFFFFF', nodeColor, gradient);
+  //   }
 
-    const node: any = {
-      size: nodeSize,
-      shape: nodeShape,
-      font: nodeFont,
-      shadow: nodeShadow,
-    };
+  //   const node: any = {
+  //     size: nodeSize,
+  //     shape: nodeShape,
+  //     font: nodeFont,
+  //     shadow: nodeShadow,
+  //   };
 
-    if (isSelected) {
-      node.color = {
-        background: nodeColor,
-        border: this.selectedBorderColor,
-        highlight: {
-          border: this.selectBorderHighlightColor,
-          background: nodeColor,
-        },
-      };
+  //   if (isSelected) {
+  //     node.color = {
+  //       background: nodeColor,
+  //       border: this.selectedBorderColor,
+  //       highlight: {
+  //         border: this.selectBorderHighlightColor,
+  //         background: nodeColor,
+  //       },
+  //     };
 
-      node.borderWidth = this.selectedBorderWidth;
-      node.borderWidthSelected = this.selectedBorderWidthSelected;
-    } else {
-      node.color = nodeColor;
+  //     node.borderWidth = this.selectedBorderWidth;
+  //     node.borderWidthSelected = this.selectedBorderWidthSelected;
+  //   } else {
+  //     node.color = nodeColor;
 
-      node.borderWidth = this.borderWidth;
-      node.borderWidthSelected = this.borderWidthSelected;
-    }
+  //     node.borderWidth = this.borderWidth;
+  //     node.borderWidthSelected = this.borderWidthSelected;
+  //   }
 
-    return node;
-  }
+  //   return node;
+  // }
 }
 

@@ -8,10 +8,6 @@
       <b><span>Symbol:</span></b>
       <span class="is-capitalized"> {{ wrapper.data.symbol }}</span>
     </p>
-    <p *ngIf="wrapper.type" [ngClass]="{'text-normal':smallStyle}">
-      <b><span>Type:</span></b>
-      <span class="is-capitalized"> {{ wrapper.type }}</span>
-    </p>
     <p *ngIf="wrapper.data.drugId" [ngClass]="{'text-normal':smallStyle}">
       <b><span>DrugBank:</span></b>
       <a href="https://go.drugbank.com/drugs/{{ wrapper.data.drugId }}" target="_blank">

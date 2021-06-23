@@ -102,8 +102,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   }
 
   public async startTask() {
-    // filter out all seed nodes that do not have a netex_Id, hence do not 
-    // exist in the backend
+    // all nodes in selection have netexId, hence exist in the backend
     const seeds = this.analysis.getSelection().map((item) => item.data.netexId)
     const seedsFiltered = seeds.filter(function (el) {
       return el != null;

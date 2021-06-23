@@ -2,9 +2,9 @@
   <ng-select [items]="queryItems" bindLabel="id" bindValue="data" [virtualScroll]="true" class="custom"
              placeholder="Search..." [hideSelected]="true" [searchFn]="querySearch" (change)="select($event)" data-tooltip="Find proteins in the network.">
     <ng-template ng-option-tmp let-item="item">
-      <b *ngIf="item.type == 'protein'"> {{item.data.name}}</b>
-      <span><small *ngIf="item.type === 'protein'">Host Protein</small> | </span>
-      <span *ngIf="item.type == 'protein'"><small>AC: <b>{{item.data.uniprotAc}}</b></small> </span>
+      <b *ngIf="item.data.netexId && item.data.netexId.startsWith('p')"> {{item.data.name}}</b>
+      <span><small *ngIf="item.data.netexId && item.data.netexId.startsWith('p')">Protein</small> | </span>
+      <span *ngIf="item.data.netexId && item.data.netexId.startsWith('p')"><small>AC: <b>{{item.data.uniprotAc}}</b></small> </span>
     </ng-template>
   </ng-select>
 </div>

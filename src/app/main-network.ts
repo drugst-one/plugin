@@ -1,5 +1,5 @@
 import {HttpClient} from '@angular/common/http';
-import { IConfig } from './config';
+import { defaultConfig, IConfig } from './config';
 import {NodeInteraction, Node, getProteinNodeId} from './interfaces';
 
 export function getDatasetFilename(dataset: Array<[string, string]>): string {
@@ -41,49 +41,58 @@ export class ProteinNetwork {
   }
 
   /** Maps user input node to network node object
+   * If user input node has no group, fall back to default
+   * If user input node has group that is not defined, throw error
    * 
    * @param customNode 
    * @param config 
    * @returns 
    */
   private mapCustomNode(customNode: any, config: IConfig): Node {
-    
-    if (config.nodeGroups[customNode.group] === undefined) {
-      throw `Node with id ${customNode.id} has undefined node group ${customNode.group}.`
+    let node;
+    if (customNode.group === undefined) {
+      // fallback to default node
+      node = {...defaultConfig.nodeGroups.default};
+    } else {
+      if (config.nodeGroups[customNode.group] === undefined) {
+        throw `Node with id ${customNode.id} has undefined node group ${customNode.group}.`
+      }
+      // copy
+      node = {...config.nodeGroups[customNode.group]};
     }
-
-    let node = JSON.parse(JSON.stringify(config.nodeGroups[customNode.group]));
-
     // update the node with custom node properties, including values fetched from backend
     node = {
       ...node,
       ...customNode
     }
-
     // label is only used for network visualization
     node.label = customNode.label ? customNode.label : customNode.id;
-
     if (node.image) {
       node.shape = 'image';
     }
-    
     return node;
   }
 
   /** Maps user input edge to network edge object
+   * If user input edge has no group, fall back to default
+   * If user input edge has group that is not defined, throw error
    * 
    * @param customEdge 
    * @param config 
    * @returns 
    */
   private mapCustomEdge(customEdge: NodeInteraction, config: IConfig): any {
-
-    if (config.edgeGroups[customEdge.group] === undefined) {
-      throw `Edge "from ${customEdge.from}" - "to ${customEdge.to}" has undefined edge group ${customEdge.group}.`
+    let edge;
+    if (customEdge.group === undefined) {
+      // fallback to default node
+      edge = {...defaultConfig.edgeGroups.default};
+    } else {
+      if (config.edgeGroups[customEdge.group] === undefined) {
+        throw `Edge "from ${customEdge.from}" - "to ${customEdge.to}" has undefined edge group ${customEdge.group}.`
+      }
+      // copy
+      edge = {...config.edgeGroups[customEdge.group]};
     }
-
-    let edge = JSON.parse(JSON.stringify(config.edgeGroups[customEdge.group]));
-
     edge = {
       ...edge,
       ...customEdge

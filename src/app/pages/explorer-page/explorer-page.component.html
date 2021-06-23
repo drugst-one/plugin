@@ -184,14 +184,14 @@
           <p class="card-header-title">
           <span class="icon">
             <i *ngIf="!selectedWrapper" class="fas fa-info" aria-hidden="true"></i>
-            <i *ngIf="selectedWrapper && selectedWrapper.type === 'protein'" class="fas fa-dna" aria-hidden="true"></i>
-            <i *ngIf="selectedWrapper && selectedWrapper.type === 'drug'" class="fas fa-capsules"
-               aria-hidden="true"></i>
+            <!-- <i *ngIf="selectedWrapper && selectedWrapper.data.netexId && selectedWrapper.data.netexId.startsWith('p')" class="fas fa-dna" aria-hidden="true"></i>
+            <i *ngIf="selectedWrapper && selectedWrapper.data.netexId && selectedWrapper.data.netexId.startsWith('d')" class="fas fa-capsules"
+               aria-hidden="true"></i> -->
           </span>
             <span *ngIf="!selectedWrapper">No item selected</span>
-            <span *ngIf="selectedWrapper">
-              <span *ngIf="selectedWrapper.type === 'protein'">Host Protein</span>
-              <span *ngIf="selectedWrapper.type === 'drug'">Drug</span>
+            <span *ngIf="selectedWrapper && selectedWrapper.data.netexId">
+              <!-- <span *ngIf="selectedWrapper.data.type">selectedWrapper.data.type</span> -->
+              <span *ngIf="selectedWrapper.data.netexId.startsWith('d')">Drug</span>
             </span>
           </p>
           <a (click)="collapseDetails = !collapseDetails" data-action="collapse"

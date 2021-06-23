@@ -38,13 +38,16 @@
 
   <network-expander id="netexp1"
                     config='{
-                      "nodeGroups": {"0.5": {"type": "gene", "color": "rgb(204, 255, 51)", "groupName": "0.5", "shape": "circle"}, "patient_group": {"type": "patient", "color": "red", "groupName": "patient group", "shape": "circle"}},
-                      "edgeGroups": {"dashes": {"color": "black", "groupName": "Dashes Group", "dashes": [1, 2]}}, 
+                      "nodeGroups": {"0.5": {"color": "rgb(204, 255, 51)", "groupName": "0.5", "shape": "circle"}, "patient_group": {"detailShowLabel": "true", "color": "red", "groupName": "patient group", "shape": "circle"}},
+                      "edgeGroups": {"dashed": {"color": "black", "groupName": "Dashed Group", "dashed": [1, 2]}, "notdashed": {"color": "black", "groupName": "not Dashed Group"}},
                       "identifier": "symbol"
                     }'
                     network='{
-                      "nodes": [{"id": "TP53", "group": "0.5"}, {"id": "C5", "group": "0.5"}, {"id": "Patient", "group": "patient_group"}, {"label": "PTEN", "id": "PTEN", "group": 0.5}],
-                      "edges": [{"from": "TP53","to": "C5","group": "dashes", "label": "this is a label", "title": "this is a title"}]
+                      "nodes": [{"id": "MYC", "label": "node w/o group"}, {"id": "TP53", "group": "0.5"}, {"id": "C5", "group": "0.5"}, {"id": "Patient", "group": "patient_group"}, {"label": "PTEN", "id": "PTEN", "group": 0.5}],
+                      "edges": [
+                      {"from": "TP53","to": "C5","group": "dashed", "label": "this is a label", "title": "this is a title"},
+                      {"from": "Patient No. 5","to": "C5","label": "w/o group"}
+                      ]
                     }'
                     style="height: 100%; width: 100vw; display: block;"
                     ></network-expander>

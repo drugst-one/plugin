@@ -39,7 +39,8 @@
     <ng-container *ngIf="this.config.showLegendEdges">
       <tr *ngFor="let edgeGroup of this.config.edgeGroups | keyvalue" class="list-item">
         <td>
-          <hr class="edge" [style.background-color]=edgeGroup.value.color>
+          <hr *ngIf="!edgeGroup.value.dashed" class="edge" [style.background-color]=edgeGroup.value.color>
+          <hr *ngIf="edgeGroup.value.dashed" class="edge dashed" [style.color]=edgeGroup.value.color>
         </td>
         <td>&nbsp;{{ edgeGroup.value.groupName }}</td>
       </tr>

@@ -392,9 +392,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
     // make sure all keys are set
     Object.entries(edgeGroups).forEach(([key, value]) => {
-      if (!('dashes' in value)) {
-        // use dashes default value if not set
-        value['dashes'] = defaultConfig.edgeGroups.default.dashes;
+      if (!('dashed' in value)) {
+        // use dashed default value if not set
+        value['dashed'] = defaultConfig.edgeGroups.default.dashed;
       }
     })
     // override default node groups
@@ -424,8 +424,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   gProfilerLink(): string {
+    // nodes in selection have netexId
     const queryString = this.analysis.getSelection()
-      .filter(wrapper => wrapper.type === 'protein')
+      .filter(wrapper => wrapper.data.netexId.startsWith('p'))
       .map(wrapper => wrapper.data.uniprotAc)
       .join('%0A');
     return 'http://biit.cs.ut.ee/gprofiler/gost?' +
@@ -457,14 +458,14 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         const pos = this.networkInternal.getPositions([item.nodeId]);
         node.x = pos[item.nodeId].x;
         node.y = pos[item.nodeId].y;
-        Object.assign(node,
-          NetworkSettings.getNodeStyle(
-            node.wrapper.type,
-            node.isSeed,
-            this.analysis.inSelection(item),
-            undefined,
-            undefined,
-            1.0));
+        // Object.assign(node,
+        //   NetworkSettings.getNodeStyle(
+        //     node.wrapper.type,
+        //     node.isSeed,
+        //     this.analysis.inSelection(item),
+        //     undefined,
+        //     undefined,
+        //     1.0));
         node.wrapper = item;
         node.gradient = 1.0;
         // protein.expressionLevel = undefined;
