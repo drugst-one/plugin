@@ -40,7 +40,7 @@
   </div>
 
   <app-toggle 
-  *ngIf="wrapper.type !== 'drug'"
+  *ngIf="wrapper.data.netexId && wrapper.data.netexId.startsWith('p')"
   [value]="analysis.inSelection(wrapper)" [smallStyle]="smallStyle"
               (valueChange)="$event ? analysis.addItems([wrapper]) : analysis.removeItems([wrapper])" textOn="Selected"
               textOff="Deselected" tooltipOn="Add protein to selection." tooltipOff="Remove protein from selection."></app-toggle>

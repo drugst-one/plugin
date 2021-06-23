@@ -26,11 +26,13 @@ export interface NodeInteraction {
   from: string;
   to: string;
   group?: string;
+  label?: string;
 }
 
 export interface NetworkEdge {
   from: string;
   to: string;
+  label: string;
 }
 
 export interface Task {

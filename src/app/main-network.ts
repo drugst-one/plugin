@@ -51,12 +51,13 @@ export class ProteinNetwork {
     if (typeof group === 'undefined' || typeof config.nodeGroups[group] === 'undefined') {
       group = 'default';
     }
+    console.log(config.nodeGroups[group])
     let node = JSON.parse(JSON.stringify(config.nodeGroups[group]));
 
     // update the node with custom node properties, including values fetched from backend
     node = {
-      ... node,
-      ... customNode
+      ...node,
+      ...customNode
     }
 
     // label is only used for network visualization
@@ -80,13 +81,23 @@ export class ProteinNetwork {
     if (typeof group === 'undefined' || typeof config.edgeGroups[group] === 'undefined') {
       group = 'default';
     }
-    const edge = JSON.parse(JSON.stringify(config.edgeGroups[group]));
-    edge.from = customEdge.from;
-    edge.to = customEdge.to;
+    let edge = JSON.parse(JSON.stringify(config.edgeGroups[group]));
+    console.log("edge")
+
+    console.log(edge)
+
+    console.log("customEdge")
+    console.log(customEdge)
+
+
+    edge = {
+      ...edge,
+      ...customEdge
+    }
     return edge;
   }
 
-  public mapDataToNodes(config: IConfig): { nodes: any[], edges: any[]; } {
+  public mapDataToNetworkInput(config: IConfig): { nodes: any[], edges: any[]; } {
     const nodes = [];
     const edges = [];
 

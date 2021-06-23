@@ -273,7 +273,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.proteinData = new ProteinNetwork(this.proteins, this.edges);
     this.proteinData.linkNodes();
 
-    const {nodes, edges} = this.proteinData.mapDataToNodes(this.myConfig);
+    const {nodes, edges} = this.proteinData.mapDataToNetworkInput(this.myConfig);
 
     this.nodeData.nodes = new vis.DataSet(nodes);
     this.nodeData.edges = new vis.DataSet(edges);
@@ -286,6 +286,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         const nodeId = nodeIds[0];
         const node = this.nodeData.nodes.get(nodeId);
         const wrapper = getWrapperFromNode(node);
+        if (wrapper.data.netexId === undefined || !wrapper.data.netexId.startsWith('p')) {
+          // skip if node is not a protein mapped to backend
+          return
+        }
         if (this.analysis.inSelection(node)) {
           this.analysis.removeItems([wrapper]);
         } else {
