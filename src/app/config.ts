@@ -17,6 +17,8 @@ export interface NodeGroup {
 export interface EdgeGroup {
   name: string;
   color: string;
+  // see https://visjs.github.io/vis-network/docs/network/edges.html
+  dashes?: false | Array<number>; 
 }
 
 export type Identifier = 'symbol'|'uniprot'|'ensg';

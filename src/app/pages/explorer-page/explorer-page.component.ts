@@ -51,12 +51,13 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     const configObj = JSON.parse(config);
     for (const key of Object.keys(configObj)) {
-      if (key === 'nodeGroups' || key === 'edgeGroups') {
-        this.myConfig[key] = {...this.myConfig[key], ...configObj[key]};
-        continue;
-      } else if (key === 'interactions') {
+      if (key === 'nodeGroups' ) {
+        this.setConfigNodeGroup(key, configObj[key]);
+      } else if (key === 'edgeGroups') {
+        this.setConfigEdgeGroup(key, configObj[key])
+      }
+      else if (key === 'interactions') {
         this.getInteractions();
-        continue;
       } else if (key === 'showLeftSidebar') {
         if (configObj[key]) {
           // shrink main column
@@ -74,7 +75,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           document.getElementById('main-column').classList.add('rightgone');
         }
       }
-      console.log(key)
       this.myConfig[key] = configObj[key];
     }
   }
@@ -342,10 +342,31 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public setConfigEdgeGroup(key: string, values: EdgeGroup) {
-    // make sure all keys are set
-
+    /**
+   * Function to set the node group attribute in config
+   * Handles setting defaults
+   * @param key 
+   * @param values 
+   */
+  public setConfigNodeGroup(key: string, values: Array<NodeGroup>) {
     this.myConfig[key] = {...this.myConfig[key], ...values};
+  }
+
+  /**
+   * Function to set the edge group attribute in config
+   * Handles setting defaults
+   * @param key 
+   * @param values 
+   */
+  public setConfigEdgeGroup(key: string, edgeGroups: Array<EdgeGroup>) {
+    // make sure all keys are set
+    Object.entries(edgeGroups).forEach(([key, value]) => {
+      if (!('dashes' in value)) {
+        // dashes defaults to 'false' if not set
+        value['dashes'] = false;
+      }
+    })
+    this.myConfig[key] = {...this.myConfig[key], ...edgeGroups};
   }
 
   public toCanvas() {
