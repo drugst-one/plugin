@@ -46,13 +46,13 @@ export class ProteinNetwork {
    * @param config 
    * @returns 
    */
-    private mapCustomNode(customNode: any, config: IConfig): Node {
-    let group = customNode.group;
-    if (typeof group === 'undefined' || typeof config.nodeGroups[group] === 'undefined') {
-      group = 'default';
+  private mapCustomNode(customNode: any, config: IConfig): Node {
+    
+    if (config.nodeGroups[customNode.group] === undefined) {
+      throw `Node with id ${customNode.id} has undefined node group ${customNode.group}.`
     }
-    console.log(config.nodeGroups[group])
-    let node = JSON.parse(JSON.stringify(config.nodeGroups[group]));
+
+    let node = JSON.parse(JSON.stringify(config.nodeGroups[customNode.group]));
 
     // update the node with custom node properties, including values fetched from backend
     node = {
@@ -77,18 +77,12 @@ export class ProteinNetwork {
    * @returns 
    */
   private mapCustomEdge(customEdge: NodeInteraction, config: IConfig): any {
-    let group = customEdge.group;
-    if (typeof group === 'undefined' || typeof config.edgeGroups[group] === 'undefined') {
-      group = 'default';
+
+    if (config.edgeGroups[customEdge.group] === undefined) {
+      throw `Edge "from ${customEdge.from}" - "to ${customEdge.to}" has undefined edge group ${customEdge.group}.`
     }
-    let edge = JSON.parse(JSON.stringify(config.edgeGroups[group]));
-    console.log("edge")
 
-    console.log(edge)
-
-    console.log("customEdge")
-    console.log(customEdge)
-
+    let edge = JSON.parse(JSON.stringify(config.edgeGroups[customEdge.group]));
 
     edge = {
       ...edge,

@@ -384,7 +384,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
    * @param values 
    */
   public setConfigEdgeGroup(key: string, edgeGroups: Array<EdgeGroup>) {
-    if (edgeGroups === undefined || !edgeGroups.length) {
+    if (edgeGroups === undefined || !Object.keys(edgeGroups).length) {
       // if edge groups are not set or empty, use default edge group(s)
       this.myConfig[key] = defaultConfig.edgeGroups;
       // stop if edgeGroups do not contain any information

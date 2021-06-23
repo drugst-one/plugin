@@ -377,6 +377,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
    * For the third case, fall back to a default case which can also be set by user.
    */
   public inferNodeGroup(wrapper: Wrapper): string {
+    console.log(wrapper)
     if (wrapper.data.group !== undefined) {
       return wrapper.data.group
     }
@@ -408,7 +409,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     }
   }
 
-
   /**
    * Maps analysis result returned from database to valid Vis.js network input
    * 
@@ -432,11 +432,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     const scores = attributes.scores || {};
     const details = attributes.details || {};
     const wrappers: { [key: string]: Wrapper } = {};
-    
+
     for (const node of network.nodes) {
       // backend converts object keys to PascalCase: p_123 --> p123
       const nodeObjectKey = node.split('_').join('');
-      console.log(nodeObjectKey)
       if (nodeTypes[nodeObjectKey] === 'protein') {
         // node is protein from database, has been mapped on init to backend protein from backend
         // or was found during analysis
@@ -474,6 +473,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     if (typeof group === 'undefined' || typeof config.nodeGroups[group] === 'undefined') {
       group = 'default';
     }
+    console.log("node group")
+    console.log(group)
+    console.log(config.nodeGroups)
+    console.log(config.nodeGroups[group]);
+
     const node = JSON.parse(JSON.stringify(config.nodeGroups[group]));
     node.id = wrapper.id;
     node.label = this.inferNodeLabel(config, wrapper);
@@ -551,7 +555,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         // }
 
         for (const interaction of edges) {
-          console.log(interaction)
           const edge = {from: interaction.uniprotAc, to: interaction.drugId};
           this.drugEdges.push(this.mapEdge(edge, 'protein-drug'));
         }
