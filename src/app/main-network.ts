@@ -60,7 +60,6 @@ export class ProteinNetwork {
     }
 
     // label is only used for network visualization
-    console.log(customNode)
     node.label = customNode.label ? customNode.label : customNode.id;
 
     if (node.image) {

@@ -355,7 +355,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
    * @param values 
    */
   public setConfigNodeGroup(key: string, nodeGroups: Array<NodeGroup>) {
-    console.log(Object.keys(nodeGroups).length)
     if (nodeGroups === undefined || !Object.keys(nodeGroups).length) {
       // if node groups are not set or empty, use default edge group(s)
       this.myConfig[key] = defaultConfig.nodeGroups;
@@ -372,7 +371,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     
     // override default edge groups
     this.myConfig[key] = nodeGroups;
-    console.log(nodeGroups)
   }
 
   /**
