@@ -53,13 +53,6 @@ export class ProteinNetwork {
     }
     let node = JSON.parse(JSON.stringify(config.nodeGroups[group]));
 
-    // remove group name
-    delete node.name
-
-    // node.name is actually group name since it comes from the group configuration
-    // this property is already stored in the wrapper object
-    // instead, node.name should reflect the actual node name
-    // "node.name = customNode.name";
     // update the node with custom node properties, including values fetched from backend
     node = {
       ... node,
@@ -67,6 +60,7 @@ export class ProteinNetwork {
     }
 
     // label is only used for network visualization
+    console.log(customNode)
     node.label = customNode.label ? customNode.label : customNode.id;
 
     if (node.image) {

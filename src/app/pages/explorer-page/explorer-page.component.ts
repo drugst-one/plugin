@@ -13,7 +13,6 @@ import {
   Tissue
 } from '../../interfaces';
 import {ProteinNetwork} from '../../main-network';
-import {HttpClient} from '@angular/common/http';
 import {AnalysisService} from '../../services/analysis/analysis.service';
 import {OmnipathControllerService} from '../../services/omnipath-controller/omnipath-controller.service';
 import html2canvas from 'html2canvas';
@@ -38,6 +37,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private networkJSON = '{"nodes": [], "edges": []}';
 
+  // set default config on init
   public myConfig: IConfig = JSON.parse(JSON.stringify(defaultConfig));
 
   @Input()
@@ -53,11 +53,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     for (const key of Object.keys(configObj)) {
       if (key === 'nodeGroups' ) {
         this.setConfigNodeGroup(key, configObj[key]);
+        // dont set the key here, will be set in function
+        continue;
       } else if (key === 'edgeGroups') {
         this.setConfigEdgeGroup(key, configObj[key])
+        // dont set the key here, will be set in function
+        continue;
       }
       else if (key === 'interactions') {
         this.getInteractions();
+        // dont set the key here, will be set in function
+        continue;
       } else if (key === 'showLeftSidebar') {
         if (configObj[key]) {
           // shrink main column
@@ -343,30 +349,54 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
     /**
-   * Function to set the node group attribute in config
-   * Handles setting defaults
+   * Function to set the node group attribute in config 
+   * Validates input NodeGroups and handles setting defaults
    * @param key 
    * @param values 
    */
-  public setConfigNodeGroup(key: string, values: Array<NodeGroup>) {
-    this.myConfig[key] = {...this.myConfig[key], ...values};
+  public setConfigNodeGroup(key: string, nodeGroups: Array<NodeGroup>) {
+    console.log(Object.keys(nodeGroups).length)
+    if (nodeGroups === undefined || !Object.keys(nodeGroups).length) {
+      // if node groups are not set or empty, use default edge group(s)
+      this.myConfig[key] = defaultConfig.nodeGroups;
+      // stop if nodeGroups do not contain any information
+      return
+    }
+    // make sure all keys are set
+    Object.entries(nodeGroups).forEach(([key, value]) => {
+      if (!('detailShowLabel' in value)) {
+        // use detailShowLabel default value if not set
+        value['detailShowLabel'] = defaultConfig.nodeGroups.default.detailShowLabel;
+      }
+    })
+    
+    // override default edge groups
+    this.myConfig[key] = nodeGroups;
+    console.log(nodeGroups)
   }
 
   /**
    * Function to set the edge group attribute in config
-   * Handles setting defaults
+   * Validates input EdgeGroups and handles setting defaults
    * @param key 
    * @param values 
    */
   public setConfigEdgeGroup(key: string, edgeGroups: Array<EdgeGroup>) {
+    if (edgeGroups === undefined || !edgeGroups.length) {
+      // if edge groups are not set or empty, use default edge group(s)
+      this.myConfig[key] = defaultConfig.edgeGroups;
+      // stop if edgeGroups do not contain any information
+      return
+    }
     // make sure all keys are set
     Object.entries(edgeGroups).forEach(([key, value]) => {
       if (!('dashes' in value)) {
-        // dashes defaults to 'false' if not set
-        value['dashes'] = false;
+        // use dashes default value if not set
+        value['dashes'] = defaultConfig.edgeGroups.default.dashes;
       }
     })
-    this.myConfig[key] = {...this.myConfig[key], ...edgeGroups};
+    // override default node groups
+    this.myConfig[key] = edgeGroups;
   }
 
   public toCanvas() {

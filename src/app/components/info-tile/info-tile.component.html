@@ -1,6 +1,6 @@
 <div *ngIf="wrapper">
   <div>
-    <p *ngIf="wrapper.data.label" [ngClass]="{'text-normal':smallStyle}">
+    <p *ngIf="wrapper.data.detailShowLabel && wrapper.data.label" [ngClass]="{'text-normal':smallStyle}">
       <b><span>Label:</span></b>
       <span class="is-capitalized"> {{ wrapper.data.label }}</span>
     </p>
@@ -18,9 +18,9 @@
         <span class="is-capitalized"> {{ wrapper.data.drugId }}</span>
       </a>
     </p>
-    <p *ngIf="wrapper.data.group" [ngClass]="{'text-normal':smallStyle}">
+    <p *ngIf="wrapper.data.groupName" [ngClass]="{'text-normal':smallStyle}">
       <b><span>Group:</span></b>
-      <span class="is-capitalized"> {{ wrapper.data.group }}</span>
+      <span class="is-capitalized"> {{ wrapper.data.groupName }}</span>
     </p>
     <p *ngIf="wrapper.data.uniprotAc" [ngClass]="{'text-normal':smallStyle}">
       <b><span>Access:</span></b>

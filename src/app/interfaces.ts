@@ -8,6 +8,7 @@ export interface Node {
   uniprotAc?: string;
   ensg?: Array<string>;
   group?: string;
+  groupName?: string;
   color?: string;
   shape?: string;
   interactions?: Node[];
@@ -172,6 +173,7 @@ export interface Wrapper {
     color?: string;
     interactions?: any;
     group?: string;
+    groupName?: string;
     uniprotAc?: string;
     expressionLevel?: number;
     x?: number;
@@ -181,6 +183,7 @@ export interface Wrapper {
     inTrial?: boolean;
     inLiterature?: boolean;
     trialLinks?: string[];
+    detailShowLabel?: boolean;
   };
 }
 

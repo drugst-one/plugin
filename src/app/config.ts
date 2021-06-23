@@ -1,21 +1,14 @@
-// export interface NodeGroup {
-//   fill: string;
-// }
-//
-// export interface EdgeGroup {
-//   color: string;
-// }
-
 export interface NodeGroup {
-  name: string;
+  groupName: string;
   color: string;
   shape: 'circle' | 'triangle' | 'star' | 'square' | 'image';
-  type: 'gene' | 'protein' | 'drug';
+  type?: string;
   image?: string;
+  detailShowLabel?: boolean;
 }
 
 export interface EdgeGroup {
-  name: string;
+  groupName: string;
   color: string;
   // see https://visjs.github.io/vis-network/docs/network/edges.html
   dashes?: false | Array<number>; 
@@ -54,6 +47,10 @@ export interface IConfig {
   identifier?: Identifier;
 }
 
+/**
+ * Provide default values
+ */
+
 export const defaultConfig: IConfig = {
   legendUrl: '', // 'https://exbio.wzw.tum.de/covex/assets/leg1.png' show legend image if set, otherwise default legend
   legendClass: 'legend',
@@ -77,19 +74,21 @@ export const defaultConfig: IConfig = {
   interactionProteinProtein: 'STRING',
   nodeGroups: {
     default: {
-      name: 'Default Group',
+      // this default group is used for default node group values
+      groupName: 'Default Node Group',
       color: 'yellow',
       shape: 'triangle',
       type: 'protein',
+      detailShowLabel: false,
     },
-    protein: {
-      name: 'Resulting Proteins',
+    default_protein: {
+      groupName: 'Resulting Proteins',
       color: 'red',
       shape: 'circle',
       type: 'protein',
     },
-    drug: {
-      name: 'Possible Drugs',
+    default_drug: {
+      groupName: 'Possible Drugs',
       color: 'green',
       shape: 'star',
       type: 'drug',
@@ -97,8 +96,10 @@ export const defaultConfig: IConfig = {
   },
   edgeGroups: {
     default: {
-      name: 'Edgy edges',
-      color: 'black'
+      // this default group is used for default edge group values
+      groupName: 'Default Edge Group',
+      color: 'black',
+      dashes: false
     }
   },
 };
