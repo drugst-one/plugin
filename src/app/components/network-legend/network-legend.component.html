@@ -10,7 +10,7 @@
           <td>
             <img [src]="nodeGroup.value.image" class="legend-icon"/>
           </td>
-          <td>&nbsp;{{ nodeGroup.value.name }}</td>
+          <td>&nbsp;{{ nodeGroup.value.groupName }}</td>
         </ng-container>
 
         <ng-container *ngIf="!nodeGroup.value.image">
@@ -30,7 +30,7 @@
             >
             </span>
           </td>
-          <td>&nbsp;{{ nodeGroup.value.name }}</td>
+          <td>&nbsp;{{ nodeGroup.value.groupName }}</td>
         </ng-container>
 
       </tr>
@@ -41,7 +41,7 @@
         <td>
           <hr class="edge" [style.background-color]=edgeGroup.value.color>
         </td>
-        <td>&nbsp;{{ edgeGroup.value.name }}</td>
+        <td>&nbsp;{{ edgeGroup.value.groupName }}</td>
       </tr>
     </ng-container>
   </table>
