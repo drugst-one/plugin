@@ -4,6 +4,7 @@ export interface Node {
   label: string;
   symbol: string;
   id: string;
+  type: string;
   netexId?: string;
   uniprotAc?: string;
   ensg?: Array<string>;
@@ -160,6 +161,7 @@ export interface Wrapper {
   data: {
     id: string;
     label: string;
+    type?: string;
     symbol?: string;
     netexId?: string;
     ensg?: Array<string>;

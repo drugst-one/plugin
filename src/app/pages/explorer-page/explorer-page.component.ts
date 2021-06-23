@@ -392,9 +392,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
     // make sure all keys are set
     Object.entries(edgeGroups).forEach(([key, value]) => {
-      if (!('dashed' in value)) {
-        // use dashed default value if not set
-        value['dashed'] = defaultConfig.edgeGroups.default.dashed;
+      if (!('dashes' in value)) {
+        // use dashes default value if not set
+        value['dashes'] = defaultConfig.edgeGroups.default.dashes;
       }
     })
     // override default node groups
