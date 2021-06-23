@@ -5,6 +5,7 @@
     "ng": "ng",
     "start:local": "ng serve --configuration=local",
     "start:remote": "ng serve --configuration=remote",
+    "start:prod": "ng serve --configuration=production",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint && htmlhint",
