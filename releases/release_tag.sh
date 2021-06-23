@@ -18,7 +18,7 @@ MESSAGE=$2
 
 cd ../../
 echo "Cloning Release Repo..."
-git clone git@gitlab.lrz.de:netex/drugstone-website.git
+git clone git@github.com:AndiMajore/drugstone-releases.git
 echo "Updating Repo..."
 
 echo "Building release..."

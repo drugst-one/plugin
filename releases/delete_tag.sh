@@ -10,7 +10,7 @@ VERSION=v$1
 
 cd ../../
 echo "Cloning Release Repo..."
-git clone git@gitlab.lrz.de:netex/drugstone-website.git
+git clone git@github.com:AndiMajore/drugstone-releases.git
 echo "Deleting Release Version..."
 cd drugstone-releases || echo "Error!" exit
 git push --delete origin "$VERSION"

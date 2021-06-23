@@ -1,35 +1,16 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Website</title>
-    <base href="/">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-<!--    <script type = "text/javascript" src="/home/andimajore/projects/drugstOne/frontend/drugsTone-build/drugsTone.js"></script>-->
-<!--    <link rel="/home/andimajore/projects/drugstOne/frontend/drugsTone-build/drugsTone.css">-->
-  <script src="https://cdn.jsdelivr.net/gh/AndiMajore/drugstone-releases@0.6.1/remote/drugsTone.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AndiMajore/drugstone-releases@0.6.1/remote/styles.css">
-    <script src="https://kit.fontawesome.com/3ad4fe992f.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
-<!--    <script>-->
-<!--        function highlightCode() {-->
-<!--            var pres = document.querySelectorAll("pre>code");-->
-<!--            for (var i = 0; i < pres.length; i++) {-->
-<!--                hljs.highlightBlock(pres[i]);-->
-<!--            }-->
-<!--        }-->
-<!--        highlightCode();-->
-<!--    </script>-->
-</head>
-<body style="background-color: var(--surface-b)">
-<div style="height: 700px; width: 1300px;">
-
-  <network-expander
-    id='drugstone-panel-1'
-    config='{"nodeGroups":{"0.5":{"type":"gene","color":"#CCFF33FF","name":"0.5","shape":"image","image":"http://simpleicon.com/wp-content/uploads/icon2.png"},"patient_group":{"type":"gene","color":"#66FF33FF","name":"1.5","shape":"circle"},"2.0":{"type":"gene","color":"#33CC33FF","name":"2.0","shape":"circle"},"-2.0":{"type":"gene","color":"#FF0000FF","name":"-2.0","shape":"circle"}},"edgeGroups":{"custom":{"color":"black","name":"Custom Group"}},"identifier":"symbol","legendUrl":"https://exbio.wzw.tum.de/covex/assets/leg1.png"}'
-    network='{"nodes":[{"id":"TP53","group":"0.5"},{"id":"C5","group":"0.5"},{"id":"Patient","group":"patient_group"},{"label":"PTEN","id":"PTEN","group":0.5}],"edges":[]}'>
-  </network-expander>
-</div>
+  <head>
+    <script src="https://cdn.jsdelivr.net/gh/AndiMajore/drugstone-releases@0.6.1/remote/drugsTone.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AndiMajore/drugstone-releases@0.6.3/remote/styles.css">
+  </head>
+  <body>
+    <div style="height: 700px; width: 1300px;">
+      <network-expander
+        id='drugstone-panel-1'
+        config='{"nodeGroups":{"0.5":{"type":"gene","color":"#CCFF33FF","groupName":"0.5","shape":"circle"},"1.5":{"type":"gene","color":"#66FF33FF","groupName":"1.5","shape":"circle"},"2.0":{"type":"gene","color":"#33CC33FF","groupName":"2.0","shape":"circle"},"patient_group":{"type":"gene","color":"#FF0000FF","groupName":"-2.0","shape":"circle"}},"edgeGroups":{"normal":{"color":"black","groupName":"Custom Group"},"dashed":{"color":"#000857","groupName":"Dashed","dashes":[18,2]}},"identifier":"symbol","legendUrl":"https://exbio.wzw.tum.de/covex/assets/leg1.png"}'
+        network='{"nodes":[{"id":"TP53","group":"0.5"},{"id":"C5","group":"0.5"},{"id":"Patient","group":"patient_group"},{"label":"PTEN","id":"PTEN","group":0.5}],"edges":[{"from":"TP53","to":"C5","group":"dashed"},{"from":"TP53","to":"PTEN","group":"dashed"},{"from":"Patient","to":"C5","group":"normal"},{"from":"Patient","to":"PTEN","group":"normal"}]}'>
+      </network-expander>
+    </div>
 </body>
 </html>
