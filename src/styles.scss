@@ -5,13 +5,7 @@
 @import url('https://fonts.googleapis.com/css?family=Varela+Round');
 @import "~@ng-select/ng-select/themes/default.theme.css";
 
-$family-sans-serif: "Varela Round", sans-serif;
-$primary: #48C774;
-$success: #3070B3;
-$danger: #EF476F;
-$link: $primary;
-$info: $primary;
-@import "./theme.scss";
+//@import "src/theme";
 @import "~bulma/bulma.sass";
 @import '~bulma-tooltip';
 @import "~primeng/resources/primeng.min.css";
@@ -29,7 +23,7 @@ $info: $primary;
   height: calc(100% - #{$network-footer-height});
 }
 
-.explorer-footer{
+.explorer-footer {
   //position: absolute;
   //overflow: auto;
   //width: $main-width;
@@ -76,8 +70,8 @@ div.covex.sidebar {
 div.covex.bar-left {
   float: left;
   width: $sidebar-left-width;
-  max-width:300px;
-  min-width:$sidebar-left-min-width;
+  max-width: 300px;
+  min-width: $sidebar-left-min-width;
   height: 100%;
 
 }
@@ -85,15 +79,16 @@ div.covex.bar-left {
 div.covex.bar-right {
   float: left;
   width: $sidebar-right-width;
-  max-width:450px;
-  min-width:$sidebar-right-min-width;
+  max-width: 450px;
+  min-width: $sidebar-right-min-width;
   /* Hide scrollbar for Chrome, Safari and Opera */
   &::-webkit-scrollbar {
     display: none;
   }
+
   /* Hide scrollbar for IE, Edge and Firefox */
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 
 }
 
@@ -126,16 +121,19 @@ div.covex.network {
 
 }
 
-.center-panel{
+.center-panel {
   width: $main-width;
-  &.leftgone{
+
+  &.leftgone {
     width: calc(#{$main-width} + max(#{$sidebar-left-width},#{$sidebar-left-min-width}));
   }
-  &.rightgone{
+
+  &.rightgone {
     width: calc(#{$main-width} + max(#{$sidebar-right-width},#{$sidebar-right-min-width}));
   }
-  &.rightgone.leftgone{
-    width: calc(#{$main-width} +  max(#{$sidebar-left-width},#{$sidebar-left-min-width}) + max(#{$sidebar-right-width},#{$sidebar-right-min-width}));
+
+  &.rightgone.leftgone {
+    width: calc(#{$main-width} + max(#{$sidebar-left-width},#{$sidebar-left-min-width}) + max(#{$sidebar-right-width},#{$sidebar-right-min-width}));
   }
 }
 
@@ -212,6 +210,7 @@ div.field.has-addons.add-remove-toggle {
 
   .field {
     margin-bottom: 0;
+
     .control {
       margin-bottom: 0;
     }
