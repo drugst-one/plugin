@@ -73,25 +73,33 @@ export const defaultConfig: IConfig = {
   interactionDrugProtein: 'DrugBank',
   interactionProteinProtein: 'STRING',
   nodeGroups: {
+    // all NodeGroups but the default group must be set, if not provided by the user, they will be taken from here
     default: {
       // this default group is used for default node group values
+      // and is fallback in case user does not provide any nodeGroup
       groupName: 'Default Node Group',
       color: 'yellow',
       shape: 'triangle',
       type: 'default type',
       detailShowLabel: false,
     },
-    default_protein: {
-      groupName: 'Resulting Proteins',
+    foundNode: {
+      groupName: 'Found Nodes',
       color: 'red',
       shape: 'circle',
-      type: 'default protein type',
+      type: 'default node type',
     },
-    default_drug: {
-      groupName: 'Possible Drugs',
+    foundDrug: {
+      groupName: 'Found Drugs',
       color: 'green',
       shape: 'star',
       type: 'default drug type',
+    },
+    seedNode: {
+      groupName: 'Seed Nodes',
+      color: 'blue',
+      shape: 'circle',
+      type: 'seed',
     }
   },
   edgeGroups: {

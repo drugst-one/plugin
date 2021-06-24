@@ -19,6 +19,7 @@ import html2canvas from 'html2canvas';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, NodeGroup} from '../../config';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
+import { removeUnderscoreFromKeys } from 'src/app/utils';
 // import * as 'vis' from 'vis-network';
 // import {DataSet} from 'vis-data';
 // import {vis} from 'src/app/scripts/vis-network.min.js';
@@ -358,22 +359,33 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
    * @param key 
    * @param values 
    */
-  public setConfigNodeGroup(key: string, nodeGroups: Array<NodeGroup>) {
+  public setConfigNodeGroup(key: string, nodeGroups: { [key: string]: NodeGroup}) {
     if (nodeGroups === undefined || !Object.keys(nodeGroups).length) {
-      // if node groups are not set or empty, use default edge group(s)
+      // if node groups are not set or empty, use default node group(s)
       this.myConfig[key] = defaultConfig.nodeGroups;
       // stop if nodeGroups do not contain any information
       return
     }
+
+    // // do not allow '_' in node Group names since it causes problems with backend
+    // nodeGroups = removeUnderscoreFromKeys(nodeGroups)
+
     // make sure all keys are set
-    Object.entries(nodeGroups).forEach(([key, value]) => {
-      if (!('detailShowLabel' in value)) {
+    Object.entries(nodeGroups).forEach(([key, group]) => {
+      if (!('detailShowLabel' in group)) {
         // use detailShowLabel default value if not set
-        value['detailShowLabel'] = defaultConfig.nodeGroups.default.detailShowLabel;
+        group['detailShowLabel'] = defaultConfig.nodeGroups.default.detailShowLabel;
       }
     })
+
+    // make sure that return-groups (seeds, drugs, found nodes) are set
+    const defaultNodeGroups = JSON.parse(JSON.stringify(defaultConfig.nodeGroups));
+    // if user has set nodeGroups, do not use group "default"
+    delete defaultNodeGroups.default;
+    // if user has not set the return-groups, take the defaults
+    nodeGroups = {...defaultNodeGroups, ...nodeGroups}
     
-    // override default edge groups
+    // override default node groups
     this.myConfig[key] = nodeGroups;
   }
 
@@ -383,13 +395,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
    * @param key 
    * @param values 
    */
-  public setConfigEdgeGroup(key: string, edgeGroups: Array<EdgeGroup>) {
+  public setConfigEdgeGroup(key: string, edgeGroups: { [key: string]: EdgeGroup}) {
     if (edgeGroups === undefined || !Object.keys(edgeGroups).length) {
       // if edge groups are not set or empty, use default edge group(s)
       this.myConfig[key] = defaultConfig.edgeGroups;
       // stop if edgeGroups do not contain any information
       return
     }
+    
+    // // do not allow '_' in node Group names since it causes problems with backend
+    // edgeGroups = removeUnderscoreFromKeys(edgeGroups)
+
     // make sure all keys are set
     Object.entries(edgeGroups).forEach(([key, value]) => {
       if (!('dashes' in value)) {

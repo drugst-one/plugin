@@ -7,8 +7,20 @@ import {IConfig} from '../../config';
   styleUrls: ['./network-legend.component.scss']
 })
 export class NetworkLegendComponent implements OnInit {
+  public legendConfig: IConfig;
 
-  @Input() config: IConfig;
+  @Input() analysis: boolean;
+  @Input() set config(value: IConfig) {
+    // copy to not override user config
+    value = JSON.parse(JSON.stringify(value));
+    if (!this.analysis) {
+      // do not show the analysis-groups in the explorer network
+      delete value.nodeGroups.foundNode;
+      delete value.nodeGroups.foundDrug;
+      delete value.nodeGroups.seedNode;
+    }
+    this.legendConfig = value;
+  };
 
   constructor() { }
 

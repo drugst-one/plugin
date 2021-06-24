@@ -139,6 +139,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
       if (this.task && this.task.info.done) {
         const result = await this.netex.getTaskResult(this.token);
+        console.log("result")
         console.log(result)
         const nodeAttributes = result.nodeAttributes || {};
         const isSeed: { [key: string]: boolean } = nodeAttributes.isSeed || {};
@@ -415,6 +416,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   public createNetwork(result: any): { edges: any[], nodes: any[] } {
     const config = result.parameters.config;
 
+    // add drugGroup and foundNodesGroup for added nodes
+    // these groups can be overwritten by the user
+
     const nodes = [];
     const edges = [];
 
@@ -468,8 +472,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
     console.log("node group")
     console.log(config.nodeGroups)
-    console.log(config.nodeGroups[wrapper.data.group]);
+    console.log("node")
 
+    console.log(wrapper.data);
+
+    // override group is node is seed
+    wrapper.data.group = isSeed ? 'seedNode' : wrapper.data.group
     const node = JSON.parse(JSON.stringify(config.nodeGroups[wrapper.data.group]));
     node.id = wrapper.id;
     node.label = this.inferNodeLabel(config, wrapper);

@@ -1,43 +1,45 @@
-<div class="legend" [class.right]="this.config.legendPos === 'right'">
+<div class="legend" [class.right]="this.legendConfig.legendPos === 'right'">
 
   <!-- default legend in html -->
-  <table *ngIf="!this.config.legendUrl.length">
-    <ng-container *ngIf="this.config.showLegendNodes">
-      <tr *ngFor="let nodeGroup of this.config.nodeGroups | keyvalue" class="list-item">
+  <table *ngIf="!this.legendConfig.legendUrl.length">
+    <ng-container *ngIf="this.legendConfig.showLegendNodes">
+      <tr *ngFor="let nodeGroup of this.legendConfig.nodeGroups | keyvalue" class="list-item">
 
-        <ng-container *ngIf="nodeGroup.value.image">
-          <!-- group icon given, use icon in legend -->
-          <td>
-            <img [src]="nodeGroup.value.image" class="legend-icon"/>
-          </td>
-          <td>&nbsp;{{ nodeGroup.value.groupName }}</td>
-        </ng-container>
-
-        <ng-container *ngIf="!nodeGroup.value.image">
-          <!-- no image given, create icon programmatically -->
-          <td *ngIf="nodeGroup.value.shape !== 'triangle' && nodeGroup.value.shape !== 'star'">
-          <span class="node {{ nodeGroup.value.shape }}" [style.background-color]=nodeGroup.value.color>
-          </span>
-          </td>
-          <td *ngIf="nodeGroup.value.shape === 'triangle'">
-            <span class="node {{ nodeGroup.value.shape }}" [style.border-bottom-color]=nodeGroup.value.color>
+        <ng-container *ngIf="!analysis && nodeGroup.key">
+          <ng-container *ngIf="nodeGroup.value.image">
+            <!-- group icon given, use icon in legend -->
+            <td>
+              <img [src]="nodeGroup.value.image" class="legend-icon"/>
+            </td>
+            <td>&nbsp;{{ nodeGroup.value.groupName }}</td>
+          </ng-container>
+  
+          <ng-container *ngIf="!nodeGroup.value.image">
+            <!-- no image given, create icon programmatically -->
+            <td *ngIf="nodeGroup.value.shape !== 'triangle' && nodeGroup.value.shape !== 'star'">
+            <span class="node {{ nodeGroup.value.shape }}" [style.background-color]=nodeGroup.value.color>
             </span>
-          </td>
-          <td *ngIf="nodeGroup.value.shape === 'star'">
-            <span class="node {{ nodeGroup.value.shape }}"
-                  [style.border-bottom-color]=nodeGroup.value.color
-                  [style.color]=nodeGroup.value.color
-            >
-            </span>
-          </td>
-          <td>&nbsp;{{ nodeGroup.value.groupName }}</td>
+            </td>
+            <td *ngIf="nodeGroup.value.shape === 'triangle'">
+              <span class="node {{ nodeGroup.value.shape }}" [style.border-bottom-color]=nodeGroup.value.color>
+              </span>
+            </td>
+            <td *ngIf="nodeGroup.value.shape === 'star'">
+              <span class="node {{ nodeGroup.value.shape }}"
+                    [style.border-bottom-color]=nodeGroup.value.color
+                    [style.color]=nodeGroup.value.color
+              >
+              </span>
+            </td>
+            <td>&nbsp;{{ nodeGroup.value.groupName }}</td>
+          </ng-container>
         </ng-container>
 
       </tr>
     </ng-container>
 
-    <ng-container *ngIf="this.config.showLegendEdges">
-      <tr *ngFor="let edgeGroup of this.config.edgeGroups | keyvalue" class="list-item">
+    <ng-container *ngIf="this.legendConfig.showLegendEdges">
+      <tr *ngFor="let edgeGroup of this.legendConfig.edgeGroups | keyvalue" class="list-item">
         <td>
           <hr *ngIf="!edgeGroup.value.dashes" class="edge" [style.background-color]=edgeGroup.value.color>
           <hr *ngIf="edgeGroup.value.dashes" class="edge dashes" [style.color]=edgeGroup.value.color>
@@ -49,5 +51,5 @@
 
 
   <!-- custom legend image if url given by user -->
-  <img *ngIf="this.config.legendUrl.length" [src]="this.config.legendUrl" [ngClass]="this.config.legendClass"/>
+  <img *ngIf="this.legendConfig.legendUrl.length" [src]="this.legendConfig.legendUrl" [ngClass]="this.legendConfig.legendClass"/>
 </div>

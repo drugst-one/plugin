@@ -52,13 +52,13 @@ export class ProteinNetwork {
     let node;
     if (customNode.group === undefined) {
       // fallback to default node
-      node = {...defaultConfig.nodeGroups.default};
+      node = JSON.parse(JSON.stringify(defaultConfig.nodeGroups.default));
     } else {
       if (config.nodeGroups[customNode.group] === undefined) {
         throw `Node with id ${customNode.id} has undefined node group ${customNode.group}.`
       }
       // copy
-      node = {...config.nodeGroups[customNode.group]};
+      node = JSON.parse(JSON.stringify(config.nodeGroups[customNode.group]));
     }
     // update the node with custom node properties, including values fetched from backend
     node = {
@@ -70,6 +70,8 @@ export class ProteinNetwork {
     if (node.image) {
       node.shape = 'image';
     }
+    // // remove '_' from group if group is defined
+    // node.group = node.group===undefined ? node.group : node.group.replace('_', '');
     return node;
   }
 
@@ -85,18 +87,20 @@ export class ProteinNetwork {
     let edge;
     if (customEdge.group === undefined) {
       // fallback to default node
-      edge = {...defaultConfig.edgeGroups.default};
+      edge = JSON.parse(JSON.stringify(defaultConfig.edgeGroups.default));
     } else {
       if (config.edgeGroups[customEdge.group] === undefined) {
         throw `Edge "from ${customEdge.from}" - "to ${customEdge.to}" has undefined edge group ${customEdge.group}.`
       }
       // copy
-      edge = {...config.edgeGroups[customEdge.group]};
+      edge = JSON.parse(JSON.stringify(config.edgeGroups[customEdge.group]));
     }
     edge = {
       ...edge,
       ...customEdge
     }
+    // // remove '_' from group if group is defined
+    // edge.group = edge.group===undefined ? edge.group : edge.group.replace('_', '');
     return edge;
   }
 

@@ -28,6 +28,7 @@ export interface NodeInteraction {
   to: string;
   group?: string;
   label?: string;
+  title?: string;
 }
 
 export interface NetworkEdge {
@@ -137,6 +138,8 @@ export function getWrapperFromNode(gene: Node): Wrapper {
   /**
    * Constructs wrapper interface for gene
    */
+  // if node does not have property group, it was found by the analysis
+  gene.group = gene.group ? gene.group : 'foundNode';
   return {
     id: getNodeId(gene),
     nodeId: getNodeId(gene),
@@ -146,6 +149,9 @@ export function getWrapperFromNode(gene: Node): Wrapper {
 
 
 export function getWrapperFromDrug(drug: Drug): Wrapper {
+  // set type and group
+  drug.type = 'Drug';
+  drug.group = 'foundDrug';
   return {
     id: getDrugBackendId(drug),
     nodeId: getDrugNodeId(drug),
@@ -186,11 +192,13 @@ export interface Wrapper {
 export interface Drug {
   id: string;
   label: string;
+  type: string;
   status: 'approved' | 'investigational';
   inTrial: boolean;
   inLiterature: boolean;
   trialLinks: string[];
   netexId: string;
+  group: string;
 }
 
 export interface Dataset {

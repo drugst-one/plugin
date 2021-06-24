@@ -45,3 +45,12 @@ export function getGradientColor(startColor: string, endColor: string, percent: 
 
   return '#' + diffRedStr + diffGreenStr + diffBlueStr;
 }
+
+export function removeUnderscoreFromKeys(obj) {
+  const result = {};
+  Object.keys(obj).forEach(x => {
+    const y = x.replace("_", "");
+    result[y] = obj[x];
+  });
+  return result;
+}
