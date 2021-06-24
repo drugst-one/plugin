@@ -89,6 +89,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }
       this.myConfig[key] = configObj[key];
     }
+    // trigger updates on config e.g. in legend
+    this.myConfig = {...this.myConfig};
     if (updateNetworkFlag && typeof this.networkJSON !== 'undefined') {
       // update network if network config has changed and networkJSON exists
       this.createNetwork();
@@ -275,10 +277,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.selectedWrapper = null;
     this.showDetails = false;
   }
-
-  // public async updateNetwork() {
-
-  // }
 
   public async createNetwork() {
     this.analysis.resetSelection();
