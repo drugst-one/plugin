@@ -49,20 +49,25 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (typeof config === 'undefined') {
       return;
     }
+    // check if config updates affect network
+    let updateNetworkFlag = false;
 
     const configObj = JSON.parse(config);
     for (const key of Object.keys(configObj)) {
       if (key === 'nodeGroups' ) {
         this.setConfigNodeGroup(key, configObj[key]);
+        updateNetworkFlag = true;
         // dont set the key here, will be set in function
         continue;
       } else if (key === 'edgeGroups') {
         this.setConfigEdgeGroup(key, configObj[key])
+        updateNetworkFlag = true;
         // dont set the key here, will be set in function
         continue;
       }
       else if (key === 'interactions') {
         this.getInteractions();
+        updateNetworkFlag = true;
         // dont set the key here, will be set in function
         continue;
       } else if (key === 'showLeftSidebar') {
@@ -83,6 +88,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         }
       }
       this.myConfig[key] = configObj[key];
+    }
+    if (updateNetworkFlag && typeof this.networkJSON !== 'undefined') {
+      // update network if network config has changed and networkJSON exists
+      this.createNetwork();
     }
   }
 
@@ -266,6 +275,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.selectedWrapper = null;
     this.showDetails = false;
   }
+
+  // public async updateNetwork() {
+
+  // }
 
   public async createNetwork() {
     this.analysis.resetSelection();
