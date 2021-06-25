@@ -21,17 +21,17 @@ echo "Cloning Release Repo..."
 git clone git@github.com:AndiMajore/drugstone-releases.git
 echo "Updating Repo..."
 
-echo "Building release..."
-cd frontend || exit
-npm run build:netex
-cd ../
-cp frontend/drugsTone-build/* drugstone-releases/releases/
-
-echo "Building dev..."
-cd frontend || exit
-npm run build:netex-dev
-cd ../
-cp frontend/drugsTone-build/* drugstone-releases/dev/
+#echo "Building release..."
+#cd frontend || exit
+#npm run build:netex
+#cd ../
+#cp frontend/drugsTone-build/* drugstone-releases/releases/
+#
+#echo "Building dev..."
+#cd frontend || exit
+#npm run build:netex-dev
+#cd ../
+#cp frontend/drugsTone-build/* drugstone-releases/dev/
 
 echo "Building remote..."
 cd frontend || exit

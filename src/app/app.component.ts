@@ -1,11 +1,10 @@
-import {Component, Injector} from '@angular/core';
-import {ExplorerPageComponent} from './pages/explorer-page/explorer-page.component';
-import {createCustomElement} from '@angular/elements';
+import {Component, ViewEncapsulation} from '@angular/core';
 
 @Component({
   selector: 'app-root',
   template: `<div></div>`,
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  // encapsulation: ViewEncapsulation.ShadowDom
 })
 export class AppComponent {
   mobileWindowExpanded = false;

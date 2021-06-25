@@ -111,7 +111,7 @@
           </p>
         </header>
         <div class="card-content fullheight">
-          <div class="card-image" id="canvas-content">
+          <div class="card-image" id="canvas-content" #networkWithLegend>
             <div *ngIf="myConfig.showLegend">
               <app-network-legend [config]="myConfig" [analysis]="false"></app-network-legend>
             </div>

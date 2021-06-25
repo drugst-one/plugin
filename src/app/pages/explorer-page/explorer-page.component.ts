@@ -19,7 +19,7 @@ import html2canvas from 'html2canvas';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, NodeGroup} from '../../config';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
-import { removeUnderscoreFromKeys } from 'src/app/utils';
+import {removeUnderscoreFromKeys} from 'src/app/utils';
 // import * as 'vis' from 'vis-network';
 // import {DataSet} from 'vis-data';
 // import {vis} from 'src/app/scripts/vis-network.min.js';
@@ -54,18 +54,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     const configObj = JSON.parse(config);
     for (const key of Object.keys(configObj)) {
-      if (key === 'nodeGroups' ) {
+      if (key === 'nodeGroups') {
         this.setConfigNodeGroup(key, configObj[key]);
         updateNetworkFlag = true;
         // dont set the key here, will be set in function
         continue;
       } else if (key === 'edgeGroups') {
-        this.setConfigEdgeGroup(key, configObj[key])
+        this.setConfigEdgeGroup(key, configObj[key]);
         updateNetworkFlag = true;
         // dont set the key here, will be set in function
         continue;
-      }
-      else if (key === 'interactions') {
+      } else if (key === 'interactions') {
         this.getInteractions();
         updateNetworkFlag = true;
         // dont set the key here, will be set in function
@@ -160,6 +159,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public textColor = 'red';
 
   @ViewChild('network', {static: false}) networkEl: ElementRef;
+  @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
 
   constructor(
     public omnipath: OmnipathControllerService,
@@ -300,7 +300,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         const wrapper = getWrapperFromNode(node);
         if (wrapper.data.netexId === undefined || !wrapper.data.netexId.startsWith('p')) {
           // skip if node is not a protein mapped to backend
-          return
+          return;
         }
         if (this.analysis.inSelection(node)) {
           this.analysis.removeItems([wrapper]);
@@ -364,18 +364,18 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-    /**
-   * Function to set the node group attribute in config 
+  /**
+   * Function to set the node group attribute in config
    * Validates input NodeGroups and handles setting defaults
-   * @param key 
-   * @param values 
+   * @param key
+   * @param values
    */
-  public setConfigNodeGroup(key: string, nodeGroups: { [key: string]: NodeGroup}) {
+  public setConfigNodeGroup(key: string, nodeGroups: { [key: string]: NodeGroup }) {
     if (nodeGroups === undefined || !Object.keys(nodeGroups).length) {
       // if node groups are not set or empty, use default node group(s)
       this.myConfig[key] = defaultConfig.nodeGroups;
       // stop if nodeGroups do not contain any information
-      return
+      return;
     }
 
     // // do not allow '_' in node Group names since it causes problems with backend
@@ -387,15 +387,15 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         // use detailShowLabel default value if not set
         group['detailShowLabel'] = defaultConfig.nodeGroups.default.detailShowLabel;
       }
-    })
+    });
 
     // make sure that return-groups (seeds, drugs, found nodes) are set
     const defaultNodeGroups = JSON.parse(JSON.stringify(defaultConfig.nodeGroups));
     // if user has set nodeGroups, do not use group "default"
     delete defaultNodeGroups.default;
     // if user has not set the return-groups, take the defaults
-    nodeGroups = {...defaultNodeGroups, ...nodeGroups}
-    
+    nodeGroups = {...defaultNodeGroups, ...nodeGroups};
+
     // override default node groups
     this.myConfig[key] = nodeGroups;
   }
@@ -403,17 +403,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   /**
    * Function to set the edge group attribute in config
    * Validates input EdgeGroups and handles setting defaults
-   * @param key 
-   * @param values 
+   * @param key
+   * @param values
    */
-  public setConfigEdgeGroup(key: string, edgeGroups: { [key: string]: EdgeGroup}) {
+  public setConfigEdgeGroup(key: string, edgeGroups: { [key: string]: EdgeGroup }) {
     if (edgeGroups === undefined || !Object.keys(edgeGroups).length) {
       // if edge groups are not set or empty, use default edge group(s)
       this.myConfig[key] = defaultConfig.edgeGroups;
       // stop if edgeGroups do not contain any information
-      return
+      return;
     }
-    
+
     // // do not allow '_' in node Group names since it causes problems with backend
     // edgeGroups = removeUnderscoreFromKeys(edgeGroups)
 
@@ -423,13 +423,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         // use dashes default value if not set
         value['dashes'] = defaultConfig.edgeGroups.default.dashes;
       }
-    })
+    });
     // override default node groups
     this.myConfig[key] = edgeGroups;
   }
 
   public toCanvas() {
-    html2canvas(this.networkEl.nativeElement).then((canvas) => {
+    let element = this.networkWithLegendEl.nativeElement;
+    let offsetY = element.getBoundingClientRect().top + document.documentElement.scrollTop;
+    let offsetX = document.documentElement.scrollLeft + element.getBoundingClientRect().left;
+    html2canvas(element, {y: (offsetY), x: (offsetX)}
+    ).then((canvas) => {
       const generatedImage = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
       const a = document.createElement('a');
       a.href = generatedImage;
