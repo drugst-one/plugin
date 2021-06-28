@@ -22,11 +22,11 @@ import {
   getWrapperFromCustom,
   getNodeIdsFromPDI,
   getNodeIdsFromPPI,
-  getProteinNodeId, 
+  getProteinNodeId,
   Tissue,
   EdgeType,
 } from '../../interfaces';
-import html2canvas from 'html2canvas';
+import domtoimage from 'dom-to-image';
 import {toast} from 'bulma-toast';
 import {NetworkSettings} from '../../network-settings';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
@@ -371,7 +371,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
    * Infers wrapper type of node returned from backend.
    * Node can only be either an input node from the user with a defined group,
    * a drug found in the backend with either user defined type or default drug group,
-   * or an intermediate protein added by the shortest path to the found drug. 
+   * or an intermediate protein added by the shortest path to the found drug.
    * For the third case, fall back to a default case which can also be set by user.
    */
   public inferNodeGroup(wrapper: Wrapper): string {
@@ -409,9 +409,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
   /**
    * Maps analysis result returned from database to valid Vis.js network input
-   * 
-   * @param result 
-   * @returns 
+   *
+   * @param result
+   * @returns
    */
   public createNetwork(result: any): { edges: any[], nodes: any[] } {
     const config = result.parameters.config;
@@ -462,11 +462,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
   /**
    * maps node object returned from backend to frontend node, i.e. input to vis.js
-   * @param config 
-   * @param wrapper 
-   * @param isSeed 
-   * @param score 
-   * @returns 
+   * @param config
+   * @param wrapper
+   * @param isSeed
+   * @param score
+   * @returns
    */
   private mapNode(config: IConfig, wrapper: Wrapper, isSeed?: boolean, score?: number): any {
 
@@ -575,14 +575,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     });
   }
 
-  public toCanvas() {
-    html2canvas(this.networkEl.nativeElement).then((canvas) => {
-      const generatedImage = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+  public toImage() {
+    domtoimage.toPng(this.networkEl.nativeElement, { bgcolor: '#ffffff' }).then((generatedImage) => {
       const a = document.createElement('a');
       a.href = generatedImage;
       a.download = `Network.png`;
       a.click();
-    });
+    }).catch(e => console.error(e));
   }
 
   public tableProteinSelection(e) {

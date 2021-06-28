@@ -120,11 +120,11 @@
                 <button class="button is-loading center" alt="loading...">Loading</button>
               </div>
             </div>
-
           </div>
 
-          <footer *ngIf="myConfig.showFooter" class="card-footer toolbar explorer-footer" [ngClass]="{'footer-small':smallStyle}">
-            <button (click)="toCanvas()" class="button is-primary is-rounded has-tooltip"
+          <footer *ngIf="myConfig.showFooter" class="card-footer toolbar explorer-footer"
+                  [ngClass]="{'footer-small':smallStyle}">
+            <button (click)="toImage()" class="button is-primary is-rounded has-tooltip"
                     data-tooltip="Take a screenshot of the current network.">
             <span class="icon">
               <i class="fas fa-camera" aria-hidden="true"></i>
@@ -137,7 +137,8 @@
                 <button (click)="expressionExpanded=!expressionExpanded"
                         class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
                         aria-haspopup="true" aria-controls="dropdown-menu"
-                        data-tooltip="Tissue expression data is provided by the GTEx project." [ngClass]="{'button-small':smallStyle}">
+                        data-tooltip="Tissue expression data is provided by the GTEx project."
+                        [ngClass]="{'button-small':smallStyle}">
                   <span *ngIf="!selectedTissue" [ngClass]="{'text-small':smallStyle}">Tissue</span>
                   <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
                   <span class="icon is-small">

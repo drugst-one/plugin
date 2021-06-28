@@ -13,7 +13,7 @@
             </td>
             <td>&nbsp;{{ nodeGroup.value.groupName }}</td>
           </ng-container>
-  
+
           <ng-container *ngIf="!nodeGroup.value.image">
             <!-- no image given, create icon programmatically -->
             <td *ngIf="nodeGroup.value.shape !== 'triangle' && nodeGroup.value.shape !== 'star'">
@@ -52,4 +52,5 @@
 
   <!-- custom legend image if url given by user -->
   <img *ngIf="this.legendConfig.legendUrl.length" [src]="this.legendConfig.legendUrl" [ngClass]="this.legendConfig.legendClass"/>
+
 </div>

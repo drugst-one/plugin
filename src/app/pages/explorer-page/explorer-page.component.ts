@@ -15,7 +15,7 @@ import {
 import {ProteinNetwork} from '../../main-network';
 import {AnalysisService} from '../../services/analysis/analysis.service';
 import {OmnipathControllerService} from '../../services/omnipath-controller/omnipath-controller.service';
-import html2canvas from 'html2canvas';
+import domtoimage from 'dom-to-image';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, NodeGroup} from '../../config';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
@@ -428,13 +428,18 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.myConfig[key] = edgeGroups;
   }
 
-  public toCanvas() {
-    let element = this.networkWithLegendEl.nativeElement;
-    let offsetY = element.getBoundingClientRect().top + document.documentElement.scrollTop;
-    let offsetX = document.documentElement.scrollLeft + element.getBoundingClientRect().left;
-    html2canvas(element, {y: (offsetY), x: (offsetX)}
-    ).then((canvas) => {
-      const generatedImage = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+  public toImage() {
+    this.downloadDom(this.networkWithLegendEl.nativeElement).catch(error => {
+      console.error("Falling back to network only screenshot. Some components seem to be inaccessable, most likely the legend is a custom image with CORS access problems on the host server side.")
+      this.downloadDom(this.networkEl.nativeElement).catch(e => {
+        console.log("Some network content seems to be inaccessable for saving as a screenshot. This can happen due to custom images used as nodes. Please ensure correct CORS accessability on the images host server.")
+        console.error(e)
+      });
+    });
+  }
+
+  public downloadDom(dom: object) {
+    return domtoimage.toPng(dom, {bgcolor: '#ffffff'}).then((generatedImage) => {
       const a = document.createElement('a');
       a.href = generatedImage;
       a.download = `Network.png`;
