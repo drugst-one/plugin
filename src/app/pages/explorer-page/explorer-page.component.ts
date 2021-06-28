@@ -432,7 +432,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.downloadDom(this.networkWithLegendEl.nativeElement).catch(error => {
       console.error("Falling back to network only screenshot. Some components seem to be inaccessable, most likely the legend is a custom image with CORS access problems on the host server side.")
       this.downloadDom(this.networkEl.nativeElement).catch(e => {
-        console.log("Some network content seems to be inaccessable for saving as a screenshot. This can happen due to custom images used as nodes. Please ensure correct CORS accessability on the images host server.")
+        console.error("Some network content seems to be inaccessable for saving as a screenshot. This can happen due to custom images used as nodes. Please ensure correct CORS accessability on the images host server.")
         console.error(e)
       });
     });
