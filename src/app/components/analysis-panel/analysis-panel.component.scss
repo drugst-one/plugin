@@ -12,7 +12,7 @@ div.network {
   visibility: hidden;
   position: absolute;
   width: calc(100% - 50px);
-  height: calc(100vh - 210px - 24px);
+  height: calc(100% - 41px - 67px - 24px);
 
   &.is-visible {
     visibility: visible;
@@ -50,4 +50,27 @@ div.network {
 .tooltip-button {
   font-size: 10px;
   width: 10px;
+}
+
+.text-small {
+  font-size: 11px;
+}
+
+.text-normal{
+  font-size:12px;
+}
+
+.b-text-small{
+  font-size:14px
+}
+
+.b-text-smaller{
+  font-size:12px
+}
+
+.button-small{
+  padding: 3px 10px 3px 10px;
+}
+.scroll-y{
+  overflow-y: auto;
 }

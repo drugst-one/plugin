@@ -13,7 +13,7 @@
         </span>
       </a>
     </header>
-    <div class="card-content">
+    <div class="card-content fullheight">
       <div class="tabs is-centered">
         <ul>
           <li [class.is-active]="tab === 'table'"><a (click)="tab = 'table'">Table</a></li>
@@ -21,7 +21,7 @@
           <li [class.is-active]="tab === 'meta'"><a (click)="tab = 'meta'">Parameters</a></li>
         </ul>
       </div>
-      <div class="content tab-content meta" *ngIf="task && task.info.done" [class.is-visible]="tab === 'meta'">
+      <div class="tab-content meta" *ngIf="task && task.info.done" [class.is-visible]="tab === 'meta'">
         <div *ngIf="task">
           <p *ngIf="task.info.algorithm !== 'quick' && task.info.algorithm !== 'super'">
             Algorithm: <strong>{{algorithmNames[task.info.algorithm]}}</strong>
@@ -124,16 +124,16 @@
           </div>
         </div>
       </div>
-      <div class="content tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'network'">
-        <div class="card-image">
-          <div class="network center image1" #network>
+      <div class="tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'network'">
+        <div class="card-image canvas-content" #networkWithLegend>
+          <div *ngIf="myConfig.showLegend">
+            <app-network-legend [config]="myConfig" [analysis]="false"></app-network-legend>
+          </div>
+          <div class="fullheight center image1" #network>
             <button class="button is-loading center">Loading</button>
           </div>
-          <div class="image2">
-            <img src="assets/ll2.png" width="200px"/>
-          </div>
         </div>
-        <footer class="card-footer toolbar">
+        <footer class="card-footer toolbar scroll-y" *ngIf="myConfig.showFooter">
           <div class="field">
             <p class="control footer-buttons">
               <button class="button is-primary is-rounded has-tooltip"
@@ -141,7 +141,7 @@
                 <span class="icon">
                   <i class="fas fa-camera" aria-hidden="true"></i>
                 </span>
-                <span>
+                <span [ngClass]="{'text-normal':smallStyle}">
                   Screenshot
                 </span>
               </button>
@@ -150,48 +150,51 @@
 
           <div class="field">
             <p class="control footer-buttons">
-              <a [href]="graphmlLink()" class="button is-success is-rounded has-tooltip" data-tooltip="Export this network as .graphml file.">
+              <a [href]="graphmlLink()" class="button is-success is-rounded has-tooltip"
+                 data-tooltip="Export this network as .graphml file.">
                 <span class="icon">
                   <i class="fas fa-download" aria-hidden="true"></i>
                 </span>
-                <span>
+                <span [ngClass]="{'text-normal':smallStyle}">
                   Export as .graphml
                 </span>
               </a>
             </p>
           </div>
 
-<!--          <div class="field">-->
-<!--            <p class="control footer-buttons">-->
-<!--              <button class="button is-danger is-rounded has-tooltip" data-tooltip="Delete the current analysis."-->
-<!--                      (click)="analysis.removeTask(token); close()">-->
-<!--                <span class="icon">-->
-<!--                  <i class="fas fa-trash" aria-hidden="true"></i>-->
-<!--                </span>-->
-<!--                <span>-->
-<!--                  Delete Analysis-->
-<!--                </span>-->
-<!--              </button>-->
-<!--            </p>-->
-<!--          </div>-->
+          <!--          <div class="field">-->
+          <!--            <p class="control footer-buttons">-->
+          <!--              <button class="button is-danger is-rounded has-tooltip" data-tooltip="Delete the current analysis."-->
+          <!--                      (click)="analysis.removeTask(token); close()">-->
+          <!--                <span class="icon">-->
+          <!--                  <i class="fas fa-trash" aria-hidden="true"></i>-->
+          <!--                </span>-->
+          <!--                <span>-->
+          <!--                  Delete Analysis-->
+          <!--                </span>-->
+          <!--              </button>-->
+          <!--            </p>-->
+          <!--          </div>-->
 
           <div class="footer-buttons dropdown is-up" [class.is-active]="expressionExpanded">
             <div class="dropdown-trigger">
               <button (click)="expressionExpanded=!expressionExpanded"
                       class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
-                      aria-haspopup="true" aria-controls="dropdown-menu">
-                <span *ngIf="!selectedTissue">Tissue</span>
-                <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
-                <span class="icon is-small">
+                      aria-haspopup="true" aria-controls="dropdown-menu" [ngClass]="{'button-small':smallStyle}">
+                <div [ngClass]="{'text-small':smallStyle}">
+                  <span *ngIf="!selectedTissue">Tissue</span>
+                  <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
+                  <span class="icon is-small">
                   <i class="fas"
                      [class.fa-angle-up]="expressionExpanded"
                      [class.fa-angle-left]="!expressionExpanded" aria-hidden="true"></i>
                 </span>
+                </div>
               </button>
             </div>
             <div class="dropdown-menu" id="dropdown-menu" role="menu">
-              <div class="dropdown-content tissue-dropdown">
-                <div class="scroll-area">
+              <div class="dropdown-content tissue-dropdown" [ngClass]="{'button-small':smallStyle}">
+                <div class="scroll-area" [ngClass]="{'text-small':smallStyle}">
                   <a (click)="selectTissue(null)"
                      [class.is-active]="!selectedTissue"
                      class="dropdown-item">
@@ -210,10 +213,13 @@
 
           <app-toggle *ngIf="task.info.target === 'drug-target'" class="footer-buttons" textOn="Drugs On" textOff="Off"
                       tooltipOn="Display drugs in the network" tooltipOff="Hide drugs in the network"
+                      [smallStyle]="smallStyle"
                       [value]="showDrugs" (valueChange)="toggleDrugs($event)"></app-toggle>
 
           <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off"
-                      tooltipOn="Enable the network animation." tooltipOff="Disable the network animation and freeze nodes."
+                      tooltipOn="Enable the network animation."
+                      tooltipOff="Disable the network animation and freeze nodes."
+                      [smallStyle]="smallStyle"
                       [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
         </footer>
       </div>

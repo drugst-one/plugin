@@ -100,7 +100,7 @@
       <div class="analysis-view" *ngIf="selectedAnalysisToken">
         <app-analysis-panel [(token)]="selectedAnalysisToken"
                             (showDetailsChange)="selectedWrapper = $event"
-                            (visibleItems)="analysisWindowChanged($event)"></app-analysis-panel>
+                            (visibleItems)="analysisWindowChanged($event)" [config]="myConfig" [smallStyle]="smallStyle"></app-analysis-panel>
       </div>
 
       <div class="card network">
@@ -111,7 +111,7 @@
           </p>
         </header>
         <div class="card-content fullheight">
-          <div class="card-image" id="canvas-content" #networkWithLegend>
+          <div class="card-image canvas-content" #networkWithLegend>
             <div *ngIf="myConfig.showLegend">
               <app-network-legend [config]="myConfig" [analysis]="false"></app-network-legend>
             </div>
@@ -122,8 +122,7 @@
             </div>
           </div>
 
-          <footer *ngIf="myConfig.showFooter" class="card-footer toolbar explorer-footer"
-                  [ngClass]="{'footer-small':smallStyle}">
+          <footer *ngIf="myConfig.showFooter" class="card-footer toolbar explorer-footer">
             <button (click)="toImage()" class="button is-primary is-rounded has-tooltip"
                     data-tooltip="Take a screenshot of the current network.">
             <span class="icon">

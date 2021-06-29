@@ -29,8 +29,8 @@ import {
 import domtoimage from 'dom-to-image';
 import {toast} from 'bulma-toast';
 import {NetworkSettings} from '../../network-settings';
-import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
-import { IConfig } from 'src/app/config';
+import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
+import {defaultConfig, IConfig} from 'src/app/config';
 
 declare var vis: any;
 
@@ -56,14 +56,25 @@ interface Baited {
 export class AnalysisPanelComponent implements OnInit, OnChanges {
 
   @ViewChild('network', {static: false}) networkEl: ElementRef;
-
+  @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
   @Input() token: string | null = null;
-
+  @Input() public smallStyle = false;
+  @Input()
+  public set config(config: IConfig | undefined) {
+    if (typeof config === 'undefined') {
+      return;
+    }
+    for (const key of Object.keys(config)) {
+      this.myConfig[key] = config[key];
+    }
+  }
   @Output() tokenChange = new EventEmitter<string | null>();
   @Output() showDetailsChange = new EventEmitter<Wrapper>();
   @Output() visibleItems = new EventEmitter<[any[], [Node[], Tissue]]>();
 
   public task: Task | null = null;
+  public myConfig: IConfig = JSON.parse(JSON.stringify(defaultConfig));
+
 
   private network: any;
   private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
@@ -139,8 +150,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
       if (this.task && this.task.info.done) {
         const result = await this.netex.getTaskResult(this.token);
-        console.log("result")
-        console.log(result)
         const nodeAttributes = result.nodeAttributes || {};
         const isSeed: { [key: string]: boolean } = nodeAttributes.isSeed || {};
 
@@ -177,7 +186,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
             this.tableProteins.forEach((r) => {
               r.rawScore = r.score;
               r.isSeed = isSeed[r.id];
-              const wrapper = getWrapperFromNode(r)
+              const wrapper = getWrapperFromNode(r);
               if (this.analysis.inSelection(wrapper)) {
                 this.tableSelectedProteins.push(r);
               }
@@ -375,14 +384,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
    * For the third case, fall back to a default case which can also be set by user.
    */
   public inferNodeGroup(wrapper: Wrapper): string {
-    console.log(wrapper)
+    console.log(wrapper);
     if (wrapper.data.group !== undefined) {
-      return wrapper.data.group
-    }
-    else if (wrapper.data.netexId !== undefined && wrapper.data.netexId.startsWith('d')) {
+      return wrapper.data.group;
+    } else if (wrapper.data.netexId !== undefined && wrapper.data.netexId.startsWith('d')) {
       return 'drug';
-    }
-    else if (wrapper.data.netexId !== undefined && wrapper.data.netexId.startsWith('p')) {
+    } else if (wrapper.data.netexId !== undefined && wrapper.data.netexId.startsWith('p')) {
       return 'protein';
     }
   }
@@ -392,7 +399,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       return wrapper.data.label;
     }
     const identifier = config.identifier;
-    if (identifier === 'uniprot'){
+    if (identifier === 'uniprot') {
       return wrapper.data.uniprotAc;
     } else if (identifier === 'symbol') {
       return wrapper.data.symbol;
@@ -470,14 +477,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
    */
   private mapNode(config: IConfig, wrapper: Wrapper, isSeed?: boolean, score?: number): any {
 
-    console.log("node group")
-    console.log(config.nodeGroups)
-    console.log("node")
+    console.log('node group');
+    console.log(config.nodeGroups);
+    console.log('node');
 
     console.log(wrapper.data);
 
     // override group is node is seed
-    wrapper.data.group = isSeed ? 'seedNode' : wrapper.data.group
+    wrapper.data.group = isSeed ? 'seedNode' : wrapper.data.group;
     const node = JSON.parse(JSON.stringify(config.nodeGroups[wrapper.data.group]));
     node.id = wrapper.id;
     node.label = this.inferNodeLabel(config, wrapper);
@@ -576,12 +583,22 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   }
 
   public toImage() {
-    domtoimage.toPng(this.networkEl.nativeElement, { bgcolor: '#ffffff' }).then((generatedImage) => {
+    this.downloadDom(this.networkWithLegendEl.nativeElement).catch(error => {
+      console.error("Falling back to network only screenshot. Some components seem to be inaccessable, most likely the legend is a custom image with CORS access problems on the host server side.")
+      this.downloadDom(this.networkEl.nativeElement).catch(e => {
+        console.error("Some network content seems to be inaccessable for saving as a screenshot. This can happen due to custom images used as nodes. Please ensure correct CORS accessability on the images host server.")
+        console.error(e)
+      });
+    });
+  }
+
+  public downloadDom(dom: object) {
+    return domtoimage.toPng(dom, {bgcolor: '#ffffff'}).then((generatedImage) => {
       const a = document.createElement('a');
       a.href = generatedImage;
       a.download = `Network.png`;
       a.click();
-    }).catch(e => console.error(e));
+    });
   }
 
   public tableProteinSelection(e) {

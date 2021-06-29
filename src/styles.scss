@@ -21,7 +21,7 @@
   height: 100%;
 }
 
-#canvas-content {
+.canvas-content {
   height: calc(100% - #{$network-footer-height});
 }
 
