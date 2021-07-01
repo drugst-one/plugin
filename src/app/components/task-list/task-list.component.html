@@ -62,7 +62,7 @@
           <span class="icon is-pulled-right"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i></span>
         </p>
         <p class="has-text-danger">
-          <small class="status-field">{{task.info.status}}</small>
+          <small [style.background-color]="colorTheme['panel-background']" [style.border-color]="colorTheme['panel-border']" class="status-field">{{task.info.status}}</small>
           <a (click)="analysis.removeTask(task.token)" class="is-pulled-right has-text-danger">
             <span class="icon is-pulled-right">
               <i class="fa fa-trash"></i>

@@ -1,4 +1,4 @@
-<div id="appWindow" class="is-hidden-mobile fullheight" [style.color]="textColor" (window:resize)="onResize($event)">
+<div id="appWindow" class="is-hidden-mobile fullheight" [style.color]="textColor" (window:resize)="onResize($event)" [style.background-color]="colorTheme.background" >
 
 
   <app-launch-analysis [(show)]="showAnalysisDialog"
@@ -22,7 +22,7 @@
     <!-- Start left sidebar -->
     <div *ngIf="myConfig.showLeftSidebar" class="covex sidebar bar-left">
 
-      <div *ngIf="myConfig.showOverview" class="card bar-large" [ngClass]="{'b-text-small':smallStyle}">
+      <div *ngIf="myConfig.showOverview" class="card bar-large" [ngClass]="{'b-text-small':smallStyle}" [style.background-color]="colorTheme['panel-background']">
         <header class="card-header">
           <p class="card-header-title">
                 <span class="icon">
@@ -69,7 +69,7 @@
         </div>
       </div>
 
-      <div *ngIf="myConfig.showQuery" class="card bar-large" [ngClass]="{'b-text-small':smallStyle}">
+      <div *ngIf="myConfig.showQuery" class="card bar-large" [ngClass]="{'b-text-small':smallStyle}" [style.background-color]="colorTheme['panel-background']">
         <header class="card-header">
           <p class="card-header-title">
                 <span class="icon">
@@ -102,7 +102,7 @@
     </div>
 
     <!-- Start network block -->
-    <div class="covex network center-panel" id="main-column">
+    <div class="covex network center-panel" id="main-column" [style.background-color]="colorTheme['panel-background']">
 
       <div class="analysis-view" *ngIf="selectedAnalysisToken">
         <app-analysis-panel [(token)]="selectedAnalysisToken"
@@ -111,7 +111,7 @@
                             [smallStyle]="smallStyle"></app-analysis-panel>
       </div>
 
-      <div class="card network">
+      <div class="card network" [style.background-color]="colorTheme['network-background']">
 
         <header class="card-header">
           <p class="card-header-title">
@@ -188,7 +188,7 @@
     <!-- End  network block -->
 
     <div *ngIf="myConfig.showRightSidebar" class="covex sidebar bar-right">
-      <div *ngIf="myConfig.showItemSelector" class="card bar-large">
+      <div *ngIf="myConfig.showItemSelector" class="card bar-large" [style.background-color]="colorTheme['panel-background']">
         <header class="card-header" [ngClass]="{'b-text-small':smallStyle}">
           <p class="card-header-title">
           <span class="icon">
@@ -219,7 +219,7 @@
         </div>
       </div>
 
-      <div *ngIf="myConfig.showSimpleAnalysis" class="card bar-large">
+      <div *ngIf="myConfig.showSimpleAnalysis" class="card bar-large" [style.background-color]="colorTheme['panel-background']">
         <header class="card-header" [ngClass]="{'b-text-small':smallStyle}">
           <p class="card-header-title">
           <span class="icon">
@@ -237,7 +237,7 @@
             </span>
           </a>
         </header>
-        <div *ngIf="collapseAnalysisQuick">
+        <div *ngIf="collapseAnalysisQuick" [style.background-color]="colorTheme['panel-background']">
           <div class="card-content quick-find">
             <div class="field">
               <div class="control">
@@ -292,7 +292,7 @@
         </div>
       </div>
 
-      <div *ngIf="myConfig.showAdvAnalysis" class="card bar-large">
+      <div *ngIf="myConfig.showAdvAnalysis" class="card bar-large" [style.background-color]="colorTheme['panel-background']">
         <header class="card-header" [ngClass]="{'b-text-small':smallStyle}">
           <p class="card-header-title">
           <span class="icon">
@@ -310,7 +310,7 @@
             </span>
           </a>
         </header>
-        <div *ngIf="collapseAnalysis">
+        <div *ngIf="collapseAnalysis" >
           <div class="card-content">
             <div class="field">
               <div class="control">
@@ -370,7 +370,7 @@
         </div>
       </div>
 
-      <div *ngIf="myConfig.showTasks" class="card bar-large">
+      <div *ngIf="myConfig.showTasks" class="card bar-large" [style.background-color]="colorTheme['panel-background']">
         <header class="card-header" [ngClass]="{'b-text-small':smallStyle}">
           <p class="card-header-title">
           <span class="icon">
@@ -390,9 +390,9 @@
         </header>
         <div *ngIf="collapseTask">
           <div class="card-content overflow" *ngIf="analysis.tasks && analysis.tasks.length > 0">
-            <app-task-list [(token)]="selectedAnalysisToken"></app-task-list>
+            <app-task-list [(token)]="selectedAnalysisToken" [colorTheme]="colorTheme"></app-task-list>
           </div>
-          <footer class="card-footer">
+          <footer class="card-footer" [style.border-color]="colorTheme['panel-border']">
             <a *ngIf="analysis.tasks && analysis.tasks.length > 0"
                (click)="analysis.removeAllTasks(); selectedAnalysisToken = null;"
                class="card-footer-item has-text-danger" data-tooltip="Delete all tasks.">
@@ -407,7 +407,7 @@
         </div>
       </div>
 
-      <div *ngIf="myConfig.showSelection" class="card bar-large">
+      <div *ngIf="myConfig.showSelection" class="card bar-large" [style.background-color]="colorTheme['panel-background']"  [style.border-color]="colorTheme['panel-border']">
         <header class="card-header" [ngClass]="{'b-text-small':smallStyle}">
           <p class="card-header-title">
           <span class="icon">
@@ -426,7 +426,7 @@
           </a>
         </header>
         <div *ngIf="collapseSelection" class="seed-selection" [ngClass]="{'text-normal':smallStyle}">
-          <div class="card-content overflow">
+          <div class="card-content overflow" [style.background-color]="colorTheme['panel-background']">
             <table class="table selection-table" *ngIf="analysis.getCount() > 0">
               <thead>
               <tr>
@@ -453,7 +453,7 @@
             </i>
           </div>
 
-          <footer class="card-footer" *ngIf="selectedAnalysisToken">
+          <footer class="card-footer" *ngIf="selectedAnalysisToken" [style.background-color]="colorTheme['panel-background']" [style.border-color]="colorTheme['panel-border']">
             <a (click)="analysis.addSeeds(currentViewNodes)"
                class="card-footer-item has-text-success" data-tooltip="Add all visible seeds.">
 
@@ -475,10 +475,10 @@
             </a>
           </footer>
 
-          <footer class="card-footer">
+          <footer class="card-footer" [style.background-color]="colorTheme['panel-background']"  [style.border-color]="colorTheme['panel-border']">
             <a (click)="showCustomProteinsDialog = true"
                class="card-footer-item has-text-primary"
-               data-tooltip="Add a custom list of proteins.">
+               data-tooltip="Add a custom list of proteins."  [style.border-color]="colorTheme['panel-border']">
             <span class="icon">
               <i class="fa fa-upload"></i>
             </span>
@@ -488,7 +488,7 @@
             </a>
             <a (click)="showThresholdDialog = true"
                class="card-footer-item has-text-primary"
-               data-tooltip="Add proteins expressed in the tissue.">
+               data-tooltip="Add proteins expressed in the tissue."  [style.border-color]="colorTheme['panel-border']">
             <span class="icon">
               <i class="fa fa-angle-double-up"></i>
             </span>
@@ -498,9 +498,9 @@
             </a>
           </footer>
 
-          <footer class="card-footer">
+          <footer class="card-footer" [style.background-color]="colorTheme['panel-background']"  [style.border-color]="colorTheme['panel-border']">
             <a (click)="analysis.invertSelection(currentViewNodes)" class="card-footer-item has-text-primary"
-               data-tooltip="Invert the current selection.">
+               data-tooltip="Invert the current selection."  [style.border-color]="colorTheme['panel-border']">
             <span class="icon">
               <i class="fa fa-sync"></i>
             </span>
@@ -509,7 +509,7 @@
             </span>
             </a>
             <a (click)="analysis.resetSelection()" class="card-footer-item has-text-danger"
-               data-tooltip="Remove all entries from the selection.">
+               data-tooltip="Remove all entries from the selection."  [style.border-color]="colorTheme['panel-border']">
             <span class="icon">
               <i class="fa fa-broom"></i>
             </span>
@@ -525,7 +525,7 @@
   </div>
 </div>
 
-<div class="is-hidden-tablet mobile-fallback">
+<div class="is-hidden-tablet mobile-fallback" [style.background-color]="colorTheme.background">
   Sorry, CoVex is not available for mobile phones.
   To find information about CoVex, please check the <a routerLink="/about">About</a> page or visit this page
   with another device with a larger screen.

@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AnalysisService, algorithmNames} from '../../services/analysis/analysis.service';
+import {Theme} from '../../theme';
 
 
 @Component({
@@ -10,6 +11,7 @@ import {AnalysisService, algorithmNames} from '../../services/analysis/analysis.
 
 export class TaskListComponent implements OnInit {
 
+  @Input() colorTheme: Theme;
   @Input() token: string;
   @Output() tokenChange: EventEmitter<string> = new EventEmitter();
 

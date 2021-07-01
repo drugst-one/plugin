@@ -6,6 +6,7 @@ import {OmnipathControllerService} from '../../services/omnipath-controller/omni
 import domtoimage from 'dom-to-image';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, NodeGroup} from '../../config';
+import {defaultTheme, Theme} from '../../theme';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 // import * as 'vis' from 'vis-network';
 // import {DataSet} from 'vis-data';
@@ -30,6 +31,18 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   @Input()
   public onload: undefined | string;
+  public colorTheme: Theme = defaultTheme;
+
+  @Input()
+  public set theme(config: string | undefined) {
+    if (config == null) {
+      return;
+    }
+    const theme = JSON.parse(config);
+    for (const key of Object.keys(theme)) {
+      this.colorTheme[key] = theme[key];
+    }
+  }
 
   @Input()
   public set config(config: string | undefined) {
@@ -417,10 +430,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public toImage() {
     this.downloadDom(this.networkWithLegendEl.nativeElement).catch(error => {
-      console.error("Falling back to network only screenshot. Some components seem to be inaccessable, most likely the legend is a custom image with CORS access problems on the host server side.")
+      console.error('Falling back to network only screenshot. Some components seem to be inaccessable, most likely the legend is a custom image with CORS access problems on the host server side.');
       this.downloadDom(this.networkEl.nativeElement).catch(e => {
-        console.error("Some network content seems to be inaccessable for saving as a screenshot. This can happen due to custom images used as nodes. Please ensure correct CORS accessability on the images host server.")
-        console.error(e)
+        console.error('Some network content seems to be inaccessable for saving as a screenshot. This can happen due to custom images used as nodes. Please ensure correct CORS accessability on the images host server.');
+        console.error(e);
       });
     });
   }

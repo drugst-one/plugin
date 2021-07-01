@@ -1,15 +1,16 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <script src="https://cdn.jsdelivr.net/gh/AndiMajore/drugstone-releases@0.6.6/remote/drugsTone.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AndiMajore/drugstone-releases@0.6.6/remote/styles.css">
+    <script src="https://cdn.jsdelivr.net/gh/AndiMajore/drugstone-releases@0.7.0-rc2/remote/drugsTone.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AndiMajore/drugstone-releases@0.7.0-rc2/remote/styles.css">
   </head>
   <body>
     <div style="height: 700px; width: 1300px;">
       <network-expander
         id='drugstone-panel-1'
-        config='{"nodeGroups":{"0.5":{"type":"gene","color":"#CCFF33FF","groupName":"0.5","shape":"star"},"patientGroup":{"type":"gene","color":"#FF0000FF","groupName":"Patients","shape":"circle"},"Group1":{"type":"someType","color":"#e900f5","groupName":"genes","shape":"circle","id":"Group1"}},"edgeGroups":{"normal":{"color":"black","groupName":"Custom Group"},"dashed":{"color":"#000857","groupName":"Dashed","dashes":[3,2]}},"identifier":"symbol","showFooter":false,"showQuery":false,"legendPos":"right","showLegendEdges":false}'
-        network='{"nodes":[{"id":"EGFR","group":"Group1"},{"id":"MYC","group":"Group1"},{"id":"ACE2","group":"Group1"}],"edges":[{"from":"TP53","to":"C5","group":"dashed"},{"from":"TP53","to":"PTEN","group":"dashed"},{"from":"Patient","to":"C5","group":"normal"},{"from":"Patient","to":"PTEN","group":"normal"}]}'>
+        theme='{"background":"#212a4a","panel-background":"#1829c4","panel-border":"#c928c9","network-background":"#d93bd9","color1":"#00D1B2","color2":"#3273DC","text-primary":"#000000","text-secondary":"#FFFFFF","success":"#48C774","warn":"#C78E48","error":"#F14668"}'
+        config='{"nodeGroups":{"0.5":{"type":"gene","color":"#CCFF33FF","groupName":"0.5","shape":"star"},"1.5":{"type":"gene","color":"#66FF33FF","groupName":"1.5","shape":"circle"},"2.0":{"type":"gene","color":"#33CC33FF","groupName":"2.0","shape":"circle"},"patientGroup":{"type":"gene","color":"#FF0000FF","groupName":"Patients","shape":"circle"}},"edgeGroups":{"normal":{"color":"black","groupName":"Custom Group"},"dashed":{"color":"#000857","groupName":"Dashed","dashes":[3,2]}},"identifier":"symbol","legendUrl":"https://exbio.wzw.tum.de/covex/assets/leg1.png"}'
+        network='{"nodes":[{"id":"TP53","group":"0.5","x":4,"y":6},{"id":"C5","group":"0.5","x":6,"y":4},{"id":"Patient","group":"patientGroup"},{"label":"PTEN","id":"PTEN","group":0.5}],"edges":[{"from":"TP53","to":"C5","group":"dashed"},{"from":"TP53","to":"PTEN","group":"dashed"},{"from":"Patient","to":"C5","group":"normal"},{"from":"Patient","to":"PTEN","group":"normal"}]}'>
       </network-expander>
     </div>
 </body>
