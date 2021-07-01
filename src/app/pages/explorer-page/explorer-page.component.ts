@@ -1,17 +1,5 @@
-import {
-  AfterViewInit,
-  Component, Directive,
-  ElementRef, HostListener, Input,
-  OnInit,
-  ViewChild
-} from '@angular/core';
-import {
-  NodeInteraction,
-  Node,
-  Wrapper,
-  getWrapperFromNode,
-  Tissue
-} from '../../interfaces';
+import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {getWrapperFromNode, Node, Tissue, Wrapper} from '../../interfaces';
 import {ProteinNetwork} from '../../main-network';
 import {AnalysisService} from '../../services/analysis/analysis.service';
 import {OmnipathControllerService} from '../../services/omnipath-controller/omnipath-controller.service';
@@ -19,7 +7,6 @@ import domtoimage from 'dom-to-image';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, NodeGroup} from '../../config';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
-import {removeUnderscoreFromKeys} from 'src/app/utils';
 // import * as 'vis' from 'vis-network';
 // import {DataSet} from 'vis-data';
 // import {vis} from 'src/app/scripts/vis-network.min.js';

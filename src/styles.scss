@@ -1,19 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
-
 @charset "utf-8";
 
 @import url('https://fonts.googleapis.com/css?family=Varela+Round');
-@import "~@ng-select/ng-select/themes/default.theme.css";
 
 //@import "src/theme";
 @import "~bulma/bulma.sass";
 @import '~bulma-tooltip';
-@import "~primeng/resources/primeng.min.css";
-//@import '~primeng/resources/themes/md-light-indigo/theme.css';
-//@import '~primeng/resources/themes/vela-blue/theme.css';
-@import "~primeicons/primeicons.css";
 @import "~animate.css/animate.min";
-
 
 @import "variables";
 
@@ -219,18 +211,13 @@ div.field.has-addons.add-remove-toggle {
   }
 }
 
-html, body {
+html, #appWindow {
   height: 100%;
 }
 
-body {
+#appWindow {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
-
-.ui-chkbox-box {
-  border: 1px solid black !important;
 }
 
 .tissue-dropdown {

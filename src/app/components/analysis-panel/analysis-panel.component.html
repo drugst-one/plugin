@@ -255,75 +255,7 @@
             <span>Download</span>
           </a>
         </div>
-        <p-table *ngIf="tableDrugs.length > 0" [value]="tableDrugs">
-          <ng-template pTemplate="header">
-            <tr>
-              <th [pSortableColumn]="'drugId'">
-                ID
-                <p-sortIcon [field]="'drugId'"></p-sortIcon>
-              </th>
-              <th [pSortableColumn]="'label'">
-                Label
-                <p-sortIcon [field]="'label'"></p-sortIcon>
-              </th>
-              <th [pSortableColumn]="'status'">
-                Approved
-                <p-sortIcon [field]="'status'"></p-sortIcon>
-              </th>
-              <th [pSortableColumn]="'inTrial'">
-                In Trial
-                <p-sortIcon [field]="'inTrial'"></p-sortIcon>
-              </th>
-              <th [pSortableColumn]="'inLiterature'">
-                In Literature
-                <p-sortIcon [field]="'inLiterature'"></p-sortIcon>
-              </th>
-              <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
-                Score
-                <button class="button is-light has-tooltip tooltip-button"
-                        [attr.data-tooltip]="tableDrugScoreTooltip">
-                  ?
-                </button>
-                <p-sortIcon [field]="'score'"></p-sortIcon>
-              </th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-e>
-            <tr>
-              <td><a href="https://www.drugbank.ca/drugs/{{ e.drugId }}" target="_blank">{{ e.drugId }}</a></td>
-              <td>{{e.label}}</td>
-              <td>
-                <span *ngIf="e.status === 'approved'">
-                  <i class="fa fa-check"></i>
-                  Approved
-                </span>
-                <span *ngIf="e.status === 'unapproved'">
-                  <i class="fa fa-times"></i>
-                </span>
-              </td>
-              <td>
-                <span *ngIf="e.inTrial">
-                  <i class="fa fa-microscope has-text-primary"></i>
-                  Trial
-                </span>
-                <span *ngIf="!e.inTrial">
-                  <i class="fa fa-times"></i>
-                </span>
-              </td>
-              <td>
-                <span *ngIf="e.inLiterature">
-                  <i class="fa fa-book has-text-primary"></i>
-                  Literature
-                </span>
-                <span *ngIf="!e.inLiterature">
-                  <i class="fa fa-times"></i>
-                </span>
-              </td>
-              <td *ngIf="tableHasScores">{{e.score | number}}</td>
-            </tr>
-          </ng-template>
-        </p-table>
-
+        <app-drug-table [tableDrugs]="tableDrugs" [tableDrugScoreTooltip]="tableDrugScoreTooltip" [tableHasScores]="tableHasScores"></app-drug-table>
         <div *ngIf="tableProteins.length > 0" class="table-header">
           <h4 class="is-4">
             <span class="icon"><i class="fa fa-dna"></i></span>
@@ -334,61 +266,7 @@
             <span>Download</span>
           </a>
         </div>
-        <p-table *ngIf="tableProteins.length > 0" selectionMode="multiple"
-                 [value]="tableProteins" [selection]="tableSelectedProteins" dataKey="uniprotAc"
-                 (selectionChange)="tableProteinSelection($event)">
-          <ng-template pTemplate="header">
-            <tr>
-              <th class="checkbox-col">
-                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-              </th>
-              <th [pSortableColumn]="'uniprotAc'">
-                UniProt Code
-                <p-sortIcon [field]="'uniprotAc'"></p-sortIcon>
-              </th>
-              <th [pSortableColumn]="'symbol'">
-                Symbol
-                <p-sortIcon [field]="'symbol'"></p-sortIcon>
-              </th>
-              <th [pSortableColumn]="'proteinName'">
-                Name
-                <p-sortIcon [field]="'proteinName'"></p-sortIcon>
-              </th>
-              <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
-                Score
-                <button class="button is-light has-tooltip tooltip-button"
-                        [attr.data-tooltip]="tableProteinScoreTooltip">
-                  ?
-                </button>
-                <p-sortIcon [field]="'score'"></p-sortIcon>
-              </th>
-              <th [pSortableColumn]="'isSeed'">
-                Seed
-                <p-sortIcon [field]="'isSeed'"></p-sortIcon>
-              </th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-e>
-            <tr>
-              <td>
-                <p-tableCheckbox [value]="e"></p-tableCheckbox>
-              </td>
-              <td><a href="https://www.uniprot.org/uniprot/{{ e.uniprotAc }}" target="_blank">{{ e.uniprotAc }}</a></td>
-              <td>{{e.symbol}}</td>
-              <td>{{e.proteinName}}</td>
-              <td *ngIf="tableHasScores">{{e.score | number}}</td>
-              <td>
-                <span *ngIf="e.isSeed">
-                  <i class="fa fa-check"></i>
-                  Seed
-                </span>
-                <span *ngIf="!e.isSeed">
-                  <i class="fa fa-times"></i>
-                </span>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
+        <app-prot-table [tableHasScores]="tableHasScores" [tableProteins]="tableProteins" [tableProteinScoreTooltip]="tableDrugScoreTooltip" [tableProteinSelection]="tableProteinSelection" [tableSelectedProteins]="tableSelectedProteins"></app-prot-table>
       </div>
     </div>
   </div>

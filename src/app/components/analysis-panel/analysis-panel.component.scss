@@ -1,3 +1,4 @@
+
 .analysis {
   position: absolute;
   height: 100%;
@@ -12,7 +13,7 @@ div.network {
   visibility: hidden;
   position: absolute;
   width: calc(100% - 50px);
-  height: calc(100% - 41px - 67px - 24px);
+  height: calc(100% - 41px - 67px - 48px);
 
   &.is-visible {
     visibility: visible;

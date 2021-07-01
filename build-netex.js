@@ -5,7 +5,7 @@ const concat = require('concat');
     './dist/netex/runtime-es5.js',
     './dist/netex/polyfills-es5.js',
     './scripts/vis-network.min.js',
-    './scripts/3ad4fe992f.js',
+    // './scripts/3ad4fe992f.js',
     // './dist/netex/scripts.js',
     './dist/netex/main-es5.js'
   ];
@@ -14,3 +14,4 @@ const concat = require('concat');
   await fs.copy('./dist/netex/styles.css', 'drugsTone-build/styles.css');
   await fs.copy('./dist/netex/assets/', 'netex/assets/');
 })();
+

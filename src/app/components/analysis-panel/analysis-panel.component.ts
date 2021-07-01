@@ -7,30 +7,31 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
-import {AnalysisService, algorithmNames} from '../../services/analysis/analysis.service';
+import {algorithmNames, AnalysisService} from '../../services/analysis/analysis.service';
 import {
-  Node,
-  Task,
   Drug,
-  Wrapper,
-  getWrapperFromNode,
-  getWrapperFromDrug,
-  getWrapperFromCustom,
+  EdgeType,
   getNodeIdsFromPDI,
   getNodeIdsFromPPI,
   getProteinNodeId,
+  getWrapperFromCustom,
+  getWrapperFromDrug,
+  getWrapperFromNode,
+  Node,
+  Task,
   Tissue,
-  EdgeType,
+  Wrapper,
 } from '../../interfaces';
 import domtoimage from 'dom-to-image';
 import {toast} from 'bulma-toast';
 import {NetworkSettings} from '../../network-settings';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 import {defaultConfig, IConfig} from 'src/app/config';
+
 
 declare var vis: any;
 
@@ -601,7 +602,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     });
   }
 
-  public tableProteinSelection(e) {
+  public tableProteinSelection = (e): void => {
     const oldSelection = [...this.tableSelectedProteins];
     this.tableSelectedProteins = e;
     const addItems = [];

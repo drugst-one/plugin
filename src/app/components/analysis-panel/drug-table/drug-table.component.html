@@ -1,0 +1,68 @@
+<p-table *ngIf="tableDrugs.length > 0" [value]="tableDrugs">
+  <ng-template pTemplate="header">
+    <tr>
+      <th [pSortableColumn]="'drugId'">
+        ID
+        <p-sortIcon [field]="'drugId'"></p-sortIcon>
+      </th>
+      <th [pSortableColumn]="'label'">
+        Label
+        <p-sortIcon [field]="'label'"></p-sortIcon>
+      </th>
+      <th [pSortableColumn]="'status'">
+        Approved
+        <p-sortIcon [field]="'status'"></p-sortIcon>
+      </th>
+      <th [pSortableColumn]="'inTrial'">
+        In Trial
+        <p-sortIcon [field]="'inTrial'"></p-sortIcon>
+      </th>
+      <th [pSortableColumn]="'inLiterature'">
+        In Literature
+        <p-sortIcon [field]="'inLiterature'"></p-sortIcon>
+      </th>
+      <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
+        Score
+        <button class="button is-light has-tooltip tooltip-button"
+                [attr.data-tooltip]="tableDrugScoreTooltip">
+          <fa-icon [icon]="faQuestionCircle" class="icon"></fa-icon>
+        </button>
+        <p-sortIcon [field]="'score'"></p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-e>
+    <tr>
+      <td><a href="https://www.drugbank.ca/drugs/{{ e.drugId }}" target="_blank">{{ e.drugId }}</a></td>
+      <td>{{e.label}}</td>
+      <td>
+                <span *ngIf="e.status === 'approved'">
+                  <fa-icon [icon]="faCheck" [classes]="['icon']"></fa-icon>
+                  Approved
+                </span>
+        <span *ngIf="e.status === 'unapproved'">
+                  <fa-icon [icon]="faTimes" [classes]="['icon']"></fa-icon>
+                </span>
+      </td>
+      <td>
+                <span *ngIf="e.inTrial">
+                  <fa-icon [icon]="faMicroscope" [classes]="['icon', 'has-text-primary']"></fa-icon>
+                  Trial
+                </span>
+        <span *ngIf="!e.inTrial">
+                  <fa-icon [icon]="faTimes" [classes]="['icon']"></fa-icon>
+                </span>
+      </td>
+      <td>
+                <span *ngIf="e.inLiterature">
+                  <fa-icon [icon]="faBook" [classes]="['icon','has-text-primary']"></fa-icon>
+                  Literature
+                </span>
+        <span *ngIf="!e.inLiterature">
+                  <fa-icon [icon]="faTimes" [classes]="['icon']"></fa-icon>
+                </span>
+      </td>
+      <td *ngIf="tableHasScores">{{e.score | number}}</td>
+    </tr>
+  </ng-template>
+</p-table>

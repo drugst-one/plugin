@@ -7,7 +7,6 @@ import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TableModule} from 'primeng/table';
 
-import {AppComponent} from './app.component';
 import {ExplorerPageComponent} from './pages/explorer-page/explorer-page.component';
 import {QueryTileComponent} from './components/query-tile/query-tile.component';
 import {LaunchAnalysisComponent} from './dialogs/launch-analysis/launch-analysis.component';
@@ -19,15 +18,22 @@ import {InfoTileComponent} from './components/info-tile/info-tile.component';
 import {CustomProteinsComponent} from './dialogs/custom-proteins/custom-proteins.component';
 
 import {AnalysisService} from './services/analysis/analysis.service';
-import { AddExpressedProteinsComponent } from './dialogs/add-expressed-proteins/add-expressed-proteins.component';
+import {AddExpressedProteinsComponent} from './dialogs/add-expressed-proteins/add-expressed-proteins.component';
 import {createCustomElement} from '@angular/elements';
-import { NetworkLegendComponent } from './components/network-legend/network-legend.component';
+import {NetworkLegendComponent} from './components/network-legend/network-legend.component';
+import {ProtTableComponent} from './components/analysis-panel/prot-table/prot-table.component';
+import {DrugTableComponent} from './components/analysis-panel/drug-table/drug-table.component';
 
-
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import fontawesome from '@fortawesome/fontawesome';
+import {faTimes, faAngleUp, faAngleLeft, faCapsules, faCrosshairs, faFlask, faCheck, faCamera, faDownload,
+  faRulerVertical, faDna, faMicroscope, faBook, faPause, faTrash, faSpinner, faExclamationTriangle, faPlus,
+  faExpand, faInfo, faRocket, faAngleDown, faSearch, faFastForward, faExternalLinkAlt, faTasks, faFilter,
+  faMinus, faUpload, faAngleDoubleDown, faSync, faBroom
+} from '@fortawesome/free-solid-svg-icons';
 
 @NgModule({
   declarations: [
-    AppComponent,
     ExplorerPageComponent,
     QueryTileComponent,
     LaunchAnalysisComponent,
@@ -39,6 +45,8 @@ import { NetworkLegendComponent } from './components/network-legend/network-lege
     CustomProteinsComponent,
     AddExpressedProteinsComponent,
     NetworkLegendComponent,
+    ProtTableComponent,
+    DrugTableComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,19 +56,27 @@ import { NetworkLegendComponent } from './components/network-legend/network-lege
     HttpClientModule,
     BrowserAnimationsModule,
     TableModule,
+    FontAwesomeModule
   ],
   providers: [AnalysisService],
 })
 export class AppModule {
 
+
   constructor(injector: Injector) {
+    // @ts-ignore
+    fontawesome.library.add(faTimes, faTimes, faAngleUp, faAngleLeft, faCapsules, faCrosshairs, faFlask,
+      faCheck, faCamera, faDownload, faRulerVertical, faDna, faMicroscope, faBook, faPause, faTrash,
+      faSpinner, faExclamationTriangle, faPlus, faExpand, faInfo, faRocket, faAngleDown, faSearch,
+      faFastForward, faExternalLinkAlt, faTasks, faFilter, faMinus, faUpload, faAngleDoubleDown,
+      faSync, faBroom);
     // Convert `PopupComponent` to a custom element.
     const NetworkExpander = createCustomElement(ExplorerPageComponent, {injector});
     // Register the custom element with the browser.
     customElements.define('network-expander', NetworkExpander);
-
   }
 
-  ngDoBootstrap() {}
+  ngDoBootstrap() {
+  }
 
 }
