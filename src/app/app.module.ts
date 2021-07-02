@@ -29,7 +29,7 @@ import fontawesome from '@fortawesome/fontawesome';
 import {faTimes, faAngleUp, faAngleLeft, faCapsules, faCrosshairs, faFlask, faCheck, faCamera, faDownload,
   faRulerVertical, faDna, faMicroscope, faBook, faPause, faTrash, faSpinner, faExclamationTriangle, faPlus,
   faExpand, faInfo, faRocket, faAngleDown, faSearch, faFastForward, faExternalLinkAlt, faTasks, faFilter,
-  faMinus, faUpload, faAngleDoubleDown, faSync, faBroom
+  faMinus, faUpload, faAngleDoubleDown, faSync, faBroom, faAngleDoubleUp
 } from '@fortawesome/free-solid-svg-icons';
 
 @NgModule({
@@ -69,7 +69,7 @@ export class AppModule {
       faCheck, faCamera, faDownload, faRulerVertical, faDna, faMicroscope, faBook, faPause, faTrash,
       faSpinner, faExclamationTriangle, faPlus, faExpand, faInfo, faRocket, faAngleDown, faSearch,
       faFastForward, faExternalLinkAlt, faTasks, faFilter, faMinus, faUpload, faAngleDoubleDown,
-      faSync, faBroom);
+      faSync, faBroom, faAngleDoubleUp);
     // Convert `PopupComponent` to a custom element.
     const NetworkExpander = createCustomElement(ExplorerPageComponent, {injector});
     // Register the custom element with the browser.

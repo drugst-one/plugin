@@ -1,0 +1,11 @@
+:root {
+  --drgstn-primary: #4885c7;
+  --drgstn-secondary: #cb32dc;
+  --drgstn-success: #7236d4;
+  --drgstn-warning: #FFDD57FF;
+  --drgstn-danger: #47efd6;
+  --drgstn-background: #FFFFFF;
+  --drgstn-info: #61c43d;
+  --drgstn-text-primary: #000000;
+  --drgstn-text-secondary: #FFFFFF;
+}

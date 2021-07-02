@@ -1,13 +1,23 @@
 @charset "utf-8";
 
 @import url('https://fonts.googleapis.com/css?family=Varela+Round');
-
-//@import "src/theme";
 @import "~bulma/bulma.sass";
 @import '~bulma-tooltip';
 @import "~animate.css/animate.min";
 
 @import "variables";
+
+:root {
+  --drgstn-primary: #00D1B2;
+  --drgstn-secondary: #3273DC;
+  --drgstn-success: #48C774;
+  --drgstn-warning: #FFDD57FF;
+  --drgstn-danger: #F14668;
+  --drgstn-background: #FFFFFF;
+  --drgstn-info: #61c43d;
+  --drgstn-text-primary: #000000;
+  --drgstn-text-secondary: #FFFFFF;
+}
 
 .fullheight {
   height: 100%;
@@ -170,11 +180,53 @@ div.field.has-addons.add-remove-toggle {
 }
 
 .fa-check {
-  color: $success;
+  color: var(--drgstn-success)
 }
 
+a {
+  color: var(--drgstn-secondary);
+}
+
+.tabs li.is-active a{
+  border-bottom-color: var(--drgstn-secondary);
+  color: var(--drgstn-secondary)
+}
+
+.button.is-primary {
+  background-color: var(--drgstn-primary) !important;
+  border-color: transparent;
+  color: var(--drgstn-text-secondary)
+}
+
+.button.is-primary.is-outlined {
+  background-color: transparent !important;
+  border-color: var(--drgstn-primary) !important;
+  color: var(--drgstn-primary) !important;
+}
+
+.button.is-primary.is-focused, .button.is-primary:focus {
+  background-color: var(--drgstn-primary) !important;
+  border-color: transparent;
+  color: var(--drgstn-text-secondary)
+}
+
+.has-text-primary {
+  color: var(--drgstn-primary) !important;
+}
+
+.has-text-danger {
+  color: var(--drgstn-danger) !important;
+}
+
+.is-primary {
+  background-color: var(--drgstn-primary) !important;
+}
+
+
+
+
 .fa-search.investigational {
-  color: $warning;
+  color: var(--drgstn-warning);
 }
 
 .fa-spinner {
@@ -182,15 +234,15 @@ div.field.has-addons.add-remove-toggle {
 }
 
 .fa-pause {
-  color: $warning;
+  color: var(--drgstn-warning);
 }
 
 .fa-exclamation-triangle {
-  color: $danger;
+  color: var(--drgstn-danger)
 }
 
 .fa-times {
-  color: $danger;
+  color: var(--drgstn-danger)
 }
 
 .footer-buttons {

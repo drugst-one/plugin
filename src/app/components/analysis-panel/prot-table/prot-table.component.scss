@@ -41,11 +41,15 @@
   width: 1.5rem;
 }
 .fa-times {
-  color: $danger;
+  color: var(--drgstn-danger);
 }
 
 .fa-check {
-  color: $success;
+  color: var(--drgstn-success);
+}
+
+a {
+  color: var(--drgstn-secondary);
 }
 
 td {
