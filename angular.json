@@ -33,6 +33,7 @@
               "src/assets"
             ],
             "styles": [
+              "src/theme-styles.scss",
               "src/styles.scss"
             ],
             "scripts": [],
@@ -70,7 +71,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "6kb",
-                  "maximumError": "500kb"
+                  "maximumError": "16kb"
                 }
               ]
             },
@@ -97,7 +98,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "6kb",
-                  "maximumError": "500kb"
+                  "maximumError": "16kb"
                 }
               ]
             },

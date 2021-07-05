@@ -24,7 +24,7 @@
       <div class="tab-content meta" *ngIf="task && task.info.done" [class.is-visible]="tab === 'meta'">
         <div *ngIf="task">
           <p *ngIf="task.info.algorithm !== 'quick' && task.info.algorithm !== 'super'">
-            Algorithm: <strong>{{algorithmNames[task.info.algorithm]}}</strong>
+            Algorithm: <strong class="has-text-normal">{{algorithmNames[task.info.algorithm]}}</strong>
           </p>
           <div>
             <table class="table is-narrow">
@@ -124,7 +124,7 @@
           </div>
         </div>
       </div>
-      <div class="tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'network'">
+      <div class="tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'network'" style="z-index: 0">
         <div class="card-image canvas-content" #networkWithLegend>
           <div *ngIf="myConfig.showLegend">
             <app-network-legend [config]="myConfig" [analysis]="false"></app-network-legend>

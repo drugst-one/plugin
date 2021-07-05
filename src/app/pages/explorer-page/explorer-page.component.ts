@@ -6,7 +6,6 @@ import {OmnipathControllerService} from '../../services/omnipath-controller/omni
 import domtoimage from 'dom-to-image';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, NodeGroup} from '../../config';
-import {defaultTheme, Theme} from '../../theme';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 // import * as 'vis' from 'vis-network';
 // import {DataSet} from 'vis-data';
@@ -31,18 +30,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   @Input()
   public onload: undefined | string;
-  public colorTheme: Theme = defaultTheme;
-
-  @Input()
-  public set theme(config: string | undefined) {
-    if (config == null) {
-      return;
-    }
-    const theme = JSON.parse(config);
-    for (const key of Object.keys(theme)) {
-      this.colorTheme[key] = theme[key];
-    }
-  }
 
   @Input()
   public set config(config: string | undefined) {

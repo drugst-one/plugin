@@ -5,7 +5,6 @@ import {faQuestionCircle} from '@fortawesome/free-regular-svg-icons';
   selector: 'app-prot-table',
   templateUrl: './prot-table.component.html',
   styleUrls: ['./prot-table.component.scss'],
-  encapsulation: ViewEncapsulation.ShadowDom
 })
 export class ProtTableComponent implements OnInit {
 

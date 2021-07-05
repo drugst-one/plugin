@@ -1,10 +1,4 @@
 @charset "utf-8";
-
-@import "~bulma/bulma.sass";
-@import "~primeng/resources/primeng.min.css";
-@import '~primeng/resources/themes/md-light-indigo/theme.css';
-@import "~primeicons/primeicons.css";
-
 .tab-content {
   visibility: hidden;
   position: absolute;
@@ -40,20 +34,10 @@
   height: 1.5rem;
   width: 1.5rem;
 }
-.fa-times {
-  color: var(--drgstn-danger);
-}
-
-.fa-check {
-  color: var(--drgstn-success);
-}
-
-a {
-  color: var(--drgstn-secondary);
-}
 
 td {
   padding: 0.2rem 1rem 0.2rem 1rem !important;
   vertical-align:middle !important;
 }
+
 

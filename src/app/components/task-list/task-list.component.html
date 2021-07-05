@@ -17,7 +17,7 @@
           <small *ngIf="task.stats.queueLength === 0 || task.stats.queuePosition === 0">
             Execution imminent...
           </small>
-          <a (click)="analysis.removeTask(task.token)" class="has-text-danger">
+          <a (click)="analysis.removeTask(task.token)" class="text-danger">
             <span class="icon is-pulled-right">
               <i class="fa fa-trash"></i>
             </span>
@@ -32,7 +32,7 @@
         </p>
         <p>
           <small>Started {{task.info.startedAt | date :'short'}}</small>
-          <a (click)="analysis.removeTask(task.token)" class="is-pulled-right has-text-danger">
+          <a (click)="analysis.removeTask(task.token)" class="is-pulled-right text-danger">
             <span class="icon is-pulled-right">
               <i class="fa fa-trash"></i>
             </span>
@@ -48,7 +48,7 @@
         </p>
         <p>
           <small>Finished {{task.info.finishedAt | date :'short'}}</small>
-          <a (click)="analysis.removeTask(task.token)" class="is-pulled-right has-text-danger">
+          <a (click)="analysis.removeTask(task.token)" class="is-pulled-right text-danger">
             <span class="icon is-pulled-right">
               <i class="fa fa-trash"></i>
             </span>
@@ -61,9 +61,9 @@
                                           [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{algorithmNames[task.info.algorithm]}}</span>
           <span class="icon is-pulled-right"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i></span>
         </p>
-        <p class="has-text-danger">
+        <p class="text-danger">
           <small class="status-field">{{task.info.status}}</small>
-          <a (click)="analysis.removeTask(task.token)" class="is-pulled-right has-text-danger">
+          <a (click)="analysis.removeTask(task.token)" class="is-pulled-right text-danger">
             <span class="icon is-pulled-right">
               <i class="fa fa-trash"></i>
             </span>

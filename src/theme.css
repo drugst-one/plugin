@@ -5,7 +5,9 @@
   --drgstn-warning: #FFDD57FF;
   --drgstn-danger: #47efd6;
   --drgstn-background: #FFFFFF;
+  --drgstn-panel: #FFFFFF;
   --drgstn-info: #61c43d;
-  --drgstn-text-primary: #000000;
+  --drgstn-text-primary: #363636;
   --drgstn-text-secondary: #FFFFFF;
+  --drgstn-border: rgba(0, 0, 0, 0.1);
 }

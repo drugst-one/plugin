@@ -6,7 +6,6 @@ import {faQuestionCircle} from '@fortawesome/free-regular-svg-icons';
   selector: 'app-drug-table',
   templateUrl: './drug-table.component.html',
   styleUrls: ['./drug-table.component.scss'],
-  encapsulation: ViewEncapsulation.ShadowDom
 })
 export class DrugTableComponent implements OnInit {
 
