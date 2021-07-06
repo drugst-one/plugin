@@ -124,7 +124,7 @@
           </div>
         </div>
       </div>
-      <div class="tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'network'" style="z-index: 0">
+      <div class="tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'network'">
         <div class="card-image canvas-content" #networkWithLegend>
           <div *ngIf="myConfig.showLegend">
             <app-network-legend [config]="myConfig" [analysis]="false"></app-network-legend>
@@ -133,7 +133,7 @@
             <button class="button is-loading center">Loading</button>
           </div>
         </div>
-        <footer class="card-footer toolbar scroll-y" *ngIf="myConfig.showFooter">
+        <footer class="card-footer toolbar" *ngIf="myConfig.showFooter">
           <div class="field">
             <p class="control footer-buttons">
               <button class="button is-primary is-rounded has-tooltip"

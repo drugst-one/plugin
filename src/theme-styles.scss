@@ -205,7 +205,13 @@ a:hover {
 
 .p-checkbox .p-checkbox-box {
   border-color: var(--drgstn-text-primary) !important;
+  color: var(--drgstn-text-primary) !important;
   background-color: var(--drgstn-panel) !important;
+  border-radius: 1px !important;
+  border-style: solid !important;
+  width: 18px !important;
+  height: 18px !important;
+  position: relative !important;
 }
 
 .p-datatable .p-datatable-tbody > tr > td, .button.is-light {
