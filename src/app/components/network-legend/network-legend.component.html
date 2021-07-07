@@ -14,23 +14,28 @@
             <td>&nbsp;{{ nodeGroup.value.groupName }}</td>
           </ng-container>
 
-          <ng-container *ngIf="!nodeGroup.value.image">
+          <ng-container *ngIf="!nodeGroup.value.image" [ngSwitch]="nodeGroup.value.shape">
             <!-- no image given, create icon programmatically -->
-            <td *ngIf="nodeGroup.value.shape !== 'triangle' && nodeGroup.value.shape !== 'star'">
-            <span class="node {{ nodeGroup.value.shape }}" [style.background-color]=nodeGroup.value.color>
-            </span>
+            <td *ngSwitchCase="'text'">
+              <span class="node {{ nodeGroup.value.shape }}">
+                text
+              </span>
             </td>
-            <td *ngIf="nodeGroup.value.shape === 'triangle'">
+            <td *ngSwitchCase="'triangle'">
               <span class="node {{ nodeGroup.value.shape }}" [style.border-bottom-color]=nodeGroup.value.color>
               </span>
             </td>
-            <td *ngIf="nodeGroup.value.shape === 'star'">
+            <td *ngSwitchCase="'star'">
               <span class="node {{ nodeGroup.value.shape }}"
                     [style.border-bottom-color]=nodeGroup.value.color
                     [style.color]=nodeGroup.value.color
               >
               </span>
             </td>
+            <td *ngSwitchDefault>
+              <span class="node {{ nodeGroup.value.shape }}" [style.background-color]=nodeGroup.value.color>
+              </span>
+              </td>
             <td>&nbsp;{{ nodeGroup.value.groupName }}</td>
           </ng-container>
         </ng-container>

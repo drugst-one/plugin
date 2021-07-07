@@ -16,6 +16,15 @@ div.legend {
       height: $legend-circle-size;
       vertical-align: middle !important;
       padding: 0 !important;
+      .text{
+        font-style: italic;
+      }
+      .ellipse{
+        height: 75%;
+        width: 100%;
+        border-radius: 50%;
+        display: inline-block;
+    }
       .circle{
         background: $legend-default-background-color;
         border-radius: 50%;
