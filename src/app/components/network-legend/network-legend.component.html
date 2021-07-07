@@ -17,33 +17,40 @@
           <ng-container *ngIf="!nodeGroup.value.image" [ngSwitch]="nodeGroup.value.shape">
             <!-- no image given, create icon programmatically -->
             <td *ngSwitchCase="'text'">
-              <span class="node {{ nodeGroup.value.shape }}">
+              <span class="node text">
                 text
               </span>
             </td>
+            <td *ngSwitchCase="'hexagon'">
+              <div class="node hexagon">
+                <div class="hexagon-in1">
+                  <div class="hexagon-in2" [style.background-color]=nodeGroup.value.color></div>
+                </div>
+              </div>
+            </td>
             <td *ngSwitchCase="'triangle'">
-              <span class="node {{ nodeGroup.value.shape }}" [style.border-bottom-color]=nodeGroup.value.color>
+              <span class="node triangle" [style.border-bottom-color]=nodeGroup.value.color>
               </span>
             </td>
             <td *ngSwitchCase="'triangleDown'">
-              <span class="node {{ nodeGroup.value.shape }}" [style.border-top-color]=nodeGroup.value.color>
+              <span class="node triangleDown" [style.border-top-color]=nodeGroup.value.color>
               </span>
             </td>
             <td *ngSwitchCase="'diamond'">
-              <span class="node {{ nodeGroup.value.shape }}" 
+              <span class="node diamond" 
                     [style.background-color]=nodeGroup.value.color
               >
               </span>
             </td>
             <td *ngSwitchCase="'star'">
-              <span class="node {{ nodeGroup.value.shape }}"
+              <span class="node star"
                     [style.border-bottom-color]=nodeGroup.value.color
                     [style.color]=nodeGroup.value.color
               >
               </span>
             </td>
             <td *ngSwitchCase="'circle'">
-              <span class="node {{ nodeGroup.value.shape }}" [style.background-color]=nodeGroup.value.color>
+              <span class="node circle" [style.background-color]=nodeGroup.value.color>
               ...
               </span>
               </td>
