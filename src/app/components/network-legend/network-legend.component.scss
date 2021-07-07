@@ -19,6 +19,14 @@ div.legend {
       .text{
         font-style: italic;
       }
+      .diamond {
+        height: 75%;
+        text-align: center;
+        transform: rotate(45deg);
+        width: 75%;
+        margin-left: 12.5%;
+        display: inline-block;
+      }
       .box{
         // class "box" exists in bulma css, we need only small changes
         height: 100%;
