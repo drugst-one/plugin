@@ -19,6 +19,13 @@ div.legend {
       .text{
         font-style: italic;
       }
+      .box{
+        // class "box" exists in bulma css, we need only small changes
+        height: 100%;
+        width: 100%;
+        display: inline-block;
+        padding: unset;
+      }
       .ellipse{
         height: 75%;
         width: 100%;

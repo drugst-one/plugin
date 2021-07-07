@@ -1,7 +1,7 @@
 export interface NodeGroup {
   groupName: string;
   color: string;
-  shape: 'circle' | 'triangle' | 'star' | 'square' | 'image' | 'text' | 'ellipse';
+  shape: 'circle' | 'triangle' | 'star' | 'square' | 'image' | 'text' | 'ellipse' | 'box';
   type: string;
   image?: string;
   detailShowLabel?: boolean;
