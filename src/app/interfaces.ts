@@ -10,17 +10,23 @@ export interface Node {
   ensg?: Array<string>;
   group?: string;
   groupName?: string;
-  color?: string;
+  color?: string | any; // mostly any, but vis js allows detail settings
   shape?: string;
   interactions?: Node[];
   x?: number;
   y?: number;
-  expressionLevel?: number;
+  borderWidth: number;
+  borderWidthSelected: number;
 }
 
 export interface Tissue {
   netexId: number;
   name: string;
+}
+
+export interface ExpressionMap {
+  // node --> expression level
+  netexId: number;
 }
 
 export interface NodeInteraction {
@@ -80,8 +86,8 @@ export function getNodeIdsFromI(pvi: NodeInteraction) {
 
 export function getNodeIdsFromPPI(edge: NetworkEdge, wrappers: { [key: string]: Wrapper }) {
   return {
-    from: wrappers[edge.from].nodeId,
-    to: wrappers[edge.to].nodeId,
+    from: wrappers[edge.from].id,
+    to: wrappers[edge.to].id,
   };
 }
 
@@ -129,7 +135,6 @@ export function getWrapperFromCustom(gene: Node): Wrapper {
   gene.label = gene.label ? gene.label : gene.id
   return {
     id: getNodeId(gene),
-    nodeId: getNodeId(gene),
     data: gene,
   };
 }
@@ -142,7 +147,6 @@ export function getWrapperFromNode(gene: Node): Wrapper {
   gene.group = gene.group ? gene.group : 'foundNode';
   return {
     id: getNodeId(gene),
-    nodeId: getNodeId(gene),
     data: gene,
   };
 }
@@ -153,8 +157,7 @@ export function getWrapperFromDrug(drug: Drug): Wrapper {
   drug.type = 'Drug';
   drug.group = 'foundDrug';
   return {
-    id: getDrugBackendId(drug),
-    nodeId: getDrugNodeId(drug),
+    id: getDrugNodeId(drug),
     data: drug,
   };
 }
@@ -163,7 +166,6 @@ export type EdgeType = 'protein-protein' | 'protein-drug';
 
 export interface Wrapper {
   id: string;
-  nodeId: string;
   data: {
     id: string;
     label: string;
@@ -178,6 +180,7 @@ export interface Wrapper {
     groupName?: string;
     uniprotAc?: string;
     expressionLevel?: number;
+    gradient?: number;
     x?: number;
     y?: number;
     drugId?: string;
