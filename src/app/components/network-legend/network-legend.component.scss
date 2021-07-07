@@ -58,11 +58,19 @@ div.legend {
       .triangle{
         width: 0;
         height: 0;
-        border-left: calc(#{$legend-circle-size} / 2) solid transparent;
-        border-right: calc(#{$legend-circle-size} / 2) solid transparent;
-        border-bottom: $legend-circle-size solid black;
+        border-left: calc(#{$legend-triangle-size} / 2) solid transparent;
+        border-right: calc(#{$legend-triangle-size} / 2) solid transparent;
+        border-bottom: $legend-triangle-height solid black;  // default color will be changed by user input
         display: inline-block;
       }
+      .triangleDown {
+        width: 0;
+        height: 0;
+        border-left: calc(#{$legend-triangle-size} / 2) solid transparent;
+        border-right: calc(#{$legend-triangle-size} / 2) solid transparent;
+        border-top: $legend-triangle-height solid black;  // default color will be changed by user input
+        display: inline-block;
+      }  
       .star {
         position: relative;
         display: inline-block;
@@ -100,8 +108,8 @@ div.legend {
         display: inline-block;
       }
       .legend-icon {
-        width: $legend-circle-size;
-        height: $legend-circle-size;
+        width: $legend-row-height;
+        height: $legend-row-height;
       }
       hr.edge{
         width: $legend-edge-width;

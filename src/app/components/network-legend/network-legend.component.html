@@ -25,6 +25,10 @@
               <span class="node {{ nodeGroup.value.shape }}" [style.border-bottom-color]=nodeGroup.value.color>
               </span>
             </td>
+            <td *ngSwitchCase="'triangleDown'">
+              <span class="node {{ nodeGroup.value.shape }}" [style.border-top-color]=nodeGroup.value.color>
+              </span>
+            </td>
             <td *ngSwitchCase="'diamond'">
               <span class="node {{ nodeGroup.value.shape }}" 
                     [style.background-color]=nodeGroup.value.color

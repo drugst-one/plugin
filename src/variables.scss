@@ -1,17 +1,21 @@
 $row-data-selector-height: auto;
 $network-footer-height: 90px;
 
+// Settings Legend
 $legend-default-background-color: #143d1f;
-$legend-circle-size: 35px;
+$legend-row-height: 35px;
+$legend-circle-size: $legend-row-height;
 $legend-star-size: 20px;
-$legend-square-width: 35px;
+$legend-square-width: $legend-row-height;
 $legend-edge-width: 20px;
 $legend-edge-height: 3px;
 $legend-star-color: #FC0;
+$legend-triangle-size: $legend-row-height;
+$legend-triangle-height: 29px;
 
 $height: 100%;
 
-
+// Settings Interface Components
 $sidebar-right-width: 25%;
 $sidebar-right-min-width: 210px;
 $sidebar-left-width: 18%;
