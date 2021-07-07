@@ -1,4 +1,5 @@
 import {HttpClient} from '@angular/common/http';
+import { NGSP_UNICODE } from '@angular/compiler';
 import { defaultConfig, IConfig } from './config';
 import {NodeInteraction, Node, getProteinNodeId} from './interfaces';
 
@@ -15,6 +16,20 @@ export class ProteinNetwork {
     const nodePositions = await http.get(`assets/positions/${getDatasetFilename(dataset)}`).toPromise();
     this.proteins.forEach((node) => {
       const nodePosition = nodePositions[getProteinNodeId(node)];
+      if (nodePosition) {
+        node.x = nodePosition.x;
+        node.y = nodePosition.y;
+      }
+    });
+  }
+
+  public updateNodePositions(positions) {
+    this.proteins.forEach((node) => {
+      // take old node position if it is saved. it might only not be saved if node did not exist in old network
+      if (!(node.id in positions)) {
+        return;
+      }
+      const nodePosition = positions[node.id];
       if (nodePosition) {
         node.x = nodePosition.x;
         node.y = nodePosition.y;

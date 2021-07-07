@@ -64,7 +64,7 @@ export interface Task {
 }
 
 export function getProteinNodeId(protein: Node) {
-  return `p_${protein.id}`;
+  return protein.id;
 }
 
 export function getProteinBackendId(protein: Node) {

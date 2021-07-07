@@ -5,7 +5,7 @@ import {AnalysisService} from '../../services/analysis/analysis.service';
 import {OmnipathControllerService} from '../../services/omnipath-controller/omnipath-controller.service';
 import domtoimage from 'dom-to-image';
 import {NetworkSettings} from '../../network-settings';
-import {defaultConfig, EdgeGroup, IConfig, NodeGroup} from '../../config';
+import {defaultConfig, EdgeGroup, IConfig, InteractionDatabase, NodeGroup} from '../../config';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 // import * as 'vis' from 'vis-network';
 // import {DataSet} from 'vis-data';
@@ -24,6 +24,7 @@ declare var vis: any;
 export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private networkJSON = '{"nodes": [], "edges": []}';
+  private networkPositions = undefined;
 
   // set default config on init
   public myConfig: IConfig = JSON.parse(JSON.stringify(defaultConfig));
@@ -52,8 +53,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         // dont set the key here, will be set in function
         continue;
       } else if (key === 'interactions') {
-        this.getInteractions();
-        updateNetworkFlag = true;
+        this.getInteractions(configObj[key]);
         // dont set the key here, will be set in function
         continue;
       } else if (key === 'showLeftSidebar') {
@@ -79,6 +79,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.myConfig = {...this.myConfig};
     if (updateNetworkFlag && typeof this.networkJSON !== 'undefined') {
       // update network if network config has changed and networkJSON exists
+      if (this.networkInternal !== undefined) {
+        // a network exists, save node positions
+        this.networkPositions = this.networkInternal.getPositions();
+      }
       this.createNetwork();
     }
   }
@@ -207,12 +211,14 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async getInteractions() {
-    const names = this.nodeData.nodes.map((node) => node.label);
-    const nameToNetworkId = {};
-    this.nodeData.nodes.map((node) => nameToNetworkId[node.label] = node.id);
-    const edges = await this.omnipath.getInteractions(names, this.myConfig.identifier, nameToNetworkId);
-
+  async getInteractions(key: InteractionDatabase) {
+    let edges = [];
+    if (key == 'omnipath') {
+      const names = this.nodeData.nodes.map((node) => node.label);
+      const nameToNetworkId = {};
+      this.nodeData.nodes.map((node) => nameToNetworkId[node.label] = node.id);
+      edges = await this.omnipath.getInteractions(names, this.myConfig.identifier, nameToNetworkId);
+    }
     this.nodeData.edges.update(edges);
   }
 
@@ -270,6 +276,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.selectedWrapper = null;
     await this.getNetwork();
     this.proteinData = new ProteinNetwork(this.proteins, this.edges);
+
+    if (this.networkPositions) {
+      this.proteinData.updateNodePositions(this.networkPositions)
+    }
     this.proteinData.linkNodes();
 
     const {nodes, edges} = this.proteinData.mapDataToNetworkInput(this.myConfig);
@@ -278,7 +288,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.nodeData.edges = new vis.DataSet(edges);
     const container = this.networkEl.nativeElement;
     const options = NetworkSettings.getOptions('main');
+
     this.networkInternal = new vis.Network(container, this.nodeData, options);
+
     this.networkInternal.on('doubleClick', (properties) => {
       const nodeIds: Array<string> = properties.nodes;
       if (nodeIds.length > 0) {
@@ -311,6 +323,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.networkInternal.on('deselectNode', (properties) => {
       this.closeSummary();
     });
+
+    // // this might be not necessary, positions get saved right before reloding network
+    // this.networkInternal.on('stabilizationIterationsDone', () => {
+    //   this.networkPositions = this.networkInternal.getPositions();
+    // });
+    // this.networkInternal.stabilize();
 
     if (this.selectedWrapper) {
       this.zoomToNode(this.selectedWrapper.nodeId);
