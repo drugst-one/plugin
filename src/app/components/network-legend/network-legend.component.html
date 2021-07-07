@@ -38,6 +38,11 @@
               >
               </span>
             </td>
+            <td *ngSwitchCase="'circle'">
+              <span class="node {{ nodeGroup.value.shape }}" [style.background-color]=nodeGroup.value.color>
+              ...
+              </span>
+              </td>
             <td *ngSwitchDefault>
               <span class="node {{ nodeGroup.value.shape }}" [style.background-color]=nodeGroup.value.color>
               </span>

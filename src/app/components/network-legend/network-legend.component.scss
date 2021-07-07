@@ -28,7 +28,7 @@ div.legend {
         display: inline-block;
       }
       .box{
-        // class "box" exists in bulma css, we need only small changes
+        // class "box" exists in bulma css, only small changes needed
         height: 100%;
         width: 100%;
         display: inline-block;
@@ -39,13 +39,21 @@ div.legend {
         width: 100%;
         border-radius: 50%;
         display: inline-block;
-    }
+      }
+      .dot{
+        background: $legend-default-background-color;
+        border-radius: 50%;
+        width: $legend-circle-size;
+        height: $legend-circle-size;
+        display: inline-block;
+      }
       .circle{
         background: $legend-default-background-color;
         border-radius: 50%;
         width: $legend-circle-size;
         height: $legend-circle-size;
         display: inline-block;
+        text-align: center;
       }
       .triangle{
         width: 0;
