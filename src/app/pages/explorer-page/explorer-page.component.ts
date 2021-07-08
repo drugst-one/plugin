@@ -1,5 +1,18 @@
-import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {getWrapperFromNode, Node, Tissue, Wrapper} from '../../interfaces';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef, HostListener, Input,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  NodeInteraction,
+  Node,
+  Wrapper,
+  getWrapperFromNode,
+  Tissue,
+  ExpressionMap
+} from '../../interfaces';
 import {ProteinNetwork} from '../../main-network';
 import {AnalysisService} from '../../services/analysis/analysis.service';
 import {OmnipathControllerService} from '../../services/omnipath-controller/omnipath-controller.service';
@@ -118,8 +131,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public proteinData: ProteinNetwork;
 
-  public proteins: any;
-  public edges: any;
+  public proteins: Node[];
+  public edges: NodeInteraction[];
 
   private networkInternal: any;
   // this will store the vis Dataset
@@ -146,6 +159,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public expressionExpanded = false;
   public selectedTissue: Tissue | null = null;
 
+  // keys are node netexIds
+  public expressionMap: ExpressionMap = undefined;
+
   @Input()
   public textColor = 'red';
 
@@ -170,14 +186,20 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         }
         const updatedNodes = [];
         for (const item of items) {
-          const node = this.nodeData.nodes.get(item.id);
+          const node: Node = this.nodeData.nodes.get(item.id);
           if (!node) {
             continue;
           }
           const pos = this.networkInternal.getPositions([item.id]);
           node.x = pos[item.id].x;
           node.y = pos[item.id].y;
+          // if (node.group == 'default') {
+          //   Object.assign(node, this.myConfig.nodeGroups.default);
+          // } else {
+          //   Object.assign(node, this.myConfig.nodeGroups[node.group]);
+          // }
           Object.assign(node, this.myConfig.nodeGroups[node.group]);
+
           updatedNodes.push(node);
         }
         this.nodeData.nodes.update(updatedNodes);
@@ -185,7 +207,13 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         const updatedNodes = [];
         this.nodeData.nodes.forEach((node) => {
           const nodeSelected = this.analysis.idInSelection(node.id);
+          // if (node.group == 'default') {
+          //   Object.assign(node, this.myConfig.nodeGroups.default);
+          // } else {
+          //   Object.assign(node, this.myConfig.nodeGroups[node.group]);
+          // };
           Object.assign(node, this.myConfig.nodeGroups[node.group]);
+
         });
         this.nodeData.nodes.update(updatedNodes);
       }
@@ -261,7 +289,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public async openSummary(item: Wrapper, zoom: boolean) {
     this.selectedWrapper = item;
     if (zoom) {
-      this.zoomToNode(item.nodeId);
+      this.zoomToNode(item.id);
     }
     this.showDetails = true;
   }
@@ -331,13 +359,13 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     // this.networkInternal.stabilize();
 
     if (this.selectedWrapper) {
-      this.zoomToNode(this.selectedWrapper.nodeId);
+      this.zoomToNode(this.selectedWrapper.id);
     }
 
     this.queryItems = [];
     this.fillQueryItems(this.proteins);
     if (this.selectedWrapper) {
-      this.networkInternal.selectNodes([this.selectedWrapper.nodeId]);
+      this.networkInternal.selectNodes([this.selectedWrapper.id]);
     }
   }
 
@@ -400,7 +428,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     delete defaultNodeGroups.default;
     // if user has not set the return-groups, take the defaults
     nodeGroups = {...defaultNodeGroups, ...nodeGroups};
-
     // override default node groups
     this.myConfig[key] = nodeGroups;
   }
@@ -487,33 +514,45 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public selectTissue(tissue: Tissue | null) {
+    console.log("here")
     this.expressionExpanded = false;
     if (!tissue) {
       this.selectedTissue = null;
       const updatedNodes = [];
       for (const item of this.proteins) {
-        const node = this.nodeData.nodes.get(item.nodeId);
+        console.log(item)
+        if (item.netexId === undefined) {
+          // nodes that are not mapped to backend remain untouched
+          continue;
+        }
+        const node: Node = this.nodeData.nodes.get(item.id);
         if (!node) {
           continue;
         }
-        const pos = this.networkInternal.getPositions([item.nodeId]);
-        node.x = pos[item.nodeId].x;
-        node.y = pos[item.nodeId].y;
-        // Object.assign(node,
-        //   NetworkSettings.getNodeStyle(
-        //     node.wrapper.type,
-        //     node.isSeed,
-        //     this.analysis.inSelection(item),
-        //     undefined,
-        //     undefined,
-        //     1.0));
-        node.wrapper = item;
-        node.gradient = 1.0;
-        // protein.expressionLevel = undefined;
-        (node.wrapper.data as Node).expressionLevel = undefined;
+        console.log("node")
+        console.log(node)
+        const pos = this.networkInternal.getPositions([item.id]);
+        node.x = pos[item.id].x;
+        node.y = pos[item.id].y;
+        Object.assign(
+          node, 
+          NetworkSettings.getNodeStyle(
+            node,
+            this.myConfig,
+            false,
+            this.analysis.inSelection(getWrapperFromNode(item)),
+            undefined,
+            undefined,
+            1.0
+            )
+        )
+        console.log("in selection")
+        console.log(this.analysis.inSelection(getWrapperFromNode(item)))
         updatedNodes.push(node);
       }
       this.nodeData.nodes.update(updatedNodes);
+      // delete expression values
+      this.expressionMap = undefined;
     } else {
       this.selectedTissue = tissue;
 

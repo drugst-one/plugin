@@ -1,6 +1,15 @@
 import {getGradientColor} from './utils';
+import {
+  Node,
+} from './interfaces';
+import { IConfig } from './config';
 
 export class NetworkSettings {
+
+  // colors
+  private static Grey = '#A0A0A0'
+  private static White = '#FFFFFF';
+  private static Black = '#000000';
 
   // Node color
   private static hostColor = '#123456';
@@ -9,8 +18,11 @@ export class NetworkSettings {
   private static nonSeedHostColor = '#3070B3';
   private static nonSeedVirusColor = '#87082c';
 
-  private static selectedBorderColor = '#F8981D';
-  private static selectBorderHighlightColor = '#F8981D';
+  private static selectedBorderColor = NetworkSettings.Black;
+  private static selectBorderHighlightColor = NetworkSettings.Black;
+
+  private static seedBorderColor = '#F8981D';
+  private static seedBorderHighlightColor = '#F8981D';
 
   // Edge color
   private static edgeHostVirusColor = '#686868';
@@ -21,19 +33,22 @@ export class NetworkSettings {
   private static edgeGeneGeneHighlightColor = '#686868';
 
 
-  // Border width
+  // Border width for nodes in selection
   private static selectedBorderWidth = 3;
   private static selectedBorderWidthSelected = 3;
-
+  // Border width for seed nodes
+  private static seedBorderWidth = 3;
+  private static seedBorderWidthSelected = 3;
+  // Border width
   private static borderWidth = 1;
   private static borderWidthSelected = 3;
 
   // Node Font
   private static hostFontSize = 20;
   private static drugFontSize = 30;
-  private static hostFontColor = '#FFFFFF';
-  private static drugFontColor = '#FFFFFF';
-  private static drugInTrialFontColor = 'black';
+  private static hostFontColor = NetworkSettings.White;
+  private static drugFontColor = NetworkSettings.White;
+  private static drugInTrialFontColor = NetworkSettings.Black;
 
   // Network Layout
   private static analysisLayout = {
@@ -160,7 +175,56 @@ export class NetworkSettings {
   //   }
   // }
 
-  // static getNodeStyle(nodeType: WrapperType,
+  static getNodeStyle(
+    node: Node,
+    config: IConfig,
+    isSeed: boolean,
+    isSelected: boolean,
+    drugType?: string,
+    drugInTrial?: boolean,
+    gradient?: number): any {
+      console.log(node)
+      if (!gradient) {
+        gradient = 1.0;
+      }
+      const nodeGroupObject = config.nodeGroups[node.group];
+      // vis js style attributes
+      const nodeShadow = true;
+      // const nodeShape = node.shape;
+      // const nodeSize = 10;
+      // const nodeFont = node.font;
+      const nodeColor = nodeGroupObject.color;
+      if (isSeed) {
+        node.color = {
+          background: nodeColor,
+          border: this.seedBorderColor,
+          highlight: {
+            border: this.seedBorderHighlightColor,
+            background: nodeColor
+          }
+        }; 
+        node.borderWidth = this.seedBorderWidth;
+        node.borderWidthSelected = this.seedBorderWidthSelected;
+      } else if (isSelected) {
+        node.color = {
+          background: nodeColor,
+          border: this.selectedBorderColor,
+          highlight: {
+            border: this.selectBorderHighlightColor,
+            background: nodeColor
+          }
+        }; 
+        node.borderWidth = this.selectedBorderWidth;
+        node.borderWidthSelected = this.selectedBorderWidthSelected;
+      } else {
+        node.color = nodeColor;
+        node.borderWidth = this.borderWidth;
+        node.borderWidthSelected = this.borderWidthSelected;
+      }
+      return node;
+    }
+
+  // static getNodeStyleOld(nodeType: WrapperType,
   //                     isSeed: boolean,
   //                     isSelected: boolean,
   //                     drugType?: string,
@@ -198,9 +262,9 @@ export class NetworkSettings {
   //   }
 
   //   if (gradient === -1) {
-  //     nodeColor = '#A0A0A0';
+  //     nodeColor = NetworkSettings.GREY;
   //   } else {
-  //     nodeColor = getGradientColor('#FFFFFF', nodeColor, gradient);
+  //     nodeColor = getGradientColor(NetworkSettings.WHITE, nodeColor, gradient);
   //   }
 
   //   const node: any = {
@@ -210,24 +274,24 @@ export class NetworkSettings {
   //     shadow: nodeShadow,
   //   };
 
-  //   if (isSelected) {
-  //     node.color = {
-  //       background: nodeColor,
-  //       border: this.selectedBorderColor,
-  //       highlight: {
-  //         border: this.selectBorderHighlightColor,
-  //         background: nodeColor,
-  //       },
-  //     };
+    // if (isSelected) {
+    //   node.color = {
+    //     background: nodeColor,
+    //     border: this.selectedBorderColor,
+    //     highlight: {
+    //       border: this.selectBorderHighlightColor,
+    //       background: nodeColor,
+    //     },
+    //   };
 
-  //     node.borderWidth = this.selectedBorderWidth;
-  //     node.borderWidthSelected = this.selectedBorderWidthSelected;
-  //   } else {
-  //     node.color = nodeColor;
+    //   node.borderWidth = this.selectedBorderWidth;
+    //   node.borderWidthSelected = this.selectedBorderWidthSelected;
+    // } else {
+    //   node.color = nodeColor;
 
-  //     node.borderWidth = this.borderWidth;
-  //     node.borderWidthSelected = this.borderWidthSelected;
-  //   }
+    //   node.borderWidth = this.borderWidth;
+    //   node.borderWidthSelected = this.borderWidthSelected;
+    // }
 
   //   return node;
   // }

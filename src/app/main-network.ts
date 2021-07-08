@@ -1,5 +1,3 @@
-import {HttpClient} from '@angular/common/http';
-import { NGSP_UNICODE } from '@angular/compiler';
 import { defaultConfig, IConfig } from './config';
 import {NodeInteraction, Node, getProteinNodeId} from './interfaces';
 
@@ -10,17 +8,6 @@ export function getDatasetFilename(dataset: Array<[string, string]>): string {
 export class ProteinNetwork {
 
   constructor(public proteins: Node[], public edges: NodeInteraction[]) {
-  }
-
-  public async loadPositions(http: HttpClient, dataset: Array<[string, string]>) {
-    const nodePositions = await http.get(`assets/positions/${getDatasetFilename(dataset)}`).toPromise();
-    this.proteins.forEach((node) => {
-      const nodePosition = nodePositions[getProteinNodeId(node)];
-      if (nodePosition) {
-        node.x = nodePosition.x;
-        node.y = nodePosition.y;
-      }
-    });
   }
 
   public updateNodePositions(positions) {
@@ -68,6 +55,7 @@ export class ProteinNetwork {
     if (customNode.group === undefined) {
       // fallback to default node
       node = JSON.parse(JSON.stringify(defaultConfig.nodeGroups.default));
+      node.group = 'default'
     } else {
       if (config.nodeGroups[customNode.group] === undefined) {
         throw `Node with id ${customNode.id} has undefined node group ${customNode.group}.`
@@ -119,7 +107,7 @@ export class ProteinNetwork {
     return edge;
   }
 
-  public mapDataToNetworkInput(config: IConfig): { nodes: any[], edges: any[]; } {
+  public mapDataToNetworkInput(config: IConfig): { nodes: Node[], edges: any[]; } {
     const nodes = [];
     const edges = [];
 

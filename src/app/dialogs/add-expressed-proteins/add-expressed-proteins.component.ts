@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {AnalysisService} from '../../services/analysis/analysis.service';
-import {getWrapperFromNode, Node, Tissue} from '../../interfaces';
+import {getWrapperFromNode, Node, Tissue, ExpressionMap} from '../../interfaces';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 
@@ -21,6 +21,8 @@ export class AddExpressedProteinsComponent implements OnChanges {
   public currentViewProteins: Array<Node> = [];
   @Input()
   public selectedTissue: Tissue | null = null;
+  @Input()
+  public expressionMap: ExpressionMap = undefined;
 
   public proteins = [];
   public threshold = 5;
@@ -54,10 +56,10 @@ export class AddExpressedProteinsComponent implements OnChanges {
 
   public setThreshold(threshold: number) {
     this.threshold = threshold;
-    if (!this.currentViewProteins) {
+    if (!this.currentViewProteins || this.expressionMap === undefined) {
       return;
     }
-    this.proteins = this.currentViewProteins.filter(p => p.expressionLevel >= threshold);
+    this.proteins = this.currentViewProteins.filter(p => this.expressionMap[p.netexId] >= threshold);
   }
 
   public close() {
