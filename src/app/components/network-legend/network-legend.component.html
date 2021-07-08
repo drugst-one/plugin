@@ -22,11 +22,9 @@
               </span>
             </td>
             <td *ngSwitchCase="'hexagon'">
-              <div class="node hexagon">
-                <div class="hexagon-in1">
-                  <div class="hexagon-in2" [style.background-color]=nodeGroup.value.color></div>
-                </div>
-              </div>
+              <span class="node hexagon" [style.color]=nodeGroup.value.color>
+                &#x2B23;
+              </span>
             </td>
             <td *ngSwitchCase="'triangle'">
               <span class="node triangle" [style.border-bottom-color]=nodeGroup.value.color>
