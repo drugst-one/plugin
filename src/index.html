@@ -36,12 +36,12 @@
 
   <network-expander id="netexp1"
                     config='{
-                      "nodeGroups": {"0.5": {"type": "0.5er Instanz", "color": "rgb(204, 255, 51)", "groupName": "0.5", "shape": "hexagon"}, "patientgroup": {"type": "Patient", "detailShowLabel": "true", "color": "red", "groupName": "patient group", "shape": "dot"}, "pugGroup": {"color": "grey", "groupName": "Pug Group", "shape": "triangle", "image": "https://static.raymondcamden.com/images/2016/11/pug.png"}},
+                      "nodeGroups": {"0.5": {"type": "0.5er Instanz", "color": "rgb(204, 255, 51)", "groupName": "0.5", "shape": "hexagon"}, "patientgroup": {"type": "Patient", "detailShowLabel": "true", "color": "red", "groupName": "patient group", "shape": "dot", "size": "50"}, "pugGroup": {"color": "grey", "groupName": "Pug Group", "shape": "triangle", "image": "https://static.raymondcamden.com/images/2016/11/pug.png"}},
                       "edgeGroups": {"dashes": {"color": "black", "groupName": "dashes Group", "dashes": [1, 2]}, "notdashes": {"color": "black", "groupName": "not dashes Group"}},
                       "identifier": "symbol"
                     }'
                     network='{
-                      "nodes": [{"id": "MYC", "label": "node w/o group"}, {"id": "TP53", "group": "0.5"}, {"id": "C5", "group": "pugGroup"}, {"id": "Patient No. 5", "group": "patientgroup"}, {"label": "PTEN", "id": "PTEN", "group": 0.5}],
+                      "nodes": [{"id": "MYC", "label": "node w/o group"}, {"id": "TP53", "group": "0.5"}, {"id": "C5", "group": "pugGroup"}, {"id": "Patient No. 5", "group": "patientgroup"}, {"label": "PTEN", "id": "PTEN", "group": 0.5, "value":"5"}],
                       "edges": [
                       {"from": "TP53","to": "C5","group": "dashes", "label": "this is a label", "title": "this is a title"},
                       {"from": "Patient No. 5","to": "C5","label": "w/o group"}
