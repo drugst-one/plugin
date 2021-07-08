@@ -443,21 +443,19 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     const wrappers: { [key: string]: Wrapper } = {};
 
     for (const node of network.nodes) {
-      // backend converts object keys to PascalCase: p_123 --> p123
-      const nodeObjectKey = node.split('_').join('');
-      if (nodeTypes[nodeObjectKey] === 'protein') {
+      if (nodeTypes[node] === 'protein') {
         // node is protein from database, has been mapped on init to backend protein from backend
         // or was found during analysis
-        this.proteins.push(details[nodeObjectKey]);
-        wrappers[node] = getWrapperFromNode(details[nodeObjectKey]);
-      } else if (nodeTypes[nodeObjectKey] === 'drug') {
+        this.proteins.push(details[node]);
+        wrappers[node] = getWrapperFromNode(details[node]);
+      } else if (nodeTypes[node] === 'drug') {
         // node is drug, was found during analysis
-        wrappers[node] = getWrapperFromDrug(details[nodeObjectKey]);
+        wrappers[node] = getWrapperFromDrug(details[node]);
       } else {
         // node is custom input from user, could not be mapped to backend protein
-        wrappers[node] = getWrapperFromCustom(details[nodeObjectKey]);
+        wrappers[node] = getWrapperFromCustom(details[node]);
       }
-      nodes.push(this.mapNode(config, wrappers[node], isSeed[nodeObjectKey], scores[nodeObjectKey]));
+      nodes.push(this.mapNode(config, wrappers[node], isSeed[node], scores[node]));
     }
     for (const edge of network.edges) {
       edges.push(this.mapEdge(edge, this.inferEdgeGroup(edge), wrappers));
@@ -477,20 +475,17 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
    * @returns
    */
   private mapNode(config: IConfig, wrapper: Wrapper, isSeed?: boolean, score?: number): any {
-
-    console.log('node group');
-    console.log(config.nodeGroups);
-    console.log('node');
-
-    console.log(wrapper.data);
-
     // override group is node is seed
-    wrapper.data.group = isSeed ? 'seedNode' : wrapper.data.group;
+    // TODO Move this to extra function
+    // wrapper.data.group = isSeed ? 'seedNode' : wrapper.data.group;
     const node = JSON.parse(JSON.stringify(config.nodeGroups[wrapper.data.group]));
     node.id = wrapper.id;
     node.label = this.inferNodeLabel(config, wrapper);
     node.isSeed = isSeed;
     node.wrapper = wrapper;
+    if (node.image) {
+      node.shape = 'image';
+    }
     return node;
   }
 

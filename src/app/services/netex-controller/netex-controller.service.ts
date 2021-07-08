@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {AlgorithmType, QuickAlgorithmType} from '../analysis/analysis.service';
+import { Observable } from 'rxjs';
+import { Tissue, Node} from 'src/app/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -71,5 +73,27 @@ export class NetexControllerService {
      */
     const payload = {nodes: JSON.stringify(nodes), identifier: JSON.stringify(identifier)};
     return this.http.post(`${environment.backend}map_nodes/`, payload).toPromise();
+  }
+
+  public tissues(): Observable<any> {
+    /**
+     * Lists all available tissues with id and name
+     */
+    return this.http.get<Tissue[]>(`${environment.backend}tissues/`);
+  }
+
+  public tissueExpressionGenes(tissue: Tissue, nodes: Node[]): Observable<any> {
+    /**
+     * Returns the expression in the given tissue for given nodes and cancerNodes
+     */
+    // slice prefix of netex id away for direct lookup in db, if node not mapped to db, replace by undefined
+    console.log("before genesBackendIds")
+    const genesBackendIds = nodes.map( (node: Node) => node.netexId ? node.netexId.slice(1) : undefined);
+    console.log("genesBackendIds")
+    console.log(genesBackendIds)
+    const params = new HttpParams()
+      .set('tissue', tissue.netexId)
+      .set('proteins', JSON.stringify(genesBackendIds));
+    return this.http.get(`${environment.backend}tissue_expression/`, {params});
   }
 }

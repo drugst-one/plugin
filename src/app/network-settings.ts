@@ -2,7 +2,7 @@ import {getGradientColor} from './utils';
 import {
   Node,
 } from './interfaces';
-import { IConfig } from './config';
+import { IConfig, defaultConfig} from './config';
 
 export class NetworkSettings {
 
@@ -183,17 +183,24 @@ export class NetworkSettings {
     drugType?: string,
     drugInTrial?: boolean,
     gradient?: number): any {
-      console.log(node)
-      if (!gradient) {
-        gradient = 1.0;
+
+      let nodeGroupObject;
+      if (node.group === 'default') {
+        nodeGroupObject = defaultConfig.nodeGroups.default;
+      } else {
+        nodeGroupObject = config.nodeGroups[node.group];
       }
-      const nodeGroupObject = config.nodeGroups[node.group];
+      let nodeColor;
+      if (gradient === null) {
+        nodeColor = NetworkSettings.Grey;
+      } else {
+        nodeColor = getGradientColor(NetworkSettings.White, nodeGroupObject.color, gradient);
+      }
       // vis js style attributes
       const nodeShadow = true;
       // const nodeShape = node.shape;
       // const nodeSize = 10;
       // const nodeFont = node.font;
-      const nodeColor = nodeGroupObject.color;
       if (isSeed) {
         node.color = {
           background: nodeColor,

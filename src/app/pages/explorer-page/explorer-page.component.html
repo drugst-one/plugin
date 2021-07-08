@@ -133,49 +133,55 @@
           </div>
 
           <footer *ngIf="myConfig.showFooter" class="card-footer toolbar explorer-footer">
-            <button (click)="toImage()" class="button is-primary is-rounded has-tooltip"
-                    data-tooltip="Take a screenshot of the current network.">
-            <span class="icon">
-              <i class="fas fa-camera" aria-hidden="true"></i>
-            </span>
-              <span [ngClass]="{'text-normal':smallStyle}">Screenshot</span>
-            </button>
 
-        <div class="footer-buttons dropdown is-up" [class.is-active]="expressionExpanded">
-          <div class="dropdown-trigger">
-            <button (click)="expressionExpanded=!expressionExpanded"
-                    class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
-                    aria-haspopup="true" aria-controls="dropdown-menu"
-                    data-tooltip="Tissue expression data is provided by the GTEx project."
-                    [ngClass]="{'button-small':smallStyle}">
-              <span *ngIf="!selectedTissue" [ngClass]="{'text-small':smallStyle}">Tissue</span>
-              <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
-              <span *ngIf="expressionExpanded" class="icon is-small">
-                        <i class="fas fa-angle-up" aria-hidden="true"></i>
-                      </span>
-              <span *ngIf="!expressionExpanded" class="icon is-small">
-                        <i class="fas fa-angle-left" aria-hidden="true"></i>
-                      </span>
-            </button>
-          </div>
-          <div class="dropdown-menu" id="dropdown-menu" role="menu">
-            <div class="dropdown-content tissue-dropdown">
-              <div class="scroll-area">
-                <a (click)="selectTissue(null)"
-                   [class.is-active]="!selectedTissue"
-                   class="dropdown-item">
-                  None
-                </a>
-                <a *ngFor="let tissue of analysis.getTissues()"
-                   (click)="selectTissue(tissue)"
-                   [class.is-active]="selectedTissue && tissue.netexId === selectedTissue.netexId"
-                   class="dropdown-item">
-                  {{tissue.name}}
-                </a>
+            <ng-container *ngIf="myConfig.showFooterButtonScreenshot">
+              <button (click)="toImage()" class="button is-primary is-rounded has-tooltip"
+                      data-tooltip="Take a screenshot of the current network.">
+              <span class="icon">
+                <i class="fas fa-camera" aria-hidden="true"></i>
+              </span>
+                <span [ngClass]="{'text-normal':smallStyle}">Screenshot</span>
+              </button>
+            </ng-container>
+
+            <ng-container *ngIf="myConfig.showFooterButtonExpression">
+              <div class="footer-buttons dropdown is-up" [class.is-active]="expressionExpanded">
+                <div class="dropdown-trigger">
+                  <button (click)="expressionExpanded=!expressionExpanded"
+                          class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
+                          aria-haspopup="true" aria-controls="dropdown-menu"
+                          data-tooltip="Tissue expression data is provided by the GTEx project."
+                          [ngClass]="{'button-small':smallStyle}">
+                    <span *ngIf="!selectedTissue" [ngClass]="{'text-small':smallStyle}">Tissue</span>
+                    <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
+                    <span *ngIf="expressionExpanded" class="icon is-small">
+                              <i class="fas fa-angle-up" aria-hidden="true"></i>
+                            </span>
+                    <span *ngIf="!expressionExpanded" class="icon is-small">
+                              <i class="fas fa-angle-left" aria-hidden="true"></i>
+                            </span>
+                  </button>
+                </div>
+                <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                  <div class="dropdown-content tissue-dropdown">
+                    <div class="scroll-area">
+                      <a (click)="selectTissue(null)"
+                         [class.is-active]="!selectedTissue"
+                         class="dropdown-item">
+                        None
+                      </a>
+                      <a *ngFor="let tissue of analysis.getTissues()"
+                         (click)="selectTissue(tissue)"
+                         [class.is-active]="selectedTissue && tissue.netexId === selectedTissue.netexId"
+                         class="dropdown-item">
+                        {{tissue.name}}
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
+            </ng-container>
+        
 
         <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off"
                     tooltipOn="Enable the network animation."

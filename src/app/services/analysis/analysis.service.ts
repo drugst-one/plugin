@@ -71,7 +71,7 @@ export class AnalysisService {
     }
     this.startWatching();
 
-    this.http.get<Tissue[]>(`${environment.backend}tissues/`).subscribe((tissues) => {
+    this.netex.tissues().subscribe((tissues) => {
       this.tissues = tissues;
     });
   }

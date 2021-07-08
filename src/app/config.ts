@@ -36,6 +36,8 @@ export interface IConfig {
   showTasks: boolean;
   showSelection: boolean;
   showFooter: boolean;
+  showFooterButtonExpression: boolean;
+  showFooterButtonScreenshot: boolean;
   showLegend: boolean;
   showLegendNodes: boolean;
   showLegendEdges: boolean;
@@ -69,6 +71,8 @@ export const defaultConfig: IConfig = {
   showTasks: true,
   showFooter: true,
   showLegend: true,
+  showFooterButtonExpression: true,
+  showFooterButtonScreenshot: true,
   identifier: 'symbol',
   interactionDrugProtein: 'DrugBank',
   interactionProteinProtein: 'STRING',
@@ -78,7 +82,7 @@ export const defaultConfig: IConfig = {
       // this default group is used for default node group values
       // and is fallback in case user does not provide any nodeGroup
       groupName: 'Default Node Group',
-      color: 'yellow',
+      color: '#FFFF00',
       shape: 'triangle',
       type: 'default type',
       detailShowLabel: false,

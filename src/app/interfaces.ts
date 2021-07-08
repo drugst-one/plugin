@@ -24,10 +24,9 @@ export interface Tissue {
   name: string;
 }
 
-export interface ExpressionMap {
-  // node --> expression level
-  netexId: number;
-}
+/// netexId to expressionlvl
+export type ExpressionMap = { string: number };
+
 
 export interface NodeInteraction {
   from: string;

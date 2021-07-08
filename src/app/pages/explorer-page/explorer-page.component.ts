@@ -20,6 +20,7 @@ import domtoimage from 'dom-to-image';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, InteractionDatabase, NodeGroup} from '../../config';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
+import {rgbaToHex, rgbToHex, standardize_color} from '../../utils'
 // import * as 'vis' from 'vis-network';
 // import {DataSet} from 'vis-data';
 // import {vis} from 'src/app/scripts/vis-network.min.js';
@@ -106,6 +107,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       return;
     }
     this.networkJSON = network;
+    console.log(this.myConfig)
     this.createNetwork();
   }
 
@@ -420,6 +422,19 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         // use detailShowLabel default value if not set
         group['detailShowLabel'] = defaultConfig.nodeGroups.default.detailShowLabel;
       }
+      // color needs to be hexacode to calculate gradient
+      if (!group.color.startsWith('#')) {
+        // color is either rgba, rgb or string like "red"
+        console.log(group.color)
+        if (group.color.startsWith('rgba')) {
+          group.color = rgbaToHex(group.color).slice(0, 7)
+        } else if (group.color.startsWith('rgb')) {
+          group.color = rgbToHex(group.color)
+        } else (
+          group.color = standardize_color(group.color)
+        )
+        console.log(group.color)
+      }
     });
 
     // make sure that return-groups (seeds, drugs, found nodes) are set
@@ -520,7 +535,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.selectedTissue = null;
       const updatedNodes = [];
       for (const item of this.proteins) {
-        console.log(item)
         if (item.netexId === undefined) {
           // nodes that are not mapped to backend remain untouched
           continue;
@@ -529,8 +543,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         if (!node) {
           continue;
         }
-        console.log("node")
-        console.log(node)
         const pos = this.networkInternal.getPositions([item.id]);
         node.x = pos[item.id].x;
         node.y = pos[item.id].y;
@@ -546,17 +558,52 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
             1.0
             )
         )
-        console.log("in selection")
-        console.log(this.analysis.inSelection(getWrapperFromNode(item)))
         updatedNodes.push(node);
       }
       this.nodeData.nodes.update(updatedNodes);
       // delete expression values
       this.expressionMap = undefined;
     } else {
-      this.selectedTissue = tissue;
-
+      this.selectedTissue = tissue
       const minExp = 0.3;
+
+      this.netex.tissueExpressionGenes(this.selectedTissue, this.nodeData.nodes).subscribe((response) => {
+        this.expressionMap = response;
+        const updatedNodes = [];
+        // mapping from netex IDs to network IDs, TODO check if this step is necessary
+        const networkIdMappping = {}
+        this.nodeData.nodes.forEach(element => {
+          networkIdMappping[element.netexId] = element.id
+        });
+        const maxExpr = Math.max(...Object.values(this.expressionMap));
+        for (const [netexId, expressionlvl] of Object.entries(this.expressionMap)) {
+          const networkId = networkIdMappping[netexId]
+          const node = this.nodeData.nodes.get(networkId);
+          if (node === null) {
+            continue;
+          }
+          const wrapper = getWrapperFromNode(node)
+          const gradient = expressionlvl !== null ? (Math.pow(expressionlvl / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
+          const pos = this.networkInternal.getPositions([networkId]);
+          node.x = pos[networkId].x;
+          node.y = pos[networkId].y;
+          Object.assign(node,
+            NetworkSettings.getNodeStyle(
+              node,
+              this.myConfig,
+              node.isSeed,
+              this.analysis.inSelection(wrapper),
+              undefined,
+              undefined,
+              gradient));
+          // node.wrapper = wrapper;
+          node.gradient = gradient;
+          // this.proteins.find(prot => getProteinNodeId(prot) === netexId).expressionLevel = lvl.level;
+          // (node.wrapper.data as Node).expressionLevel = lvl.level;
+          updatedNodes.push(node);
+        }
+        this.nodeData.nodes.update(updatedNodes);
+      })
 
       // const params = new HttpParams().set('tissue', `${tissue.id}`).set('data', JSON.stringify(this.currentDataset));
       // this.http.get<any>(
