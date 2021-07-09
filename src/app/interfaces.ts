@@ -12,11 +12,16 @@ export interface Node {
   groupName?: string;
   color?: string | any; // mostly any, but vis js allows detail settings
   shape?: string;
+  image?: string;
   interactions?: Node[];
   x?: number;
   y?: number;
   borderWidth: number;
   borderWidthSelected: number;
+  font: {
+    color: string;
+    size: number;
+  }
 }
 
 export interface Tissue {

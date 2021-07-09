@@ -21,6 +21,7 @@ import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, InteractionDatabase, NodeGroup} from '../../config';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 import {rgbaToHex, rgbToHex, standardize_color} from '../../utils'
+import * as merge from 'lodash/fp/merge'; 
 // import * as 'vis' from 'vis-network';
 // import {DataSet} from 'vis-data';
 // import {vis} from 'src/app/scripts/vis-network.min.js';
@@ -53,10 +54,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
     // check if config updates affect network
     let updateNetworkFlag = false;
-
     const configObj = JSON.parse(config);
     for (const key of Object.keys(configObj)) {
       if (key === 'nodeGroups') {
+        console.log("set node config")
         this.setConfigNodeGroup(key, configObj[key]);
         updateNetworkFlag = true;
         // dont set the key here, will be set in function
@@ -107,7 +108,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       return;
     }
     this.networkJSON = network;
-    console.log(this.myConfig)
     this.createNetwork();
   }
 
@@ -412,20 +412,26 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       // stop if nodeGroups do not contain any information
       return;
     }
-
     // // do not allow '_' in node Group names since it causes problems with backend
     // nodeGroups = removeUnderscoreFromKeys(nodeGroups)
 
     // make sure all keys are set
     Object.entries(nodeGroups).forEach(([key, group]) => {
+      if (!('color' in group)) {
+        // use detailShowLabel default value if not set
+        group['color'] = defaultConfig.nodeGroups.default.color;
+      }
       if (!('detailShowLabel' in group)) {
         // use detailShowLabel default value if not set
         group['detailShowLabel'] = defaultConfig.nodeGroups.default.detailShowLabel;
       }
+      if (!('font' in group)) {
+        // use detailShowLabel default value if not set
+        group['font'] = defaultConfig.nodeGroups.default.font;
+      }
       // color needs to be hexacode to calculate gradient
       if (!group.color.startsWith('#')) {
         // color is either rgba, rgb or string like "red"
-        console.log(group.color)
         if (group.color.startsWith('rgba')) {
           group.color = rgbaToHex(group.color).slice(0, 7)
         } else if (group.color.startsWith('rgb')) {
@@ -433,7 +439,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         } else (
           group.color = standardize_color(group.color)
         )
-        console.log(group.color)
       }
     });
 
@@ -442,8 +447,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     // if user has set nodeGroups, do not use group "default"
     delete defaultNodeGroups.default;
     // if user has not set the return-groups, take the defaults
-    nodeGroups = {...defaultNodeGroups, ...nodeGroups};
-    // override default node groups
+    // user merge function to do deep merge
+    nodeGroups = merge(defaultNodeGroups, nodeGroups);
+    // overwrite default node groups
     this.myConfig[key] = nodeGroups;
   }
 
@@ -529,7 +535,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public selectTissue(tissue: Tissue | null) {
-    console.log("here")
     this.expressionExpanded = false;
     if (!tissue) {
       this.selectedTissue = null;
