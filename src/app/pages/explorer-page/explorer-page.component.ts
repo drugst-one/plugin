@@ -623,8 +623,14 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     } else {
       this.selectedTissue = tissue
       const minExp = 0.3;
-
-      this.netex.tissueExpressionGenes(this.selectedTissue, this.nodeData.nodes).subscribe((response) => {
+      // filter out non-proteins, e.g. drugs
+      const proteinNodes = [];
+      this.nodeData.nodes.forEach(element => {
+        if (element.id.startsWith('p') && element.netexId !== undefined) {
+          proteinNodes.push(element);
+        }
+      });
+      this.netex.tissueExpressionGenes(this.selectedTissue, proteinNodes).subscribe((response) => {
         this.expressionMap = response;
         const updatedNodes = [];
         // mapping from netex IDs to network IDs, TODO check if this step is necessary
@@ -651,10 +657,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
               node.isSeed,
               this.analysis.inSelection(wrapper),
               gradient));
-          // node.wrapper = wrapper;
           node.gradient = gradient;
-          // this.proteins.find(prot => getProteinNodeId(prot) === netexId).expressionLevel = lvl.level;
-          // (node.wrapper.data as Node).expressionLevel = lvl.level;
           updatedNodes.push(node);
         }
         this.nodeData.nodes.update(updatedNodes);
