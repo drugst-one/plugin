@@ -18,8 +18,8 @@ export class NetworkSettings {
   private static nonSeedHostColor = '#3070B3';
   private static nonSeedVirusColor = '#87082c';
 
-  private static selectedBorderColor = NetworkSettings.Black;
-  private static selectBorderHighlightColor = NetworkSettings.Black;
+  private static selectedBorderColor = '#F8981D';
+  private static selectBorderHighlightColor = '#F8981D';
 
   private static seedBorderColor = '#F8981D';
   private static seedBorderHighlightColor = '#F8981D';
@@ -184,6 +184,9 @@ export class NetworkSettings {
     drugInTrial?: boolean,
     gradient?: number): any {
 
+      if (!gradient) {
+        gradient = -1.0;
+      }
       let nodeGroupObject;
       if (node.group === 'default') {
         nodeGroupObject = defaultConfig.nodeGroups.default;
@@ -201,6 +204,9 @@ export class NetworkSettings {
       // const nodeShape = node.shape;
       // const nodeSize = 10;
       // const nodeFont = node.font;
+      console.log("is selected")
+      console.log(isSelected)
+
       if (isSeed) {
         node.color = {
           background: nodeColor,

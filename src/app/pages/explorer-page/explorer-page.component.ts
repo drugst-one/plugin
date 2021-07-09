@@ -179,6 +179,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.showDetails = false;
 
     this.analysis.subscribeList((items, selected) => {
+      console.log(selected)
+      console.log(items)
       if (!this.nodeData.nodes) {
         return;
       }
@@ -187,20 +189,25 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           return;
         }
         const updatedNodes = [];
-        for (const item of items) {
-          const node: Node = this.nodeData.nodes.get(item.id);
+        for (const wrapper of items) {
+          const node: Node = this.nodeData.nodes.get(wrapper.id);
           if (!node) {
             continue;
           }
-          const pos = this.networkInternal.getPositions([item.id]);
-          node.x = pos[item.id].x;
-          node.y = pos[item.id].y;
-          // if (node.group == 'default') {
-          //   Object.assign(node, this.myConfig.nodeGroups.default);
-          // } else {
-          //   Object.assign(node, this.myConfig.nodeGroups[node.group]);
-          // }
-          Object.assign(node, this.myConfig.nodeGroups[node.group]);
+          const pos = this.networkInternal.getPositions([wrapper.id]);
+          node.x = pos[wrapper.id].x;
+          node.y = pos[wrapper.id].y;
+
+          const nodeStyled = NetworkSettings.getNodeStyle(
+            node,
+            this.myConfig,
+            false,
+            selected,
+            undefined,
+            undefined,
+            1.0
+            )
+          Object.assign(node, nodeStyled);
 
           updatedNodes.push(node);
         }
@@ -604,40 +611,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         }
         this.nodeData.nodes.update(updatedNodes);
       })
-
-      // const params = new HttpParams().set('tissue', `${tissue.id}`).set('data', JSON.stringify(this.currentDataset));
-      // this.http.get<any>(
-      //   `${environment.backend}tissue_expression/`, {params})
-      //   .subscribe((levels) => {
-      //     const updatedNodes = [];
-      //     const maxExpr = Math.max(...levels.map(lvl => lvl.level));
-      //     for (const lvl of levels) {
-      //       const item = getWrapperFromNode(lvl.protein);
-      //       const node = this.nodeData.nodes.get(item.nodeId);
-      //       if (!node) {
-      //         continue;
-      //       }
-      //       const gradient = lvl.level !== null ? (Math.pow(lvl.level / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
-      //       const pos = this.network.getPositions([item.nodeId]);
-      //       node.x = pos[item.nodeId].x;
-      //       node.y = pos[item.nodeId].y;
-      //       Object.assign(node,
-      //         NetworkSettings.getNodeStyle(
-      //           node.wrapper.type,
-      //           node.isSeed,
-      //           this.analysis.inSelection(item),
-      //           undefined,
-      //           undefined,
-      //           gradient));
-      //       node.wrapper = item;
-      //       node.gradient = gradient;
-      //       this.proteins.find(prot => getProteinNodeId(prot) === item.nodeId).expressionLevel = lvl.level;
-      //       (node.wrapper.data as Protein).expressionLevel = lvl.level;
-      //       updatedNodes.push(node);
-      //     }
-      //     this.nodeData.nodes.update(updatedNodes);
-      //   });
-
     }
 
     this.currentViewSelectedTissue = this.selectedTissue;

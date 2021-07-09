@@ -87,10 +87,7 @@ export class NetexControllerService {
      * Returns the expression in the given tissue for given nodes and cancerNodes
      */
     // slice prefix of netex id away for direct lookup in db, if node not mapped to db, replace by undefined
-    console.log("before genesBackendIds")
     const genesBackendIds = nodes.map( (node: Node) => node.netexId ? node.netexId.slice(1) : undefined);
-    console.log("genesBackendIds")
-    console.log(genesBackendIds)
     const params = new HttpParams()
       .set('tissue', tissue.netexId)
       .set('proteins', JSON.stringify(genesBackendIds));
