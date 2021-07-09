@@ -1,10 +1,16 @@
+// https://visjs.github.io/vis-network/docs/network/nodes.html
 export interface NodeGroup {
   groupName: string;
-  color: string;
-  shape: 'circle' | 'triangle' | 'star' | 'square' | 'image' | 'text' | 'ellipse' | 'box' | 'diamond' | 'dot';
-  type: string;
+  color?: string;
+  shape?: 'circle' | 'triangle' | 'star' | 'square' | 'image' | 'text' | 'ellipse' | 'box' | 'diamond' | 'dot';
+  type?: string;
   image?: string;
   detailShowLabel?: boolean;
+  font?: any;
+  border?: any;
+  highlight?: any;
+  borderWidth?: number;
+  borderWidthSelected?: number;
 }
 
 export interface EdgeGroup {
@@ -86,6 +92,21 @@ export const defaultConfig: IConfig = {
       shape: 'triangle',
       type: 'default type',
       detailShowLabel: false,
+      font: {
+        color: 'black',
+        size: 14,
+        face: 'arial',
+        background: undefined,
+        strokeWidth: 0,
+        strokeColor: '#ffffff',
+        align: 'center',
+        bold: false,
+        ital: false,
+        boldital: false,
+        mono: false,
+      },
+      borderWidth: 1,
+      borderWidthSelected: 3
     },
     foundNode: {
       groupName: 'Found Nodes',
@@ -101,9 +122,33 @@ export const defaultConfig: IConfig = {
     },
     seedNode: {
       groupName: 'Seed Nodes',
-      color: 'blue',
-      shape: 'circle',
-      type: 'seed',
+      // color: '#F8981D',
+      // shape: 'circle',
+      // type: 'seed',
+      border: '#F8981D',
+      highlight: {
+        border: '#F8981D',
+        background: '#F8981D'
+      },
+      font: {
+        color: '#F8981D',
+        size: 14
+      }
+    },
+    selectedNode: {
+      groupName: 'Selected Nodes',
+      color: '#F8981D',
+      // shape: 'dot',
+      // type: 'selected',
+      border: '#F8981D',
+      highlight: {
+        border: '#F8981D',
+        background: '#F8981D'
+      },
+      font: {
+        color: '#F8981D',
+        size: 14
+      }
     }
   },
   edgeGroups: {
