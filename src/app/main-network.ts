@@ -1,5 +1,6 @@
 import { defaultConfig, IConfig } from './config';
 import {NodeInteraction, Node, getProteinNodeId} from './interfaces';
+import * as merge from 'lodash/fp/merge'; 
 
 export function getDatasetFilename(dataset: Array<[string, string]>): string {
   return `network-${JSON.stringify(dataset).replace(/[\[\]\",]/g, '')}.json`;
@@ -50,7 +51,7 @@ export class ProteinNetwork {
    * @param config 
    * @returns 
    */
-  private mapCustomNode(customNode: any, config: IConfig): Node {
+  public mapCustomNode(customNode: any, config: IConfig): Node {
     let node;
     if (customNode.group === undefined) {
       // fallback to default node
@@ -64,17 +65,23 @@ export class ProteinNetwork {
       node = JSON.parse(JSON.stringify(config.nodeGroups[customNode.group]));
     }
     // update the node with custom node properties, including values fetched from backend
-    node = {
-      ...node,
-      ...customNode
-    }
+    node = merge(node, customNode)
     // label is only used for network visualization
     node.label = customNode.label ? customNode.label : customNode.id;
     if (node.image) {
       node.shape = 'image';
     }
-    // // remove '_' from group if group is defined
-    // node.group = node.group===undefined ? node.group : node.group.replace('_', '');
+    // if color is set as string, add detail settings
+    if (typeof node.color === 'string') {
+      node.color = {
+        border: node.color,
+        background: node.color,
+        highlight: {
+          border: node.color,
+          background: node.color
+        }
+      }
+    }
     return node;
   }
 
@@ -86,7 +93,7 @@ export class ProteinNetwork {
    * @param config 
    * @returns 
    */
-  private mapCustomEdge(customEdge: NodeInteraction, config: IConfig): any {
+  public mapCustomEdge(customEdge: NodeInteraction, config: IConfig): any {
     let edge;
     if (customEdge.group === undefined) {
       // fallback to default node
@@ -102,8 +109,6 @@ export class ProteinNetwork {
       ...edge,
       ...customEdge
     }
-    // // remove '_' from group if group is defined
-    // edge.group = edge.group===undefined ? edge.group : edge.group.replace('_', '');
     return edge;
   }
 

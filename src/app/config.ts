@@ -1,7 +1,7 @@
 // https://visjs.github.io/vis-network/docs/network/nodes.html
 export interface NodeGroup {
-  groupName: string;
-  color?: string;
+  groupName?: string;
+  color?: any;
   shape?: 'circle' | 'triangle' | 'star' | 'square' | 'image' | 'text' | 'ellipse' | 'box' | 'diamond' | 'dot';
   type?: string;
   image?: string;
@@ -11,6 +11,7 @@ export interface NodeGroup {
   highlight?: any;
   borderWidth?: number;
   borderWidthSelected?: number;
+  background?: any;
 }
 
 export interface EdgeGroup {
@@ -84,16 +85,24 @@ export const defaultConfig: IConfig = {
   interactionProteinProtein: 'STRING',
   nodeGroups: {
     // all NodeGroups but the default group must be set, if not provided by the user, they will be taken from here
+    // IMPORTANT: node color must be hexacode!
     default: {
       // this default group is used for default node group values
       // and is fallback in case user does not provide any nodeGroup
       groupName: 'Default Node Group',
-      color: '#FFFF00',
+      color: {
+        border: '#FFFF00',
+        background: '#FFFF00',
+        highlight: {
+          border: '#FF0000',
+          background: '#FF0000'
+        },
+      },
       shape: 'triangle',
       type: 'default type',
       detailShowLabel: false,
       font: {
-        color: 'black',
+        color: '#000000',
         size: 14,
         face: 'arial',
         background: undefined,
@@ -106,29 +115,46 @@ export const defaultConfig: IConfig = {
         mono: false,
       },
       borderWidth: 1,
-      borderWidthSelected: 3
+      borderWidthSelected: 2
     },
     foundNode: {
       groupName: 'Found Nodes',
-      color: 'red',
+      color: {
+        border: '#F12590',
+        background: '##F12590',
+        highlight: {
+          border: '#F12590',
+          background: '#F12590'
+        },
+      },
       shape: 'circle',
       type: 'default node type',
     },
     foundDrug: {
       groupName: 'Found Drugs',
-      color: 'green',
+      color: {
+        border: '#F12590',
+        background: '##F12590',
+        highlight: {
+          border: '#F12590',
+          background: '#F12590'
+        },
+      },
       shape: 'star',
       type: 'default drug type',
     },
     seedNode: {
-      groupName: 'Seed Nodes',
+      // groupName: 'Seed Nodes',
       // color: '#F8981D',
       // shape: 'circle',
       // type: 'seed',
-      border: '#F8981D',
-      highlight: {
+      color: {
         border: '#F8981D',
-        background: '#F8981D'
+        background: '#F8981D',
+        highlight: {
+          border: '#F8981D',
+          background: '#F8981D'
+        },
       },
       font: {
         color: '#F8981D',
@@ -136,14 +162,20 @@ export const defaultConfig: IConfig = {
       }
     },
     selectedNode: {
-      groupName: 'Selected Nodes',
-      color: '#F8981D',
+      // groupName: 'Selected Nodes',
+      // color: '#F8981D',
       // shape: 'dot',
       // type: 'selected',
-      border: '#F8981D',
-      highlight: {
+
+      borderWidth: 3,
+      borderWidthSelected: 4,
+      color: {
         border: '#F8981D',
-        background: '#F8981D'
+        // background: '#F8981D',
+        highlight: {
+          border: '#F8981D',
+        //   background: '#F8981D'
+        },
       },
       font: {
         color: '#F8981D',

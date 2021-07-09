@@ -11,7 +11,9 @@ import {
   Wrapper,
   getWrapperFromNode,
   Tissue,
-  ExpressionMap
+  ExpressionMap,
+  getDrugNodeId,
+  Drug
 } from '../../interfaces';
 import {ProteinNetwork} from '../../main-network';
 import {AnalysisService} from '../../services/analysis/analysis.service';
@@ -22,6 +24,7 @@ import {defaultConfig, EdgeGroup, IConfig, InteractionDatabase, NodeGroup} from 
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 import {rgbaToHex, rgbToHex, standardize_color} from '../../utils'
 import * as merge from 'lodash/fp/merge'; 
+
 // import * as 'vis' from 'vis-network';
 // import {DataSet} from 'vis-data';
 // import {vis} from 'src/app/scripts/vis-network.min.js';
@@ -57,7 +60,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     const configObj = JSON.parse(config);
     for (const key of Object.keys(configObj)) {
       if (key === 'nodeGroups') {
-        console.log("set node config")
         this.setConfigNodeGroup(key, configObj[key]);
         updateNetworkFlag = true;
         // dont set the key here, will be set in function
@@ -142,6 +144,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private dumpPositions = false;
   public physicsEnabled = false;
+  public adjacentDrugs = false;
+  public adjacentDrugList: Node[] = [];
+  public adjacentDrugEdgesList: Node[] = [];
 
   public queryItems: Wrapper[] = [];
   public showAnalysisDialog = false;
@@ -179,8 +184,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.showDetails = false;
 
     this.analysis.subscribeList((items, selected) => {
-      console.log(selected)
-      console.log(items)
       if (!this.nodeData.nodes) {
         return;
       }
@@ -190,26 +193,26 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         }
         const updatedNodes = [];
         for (const wrapper of items) {
-          const node: Node = this.nodeData.nodes.get(wrapper.id);
+          // const node: Node = this.nodeData.nodes.get(wrapper.id);
+          const node = wrapper.data as Node;
           if (!node) {
             continue;
           }
           const pos = this.networkInternal.getPositions([wrapper.id]);
           node.x = pos[wrapper.id].x;
           node.y = pos[wrapper.id].y;
-
+          console.log('before styling')
           const nodeStyled = NetworkSettings.getNodeStyle(
             node,
             this.myConfig,
             false,
             selected,
-            undefined,
-            undefined,
             1.0
             )
-          Object.assign(node, nodeStyled);
-
-          updatedNodes.push(node);
+          console.log('after styling')
+          nodeStyled.x = pos[wrapper.id].x;
+          nodeStyled.y = pos[wrapper.id].y;
+          updatedNodes.push(nodeStyled);
         }
         this.nodeData.nodes.update(updatedNodes);
       } else {
@@ -267,6 +270,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (network.nodes.length) {
       network.nodes = await this.netex.mapNodes(network.nodes, this.myConfig.identifier);
     }
+    // use netexIds where posssible
+    const nodeIdMap = {};
+    network.nodes.forEach(node => {
+      nodeIdMap[node.id] = node.netexId ? node.netexId : node.id
+      node.id = nodeIdMap[node.id];
+    });
+    // adjust edge labels accordingly
+    network.edges.forEach(edge => {
+      edge.from = nodeIdMap[edge.from];
+      edge.to = nodeIdMap[edge.to];
+    });
     this.proteins = network.nodes;
     this.edges = network.edges;
   }
@@ -311,6 +325,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public async createNetwork() {
     this.analysis.resetSelection();
     this.selectedWrapper = null;
+    // getNetwork synchronizes the input network with the database
     await this.getNetwork();
     this.proteinData = new ProteinNetwork(this.proteins, this.edges);
 
@@ -394,7 +409,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public updatePhysicsEnabled(bool) {
+  public updatePhysicsEnabled(bool: boolean) {
     this.physicsEnabled = bool;
     this.networkInternal.setOptions({
       physics: {
@@ -404,6 +419,30 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         },
       }
     });
+  }
+
+  public updateAdjacentDrugs(bool: boolean) {
+    this.adjacentDrugs = bool;
+    if (this.adjacentDrugs) {
+        this.netex.adjacentDrugs(this.myConfig.interactionDrugProtein, this.nodeData.nodes).subscribe(response => {
+          for (const interaction of response.pdis) {
+            const edge = {from: interaction.protein, to: interaction.drug};
+            this.adjacentDrugEdgesList.push(this.proteinData.mapCustomEdge(edge, this.myConfig));
+          }
+          for (const drug of response.drugs) {
+            drug.group = 'foundDrug';
+            drug.id = getDrugNodeId(drug)
+            this.adjacentDrugList.push(this.proteinData.mapCustomNode(drug, this.myConfig))
+          }
+          this.nodeData.nodes.add(this.adjacentDrugList);
+          this.nodeData.edges.add(this.adjacentDrugEdgesList);
+      })
+    } else {
+      this.nodeData.nodes.remove(this.adjacentDrugList);
+      this.nodeData.edges.remove(this.adjacentDrugEdgesList);
+      this.adjacentDrugList = [];
+      this.adjacentDrugEdgesList = [];
+    }
   }
 
   /**
@@ -419,24 +458,32 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       // stop if nodeGroups do not contain any information
       return;
     }
-    // // do not allow '_' in node Group names since it causes problems with backend
-    // nodeGroups = removeUnderscoreFromKeys(nodeGroups)
 
     // make sure all keys are set
     Object.entries(nodeGroups).forEach(([key, group]) => {
-      if (!('color' in group)) {
-        // use detailShowLabel default value if not set
-        group['color'] = defaultConfig.nodeGroups.default.color;
+      if (key in defaultConfig.nodeGroups) {
+        // skip the groups that overwrite default groups in case user only wants to overwrite partially
+        return
       }
-      if (!('detailShowLabel' in group)) {
-        // use detailShowLabel default value if not set
-        group['detailShowLabel'] = defaultConfig.nodeGroups.default.detailShowLabel;
+      if (!group.color) {
+        throw `Group ${defaultConfig.nodeGroups.groupName} has no attribute 'color'.`;
       }
-      if (!('font' in group)) {
-        // use detailShowLabel default value if not set
-        group['font'] = defaultConfig.nodeGroups.default.font;
+      if (!group.shape) {
+        throw `Group ${defaultConfig.nodeGroups.groupName} has no attribute 'shape'.`;
       }
-      // color needs to be hexacode to calculate gradient
+      if (!group.groupName) {
+        throw `Group ${defaultConfig.nodeGroups.groupName} has no attribute 'groupName'.`;
+      }
+      // set default values in case they are not set by user
+      // these values are not mandatory but are neede to override default vis js styles after e.g. deselecting
+      // because vis js "remembers" styles even though they are removed
+      if (!group.borderWidth) {
+        group.borderWidth = 0;
+      }
+      if (!group.borderWidthSelected) {
+        group.borderWidthSelected = 0;
+      }
+      // color needs to be hexacode to calculate gradient, group.color might not be set for seed and selected group
       if (!group.color.startsWith('#')) {
         // color is either rgba, rgb or string like "red"
         if (group.color.startsWith('rgba')) {
@@ -565,8 +612,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
             this.myConfig,
             false,
             this.analysis.inSelection(getWrapperFromNode(item)),
-            undefined,
-            undefined,
             1.0
             )
         )
@@ -605,8 +650,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
               this.myConfig,
               node.isSeed,
               this.analysis.inSelection(wrapper),
-              undefined,
-              undefined,
               gradient));
           // node.wrapper = wrapper;
           node.gradient = gradient;

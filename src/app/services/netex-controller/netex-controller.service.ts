@@ -4,6 +4,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {AlgorithmType, QuickAlgorithmType} from '../analysis/analysis.service';
 import { Observable } from 'rxjs';
 import { Tissue, Node} from 'src/app/interfaces';
+import { InteractionDrugProteinDB } from 'src/app/config';
 
 @Injectable({
   providedIn: 'root'
@@ -92,5 +93,18 @@ export class NetexControllerService {
       .set('tissue', tissue.netexId)
       .set('proteins', JSON.stringify(genesBackendIds));
     return this.http.get(`${environment.backend}tissue_expression/`, {params});
+  }
+
+  public adjacentDrugs(pdiDataset: InteractionDrugProteinDB, nodes: Node[]): Observable<any> {
+    /**
+     * Returns the expression in the given tissue for given nodes and cancerNodes
+     */
+    // slice prefix of netex id away for direct lookup in db, if node not mapped to db, replace by undefined
+    const genesBackendIds = nodes.map( (node: Node) => node.netexId ? node.netexId.slice(1) : undefined);
+    const params = {
+      pdi_dataset: pdiDataset,
+      proteins: genesBackendIds
+    }
+    return this.http.post<any>(`${environment.backend}adjacent_drugs/`, params);
   }
 }

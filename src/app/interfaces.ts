@@ -18,6 +18,7 @@ export interface Node {
   y?: number;
   borderWidth: number;
   borderWidthSelected: number;
+  opacity?: number;
   font: {
     color: string;
     size: number;
@@ -117,11 +118,19 @@ export function getNodeId(node: Node) {
   /**
    * Returns backend_id of Gene object
    */
-   if ('netexId' in node) {
-     return node['netexId']
-   } else {
-     return node.id
-   }
+  //  if ('netexId' in node) {
+  //    return node['netexId']
+  //  } else {
+  //    return node.id
+  //  }
+  return node.id
+}
+
+export function getNetworkId(node: Node) {
+  /**
+   * Returns ID of a network node
+   */
+  return node.id
 }
 
 export function getId(gene: Node) {
@@ -150,7 +159,7 @@ export function getWrapperFromNode(gene: Node): Wrapper {
   // if node does not have property group, it was found by the analysis
   gene.group = gene.group ? gene.group : 'foundNode';
   return {
-    id: getNodeId(gene),
+    id: getNetworkId(gene),
     data: gene,
   };
 }

@@ -125,10 +125,12 @@ export class NetworkSettings {
     config: IConfig,
     isSeed: boolean,
     isSelected: boolean,
-    gradient?: number): any {
+    gradient: number = 1): any {
 
+      // delete possible old styles
+      Object.keys(defaultConfig.nodeGroups.default).forEach(e => delete node[e]);
+      // set group styles
       if (node.group === 'default') {
-        console.log("we should not see this")
         node = merge(node, defaultConfig.nodeGroups.default);
       } else {
         node = merge(node, config.nodeGroups[node.group]);
@@ -136,26 +138,24 @@ export class NetworkSettings {
       // note that seed and selected node style are applied after the node style is fetched. 
       // this allows to overwrite only attributes of interest, therefor in e.g. seedNode group
       // certain attributes like shape can remain undefined
+      // use lodash merge to not lose deep attributes, e.g. "font.size"
       if (isSeed) {
         // apply seed node style to node
         node = merge(node, config.nodeGroups.seedNode);
       } else if (isSelected) {
         // apply selected node style to node
-        console.log("node styles")
-        console.log(node)
-        console.log(config.nodeGroups.selectedNode)
         node = merge(node, config.nodeGroups.selectedNode);
       }
       // show image if image url is given
       if (node.image) {
         node.shape = 'image';
       }
-      // calculate color gradient if gradient is givel
+      // use opactiy as gradient
       if (gradient === null) {
-        node.color = NetworkSettings.Grey;
-      } else {
-        node.color = getGradientColor(NetworkSettings.White, node.color, gradient);
-      }
+          node.opacity = 0
+        } else {
+          node.opacity = gradient
+        }
       return node;
     }
 }
