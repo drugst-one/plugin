@@ -140,14 +140,15 @@ export function getId(gene: Node) {
   return `${gene.id}`;
 }
 
-export function getWrapperFromCustom(gene: Node): Wrapper {
+export function getWrapperFromProtein(gene: Node): Wrapper {
   /**
    * Constructs wrapper interface for gene
    */
-  // if gene.label is undefined, set it to id
+  // if node does not have property group, it was found by the analysis
+  gene.group = gene.group ? gene.group : 'foundNode';
   gene.label = gene.label ? gene.label : gene.id
   return {
-    id: getNodeId(gene),
+    id: getNetworkId(gene),
     data: gene,
   };
 }
@@ -156,8 +157,8 @@ export function getWrapperFromNode(gene: Node): Wrapper {
   /**
    * Constructs wrapper interface for gene
    */
-  // if node does not have property group, it was found by the analysis
-  gene.group = gene.group ? gene.group : 'foundNode';
+  // if node does not have property group, it was custom node from user
+  gene.group = gene.group ? gene.group : 'default';
   gene.label = gene.label ? gene.label : gene.id
   return {
     id: getNetworkId(gene),

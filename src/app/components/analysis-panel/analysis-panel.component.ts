@@ -18,9 +18,9 @@ import {
   getNodeIdsFromPDI,
   getNodeIdsFromPPI,
   getProteinNodeId,
-  getWrapperFromCustom,
   getWrapperFromDrug,
   getWrapperFromNode,
+  getWrapperFromProtein,
   Node,
   Task,
   Tissue,
@@ -214,7 +214,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
           if (nodeIds.length > 0) {
             const nodeId = nodeIds[0];
             const node = this.nodeData.nodes.get(nodeId);
-            console.log(node)
             if (node.nodeType === 'drug' || node.netexId === undefined || !node.netexId.startsWith('p')) {
               return;
             }
@@ -391,7 +390,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
    * For the third case, fall back to a default case which can also be set by user.
    */
   public inferNodeGroup(wrapper: Wrapper): string {
-    console.log(wrapper);
     if (wrapper.data.group !== undefined) {
       return wrapper.data.group;
     } else if (wrapper.data.netexId !== undefined && wrapper.data.netexId.startsWith('d')) {
@@ -432,9 +430,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
     // add drugGroup and foundNodesGroup for added nodes
     // these groups can be overwritten by the user
-    console.log("result")
-    console.log(result)
-
     const nodes = [];
     const edges = [];
 
@@ -451,22 +446,23 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     const wrappers: { [key: string]: Wrapper } = {};
 
     for (const node of network.nodes) {
-      if (nodeTypes[node] === 'protein') {
+      // convert id to netex Id if exists
+      const nodeDetails = details[node];
+      if (nodeDetails.netexId && nodeDetails.netexId.startsWith('p')) {
         // node is protein from database, has been mapped on init to backend protein from backend
         // or was found during analysis
-        this.proteins.push(details[node]);
-        wrappers[node] = getWrapperFromNode(details[node]);
-      } else if (nodeTypes[node] === 'drug') {
+        this.proteins.push(nodeDetails);
+        wrappers[node] = getWrapperFromProtein(nodeDetails as Node);
+      } else if (nodeDetails.netexId && nodeDetails.netexId.startsWith('d')) {
         // node is drug, was found during analysis
-        wrappers[node] = getWrapperFromDrug(details[node]);
+        wrappers[node] = getWrapperFromDrug(nodeDetails as Drug);
       } else {
         // node is custom input from user, could not be mapped to backend protein
-        wrappers[node] = getWrapperFromCustom(details[node]);
+        wrappers[node] = getWrapperFromNode(nodeDetails as Node);
       }
       // IMPORTANT we set seeds to "selected" and not to seeds. The user should be inspired to run 
       // further analysis and the button function can be used to highlight seeds
-      // option to use details[node] as gradient, but sccores are very small
-      console.log(details[node])
+      // option to use scores[node] as gradient, but sccores are very small
       nodes.push(NetworkSettings.getNodeStyle(wrappers[node].data as Node, config, false, isSeed[node], 1))
     }
     for (const edge of network.edges) {
