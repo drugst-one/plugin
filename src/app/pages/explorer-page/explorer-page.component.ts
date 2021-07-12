@@ -23,7 +23,7 @@ import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, InteractionDatabase, NodeGroup} from '../../config';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 import {rgbaToHex, rgbToHex, standardize_color} from '../../utils'
-import * as merge from 'lodash/fp/merge'; 
+import * as merge from 'lodash/fp/merge';
 
 // import * as 'vis' from 'vis-network';
 // import {DataSet} from 'vis-data';
@@ -341,7 +341,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     const options = NetworkSettings.getOptions('main');
 
     this.networkInternal = new vis.Network(container, this.nodeData, options);
-
     this.networkInternal.on('doubleClick', (properties) => {
       const nodeIds: Array<string> = properties.nodes;
       if (nodeIds.length > 0) {
@@ -620,7 +619,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         node.x = pos[item.id].x;
         node.y = pos[item.id].y;
         Object.assign(
-          node, 
+          node,
           NetworkSettings.getNodeStyle(
             node,
             this.myConfig,
