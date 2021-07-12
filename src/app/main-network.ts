@@ -68,20 +68,6 @@ export class ProteinNetwork {
     node = merge(node, customNode)
     // label is only used for network visualization
     node.label = customNode.label ? customNode.label : customNode.id;
-    if (node.image) {
-      node.shape = 'image';
-    }
-    // if color is set as string, add detail settings
-    if (typeof node.color === 'string') {
-      node.color = {
-        border: node.color,
-        background: node.color,
-        highlight: {
-          border: node.color,
-          background: node.color
-        }
-      }
-    }
     return node;
   }
 

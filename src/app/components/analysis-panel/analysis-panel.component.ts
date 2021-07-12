@@ -214,10 +214,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
           if (nodeIds.length > 0) {
             const nodeId = nodeIds[0];
             const node = this.nodeData.nodes.get(nodeId);
-            if (node.nodeType === 'drug') {
+            console.log(node)
+            if (node.nodeType === 'drug' || node.netexId === undefined || !node.netexId.startsWith('p')) {
               return;
             }
-            const wrapper = node.wrapper;
+            const wrapper = getWrapperFromNode(node);
             if (this.analysis.inSelection(wrapper)) {
               this.analysis.removeItems([wrapper]);
               this.analysis.getCount();
@@ -231,17 +232,20 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         this.network.on('click', (properties) => {
           const selectedNodes = this.nodeData.nodes.get(properties.nodes);
           if (selectedNodes.length > 0) {
-            const selectedNode = selectedNodes[0];
-            const wrapper = selectedNode.wrapper;
-            this.showDetailsChange.emit(wrapper);
+            this.showDetailsChange.emit(getWrapperFromNode(selectedNodes[0]));
           } else {
             this.showDetailsChange.emit(null);
           }
         });
 
         this.analysis.subscribeList((items, selected) => {
+          // return if analysis panel is closed or no nodes are loaded
+          if (!this.token) {
+            return;
+          }
+
           if (selected !== null) {
-            const updatedNodes = [];
+            const updatedNodes: Node[] = [];
             for (const item of items) {
               const node = this.nodeData.nodes.get(item.id);
               if (!node) {
@@ -250,11 +254,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
               const pos = this.network.getPositions([item.id]);
               node.x = pos[item.id].x;
               node.y = pos[item.id].y;
-              // Object.assign(node, NetworkSettings.getNodeStyle(
-              //   node.wrapper.type,
-              //   node.isSeed,
-              //   selected));
-              updatedNodes.push(node);
+              const nodeStyled = NetworkSettings.getNodeStyle(
+                node,
+                this.myConfig,
+                false,
+                selected,
+                1.0
+                )
+              updatedNodes.push(nodeStyled);
             }
             this.nodeData.nodes.update(updatedNodes);
 
@@ -276,21 +283,20 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
           } else {
             const updatedNodes = [];
             this.nodeData.nodes.forEach((node) => {
-              const nodeSelected = this.analysis.idInSelection(node.id);
               let drugType;
               let drugInTrial;
               if (node.wrapper.data.netexId && node.wrapper.data.netexId.startswith('d')) {
                 drugType = node.wrapper.data.status;
                 drugInTrial = node.wrapper.data.inTrial;
               }
-              // Object.assign(node, NetworkSettings.getNodeStyle(
-              //   node.wrapper.type,
-              //   node.isSeed,
-              //   nodeSelected,
-              //   drugType,
-              //   drugInTrial,
-              //   node.gradient));
-              updatedNodes.push(node);
+              const nodeStyled = NetworkSettings.getNodeStyle(
+                node,
+                this.myConfig,
+                false,
+                selected,
+                1.0
+                )
+              updatedNodes.push(nodeStyled);
             });
             this.nodeData.nodes.update(updatedNodes);
 
@@ -426,6 +432,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
     // add drugGroup and foundNodesGroup for added nodes
     // these groups can be overwritten by the user
+    console.log("result")
+    console.log(result)
 
     const nodes = [];
     const edges = [];
@@ -455,7 +463,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         // node is custom input from user, could not be mapped to backend protein
         wrappers[node] = getWrapperFromCustom(details[node]);
       }
-      nodes.push(this.mapNode(config, wrappers[node], isSeed[node], scores[node]));
+      // IMPORTANT we set seeds to "selected" and not to seeds. The user should be inspired to run 
+      // further analysis and the button function can be used to highlight seeds
+      // option to use details[node] as gradient, but sccores are very small
+      console.log(details[node])
+      nodes.push(NetworkSettings.getNodeStyle(wrappers[node].data as Node, config, false, isSeed[node], 1))
     }
     for (const edge of network.edges) {
       edges.push(this.mapEdge(edge, this.inferEdgeGroup(edge), wrappers));
@@ -464,29 +476,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       nodes,
       edges,
     };
-  }
-
-  /**
-   * maps node object returned from backend to frontend node, i.e. input to vis.js
-   * @param config
-   * @param wrapper
-   * @param isSeed
-   * @param score
-   * @returns
-   */
-  private mapNode(config: IConfig, wrapper: Wrapper, isSeed?: boolean, score?: number): any {
-    // override group is node is seed
-    // TODO Move this to extra function
-    // wrapper.data.group = isSeed ? 'seedNode' : wrapper.data.group;
-    const node = JSON.parse(JSON.stringify(config.nodeGroups[wrapper.data.group]));
-    node.id = wrapper.id;
-    node.label = this.inferNodeLabel(config, wrapper);
-    node.isSeed = isSeed;
-    node.wrapper = wrapper;
-    if (node.image) {
-      node.shape = 'image';
-    }
-    return node;
   }
 
   private mapEdge(edge: any, type: 'protein-protein' | 'protein-drug', wrappers?: { [key: string]: Wrapper }): any {

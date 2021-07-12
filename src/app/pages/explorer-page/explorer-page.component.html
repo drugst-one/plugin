@@ -135,7 +135,7 @@
           <footer *ngIf="myConfig.showFooter" class="card-footer toolbar explorer-footer">
 
             <ng-container *ngIf="myConfig.showFooterButtonScreenshot">
-              <button (click)="toImage()" class="button is-primary is-rounded has-tooltip"
+              <button (click)="toImage()" class="button is-primary is-rounded has-tooltip explorer-footer-element"
                       data-tooltip="Take a screenshot of the current network.">
               <span class="icon">
                 <i class="fas fa-camera" aria-hidden="true"></i>
@@ -145,7 +145,7 @@
             </ng-container>
 
             <ng-container *ngIf="myConfig.showFooterButtonExpression">
-              <div class="footer-buttons dropdown is-up" [class.is-active]="expressionExpanded">
+              <div class="footer-buttons dropdown is-up explorer-footer-element" [class.is-active]="expressionExpanded">
                 <div class="dropdown-trigger">
                   <button (click)="expressionExpanded=!expressionExpanded"
                           class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
@@ -182,17 +182,18 @@
               </div>
             </ng-container>
         
-        <app-toggle class="footer-buttons" textOn="Drugs On" textOff="Off"
+        <app-toggle class="footer-buttons explorer-footer-element" textOn="Drugs On" textOff="Off"
             tooltipOn="Display adjacent drugs ON."
             tooltipOff="Display adjacent drugs OFF."
             [smallStyle]="smallStyle"
             [value]="adjacentDrugs" (valueChange)="updateAdjacentDrugs($event)"></app-toggle>
 
-        <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off"
+        <app-toggle class="footer-buttons explorer-footer-element" textOn="Animation On" textOff="Off"
                     tooltipOn="Enable the network animation."
                     tooltipOff="Disable the network animation and freeze nodes."
                     [smallStyle]="smallStyle"
                     [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
+
         </footer>
       </div>
     </div>

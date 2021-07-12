@@ -184,7 +184,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.showDetails = false;
 
     this.analysis.subscribeList((items, selected) => {
-      if (!this.nodeData.nodes) {
+      // return if analysis panel is open or no nodes are loaded
+      if (this.selectedAnalysisToken || !this.nodeData.nodes) {
         return;
       }
       if (selected !== null) {
@@ -201,7 +202,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           const pos = this.networkInternal.getPositions([wrapper.id]);
           node.x = pos[wrapper.id].x;
           node.y = pos[wrapper.id].y;
-          console.log('before styling')
           const nodeStyled = NetworkSettings.getNodeStyle(
             node,
             this.myConfig,
@@ -209,7 +209,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
             selected,
             1.0
             )
-          console.log('after styling')
           nodeStyled.x = pos[wrapper.id].x;
           nodeStyled.y = pos[wrapper.id].y;
           updatedNodes.push(nodeStyled);
@@ -218,7 +217,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       } else {
         const updatedNodes = [];
         this.nodeData.nodes.forEach((node) => {
-          const nodeSelected = this.analysis.idInSelection(node.id);
+          // const nodeSelected = this.analysis.idInSelection(node.id);
           // if (node.group == 'default') {
           //   Object.assign(node, this.myConfig.nodeGroups.default);
           // } else {
@@ -348,11 +347,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (nodeIds.length > 0) {
         const nodeId = nodeIds[0];
         const node = this.nodeData.nodes.get(nodeId);
-        const wrapper = getWrapperFromNode(node);
-        if (wrapper.data.netexId === undefined || !wrapper.data.netexId.startsWith('p')) {
+        if (node.netexId === undefined || !node.netexId.startsWith('p')) {
           // skip if node is not a protein mapped to backend
           return;
         }
+        const wrapper = getWrapperFromNode(node);
         if (this.analysis.inSelection(node)) {
           this.analysis.removeItems([wrapper]);
         } else {
@@ -483,17 +482,32 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (!group.borderWidthSelected) {
         group.borderWidthSelected = 0;
       }
-      // color needs to be hexacode to calculate gradient, group.color might not be set for seed and selected group
-      if (!group.color.startsWith('#')) {
-        // color is either rgba, rgb or string like "red"
-        if (group.color.startsWith('rgba')) {
-          group.color = rgbaToHex(group.color).slice(0, 7)
-        } else if (group.color.startsWith('rgb')) {
-          group.color = rgbToHex(group.color)
-        } else (
-          group.color = standardize_color(group.color)
-        )
+      // if color is set as string, add detail settings
+      if (typeof group.color === 'string') {
+        group.color = {
+          border: group.color,
+          background: group.color,
+          highlight: {
+            border: group.color,
+            background: group.color
+          }
+        }
       }
+      // if image is given, set node shape to image
+      if (group.image) {
+        group.shape = 'image';
+      }
+      // color needs to be hexacode to calculate gradient, group.color might not be set for seed and selected group
+      // if (!group.color.startsWith('#')) {
+      //   // color is either rgba, rgb or string like "red"
+      //   if (group.color.startsWith('rgba')) {
+      //     group.color = rgbaToHex(group.color).slice(0, 7)
+      //   } else if (group.color.startsWith('rgb')) {
+      //     group.color = rgbToHex(group.color)
+      //   } else (
+      //     group.color = standardize_color(group.color)
+      //   )
+      // }
     });
 
     // make sure that return-groups (seeds, drugs, found nodes) are set

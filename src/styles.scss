@@ -18,10 +18,13 @@
 }
 
 .explorer-footer {
-  //position: absolute;
-  //overflow: auto;
+  position: absolute;
+  // overflow: auto;
   //width: $main-width;
   bottom: 0;
+  &-element {
+    position: relative;
+  } 
 }
 
 nav.navbar {

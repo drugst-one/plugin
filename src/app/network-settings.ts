@@ -125,8 +125,7 @@ export class NetworkSettings {
     config: IConfig,
     isSeed: boolean,
     isSelected: boolean,
-    gradient: number = 1): any {
-
+    gradient: number = 1): Node {
       // delete possible old styles
       Object.keys(defaultConfig.nodeGroups.default).forEach(e => delete node[e]);
       // set group styles
@@ -144,7 +143,9 @@ export class NetworkSettings {
         node = merge(node, config.nodeGroups.seedNode);
       } else if (isSelected) {
         // apply selected node style to node
+        console.log(node)
         node = merge(node, config.nodeGroups.selectedNode);
+        console.log(node)
       }
       // show image if image url is given
       if (node.image) {

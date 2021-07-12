@@ -158,6 +158,7 @@ export function getWrapperFromNode(gene: Node): Wrapper {
    */
   // if node does not have property group, it was found by the analysis
   gene.group = gene.group ? gene.group : 'foundNode';
+  gene.label = gene.label ? gene.label : gene.id
   return {
     id: getNetworkId(gene),
     data: gene,

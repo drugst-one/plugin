@@ -149,15 +149,15 @@ export const defaultConfig: IConfig = {
       // shape: 'circle',
       // type: 'seed',
       color: {
-        border: '#F8981D',
-        background: '#F8981D',
+        border: '#F1111D',
+        background: '#F1111D',
         highlight: {
-          border: '#F8981D',
-          background: '#F8981D'
+          border: '#F1111D',
+          background: '#F1111D'
         },
       },
       font: {
-        color: '#F8981D',
+        color: '#F1111D',
         size: 14
       }
     },
