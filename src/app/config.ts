@@ -18,7 +18,7 @@ export interface EdgeGroup {
   groupName: string;
   color: string;
   // see https://visjs.github.io/vis-network/docs/network/edges.html
-  dashes?: false | Array<number>; 
+  dashes?: false | Array<number>;
 }
 
 export type Identifier = 'symbol'|'uniprot'|'ensg';
@@ -29,6 +29,7 @@ export type InteractionProteinProteinDB = 'STRING'|'BioGRID'|'APID';
 export type InteractionDatabase = 'omnipath';
 
 export interface IConfig {
+  title: string;
   legendUrl: string;
   legendClass: string;
   legendPos: 'left' | 'right';
@@ -61,6 +62,7 @@ export interface IConfig {
  */
 
 export const defaultConfig: IConfig = {
+  title: 'Drugst.one',
   legendUrl: '', // 'https://exbio.wzw.tum.de/covex/assets/leg1.png' show legend image if set, otherwise default legend
   legendClass: 'legend',
   legendPos: 'left',
