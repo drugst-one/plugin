@@ -22,38 +22,38 @@
               </span>
             </td>
             <td *ngSwitchCase="'hexagon'">
-              <span class="node hexagon" [style.color]=nodeGroup.value.color>
+              <span class="node hexagon" [style.color]=nodeGroup.value.color.background>
                 &#x2B23;
               </span>
             </td>
             <td *ngSwitchCase="'triangle'">
-              <span class="node triangle" [style.border-bottom-color]=nodeGroup.value.color>
+              <span class="node triangle" [style.border-bottom-color]=nodeGroup.value.color.background>
               </span>
             </td>
             <td *ngSwitchCase="'triangleDown'">
-              <span class="node triangleDown" [style.border-top-color]=nodeGroup.value.color>
+              <span class="node triangleDown" [style.border-top-color]=nodeGroup.value.color.background>
               </span>
             </td>
             <td *ngSwitchCase="'diamond'">
               <span class="node diamond" 
-                    [style.background-color]=nodeGroup.value.color
+                    [style.background-color]=nodeGroup.value.color.background
               >
               </span>
             </td>
             <td *ngSwitchCase="'star'">
               <span class="node star"
-                    [style.border-bottom-color]=nodeGroup.value.color
-                    [style.color]=nodeGroup.value.color
+                    [style.border-bottom-color]=nodeGroup.value.color.background
+                    [style.color]=nodeGroup.value.color.background
               >
               </span>
             </td>
             <td *ngSwitchCase="'circle'">
-              <span class="node circle" [style.background-color]=nodeGroup.value.color>
+              <span class="node circle" [style.background-color]=nodeGroup.value.color.background>
               ...
               </span>
               </td>
             <td *ngSwitchDefault>
-              <span class="node {{ nodeGroup.value.shape }}" [style.background-color]=nodeGroup.value.color>
+              <span class="node {{ nodeGroup.value.shape }}" [style.background-color]=nodeGroup.value.color.background>
               </span>
               </td>
             <td>&nbsp;{{ nodeGroup.value.groupName }}</td>
