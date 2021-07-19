@@ -17,6 +17,8 @@ import {ToggleComponent} from './components/toggle/toggle.component';
 import {InfoTileComponent} from './components/info-tile/info-tile.component';
 import {CustomProteinsComponent} from './dialogs/custom-proteins/custom-proteins.component';
 
+import {MatTooltipModule} from '@angular/material/tooltip';
+
 import {AnalysisService} from './services/analysis/analysis.service';
 import {AddExpressedProteinsComponent} from './dialogs/add-expressed-proteins/add-expressed-proteins.component';
 import {createCustomElement} from '@angular/elements';
@@ -31,6 +33,7 @@ import {faTimes, faAngleUp, faAngleLeft, faCapsules, faCrosshairs, faFlask, faCh
   faExpand, faInfo, faRocket, faAngleDown, faSearch, faFastForward, faExternalLinkAlt, faTasks, faFilter,
   faMinus, faUpload, faAngleDoubleDown, faSync, faBroom, faAngleDoubleUp
 } from '@fortawesome/free-solid-svg-icons';
+import {TooltipModule} from "primeng/tooltip";
 
 @NgModule({
   declarations: [
@@ -46,7 +49,7 @@ import {faTimes, faAngleUp, faAngleLeft, faCapsules, faCrosshairs, faFlask, faCh
     AddExpressedProteinsComponent,
     NetworkLegendComponent,
     ProtTableComponent,
-    DrugTableComponent,
+    DrugTableComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +59,9 @@ import {faTimes, faAngleUp, faAngleLeft, faCapsules, faCrosshairs, faFlask, faCh
     HttpClientModule,
     BrowserAnimationsModule,
     TableModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    MatTooltipModule,
+    TooltipModule,
   ],
   providers: [AnalysisService],
 })

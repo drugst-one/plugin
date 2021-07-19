@@ -43,7 +43,7 @@
     </section>
     <footer class="modal-card-foot">
       <button (click)="addProteins();" class="button is-success is-rounded has-tooltip"
-              data-tooltip="Add all to the selection."
+              pTooltip="Add all to the selection." tooltipPosition="top"
               [disabled]="proteins.length === 0 || loading">
         <span class="icon">
           <i class="fa fa-plus"></i>
@@ -53,7 +53,7 @@
         </span>
       </button>
       <button (click)="addVisibleProteins();" class="button is-success is-rounded has-tooltip"
-              data-tooltip="Add to selection if they appear in the current network."
+              pTooltip="Add to selection if they appear in the current network." tooltipPosition="top"
               [disabled]="proteins.length === 0 || loading">
         <span class="icon">
           <i class="fas fa-expand"></i>
@@ -62,7 +62,7 @@
           Select
         </span>
       </button>
-      <button (click)="close()" class="button is-rounded has-tooltip" data-tooltip="Close the current window.">Close
+      <button (click)="close()" class="button is-rounded has-tooltip" pTooltip="Close the current window." tooltipPosition="top">Close
       </button>
     </footer>
   </div>

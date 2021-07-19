@@ -136,7 +136,7 @@
 
             <ng-container *ngIf="myConfig.showFooterButtonScreenshot">
               <button (click)="toImage()" class="button is-primary is-rounded has-tooltip explorer-footer-element"
-                      data-tooltip="Take a screenshot of the current network.">
+                      pTooltip="Take a screenshot of the current network." tooltipPosition="top">
               <span class="icon">
                 <i class="fas fa-camera" aria-hidden="true"></i>
               </span>
@@ -150,7 +150,7 @@
                   <button (click)="expressionExpanded=!expressionExpanded"
                           class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
                           aria-haspopup="true" aria-controls="dropdown-menu"
-                          data-tooltip="Tissue expression data is provided by the GTEx project."
+                          pTooltip="Tissue expression data is provided by the GTEx project." tooltipPosition="top"
                           [ngClass]="{'button-small':smallStyle}">
                     <span *ngIf="!selectedTissue" [ngClass]="{'text-small':smallStyle}">Tissue</span>
                     <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
@@ -260,7 +260,7 @@
                   <div class="digit"><i class="fa fa-fast-forward"></i></div>
                   <button (click)="analysis.startQuickAnalysis(true, null)"
                           [disabled]="analysis.isLaunchingQuick()"
-                          class="button is-white is-rounded has-tooltip" data-tooltip="Find drugs for all proteins.">
+                          class="button is-white is-rounded has-tooltip" pTooltip="Find drugs for all proteins." tooltipPosition="top">
                     <span class="icon">
                       <i class="fa fa-capsules" *ngIf="!analysis.isLaunchingQuick()"></i>
                       <i class="fa fa-spin fa-spinner" *ngIf="analysis.isLaunchingQuick()"></i>
@@ -289,7 +289,7 @@
                   <button (click)="analysis.startQuickAnalysis(false, null)"
                           [disabled]="analysis.getCount() === 0 || analysis.isLaunchingQuick()"
                           class="button is-white is-rounded has-tooltip"
-                          data-tooltip="Find drugs for the selected proteins.">
+                          pTooltip="Find drugs for the selected proteins." tooltipPosition="top">
                     <span class="icon">
                       <i class="fa fa-capsules" *ngIf="!analysis.isLaunchingQuick()"></i>
                       <i class="fa fa-spin fa-spinner" *ngIf="analysis.isLaunchingQuick()"></i>
@@ -327,10 +327,9 @@
       <div *ngIf="collapseAnalysis">
         <div class="card-content">
           <div class="field">
-            <div class="control">
+            <div class="control" pTooltip="Find drug targets for the selected proteins." tooltipPosition="top">
               <button (click)="analysisDialogTarget = 'drug-target'; showAnalysisDialog = true;"
                       class="button is-primary is-fullwidth is-rounded has-tooltip"
-                      data-tooltip="Find drug targets for the selected proteins."
                       [disabled]="analysis.getCount() === 0" [ngClass]="{'text-small':smallStyle}">
                 <span class="icon">
                   <i class="fa fa-crosshairs"></i>
@@ -342,10 +341,9 @@
             </div>
           </div>
           <div class="field">
-            <div class="control">
+            <div class="control" pTooltip="Find drugs for the selected proteins." tooltipPosition="top">
               <button (click)="analysisDialogTarget = 'drug'; showAnalysisDialog = true;"
                       class="button is-primary is-fullwidth is-rounded has-tooltip"
-                      data-tooltip="Find drugs for the selected proteins."
                       [disabled]="analysis.getCount() === 0" [ngClass]="{'text-small':smallStyle}">
                 <span class="icon">
                   <i class="fa fa-capsules"></i>
@@ -360,7 +358,7 @@
             <div class="control">
               <a *ngIf="analysis.getCount() > 0" [href]="gProfilerLink()" target="_blank"
                  class="button is-primary is-fullwidth is-rounded has-tooltip"
-                 data-tooltip="Use enrichment analysis via g:Profiler (external).">
+                 pTooltip="Use enrichment analysis via g:Profiler (external)." tooltipPosition="top">
                 <span class="icon">
                   <i class="fa fa-external-link-alt"></i>
                 </span>
@@ -370,7 +368,7 @@
               </a>
               <a *ngIf="analysis.getCount() === 0" disabled
                  class="button is-primary is-fullwidth is-rounded has-tooltip"
-                 data-tooltip="Use enrichment analysis via g:Profiler (external).">
+                 pTooltip="Use enrichment analysis via g:Profiler (external)." tooltipPosition="top">
                 <span class="icon">
                   <i class="fa fa-external-link-alt"></i>
                 </span>
@@ -409,7 +407,7 @@
         <footer class="card-footer">
           <a *ngIf="analysis.tasks && analysis.tasks.length > 0"
              (click)="analysis.removeAllTasks(); selectedAnalysisToken = null;"
-             class="card-footer-item text-danger" data-tooltip="Delete all tasks.">
+             class="card-footer-item text-danger" pTooltip="Delete all tasks." tooltipPosition="top">
             <span class="icon">
                 <i class="fa fa-trash"></i>
               </span>
@@ -455,7 +453,7 @@
               <td><p class="is-capitalized">{{p.data.label}}</p></td>
               <td>
                 <button (click)="analysis.removeItems([p])" class="button is-small is-danger is-outlined has-tooltip"
-                        data-tooltip="Remove from selection.">
+                        tooltipPosition="top" pTooltip="Remove from selection.">
                   <i class="fa fa-trash"></i>
                 </button>
               </td>
@@ -469,7 +467,7 @@
 
         <footer class="card-footer" *ngIf="selectedAnalysisToken">
           <a (click)="analysis.addSeeds(currentViewNodes)"
-             class="card-footer-item has-text-success" data-tooltip="Add all visible seeds.">
+             class="card-footer-item has-text-success" tooltipPosition="top" pTooltip="Add all visible seeds.">
 
             <span class="icon">
               <i class="fa fa-plus"></i>
@@ -479,7 +477,7 @@
             </span>
           </a>
           <a (click)="analysis.removeSeeds(currentViewNodes)"
-             class="card-footer-item text-danger" data-tooltip="Remove all seeds.">
+             class="card-footer-item text-danger" tooltipPosition="top" pTooltip="Remove all seeds.">
             <span class="icon">
               <i class="fa fa-minus"></i>
             </span>
@@ -492,7 +490,7 @@
         <footer class="card-footer">
           <a (click)="showCustomProteinsDialog = true"
              class="card-footer-item text-primary"
-             data-tooltip="Add a custom list of proteins.">
+             tooltipPosition="top" pTooltip="Add a custom list of proteins.">
             <span class="icon">
               <i class="fa fa-upload"></i>
             </span>
@@ -502,7 +500,7 @@
           </a>
           <a (click)="showThresholdDialog = true"
              class="card-footer-item text-primary"
-             data-tooltip="Add proteins expressed in the tissue.">
+             pTooltip="Add proteins expressed in the tissue." tooltipPosition="top">
             <span class="icon">
               <i class="fas fa-angle-double-up"></i>
             </span>
@@ -514,7 +512,7 @@
 
         <footer class="card-footer">
           <a (click)="analysis.invertSelection(currentViewNodes)" class="card-footer-item text-primary"
-             data-tooltip="Invert the current selection.">
+             tooltipPosition="top" pTooltip="Invert the current selection.">
             <span class="icon">
               <i class="fa fa-sync"></i>
             </span>
@@ -523,7 +521,7 @@
             </span>
           </a>
           <a (click)="analysis.resetSelection()" class="card-footer-item text-danger"
-             data-tooltip="Remove all entries from the selection.">
+             tooltipPosition="top" pTooltip="Remove all entries from the selection.">
             <span class="icon">
               <i class="fa fa-broom"></i>
             </span>

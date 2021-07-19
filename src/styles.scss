@@ -4,7 +4,7 @@
 @import "~bulma/bulma.sass";
 @import '~bulma-tooltip';
 @import "~animate.css/animate.min";
-//@import '~primeng/resources/themes/md-dark-deeppurple/theme.css';
+@import '~primeng/resources/themes/md-dark-deeppurple/theme.css';
 @import "~primeng/resources/primeng.min.css";
 @import "~primeicons/primeicons.css";
 @import "variables";
@@ -19,12 +19,14 @@
 
 .explorer-footer {
   position: absolute;
-  // overflow: auto;
-  //width: $main-width;
+  overflow: auto;
+  width: 100%;
+  margin-left: -24px;
   bottom: 0;
+
   &-element {
     position: relative;
-  } 
+  }
 }
 
 nav.navbar {
@@ -210,6 +212,19 @@ div.field.has-addons.add-remove-toggle {
       margin-bottom: 0;
     }
   }
+}
+
+.p-tooltip-text:before {
+  content: '';
+  position: absolute;
+  display: block;
+  width: 0;
+  left: 50%;
+  bottom: +7px;
+  border: 6px solid transparent;
+  border-bottom: 0;
+  border-top: 6px solid var(--drgstn-tooltip);
+  transform: translate(-50%, calc(100% + 3px));
 }
 
 html, #appWindow {

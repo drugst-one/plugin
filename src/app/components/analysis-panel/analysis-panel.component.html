@@ -133,11 +133,11 @@
             <button class="button is-loading center">Loading</button>
           </div>
         </div>
-        <footer class="card-footer toolbar" *ngIf="myConfig.showFooter">
+        <footer class="card-footer toolbar explorer-footer" *ngIf="myConfig.showFooter">
           <div class="field">
             <p class="control footer-buttons">
               <button class="button is-primary is-rounded has-tooltip"
-                      data-tooltip="Take a screenshot of the current network." (click)="toImage()">
+                      pTooltip="Take a screenshot of the current network." tooltipPosition="top" (click)="toImage()">
                 <span class="icon">
                   <i class="fas fa-camera" aria-hidden="true"></i>
                 </span>
@@ -151,7 +151,7 @@
           <div class="field">
             <p class="control footer-buttons">
               <a [href]="graphmlLink()" class="button is-success is-rounded has-tooltip"
-                 data-tooltip="Export this network as .graphml file.">
+                 pTooltip="Export this network as .graphml file." tooltipPosition="top">
                 <span class="icon">
                   <i class="fas fa-download" aria-hidden="true"></i>
                 </span>
@@ -226,7 +226,7 @@
       <div class="content tab-content scrollable" *ngIf="task && task.info.done" [class.is-visible]="tab === 'table'">
         <div class="field has-addons" *ngIf="tableHasScores && task.info.algorithm !== 'proximity'">
           <p class="control">
-            <button class="button is-rounded has-tooltip" data-tooltip="Normalize the scores"
+            <button class="button is-rounded has-tooltip" pTooltip="Normalize the scores" tooltipPosition="top"
                     [class.is-primary]="tableNormalize" (click)="toggleNormalization(true)">
                 <span class="icon is-small">
                   <i class="fa fa-ruler-vertical"></i>
@@ -235,7 +235,7 @@
             </button>
           </p>
           <p class="control">
-            <button class="button is-rounded has-tooltip" data-tooltip="Disable normalization of the scores."
+            <button class="button is-rounded has-tooltip" pTooltip="Disable normalization of the scores." tooltipPosition="top"
                     [class.is-primary]="!tableNormalize" (click)="toggleNormalization(false)">
               <span>Off</span>
             </button>

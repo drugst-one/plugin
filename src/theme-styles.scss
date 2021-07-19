@@ -12,6 +12,7 @@
   --drgstn-text-primary: #151515;
   --drgstn-text-secondary: #eeeeee;
   --drgstn-border: rgba(0, 0, 0, 0.2);
+  --drgstn-tooltip: rgba(74,74,74,0.9);
 }
 
 #appWindow {
@@ -87,11 +88,6 @@ app-task-list a, a.card-header-icon {
 a:hover {
   color: var(--drgstn-primary) !important;
 }
-
-.p-datatable .p-sortable-column .p-sortable-column-icon{
-  color: inherit !important;
-}
-
 
 .button.is-primary {
   background-color: var(--drgstn-primary) !important;
@@ -188,6 +184,20 @@ a {
 
 a:hover {
   color: var(--drgstn-text-primary)
+}
+
+
+
+.p-tooltip-text, .p-tooltip-arrow {
+  background: var(--drgstn-tooltip) !important;
+  border-radius: 2px !important;
+  padding: .5rem 1rem .5rem 1rem !important;
+  color: var(--drgstn-text-secondary) !important;
+  font-size: .75rem !important;
+}
+
+.p-datatable .p-sortable-column .p-sortable-column-icon{
+  color: inherit !important;
 }
 
 .p-datatable .p-datatable-tfoot > tr > td, .p-datatable .p-datatable-thead > tr > th {
