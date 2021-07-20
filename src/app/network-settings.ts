@@ -143,9 +143,7 @@ export class NetworkSettings {
         node = merge(node, config.nodeGroups.seedNode);
       } else if (isSelected) {
         // apply selected node style to node
-        console.log(node)
         node = merge(node, config.nodeGroups.selectedNode);
-        console.log(node)
       }
       // show image if image url is given
       if (node.image) {

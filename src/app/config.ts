@@ -136,7 +136,7 @@ export const defaultConfig: IConfig = {
       groupName: 'Found Drugs',
       color: {
         border: '#F12590',
-        background: '##F12590',
+        background: '#F12590',
         highlight: {
           border: '#F12590',
           background: '#F12590'

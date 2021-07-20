@@ -477,8 +477,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       // option to use scores[node] as gradient, but sccores are very small
       nodes.push(NetworkSettings.getNodeStyle(nodeDetails as Node, config, false, isSeed[node], 1))
     }
-    console.log('nodes')
-    console.log(nodes)
     for (const edge of network.edges) {
       edges.push(mapCustomEdge(edge, this.myConfig));
     }

@@ -115,7 +115,5 @@ export function mapCustomEdge(customEdge: NodeInteraction, config: IConfig): any
     ...edge,
     ...customEdge
   }
-  console.log('edge')
-  console.log(edge)
   return edge;
 }
