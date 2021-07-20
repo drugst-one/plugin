@@ -110,10 +110,6 @@ export function getDrugNodeId(drug: Drug) {
   return drug.netexId
 }
 
-export function getDrugBackendId(drug: Drug) {
-  return drug.netexId;
-}
-
 export function getNodeId(node: Node) {
   /**
    * Returns backend_id of Gene object
@@ -130,7 +126,7 @@ export function getNetworkId(node: Node) {
   /**
    * Returns ID of a network node
    */
-  return node.id
+  return node.netexId
 }
 
 export function getId(gene: Node) {
@@ -138,19 +134,6 @@ export function getId(gene: Node) {
    * Returns the network node id based on a given gene
    */
   return `${gene.id}`;
-}
-
-export function getWrapperFromProtein(gene: Node): Wrapper {
-  /**
-   * Constructs wrapper interface for gene
-   */
-  // if node does not have property group, it was found by the analysis
-  gene.group = gene.group ? gene.group : 'foundNode';
-  gene.label = gene.label ? gene.label : gene.id
-  return {
-    id: getNetworkId(gene),
-    data: gene,
-  };
 }
 
 export function getWrapperFromNode(gene: Node): Wrapper {
@@ -161,19 +144,8 @@ export function getWrapperFromNode(gene: Node): Wrapper {
   gene.group = gene.group ? gene.group : 'default';
   gene.label = gene.label ? gene.label : gene.id
   return {
-    id: getNetworkId(gene),
+    id: gene.id,
     data: gene,
-  };
-}
-
-
-export function getWrapperFromDrug(drug: Drug): Wrapper {
-  // set type and group
-  drug.type = 'Drug';
-  drug.group = 'foundDrug';
-  return {
-    id: getDrugNodeId(drug),
-    data: drug,
   };
 }
 

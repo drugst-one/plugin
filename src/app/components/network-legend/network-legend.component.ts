@@ -13,6 +13,7 @@ export class NetworkLegendComponent implements OnInit {
   @Input() set config(value: IConfig) {
     // copy to not override user config
     value = JSON.parse(JSON.stringify(value));
+    // remove selected node group since it is just a border
     delete value.nodeGroups.selectedNode;
     if (!this.analysis) {
       // do not show the analysis-groups in the explorer network

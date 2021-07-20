@@ -15,7 +15,7 @@ import {
   getDrugNodeId,
   Drug
 } from '../../interfaces';
-import {ProteinNetwork} from '../../main-network';
+import {mapCustomEdge, mapCustomNode, ProteinNetwork} from '../../main-network';
 import {AnalysisService} from '../../services/analysis/analysis.service';
 import {OmnipathControllerService} from '../../services/omnipath-controller/omnipath-controller.service';
 import domtoimage from 'dom-to-image';
@@ -269,10 +269,20 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (network.nodes.length) {
       network.nodes = await this.netex.mapNodes(network.nodes, this.myConfig.identifier);
     }
-    // use netexIds where posssible
+    // at this point, we have nodes synched with the backend
+    // use netexIds where posssible, but use original id as node name if no label given
     const nodeIdMap = {};
-    network.nodes.forEach(node => {
-      nodeIdMap[node.id] = node.netexId ? node.netexId : node.id
+    const seenNodeIds = new Set();
+    network.nodes.forEach((node, index, object) => {
+      if (seenNodeIds.has(node.id)) {
+        // remove duplicate ensg nodes, TODO is there a better way to do this?
+        object.splice(index, 1);
+        return;
+      } else {
+        seenNodeIds.add(node.id);
+      }
+      nodeIdMap[node.id] = node.netexId ? node.netexId : node.id;
+      node.label = node.label ? node.label : node.id;
       node.id = nodeIdMap[node.id];
     });
     // adjust edge labels accordingly
@@ -425,12 +435,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.netex.adjacentDrugs(this.myConfig.interactionDrugProtein, this.nodeData.nodes).subscribe(response => {
           for (const interaction of response.pdis) {
             const edge = {from: interaction.protein, to: interaction.drug};
-            this.adjacentDrugEdgesList.push(this.proteinData.mapCustomEdge(edge, this.myConfig));
+            this.adjacentDrugEdgesList.push(mapCustomEdge(edge, this.myConfig));
           }
           for (const drug of response.drugs) {
             drug.group = 'foundDrug';
             drug.id = getDrugNodeId(drug)
-            this.adjacentDrugList.push(this.proteinData.mapCustomNode(drug, this.myConfig))
+            this.adjacentDrugList.push(mapCustomNode(drug, this.myConfig))
           }
           this.nodeData.nodes.add(this.adjacentDrugList);
           this.nodeData.edges.add(this.adjacentDrugEdgesList);

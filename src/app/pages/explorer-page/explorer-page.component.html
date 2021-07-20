@@ -146,6 +146,7 @@
 
             <ng-container *ngIf="myConfig.showFooterButtonExpression">
               <div class="footer-buttons dropdown is-up explorer-footer-element" [class.is-active]="expressionExpanded">
+
                 <div class="dropdown-trigger">
                   <button (click)="expressionExpanded=!expressionExpanded"
                           class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
@@ -182,17 +183,17 @@
               </div>
             </ng-container>
 
-        <app-toggle class="footer-buttons" textOn="Drugs On" textOff="Off"
-            tooltipOn="Display adjacent drugs ON."
-            tooltipOff="Display adjacent drugs OFF."
-            [smallStyle]="smallStyle"
-            [value]="adjacentDrugs" (valueChange)="updateAdjacentDrugs($event)"></app-toggle>
+            <app-toggle class="footer-buttons" textOn="Drugs On" textOff="Off"
+                tooltipOn="Display adjacent drugs ON."
+                tooltipOff="Display adjacent drugs OFF."
+                [smallStyle]="smallStyle"
+                [value]="adjacentDrugs" (valueChange)="updateAdjacentDrugs($event)"></app-toggle>
 
-        <app-toggle class="footer-buttons explorer-footer-element" textOn="Animation On" textOff="Off"
-                    tooltipOn="Enable the network animation."
-                    tooltipOff="Disable the network animation and freeze nodes."
-                    [smallStyle]="smallStyle"
-                    [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
+            <app-toggle class="footer-buttons explorer-footer-element" textOn="Animation On" textOff="Off"
+                        tooltipOn="Enable the network animation."
+                        tooltipOff="Disable the network animation and freeze nodes."
+                        [smallStyle]="smallStyle"
+                        [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
 
         </footer>
       </div>

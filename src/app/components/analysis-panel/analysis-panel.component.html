@@ -127,7 +127,7 @@
       <div class="tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'network'">
         <div class="card-image canvas-content" #networkWithLegend>
           <div *ngIf="myConfig.showLegend">
-            <app-network-legend [config]="myConfig" [analysis]="false"></app-network-legend>
+            <app-network-legend [config]="myConfig" [analysis]="true"></app-network-legend>
           </div>
           <div class="fullheight center image1" #network>
             <button class="button is-loading center">Loading</button>
@@ -180,7 +180,9 @@
             <div class="dropdown-trigger">
               <button (click)="expressionExpanded=!expressionExpanded"
                       class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
-                      aria-haspopup="true" aria-controls="dropdown-menu" [ngClass]="{'button-small':smallStyle}">
+                      aria-haspopup="true" aria-controls="dropdown-menu" [ngClass]="{'button-small':smallStyle}"
+                      pTooltip="Tissue expression data is provided by the GTEx project." tooltipPosition="top"
+                      >
                 <div [ngClass]="{'text-small':smallStyle}">
                   <span *ngIf="!selectedTissue">Tissue</span>
                   <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
@@ -212,9 +214,10 @@
           </div>
 
           <app-toggle *ngIf="task.info.target === 'drug-target'" class="footer-buttons" textOn="Drugs On" textOff="Off"
-                      tooltipOn="Display drugs in the network" tooltipOff="Hide drugs in the network"
-                      [smallStyle]="smallStyle"
-                      [value]="showDrugs" (valueChange)="toggleDrugs($event)"></app-toggle>
+                tooltipOn="Display adjacent drugs ON."
+                tooltipOff="Display adjacent drugs OFF."
+                [smallStyle]="smallStyle"
+                [value]="adjacentDrugs" (valueChange)="updateAdjacentDrugs($event)"></app-toggle>
 
           <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off"
                       tooltipOn="Enable the network animation."

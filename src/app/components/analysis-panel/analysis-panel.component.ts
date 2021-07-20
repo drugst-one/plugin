@@ -9,18 +9,15 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {algorithmNames, AnalysisService} from '../../services/analysis/analysis.service';
 import {
   Drug,
   EdgeType,
-  getNodeIdsFromPDI,
-  getNodeIdsFromPPI,
+  getDrugNodeId,
   getProteinNodeId,
-  getWrapperFromDrug,
   getWrapperFromNode,
-  getWrapperFromProtein,
   Node,
   Task,
   Tissue,
@@ -31,6 +28,7 @@ import {toast} from 'bulma-toast';
 import {NetworkSettings} from '../../network-settings';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 import {defaultConfig, IConfig} from 'src/app/config';
+import { mapCustomEdge, mapCustomNode } from 'src/app/main-network';
 
 
 declare var vis: any;
@@ -84,6 +82,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   public showDrugs = false;
   public tab: 'meta' | 'network' | 'table' = 'table';
   public physicsEnabled = true;
+
+  public adjacentDrugs = false;
+  public adjacentDrugList: Node[] = [];
+  public adjacentDrugEdgesList: Node[] = [];
 
   private proteins: any;
   public effects: any;
@@ -427,6 +429,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
    */
   public createNetwork(result: any): { edges: any[], nodes: any[] } {
     const config = result.parameters.config;
+    this.myConfig = config;
+
+    console.log(config)
+    console.log('config')
+
+    const identifier = this.myConfig.identifier;
 
     // add drugGroup and foundNodesGroup for added nodes
     // these groups can be overwritten by the user
@@ -443,30 +451,36 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     const isSeed = attributes.isSeed || {};
     const scores = attributes.scores || {};
     const details = attributes.details || {};
-    const wrappers: { [key: string]: Wrapper } = {};
 
     for (const node of network.nodes) {
       // convert id to netex Id if exists
       const nodeDetails = details[node];
+
+      nodeDetails.id = nodeDetails.id ? nodeDetails.id : nodeDetails.netexId;
       if (nodeDetails.netexId && nodeDetails.netexId.startsWith('p')) {
         // node is protein from database, has been mapped on init to backend protein from backend
         // or was found during analysis
+        nodeDetails.group = nodeDetails.group ? nodeDetails.group : 'foundNode';
+        nodeDetails.label = nodeDetails.label ? nodeDetails.label : nodeDetails[identifier];
         this.proteins.push(nodeDetails);
-        wrappers[node] = getWrapperFromProtein(nodeDetails as Node);
       } else if (nodeDetails.netexId && nodeDetails.netexId.startsWith('d')) {
         // node is drug, was found during analysis
-        wrappers[node] = getWrapperFromDrug(nodeDetails as Drug);
+        nodeDetails.type = 'Drug';
+        nodeDetails.group = 'foundDrug';
       } else {
         // node is custom input from user, could not be mapped to backend protein
-        wrappers[node] = getWrapperFromNode(nodeDetails as Node);
+        nodeDetails.group = nodeDetails.group ? nodeDetails.group : 'default';
+        nodeDetails.label = nodeDetails.label ? nodeDetails.label : nodeDetails[identifier]
       }
       // IMPORTANT we set seeds to "selected" and not to seeds. The user should be inspired to run 
       // further analysis and the button function can be used to highlight seeds
       // option to use scores[node] as gradient, but sccores are very small
-      nodes.push(NetworkSettings.getNodeStyle(wrappers[node].data as Node, config, false, isSeed[node], 1))
+      nodes.push(NetworkSettings.getNodeStyle(nodeDetails as Node, config, false, isSeed[node], 1))
     }
+    console.log('nodes')
+    console.log(nodes)
     for (const edge of network.edges) {
-      edges.push(this.mapEdge(edge, this.inferEdgeGroup(edge), wrappers));
+      edges.push(mapCustomEdge(edge, this.myConfig));
     }
     return {
       nodes,
@@ -474,80 +488,28 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     };
   }
 
-  private mapEdge(edge: any, type: 'protein-protein' | 'protein-drug', wrappers?: { [key: string]: Wrapper }): any {
-    let edgeColor;
-    if (type === 'protein-protein') {
-      edgeColor = {
-        color: NetworkSettings.getColor('edgeGeneGene'),
-        highlight: NetworkSettings.getColor('edgeGeneGeneHighlight'),
-      };
-      const {from, to} = getNodeIdsFromPPI(edge, wrappers);
-      return {
-        from, to,
-        color: edgeColor,
-      };
-    } else if (type === 'protein-drug') {
-      edgeColor = {
-        color: NetworkSettings.getColor('edgeHostDrug'),
-        highlight: NetworkSettings.getColor('edgeHostDrugHighlight'),
-      };
-      const {from, to} = getNodeIdsFromPDI(edge);
-      return {
-        from, to,
-        color: edgeColor,
-      };
-    }
-  }
 
-  public async toggleDrugs(bool: boolean) {
-    this.showDrugs = bool;
-    this.nodeData.nodes.remove(this.drugNodes);
-    this.nodeData.edges.remove(this.drugEdges);
-    this.drugNodes = [];
-    this.drugEdges = [];
-    if (this.showDrugs) {
-      const result = await this.http.get<any>(
-        `${environment.backend}drug_interactions/?token=${this.token}`).toPromise().catch(
-        (err: HttpErrorResponse) => {
-          // simple logging, but you can do a lot more, see below
-          toast({
-            message: 'An error occured while fetching the drugs.',
-            duration: 5000,
-            dismissible: true,
-            pauseOnHover: true,
-            type: 'is-danger',
-            position: 'top-center',
-            animate: {in: 'fadeIn', out: 'fadeOut'}
-          });
-          this.showDrugs = false;
-          return;
-        });
-
-      const drugs = result.drugs;
-      const edges = result.edges;
-
-      if (drugs.length === 0) {
-        toast({
-          message: 'No drugs found.',
-          duration: 5000,
-          dismissible: true,
-          pauseOnHover: true,
-          type: 'is-warning',
-          position: 'top-center',
-          animate: {in: 'fadeIn', out: 'fadeOut'}
-        });
-      } else {
-        // for (const drug of drugs) {
-        //   this.drugNodes.push(this.mapNode(config, 'drug', drug, false, null));
-        // }
-
-        for (const interaction of edges) {
-          const edge = {from: interaction.uniprotAc, to: interaction.drugId};
-          this.drugEdges.push(this.mapEdge(edge, 'protein-drug'));
-        }
-        this.nodeData.nodes.add(Array.from(this.drugNodes.values()));
-        this.nodeData.edges.add(Array.from(this.drugEdges.values()));
-      }
+  public updateAdjacentDrugs(bool: boolean) {
+    this.adjacentDrugs = bool;
+    if (this.adjacentDrugs) {
+        this.netex.adjacentDrugs(this.myConfig.interactionDrugProtein, this.nodeData.nodes).subscribe(response => {
+          for (const interaction of response.pdis) {
+            const edge = {from: interaction.protein, to: interaction.drug};
+            this.adjacentDrugEdgesList.push(mapCustomEdge(edge, this.myConfig));
+          }
+          for (const drug of response.drugs) {
+            drug.group = 'foundDrug';
+            drug.id = getDrugNodeId(drug)
+            this.adjacentDrugList.push(mapCustomNode(drug, this.myConfig))
+          }
+          this.nodeData.nodes.add(this.adjacentDrugList);
+          this.nodeData.edges.add(this.adjacentDrugEdgesList);
+      })
+    } else {
+      this.nodeData.nodes.remove(this.adjacentDrugList);
+      this.nodeData.edges.remove(this.adjacentDrugEdgesList);
+      this.adjacentDrugList = [];
+      this.adjacentDrugEdgesList = [];
     }
   }
 
