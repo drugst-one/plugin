@@ -11,7 +11,7 @@ import {
   Wrapper,
   getWrapperFromNode,
   Tissue,
-  ExpressionMap,
+  NodeAttributeMap,
   getDrugNodeId,
   Drug,
   legendContext
@@ -170,7 +170,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public legendContext: legendContext = 'explorer';
 
   // keys are node netexIds
-  public expressionMap: ExpressionMap = undefined;
+  public expressionMap: NodeAttributeMap = undefined;
 
   @Input()
   public textColor = 'red';

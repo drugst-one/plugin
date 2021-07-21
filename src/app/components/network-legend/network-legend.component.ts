@@ -16,7 +16,9 @@ export class NetworkLegendComponent implements OnInit {
     'explorer': ['foundNode', 'foundDrug', 'seedNode'],
     'adjacentDrugs': ['foundNode', 'seedNode'],
     'drugTarget': ['foundDrug', 'seedNode'],
-    'drug': ['seedNode']
+    'drug': ['seedNode'],
+    'drugTargetAndSeeds': ['foundDrug'],
+    'drugAndSeeds': []
   }
 
   public checkContext(nodeGroupKey) {

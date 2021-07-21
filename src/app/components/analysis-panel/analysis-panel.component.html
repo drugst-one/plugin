@@ -213,6 +213,12 @@
             </div>
           </div>
 
+          <app-toggle class="footer-buttons" textOn="Seeds On" textOff="Off"
+                tooltipOn="Highlight seed nodes ON."
+                tooltipOff="Highlight seed nodes OFF."
+                [smallStyle]="smallStyle"
+                [value]="highlightSeeds" (valueChange)="updateHighlightSeeds($event)"></app-toggle>
+
           <app-toggle *ngIf="task.info.target === 'drug-target'" class="footer-buttons" textOn="Drugs On" textOff="Off"
                 tooltipOn="Display adjacent drugs ON."
                 tooltipOff="Display adjacent drugs OFF."

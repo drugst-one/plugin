@@ -123,7 +123,7 @@ export const defaultConfig: IConfig = {
       groupName: 'Found Nodes',
       color: {
         border: '#F12590',
-        background: '##F12590',
+        background: '#F12590',
         highlight: {
           border: '#F12590',
           background: '#F12590'
@@ -146,10 +146,9 @@ export const defaultConfig: IConfig = {
       type: 'default drug type',
     },
     seedNode: {
-      // groupName: 'Seed Nodes',
-      // color: '#F8981D',
-      // shape: 'circle',
-      // type: 'seed',
+      groupName: 'Seed Nodes',
+      shape: 'triangle',
+      type: 'seed',
       color: {
         border: '#F1111D',
         background: '#F1111D',
@@ -164,19 +163,12 @@ export const defaultConfig: IConfig = {
       }
     },
     selectedNode: {
-      // groupName: 'Selected Nodes',
-      // color: '#F8981D',
-      // shape: 'dot',
-      // type: 'selected',
-
       borderWidth: 3,
       borderWidthSelected: 4,
       color: {
         border: '#F8981D',
-        // background: '#F8981D',
         highlight: {
           border: '#F8981D',
-        //   background: '#F8981D'
         },
       },
       font: {

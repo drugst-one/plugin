@@ -15,7 +15,7 @@ import {algorithmNames, AnalysisService} from '../../services/analysis/analysis.
 import {
   Drug,
   EdgeType,
-  ExpressionMap,
+  NodeAttributeMap,
   getDrugNodeId,
   getProteinNodeId,
   getWrapperFromNode,
@@ -89,6 +89,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   public adjacentDrugList: Node[] = [];
   public adjacentDrugEdgesList: Node[] = [];
 
+  public highlightSeeds = false;
+  public seedMap: NodeAttributeMap;
+
   private proteins: any;
   public effects: any;
 
@@ -110,7 +113,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   public tableDrugScoreTooltip = '';
   public tableProteinScoreTooltip = '';
 
-  public expressionMap: ExpressionMap;
+  public expressionMap: NodeAttributeMap;
 
   constructor(private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService) {
   }
@@ -160,7 +163,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       if (this.task && this.task.info.done) {
         const result = await this.netex.getTaskResult(this.token);
         const nodeAttributes = result.nodeAttributes || {};
-        const isSeed: { [key: string]: boolean } = nodeAttributes.isSeed || {};
+
+        this.seedMap = nodeAttributes.isSeed || {};
 
         // Reset
         this.nodeData = {nodes: null, edges: null};
@@ -194,7 +198,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
             this.tableSelectedProteins = [];
             this.tableProteins.forEach((r) => {
               r.rawScore = r.score;
-              r.isSeed = isSeed[r.id];
+              r.isSeed = this.seedMap[r.id];
               const wrapper = getWrapperFromNode(r);
               if (this.analysis.inSelection(wrapper)) {
                 this.tableSelectedProteins.push(r);
@@ -261,10 +265,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
               const pos = this.network.getPositions([item.id]);
               node.x = pos[item.id].x;
               node.y = pos[item.id].y;
+              const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
               const nodeStyled = NetworkSettings.getNodeStyle(
                 node,
                 this.myConfig,
-                false,
+                isSeed,
                 selected,
                 1.0
                 )
@@ -481,7 +486,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       // IMPORTANT we set seeds to "selected" and not to seeds. The user should be inspired to run 
       // further analysis and the button function can be used to highlight seeds
       // option to use scores[node] as gradient, but sccores are very small
-      nodes.push(NetworkSettings.getNodeStyle(nodeDetails as Node, config, false, isSeed[node], 1))
+      nodes.push(NetworkSettings.getNodeStyle(nodeDetails as Node, config, false, false, 1))
     }
     for (const edge of network.edges) {
       edges.push(mapCustomEdge(edge, this.myConfig));
@@ -494,13 +499,54 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
   public setLegendContext() {
     const target = this.task.info.target;
-    if (target === 'drug') {
-      this.legendContext = "drug";
+    if (target === 'drug' || this.adjacentDrugs) {
+      if (this.highlightSeeds) {
+        this.legendContext = "drugAndSeeds";
+      } else {
+        this.legendContext = "drug";
+      }
+      
     } else if (target === 'drug-target') {
-      this.legendContext = 'drugTarget'
+      if (this.highlightSeeds) {
+        this.legendContext = "drugTargetAndSeeds";
+      } else {
+        this.legendContext = 'drugTarget'
+      }
     } else {
       throw `Could not set legend context based on ${target}.` 
     }
+  }
+
+  public updateHighlightSeeds(bool: boolean) {
+    this.highlightSeeds = bool;
+    const updatedNodes = [];
+    for (const item of this.proteins) {
+      if (item.netexId === undefined) {
+        // nodes that are not mapped to backend remain untouched
+        continue;
+      }
+      const node: Node = this.nodeData.nodes.get(item.id);
+      if (!node) {
+        continue;
+      }
+      const pos = this.network.getPositions([item.id]);
+      node.x = pos[item.id].x;
+      node.y = pos[item.id].y;
+      const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
+      Object.assign(
+        node,
+        NetworkSettings.getNodeStyle(
+          node,
+          this.myConfig,
+          isSeed,
+          this.analysis.inSelection(getWrapperFromNode(item)),
+          1.0
+          )
+      )
+      updatedNodes.push(node);
+    }
+    this.nodeData.nodes.update(updatedNodes);
+    this.setLegendContext();
   }
 
   public updateAdjacentDrugs(bool: boolean) {
@@ -519,15 +565,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
           this.nodeData.nodes.add(this.adjacentDrugList);
           this.nodeData.edges.add(this.adjacentDrugEdgesList);
       })
-      this.legendContext = 'drug'
     } else {
       this.nodeData.nodes.remove(this.adjacentDrugList);
       this.nodeData.edges.remove(this.adjacentDrugEdgesList);
       this.adjacentDrugList = [];
       this.adjacentDrugEdgesList = [];
-
-      this.setLegendContext()
     }
+    this.setLegendContext()
   }
 
   public updatePhysicsEnabled(bool: boolean) {
@@ -656,7 +700,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
             NetworkSettings.getNodeStyle(
               node,
               this.myConfig,
-              node.isSeed,
+              false, // node.isSeed,
               this.analysis.inSelection(wrapper),
               gradient));
           node.gradient = gradient;

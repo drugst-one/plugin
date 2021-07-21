@@ -141,10 +141,13 @@ export class NetworkSettings {
       if (isSeed) {
         // apply seed node style to node
         node = merge(node, config.nodeGroups.seedNode);
-      } else if (isSelected) {
+      }
+      // selection on purpose after seed style, so seed style will be combined with selection style
+      if (isSelected) {
         // apply selected node style to node
         node = merge(node, config.nodeGroups.selectedNode);
       }
+
       // show image if image url is given
       if (node.image) {
         node.shape = 'image';

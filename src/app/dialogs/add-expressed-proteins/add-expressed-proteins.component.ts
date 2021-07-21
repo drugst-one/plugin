@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {AnalysisService} from '../../services/analysis/analysis.service';
-import {getWrapperFromNode, Node, Tissue, ExpressionMap} from '../../interfaces';
+import {getWrapperFromNode, Node, Tissue, NodeAttributeMap} from '../../interfaces';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 
@@ -22,7 +22,7 @@ export class AddExpressedProteinsComponent implements OnChanges {
   @Input()
   public selectedTissue: Tissue | null = null;
   @Input()
-  public expressionMap: ExpressionMap = undefined;
+  public expressionMap: NodeAttributeMap = undefined;
 
   public proteins = [];
   public threshold = 5;
