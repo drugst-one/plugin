@@ -127,7 +127,7 @@
       <div class="tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'network'">
         <div class="card-image canvas-content" #networkWithLegend>
           <div *ngIf="myConfig.showLegend">
-            <app-network-legend [config]="myConfig" [analysis]="false"></app-network-legend>
+            <app-network-legend [config]="myConfig" [context]="legendContext"></app-network-legend>
           </div>
           <div class="fullheight center image1" #network>
             <button class="button is-loading center">Loading</button>

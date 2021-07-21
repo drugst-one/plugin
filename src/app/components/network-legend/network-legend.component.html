@@ -1,61 +1,61 @@
-<div class="legend" [class.right]="this.legendConfig.legendPos === 'right'">
+<div class="legend" [class.right]="this.config.legendPos === 'right'">
 
   <!-- default legend in html -->
-  <table *ngIf="!this.legendConfig.legendUrl.length">
-    <ng-container *ngIf="this.legendConfig.showLegendNodes">
-      <tr *ngFor="let nodeGroup of this.legendConfig.nodeGroups | keyvalue" class="list-item">
+  <table *ngIf="!this.config.legendUrl.length">
+    <ng-container *ngIf="this.config.showLegendNodes">
+      <tr *ngFor="let nodeGroup of this.config.nodeGroups | keyvalue" class="list-item">
 
-        <ng-container *ngIf="!analysis && nodeGroup.key">
+        <ng-container *ngIf="nodeGroup.key && checkContext(nodeGroup.key)">
           <ng-container *ngIf="nodeGroup.value.image">
             <!-- group icon given, use icon in legend -->
-            <td>
+            <th>
               <img [src]="nodeGroup.value.image" class="legend-icon"/>
-            </td>
+            </th>
             <td>&nbsp;{{ nodeGroup.value.groupName }}</td>
           </ng-container>
 
           <ng-container *ngIf="!nodeGroup.value.image" [ngSwitch]="nodeGroup.value.shape">
             <!-- no image given, create icon programmatically -->
-            <td *ngSwitchCase="'text'">
+            <th *ngSwitchCase="'text'">
               <span class="node text">
                 text
               </span>
-            </td>
-            <td *ngSwitchCase="'hexagon'">
+            </th>
+            <th *ngSwitchCase="'hexagon'">
               <span class="node hexagon" [style.color]=nodeGroup.value.color.background>
                 &#x2B23;
               </span>
-            </td>
-            <td *ngSwitchCase="'triangle'">
+            </th>
+            <th *ngSwitchCase="'triangle'">
               <span class="node triangle" [style.border-bottom-color]=nodeGroup.value.color.background>
               </span>
-            </td>
-            <td *ngSwitchCase="'triangleDown'">
+            </th>
+            <th *ngSwitchCase="'triangleDown'">
               <span class="node triangleDown" [style.border-top-color]=nodeGroup.value.color.background>
               </span>
-            </td>
-            <td *ngSwitchCase="'diamond'">
+            </th>
+            <th *ngSwitchCase="'diamond'">
               <span class="node diamond" 
                     [style.background-color]=nodeGroup.value.color.background
               >
               </span>
-            </td>
-            <td *ngSwitchCase="'star'">
+            </th>
+            <th *ngSwitchCase="'star'">
               <span class="node star"
                     [style.border-bottom-color]=nodeGroup.value.color.background
                     [style.color]=nodeGroup.value.color.background
               >
               </span>
-            </td>
-            <td *ngSwitchCase="'circle'">
+            </th>
+            <th *ngSwitchCase="'circle'">
               <span class="node circle" [style.background-color]=nodeGroup.value.color.background>
               ...
               </span>
-              </td>
-            <td *ngSwitchDefault>
+              </th>
+            <th *ngSwitchDefault>
               <span class="node {{ nodeGroup.value.shape }}" [style.background-color]=nodeGroup.value.color.background>
               </span>
-              </td>
+              </th>
             <td>&nbsp;{{ nodeGroup.value.groupName }}</td>
           </ng-container>
         </ng-container>
@@ -63,12 +63,12 @@
       </tr>
     </ng-container>
 
-    <ng-container *ngIf="this.legendConfig.showLegendEdges">
-      <tr *ngFor="let edgeGroup of this.legendConfig.edgeGroups | keyvalue" class="list-item">
-        <td>
+    <ng-container *ngIf="this.config.showLegendEdges">
+      <tr *ngFor="let edgeGroup of this.config.edgeGroups | keyvalue" class="list-item">
+        <th>
           <hr *ngIf="!edgeGroup.value.dashes" class="edge" [style.background-color]=edgeGroup.value.color>
           <hr *ngIf="edgeGroup.value.dashes" class="edge dashes" [style.color]=edgeGroup.value.color>
-        </td>
+        </th>
         <td>&nbsp;{{ edgeGroup.value.groupName }}</td>
       </tr>
     </ng-container>
@@ -76,6 +76,6 @@
 
 
   <!-- custom legend image if url given by user -->
-  <img *ngIf="this.legendConfig.legendUrl.length" [src]="this.legendConfig.legendUrl" [ngClass]="this.legendConfig.legendClass"/>
+  <img *ngIf="this.config.legendUrl.length" [src]="this.config.legendUrl" [ngClass]="this.config.legendClass"/>
 
 </div>

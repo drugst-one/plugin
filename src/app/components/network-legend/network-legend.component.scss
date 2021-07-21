@@ -12,18 +12,19 @@ div.legend {
   }
   tr.list-item{
     line-height: calc(#{$legend-row-height} / 2);
-    td{
+    th{
       height: $legend-row-height;
+      width: $legend-row-height;
       vertical-align: middle !important;
       padding: 0 !important;
       .text{
         font-style: italic;
       }
       .diamond {
-        height: 75%;
+        height: $legend-diamond-size;
         text-align: center;
         transform: rotate(45deg);
-        width: 75%;
+        width: $legend-diamond-size;
         margin-left: 12.5%;
         display: inline-block;
       }
@@ -124,8 +125,12 @@ div.legend {
           border-top: dotted;
           background-color: transparent;
         }
-
       }
+    }
+    td {
+      height: $legend-row-height;
+      vertical-align: middle !important;
+      padding: 0 !important;
     }
 
   }

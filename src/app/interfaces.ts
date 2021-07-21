@@ -30,6 +30,8 @@ export interface Tissue {
   name: string;
 }
 
+export type legendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget';
+
 /// netexId to expressionlvl
 export type ExpressionMap = { string: number };
 

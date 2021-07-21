@@ -142,7 +142,7 @@ export const defaultConfig: IConfig = {
           background: '#F12590'
         },
       },
-      shape: 'star',
+      shape: 'diamond',
       type: 'default drug type',
     },
     seedNode: {

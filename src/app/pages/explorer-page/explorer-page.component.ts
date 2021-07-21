@@ -13,7 +13,8 @@ import {
   Tissue,
   ExpressionMap,
   getDrugNodeId,
-  Drug
+  Drug,
+  legendContext
 } from '../../interfaces';
 import {mapCustomEdge, mapCustomNode, ProteinNetwork} from '../../main-network';
 import {AnalysisService} from '../../services/analysis/analysis.service';
@@ -165,6 +166,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public expressionExpanded = false;
   public selectedTissue: Tissue | null = null;
+
+  public legendContext: legendContext = 'explorer';
 
   // keys are node netexIds
   public expressionMap: ExpressionMap = undefined;
@@ -445,11 +448,14 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           this.nodeData.nodes.add(this.adjacentDrugList);
           this.nodeData.edges.add(this.adjacentDrugEdgesList);
       })
+      this.legendContext = 'adjacentDrugs'
     } else {
       this.nodeData.nodes.remove(this.adjacentDrugList);
       this.nodeData.edges.remove(this.adjacentDrugEdgesList);
       this.adjacentDrugList = [];
       this.adjacentDrugEdgesList = [];
+
+      this.legendContext = 'explorer'
     }
   }
 
@@ -528,6 +534,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     nodeGroups = merge(defaultNodeGroups, nodeGroups);
     // overwrite default node groups
     this.myConfig[key] = nodeGroups;
+    console.log('nodeGroups after preprocessing')
+    console.log(nodeGroups)
   }
 
   /**

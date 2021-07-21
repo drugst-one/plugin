@@ -123,7 +123,7 @@
         <div class="card-content fullheight">
           <div class="card-image canvas-content" #networkWithLegend>
             <div *ngIf="myConfig.showLegend">
-              <app-network-legend [config]="myConfig" [analysis]="false"></app-network-legend>
+              <app-network-legend [config]="myConfig" [context]="legendContext"></app-network-legend>
             </div>
             <div class="parent fullheight">
               <div class="center image1 fullheight" #network>

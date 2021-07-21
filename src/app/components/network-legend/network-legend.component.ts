@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import { legendContext } from 'src/app/interfaces';
 import {IConfig} from '../../config';
 
 @Component({
@@ -7,22 +8,27 @@ import {IConfig} from '../../config';
   styleUrls: ['./network-legend.component.scss']
 })
 export class NetworkLegendComponent implements OnInit {
-  public legendConfig: IConfig;
 
-  @Input() analysis: boolean;
-  @Input() set config(value: IConfig) {
-    // copy to not override user config
-    value = JSON.parse(JSON.stringify(value));
-    // remove selected node group since it is just a border
-    delete value.nodeGroups.selectedNode;
-    if (!this.analysis) {
-      // do not show the analysis-groups in the explorer network
-      delete value.nodeGroups.foundNode;
-      delete value.nodeGroups.foundDrug;
-      delete value.nodeGroups.seedNode;
+  @Input() context: legendContext;
+  @Input() config: IConfig;
+
+  private contextGroupsToDelete = {
+    'explorer': ['foundNode', 'foundDrug', 'seedNode'],
+    'adjacentDrugs': ['foundNode', 'seedNode'],
+    'drugTarget': ['foundDrug', 'seedNode'],
+    'drug': ['seedNode']
+  }
+
+  public checkContext(nodeGroupKey) {
+    if (nodeGroupKey === 'selectedNode') {
+      // selected node is not supposed to appear in legend
+      return false;
     }
-    this.legendConfig = value;
-  };
+    if (this.contextGroupsToDelete[this.context].includes(nodeGroupKey)) {
+      return false;
+    }
+    return true;
+  }
 
   constructor() { }
 
