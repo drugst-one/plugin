@@ -133,7 +133,7 @@ export const defaultConfig: IConfig = {
       type: 'default node type',
     },
     foundDrug: {
-      groupName: 'Found Drugs',
+      groupName: 'Drugs',
       color: {
         border: '#F12590',
         background: '#F12590',
