@@ -13,8 +13,8 @@
         </span>
       </a>
     </header>
-    <div class="card-content fullheight">
-      <div class="tabs is-centered">
+    <div class="card-content" [class.network-view-settings]="tab === 'network'">
+      <div class="tabs is-centered tabs-header">
         <ul>
           <li [class.is-active]="tab === 'table'"><a (click)="tab = 'table'">Table</a></li>
           <li [class.is-active]="tab === 'network'"><a (click)="tab = 'network'">Network</a></li>
@@ -124,19 +124,23 @@
           </div>
         </div>
       </div>
+
       <div class="tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'network'">
         <div class="card-image canvas-content" #networkWithLegend>
           <div *ngIf="myConfig.showLegend">
             <app-network-legend [config]="myConfig" [context]="legendContext"></app-network-legend>
           </div>
-          <div class="fullheight center image1" #network>
-            <button class="button is-loading center">Loading</button>
+          <div class="parent fullheight">
+            <div class="center image1 fullheight" #network>
+              <button class="button is-loading center" alt="loading...">Loading</button>
+            </div>
           </div>
         </div>
-        <footer class="card-footer toolbar explorer-footer" *ngIf="myConfig.showFooter">
-          <div class="field">
-            <p class="control footer-buttons">
-              <button class="button is-primary is-rounded has-tooltip"
+
+        <footer *ngIf="myConfig.showFooter" class="card-footer toolbar network-footer-toolbar">
+         
+          <ng-container *ngIf="myConfig.showFooterButtonScreenshot">
+            <button class="button is-primary is-rounded has-tooltip"
                       pTooltip="Take a screenshot of the current network." tooltipPosition="top" (click)="toImage()">
                 <span class="icon">
                   <i class="fas fa-camera" aria-hidden="true"></i>
@@ -145,8 +149,7 @@
                   Screenshot
                 </span>
               </button>
-            </p>
-          </div>
+            </ng-container>
 
           <div class="field">
             <p class="control footer-buttons">
@@ -232,7 +235,7 @@
                       [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
         </footer>
       </div>
-      <div class="content tab-content scrollable" *ngIf="task && task.info.done" [class.is-visible]="tab === 'table'">
+      <div class="content tab-content scrollable table-tab" *ngIf="task && task.info.done" [class.is-visible]="tab === 'table'">
         <div class="field has-addons" *ngIf="tableHasScores && task.info.algorithm !== 'proximity'">
           <p class="control">
             <button class="button is-rounded has-tooltip" pTooltip="Normalize the scores" tooltipPosition="top"
@@ -270,7 +273,7 @@
             <span class="icon"><i class="fa fa-dna"></i></span>
             <span>Proteins</span>
           </h4>
-          <a [href]="downloadLink('proteins')" class="button is-primary is-outlined is-pulled-right is-small">
+          <a [href]="downloadLink('prot-+ins')" class="button is-primary is-outlined is-pulled-right is-small">
             <span class="icon"><i class="fa fa-download"></i></span>
             <span>Download</span>
           </a>

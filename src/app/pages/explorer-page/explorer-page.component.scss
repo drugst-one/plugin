@@ -1,3 +1,4 @@
+@import "../../../variables";
 
 .quick-find {
   .notification {
@@ -22,6 +23,13 @@
   }
 }
 
+.explorer-network-view-settings {
+  // remove margin from tab header when network is displayed, so that network 
+  // does not disappear in empty border
+  padding: 0;
+  height: calc(100% - #{$network-header-height});
+}
+
 .align-vmiddle {
   display: table-cell;
   vertical-align: middle;
@@ -43,43 +51,18 @@
   font-weight: bold;
 }
 
+.network-header {
+  height: $network-header-height;
+}
+
 .card-footer {
   font-size: 12px;
   a {
     padding: 3px;
   }
 }
-.text-small {
-  font-size: 11px;
-}
-
-.text-normal{
-  font-size:12px;
-}
-
-.b-text-small{
-  font-size:14px
-}
-
-.b-text-smaller{
-  font-size:12px
-}
-
-.button-small{
-  padding: 3px 10px 3px 10px;
-}
 
 .scroll-x{
   overflow-x: auto;
 }
 
-
-
-//
-//.p-tooltip .p-tooltip-text {
-//  background-color: rgba(74,74,74,.9);
-//  color: #fff;
-//}
-//.p-tooltip-arrow {
-//  background-color: rgba(74,74,74,.9) !important;
-//}

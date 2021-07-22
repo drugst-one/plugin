@@ -1,3 +1,4 @@
+@import "../../../variables";
 
 .analysis {
   position: absolute;
@@ -5,16 +6,27 @@
   width: 100%;
 }
 
-div.network {
-  height: calc(100vh - 210px - 52px);
+.network-view-settings {
+  // remove margin from tab header when network is displayed, so that network 
+  // does not disappear in empty border
+  padding-left: 0;
+  padding-right: 0;
+  .tabs {
+    margin: 0;
+  }
+  .tab-content {
+    width: 100%;
+    height: calc(100% - #{$network-header-height} - #{$analysis-tab-header-height} - #{$analysis-tab-header-padding});
+  }
+}
+
+.tabs-header {
+  height: $analysis-tab-header-height;
 }
 
 .tab-content {
   visibility: hidden;
   position: absolute;
-  width: calc(100% - 50px);
-  height: calc(100% - 41px - 67px - 48px);
-
   &.is-visible {
     visibility: visible;
   }
@@ -22,6 +34,10 @@ div.network {
   &.scrollable {
     overflow-y: auto;
     padding-right: 10px;
+  }
+  &.table-tab {
+    // 100% - #{$network-header-height} - #{$analysis-tab-header-height} - normalization-button
+    height: calc(100% - 9rem);
   }
 
   h4 {
@@ -53,25 +69,6 @@ div.network {
   width: 10px;
 }
 
-.text-small {
-  font-size: 11px;
-}
-
-.text-normal{
-  font-size:12px;
-}
-
-.b-text-small{
-  font-size:14px
-}
-
-.b-text-smaller{
-  font-size:12px
-}
-
-.button-small{
-  padding: 3px 10px 3px 10px;
-}
 .scroll-y{
   overflow-y: auto;
 }

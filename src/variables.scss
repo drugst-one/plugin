@@ -1,5 +1,9 @@
 $row-data-selector-height: auto;
-$network-footer-height: 90px;
+$network-header-height: 3rem;
+$network-footer-height: 4rem;
+
+$analysis-tab-header-height: 2.5rem;
+$analysis-tab-header-padding: 1.5rem;
 
 // Settings Legend
 $legend-default-background-color: #143d1f;
@@ -24,3 +28,11 @@ $sidebar-left-width: 18%;
 $sidebar-left-min-width: 200px;
 $main-width: calc(100% - (max(#{$sidebar-left-width},#{$sidebar-left-min-width}) + max(#{$sidebar-right-width},#{$sidebar-right-min-width})));
 
+
+// settings for different screen sizes
+$b-text-small-font-size: 14px;
+$b-text-smaller-font-size: 12px;
+$text-normal-font-size: 12px;
+$text-small-font-size: 11px;
+
+$button-small-padding: 3px 10px 3px 10px;

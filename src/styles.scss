@@ -17,13 +17,13 @@
   height: calc(100% - #{$network-footer-height});
 }
 
-.explorer-footer {
+.network-footer-toolbar {
   position: absolute;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
   width: 100%;
-  margin-left: -24px;
   bottom: 0;
-
+  height: $network-footer-height;
   &-element {
     position: relative;
   }
@@ -236,6 +236,21 @@ html, #appWindow {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-
+// classes for different screen sizes
+.text-small {
+  font-size: $text-small-font-size;
+}
+.text-normal{
+  font-size: $text-normal-font-size;
+}
+.b-text-small{
+  font-size: $b-text-small-font-size;
+}
+.b-text-smaller{
+  font-size: $b-text-smaller-font-size;
+}
+.button-small{
+  padding: $button-small-padding;
+}
 
 

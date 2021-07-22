@@ -115,27 +115,25 @@
 
       <div class="card network">
 
-        <header class="card-header">
+        <header class="card-header network-header">
           <p class="card-header-title">
             {{myConfig.title}}
           </p>
         </header>
-        <div class="card-content fullheight">
+        <div class="card-content explorer-network-view-settings">
           <div class="card-image canvas-content" #networkWithLegend>
             <div *ngIf="myConfig.showLegend">
               <app-network-legend [config]="myConfig" [context]="legendContext"></app-network-legend>
             </div>
-            <div class="parent fullheight">
-              <div class="center image1 fullheight" #network>
-                <button class="button is-loading center" alt="loading...">Loading</button>
-              </div>
+            <div class="center image1 fullheight" #network>
+              <button class="button is-loading center" alt="loading...">Loading</button>
             </div>
           </div>
 
-          <footer *ngIf="myConfig.showFooter" class="card-footer toolbar explorer-footer">
+          <footer *ngIf="myConfig.showFooter" class="card-footer toolbar network-footer-toolbar">
 
             <ng-container *ngIf="myConfig.showFooterButtonScreenshot">
-              <button (click)="toImage()" class="button is-primary is-rounded has-tooltip explorer-footer-element"
+              <button (click)="toImage()" class="button is-primary is-rounded has-tooltip network-footer-toolbar-element"
                       pTooltip="Take a screenshot of the current network." tooltipPosition="top">
               <span class="icon">
                 <i class="fas fa-camera" aria-hidden="true"></i>
@@ -145,7 +143,7 @@
             </ng-container>
 
             <ng-container *ngIf="myConfig.showFooterButtonExpression">
-              <div class="footer-buttons dropdown is-up explorer-footer-element" [class.is-active]="expressionExpanded">
+              <div class="footer-buttons dropdown is-up network-footer-toolbar-element" [class.is-active]="expressionExpanded">
 
                 <div class="dropdown-trigger">
                   <button (click)="expressionExpanded=!expressionExpanded"
@@ -189,7 +187,7 @@
                 [smallStyle]="smallStyle"
                 [value]="adjacentDrugs" (valueChange)="updateAdjacentDrugs($event)"></app-toggle>
 
-            <app-toggle class="footer-buttons explorer-footer-element" textOn="Animation On" textOff="Off"
+            <app-toggle class="footer-buttons network-footer-toolbar-element" textOn="Animation On" textOff="Off"
                         tooltipOn="Enable the network animation."
                         tooltipOff="Disable the network animation and freeze nodes."
                         [smallStyle]="smallStyle"
