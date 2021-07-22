@@ -10,6 +10,7 @@ export interface Node {
   ensg?: Array<string>;
   group?: string;
   groupName?: string;
+  proteinName?: string;
   color?: string | any; // mostly any, but vis js allows detail settings
   shape?: string;
   image?: string;
@@ -168,6 +169,7 @@ export interface Wrapper {
     interactions?: any;
     group?: string;
     groupName?: string;
+    proteinName?: string;
     uniprotAc?: string;
     expressionLevel?: number;
     gradient?: number;

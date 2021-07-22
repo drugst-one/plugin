@@ -4,6 +4,10 @@
       <b><span>Label:</span></b>
       <span class="is-capitalized"> {{ wrapper.data.label }}</span>
     </p>
+    <p *ngIf="wrapper.data.proteinName" [ngClass]="{'text-normal':smallStyle}">
+      <b><span>Name:</span></b>
+      <span class="is-capitalized"> {{ wrapper.data.proteinName }}</span>
+    </p>
     <p *ngIf="wrapper.data.symbol" [ngClass]="{'text-normal':smallStyle}">
       <b><span>Symbol:</span></b>
       <span class="is-capitalized"> {{ wrapper.data.symbol }}</span>
