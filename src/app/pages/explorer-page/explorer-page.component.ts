@@ -23,7 +23,7 @@ import domtoimage from 'dom-to-image';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, InteractionDatabase, NodeGroup} from '../../config';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
-import {rgbaToHex, rgbToHex, standardize_color} from '../../utils'
+import {removeDuplicateObjectsFromList, rgbaToHex, rgbToHex, standardize_color} from '../../utils'
 import * as merge from 'lodash/fp/merge';
 
 // import * as 'vis' from 'vis-network';
@@ -272,27 +272,37 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (network.nodes.length) {
       network.nodes = await this.netex.mapNodes(network.nodes, this.myConfig.identifier);
     }
+
+    if (this.myConfig.identifier === 'ensg') {
+      // remove possible duplicate IDs
+      network.nodes = removeDuplicateObjectsFromList(network.nodes, 'netexId');
+    }
+
     // at this point, we have nodes synched with the backend
     // use netexIds where posssible, but use original id as node name if no label given
     const nodeIdMap = {};
-    const seenNodeIds = new Set();
-    network.nodes.forEach((node, index, object) => {
-      if (seenNodeIds.has(node.id)) {
-        // remove duplicate ensg nodes, TODO is there a better way to do this?
-        object.splice(index, 1);
-        return;
-      } else {
-        seenNodeIds.add(node.id);
-      }
-      nodeIdMap[node.id] = node.netexId ? node.netexId : node.id;
+    
+    network.nodes.forEach((node) => {
+      // set node label to original id before node id will be set to netex id
       node.label = node.label ? node.label : node.id;
+
+      nodeIdMap[node.id] = node.netexId ? node.netexId : node.id;
       node.id = nodeIdMap[node.id];
     });
-    // adjust edge labels accordingly
+
+    // adjust edge labels accordingly and filter 
+    const edges = new Array();
     network.edges.forEach(edge => {
       edge.from = nodeIdMap[edge.from];
       edge.to = nodeIdMap[edge.to];
+      // check if edges have endpoints
+      if (edge.from !== undefined && edge.to !== undefined) {
+        edges.push(edge);
+      }
     });
+    // remove edges without endpoints
+    network.edges = edges;
+
     this.proteins = network.nodes;
     this.edges = network.edges;
   }
@@ -534,8 +544,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     nodeGroups = merge(defaultNodeGroups, nodeGroups);
     // overwrite default node groups
     this.myConfig[key] = nodeGroups;
-    console.log('nodeGroups after preprocessing')
-    console.log(nodeGroups)
   }
 
   /**

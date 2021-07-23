@@ -1,5 +1,7 @@
 // From https://stackoverflow.com/a/27709336/3850564
 
+import { Node } from "./interfaces";
+
 export function getGradientColor(startColor: string, endColor: string, percent: number) {
   // strip the leading # if it's there
   startColor = startColor.replace(/^\s*#|\s*$/g, '');
@@ -102,5 +104,18 @@ export function standardize_color(str){
 	var ctx = document.createElement("canvas").getContext("2d");
 	ctx.fillStyle = str;
 	return ctx.fillStyle.toString();
+}
+
+export function removeDuplicateObjectsFromList(nodes: Node[], attribute: string): Node[] {
+  const seenIds = new Set();
+  const filteredArray = new Array();
+  for (const node of nodes) {
+    if (seenIds.has(node[attribute])) {
+      continue;
+    }
+    filteredArray.push(node);
+    seenIds.add(node[attribute]);
+  }
+  return filteredArray;
 }
 

@@ -37,10 +37,10 @@
                     config='{
                       "nodeGroups": {"selectedNode": {"font": {"size": "18"} }, "0.5": {"font": "18px verdana blue", "type": "0.5er Instanz", "color": "green", "groupName": "0.5", "shape": "star"}, "patientgroup": {"type": "Patient", "detailShowLabel": "true", "color": "#632345", "groupName": "patient group", "shape": "dot", "size": "50"}, "pugGroup": {"type": "woof woof", "color": "grey", "groupName": "Pug Group", "shape": "triangle", "image": "https://static.raymondcamden.com/images/2016/11/pug.png"}},
                       "edgeGroups": {"xxx": {"color": "black", "groupName": "xxx Group", "dashes": [1, 2]}, "notdashes": {"color": "black", "groupName": "not dashes Group"}},
-                      "identifier": "symbol"
+                      "identifier": "ensg"
                     }'
                     network='{
-                      "nodes": [{"id": "MYC", "label": "node w/o group"}, {"id": "TP53", "group": "0.5"}, {"id": "C5", "group": "pugGroup"}, {"id": "Patient No. 5", "group": "patientgroup"}, {"label": "PTEN", "id": "PTEN", "group": 0.5, "value":"5"}],
+                      "nodes": [{"id": "ENSG00000171862", "label": "node w/o group"}, {"id": "ENSG00000284792", "group": "0.5"}, {"id": "ENSG00000106804", "group": "pugGroup"}, {"id": "Patient No. 5", "group": "patientgroup"}, {"label": "PTEN", "id": "PTEN", "group": 0.5, "value":"5"}],
                       "edges": [
                       {"from": "TP53","to": "C5","group": "xxx", "label": "this is a label", "title": "this is a title"},
                       {"from": "Patient No. 5","to": "C5","label": "w/o group"}
