@@ -230,4 +230,33 @@ a:hover {
   color: var(--drgstn-text-primary) !important;
 }
 
+// scrolllbar styles
+network-expander {
+  --thumbBG: var(--drgstn-primary);
+  --scrollbarBG: var(--drgstn-secondary);
+}
+network-expander {
+  scrollbar-width: thin;
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: var(--scrollbarBG);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--thumbBG);
+  border-radius: 6px;
+  border: 3px solid var(--scrollbarBG);
+}
+::-moz-scrollbar-button:decrement,
+::-moz-scrollbar-button:increment,
+::-webkit-scrollbar-button:decrement,
+::-webkit-scrollbar-button:increment {
+  width: 0px;
+}
+
+
+
 
