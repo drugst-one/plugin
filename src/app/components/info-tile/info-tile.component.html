@@ -46,8 +46,8 @@
   <app-toggle 
   *ngIf="wrapper.data.netexId && wrapper.data.netexId.startsWith('p')"
   [value]="analysis.inSelection(wrapper)" [smallStyle]="smallStyle"
-              (valueChange)="$event ? analysis.addItems([wrapper]) : analysis.removeItems([wrapper])" textOn="Selected"
-              textOff="Deselected" tooltipOn="Add protein to selection." tooltipOff="Remove protein from selection."></app-toggle>
+              (valueChange)="$event ? analysis.addItems([wrapper]) : analysis.removeItems([wrapper])" textOn="Seed"
+              textOff="Off" tooltipOn="Add protein to selection." tooltipOff="Remove protein from selection."></app-toggle>
 </div>
 <div *ngIf="!wrapper" [ngClass]="{'text-normal':smallStyle}" >
   Please select a node for further information.
