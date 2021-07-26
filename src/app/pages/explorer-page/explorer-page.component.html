@@ -400,7 +400,7 @@
         </a>
       </header>
       <div *ngIf="collapseTask">
-        <div class="card-content overflow" *ngIf="analysis.tasks && analysis.tasks.length > 0">
+        <div class="card-content overflow task-list-container" *ngIf="analysis.tasks && analysis.tasks.length > 0">
           <app-task-list [(token)]="selectedAnalysisToken"></app-task-list>
         </div>
         <footer class="card-footer">

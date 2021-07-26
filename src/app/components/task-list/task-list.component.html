@@ -1,6 +1,6 @@
 <div class="content">
   <div class="list is-hoverable">
-    <a *ngFor="let task of analysis.tasks" class="list-item" [class.is-active]="task.token === token">
+    <a *ngFor="let task of analysis.tasks" class="list-item box small-box" [class.is-active]="task.token === token">
       <div *ngIf="!task.info.startedAt">
         <p>
           <span class="is-capitalized"><i class="fa" [class.fa-capsules]="task.info.target === 'drug'"
