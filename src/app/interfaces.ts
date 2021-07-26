@@ -44,6 +44,7 @@ export interface NodeInteraction {
   group?: string;
   label?: string;
   title?: string;
+  shadow?: boolean;
 }
 
 export interface NetworkEdge {

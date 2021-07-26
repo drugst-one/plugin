@@ -152,6 +152,7 @@ export class NetworkSettings {
       if (node.image) {
         node.shape = 'image';
       }
+
       // use opactiy as gradient
       if (gradient === null) {
           node.opacity = 0

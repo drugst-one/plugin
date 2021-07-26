@@ -12,6 +12,7 @@ export interface NodeGroup {
   borderWidth?: number;
   borderWidthSelected?: number;
   background?: any;
+  shadow?: any;
 }
 
 export interface EdgeGroup {
@@ -19,6 +20,7 @@ export interface EdgeGroup {
   color: string;
   // see https://visjs.github.io/vis-network/docs/network/edges.html
   dashes?: false | Array<number>;
+  shadow?: any;
 }
 
 export type Identifier = 'symbol'|'uniprot'|'ensg';
@@ -55,6 +57,8 @@ export interface IConfig {
   interactionProteinProtein: InteractionProteinProteinDB;
   interactions?: InteractionDatabase;
   identifier?: Identifier;
+  nodeShadow?: boolean;
+  edgeShadow?: boolean;
 }
 
 /**
@@ -85,6 +89,8 @@ export const defaultConfig: IConfig = {
   identifier: 'symbol',
   interactionDrugProtein: 'DrugBank',
   interactionProteinProtein: 'STRING',
+  nodeShadow: true,
+  edgeShadow: true,
   nodeGroups: {
     // all NodeGroups but the default group must be set, if not provided by the user, they will be taken from here
     // IMPORTANT: node color must be hexacode!
@@ -99,6 +105,7 @@ export const defaultConfig: IConfig = {
           border: '#FF0000',
           background: '#FF0000'
         },
+      shadow: true,
       },
       shape: 'triangle',
       type: 'default type',

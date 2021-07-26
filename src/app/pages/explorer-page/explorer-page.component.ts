@@ -25,6 +25,7 @@ import {defaultConfig, EdgeGroup, IConfig, InteractionDatabase, NodeGroup} from 
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 import {removeDuplicateObjectsFromList, rgbaToHex, rgbToHex, standardize_color} from '../../utils'
 import * as merge from 'lodash/fp/merge';
+import { config } from 'rxjs';
 
 // import * as 'vis' from 'vis-network';
 // import {DataSet} from 'vis-data';
@@ -479,8 +480,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (nodeGroups === undefined || !Object.keys(nodeGroups).length) {
       // if node groups are not set or empty, use default node group(s)
       this.myConfig[key] = defaultConfig.nodeGroups;
-      // stop if nodeGroups do not contain any information
-      return;
     }
 
     // make sure all keys are set
@@ -522,6 +521,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (group.image) {
         group.shape = 'image';
       }
+      // implement nodeShadow option, it needs to be set for all nodes or none
+      group.shadow = this.myConfig.nodeShadow;
+
       // color needs to be hexacode to calculate gradient, group.color might not be set for seed and selected group
       // if (!group.color.startsWith('#')) {
       //   // color is either rgba, rgb or string like "red"
@@ -569,6 +571,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         // use dashes default value if not set
         value['dashes'] = defaultConfig.edgeGroups.default.dashes;
       }
+
+      // implement edgeShadow option, it needs to be set for all nodes or none
+      value.shadow = this.myConfig.edgeShadow;
     });
     // override default node groups
     this.myConfig[key] = edgeGroups;
