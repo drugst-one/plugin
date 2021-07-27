@@ -440,34 +440,33 @@
               <i class="fas fa-angle-left" aria-hidden="true"></i>
             </span>
 
-            </a>
-          </header>
-          <div *ngIf="collapseSelection" class="seed-selection" [ngClass]="{'text-normal':smallStyle}">
-            <div class="card-content overflow">
-              <table class="table selection-table" *ngIf="analysis.getCount() > 0">
-                <thead>
-                <tr>
-                  <td>Label</td>
-                  <td>Actions</td>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let p of analysis.getSelection()">
-                  <td><p class="is-capitalized">{{p.data.label}}</p></td>
-                  <td>
-                    <button (click)="analysis.removeItems([p])"
-                            class="button is-small is-danger is-outlined has-tooltip"
-                            tooltipPosition="top" pTooltip="Remove from selection.">
-                      <i class="fa fa-trash"></i>
-                    </button>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-              <i *ngIf="analysis.getCount() === 0">
-                Double-click on a protein to select it for the analysis.
-              </i>
-            </div>
+        </a>
+      </header>
+      <div *ngIf="collapseSelection" class="seed-selection" [ngClass]="{'text-normal':smallStyle}">
+        <!-- <div class="card-content overflow">
+          <table class="table selection-table" *ngIf="analysis.getCount() > 0">
+            <thead>
+            <tr>
+              <td>Label</td>
+              <td>Actions</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let p of analysis.getSelection()">
+              <td><p class="is-capitalized">{{p.data.label}}</p></td>
+              <td>
+                <button (click)="analysis.removeItems([p])" class="button is-small is-danger is-outlined has-tooltip"
+                        tooltipPosition="top" pTooltip="Remove from selection.">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <i *ngIf="analysis.getCount() === 0">
+            Double-click on a protein to select it for the analysis.
+          </i>
+        </div>
 
             <footer class="card-footer" *ngIf="selectedAnalysisToken">
               <a (click)="analysis.addSeeds(currentViewNodes)"
@@ -511,10 +510,10 @@
                 <span>
               Tissue proteins
             </span>
-              </a>
-            </footer>
+          </a>
+        </footer> -->
 
-            <footer class="card-footer">
+            <!-- <footer class="card-footer">
               <a (click)="analysis.invertSelection(currentViewNodes)" class="card-footer-item text-primary"
                  tooltipPosition="top" pTooltip="Invert the current selection.">
             <span class="icon">
@@ -533,7 +532,7 @@
               Reset
             </span>
               </a>
-            </footer>
+            </footer> -->
 
           </div>
         </div>
