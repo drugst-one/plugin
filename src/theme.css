@@ -5,10 +5,11 @@
   --drgstn-warning: #FFDD57FF;
   --drgstn-danger: #47efd6;
   --drgstn-background: #FFFFFF;
-  --drgstn-panel: #FFFFFF;
+  --drgstn-panel: #ff3a3a;
   --drgstn-info: #61c43d;
   --drgstn-text-primary: #363636;
   --drgstn-text-secondary: #FFFFFF;
   --drgstn-border: rgba(0, 0, 0, 0.2);
   --drgstn-tooltip: rgba(74,74,74,0.9);
+  --drgstn-panel-secondary: #FF3A3AFF;
 }

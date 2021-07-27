@@ -169,8 +169,8 @@
               "browserTarget": "netex:build:remote"
             },
             "production": {
-              "browserTarget": "netex:build:production"
-            }
+              "browserTarget": "netex:build:uhh-production"
+            },
           }
         },
         "extract-i18n": {

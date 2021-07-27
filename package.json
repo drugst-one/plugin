@@ -21,7 +21,7 @@
     "build:netex-dev": "npm run build-dev netex && node build-netex.js",
     "build:netex-uhh": "npm run build-uhh netex && node build-netex.js",
     "build:netex-remote": "npm run build-remote netex && node build-netex.js",
-    "prefix": "bash prefix_styles.sh" ,
+    "prefix": "bash prefix_styles.sh",
     "prefixcss": "postcss -r drugsTone-build/styles.css"
   },
   "private": true,
