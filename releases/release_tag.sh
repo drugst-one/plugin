@@ -21,24 +21,30 @@ echo "Cloning Release Repo..."
 git clone git@github.com:AndiMajore/drugstone-releases.git
 echo "Updating Repo..."
 
-echo "Building release..."
-cd frontend || exit
-npm run build:netex
-cd ../
-cp frontend/drugsTone-build/* drugstone-releases/releases/
+#echo "Building release..."
+#cd frontend || exit
+#npm run build:netex
+#cd ../
+#cp frontend/drugsTone-build/* drugstone-releases/releases/
+#
+#echo "Building dev..."
+#cd frontend || exit
+#npm run build:netex-dev
+#cd ../
+#cp frontend/drugsTone-build/* drugstone-releases/dev/
+#
+#echo "Building remote..."
+#cd frontend || exit
+#npm run build:netex-remote
+#cd ../
+#cp frontend/drugsTone-build/* drugstone-releases/remote/
 
-echo "Building dev..."
-cd frontend || exit
-npm run build:netex-dev
-cd ../
-cp frontend/drugsTone-build/* drugstone-releases/dev/
 
-echo "Building remote..."
+echo "Building v-server..."
 cd frontend || exit
-npm run build:netex-remote
+npm run build:netex-uhh
 cd ../
-cp frontend/drugsTone-build/* drugstone-releases/remote/
-
+cp frontend/drugsTone-build/* drugstone-releases/uhh/
 
 cd drugstone-releases || echo "Error!" exit
 git commit -am "$VERSION commit: $MESSAGE"

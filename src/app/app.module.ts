@@ -33,7 +33,7 @@ import {faTimes, faAngleUp, faAngleLeft, faCapsules, faCrosshairs, faFlask, faCh
   faExpand, faInfo, faRocket, faAngleDown, faSearch, faFastForward, faExternalLinkAlt, faTasks, faFilter,
   faMinus, faUpload, faAngleDoubleDown, faSync, faBroom, faAngleDoubleUp
 } from '@fortawesome/free-solid-svg-icons';
-import {TooltipModule} from "primeng/tooltip";
+import {TooltipModule} from 'primeng/tooltip';
 
 @NgModule({
   declarations: [

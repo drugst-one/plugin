@@ -1,20 +1,22 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef, HostListener, Input,
+  ElementRef,
+  HostListener,
+  Input,
   OnInit,
-  ViewChild
+  ViewChild,
+  ViewEncapsulation
 } from '@angular/core';
 import {
-  NodeInteraction,
-  Node,
-  Wrapper,
-  getWrapperFromNode,
-  Tissue,
-  NodeAttributeMap,
   getDrugNodeId,
-  Drug,
-  legendContext
+  getWrapperFromNode,
+  legendContext,
+  Node,
+  NodeAttributeMap,
+  NodeInteraction,
+  Tissue,
+  Wrapper
 } from '../../interfaces';
 import {mapCustomEdge, mapCustomNode, ProteinNetwork} from '../../main-network';
 import {AnalysisService} from '../../services/analysis/analysis.service';
@@ -23,9 +25,8 @@ import domtoimage from 'dom-to-image';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, InteractionDatabase, NodeGroup} from '../../config';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
-import {removeDuplicateObjectsFromList, rgbaToHex, rgbToHex, standardize_color} from '../../utils'
+import {removeDuplicateObjectsFromList} from '../../utils'
 import * as merge from 'lodash/fp/merge';
-import { config } from 'rxjs';
 
 // import * as 'vis' from 'vis-network';
 // import {DataSet} from 'vis-data';
@@ -280,7 +281,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     // at this point, we have nodes synched with the backend
     // use netexIds where posssible, but use original id as node name if no label given
     const nodeIdMap = {};
-    
+
     network.nodes.forEach((node) => {
       // set node label to original id before node id will be set to netex id
       node.label = node.label ? node.label : node.id;
@@ -289,7 +290,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       node.id = nodeIdMap[node.id];
     });
 
-    // adjust edge labels accordingly and filter 
+    // adjust edge labels accordingly and filter
     const edges = new Array();
     network.edges.forEach(edge => {
       edge.from = nodeIdMap[edge.from];
