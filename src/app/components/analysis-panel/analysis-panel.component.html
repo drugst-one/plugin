@@ -138,101 +138,104 @@
         </div>
 
         <footer *ngIf="myConfig.showFooter" class="card-footer toolbar network-footer-toolbar">
+
+          <div class="network-footer-toolbar-inner-container">
          
-          <ng-container *ngIf="myConfig.showFooterButtonScreenshot">
-            <button class="button is-primary is-rounded has-tooltip"
-                      pTooltip="Take a screenshot of the current network." tooltipPosition="top" (click)="toImage()">
-                <span class="icon">
-                  <i class="fas fa-camera" aria-hidden="true"></i>
-                </span>
-                <span [ngClass]="{'text-normal':smallStyle}">
-                  Screenshot
-                </span>
-              </button>
-            </ng-container>
+            <ng-container *ngIf="myConfig.showFooterButtonScreenshot">
+              <button class="button is-primary is-rounded has-tooltip network-footer-toolbar-element"
+                        pTooltip="Take a screenshot of the current network." tooltipPosition="top" (click)="toImage()">
+                  <span class="icon">
+                    <i class="fas fa-camera" aria-hidden="true"></i>
+                  </span>
+                  <span [ngClass]="{'text-normal':smallStyle}">
+                    Screenshot
+                  </span>
+                </button>
+              </ng-container>
 
-          <div class="field">
-            <p class="control footer-buttons">
-              <a [href]="graphmlLink()" class="button is-success is-rounded has-tooltip"
-                 pTooltip="Export this network as .graphml file." tooltipPosition="top">
-                <span class="icon">
-                  <i class="fas fa-download" aria-hidden="true"></i>
-                </span>
-                <span [ngClass]="{'text-normal':smallStyle}">
-                  Export as .graphml
-                </span>
-              </a>
-            </p>
-          </div>
-
-          <!--          <div class="field">-->
-          <!--            <p class="control footer-buttons">-->
-          <!--              <button class="button is-danger is-rounded has-tooltip" data-tooltip="Delete the current analysis."-->
-          <!--                      (click)="analysis.removeTask(token); close()">-->
-          <!--                <span class="icon">-->
-          <!--                  <i class="fas fa-trash" aria-hidden="true"></i>-->
-          <!--                </span>-->
-          <!--                <span>-->
-          <!--                  Delete Analysis-->
-          <!--                </span>-->
-          <!--              </button>-->
-          <!--            </p>-->
-          <!--          </div>-->
-
-          <div class="footer-buttons dropdown is-up" [class.is-active]="expressionExpanded">
-            <div class="dropdown-trigger">
-              <button (click)="expressionExpanded=!expressionExpanded"
-                      class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
-                      aria-haspopup="true" aria-controls="dropdown-menu" [ngClass]="{'button-small':smallStyle}"
-                      pTooltip="Tissue expression data is provided by the GTEx project." tooltipPosition="top"
-                      >
-                <div [ngClass]="{'text-small':smallStyle}">
-                  <span *ngIf="!selectedTissue">Tissue</span>
-                  <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
-                  <span class="icon is-small">
-                  <i class="fas"
-                     [class.fa-angle-up]="expressionExpanded"
-                     [class.fa-angle-left]="!expressionExpanded" aria-hidden="true"></i>
-                </span>
-                </div>
-              </button>
+            <div class="field network-footer-toolbar-element">
+              <p class="control footer-buttons">
+                <a [href]="graphmlLink()" class="button is-success is-rounded has-tooltip"
+                  pTooltip="Export this network as .graphml file." tooltipPosition="top">
+                  <span class="icon">
+                    <i class="fas fa-download" aria-hidden="true"></i>
+                  </span>
+                  <span [ngClass]="{'text-normal':smallStyle}">
+                    Export as .graphml
+                  </span>
+                </a>
+              </p>
             </div>
-            <div class="dropdown-menu" id="dropdown-menu" role="menu">
-              <div class="dropdown-content tissue-dropdown" [ngClass]="{'button-small':smallStyle}">
-                <div class="scroll-area" [ngClass]="{'text-small':smallStyle}">
-                  <a (click)="selectTissue(null)"
-                     [class.is-active]="!selectedTissue"
-                     class="dropdown-item">
-                    None
-                  </a>
-                  <a *ngFor="let tissue of analysis.getTissues()"
-                     (click)="selectTissue(tissue)"
-                     [class.is-active]="selectedTissue && tissue.netexId === selectedTissue.netexId"
-                     class="dropdown-item">
-                    {{tissue.name}}
-                  </a>
+
+            <!--          <div class="field">-->
+            <!--            <p class="control footer-buttons">-->
+            <!--              <button class="button is-danger is-rounded has-tooltip" data-tooltip="Delete the current analysis."-->
+            <!--                      (click)="analysis.removeTask(token); close()">-->
+            <!--                <span class="icon">-->
+            <!--                  <i class="fas fa-trash" aria-hidden="true"></i>-->
+            <!--                </span>-->
+            <!--                <span>-->
+            <!--                  Delete Analysis-->
+            <!--                </span>-->
+            <!--              </button>-->
+            <!--            </p>-->
+            <!--          </div>-->
+
+            <div class="footer-buttons dropdown is-up network-footer-toolbar-element" [class.is-active]="expressionExpanded">
+              <div class="dropdown-trigger">
+                <button (click)="expressionExpanded=!expressionExpanded"
+                        class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
+                        aria-haspopup="true" aria-controls="dropdown-menu" [ngClass]="{'button-small':smallStyle}"
+                        pTooltip="Tissue expression data is provided by the GTEx project." tooltipPosition="top"
+                        >
+                  <div [ngClass]="{'text-small':smallStyle}">
+                    <span *ngIf="!selectedTissue">Tissue</span>
+                    <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
+                    <span class="icon is-small">
+                    <i class="fas"
+                      [class.fa-angle-up]="expressionExpanded"
+                      [class.fa-angle-left]="!expressionExpanded" aria-hidden="true"></i>
+                  </span>
+                  </div>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content tissue-dropdown" [ngClass]="{'button-small':smallStyle}">
+                  <div class="scroll-area" [ngClass]="{'text-small':smallStyle}">
+                    <a (click)="selectTissue(null)"
+                      [class.is-active]="!selectedTissue"
+                      class="dropdown-item">
+                      None
+                    </a>
+                    <a *ngFor="let tissue of analysis.getTissues()"
+                      (click)="selectTissue(tissue)"
+                      [class.is-active]="selectedTissue && tissue.netexId === selectedTissue.netexId"
+                      class="dropdown-item">
+                      {{tissue.name}}
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <app-toggle class="footer-buttons" textOn="Seeds On" textOff="Off"
-                tooltipOn="Highlight seed nodes ON."
-                tooltipOff="Highlight seed nodes OFF."
-                [smallStyle]="smallStyle"
-                [value]="highlightSeeds" (valueChange)="updateHighlightSeeds($event)"></app-toggle>
+            <app-toggle class="footer-buttons network-footer-toolbar-element" textOn="Seeds On" textOff="Off"
+                  tooltipOn="Highlight seed nodes ON."
+                  tooltipOff="Highlight seed nodes OFF."
+                  [smallStyle]="smallStyle"
+                  [value]="highlightSeeds" (valueChange)="updateHighlightSeeds($event)"></app-toggle>
 
-          <app-toggle *ngIf="task.info.target === 'drug-target'" class="footer-buttons" textOn="Drugs On" textOff="Off"
-                tooltipOn="Display adjacent drugs ON."
-                tooltipOff="Display adjacent drugs OFF."
-                [smallStyle]="smallStyle"
-                [value]="adjacentDrugs" (valueChange)="updateAdjacentDrugs($event)"></app-toggle>
+            <app-toggle *ngIf="task.info.target === 'drug-target'" class="footer-buttons network-footer-toolbar-element" textOn="Drugs On" textOff="Off"
+                  tooltipOn="Display adjacent drugs ON."
+                  tooltipOff="Display adjacent drugs OFF."
+                  [smallStyle]="smallStyle"
+                  [value]="adjacentDrugs" (valueChange)="updateAdjacentDrugs($event)"></app-toggle>
 
-          <app-toggle class="footer-buttons" textOn="Animation On" textOff="Off"
-                      tooltipOn="Enable the network animation."
-                      tooltipOff="Disable the network animation and freeze nodes."
-                      [smallStyle]="smallStyle"
-                      [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
+            <app-toggle class="footer-buttons network-footer-toolbar-element" textOn="Animation On" textOff="Off"
+                        tooltipOn="Enable the network animation."
+                        tooltipOff="Disable the network animation and freeze nodes."
+                        [smallStyle]="smallStyle"
+                        [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
+            </div>
         </footer>
       </div>
       <div class="content tab-content scrollable table-tab" *ngIf="task && task.info.done" [class.is-visible]="tab === 'table'">

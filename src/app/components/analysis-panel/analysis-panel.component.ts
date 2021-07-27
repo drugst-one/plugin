@@ -115,6 +115,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   public tableProteinScoreTooltip = '';
 
   public expressionMap: NodeAttributeMap;
+  public gradientMap: NodeAttributeMap;
 
   constructor(private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService) {
   }
@@ -267,12 +268,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
               node.x = pos[item.id].x;
               node.y = pos[item.id].y;
               const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
+              const gradient = (this.gradientMap !== {}) && (this.gradientMap[item.id]) ? this.gradientMap[item.id] : 1.0;
               const nodeStyled = NetworkSettings.getNodeStyle(
                 node,
                 this.myConfig,
                 isSeed,
                 selected,
-                1.0
+                gradient
                 )
               updatedNodes.push(nodeStyled);
             }
@@ -294,6 +296,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
             this.tableSelectedProteins = [...proteinSelection];
             this.tableSelectedViralProteins = [...viralProteinSelection];
           } else {
+            // else: selected is null
             const updatedNodes = [];
             this.nodeData.nodes.forEach((node) => {
               let drugType;
@@ -302,12 +305,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
                 drugType = node.wrapper.data.status;
                 drugInTrial = node.wrapper.data.inTrial;
               }
+              const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
+              const gradient = (this.gradientMap !== {}) && (this.gradientMap[node.id]) ? this.gradientMap[node.id] : 1.0;
               const nodeStyled = NetworkSettings.getNodeStyle(
                 node,
                 this.myConfig,
-                false,
+                isSeed,
                 selected,
-                1.0
+                gradient
                 )
               updatedNodes.push(nodeStyled);
             });
@@ -652,12 +657,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         const pos = this.network.getPositions([item.id]);
         node.x = pos[item.id].x;
         node.y = pos[item.id].y;
+        const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
         Object.assign(
           node,
           NetworkSettings.getNodeStyle(
             node,
             this.myConfig,
-            false,
+            isSeed,
             this.analysis.inSelection(getWrapperFromNode(item)),
             1.0
             )
@@ -667,6 +673,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       this.nodeData.nodes.update(updatedNodes);
       // delete expression values
       this.expressionMap = undefined;
+      this.gradientMap = {};
     } else {
       this.selectedTissue = tissue
       const minExp = 0.3;
@@ -693,18 +700,19 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
             continue;
           }
           const wrapper = getWrapperFromNode(node)
-          const gradient = expressionlvl !== null ? (Math.pow(expressionlvl / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
+          this.gradientMap[netexId] = expressionlvl !== null ? (Math.pow(expressionlvl / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
           const pos = this.network.getPositions([networkId]);
           node.x = pos[networkId].x;
           node.y = pos[networkId].y;
+          const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
           Object.assign(node,
             NetworkSettings.getNodeStyle(
               node,
               this.myConfig,
-              false, // node.isSeed,
+              isSeed,
               this.analysis.inSelection(wrapper),
-              gradient));
-          node.gradient = gradient;
+              this.gradientMap[netexId]));
+          node.gradient = this.gradientMap[netexId];
           updatedNodes.push(node);
         }
         this.nodeData.nodes.update(updatedNodes);

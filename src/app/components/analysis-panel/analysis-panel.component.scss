@@ -73,3 +73,10 @@
   overflow-y: auto;
 }
 
+.network-footer-toolbar{
+  .dropdown-menu{
+    z-index: $analysis-network-toolbar-dropdown-z;
+  }
+}
+
+

@@ -15,17 +15,33 @@
 
 .canvas-content {
   height: calc(100% - #{$network-footer-height});
+  z-index: $explorer-network-z;
 }
 
+// general network settings, some will be overwritten in analysis
 .network-footer-toolbar {
   position: absolute;
-  overflow-x: auto;
-  overflow-y: hidden;
   width: 100%;
   bottom: 0;
   height: $network-footer-height;
+  &-inner-container{
+    width: 100%;
+    display: inline-flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: $network-footer-inner-container-height;
+    position: absolute;
+    bottom: 0;
+  }
   &-element {
     position: relative;
+    margin-top: calc(#{$network-footer-inner-container-height} - #{$network-footer-height} + #{$network-footer-space-button-to-border});
+  }
+  .dropdown-menu{
+    z-index: $explorer-network-toolbar-dropdown-z;
+    .scroll-area{
+      height: calc(#{$network-footer-inner-container-height} - #{$network-footer-height});
+    }
   }
 }
 
@@ -185,7 +201,10 @@ div.covex.explorer {
   width: 100%;
   position: absolute;
   margin-top: 0;
-  z-index: 10;
+  z-index: $analysis-view-z;
+  .canvas-content {
+    z-index: $analysis-network-z;
+  }
 }
 
 div.field.has-addons.add-remove-toggle {
