@@ -115,7 +115,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   public tableProteinScoreTooltip = '';
 
   public expressionMap: NodeAttributeMap;
-  public gradientMap: NodeAttributeMap;
+  public gradientMap: NodeAttributeMap = {};
 
   constructor(private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService) {
   }
@@ -351,6 +351,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   }
 
   close() {
+    this.gradientMap = {};
+    this.expressionExpanded = false;
+    this.expressionMap = undefined;
+    this.seedMap = {};
+    this.highlightSeeds = false;
+    this.showDrugs = false;
     this.analysis.switchSelection('main');
     this.token = null;
     this.tokenChange.emit(this.token);
@@ -539,6 +545,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       node.x = pos[item.id].x;
       node.y = pos[item.id].y;
       const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
+      const gradient = (this.gradientMap !== {}) && (this.gradientMap[item.id]) ? this.gradientMap[item.id] : 1.0;
       Object.assign(
         node,
         NetworkSettings.getNodeStyle(
@@ -546,7 +553,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
           this.myConfig,
           isSeed,
           this.analysis.inSelection(getWrapperFromNode(item)),
-          1.0
+          gradient
           )
       )
       updatedNodes.push(node);
