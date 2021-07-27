@@ -157,12 +157,12 @@ export class AnalysisService {
 
   public invertSelection(nodes) {
     const newSelection = [];
-    nodes.forEach((node) => {
-      if (!this.inSelection(node)) {
-        newSelection.push(node);
+    nodes.forEach((node: Node) => {
+      const wrapper = getWrapperFromNode(node);
+      if (!this.inSelection(wrapper)) {
+        newSelection.push(wrapper);
       }
     });
-    console.log(nodes)
     this.selectedItems.clear();
     for (const wrapper of newSelection) {
       this.selectedItems.set(wrapper.nodeId, wrapper);

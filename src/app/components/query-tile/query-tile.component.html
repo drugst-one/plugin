@@ -1,10 +1,8 @@
 <div class="content">
-  <ng-select [items]="queryItems" bindLabel="id" bindValue="data" [virtualScroll]="true" class="custom"
-             placeholder="Search..." [hideSelected]="true" [searchFn]="querySearch" (change)="select($event)" pTooltip="Find proteins in the network." tooltipPosition="top">
+  <ng-select [items]="queryItems" bindLabel="label" bindValue="data" [virtualScroll]="true" class="custom"
+             placeholder="Search..." [hideSelected]="true" [searchFn]="querySearch" (change)="select($event)" pTooltip="Find nodes in the network." tooltipPosition="top">
     <ng-template ng-option-tmp let-item="item">
-      <b *ngIf="item.data.netexId && item.data.netexId.startsWith('p')"> {{item.data.name}}</b>
-      <span><small *ngIf="item.data.netexId && item.data.netexId.startsWith('p')">Protein</small> | </span>
-      <span *ngIf="item.data.netexId && item.data.netexId.startsWith('p')"><small>AC: <b>{{item.data.uniprotAc}}</b></small> </span>
+      <p>{{item.data.label}}</p>
     </ng-template>
   </ng-select>
 </div>
