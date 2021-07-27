@@ -162,6 +162,7 @@ export class AnalysisService {
         newSelection.push(node);
       }
     });
+    console.log(nodes)
     this.selectedItems.clear();
     for (const wrapper of newSelection) {
       this.selectedItems.set(wrapper.nodeId, wrapper);

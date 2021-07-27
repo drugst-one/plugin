@@ -439,7 +439,7 @@
         </a>
       </header>
       <div *ngIf="collapseSelection" class="seed-selection" [ngClass]="{'text-normal':smallStyle}">
-        <div class="card-content overflow">
+        <!-- <div class="card-content overflow">
           <table class="table selection-table" *ngIf="analysis.getCount() > 0">
             <thead>
             <tr>
@@ -507,7 +507,7 @@
               Tissue proteins
             </span>
           </a>
-        </footer>
+        </footer> -->
 
         <footer class="card-footer">
           <a (click)="analysis.invertSelection(currentViewNodes)" class="card-footer-item text-primary"
