@@ -148,8 +148,8 @@ export class NetworkSettings {
         node = merge(node, config.nodeGroups.selectedNode);
       }
 
-      // show image if image url is given
-      if (node.image) {
+      // show image if image url is given. If seed nodes are highlighted, ignore image property
+      if (node.image && !isSeed) {
         node.shape = 'image';
       }
 

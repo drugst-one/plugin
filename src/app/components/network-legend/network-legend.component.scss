@@ -56,6 +56,7 @@ div.legend {
         height: $legend-circle-size;
         display: inline-block;
         text-align: center;
+        line-height: $legend-circle-line-height;
       }
       .triangle{
         width: 0;

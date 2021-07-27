@@ -506,6 +506,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (!group.borderWidthSelected) {
         group.borderWidthSelected = 0;
       }
+      if (!group.font) {
+        group.font = defaultConfig.nodeGroups.default.font;
+      }
       // if color is set as string, add detail settings
       if (typeof group.color === 'string') {
         group.color = {
