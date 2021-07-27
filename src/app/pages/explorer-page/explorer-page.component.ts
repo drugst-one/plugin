@@ -57,24 +57,23 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (typeof config === 'undefined') {
       return;
     }
+
+    // addd settings to config
+    const configObj = JSON.parse(config);
+    this.myConfig = merge(this.myConfig, configObj)
+
+    // update Drugst.One according to the settings
     // check if config updates affect network
     let updateNetworkFlag = false;
-    const configObj = JSON.parse(config);
     for (const key of Object.keys(configObj)) {
       if (key === 'nodeGroups') {
         this.setConfigNodeGroup(key, configObj[key]);
         updateNetworkFlag = true;
-        // dont set the key here, will be set in function
-        continue;
       } else if (key === 'edgeGroups') {
         this.setConfigEdgeGroup(key, configObj[key]);
         updateNetworkFlag = true;
-        // dont set the key here, will be set in function
-        continue;
       } else if (key === 'interactions') {
         this.getInteractions(configObj[key]);
-        // dont set the key here, will be set in function
-        continue;
       } else if (key === 'showLeftSidebar') {
         if (configObj[key]) {
           // shrink main column
@@ -92,7 +91,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           document.getElementById('main-column').classList.add('rightgone');
         }
       }
-      this.myConfig[key] = configObj[key];
     }
     // trigger updates on config e.g. in legend
     this.myConfig = {...this.myConfig};
@@ -477,25 +475,21 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
    * @param values
    */
   public setConfigNodeGroup(key: string, nodeGroups: { [key: string]: NodeGroup }) {
-    if (nodeGroups === undefined || !Object.keys(nodeGroups).length) {
-      // if node groups are not set or empty, use default node group(s)
-      this.myConfig[key] = defaultConfig.nodeGroups;
-    }
+    // make sure that return-groups (seeds, drugs, found nodes) are set
+    const defaultNodeGroups = JSON.parse(JSON.stringify(defaultConfig.nodeGroups));
+    // user merge function to do deep merge
+    nodeGroups = merge(defaultNodeGroups, nodeGroups);
 
     // make sure all keys are set
     Object.entries(nodeGroups).forEach(([key, group]) => {
-      if (key in defaultConfig.nodeGroups) {
-        // skip the groups that overwrite default groups in case user only wants to overwrite partially
-        return
+      if (!group.color && key !== 'selectedNode') {
+        console.error(`Group ${key} has no attribute 'color'.`);
       }
-      if (!group.color) {
-        throw `Group ${defaultConfig.nodeGroups.groupName} has no attribute 'color'.`;
+      if (!group.shape && key !== 'selectedNode') {
+        console.error(`Group ${key} has no attribute 'shape'.`);
       }
-      if (!group.shape) {
-        throw `Group ${defaultConfig.nodeGroups.groupName} has no attribute 'shape'.`;
-      }
-      if (!group.groupName) {
-        throw `Group ${defaultConfig.nodeGroups.groupName} has no attribute 'groupName'.`;
+      if (!group.groupName && key !== 'selectedNode') {
+        console.error(`Group ${key} has no attribute 'groupName'.`);
       }
       // set default values in case they are not set by user
       // these values are not mandatory but are neede to override default vis js styles after e.g. deselecting
@@ -526,28 +520,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }
       // implement nodeShadow option, it needs to be set for all nodes or none
       group.shadow = this.myConfig.nodeShadow;
-
-      // color needs to be hexacode to calculate gradient, group.color might not be set for seed and selected group
-      // if (!group.color.startsWith('#')) {
-      //   // color is either rgba, rgb or string like "red"
-      //   if (group.color.startsWith('rgba')) {
-      //     group.color = rgbaToHex(group.color).slice(0, 7)
-      //   } else if (group.color.startsWith('rgb')) {
-      //     group.color = rgbToHex(group.color)
-      //   } else (
-      //     group.color = standardize_color(group.color)
-      //   )
-      // }
     });
 
-    // make sure that return-groups (seeds, drugs, found nodes) are set
-    const defaultNodeGroups = JSON.parse(JSON.stringify(defaultConfig.nodeGroups));
-    // if user has set nodeGroups, do not use group "default"
-    delete defaultNodeGroups.default;
-    // if user has not set the return-groups, take the defaults
-    // user merge function to do deep merge
-    nodeGroups = merge(defaultNodeGroups, nodeGroups);
-    // overwrite default node groups
     this.myConfig[key] = nodeGroups;
   }
 
@@ -558,12 +532,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
    * @param values
    */
   public setConfigEdgeGroup(key: string, edgeGroups: { [key: string]: EdgeGroup }) {
-    if (edgeGroups === undefined || !Object.keys(edgeGroups).length) {
-      // if edge groups are not set or empty, use default edge group(s)
-      this.myConfig[key] = defaultConfig.edgeGroups;
-      // stop if edgeGroups do not contain any information
-      return;
-    }
+    // make sure that default-groups are set
+    const defaultNodeGroups = JSON.parse(JSON.stringify(defaultConfig.edgeGroups));
+    edgeGroups = merge(defaultNodeGroups, edgeGroups);
 
     // // do not allow '_' in node Group names since it causes problems with backend
     // edgeGroups = removeUnderscoreFromKeys(edgeGroups)
@@ -578,7 +549,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       // implement edgeShadow option, it needs to be set for all nodes or none
       value.shadow = this.myConfig.edgeShadow;
     });
-    // override default node groups
     this.myConfig[key] = edgeGroups;
   }
 

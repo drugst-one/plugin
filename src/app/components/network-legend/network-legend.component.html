@@ -5,7 +5,7 @@
     <ng-container *ngIf="this.config.showLegendNodes">
       <tr *ngFor="let nodeGroup of this.config.nodeGroups | keyvalue" class="list-item">
 
-        <ng-container *ngIf="nodeGroup.key && checkContext(nodeGroup.key)">
+        <ng-container *ngIf="nodeGroup.key && checkNodeGroupContext(nodeGroup.key)">
           <ng-container *ngIf="nodeGroup.value.image">
             <!-- group icon given, use icon in legend -->
             <th>
@@ -65,11 +65,13 @@
 
     <ng-container *ngIf="this.config.showLegendEdges">
       <tr *ngFor="let edgeGroup of this.config.edgeGroups | keyvalue" class="list-item">
-        <th>
-          <hr *ngIf="!edgeGroup.value.dashes" class="edge" [style.background-color]=edgeGroup.value.color>
-          <hr *ngIf="edgeGroup.value.dashes" class="edge dashes" [style.color]=edgeGroup.value.color>
-        </th>
-        <td>&nbsp;{{ edgeGroup.value.groupName }}</td>
+        <ng-container *ngIf="edgeGroup.key && checkEdgeGroupContext(edgeGroup.key)">
+          <th>
+            <hr *ngIf="!edgeGroup.value.dashes" class="edge" [style.background-color]=edgeGroup.value.color>
+            <hr *ngIf="edgeGroup.value.dashes" class="edge dashes" [style.color]=edgeGroup.value.color>
+          </th>
+          <td>&nbsp;{{ edgeGroup.value.groupName }}</td>
+        </ng-container>
       </tr>
     </ng-container>
   </table>

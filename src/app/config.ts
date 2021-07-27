@@ -105,7 +105,6 @@ export const defaultConfig: IConfig = {
           border: '#FF0000',
           background: '#FF0000'
         },
-      shadow: true,
       },
       shape: 'triangle',
       type: 'default type',

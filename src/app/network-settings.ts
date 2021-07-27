@@ -127,10 +127,10 @@ export class NetworkSettings {
     isSelected: boolean,
     gradient: number = 1): Node {
       // delete possible old styles
-      Object.keys(defaultConfig.nodeGroups.default).forEach(e => delete node[e]);
+      Object.keys(config.nodeGroups.default).forEach(e => delete node[e]);
       // set group styles
       if (node.group === 'default') {
-        node = merge(node, defaultConfig.nodeGroups.default);
+        node = merge(node, config.nodeGroups.default);
       } else {
         node = merge(node, config.nodeGroups[node.group]);
       }

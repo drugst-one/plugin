@@ -75,7 +75,7 @@ export class ProteinNetwork {
   let node;
   if (customNode.group === undefined) {
     // fallback to default node
-    node = JSON.parse(JSON.stringify(defaultConfig.nodeGroups.default));
+    node = JSON.parse(JSON.stringify(config.nodeGroups.default));
     node.group = 'default';
   } else {
     if (config.nodeGroups[customNode.group] === undefined) {
@@ -103,10 +103,10 @@ export function mapCustomEdge(customEdge: NodeInteraction, config: IConfig): any
   let edge;
   if (customEdge.group === undefined) {
     // fallback to default node
-    edge = JSON.parse(JSON.stringify(defaultConfig.edgeGroups.default));
+    edge = JSON.parse(JSON.stringify(config.edgeGroups.default));
   } else {
     if (config.edgeGroups[customEdge.group] === undefined) {
-      throw `Edge "from ${customEdge.from}" - "to ${customEdge.to}" has undefined edge group ${customEdge.group}.`
+      console.error(`Edge "from ${customEdge.from}" - "to ${customEdge.to}" has undefined edge group ${customEdge.group}.`);
     }
     // copy
     edge = JSON.parse(JSON.stringify(config.edgeGroups[customEdge.group]));
@@ -114,6 +114,6 @@ export function mapCustomEdge(customEdge: NodeInteraction, config: IConfig): any
   edge = {
     ...edge,
     ...customEdge
-  }
+  };
   return edge;
 }
