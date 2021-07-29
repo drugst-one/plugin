@@ -455,7 +455,7 @@
 
     <footer class="modal-card-foot">
       <button (click)="startTask(); close()" class="button is-success is-rounded has-tooltip"
-              pTooltip="Run the analysis." tooltipPosition="top"
+              pTooltip="Run the analysis." tooltipStyleClass="drgstn" tooltipPosition="top"
               [disabled]="!analysis.canLaunchTask()">
         <span class="icon">
           <i class="fa fa-rocket"></i>
@@ -464,7 +464,7 @@
           Launch
         </span>
       </button>
-      <button (click)="close()" class="button is-rounded has-tooltip" pTooltip="Close the current window." tooltipPosition="top">Close
+      <button (click)="close()" class="button is-rounded has-tooltip" pTooltip="Close the current window." tooltipStyleClass="drgstn" tooltipPosition="top">Close
       </button>
     </footer>
   </div>

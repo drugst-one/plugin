@@ -1,4 +1,4 @@
-@import "../../../variables";
+@import "src/stylesheets/variables";
 
 .analysis {
   position: absolute;
@@ -7,7 +7,7 @@
 }
 
 .network-view-settings {
-  // remove margin from tab header when network is displayed, so that network 
+  // remove margin from tab header when network is displayed, so that network
   // does not disappear in empty border
   padding-left: 0;
   padding-right: 0;

@@ -1,4 +1,4 @@
-@import "~src/variables";
+@import "src/stylesheets/variables";
 
 
 div.legend {
@@ -73,7 +73,7 @@ div.legend {
         border-right: calc(#{$legend-triangle-size} / 2) solid transparent;
         border-top: $legend-triangle-height solid black;  // default color will be changed by user input
         display: inline-block;
-      }  
+      }
       .star {
         position: relative;
         display: inline-block;
@@ -122,7 +122,7 @@ div.legend {
         width: $legend-edge-width;
         height: $legend-edge-height;
         /* Center edge icon */
-        margin: 0 auto; 
+        margin: 0 auto;
         &.dashes {
           border-top: dotted;
           background-color: transparent;

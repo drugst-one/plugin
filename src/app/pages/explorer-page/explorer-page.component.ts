@@ -12,7 +12,6 @@ import {
   getDrugNodeId,
   getWrapperFromNode,
   legendContext,
-  NetworkEdge,
   Node,
   NodeAttributeMap,
   NodeInteraction,

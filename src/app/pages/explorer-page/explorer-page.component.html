@@ -181,13 +181,14 @@
                       network-footer-toolbar-element
                     "
                     pTooltip="Take a screenshot of the current network."
+                    tooltipStyleClass="drgstn"
                     tooltipPosition="top"
                   >
                     <span class="icon">
                       <i class="fas fa-camera" aria-hidden="true"></i>
                     </span>
                     <span [ngClass]="{ 'text-normal': smallStyle }"
-                      >Screenshot</span
+                    >Screenshot</span
                     >
                   </button>
                 </ng-container>
@@ -210,17 +211,18 @@
                         aria-haspopup="true"
                         aria-controls="dropdown-menu"
                         pTooltip="Tissue expression data is provided by the GTEx project."
+                        tooltipStyleClass="drgstn"
                         tooltipPosition="top"
                         [ngClass]="{ 'button-small': smallStyle }"
                       >
                         <span
                           *ngIf="!selectedTissue"
                           [ngClass]="{ 'text-small': smallStyle }"
-                          >Tissue</span
+                        >Tissue</span
                         >
                         <span *ngIf="selectedTissue">{{
                           selectedTissue.name
-                        }}</span>
+                          }}</span>
                         <span *ngIf="expressionExpanded" class="icon is-small">
                           <i class="fas fa-angle-up" aria-hidden="true"></i>
                         </span>
@@ -366,6 +368,7 @@
                         [disabled]="analysis.isLaunchingQuick()"
                         class="button is-white is-rounded has-tooltip"
                         pTooltip="Find drugs for all proteins."
+                        tooltipStyleClass="drgstn"
                         tooltipPosition="top"
                       >
                         <span class="icon">
@@ -395,7 +398,7 @@
                       </div>
                       <div>
                         <span [ngClass]="{ 'text-normal': smallStyle }"
-                          >Select Proteins</span
+                        >Select Proteins</span
                         >
                       </div>
                     </div>
@@ -409,8 +412,9 @@
                           analysis.getCount() === 0 ||
                           analysis.isLaunchingQuick()
                         "
-                        class="button is-white is-rounded has-tooltip"
+                        class="button is-white is-rounded"
                         pTooltip="Find drugs for the selected proteins."
+                        tooltipStyleClass="drgstn"
                         tooltipPosition="top"
                       >
                         <span class="icon">
@@ -466,6 +470,7 @@
                 <div
                   class="control"
                   pTooltip="Find drug targets for the selected proteins."
+                  tooltipStyleClass="drgstn"
                   tooltipPosition="top"
                 >
                   <button
@@ -492,6 +497,7 @@
                 <div
                   class="control"
                   pTooltip="Find drugs for the selected proteins."
+                  tooltipStyleClass="drgstn"
                   tooltipPosition="top"
                 >
                   <button
@@ -527,6 +533,7 @@
                       has-tooltip
                     "
                     pTooltip="Use enrichment analysis via g:Profiler (external)."
+                    tooltipStyleClass="drgstn"
                     tooltipPosition="top"
                   >
                     <span class="icon">
@@ -545,6 +552,7 @@
                       has-tooltip
                     "
                     pTooltip="Use enrichment analysis via g:Profiler (external)."
+                    tooltipStyleClass="drgstn"
                     tooltipPosition="top"
                   >
                     <span class="icon">
@@ -600,6 +608,7 @@
                 "
                 class="card-footer-item text-danger"
                 pTooltip="Delete all tasks."
+                tooltipStyleClass="drgstn"
                 tooltipPosition="top"
               >
                 <span class="icon">
