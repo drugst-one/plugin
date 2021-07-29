@@ -24,7 +24,7 @@ export class QueryTileComponent {
 
   querySearch = (term: string, item: Wrapper) => {
     term = term.toLowerCase();
-    const data = JSON.parse(JSON.stringify(item.data));
+    const data = {...item.data}
     // add possible missing attributes to not throw errors
     if (data.ensg === undefined) {data.ensg = []};
     if (data.groupName === undefined) {data.groupName = ''};
@@ -34,9 +34,9 @@ export class QueryTileComponent {
     if (data.uniprotAc === undefined) {data.uniprotAc = ''};
     if (data.drugId === undefined) {data.drugId = ''};
 
-    return data.symbol.toLowerCase().indexOf(term) > -1 || data.uniprotAc.toLowerCase().indexOf(term) > -1 || 
-      data.label.toLowerCase().indexOf(term) > -1 || this.listStartsWith(data.ensg, term) || data.id.toLowerCase().indexOf(term) > -1 
-      || data.proteinName.toLowerCase().indexOf(term) > -1 || data.type.toLowerCase().indexOf(term) > -1 || 
+    return data.symbol.toLowerCase().indexOf(term) > -1 || data.uniprotAc.toLowerCase().indexOf(term) > -1 ||
+      data.label.toLowerCase().indexOf(term) > -1 || this.listStartsWith(data.ensg, term) || data.id.toLowerCase().indexOf(term) > -1
+      || data.proteinName.toLowerCase().indexOf(term) > -1 || data.type.toLowerCase().indexOf(term) > -1 ||
       data.groupName.toLowerCase().indexOf(term) > -1 || data.drugId.toLowerCase().indexOf(term) > -1;
   }
 
