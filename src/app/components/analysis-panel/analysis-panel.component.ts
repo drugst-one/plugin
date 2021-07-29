@@ -79,7 +79,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   public myConfig: IConfig = JSON.parse(JSON.stringify(defaultConfig));
 
 
-  private network: any;
+  public network: any;
   private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
   private drugNodes: any[] = [];
   private drugEdges: any[] = [];
