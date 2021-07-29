@@ -5,6 +5,8 @@ div.legend {
   position: absolute;
   bottom: 0;
   left: 1rem;
+  bottom: 1rem;
+  z-index: $explorer-networklegend-z;
   &.right {
     right: 0;
   }
