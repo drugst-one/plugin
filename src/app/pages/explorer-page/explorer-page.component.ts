@@ -365,7 +365,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.proteinData.linkNodes();
 
     const {nodes, edges} = this.proteinData.mapDataToNetworkInput(this.myConfig);
-    console.log('first item nodes', nodes[0])
 
     this.nodeData.nodes = new vis.DataSet(nodes);
     this.nodeData.edges = new vis.DataSet(edges);
