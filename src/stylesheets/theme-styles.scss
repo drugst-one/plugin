@@ -64,6 +64,11 @@
     background-color: var(--drgstn-border) !important;
   }
 
+  // legend styles
+  .legend {
+    color: var(--drgstn-text-primary);
+  }
+
   .modal-card-body {
     .label {
       color: var(--drgstn-text-primary) !important;
@@ -186,6 +191,14 @@
     color: var(--drgstn-text-primary)
   }
 
+  // scrolllbar styles
+  network-expander {
+    --thumbBG: var(--drgstn-primary);
+    --scrollbarBG: var(--drgstn-background);
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+  }
 
   ::-webkit-scrollbar {
     width: 5px;
@@ -207,17 +220,6 @@
   ::-webkit-scrollbar-button:increment {
     width: 0px;
   }
-}
-
-// scrolllbar styles
-network-expander {
-  --thumbBG: var(--drgstn-primary);
-  --scrollbarBG: var(--drgstn-background);
-}
-
-network-expander {
-  scrollbar-width: thin;
-  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
 }
 
 
