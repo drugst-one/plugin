@@ -24,6 +24,7 @@ import {
   Task,
   Tissue,
   Wrapper,
+  NodeInteraction,
 } from '../../interfaces';
 import domtoimage from 'dom-to-image';
 import {toast} from 'bulma-toast';
@@ -72,7 +73,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   }
   @Output() tokenChange = new EventEmitter<string | null>();
   @Output() showDetailsChange = new EventEmitter<Wrapper>();
-  @Output() visibleItems = new EventEmitter<[any[], [Node[], Tissue]]>();
+  @Output() visibleItems = new EventEmitter<[any[], [Node[], Tissue], NodeInteraction[]]>();
 
   public task: Task | null = null;
   public myConfig: IConfig = JSON.parse(JSON.stringify(defaultConfig));
@@ -340,7 +341,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
   public emitVisibleItems(on: boolean) {
     if (on) {
-      this.visibleItems.emit([this.nodeData.nodes, [this.proteins, this.selectedTissue]]);
+      this.visibleItems.emit([this.nodeData.nodes, [this.proteins, this.selectedTissue], this.nodeData.edges]);
     } else {
       this.visibleItems.emit(null);
     }
@@ -585,6 +586,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       this.adjacentDrugEdgesList = [];
     }
     this.setLegendContext()
+    // emit data to update sidebar information
+    this.emitVisibleItems(true);
   }
 
   public updatePhysicsEnabled(bool: boolean) {
