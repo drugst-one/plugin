@@ -27,6 +27,7 @@ import {defaultConfig, EdgeGroup, IConfig, InteractionDatabase, NodeGroup} from 
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 import {removeDuplicateObjectsFromList} from '../../utils'
 import * as merge from 'lodash/fp/merge';
+import { AnalysisPanelComponent } from 'src/app/components/analysis-panel/analysis-panel.component';
 
 // import * as 'vis' from 'vis-network';
 // import {DataSet} from 'vis-data';
@@ -179,6 +180,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   @ViewChild('network', {static: false}) networkEl: ElementRef;
   @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
 
+  @ViewChild(AnalysisPanelComponent, { static: false })
+  private analysisPanel: AnalysisPanelComponent;
+
   constructor(
     public omnipath: OmnipathControllerService,
     public analysis: AnalysisService,
@@ -314,8 +318,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   private zoomToNode(id: string) {
+    // get network object, depending on whether analysis is open or not
+    const network = this.selectedAnalysisToken ? this.analysisPanel.network : this.networkInternal;
+
     this.nodeData.nodes.getIds();
-    const coords = this.networkInternal.getPositions(id)[id];
+    const coords = network.getPositions(id)[id];
     if (!coords) {
       return;
     }
@@ -325,7 +332,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     } else {
       zoomScale = 3.0;
     }
-    this.networkInternal.moveTo({
+    network.moveTo({
       position: {x: coords.x, y: coords.y},
       scale: zoomScale,
       animation: true,
@@ -398,18 +405,15 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.closeSummary();
     });
 
-    // // this might be not necessary, positions get saved right before reloding network
-    // this.networkInternal.on('stabilizationIterationsDone', () => {
-    //   this.networkPositions = this.networkInternal.getPositions();
-    // });
-    // this.networkInternal.stabilize();
-
     if (this.selectedWrapper) {
       this.zoomToNode(this.selectedWrapper.id);
     }
 
+    this.currentViewNodes = this.nodeData.nodes;
+    this.currentViewEdges = this.nodeData.edges;
+
     this.queryItems = [];
-    this.fillQueryItems(this.proteins);
+    this.fillQueryItems(this.currentViewNodes);
     if (this.selectedWrapper) {
       this.networkInternal.selectNodes([this.selectedWrapper.id]);
     }
@@ -421,8 +425,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.queryItems.push(getWrapperFromNode(protein));
     });
 
-    this.currentViewNodes = this.nodeData.nodes;
-    this.currentViewEdges = this.nodeData.edges;
+
     this.currentViewProteins = this.proteins;
   }
 
@@ -586,6 +589,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.currentViewProteins = this.proteins;
       this.currentViewSelectedTissue = this.selectedTissue;
     }
+    // changes for either way (analysis open and close)
+    this.selectedWrapper = null;
+    this.fillQueryItems(this.currentViewNodes);
   }
 
   gProfilerLink(): string {
