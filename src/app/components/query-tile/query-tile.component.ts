@@ -1,4 +1,5 @@
 import {Component, Input, Output, EventEmitter} from '@angular/core';
+import { element } from 'protractor';
 import {Node, Wrapper} from '../../interfaces';
 
 @Component({
@@ -12,7 +13,16 @@ export class QueryTileComponent {
   @Output() selectItem: EventEmitter<any> = new EventEmitter();
   @Input() queryItems: Wrapper[];
 
-  querySearch(term: string, item: Wrapper) {
+  private listStartsWith = (elments: any[], term) => {
+    for (const e of elments) {
+      if (e.toLowerCase().indexOf(term) > -1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  querySearch = (term: string, item: Wrapper) => {
     term = term.toLowerCase();
     const data = JSON.parse(JSON.stringify(item.data));
     // add possible missing attributes to not throw errors
@@ -24,9 +34,8 @@ export class QueryTileComponent {
     if (data.uniprotAc === undefined) {data.uniprotAc = ''};
     if (data.drugId === undefined) {data.drugId = ''};
 
-    data.ensg = data.ensg.map(x => x.toLowerCase())
     return data.symbol.toLowerCase().indexOf(term) > -1 || data.uniprotAc.toLowerCase().indexOf(term) > -1 || 
-      data.label.toLowerCase().indexOf(term) > -1 || data.ensg.includes(term) || data.id.toLowerCase().indexOf(term) > -1 
+      data.label.toLowerCase().indexOf(term) > -1 || this.listStartsWith(data.ensg, term) || data.id.toLowerCase().indexOf(term) > -1 
       || data.proteinName.toLowerCase().indexOf(term) > -1 || data.type.toLowerCase().indexOf(term) > -1 || 
       data.groupName.toLowerCase().indexOf(term) > -1 || data.drugId.toLowerCase().indexOf(term) > -1;
   
