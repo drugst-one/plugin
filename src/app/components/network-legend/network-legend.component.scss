@@ -11,9 +11,11 @@ div.legend {
   img {
     max-width: 20vw;
   }
+  td.group-name{
+    color:var(--drgstn-text-primary);
+  }
   tr.list-item{
     line-height: calc(#{$legend-row-height} / 2);
-
     th{
       height: $legend-row-height;
       width: $legend-row-height;
@@ -21,6 +23,7 @@ div.legend {
       padding: 0 !important;
       .text{
         font-style: italic;
+        color:var(--drgstn-text-primary);
       }
       .diamond {
         height: $legend-diamond-size;
