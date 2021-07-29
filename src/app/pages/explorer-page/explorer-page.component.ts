@@ -590,6 +590,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.currentViewProteins = this.proteins;
       this.currentViewSelectedTissue = this.selectedTissue;
     }
+    // changes for either way (analysis open and close)
+    this.selectedWrapper = null;
     this.fillQueryItems(this.currentViewNodes);
   }
 
