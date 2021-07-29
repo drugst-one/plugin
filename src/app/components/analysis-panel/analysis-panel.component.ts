@@ -300,12 +300,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
             // else: selected is null
             const updatedNodes = [];
             this.nodeData.nodes.forEach((node) => {
-              let drugType;
-              let drugInTrial;
-              if (node.wrapper.data.netexId && node.wrapper.data.netexId.startswith('d')) {
-                drugType = node.wrapper.data.status;
-                drugInTrial = node.wrapper.data.inTrial;
-              }
+              // let drugType;
+              // let drugInTrial;
+              // if (node.netexId && node.netexId.startsWith('d')) {
+              //   drugType = node.status;
+              //   drugInTrial = node.inTrial;
+              // }
               const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
               const gradient = (this.gradientMap !== {}) && (this.gradientMap[node.id]) ? this.gradientMap[node.id] : 1.0;
               const nodeStyled = NetworkSettings.getNodeStyle(
