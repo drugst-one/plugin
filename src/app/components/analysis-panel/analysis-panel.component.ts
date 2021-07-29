@@ -491,7 +491,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         nodeDetails.label = nodeDetails.label ? nodeDetails.label : nodeDetails[identifier]
       }
       console.log(nodeDetails)
-      // IMPORTANT we set seeds to "selected" and not to seeds. The user should be inspired to run 
+      // IMPORTANT we set seeds to "selected" and not to seeds. The user should be inspired to run
       // further analysis and the button function can be used to highlight seeds
       // option to use scores[node] as gradient, but sccores are very small
       nodes.push(NetworkSettings.getNodeStyle(nodeDetails as Node, config, false, false, 1))
@@ -513,7 +513,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       } else {
         this.legendContext = "drug";
       }
-      
+
     } else if (target === 'drug-target') {
       if (this.highlightSeeds) {
         this.legendContext = "drugTargetAndSeeds";
@@ -521,7 +521,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         this.legendContext = 'drugTarget'
       }
     } else {
-      throw `Could not set legend context based on ${target}.` 
+      throw `Could not set legend context based on ${target}.`
     }
   }
 
@@ -622,7 +622,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     const addItems = [];
     const removeItems = [];
     console.log(e)
-    
+
     for (const i of this.tableSelectedProteins) {
       const wrapper = getWrapperFromNode(i);
       if (oldSelection.indexOf(i) === -1) {

@@ -60,9 +60,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // addd settings to config
+    // add settings to config
     const configObj = JSON.parse(config);
-    this.myConfig = merge(this.myConfig, configObj)
+    this.myConfig = merge(this.myConfig, configObj);
 
     // update Drugst.One according to the settings
     // check if config updates affect network
@@ -382,7 +382,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           // skip if node is not a protein mapped to backend
           return;
         }
-        console.log(node)
         const wrapper = getWrapperFromNode(node);
         if (this.analysis.inSelection(node)) {
           this.analysis.removeItems([wrapper]);
