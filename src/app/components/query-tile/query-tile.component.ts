@@ -38,7 +38,6 @@ export class QueryTileComponent {
       data.label.toLowerCase().indexOf(term) > -1 || this.listStartsWith(data.ensg, term) || data.id.toLowerCase().indexOf(term) > -1 
       || data.proteinName.toLowerCase().indexOf(term) > -1 || data.type.toLowerCase().indexOf(term) > -1 || 
       data.groupName.toLowerCase().indexOf(term) > -1 || data.drugId.toLowerCase().indexOf(term) > -1;
-  
   }
 
   select(item) {
