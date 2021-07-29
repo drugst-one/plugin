@@ -12,6 +12,7 @@ import {
   getDrugNodeId,
   getWrapperFromNode,
   legendContext,
+  NetworkEdge,
   Node,
   NodeAttributeMap,
   NodeInteraction,
@@ -163,6 +164,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public currentViewProteins: Node[];
   public currentViewSelectedTissue: Tissue | null = null;
   public currentViewNodes: Node[];
+  public currentViewEdges: NodeInteraction[];
 
   public expressionExpanded = false;
   public selectedTissue: Tissue | null = null;
@@ -421,6 +423,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
 
     this.currentViewNodes = this.nodeData.nodes;
+    this.currentViewEdges = this.nodeData.edges;
     this.currentViewProteins = this.proteins;
   }
 
@@ -572,13 +575,15 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  analysisWindowChanged($event: [any[], [Node[], Tissue]]) {
+  analysisWindowChanged($event: [any[], [Node[], Tissue], NodeInteraction[]]) {
     if ($event) {
       this.currentViewNodes = $event[0];
+      this.currentViewEdges = $event[2];
       this.currentViewProteins = $event[1][0];
       this.currentViewSelectedTissue = $event[1][1];
     } else {
       this.currentViewNodes = this.nodeData.nodes;
+      this.currentViewEdges = this.nodeData.edges;
       this.currentViewProteins = this.proteins;
       this.currentViewSelectedTissue = this.selectedTissue;
     }
