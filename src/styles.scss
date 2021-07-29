@@ -100,6 +100,7 @@
     margin-left: 15px;
   }
 
+
   div.covex.sidebar {
     height: $height;
     overflow-y: auto;
@@ -148,10 +149,12 @@
     max-height: 600px;
   }
 
+
   div.card-content.overflow {
     overflow: auto;
     max-height: 350px;
   }
+
 
   div.covex.network {
     height: 100%;

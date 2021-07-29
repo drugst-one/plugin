@@ -365,6 +365,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.proteinData.linkNodes();
 
     const {nodes, edges} = this.proteinData.mapDataToNetworkInput(this.myConfig);
+    console.log('first item nodes', nodes[0])
 
     this.nodeData.nodes = new vis.DataSet(nodes);
     this.nodeData.edges = new vis.DataSet(edges);
@@ -372,6 +373,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     const options = NetworkSettings.getOptions('main');
 
     this.networkInternal = new vis.Network(container, this.nodeData, options);
+
     this.networkInternal.on('doubleClick', (properties) => {
       const nodeIds: Array<string> = properties.nodes;
       if (nodeIds.length > 0) {
@@ -381,6 +383,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           // skip if node is not a protein mapped to backend
           return;
         }
+        console.log(node)
         const wrapper = getWrapperFromNode(node);
         if (this.analysis.inSelection(node)) {
           this.analysis.removeItems([wrapper]);
