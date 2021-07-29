@@ -35,7 +35,7 @@
               </span>
             </th>
             <th *ngSwitchCase="'diamond'">
-              <span class="node diamond" 
+              <span class="node diamond"
                     [style.background-color]=nodeGroup.value.color.background
               >
               </span>
@@ -56,7 +56,7 @@
               <span class="node {{ nodeGroup.value.shape }}" [style.background-color]=nodeGroup.value.color.background>
               </span>
               </th>
-            <td>&nbsp;{{ nodeGroup.value.groupName }}</td>
+            <td class="group-name">&nbsp;{{ nodeGroup.value.groupName }}</td>
           </ng-container>
         </ng-container>
 

@@ -186,6 +186,39 @@
     color: var(--drgstn-text-primary)
   }
 
+  .ng-select-container, .ng-dropdown-panel.ng-select-bottom {
+    background-color: var(--drgstn-panel-secondary);
+    border-color: var(--drgstn-border);
+    .ng-value-container {
+
+      .ng-placeholder{
+        color: var(--drgstn-text-primary);
+      }
+    }
+  }
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
+    background-color: var(--drgstn-panel);
+    color:var(--drgstn-text-primary);
+  }
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+    background-color: var(--drgstn-panel-secondary);
+    color:var(--drgstn-text-primary);
+  }
+
+  .ng-select {
+    .ng-arrow-wrapper .ng-arrow {
+      border-top-color: var(--drgstn-text-primary);
+    }
+    .ng-clear-wrapper, .ng-select-container {
+      color: var(--drgstn-text-primary);
+    }
+  }
+
+
+  .ng-select.ng-select-opened>.ng-select-container .ng-arrow{
+    border-bottom-color: var(--drgstn-text-primary);
+  }
+
 
   ::-webkit-scrollbar {
     width: 5px;

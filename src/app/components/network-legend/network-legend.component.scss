@@ -13,6 +13,7 @@ div.legend {
   }
   tr.list-item{
     line-height: calc(#{$legend-row-height} / 2);
+
     th{
       height: $legend-row-height;
       width: $legend-row-height;
