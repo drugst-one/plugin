@@ -191,15 +191,6 @@
     color: var(--drgstn-text-primary)
   }
 
-  // scrolllbar styles
-  network-expander {
-    --thumbBG: var(--drgstn-primary);
-    --scrollbarBG: var(--drgstn-background);
-
-    scrollbar-width: thin;
-    scrollbar-color: var(--thumbBG) var(--scrollbarBG);
-  }
-
   ::-webkit-scrollbar {
     width: 5px;
   }
@@ -222,7 +213,11 @@
   }
 }
 
+// scrolllbar styles
+network-expander {
+  --thumbBG: var(--drgstn-primary);
+  --scrollbarBG: var(--drgstn-background);
 
-
-
-
+  scrollbar-width: thin;
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
