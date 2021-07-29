@@ -651,37 +651,58 @@
             [ngClass]="{ 'text-normal': 'smallStyle' }"
           >
             <div class="card-content overflow">
-            <table class="table selection-table" *ngIf="analysis.getCount() > 0">
-              <thead>
-              <tr>
-                <td>Label</td>
-                <td>Group</td>
-                <td *ngIf="myConfig.identifier !== 'symbol'">Symbol</td>
-                <td *ngIf="myConfig.identifier !== 'uniprot'">Uniprot</td>
-                <td>Actions</td>
-              </tr>
-              </thead>
-              <tbody>
-              <tr *ngFor="let p of analysis.getSelection()">
-                <td><p class="is-capitalized">{{p.data.label}}</p></td>
-                <td><p>{{myConfig.nodeGroups[p.data.group]['groupName']}}</p></td>
-                <td *ngIf="myConfig.identifier !== 'symbol'"><p>{{p.data.symbol}}</p></td>
-                <td *ngIf="myConfig.identifier !== 'uniprot'"><p>{{p.data.uniprotAc}}</p></td>
-                <td>
-                  <button (click)="analysis.removeItems([p])" class="button is-small is-danger is-outlined has-tooltip"
-                          tooltipPosition="top" pTooltip="Remove from selection.">
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-            <i *ngIf="analysis.getCount() === 0">
-              Double-click on a node to select it for the analysis.
-            </i>
+              <table
+                class="table selection-table"
+                *ngIf="analysis.getCount() > 0"
+              >
+                <thead>
+                  <tr>
+                    <td>Label</td>
+                    <td>Group</td>
+                    <td *ngIf="myConfig.identifier !== 'symbol'">Symbol</td>
+                    <td *ngIf="myConfig.identifier !== 'uniprot'">Uniprot</td>
+                    <td>Actions</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let p of analysis.getSelection()">
+                    <td>
+                      <p class="is-capitalized">{{ p.data.label }}</p>
+                    </td>
+                    <td>
+                      <p>
+                        {{ myConfig.nodeGroups[p.data.group]["groupName"] }}
+                      </p>
+                    </td>
+                    <td *ngIf="myConfig.identifier !== 'symbol'">
+                      <p>{{ p.data.symbol }}</p>
+                    </td>
+                    <td *ngIf="myConfig.identifier !== 'uniprot'">
+                      <p>{{ p.data.uniprotAc }}</p>
+                    </td>
+                    <td>
+                      <button
+                        (click)="analysis.removeItems([p])"
+                        class="
+                          button
+                          is-small is-danger is-outlined
+                          has-tooltip
+                        "
+                        tooltipPosition="top"
+                        pTooltip="Remove from selection."
+                      >
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <i *ngIf="analysis.getCount() === 0">
+                Double-click on a node to select it for the analysis.
+              </i>
             </div>
 
-              <!-- <footer class="card-footer" *ngIf="selectedAnalysisToken">
+            <!-- <footer class="card-footer" *ngIf="selectedAnalysisToken">
                 <a (click)="analysis.addSeeds(currentViewNodes)"
                   class="card-footer-item has-text-success" tooltipPosition="top" pTooltip="Add all visible seeds.">
 
@@ -726,8 +747,8 @@
               </a>
               </footer> -->
 
-            <!-- <footer class="card-footer">
-                <a (click)="analysis.invertSelection(currentViewNodes)" class="card-footer-item text-primary"
+            <footer class="card-footer">
+              <!-- <a (click)="analysis.invertSelection(currentViewNodes)" class="card-footer-item text-primary"
                   tooltipPosition="top" pTooltip="Invert the current selection.">
               <span class="icon">
                 <i class="fa fa-sync"></i>
@@ -735,19 +756,22 @@
                   <span>
                 Invert
               </span>
-                </a>
-                <a (click)="analysis.resetSelection()" class="card-footer-item text-danger"
-                  tooltipPosition="top" pTooltip="Remove all entries from the selection.">
-              <span class="icon">
-                <i class="fa fa-broom"></i>
-              </span>
-                  <span>
-                Reset
-              </span>
-                </a>
-              </footer> -->
+                </a> -->
+              <a
+                *ngIf="analysis.getSelection().length"
+                (click)="analysis.resetSelection()"
+                class="card-footer-item text-danger"
+                tooltipPosition="top"
+                pTooltip="Remove all entries from the selection."
+              >
+                <span class="icon">
+                  <i class="fa fa-broom"></i>
+                </span>
+                <span> Reset </span>
+              </a>
+            </footer>
 
-              <!-- </div> -->
+            <!-- </div> -->
             <!-- </div>  -->
           </div>
         </div>
