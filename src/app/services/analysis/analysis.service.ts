@@ -209,8 +209,8 @@ export class AnalysisService {
   }*/
 
   resetSelection() {
+    this.selectListSubject.next({items: Array.from(this.selectedItems.values()), selected: false});
     this.selectedItems.clear();
-    this.selectListSubject.next({items: [], selected: null});
   }
 
   idInSelection(nodeId: string): boolean {
