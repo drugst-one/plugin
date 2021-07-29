@@ -1,10 +1,10 @@
 <p-table *ngIf="tableProteins.length > 0" selectionMode="multiple"
          [value]="tableProteins" [selection]="tableSelectedProteins" dataKey="uniprotAc"
-         (selectionChange)="tableProteinSelection($event)">
+         (selectionChange)="tableProteinSelection($event)" class="drgstn">
   <ng-template pTemplate="header">
     <tr>
       <th class="checkbox-col">
-        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        <p-tableHeaderCheckbox class="drgstn"></p-tableHeaderCheckbox>
       </th>
       <th [pSortableColumn]="'uniprotAc'">
         UniProt Code
@@ -35,7 +35,7 @@
   <ng-template pTemplate="body" let-e>
     <tr>
       <td>
-        <p-tableCheckbox [value]="e"></p-tableCheckbox>
+        <p-tableCheckbox [value]="e" class="drgstn"></p-tableCheckbox>
       </td>
       <td><a href="https://www.uniprot.org/uniprot/{{ e.uniprotAc }}" target="_blank">{{ e.uniprotAc }}</a></td>
       <td>{{e.symbol}}</td>
