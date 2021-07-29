@@ -11,7 +11,7 @@
             <th>
               <img [src]="nodeGroup.value.image" class="legend-icon"/>
             </th>
-            <td>&nbsp;{{ nodeGroup.value.groupName }}</td>
+            <td class="group-name">&nbsp;{{ nodeGroup.value.groupName }}</td>
           </ng-container>
 
           <ng-container *ngIf="!nodeGroup.value.image" [ngSwitch]="nodeGroup.value.shape">
@@ -35,7 +35,7 @@
               </span>
             </th>
             <th *ngSwitchCase="'diamond'">
-              <span class="node diamond" 
+              <span class="node diamond"
                     [style.background-color]=nodeGroup.value.color.background
               >
               </span>
@@ -51,12 +51,12 @@
               <span class="node circle" [style.background-color]=nodeGroup.value.color.background>
               ...
               </span>
-              </th>
+            </th>
             <th *ngSwitchDefault>
               <span class="node {{ nodeGroup.value.shape }}" [style.background-color]=nodeGroup.value.color.background>
               </span>
-              </th>
-            <td>&nbsp;{{ nodeGroup.value.groupName }}</td>
+            </th>
+            <td class="group-name">&nbsp;{{ nodeGroup.value.groupName }}</td>
           </ng-container>
         </ng-container>
 
@@ -70,7 +70,7 @@
             <hr *ngIf="!edgeGroup.value.dashes" class="edge" [style.background-color]=edgeGroup.value.color>
             <hr *ngIf="edgeGroup.value.dashes" class="edge dashes" [style.color]=edgeGroup.value.color>
           </th>
-          <td>&nbsp;{{ edgeGroup.value.groupName }}</td>
+          <td class="group-name">&nbsp;{{ edgeGroup.value.groupName }}</td>
         </ng-container>
       </tr>
     </ng-container>
