@@ -32,7 +32,7 @@ import {NetworkSettings} from '../../network-settings';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 import {defaultConfig, IConfig} from 'src/app/config';
 import { mapCustomEdge, mapCustomNode } from 'src/app/main-network';
-import { removeDuplicateObjectsFromList } from 'src/app/utils';
+import { downLoadFile, removeDuplicateObjectsFromList } from 'src/app/utils';
 
 
 declare var vis: any;
@@ -394,8 +394,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     return `${environment.backend}task_result/?token=${this.token}&view=${view}&fmt=csv`;
   }
 
-  public graphmlLink(): string {
-    return `${environment.backend}graph_export/?token=${this.token}`;
+  public graphmlLink() {
+    const data = {nodes: this.nodeData.nodes.get(), edges: this.nodeData.edges.get()}
+    this.netex.graphmlLink(data).subscribe(response => {
+      return downLoadFile(response, "application/xml");
+    })
   }
 
   public inferEdgeGroup(edge: object): EdgeType {

@@ -3,7 +3,7 @@ import {environment} from '../../../environments/environment';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {AlgorithmType, QuickAlgorithmType} from '../analysis/analysis.service';
 import { Observable } from 'rxjs';
-import { Tissue, Node} from 'src/app/interfaces';
+import { Tissue, Node, EdgeType} from 'src/app/interfaces';
 import { InteractionDrugProteinDB } from 'src/app/config';
 
 @Injectable({
@@ -106,5 +106,13 @@ export class NetexControllerService {
       proteins: genesBackendIds
     }
     return this.http.post<any>(`${environment.backend}adjacent_drugs/`, params);
+  }
+
+  public graphmlLink(graph_data: {edges: EdgeType[], nodes: Node[]}) {
+    /**
+     * Sends complete graph data to backend where it is written to graphml File.
+     * The file is returned as download for the user.
+     */
+    return this.http.post(`${environment.backend}graph_export/`, graph_data, {responseType: 'text'});
   }
 }

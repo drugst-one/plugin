@@ -175,7 +175,7 @@
                   <button
                     (click)="toImage()"
                     class="
-                      button
+                      button footer-buttons
                       is-primary is-rounded
                       has-tooltip
                       network-footer-toolbar-element
@@ -189,6 +189,28 @@
                     </span>
                     <span [ngClass]="{ 'text-normal': smallStyle }"
                     >Screenshot</span
+                    >
+                  </button>
+                </ng-container>
+
+                <ng-container *ngIf="myConfig.showFooterButtonExportGraphml">
+                  <button
+                    (click)="graphmlLink()"
+                    class="
+                      button footer-buttons
+                      is-success is-rounded
+                      has-tooltip
+                      network-footer-toolbar-element
+                    "
+                    pTooltip="Export this network as .graphml file."
+                    tooltipStyleClass="drgstn"
+                    tooltipPosition="top"
+                  >
+                    <span class="icon">
+                      <i class="fas fa-download" aria-hidden="true"></i>
+                    </span>
+                    <span [ngClass]="{ 'text-normal': smallStyle }"
+                    >Export as .graphml</span
                     >
                   </button>
                 </ng-container>

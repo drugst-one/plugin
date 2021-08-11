@@ -25,7 +25,7 @@ import domtoimage from 'dom-to-image';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, InteractionDatabase, NodeGroup} from '../../config';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
-import {removeDuplicateObjectsFromList} from '../../utils'
+import {downLoadFile, removeDuplicateObjectsFromList} from '../../utils'
 import * as merge from 'lodash/fp/merge';
 import { AnalysisPanelComponent } from 'src/app/components/analysis-panel/analysis-panel.component';
 
@@ -337,6 +337,13 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       scale: zoomScale,
       animation: true,
     });
+  }
+
+  public graphmlLink() {
+    const data = {nodes: this.nodeData.nodes.get(), edges: this.nodeData.edges.get()}
+    this.netex.graphmlLink(data).subscribe(response => {
+      return downLoadFile(response, "application/xml");
+    })
   }
 
   public async openSummary(item: Wrapper, zoom: boolean) {
