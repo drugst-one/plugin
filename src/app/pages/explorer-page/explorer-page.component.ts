@@ -389,7 +389,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           // skip if node is not a protein mapped to backend
           return;
         }
-        console.log(node)
         const wrapper = getWrapperFromNode(node);
         if (this.analysis.inSelection(node)) {
           this.analysis.removeItems([wrapper]);

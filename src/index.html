@@ -20,6 +20,10 @@
 <input type="checkbox" onclick=changeConfigStr('{"showSelection":'+this.checked+'}') checked /> Show Selection<br>
 <input type="checkbox" onclick=changeConfigStr('{"showFooter":'+this.checked+'}') checked /> Show Footer<br>
 <input type="checkbox" onclick=changeConfigStr('{"showLegend":'+this.checked+'}') checked /> Show Legend<br>
+<input type="checkbox" onclick=changeConfigStr('{"showFooterButtonScreenshot":'+this.checked+'}') checked /> Show Screenshot button<br>
+<input type="checkbox" onclick=changeConfigStr('{"showFooterButtonExportGraphml":'+this.checked+'}') checked /> Show Export As Graphml Button<br>
+
+
 <input id="new_color" type="text" /> <button onclick=changeColor(document.getElementById("new_color").value) >Set Color </button> <br>
 <button onclick=changeConfigStr('{"legendPos":"left"}') > Legend to Left </button> <br>
 <button onclick=changeConfigStr('{"legendPos":"right"}') > Legend to Right </button> <br>
@@ -39,7 +43,8 @@
                       "edgeGroups": {"xxx": {"color": "black", "groupName": "xxx Group", "dashes": [1, 2]}, "notdashes": {"color": "black", "groupName": "not dashes Group"}},
                       "identifier": "symbol",
                       "nodeShadow": true,
-                      "edgeShadow": true
+                      "edgeShadow": true,
+                      "legendUrl": "https://exbio.wzw.tum.de/covex/assets/leg1.png"
                     }'
                     network='{
                       "nodes": [{"id": "TP53", "group": "0.5"}, {"id": "MYC", "group": "pugGroup"}, {"id": "Patient No. 5", "group": "patientgroup"}, {"label": "PTEN", "id": "PTEN", "group": 0.5, "value":"5"}],

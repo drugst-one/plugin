@@ -70,6 +70,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     for (const key of Object.keys(config)) {
       this.myConfig[key] = config[key];
     }
+    console.log(this.myConfig)
   }
   @Output() tokenChange = new EventEmitter<string | null>();
   @Output() showDetailsChange = new EventEmitter<Wrapper>();
@@ -493,7 +494,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         nodeDetails.group = nodeDetails.group ? nodeDetails.group : 'default';
         nodeDetails.label = nodeDetails.label ? nodeDetails.label : nodeDetails[identifier]
       }
-      console.log(nodeDetails)
       // IMPORTANT we set seeds to "selected" and not to seeds. The user should be inspired to run 
       // further analysis and the button function can be used to highlight seeds
       // option to use scores[node] as gradient, but sccores are very small
@@ -624,7 +624,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     this.tableSelectedProteins = e;
     const addItems = [];
     const removeItems = [];
-    console.log(e)
     
     for (const i of this.tableSelectedProteins) {
       const wrapper = getWrapperFromNode(i);

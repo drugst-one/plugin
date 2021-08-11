@@ -4,14 +4,14 @@
 div.legend {
   position: absolute;
   bottom: 0;
-  left: 1rem;
-  bottom: 1rem;
+  margin-left: 1rem;
   z-index: $explorer-networklegend-z;
   &.right {
     right: 0;
   }
   img {
     max-width: 20vw;
+    // margin-bottom: 1rem;
   }
   td.group-name{
     color:var(--drgstn-text-primary);
