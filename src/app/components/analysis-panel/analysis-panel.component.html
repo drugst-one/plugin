@@ -29,6 +29,14 @@
           <div>
             <table class="table is-narrow">
               <tbody>
+                <tr *ngIf="result && result.geneInteractionDataset !== undefined">
+                  <td>Protein-Protein Interaction Dataset</td>
+                  <td>{{result.geneInteractionDataset.name}} (Version {{result.geneInteractionDataset.version}})</td>
+                </tr>
+                <tr *ngIf="result && result.drugInteractionDataset !== undefined">
+                  <td>Protein-Drug Interaction Dataset</td>
+                  <td>{{result.drugInteractionDataset.name}} (Version {{result.drugInteractionDataset.version}})</td>
+                </tr>
               <tr *ngIf="task.info.parameters.resultSize !== undefined">
                 <td>Result Size</td>
                 <td>{{task.info.parameters.resultSize}}</td>

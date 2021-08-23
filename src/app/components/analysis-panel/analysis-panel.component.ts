@@ -77,8 +77,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   @Output() visibleItems = new EventEmitter<[any[], [Node[], Tissue], NodeInteraction[]]>();
 
   public task: Task | null = null;
+  public result: any = null;
   public myConfig: IConfig = JSON.parse(JSON.stringify(defaultConfig));
-
 
   public network: any;
   private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
@@ -165,8 +165,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       }
 
       if (this.task && this.task.info.done) {
-        const result = await this.netex.getTaskResult(this.token);
-        const nodeAttributes = result.nodeAttributes || {};
+        this.result = await this.netex.getTaskResult(this.token);
+        console.log(this.result)
+        const nodeAttributes = this.result.nodeAttributes || {};
 
         this.seedMap = nodeAttributes.isSeed || {};
 
@@ -177,7 +178,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         this.showDrugs = false;
 
         // Create
-        const {nodes, edges} = this.createNetwork(result);
+        const {nodes, edges} = this.createNetwork(this.result);
         this.nodeData.nodes = new vis.DataSet(nodes);
         this.nodeData.edges = new vis.DataSet(edges);
 
