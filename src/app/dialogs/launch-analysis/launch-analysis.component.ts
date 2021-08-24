@@ -28,6 +28,8 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public config: IConfig;
   @Output()
   public showChange = new EventEmitter<boolean>();
+  @Output()
+  public taskEvent = new EventEmitter<object>();
 
   public algorithm: AlgorithmType | QuickAlgorithmType;
 
@@ -173,7 +175,9 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       }
       parameters.hub_penalty = this.multisteinerHubPenalty;
     }
-    await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
+    const token = await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
+    const object = {taskId: token, algorithm: this.algorithm, target: this.target, params: parameters};
+    this.taskEvent.emit(object);
   }
 
 }

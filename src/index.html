@@ -29,6 +29,7 @@
 <button onclick=changeConfigStr('{"legendPos":"left"}') > Legend to Left </button> <br>
 <button onclick=changeConfigStr('{"legendPos":"right"}') > Legend to Right </button> <br>
 <button onclick=changeConfigStr('{"interactions":"omnipath"}') >Get Omnipath Interactions </button> <br>
+<button onclick="initTaskEventListener()">Init Task-Eventlistener</button> <br>
 
 <!--<input type="checkbox" onclick=changeConfigStr('{"showSimpleAnalysis":'+this.checked+'}') checked /> Show SimpleAnalysis<br>-->
 
@@ -94,6 +95,11 @@
     const netexp = document.getElementById('netexp1');
     netexp.setAttribute('config', config);
   }
+
+  function initTaskEventListener(){
+    document.getElementsByTagName("network-expander")[0].addEventListener("taskEvent",(event)=>{console.log(event.detail)})
+  }
+
 
   function setNetwork(nw) {
     const netexp = document.getElementById(nw);

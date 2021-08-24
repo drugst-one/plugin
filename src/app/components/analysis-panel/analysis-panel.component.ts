@@ -70,7 +70,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     for (const key of Object.keys(config)) {
       this.myConfig[key] = config[key];
     }
-    console.log(this.myConfig)
   }
   @Output() tokenChange = new EventEmitter<string | null>();
   @Output() showDetailsChange = new EventEmitter<Wrapper>();
@@ -166,7 +165,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
       if (this.task && this.task.info.done) {
         this.result = await this.netex.getTaskResult(this.token);
-        console.log(this.result)
         const nodeAttributes = this.result.nodeAttributes || {};
 
         this.seedMap = nodeAttributes.isSeed || {};

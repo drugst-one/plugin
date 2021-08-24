@@ -8,6 +8,7 @@
       [target]="analysisDialogTarget"
       [config]="myConfig"
       [inputNetwork]="{ nodes: proteins, edges: edges }"
+      (taskEvent)="emitTaskEvent($event)"
     >
     </app-launch-analysis>
 

@@ -289,7 +289,7 @@ export class AnalysisService {
         position: 'top-center',
         animate: {in: 'fadeIn', out: 'fadeOut'}
       });
-      return;
+      return '';
     }
     const resp = await this.http.post<any>(`${environment.backend}task/`, {
       algorithm,
@@ -300,6 +300,7 @@ export class AnalysisService {
     this.tokens.push(resp.token);
     localStorage.setItem(`netex-tokens-${window.location.host}`, JSON.stringify(this.tokens));
     this.startWatching();
+    return resp.token;
   }
 
   public isLaunchingQuick(): boolean {
