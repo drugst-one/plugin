@@ -37,7 +37,7 @@
   }
   &.table-tab {
     // 100% - #{$network-header-height} - #{$analysis-tab-header-height} - normalization-button
-    height: calc(100% - 9rem);
+    height: calc(100% - 40px - 1.5rem - 72px);
   }
 
   h4 {

@@ -48,6 +48,7 @@ export interface IConfig {
   showFooter: boolean;
   showFooterButtonExpression: boolean;
   showFooterButtonScreenshot: boolean;
+  showFooterButtonExportGraphml: boolean;
   showLegend: boolean;
   showLegendNodes: boolean;
   showLegendEdges: boolean;
@@ -86,6 +87,7 @@ export const defaultConfig: IConfig = {
   showLegend: true,
   showFooterButtonExpression: true,
   showFooterButtonScreenshot: true,
+  showFooterButtonExportGraphml: true,
   identifier: 'symbol',
   interactionDrugProtein: 'DrugBank',
   interactionProteinProtein: 'STRING',

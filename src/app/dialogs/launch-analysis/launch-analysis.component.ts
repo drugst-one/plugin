@@ -112,12 +112,9 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       config: this.config,
       input_network: this.inputNetwork
     };
-    console.log("config")
-    console.log(this.config)
 
     parameters.ppi_dataset = this.config.interactionProteinProtein;
     parameters.pdi_dataset = this.config.interactionDrugProtein;
-    console.log(this.target)
     parameters.target = this.target === 'drug' ? 'drug' : 'drug-target';
     // pass network data to reconstruct network in analysis result to connect non-proteins to results
     // drop interactions in nodes beforehand to no cause cyclic error, information is contained in edges
@@ -176,9 +173,6 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       }
       parameters.hub_penalty = this.multisteinerHubPenalty;
     }
-    console.log('parameters')
-
-    console.log(parameters)
     await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
   }
 

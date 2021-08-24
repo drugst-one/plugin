@@ -32,7 +32,7 @@ import {NetworkSettings} from '../../network-settings';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 import {defaultConfig, IConfig} from 'src/app/config';
 import { mapCustomEdge, mapCustomNode } from 'src/app/main-network';
-import { removeDuplicateObjectsFromList } from 'src/app/utils';
+import { downLoadFile, removeDuplicateObjectsFromList } from 'src/app/utils';
 
 
 declare var vis: any;
@@ -70,14 +70,15 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     for (const key of Object.keys(config)) {
       this.myConfig[key] = config[key];
     }
+    console.log(this.myConfig)
   }
   @Output() tokenChange = new EventEmitter<string | null>();
   @Output() showDetailsChange = new EventEmitter<Wrapper>();
   @Output() visibleItems = new EventEmitter<[any[], [Node[], Tissue], NodeInteraction[]]>();
 
   public task: Task | null = null;
+  public result: any = null;
   public myConfig: IConfig = JSON.parse(JSON.stringify(defaultConfig));
-
 
   public network: any;
   private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
@@ -164,8 +165,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       }
 
       if (this.task && this.task.info.done) {
-        const result = await this.netex.getTaskResult(this.token);
-        const nodeAttributes = result.nodeAttributes || {};
+        this.result = await this.netex.getTaskResult(this.token);
+        console.log(this.result)
+        const nodeAttributes = this.result.nodeAttributes || {};
 
         this.seedMap = nodeAttributes.isSeed || {};
 
@@ -176,7 +178,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         this.showDrugs = false;
 
         // Create
-        const {nodes, edges} = this.createNetwork(result);
+        const {nodes, edges} = this.createNetwork(this.result);
         this.nodeData.nodes = new vis.DataSet(nodes);
         this.nodeData.edges = new vis.DataSet(edges);
 
@@ -394,8 +396,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     return `${environment.backend}task_result/?token=${this.token}&view=${view}&fmt=csv`;
   }
 
-  public graphmlLink(): string {
-    return `${environment.backend}graph_export/?token=${this.token}`;
+  public graphmlLink() {
+    const data = {nodes: this.nodeData.nodes.get(), edges: this.nodeData.edges.get()}
+    this.netex.graphmlLink(data).subscribe(response => {
+      return downLoadFile(response, "application/xml");
+    })
   }
 
   public inferEdgeGroup(edge: object): EdgeType {
@@ -490,8 +495,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         nodeDetails.group = nodeDetails.group ? nodeDetails.group : 'default';
         nodeDetails.label = nodeDetails.label ? nodeDetails.label : nodeDetails[identifier]
       }
-      console.log(nodeDetails)
-      // IMPORTANT we set seeds to "selected" and not to seeds. The user should be inspired to run
       // further analysis and the button function can be used to highlight seeds
       // option to use scores[node] as gradient, but sccores are very small
       nodes.push(NetworkSettings.getNodeStyle(nodeDetails as Node, config, false, false, 1))
@@ -621,8 +624,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     this.tableSelectedProteins = e;
     const addItems = [];
     const removeItems = [];
-    console.log(e)
-
     for (const i of this.tableSelectedProteins) {
       const wrapper = getWrapperFromNode(i);
       if (oldSelection.indexOf(i) === -1) {

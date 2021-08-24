@@ -29,6 +29,14 @@
           <div>
             <table class="table is-narrow">
               <tbody>
+                <tr *ngIf="result && result.geneInteractionDataset !== undefined">
+                  <td>Protein-Protein Interaction Dataset</td>
+                  <td>{{result.geneInteractionDataset.name}} (Version {{result.geneInteractionDataset.version}})</td>
+                </tr>
+                <tr *ngIf="result && result.drugInteractionDataset !== undefined">
+                  <td>Protein-Drug Interaction Dataset</td>
+                  <td>{{result.drugInteractionDataset.name}} (Version {{result.drugInteractionDataset.version}})</td>
+                </tr>
               <tr *ngIf="task.info.parameters.resultSize !== undefined">
                 <td>Result Size</td>
                 <td>{{task.info.parameters.resultSize}}</td>
@@ -142,8 +150,11 @@
           <div class="network-footer-toolbar-inner-container">
 
             <ng-container *ngIf="myConfig.showFooterButtonScreenshot">
-              <button class="button is-primary is-rounded has-tooltip network-footer-toolbar-element"
-                      pTooltip="Take a screenshot of the current network." tooltipStyleClass="drgstn" tooltipPosition="top" (click)="toImage()">
+              <button class="button is-primary is-rounded has-tooltip network-footer-toolbar-element footer-buttons"
+                      pTooltip="Take a screenshot of the current network." 
+                      tooltipStyleClass="drgstn" 
+                      tooltipPosition="top" 
+                      (click)="toImage()">
                   <span class="icon">
                     <i class="fas fa-camera" aria-hidden="true"></i>
                   </span>
@@ -153,19 +164,22 @@
               </button>
             </ng-container>
 
-            <div class="field network-footer-toolbar-element">
-              <p class="control footer-buttons">
-                <a [href]="graphmlLink()" class="button is-success is-rounded has-tooltip"
-                   pTooltip="Export this network as .graphml file." tooltipStyleClass="drgstn" tooltipPosition="top">
-                  <span class="icon">
-                    <i class="fas fa-download" aria-hidden="true"></i>
-                  </span>
-                  <span [ngClass]="{'text-normal':smallStyle}">
-                    Export as .graphml
-                  </span>
-                </a>
-              </p>
-            </div>
+            <ng-container *ngIf="myConfig.showFooterButtonExportGraphml">
+              <button
+                (click)="graphmlLink()"
+                class="button is-primary is-rounded has-tooltip network-footer-toolbar-element footer-buttons"
+                pTooltip="Export this network as .graphml file."
+                tooltipStyleClass="drgstn"
+                tooltipPosition="top"
+              >
+                <span class="icon">
+                  <i class="fas fa-download" aria-hidden="true"></i>
+                </span>
+                <span [ngClass]="{ 'text-normal': smallStyle }"
+                >.graphml</span
+                >
+              </button>
+            </ng-container>
 
             <!--          <div class="field">-->
             <!--            <p class="control footer-buttons">-->
@@ -226,13 +240,13 @@
                         [value]="highlightSeeds" (valueChange)="updateHighlightSeeds($event)"></app-toggle>
 
             <app-toggle *ngIf="task.info.target === 'drug-target'" class="footer-buttons network-footer-toolbar-element"
-                        textOn="Drugs On" textOff="Off"
+                        textOn="Drugs" textOff="Off"
                         tooltipOn="Display adjacent drugs ON."
                         tooltipOff="Display adjacent drugs OFF."
                         [smallStyle]="smallStyle"
                         [value]="adjacentDrugs" (valueChange)="updateAdjacentDrugs($event)"></app-toggle>
 
-            <app-toggle class="footer-buttons network-footer-toolbar-element" textOn="Animation On" textOff="Off"
+            <app-toggle class="footer-buttons network-footer-toolbar-element" textOn="Animation" textOff="Off"
                         tooltipOn="Enable the network animation."
                         tooltipOff="Disable the network animation and freeze nodes."
                         [smallStyle]="smallStyle"

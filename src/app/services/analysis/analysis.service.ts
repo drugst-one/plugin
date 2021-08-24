@@ -49,6 +49,8 @@ export class AnalysisService {
   private selections = new Map<string, Map<string, Wrapper>>();
 
   public tokens: string[] = [];
+  private tokensCookieKey = `netex-tokens-${window.location.host}`;
+  private tokensFinishedCookieKey = `netex-finishedTokens-${window.location.host}`;
   public finishedTokens: string[] = [];
   public tasks: Task[] = [];
 
@@ -60,8 +62,8 @@ export class AnalysisService {
   private tissues: Tissue[] = [];
 
   constructor(private http: HttpClient, public netex: NetexControllerService) {
-    const tokens = localStorage.getItem('tokens');
-    const finishedTokens = localStorage.getItem('finishedTokens');
+    const tokens = localStorage.getItem(this.tokensCookieKey);
+    const finishedTokens = localStorage.getItem(this.tokensFinishedCookieKey);
 
     if (tokens) {
       this.tokens = JSON.parse(tokens);
@@ -80,14 +82,14 @@ export class AnalysisService {
     this.tokens = this.tokens.filter((item) => item !== token);
     this.finishedTokens = this.finishedTokens.filter((item) => item !== token);
     this.tasks = this.tasks.filter((item) => item.token !== (token));
-    localStorage.setItem('tokens', JSON.stringify(this.tokens));
+    localStorage.setItem(this.tokensCookieKey, JSON.stringify(this.tokens));
   }
 
   removeAllTasks() {
     this.tasks = [];
     this.finishedTokens = [];
     this.tokens = [];
-    localStorage.removeItem('tokens');
+    localStorage.removeItem(this.tokensCookieKey);
   }
 
   async getTasks() {
@@ -261,7 +263,7 @@ export class AnalysisService {
       },
     }).toPromise();
     this.tokens.push(resp.token);
-    localStorage.setItem('tokens', JSON.stringify(this.tokens));
+    localStorage.setItem(this.tokensCookieKey, JSON.stringify(this.tokens));
     this.startWatching();
 
     toast({
@@ -296,7 +298,7 @@ export class AnalysisService {
     }).toPromise();
 
     this.tokens.push(resp.token);
-    localStorage.setItem('tokens', JSON.stringify(this.tokens));
+    localStorage.setItem(`netex-tokens-${window.location.host}`, JSON.stringify(this.tokens));
     this.startWatching();
   }
 
@@ -346,11 +348,11 @@ export class AnalysisService {
             if (task.info.done) {
               this.finishedTokens.push(task.token);
               this.showToast(task, 'DONE');
-              localStorage.setItem('finishedTokens', JSON.stringify(this.finishedTokens));
+              localStorage.setItem(this.tokensFinishedCookieKey, JSON.stringify(this.finishedTokens));
             } else if (task.info.failed) {
               this.finishedTokens.push(task.token);
               this.showToast(task, 'FAILED');
-              localStorage.setItem('finishedTokens', JSON.stringify(this.finishedTokens));
+              localStorage.setItem(this.tokensFinishedCookieKey, JSON.stringify(this.finishedTokens));
             } else {
             }
           }

@@ -119,3 +119,17 @@ export function removeDuplicateObjectsFromList(nodes: Node[], attribute: string)
   return filteredArray;
 }
 
+/**
+ * Method is use to download file.
+ * @param data - Array Buffer data
+ * @param type - type of the document.
+ */
+export function downLoadFile(data: any, type: string) {
+  let blob = new Blob([data], { type: type});
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = 'test.graphml';
+  // start download
+  a.click();
+}
+
