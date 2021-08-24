@@ -174,9 +174,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   // keys are node netexIds
   public expressionMap: NodeAttributeMap = undefined;
 
-  @Input()
-  public textColor = 'red';
-
   @ViewChild('network', {static: false}) networkEl: ElementRef;
   @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
 

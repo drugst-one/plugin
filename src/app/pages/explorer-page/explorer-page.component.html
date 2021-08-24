@@ -1,9 +1,8 @@
 <div
   id="appWindow"
-  [style.color]="textColor"
   (window:resize)="onResize($event)"
 >
-  <div class="is-hidden-mobile fullheight">
+  <div class="is-hidden-mobile fullheight" id="appContainer">
     <app-launch-analysis
       [(show)]="showAnalysisDialog"
       [target]="analysisDialogTarget"
