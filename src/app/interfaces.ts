@@ -37,6 +37,11 @@ export type legendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget'
 /// netexId to expressionlvl
 export type NodeAttributeMap = { string: number } | {};
 
+export interface NetexInteraction {
+  dataset: string;
+  proteinA: string;
+  proteinB: string;
+}
 
 export interface NodeInteraction {
   from: string;

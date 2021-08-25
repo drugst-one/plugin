@@ -18,7 +18,7 @@ import {
   Tissue,
   Wrapper
 } from '../../interfaces';
-import {mapCustomEdge, mapCustomNode, ProteinNetwork} from '../../main-network';
+import {mapCustomEdge, mapCustomNode, mapNetexEdge, ProteinNetwork} from '../../main-network';
 import {AnalysisService} from '../../services/analysis/analysis.service';
 import {OmnipathControllerService} from '../../services/omnipath-controller/omnipath-controller.service';
 import domtoimage from 'dom-to-image';
@@ -369,9 +369,18 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (this.networkPositions) {
       this.proteinData.updateNodePositions(this.networkPositions)
     }
-    this.proteinData.linkNodes();
+    // TODO do we still need this?
+    // this.proteinData.linkNodes();
 
     const {nodes, edges} = this.proteinData.mapDataToNetworkInput(this.myConfig);
+
+    console.log('nodes', nodes)
+    console.log('edges', edges)
+    if (this.myConfig.autofillEdges && nodes.length) {
+      const netexEdges = await this.netex.fetchEdges(nodes, this.myConfig.interactionProteinProtein);
+      console.log(netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.myConfig)))
+      edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.myConfig)))
+    }
 
     this.nodeData.nodes = new vis.DataSet(nodes);
     this.nodeData.edges = new vis.DataSet(edges);

@@ -4,7 +4,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {AlgorithmType, QuickAlgorithmType} from '../analysis/analysis.service';
 import { Observable } from 'rxjs';
 import { Tissue, Node, EdgeType} from 'src/app/interfaces';
-import { InteractionDrugProteinDB } from 'src/app/config';
+import { InteractionDrugProteinDB, InteractionProteinProteinDB } from 'src/app/config';
 
 @Injectable({
   providedIn: 'root'
@@ -114,5 +114,14 @@ export class NetexControllerService {
      * The file is returned as download for the user.
      */
     return this.http.post(`${environment.backend}graph_export/`, graph_data, {responseType: 'text'});
+  }
+
+  public async fetchEdges(nodes: Node[], dataset: InteractionProteinProteinDB): Promise<any> {
+    /**
+     * Tries to map every node to a node object in out database
+     * Returns list of mapped nodes if node was found, otherwise original node to not lose information
+     */
+    const payload = {nodes: nodes, dataset: dataset};
+    return this.http.post(`${environment.backend}fetch_edges/`, payload).toPromise();
   }
 }

@@ -56,6 +56,7 @@ export interface IConfig {
   edgeGroups: { [key: string]: EdgeGroup };
   interactionDrugProtein: InteractionDrugProteinDB;
   interactionProteinProtein: InteractionProteinProteinDB;
+  autofillEdges: boolean;
   interactions?: InteractionDatabase;
   identifier?: Identifier;
   nodeShadow?: boolean;
@@ -93,6 +94,7 @@ export const defaultConfig: IConfig = {
   interactionProteinProtein: 'STRING',
   nodeShadow: true,
   edgeShadow: true,
+  autofillEdges: true,
   nodeGroups: {
     // all NodeGroups but the default group must be set, if not provided by the user, they will be taken from here
     // IMPORTANT: node color must be hexacode!

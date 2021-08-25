@@ -1,5 +1,5 @@
 import { defaultConfig, IConfig } from './config';
-import {NodeInteraction, Node, getProteinNodeId} from './interfaces';
+import {NodeInteraction, Node, getProteinNodeId, NetexInteraction} from './interfaces';
 import * as merge from 'lodash/fp/merge'; 
 
 export function getDatasetFilename(dataset: Array<[string, string]>): string {
@@ -115,5 +115,20 @@ export function mapCustomEdge(customEdge: NodeInteraction, config: IConfig): any
     ...edge,
     ...customEdge
   };
+  return edge;
+}
+
+/** Maps netex retrieved edge to network edge object
+ * Uses the default group for edge objects.
+ * 
+ * @param customEdge 
+ * @param config 
+ * @returns 
+ */
+ export function mapNetexEdge(customEdge: NetexInteraction, config: IConfig): any {
+  const edge = JSON.parse(JSON.stringify(config.edgeGroups.default));
+  edge['from'] = customEdge['proteinA'];
+  edge['to'] = customEdge['proteinB'];
+  edge['dataset'] = customEdge['dataset'];
   return edge;
 }
