@@ -31,6 +31,9 @@
 <button onclick=changeConfigStr('{"interactions":"omnipath"}') >Get Omnipath Interactions </button> <br>
 <button onclick="initTaskEventListener()">Init Task-Eventlistener</button> <br>
 
+<input id="taskID" type="text" /> <button onclick=loadTaskID(document.getElementById("taskID").value) >Load TaskID</button> <br>
+
+
 <!--<input type="checkbox" onclick=changeConfigStr('{"showSimpleAnalysis":'+this.checked+'}') checked /> Show SimpleAnalysis<br>-->
 
 <br>
@@ -128,6 +131,13 @@
     for(var i = 0; i < elements_text.length; i++){
       elements_text[i].setAttribute('style', `color: ${hexacode} !important`);
     }
+  }
+
+  function loadTaskID(token){
+    console.log("Trying to load "+token)
+    const netexp = document.getElementById('netexp1');
+    netexp.setAttribute('task-id', token);
+
   }
 
 </script>

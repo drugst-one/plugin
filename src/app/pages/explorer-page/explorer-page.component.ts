@@ -163,6 +163,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public selectedAnalysisToken: string | null = null;
 
+  @Input() set taskId(token: string | null) {
+    if(token ==null || token.length==0)
+      this.selectedAnalysisToken=null
+    this.selectedAnalysisToken = token;
+  }
+
   public currentDataset = [];
 
   public currentViewProteins: Node[];
