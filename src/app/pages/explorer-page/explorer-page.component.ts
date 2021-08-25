@@ -4,8 +4,9 @@ import {
   ElementRef,
   HostListener,
   Input,
-  OnInit,
+  OnInit, Output,
   ViewChild,
+  EventEmitter,
   ViewEncapsulation
 } from '@angular/core';
 import {
@@ -27,7 +28,7 @@ import {defaultConfig, EdgeGroup, IConfig, InteractionDatabase, NodeGroup} from 
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 import {downLoadFile, removeDuplicateObjectsFromList} from '../../utils'
 import * as merge from 'lodash/fp/merge';
-import { AnalysisPanelComponent } from 'src/app/components/analysis-panel/analysis-panel.component';
+import {AnalysisPanelComponent} from 'src/app/components/analysis-panel/analysis-panel.component';
 
 // import * as 'vis' from 'vis-network';
 // import {DataSet} from 'vis-data';
@@ -60,9 +61,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // addd settings to config
+    // add settings to config
     const configObj = JSON.parse(config);
-    this.myConfig = merge(this.myConfig, configObj)
+    this.myConfig = merge(this.myConfig, configObj);
 
     // update Drugst.One according to the settings
     // check if config updates affect network
@@ -115,6 +116,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.createNetwork();
   }
 
+  @Output()
+  public taskEvent = new EventEmitter<object>();
+
   public get network() {
     return this.networkJSON;
   }
@@ -159,6 +163,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public selectedAnalysisToken: string | null = null;
 
+  @Input() set taskId(token: string | null) {
+    if(token ==null || token.length==0)
+      this.selectedAnalysisToken=null
+    this.selectedAnalysisToken = token;
+  }
+
   public currentDataset = [];
 
   public currentViewProteins: Node[];
@@ -174,13 +184,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   // keys are node netexIds
   public expressionMap: NodeAttributeMap = undefined;
 
-  @Input()
-  public textColor = 'red';
-
   @ViewChild('network', {static: false}) networkEl: ElementRef;
   @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
 
-  @ViewChild(AnalysisPanelComponent, { static: false })
+  @ViewChild(AnalysisPanelComponent, {static: false})
   private analysisPanel: AnalysisPanelComponent;
 
   constructor(
@@ -216,7 +223,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
             false,
             selected,
             1.0
-            )
+          )
           nodeStyled.x = pos[wrapper.id].x;
           nodeStyled.y = pos[wrapper.id].y;
           updatedNodes.push(nodeStyled);
@@ -316,6 +323,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.windowWidth = width;
     this.smallStyle = this.windowWidth < 1250;
   }
+
 
   private zoomToNode(id: string) {
     // get network object, depending on whether analysis is open or not
@@ -467,18 +475,18 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public updateAdjacentDrugs(bool: boolean) {
     this.adjacentDrugs = bool;
     if (this.adjacentDrugs) {
-        this.netex.adjacentDrugs(this.myConfig.interactionDrugProtein, this.nodeData.nodes).subscribe(response => {
-          for (const interaction of response.pdis) {
-            const edge = {from: interaction.protein, to: interaction.drug};
-            this.adjacentDrugEdgesList.push(mapCustomEdge(edge, this.myConfig));
-          }
-          for (const drug of response.drugs) {
-            drug.group = 'foundDrug';
-            drug.id = getDrugNodeId(drug)
-            this.adjacentDrugList.push(mapCustomNode(drug, this.myConfig))
-          }
-          this.nodeData.nodes.add(this.adjacentDrugList);
-          this.nodeData.edges.add(this.adjacentDrugEdgesList);
+      this.netex.adjacentDrugs(this.myConfig.interactionDrugProtein, this.nodeData.nodes).subscribe(response => {
+        for (const interaction of response.pdis) {
+          const edge = {from: interaction.protein, to: interaction.drug};
+          this.adjacentDrugEdgesList.push(mapCustomEdge(edge, this.myConfig));
+        }
+        for (const drug of response.drugs) {
+          drug.group = 'foundDrug';
+          drug.id = getDrugNodeId(drug)
+          this.adjacentDrugList.push(mapCustomNode(drug, this.myConfig))
+        }
+        this.nodeData.nodes.add(this.adjacentDrugList);
+        this.nodeData.edges.add(this.adjacentDrugEdgesList);
       })
       this.legendContext = 'adjacentDrugs'
     } else {
@@ -658,7 +666,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
             false,
             this.analysis.inSelection(getWrapperFromNode(item)),
             1.0
-            )
+          )
         )
         updatedNodes.push(node);
       }
@@ -712,4 +720,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.currentViewSelectedTissue = this.selectedTissue;
   }
 
+  emitTaskEvent(eventObject: object) {
+    this.taskEvent.emit(eventObject);
+  }
 }

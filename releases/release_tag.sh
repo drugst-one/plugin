@@ -33,11 +33,11 @@ echo "Updating Repo..."
 #cd ../
 #cp frontend/drugsTone-build/* drugstone-releases/dev/
 #
-#echo "Building remote..."
-#cd frontend || exit
-#npm run build:netex-remote
-#cd ../
-#cp frontend/drugsTone-build/* drugstone-releases/remote/
+echo "Building remote..."
+cd frontend || exit
+npm run build:netex-remote
+cd ../
+cp frontend/drugsTone-build/* drugstone-releases/remote/
 
 
 echo "Building v-server..."

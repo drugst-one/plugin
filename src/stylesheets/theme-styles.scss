@@ -106,6 +106,13 @@
     color: var(--drgstn-primary) !important;
   }
 
+  a.dropdown-item:hover, button.dropdown-item:hover{
+    background-color: var(--drgstn-panel-secondary)
+  }
+
+  .tissue-dropdown {
+    background-color: var(--drgstn-panel);
+  }
 
   .button.is-primary.is-focused, .button.is-primary:focus {
     background-color: var(--drgstn-primary) !important;
