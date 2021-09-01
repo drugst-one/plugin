@@ -1,14 +1,17 @@
 
+@import '../stylesheets/tooltip';
+@import '../stylesheets/checkbox';
+@import '../stylesheets/icons';
 
 .drgstn {
-
-  @import '../../node_modules/primeng/resources/primeng.min';
+  @import '../assets/styles/primeicons';
   @import  '../assets/styles/theme';
+
 
   .p-tooltip-text, .p-tooltip-arrow {
     background: var(--drgstn-tooltip) !important;
     border-radius: 2px !important;
-    padding: .5rem 1rem .5rem 1rem !important;
+    padding: 0 1rem .25rem 1rem !important;
     color: var(--drgstn-text-secondary) !important;
     font-size: .75rem !important;
   }
@@ -44,7 +47,8 @@
     border-color: var(--drgstn-text-primary) !important;
   }
 
-  p.-datatable .p-sortable-column .p-sortable-column-icon {
+
+  .p-datatable .p-sortable-column .p-sortable-column-icon {
     color: inherit !important;
   }
 
