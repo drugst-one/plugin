@@ -72,7 +72,7 @@ export const defaultConfig: IConfig = {
   legendUrl: '', // 'https://exbio.wzw.tum.de/covex/assets/leg1.png' show legend image if set, otherwise default legend
   legendClass: 'legend',
   legendPos: 'left',
-  taskName: 'Run Task X',
+  taskName: 'Find Drug Candidates',
   showLegendNodes: true,
   showLegendEdges: true,
   showLeftSidebar: true,

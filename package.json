@@ -1,6 +1,6 @@
 {
   "name": "netex",
-  "version": "0.7.1",
+  "version": "0.8.3-rc2",
   "scripts": {
     "ng": "ng",
     "start:local": "ng serve --configuration=local",
@@ -12,6 +12,7 @@
     "e2e": "ng e2e",
     "build-prod": "ng build --configuration=production --output-hashing=none",
     "build-uhh": "ng build --configuration=uhh-production --output-hashing=none",
+    "build-dock1": "ng build --configuration=dock1-production --output-hashing=none",
     "build-dev": "ng build --configuration=development --output-hashing=none",
     "build-remote": "ng build --configuration=remote --output-hashing=none",
     "package-es5": "cd dist/netex && cat runtime-es5.js polyfills-es5.js main-es5.js > bundle-es5.js",
@@ -20,6 +21,7 @@
     "build:netex": "npm run build-prod netex && node build-netex.js",
     "build:netex-dev": "npm run build-dev netex && node build-netex.js",
     "build:netex-uhh": "npm run build-uhh netex && node build-netex.js",
+    "build:netex-dock1": "npm run build-dock1 netex && node build-netex.js",
     "build:netex-remote": "npm run build-remote netex && node build-netex.js",
     "prefix": "bash prefix_styles.sh",
     "prefixcss": "postcss -r drugsTone-build/styles.css"

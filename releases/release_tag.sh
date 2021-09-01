@@ -39,12 +39,17 @@ npm run build:netex-remote
 cd ../
 cp frontend/drugsTone-build/* drugstone-releases/remote/
 
-
-echo "Building v-server..."
+echo "Building v-server dock1..."
 cd frontend || exit
-npm run build:netex-uhh
+npm run build:netex-dock1
 cd ../
-cp frontend/drugsTone-build/* drugstone-releases/uhh/
+cp frontend/drugsTone-build/* drugstone-releases/dock1/
+
+#echo "Building v-server dock2..."
+#cd frontend || exit
+#npm run build:netex-uhh
+#cd ../
+#cp frontend/drugsTone-build/* drugstone-releases/uhh/
 
 cd drugstone-releases || echo "Error!" exit
 git commit -am "$VERSION commit: $MESSAGE"
