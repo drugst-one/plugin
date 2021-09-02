@@ -225,9 +225,8 @@
               "src/app-test"
             ],
             "styles": [
-              "node_modules/animate.css/animate.min.css",
               "src/stylesheets/styles.scss",
-              "src/stylesheets/theme-styles.scss"
+              "src/stylesheets/theme-css"
             ],
             "scripts": []
           }

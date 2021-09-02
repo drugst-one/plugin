@@ -89,6 +89,11 @@
     }
   }
 
+  .input, .select select, .textarea, .box {
+    background-color: var(--drgstn-panel) !important;
+    border-color: var(--drgstn-border) !important;
+  }
+
 
   .fa-check {
     color: var(--drgstn-success) !important;
