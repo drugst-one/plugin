@@ -1,4 +1,5 @@
 @import "src/stylesheets/variables";
+
 .quick-find {
   .notification {
     padding: 15px;
@@ -70,7 +71,7 @@
 }
 
 .task-list-container {
-  padding: 0.5rem;
+  padding: 0.5rem !important;
 }
 
 

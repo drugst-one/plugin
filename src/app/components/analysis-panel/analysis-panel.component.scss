@@ -1,16 +1,16 @@
 @import "src/stylesheets/variables";
 
 .analysis {
-  position: absolute;
-  height: 100%;
-  width: 100%;
+  position: absolute !important;
+  height: 100% !important;
+  width: 100% !important;
 }
 
 .network-view-settings {
   // remove margin from tab header when network is displayed, so that network
   // does not disappear in empty border
-  padding-left: 0;
-  padding-right: 0;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
   .tabs {
     margin: 0;
   }
@@ -37,7 +37,8 @@
   }
   &.table-tab {
     // 100% - #{$network-header-height} - #{$analysis-tab-header-height} - normalization-button
-    height: calc(100% - 40px - 1.5rem - 72px);
+    height: calc(100% - 40px - 1.5rem - 72px - 6px);
+
   }
 
   h4 {

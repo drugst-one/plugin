@@ -49,7 +49,7 @@ import {TooltipModule} from 'primeng/tooltip';
     AddExpressedProteinsComponent,
     NetworkLegendComponent,
     ProtTableComponent,
-    DrugTableComponent
+    DrugTableComponent,
   ],
   imports: [
     BrowserModule,

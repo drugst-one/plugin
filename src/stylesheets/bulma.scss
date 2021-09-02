@@ -1,0 +1,34 @@
+@import "toast";
+#appWindow {
+  @import "../../node_modules/bulma/bulma";
+  height: var(--drgstn-height, 500px);
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+  p {
+    margin-bottom: .4rem !important;
+  }
+
+  .card-content.explorer-network-view-settings {
+    padding: 0 !important;
+
+  }
+
+  .delete, .modal-close {
+    padding: 0 !important;
+  }
+
+  hr {
+    margin-top: .25rem;
+    margin-bottom: .25rem;
+  }
+
+  button {
+    height: auto !important;
+  }
+
+  .box {
+    padding: .5rem !important;
+    margin-bottom: .5rem !important;
+  }
+}

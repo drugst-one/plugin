@@ -2,12 +2,12 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  EventEmitter,
   HostListener,
   Input,
-  OnInit, Output,
+  OnInit,
+  Output,
   ViewChild,
-  EventEmitter,
-  ViewEncapsulation
 } from '@angular/core';
 import {
   getDrugNodeId,
@@ -30,13 +30,7 @@ import {downLoadFile, removeDuplicateObjectsFromList} from '../../utils'
 import * as merge from 'lodash/fp/merge';
 import {AnalysisPanelComponent} from 'src/app/components/analysis-panel/analysis-panel.component';
 
-// import * as 'vis' from 'vis-network';
-// import {DataSet} from 'vis-data';
-// import {vis} from 'src/app/scripts/vis-network.min.js';
 declare var vis: any;
-// import {Network, Data} from 'vis-network';
-// declare var DataSet: any;
-// declare var Network: any;
 
 @Component({
   selector: 'app-explorer-page',
