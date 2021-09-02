@@ -151,9 +151,9 @@
 
             <ng-container *ngIf="myConfig.showFooterButtonScreenshot">
               <button class="button is-primary is-rounded has-tooltip network-footer-toolbar-element footer-buttons"
-                      pTooltip="Take a screenshot of the current network." 
-                      tooltipStyleClass="drgstn" 
-                      tooltipPosition="top" 
+                      pTooltip="Take a screenshot of the current network."
+                      [tooltipStyleClass]="'drgstn drgstn-tooltip'"
+                      tooltipPosition="top"
                       (click)="toImage()">
                   <span class="icon">
                     <i class="fas fa-camera" aria-hidden="true"></i>
@@ -169,7 +169,7 @@
                 (click)="graphmlLink()"
                 class="button is-primary is-rounded has-tooltip network-footer-toolbar-element footer-buttons"
                 pTooltip="Export this network as .graphml file."
-                tooltipStyleClass="drgstn"
+                [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                 tooltipPosition="top"
               >
                 <span class="icon">
@@ -201,7 +201,7 @@
                 <button (click)="expressionExpanded=!expressionExpanded"
                         class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
                         aria-haspopup="true" aria-controls="dropdown-menu" [ngClass]="{'button-small':smallStyle}"
-                        pTooltip="Tissue expression data is provided by the GTEx project." tooltipStyleClass="drgstn" tooltipPosition="top"
+                        pTooltip="Tissue expression data is provided by the GTEx project." [tooltipStyleClass]="'drgstn drgstn-tooltip'" tooltipPosition="top"
                 >
                   <div [ngClass]="{'text-small':smallStyle}">
                     <span *ngIf="!selectedTissue">Tissue</span>
@@ -258,7 +258,7 @@
            [class.is-visible]="tab === 'table'">
         <div class="field has-addons" *ngIf="tableHasScores && task.info.algorithm !== 'proximity'">
           <p class="control">
-            <button class="button is-rounded has-tooltip" pTooltip="Normalize the scores" tooltipStyleClass="drgstn" tooltipPosition="top"
+            <button class="button is-rounded has-tooltip" pTooltip="Normalize the scores" [tooltipStyleClass]="'drgstn drgstn-tooltip'" tooltipPosition="top"
                     [class.is-primary]="tableNormalize" (click)="toggleNormalization(true)">
                 <span class="icon is-small">
                   <i class="fa fa-ruler-vertical"></i>
@@ -267,7 +267,7 @@
             </button>
           </p>
           <p class="control">
-            <button class="button is-rounded has-tooltip" pTooltip="Disable normalization of the scores." tooltipStyleClass="drgstn"
+            <button class="button is-rounded has-tooltip" pTooltip="Disable normalization of the scores." [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                     tooltipPosition="top"
                     [class.is-primary]="!tableNormalize" (click)="toggleNormalization(false)">
               <span>Off</span>

@@ -181,7 +181,7 @@
                       network-footer-toolbar-element
                     "
                     pTooltip="Take a screenshot of the current network."
-                    tooltipStyleClass="drgstn"
+                    [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                     tooltipPosition="top"
                   >
                     <span class="icon">
@@ -203,7 +203,7 @@
                       network-footer-toolbar-element
                     "
                     pTooltip="Export this network as .graphml file."
-                    tooltipStyleClass="drgstn"
+                    [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                     tooltipPosition="top"
                   >
                     <span class="icon">
@@ -233,7 +233,7 @@
                         aria-haspopup="true"
                         aria-controls="dropdown-menu"
                         pTooltip="Tissue expression data is provided by the GTEx project."
-                        tooltipStyleClass="drgstn"
+                        [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                         tooltipPosition="top"
                         [ngClass]="{ 'button-small': smallStyle }"
                       >
@@ -390,7 +390,7 @@
                         [disabled]="analysis.isLaunchingQuick()"
                         class="button is-white is-rounded has-tooltip"
                         pTooltip="Find drugs for all proteins."
-                        tooltipStyleClass="drgstn"
+                        [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                         tooltipPosition="top"
                       >
                         <span class="icon">
@@ -436,7 +436,7 @@
                         "
                         class="button is-white is-rounded"
                         pTooltip="Find drugs for the selected proteins."
-                        tooltipStyleClass="drgstn"
+                        [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                         tooltipPosition="top"
                       >
                         <span class="icon">
@@ -492,7 +492,7 @@
                 <div
                   class="control"
                   pTooltip="Find drug targets for the selected proteins."
-                  tooltipStyleClass="drgstn"
+                  [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                   tooltipPosition="top"
                 >
                   <button
@@ -519,7 +519,7 @@
                 <div
                   class="control"
                   pTooltip="Find drugs for the selected proteins."
-                  tooltipStyleClass="drgstn"
+                  [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                   tooltipPosition="top"
                 >
                   <button
@@ -555,7 +555,7 @@
                       has-tooltip
                     "
                     pTooltip="Use enrichment analysis via g:Profiler (external)."
-                    tooltipStyleClass="drgstn"
+                    [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                     tooltipPosition="top"
                   >
                     <span class="icon">
@@ -574,7 +574,7 @@
                       has-tooltip
                     "
                     pTooltip="Use enrichment analysis via g:Profiler (external)."
-                    tooltipStyleClass="drgstn"
+                    [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                     tooltipPosition="top"
                   >
                     <span class="icon">
@@ -630,7 +630,7 @@
                 "
                 class="card-footer-item text-danger"
                 pTooltip="Delete all tasks."
-                tooltipStyleClass="drgstn"
+                [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                 tooltipPosition="top"
               >
                 <span class="icon">

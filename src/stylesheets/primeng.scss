@@ -1,21 +1,32 @@
-
-@import '../stylesheets/tooltip';
-@import '../stylesheets/checkbox';
 @import '../stylesheets/icons';
+
+.drgstn-tooltip {
+  position: absolute !important;
+  padding: .25em .5rem !important;
+  max-width: 12.5rem !important;
+}
 
 .drgstn {
   @import '../assets/styles/primeicons';
-  @import  '../assets/styles/theme';
+  @import '../assets/styles/theme';
+
+  .p-hidden-accessible {
+    position: absolute;
+  }
 
 
-  .p-tooltip-text, .p-tooltip-arrow {
+  .p-tooltip-arrow {
+    display: none !important;
+  }
+
+  .p-tooltip-text {
+    white-space: pre-line !important;
     background: var(--drgstn-tooltip) !important;
     border-radius: 2px !important;
-    padding: 0 1rem .25rem 1rem !important;
+    padding: .25rem 1rem .25rem 1rem !important;
     color: var(--drgstn-text-secondary) !important;
     font-size: .75rem !important;
   }
-
 
   .p-tooltip-text:before {
     content: '';
@@ -42,7 +53,7 @@
   }
 
   .p-checkbox .p-checkbox-box.p-highlight .p-checkbox-icon.pi-check:before {
-    top: 8px!important;
+    top: 8px !important;
     left: 2px !important;
     border-color: var(--drgstn-text-primary) !important;
   }

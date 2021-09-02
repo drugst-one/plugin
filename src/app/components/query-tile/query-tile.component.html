@@ -1,6 +1,6 @@
 <div class="content">
   <ng-select [items]="queryItems" bindLabel="data.label" bindValue="data.label" [virtualScroll]="true" class="custom"
-             placeholder="Search..." [hideSelected]="true" [searchFn]="querySearch" (change)="select($event)" pTooltip="Find nodes in the network." tooltipStyleClass="drgstn"  tooltipPosition="top">
+             placeholder="Search..." [hideSelected]="true" [searchFn]="querySearch" (change)="select($event)" pTooltip="Find nodes in the network." [tooltipStyleClass]="'drgstn drgstn-tooltip'"  tooltipPosition="top">
     <ng-template ng-option-tmp let-item="item">
       <span>{{item.data.label}}</span>
     </ng-template>
