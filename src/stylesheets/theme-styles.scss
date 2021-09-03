@@ -5,13 +5,13 @@
   --drgstn-warning: #ffdd00;
   --drgstn-danger: #c527ff;
   --drgstn-background: #ffffff;
-  --drgstn-panel: #f8f8f8;
+  --drgstn-panel: #f7f7f7;
   --drgstn-info: #61c43d;
   --drgstn-text-primary: #020202;
   --drgstn-text-secondary: #eeeeee;
   --drgstn-border: rgba(0, 0, 0, 0.2);
   --drgstn-tooltip: rgba(74, 74, 74, 0.9);
-  --drgstn-panel-secondary: #ffffff
+  --drgstn-panel-secondary: #fafafa
 }
 
 #appWindow {
@@ -77,20 +77,24 @@
     color: var(--drgstn-text-primary) !important;
   }
 
+  .modal-card-head, .modal-card-foot {
+    background-color: var(--drgstn-border) !important;
+  }
+
   .modal-card-body {
     .label {
       color: var(--drgstn-text-primary) !important;
     }
 
     .input, .select select, .textarea, .box {
-      background-color: var(--drgstn-panel) !important;
+      background-color: var(--drgstn-panel-secondary) !important;
       border-color: var(--drgstn-border) !important;
       color: var(--drgstn-text-primary) !important;
     }
   }
 
   .input, .select select, .textarea, .box {
-    background-color: var(--drgstn-panel) !important;
+    background-color: var(--drgstn-panel-secondary) !important;
     border-color: var(--drgstn-border) !important;
   }
 
@@ -270,7 +274,7 @@
 // scrolllbar styles
 network-expander {
   --thumbBG: var(--drgstn-primary) !important;
-  --scrollbarBG: var(--drgstn-background) !important;
+  --scrollbarBG: var(--drgstn-panel) !important;
 
   scrollbar-width: thin !important;
   scrollbar-color: var(--thumbBG) var(--scrollbarBG) !important;

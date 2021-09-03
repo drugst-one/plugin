@@ -158,8 +158,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public selectedAnalysisToken: string | null = null;
 
   @Input() set taskId(token: string | null) {
-    if(token ==null || token.length==0)
-      this.selectedAnalysisToken=null
+    if (token == null || token.length === 0)
+      this.selectedAnalysisToken = null
     this.selectedAnalysisToken = token;
   }
 
@@ -198,7 +198,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         return;
       }
       if (selected !== null) {
-        if (items.length === 0) {
+        if (items == null || items.length === 0) {
           return;
         }
         const updatedNodes = [];
@@ -275,7 +275,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     const network = JSON.parse(this.networkJSON);
 
     // map data to nodes in backend
-    if (network.nodes.length) {
+    if (network.nodes != null && network.nodes.length) {
       network.nodes = await this.netex.mapNodes(network.nodes, this.myConfig.identifier);
     }
 
@@ -376,11 +376,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     const {nodes, edges} = this.proteinData.mapDataToNetworkInput(this.myConfig);
 
-    console.log('nodes', nodes)
-    console.log('edges', edges)
     if (this.myConfig.autofillEdges && nodes.length) {
       const netexEdges = await this.netex.fetchEdges(nodes, this.myConfig.interactionProteinProtein);
-      console.log(netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.myConfig)))
       edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.myConfig)))
     }
 
@@ -393,7 +390,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     this.networkInternal.on('doubleClick', (properties) => {
       const nodeIds: Array<string> = properties.nodes;
-      if (nodeIds.length > 0) {
+      if (nodeIds != null && nodeIds.length > 0) {
         const nodeId = nodeIds[0];
         const node = this.nodeData.nodes.get(nodeId);
         if (node.netexId === undefined || !node.netexId.startsWith('p')) {
@@ -411,7 +408,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     this.networkInternal.on('click', (properties) => {
       const nodeIds: Array<string> = properties.nodes;
-      if (nodeIds.length > 0) {
+      if (nodeIds != null && nodeIds.length > 0) {
         const nodeId = nodeIds[0];
         const node = this.nodeData.nodes.get(nodeId);
         const wrapper = getWrapperFromNode(node);

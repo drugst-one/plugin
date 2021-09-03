@@ -73,7 +73,7 @@
                   <div>
                     <p class="heading">Nodes</p>
                     <p class="title">
-                      {{ currentViewNodes.length }}
+                      {{ currentViewNodes != null ? currentViewNodes.length :0 }}
                     </p>
                   </div>
                 </div>
@@ -81,7 +81,7 @@
                   <div>
                     <p class="heading">Interactions</p>
                     <p class="title">
-                      {{ currentViewEdges.length }}
+                      {{ currentViewEdges!=null ? currentViewEdges.length :0 }}
                     </p>
                   </div>
                 </div>
@@ -599,7 +599,7 @@
               <span class="icon">
                 <i class="fas fa-tasks" aria-hidden="true"></i>
               </span>
-              Tasks ({{ analysis.tasks.length }})
+              Tasks ({{ analysis.tasks != null ? analysis.tasks.length : 0 }})
             </p>
             <a
               (click)="collapseTask = !collapseTask"

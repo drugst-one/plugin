@@ -224,7 +224,8 @@ export class AnalysisService {
   }
 
   getSelection(): Wrapper[] {
-    return Array.from(this.selectedItems.values());
+    const out = Array.from(this.selectedItems.values());
+    return out != null ? out : [];
   }
 
   getCount(): number {
