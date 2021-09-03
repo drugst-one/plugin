@@ -1,19 +1,46 @@
 @import "src/stylesheets/variables";
 
+
+.quick-icon {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  margin: auto;
+}
+
 .quick-find {
   .notification {
-    padding: 15px;
-
+    padding: 1.25rem 1rem 1.25rem 1rem !important;
     .digit {
       color: rgba(255, 255, 255, 0.5);
       font-size: 32px;
       border: 2px solid rgba(255, 255, 255, 0.5);
       border-radius: 30px;
       width: 50px;
+      min-width: 50px;
       height: 50px;
       text-align: center;
+      align-self: center;
+      margin: auto 0;
       font-weight: bold;
     }
+    .digit-small {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 24px;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 30px;
+      width: 42px;
+      min-width: 42px;
+      height: 42px;
+      text-align: center;
+      align-self: center;
+      margin: auto 0;
+      font-weight: bold;
+    }
+
+  }
+  .notification.small {
+    padding: .5rem 1rem !important;
   }
 
   .divisor-rapid {
@@ -22,6 +49,15 @@
     text-align: center;
   }
 }
+.card-content.quick-find.small{
+  padding: .5rem !important;
+}
+
+.card-content.quick-find {
+  padding: 1.5rem !important;
+}
+
+
 
 .explorer-network-view-settings {
   // remove margin from tab header when network is displayed, so that network
@@ -30,8 +66,19 @@
   height: calc(100% - #{$network-header-height});
 }
 
+
+.quick-start-btn {
+  align-self: center;
+  justify-self: center;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
 .align-vmiddle {
-  display: table-cell;
+  width:100%;
+  display: flex;
   vertical-align: middle;
   height: 50px;
 

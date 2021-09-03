@@ -36,9 +36,11 @@ $height: 100%;
 
 // Settings Interface Components
 $sidebar-right-width: 25%;
-$sidebar-right-min-width: 210px;
+$sidebar-right-min-width: 235px;
+$sidebar-right-max-width: 320px;
 $sidebar-left-width: 18%;
 $sidebar-left-min-width: 200px;
+$sidebar-left-max-width: 260px;
 $main-width: calc(100% - (max(#{$sidebar-left-width},#{$sidebar-left-min-width}) + max(#{$sidebar-right-width},#{$sidebar-right-min-width})));
 
 

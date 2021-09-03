@@ -1,6 +1,6 @@
 <div class="field has-addons">
   <p class="control has-tooltip">
-    <button class="button is-rounded has-tooltip" [pTooltip]="tooltipOn" [tooltipStyleClass]="'drgstn drgstn-tooltip'" tooltipPosition="top" [class.is-primary]="value" (click)="toggle(true)" [ngClass]="{'button-small':smallStyle}">
+    <button class="button is-rounded has-tooltip" [pTooltip]="tooltipOn" [tooltipStyleClass]="'drgstn drgstn-tooltip'" tooltipPosition="top" [class.is-primary]="value" (click)="toggle(true)" [ngClass]="{'switch-small':smallStyle}">
       <span class="icon is-small">
         <i class="fa {{iconOn}}"></i>
       </span>
@@ -8,7 +8,7 @@
     </button>
   </p>
   <p class="control">
-    <button class="button is-rounded has-tooltip" [pTooltip]="tooltipOff" [tooltipStyleClass]="'drgstn drgstn-tooltip'" tooltipPosition="top" [class.is-primary]="!value" (click)="toggle(false)" [ngClass]="{'button-small':smallStyle}">
+    <button class="button is-rounded has-tooltip" [pTooltip]="tooltipOff" [tooltipStyleClass]="'drgstn drgstn-tooltip'" tooltipPosition="top" [class.is-primary]="!value" (click)="toggle(false)" [ngClass]="{'switch-small':smallStyle}">
       <span [ngClass]="{'text-small':smallStyle}">{{textOff}}</span>
       <span *ngIf="iconOff" class="icon is-small">
         <i class="fa {{iconOff}}"></i>

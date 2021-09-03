@@ -17,6 +17,14 @@
 #appWindow {
   background-color: var(--drgstn-background) !important;
 
+  .tile.notification.quick-start.warning {
+      background-color: var(--drgstn-info) !important;
+  }
+
+  .tile.notification.quick-start {
+    background-color: var(--drgstn-primary) !important;
+    color: var(--drgstn-text-secondary) !important;
+  }
 
   .card-header-title, .card-content, .title {
     color: var(--drgstn-text-primary) !important;
@@ -123,7 +131,7 @@
     color: var(--drgstn-primary) !important;
   }
 
-  a.dropdown-item:hover, button.dropdown-item:hover{
+  a.dropdown-item:hover, button.dropdown-item:hover {
     background-color: var(--drgstn-panel-secondary) !important;
   }
 
@@ -218,33 +226,37 @@
   .ng-select-container, .ng-dropdown-panel.ng-select-bottom {
     background-color: var(--drgstn-panel-secondary) !important;
     border-color: var(--drgstn-border) !important;
+
     .ng-value-container {
 
-      .ng-placeholder{
+      .ng-placeholder {
         color: var(--drgstn-text-primary) !important;
       }
     }
   }
+
   .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
     background-color: var(--drgstn-panel) !important;
-    color:var(--drgstn-text-primary) !important;
+    color: var(--drgstn-text-primary) !important;
   }
+
   .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
     background-color: var(--drgstn-panel-secondary) !important;
-    color:var(--drgstn-text-primary) !important;
+    color: var(--drgstn-text-primary) !important;
   }
 
   .ng-select {
     .ng-arrow-wrapper .ng-arrow {
       border-top-color: var(--drgstn-text-primary) !important;
     }
+
     .ng-clear-wrapper, .ng-select-container {
       color: var(--drgstn-text-primary) !important;
     }
   }
 
 
-  .ng-select.ng-select-opened>.ng-select-container .ng-arrow{
+  .ng-select.ng-select-opened > .ng-select-container .ng-arrow {
     border-bottom-color: var(--drgstn-text-primary) !important;
   }
 

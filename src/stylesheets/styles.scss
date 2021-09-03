@@ -114,7 +114,7 @@
   div.covex.bar-left {
     float: left;
     width: $sidebar-left-width;
-    max-width: 300px;
+    max-width: $sidebar-left-max-width;
     min-width: $sidebar-left-min-width;
     height: 100%;
   }
@@ -122,7 +122,7 @@
   div.covex.bar-right {
     float: left;
     width: $sidebar-right-width;
-    max-width: 450px;
+    max-width: $sidebar-right-max-width;
     min-width: $sidebar-right-min-width;
     /* Hide scrollbar for Chrome, Safari and Opera */
     &::-webkit-scrollbar {
@@ -235,10 +235,10 @@
     border-top: 2px solid #d0d0d0;
 
     .field {
-      margin-bottom: 0;
+      margin-bottom: 0 !important;
 
       .control {
-        margin-bottom: 0;
+        margin-bottom: 0 !important;
       }
     }
   }
@@ -263,6 +263,12 @@
 
   .button-small {
     padding: $button-small-padding;
+    height: 30px !important;
   }
+  .switch-small {
+    padding: $button-small-padding;
+    height: 36px !important;
+  }
+
 }
 

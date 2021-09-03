@@ -242,7 +242,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-    this.setWindowWidth(event.target.innerWidth);
+    this.setWindowWidth(document.getElementById('appWindow').getBoundingClientRect().width);
   }
 
   ngOnInit() {
