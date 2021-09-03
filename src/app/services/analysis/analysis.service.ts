@@ -4,9 +4,16 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {toast} from 'bulma-toast';
 import {Injectable} from '@angular/core';
-import { NetexControllerService } from '../netex-controller/netex-controller.service';
+import {NetexControllerService} from '../netex-controller/netex-controller.service';
 
-export type AlgorithmType = 'trustrank' | 'keypathwayminer' | 'multisteiner' | 'closeness' | 'degree' | 'proximity' | 'betweenness';
+export type AlgorithmType =
+  'trustrank'
+  | 'keypathwayminer'
+  | 'multisteiner'
+  | 'closeness'
+  | 'degree'
+  | 'proximity'
+  | 'betweenness';
 export type QuickAlgorithmType = 'quick' | 'super';
 
 export const algorithmNames = {
@@ -242,6 +249,19 @@ export class AnalysisService {
     if (!this.canLaunchTask()) {
       toast({
         message: `You can only run ${MAX_TASKS} tasks at once. Please wait for one of them to finish or delete it from the task list.`,
+        duration: 5000,
+        dismissible: true,
+        pauseOnHover: true,
+        type: 'is-danger',
+        position: 'top-center',
+        animate: {in: 'fadeIn', out: 'fadeOut'}
+      });
+      return;
+    }
+
+    if (dataset == null) {
+      toast({
+        message: `Passed dataset is null. This feature might be still under development.`,
         duration: 5000,
         dismissible: true,
         pauseOnHover: true,
