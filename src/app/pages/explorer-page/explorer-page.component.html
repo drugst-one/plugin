@@ -172,49 +172,58 @@
             >
               <div class="network-footer-toolbar-inner-container">
                 <ng-container *ngIf="myConfig.showFooterButtonScreenshot">
-                  <button
-                    (click)="toImage()"
+                  <div
                     class="
-                      button footer-buttons
-                      is-primary is-rounded
-                      has-tooltip
+                      footer-buttons
                       network-footer-toolbar-element
                     "
-                    pTooltip="Take a screenshot of the current network."
-                    [ngClass]="{ 'button-small': smallStyle }"
-                    [tooltipStyleClass]="'drgstn drgstn-tooltip'"
-                    tooltipPosition="top"
                   >
+                    <button
+                      (click)="toImage()"
+                      class="
+                      button
+                      is-primary is-rounded
+                      has-tooltip
+                    "
+                      pTooltip="Take a screenshot of the current network."
+                      [ngClass]="{ 'button-small': smallStyle }"
+                      [tooltipStyleClass]="'drgstn drgstn-tooltip'"
+                      tooltipPosition="top"
+                    >
                     <span class="icon">
                       <i class="fas fa-camera" aria-hidden="true"></i>
                     </span>
-                    <span [ngClass]="{ 'text-normal': smallStyle }"
-                    >Screenshot</span
-                    >
-                  </button>
+                      <span [ngClass]="{ 'text-normal': smallStyle }"
+                      >Screenshot</span
+                      >
+                    </button>
+                  </div>
                 </ng-container>
 
                 <ng-container *ngIf="myConfig.showFooterButtonExportGraphml">
-                  <button
-                    (click)="graphmlLink()"
+                  <div
                     class="
-                      button footer-buttons
-                      is-primary is-rounded
-                      has-tooltip
-                      network-footer-toolbar-element
-                    "
-                    [ngClass]="{ 'button-small': smallStyle }"
-                    pTooltip="Export this network as .graphml file."
-                    [tooltipStyleClass]="'drgstn drgstn-tooltip'"
-                    tooltipPosition="top"
+                      footer-buttons
+                      network-footer-toolbar-element"
                   >
+                    <button
+                      (click)="graphmlLink()"
+                      class="button
+                      is-primary is-rounded
+                      has-tooltip"
+                      [ngClass]="{ 'button-small': smallStyle }"
+                      pTooltip="Export this network as .graphml file."
+                      [tooltipStyleClass]="'drgstn drgstn-tooltip'"
+                      tooltipPosition="top"
+                    >
                     <span class="icon">
                       <i class="fas fa-download" aria-hidden="true"></i>
                     </span>
-                    <span [ngClass]="{ 'text-normal': smallStyle }"
-                    >.graphml</span
-                    >
-                  </button>
+                      <span [ngClass]="{ 'text-normal': smallStyle }"
+                      >.graphml</span
+                      >
+                    </button>
+                  </div>
                 </ng-container>
 
                 <ng-container *ngIf="myConfig.showFooterButtonExpression">
@@ -242,8 +251,7 @@
                         <span
                           *ngIf="!selectedTissue"
                           [ngClass]="{ 'text-small': smallStyle }"
-                        >Tissue</span
-                        >
+                        >Tissue</span>
                         <span *ngIf="selectedTissue">{{
                           selectedTissue.name
                           }}</span>
@@ -281,7 +289,6 @@
                     </div>
                   </div>
                 </ng-container>
-
                 <app-toggle
                   class="footer-buttons network-footer-toolbar-element"
                   textOn="Drugs"
