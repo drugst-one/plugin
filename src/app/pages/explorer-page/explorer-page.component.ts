@@ -106,17 +106,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (typeof network === 'undefined') {
       return;
     }
-    if (this.myConfig.identifier === 'ensg') {
-      // @ts-ignore
-      network.nodes.forEach(node => {
-        node.id = this.removeEnsemblVersion(node.id);
-      });
-      // @ts-ignore
-      network.edges.forEach(edge => {
-        edge.from = this.removeEnsemblVersion(edge.from);
-        edge.to = this.removeEnsemblVersion(edge.to);
-      });
-    }
+
     this.networkJSON = network;
     this.createNetwork();
   }
@@ -285,6 +275,18 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     const network = JSON.parse(this.networkJSON);
 
+    if (this.myConfig.identifier === 'ensg') {
+      // @ts-ignore
+      network.nodes.forEach(node => {
+        node.id = this.removeEnsemblVersion(node.id);
+      });
+      // @ts-ignore
+      network.edges.forEach(edge => {
+        edge.from = this.removeEnsemblVersion(edge.from);
+        edge.to = this.removeEnsemblVersion(edge.to);
+      });
+    }
+
     // map data to nodes in backend
     if (network.nodes != null && network.nodes.length) {
       network.nodes = await this.netex.mapNodes(network.nodes, this.myConfig.identifier);
@@ -372,7 +374,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.showDetails = false;
   }
 
-  removeEnsemblVersion(versionId: string):string{
+  removeEnsemblVersion(versionId: string): string {
     return versionId.startsWith('ENSG') ? versionId.split('.')[0] : versionId;
   }
 
