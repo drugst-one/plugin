@@ -106,6 +106,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (typeof network === 'undefined') {
       return;
     }
+    if (this.myConfig.identifier === 'ensg') {
+      // @ts-ignore
+      network.nodes.forEach(node => {
+        node.id = this.removeEnsemblVersion(node.id);
+      });
+      // @ts-ignore
+      network.edges.forEach(edge => {
+        edge.from = this.removeEnsemblVersion(edge.from);
+        edge.to = this.removeEnsemblVersion(edge.to);
+      });
+    }
     this.networkJSON = network;
     this.createNetwork();
   }
@@ -359,6 +370,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public async closeSummary() {
     this.selectedWrapper = null;
     this.showDetails = false;
+  }
+
+  removeEnsemblVersion(versionId: string):string{
+    return versionId.startsWith('ENSG') ? versionId.split('.')[0] : versionId;
   }
 
   public async createNetwork() {
