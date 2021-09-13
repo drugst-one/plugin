@@ -1,6 +1,6 @@
 {
   "name": "netex",
-  "version": "0.8.8",
+  "version": "0.8.9-rc1",
   "scripts": {
     "ng": "ng",
     "start:local": "ng serve --configuration=local",
