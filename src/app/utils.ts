@@ -110,7 +110,7 @@ export function removeDuplicateObjectsFromList(nodes: Node[], attribute: string)
   const seenIds = new Set();
   const filteredArray = new Array();
   for (const node of nodes) {
-    if (seenIds.has(node[attribute])) {
+    if (node[attribute] != null && seenIds.has(node[attribute])) {
       continue;
     }
     filteredArray.push(node);
