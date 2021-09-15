@@ -27,7 +27,6 @@ import {
   NodeInteraction,
 } from '../../interfaces';
 import domtoimage from 'dom-to-image';
-import {toast} from 'bulma-toast';
 import {NetworkSettings} from '../../network-settings';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 import {defaultConfig, IConfig} from 'src/app/config';
