@@ -44,7 +44,7 @@ export const MULTISTEINER: Algorithm = {slug: 'multisteiner', name: algorithmNam
 export const MAX_TASKS = 3;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class AnalysisService {
 
