@@ -197,7 +197,14 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     public netex: NetexControllerService) {
     this.showDetails = false;
 
-    this.analysis.subscribeList((items, selected) => {
+    this.analysis.subscribeList(async (items, selected) => {
+      // while (this.networkEl == null) {
+      //   await setTimeout(() => {
+      //   }, 200);
+      // }
+      // if (this.networkEl.nativeElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.id !== this.id)
+      //   return;
+      // console.log("subcribe event on " + this.id)
       // return if analysis panel is open or no nodes are loaded
       if (this.selectedAnalysisToken || !this.nodeData.nodes) {
         return;
@@ -383,14 +390,15 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public async createNetwork() {
-    if (this.networkEl == null) {
-      setTimeout(() => {
-        this.createNetwork();
-      }, 200);
-      return;
-    }
-    if (this.networkEl.nativeElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.id !== this.id)
-      return;
+    // if (this.networkEl == null) {
+    //   setTimeout(() => {
+    //     this.createNetwork();
+    //   }, 200);
+    //   return;
+    // }
+    // if (this.networkEl.nativeElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.id !== this.id)
+    //   return;
+    console.log("network "+this.id+" is set up!")
     this.analysis.resetSelection();
     this.selectedWrapper = null;
     // getNetwork synchronizes the input network with the database
@@ -419,6 +427,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.networkInternal = new vis.Network(container, this.nodeData, options);
 
     this.networkInternal.on('doubleClick', (properties) => {
+      console.log("selected on node in "+this.id)
       const nodeIds: Array<string> = properties.nodes;
       if (nodeIds != null && nodeIds.length > 0) {
         const nodeId = nodeIds[0];
