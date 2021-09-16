@@ -50,11 +50,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public onload: undefined | string;
 
   @Input()
+  public id: undefined | string;
+
+  @Input()
   public set config(config: string | undefined) {
     if (typeof config === 'undefined') {
       return;
     }
-
+    if (this.id == null)
+      setTimeout(() => {
+        this.config = config;
+      }, 200);
     // add settings to config
     const configObj = JSON.parse(config);
     this.myConfig = merge(this.myConfig, configObj);
@@ -189,8 +195,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     public omnipath: OmnipathControllerService,
     public analysis: AnalysisService,
     public netex: NetexControllerService) {
-
-
     this.showDetails = false;
 
     this.analysis.subscribeList((items, selected) => {
@@ -379,6 +383,14 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public async createNetwork() {
+    if (this.networkEl == null) {
+      setTimeout(() => {
+        this.createNetwork();
+      }, 200);
+      return;
+    }
+    if (this.networkEl.nativeElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.id !== this.id)
+      return;
     this.analysis.resetSelection();
     this.selectedWrapper = null;
     // getNetwork synchronizes the input network with the database
@@ -401,6 +413,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.nodeData.nodes = new vis.DataSet(nodes);
     this.nodeData.edges = new vis.DataSet(edges);
     const container = this.networkEl.nativeElement;
+
     const options = NetworkSettings.getOptions('main');
 
     this.networkInternal = new vis.Network(container, this.nodeData, options);
