@@ -100,7 +100,7 @@ export class AnalysisService {
   }
 
   async getTasks() {
-    return await this.netex.getTasks(this.tokens).catch((e) => {
+    return await this.netex.getTasks(this.finishedTokens.length > 0 && this.tasks.length === 0 ? this.tokens : this.tokens.filter(t => this.finishedTokens.indexOf(t) === -1)).catch((e) => {
       clearInterval(this.intervalId);
     });
   }
@@ -357,7 +357,11 @@ export class AnalysisService {
   startWatching() {
     const watch = async () => {
       if (this.tokens.length > 0) {
-        this.tasks = await this.getTasks();
+        const newtasks = await this.getTasks();
+        if (newtasks.length === 0)
+          return;
+        const newTaskIds = newtasks.map(t => t.token.toString());
+        this.tasks = newtasks.concat(this.tasks.filter(t => newTaskIds.indexOf(t.token) === -1));
         if (!this.tasks) {
           return;
         }

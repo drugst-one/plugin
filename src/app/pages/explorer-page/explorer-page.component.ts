@@ -359,10 +359,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public graphmlLink() {
-    const data = {nodes: this.nodeData.nodes.get(), edges: this.nodeData.edges.get()}
+    const data = {nodes: this.nodeData.nodes.get(), edges: this.nodeData.edges.get()};
     this.netex.graphmlLink(data).subscribe(response => {
       return downLoadFile(response, "application/xml");
-    })
+    });
   }
 
   public async openSummary(item: Wrapper, zoom: boolean) {
