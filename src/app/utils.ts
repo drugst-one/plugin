@@ -129,7 +129,6 @@ export function downLoadFile(data: any, type: string) {
   var a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = 'test.graphml';
-  // start download
   a.click();
 }
 
