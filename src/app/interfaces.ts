@@ -6,6 +6,7 @@ export interface Node {
   id: string;
   type: string;
   netexId?: string;
+  drugId?:string;
   uniprotAc?: string;
   ensg?: Array<string>;
   group?: string;
@@ -31,8 +32,8 @@ export interface Tissue {
   name: string;
 }
 
-export type legendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget' | 
-'drugTargetAndSeeds' | 'drugAndSeeds';
+export type legendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget' |
+'drugTargetAndSeeds' | 'drugAndSeeds' | 'adjacentDisorders';
 
 /// netexId to expressionlvl
 export type NodeAttributeMap = { string: number } | {};
@@ -119,6 +120,12 @@ export function getDrugNodeId(drug: Drug) {
    */
   return drug.netexId
 }
+
+// export function getDisorderNodeId(disorder: Disorder) {
+//   /**
+//    * Returns backend_id of Drug object
+//    */
+//   return disorder.netexId
 
 export function getNodeId(node: Node) {
   /**

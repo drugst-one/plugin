@@ -13,17 +13,19 @@ export class NetworkLegendComponent implements OnInit {
   @Input() config: IConfig;
 
   private contextNodeGroupsToDelete = {
-    'explorer': ['foundNode', 'foundDrug', 'seedNode', 'default'],
-    'adjacentDrugs': ['foundNode', 'seedNode', 'default'],
-    'drugTarget': ['foundDrug', 'seedNode', 'default'],
-    'drug': ['seedNode', 'default'],
-    'drugTargetAndSeeds': ['foundDrug', 'default'],
-    'drugAndSeeds': ['default']
+    'explorer': ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder'],
+    'adjacentDrugs': ['foundNode', 'seedNode', 'default', 'defaultDisorder'],
+    'adjacentDisorders': ['foundDrug', 'foundNode', 'seedNode', 'default'],
+    'drugTarget': ['foundDrug', 'seedNode', 'default', 'defaultDisorder'],
+    'drug': ['seedNode', 'default', 'defaultDisorder'],
+    'drugTargetAndSeeds': ['foundDrug', 'default', 'defaultDisorder'],
+    'drugAndSeeds': ['default', 'defaultDisorder']
   }
 
   private contextEdgeGroupsToDelete = {
     'explorer': ['default'],
     'adjacentDrugs': ['default'],
+    'adjacentDisorders': ['default'],
     'drugTarget': ['default'],
     'drug': ['default'],
     'drugTargetAndSeeds': ['default'],

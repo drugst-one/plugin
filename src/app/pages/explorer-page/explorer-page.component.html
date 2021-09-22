@@ -299,7 +299,16 @@
                   [value]="adjacentDrugs"
                   (valueChange)="updateAdjacentDrugs($event)"
                 ></app-toggle>
-
+                <app-toggle
+                  class="footer-buttons network-footer-toolbar-element"
+                  textOn="Disorders"
+                  textOff="Off"
+                  tooltipOn="Display adjacent disorders ON."
+                  tooltipOff="Display adjacent disorders OFF."
+                  [smallStyle]="smallStyle"
+                  [value]="adjacentDisorders"
+                  (valueChange)="updateAdjacentDisorders($event)"
+                ></app-toggle>
                 <app-toggle
                   class="footer-buttons network-footer-toolbar-element"
                   textOn="Animation"

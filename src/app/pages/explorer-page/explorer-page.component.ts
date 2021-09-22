@@ -152,8 +152,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   private dumpPositions = false;
   public physicsEnabled = false;
   public adjacentDrugs = false;
+  public adjacentDisorders = false;
   public adjacentDrugList: Node[] = [];
   public adjacentDrugEdgesList: Node[] = [];
+
+  public adjacentDisorderList: Node[] = [];
+  public adjacentDisorderEdgesList: Node[] = [];
 
   public queryItems: Wrapper[] = [];
   public showAnalysisDialog = false;
@@ -427,7 +431,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         }
       }
     });
-
     this.networkInternal.on('click', (properties) => {
       const nodeIds: Array<string> = properties.nodes;
       if (nodeIds != null && nodeIds.length > 0) {
@@ -483,6 +486,32 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         },
       }
     });
+  }
+
+  public updateAdjacentDisorders(bool: boolean){
+    this.adjacentDisorders = bool;
+    if (this.adjacentDisorders){
+      this.netex.adjacentDisorders(this.nodeData.nodes).subscribe(response => {
+        for (const interaction of response.pdis) {
+          const edge = {from: interaction.protein, to: interaction.disorder};
+          this.adjacentDisorderEdgesList.push(mapCustomEdge(edge, this.myConfig));
+        }
+        for (const disorder of response.disorders) {
+          disorder.group = 'defaultDisorder';
+          disorder.id = disorder.netexId;
+          this.adjacentDisorderList.push(mapCustomNode(disorder, this.myConfig))
+        }
+        this.nodeData.nodes.add(this.adjacentDisorderList);
+        this.nodeData.edges.add(this.adjacentDisorderEdgesList);
+      });
+      this.legendContext = 'adjacentDisorders';
+    }else {
+      this.nodeData.nodes.remove(this.adjacentDisorderList);
+      this.nodeData.edges.remove(this.adjacentDisorderEdgesList);
+      this.adjacentDisorderList = [];
+      this.adjacentDisorderEdgesList = [];
+      this.legendContext = 'explorer';
+    }
   }
 
   public updateAdjacentDrugs(bool: boolean) {

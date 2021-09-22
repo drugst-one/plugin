@@ -1,17 +1,18 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {AlgorithmType, QuickAlgorithmType} from '../analysis/analysis.service';
-import { Observable } from 'rxjs';
-import { Tissue, Node, EdgeType} from 'src/app/interfaces';
-import { InteractionDrugProteinDB, InteractionProteinProteinDB } from 'src/app/config';
+import {Observable} from 'rxjs';
+import {Tissue, Node, EdgeType} from 'src/app/interfaces';
+import {InteractionDrugProteinDB, InteractionProteinProteinDB} from 'src/app/config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NetexControllerService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   public async getTask(token): Promise<any> {
     /**
@@ -42,9 +43,9 @@ export class NetexControllerService {
   }
 
   public async getTaskResultGene(token): Promise<any> {
-      /**
-       * returns promise of gene view of task result of COMPLETED task
-       */
+    /**
+     * returns promise of gene view of task result of COMPLETED task
+     */
     return this.http.get<any>(`${environment.backend}task_result/?token=${token}&view=genes`).toPromise();
   }
 
@@ -55,7 +56,7 @@ export class NetexControllerService {
     return this.http.get<any>(`${environment.backend}task_result/?token=${token}&view=cancer_driver_genes`).toPromise();
   }
 
-  public async postTask(algorithm: QuickAlgorithmType | AlgorithmType, target, parameters, ) {
+  public async postTask(algorithm: QuickAlgorithmType | AlgorithmType, target, parameters,) {
     /**
      * sends a task to task service
      */
@@ -87,28 +88,39 @@ export class NetexControllerService {
     /**
      * Returns the expression in the given tissue for given nodes and cancerNodes
      */
-    // slice prefix of netex id away for direct lookup in db, if node not mapped to db, replace by undefined
-    const genesBackendIds = nodes.map( (node: Node) => node.netexId ? node.netexId.slice(1) : undefined);
+      // slice prefix of netex id away for direct lookup in db, if node not mapped to db, replace by undefined
+    const genesBackendIds = nodes.map((node: Node) => node.netexId ? node.netexId.slice(1) : undefined);
     const params = new HttpParams()
       .set('tissue', tissue.netexId)
       .set('proteins', JSON.stringify(genesBackendIds));
     return this.http.get(`${environment.backend}tissue_expression/`, {params});
   }
 
+  public adjacentDisorders(nodes: Node[]): Observable<any> {
+    const genesBackendIds = nodes.map((node: Node) => node.netexId && !node.drugId ? node.netexId.slice(1) : undefined).filter(id => id != null);
+    const drugsBackendIds = nodes.map((node: Node) => node.drugId && node.netexId ? node.netexId.slice(1) : undefined).filter(id => id != null);
+    const params = {
+      proteins: genesBackendIds,
+      drugs: drugsBackendIds,
+    };
+    console.log(params)
+    return this.http.post<any>(`${environment.backend}adjacent_disorders/`, params);
+  }
+
   public adjacentDrugs(pdiDataset: InteractionDrugProteinDB, nodes: Node[]): Observable<any> {
     /**
      * Returns the expression in the given tissue for given nodes and cancerNodes
      */
-    // slice prefix of netex id away for direct lookup in db, if node not mapped to db, replace by undefined
-    const genesBackendIds = nodes.map( (node: Node) => node.netexId ? node.netexId.slice(1) : undefined);
+      // slice prefix of netex id away for direct lookup in db, if node not mapped to db, replace by undefined
+    const genesBackendIds = nodes.map((node: Node) => node.netexId ? node.netexId.slice(1) : undefined).filter(id => id != null);
     const params = {
       pdi_dataset: pdiDataset,
       proteins: genesBackendIds
-    }
+    };
     return this.http.post<any>(`${environment.backend}adjacent_drugs/`, params);
   }
 
-  public graphmlLink(graph_data: {edges: EdgeType[], nodes: Node[]}) {
+  public graphmlLink(graph_data: { edges: EdgeType[], nodes: Node[] }) {
     /**
      * Sends complete graph data to backend where it is written to graphml File.
      * The file is returned as download for the user.

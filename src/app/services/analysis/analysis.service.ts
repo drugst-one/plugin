@@ -358,7 +358,7 @@ export class AnalysisService {
     const watch = async () => {
       if (this.tokens.length > 0) {
         const newtasks = await this.getTasks();
-        if (newtasks.length === 0)
+        if(newtasks.length === 0)
           return;
         const newTaskIds = newtasks.map(t => t.token.toString());
         this.tasks = newtasks.concat(this.tasks.filter(t => newTaskIds.indexOf(t.token) === -1));
