@@ -97,13 +97,12 @@ export class NetexControllerService {
   }
 
   public adjacentDisorders(nodes: Node[]): Observable<any> {
-    const genesBackendIds = nodes.map((node: Node) => node.netexId && !node.drugId ? node.netexId.slice(1) : undefined).filter(id => id != null);
-    const drugsBackendIds = nodes.map((node: Node) => node.drugId && node.netexId ? node.netexId.slice(1) : undefined).filter(id => id != null);
+    const genesBackendIds = nodes.map((node: Node) => node.netexId && !node.drugId && node.netexId.startsWith('p') ? node.netexId.slice(1) : undefined).filter(id => id != null);
+    const drugsBackendIds = nodes.map((node: Node) => node.drugId && node.netexId && node.netexId.startsWith('dr') ? node.netexId.slice(1) : undefined).filter(id => id != null);
     const params = {
       proteins: genesBackendIds,
       drugs: drugsBackendIds,
     };
-    console.log(params)
     return this.http.post<any>(`${environment.backend}adjacent_disorders/`, params);
   }
 
@@ -112,7 +111,7 @@ export class NetexControllerService {
      * Returns the expression in the given tissue for given nodes and cancerNodes
      */
       // slice prefix of netex id away for direct lookup in db, if node not mapped to db, replace by undefined
-    const genesBackendIds = nodes.map((node: Node) => node.netexId ? node.netexId.slice(1) : undefined).filter(id => id != null);
+    const genesBackendIds = nodes.map((node: Node) => node.netexId && node.netexId.startsWith('p') ? node.netexId.slice(1) : undefined).filter(id => id != null);
     const params = {
       pdi_dataset: pdiDataset,
       proteins: genesBackendIds

@@ -27,6 +27,8 @@ export class ToggleComponent implements OnInit {
   }
 
   public toggle(value: boolean) {
+    if(this.value === value)
+      return;
     this.value = value;
     this.valueChange.emit(this.value);
   }
