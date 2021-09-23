@@ -165,7 +165,7 @@ export const defaultConfig: IConfig = {
           background: '#ffa62f'
         },
       },
-      shape: 'diamond',
+      shape: 'triangle',
       type: 'default disorder type',
     },
     seedNode: {

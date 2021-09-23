@@ -301,13 +301,23 @@
                 ></app-toggle>
                 <app-toggle
                   class="footer-buttons network-footer-toolbar-element"
-                  textOn="Disorders"
+                  textOn="Disorders (protein)"
                   textOff="Off"
                   tooltipOn="Display adjacent disorders ON."
                   tooltipOff="Display adjacent disorders OFF."
                   [smallStyle]="smallStyle"
-                  [value]="adjacentDisorders"
-                  (valueChange)="updateAdjacentDisorders($event)"
+                  [value]="adjacentDisordersProtein"
+                  (valueChange)="updateAdjacentProteinDisorders($event)"
+                ></app-toggle>
+                <app-toggle
+                  class="footer-buttons network-footer-toolbar-element"
+                  textOn="Disorders (drugs)"
+                  textOff="Off"
+                  tooltipOn="Display adjacent disorders ON."
+                  tooltipOff="Display adjacent disorders OFF."
+                  [smallStyle]="smallStyle"
+                  [value]="adjacentDisordersDrug"
+                  (valueChange)="updateAdjacentDrugDisorders($event)"
                 ></app-toggle>
                 <app-toggle
                   class="footer-buttons network-footer-toolbar-element"

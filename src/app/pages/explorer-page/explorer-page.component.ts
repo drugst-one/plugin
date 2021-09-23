@@ -152,12 +152,16 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   private dumpPositions = false;
   public physicsEnabled = false;
   public adjacentDrugs = false;
-  public adjacentDisorders = false;
+  public adjacentDisordersProtein = false;
+  public adjacentDisordersDrug = false;
   public adjacentDrugList: Node[] = [];
   public adjacentDrugEdgesList: Node[] = [];
 
-  public adjacentDisorderList: Node[] = [];
-  public adjacentDisorderEdgesList: Node[] = [];
+  public adjacentProteinDisorderList: Node[] = [];
+  public adjacentProteinDisorderEdgesList: Node[] = [];
+
+  public adjacentDrugDisorderList: Node[] = [];
+  public adjacentDrugDisorderEdgesList: Node[] = [];
 
   public queryItems: Wrapper[] = [];
   public showAnalysisDialog = false;
@@ -488,30 +492,74 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public updateAdjacentDisorders(bool: boolean){
-    this.adjacentDisorders = bool;
-    if (this.adjacentDisorders){
-      this.netex.adjacentDisorders(this.nodeData.nodes).subscribe(response => {
-        for (const interaction of response.pdis) {
+  public updateAdjacentProteinDisorders(bool: boolean){
+    this.adjacentDisordersProtein = bool;
+    if (this.adjacentDisordersProtein){
+      this.netex.adjacentDisorders(this.nodeData.nodes, 'proteins').subscribe(response => {
+        for (const interaction of response.edges) {
           const edge = {from: interaction.protein, to: interaction.disorder};
-          this.adjacentDisorderEdgesList.push(mapCustomEdge(edge, this.myConfig));
+          this.adjacentProteinDisorderEdgesList.push(mapCustomEdge(edge, this.myConfig));
         }
         for (const disorder of response.disorders) {
           disorder.group = 'defaultDisorder';
           disorder.id = disorder.netexId;
-          this.adjacentDisorderList.push(mapCustomNode(disorder, this.myConfig))
+          this.adjacentProteinDisorderList.push(mapCustomNode(disorder, this.myConfig))
         }
-        this.nodeData.nodes.add(this.adjacentDisorderList);
-        this.nodeData.edges.add(this.adjacentDisorderEdgesList);
+        this.saveAddNodes(this.adjacentProteinDisorderList);
+        this.nodeData.edges.add(this.adjacentProteinDisorderEdgesList);
       });
       this.legendContext = 'adjacentDisorders';
     }else {
-      this.nodeData.nodes.remove(this.adjacentDisorderList);
-      this.nodeData.edges.remove(this.adjacentDisorderEdgesList);
-      this.adjacentDisorderList = [];
-      this.adjacentDisorderEdgesList = [];
+      this.saveRemoveDisorders(this.adjacentProteinDisorderList);
+      this.nodeData.edges.remove(this.adjacentProteinDisorderEdgesList);
+      this.adjacentProteinDisorderList = [];
+      this.adjacentProteinDisorderEdgesList = [];
       this.legendContext = 'explorer';
     }
+  }
+
+  public updateAdjacentDrugDisorders(bool: boolean){
+    this.adjacentDisordersDrug = bool;
+    if (this.adjacentDisordersDrug){
+      this.netex.adjacentDisorders(this.nodeData.nodes, 'drugs').subscribe(response => {
+        for (const interaction of response.edges) {
+          const edge = {from: interaction.drug, to: interaction.disorder};
+          this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.myConfig));
+        }
+        for (const disorder of response.disorders) {
+          disorder.group = 'defaultDisorder';
+          disorder.id = disorder.netexId;
+          this.adjacentDrugDisorderList.push(mapCustomNode(disorder, this.myConfig));
+        }
+        this.saveAddNodes(this.adjacentDrugDisorderList);
+        this.nodeData.edges.add(this.adjacentDrugDisorderEdgesList);
+      });
+      this.legendContext = 'adjacentDisorders';
+    }else {
+      this.saveRemoveDisorders(this.adjacentDrugDisorderList);
+      this.nodeData.edges.remove(this.adjacentDrugDisorderEdgesList);
+      this.adjacentDrugDisorderList = [];
+      this.adjacentDrugDisorderEdgesList = [];
+      this.legendContext = 'explorer';
+    }
+  }
+
+  public saveAddNodes(nodeList: Node[]){
+    const existing = this.nodeData.nodes.get().map(n=>n.id);
+    const toAdd = nodeList.filter(n=>existing.indexOf(n.id)===-1)
+    this.nodeData.nodes.add(toAdd);
+  }
+
+  public saveRemoveDisorders(nodeList: Node[]){
+    const other = this.adjacentDrugDisorderList === nodeList ? this.adjacentProteinDisorderList : this.adjacentDrugDisorderList
+    if(other==null)
+      this.nodeData.nodes.remove(nodeList);
+    else{
+      const otherIds = other.map(d=>d.id);
+      const rest = nodeList.filter(d=>otherIds.indexOf(d.id)===-1)
+      this.nodeData.nodes.remove(rest)
+    }
+
   }
 
   public updateAdjacentDrugs(bool: boolean) {

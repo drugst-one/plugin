@@ -96,13 +96,16 @@ export class NetexControllerService {
     return this.http.get(`${environment.backend}tissue_expression/`, {params});
   }
 
-  public adjacentDisorders(nodes: Node[]): Observable<any> {
-    const genesBackendIds = nodes.map((node: Node) => node.netexId && !node.drugId && node.netexId.startsWith('p') ? node.netexId.slice(1) : undefined).filter(id => id != null);
-    const drugsBackendIds = nodes.map((node: Node) => node.drugId && node.netexId && node.netexId.startsWith('dr') ? node.netexId.slice(1) : undefined).filter(id => id != null);
-    const params = {
-      proteins: genesBackendIds,
-      drugs: drugsBackendIds,
-    };
+  public adjacentDisorders(nodes: Node[], nodeType: string): Observable<any> {
+
+    const params = {};
+    if (nodeType === 'proteins') {
+      // @ts-ignore
+      params.proteins = nodes.map((node: Node) => node.netexId && node.netexId.startsWith('p') ? node.netexId.slice(1) : undefined).filter(id => id != null);
+    } else if (nodeType === 'drugs') {
+      // @ts-ignore
+      params.drugs = nodes.map((node: Node) => node.drugId && node.netexId.startsWith('dr') ? node.netexId.slice(2) : undefined).filter(id => id != null);
+    }
     return this.http.post<any>(`${environment.backend}adjacent_disorders/`, params);
   }
 
