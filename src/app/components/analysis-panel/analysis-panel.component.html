@@ -245,6 +245,27 @@
                         tooltipOff="Display adjacent drugs OFF."
                         [smallStyle]="smallStyle"
                         [value]="adjacentDrugs" (valueChange)="updateAdjacentDrugs($event)"></app-toggle>
+            <app-toggle
+              class="footer-buttons network-footer-toolbar-element"
+              textOn="Disorders (protein)"
+              textOff="Off"
+              tooltipOn="Show disorders adjacent to all currently displayed proteins/genes ON."
+              tooltipOff="Show disorders adjacent to all currently displayed proteins/genes OFF."
+              [smallStyle]="smallStyle"
+              [value]="adjacentDisordersProtein"
+              (valueChange)="updateAdjacentProteinDisorders($event)"
+            ></app-toggle>
+            <app-toggle
+              class="footer-buttons network-footer-toolbar-element"
+              textOn="Disorders (drugs)"
+              textOff="Off"
+              tooltipOn="Show disorders adjacent to all currently displayed drugs ON."
+              tooltipOff="Show disorders adjacent to all currently displayed drugs OFF."
+              [smallStyle]="smallStyle"
+              [value]="adjacentDisordersDrug"
+              [disabled]="!hasDrugsLoaded()"
+              (valueChange)="updateAdjacentDrugDisorders($event)"
+            ></app-toggle>
 
             <app-toggle class="footer-buttons network-footer-toolbar-element" textOn="Animation" textOff="Off"
                         tooltipOn="Enable the network animation."

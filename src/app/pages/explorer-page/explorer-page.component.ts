@@ -152,10 +152,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   private dumpPositions = false;
   public physicsEnabled = false;
   public adjacentDrugs = false;
-  public adjacentDisordersProtein = false;
-  public adjacentDisordersDrug = false;
+
   public adjacentDrugList: Node[] = [];
   public adjacentDrugEdgesList: Node[] = [];
+
+  public adjacentDisordersProtein = false;
+  public adjacentDisordersDrug = false;
 
   public adjacentProteinDisorderList: Node[] = [];
   public adjacentProteinDisorderEdgesList: Node[] = [];
@@ -458,21 +460,30 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.currentViewEdges = this.nodeData.edges;
 
     this.queryItems = [];
-    this.fillQueryItems(this.currentViewNodes);
+    this.updateQueryItems();
+    this.currentViewProteins = this.proteins;
+    // this.fillQueryItems(this.currentViewNodes);
     if (this.selectedWrapper) {
       this.networkInternal.selectNodes([this.selectedWrapper.id]);
     }
   }
 
-  fillQueryItems(hostProteins: Node[]) {
+  updateQueryItems() {
     this.queryItems = [];
-    hostProteins.forEach((protein) => {
+    this.currentViewNodes.forEach((protein) => {
       this.queryItems.push(getWrapperFromNode(protein));
     });
-
-
-    this.currentViewProteins = this.proteins;
   }
+
+  // fillQueryItems(hostProteins: Node[]) {
+  //   this.queryItems = [];
+  //   hostProteins.forEach((protein) => {
+  //     this.queryItems.push(getWrapperFromNode(protein));
+  //   });
+  //
+  //
+  //   this.currentViewProteins = this.proteins;
+  // }
 
   public queryAction(item: any) {
     if (item) {
@@ -492,9 +503,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public updateAdjacentProteinDisorders(bool: boolean){
+  public updateAdjacentProteinDisorders(bool: boolean) {
     this.adjacentDisordersProtein = bool;
-    if (this.adjacentDisordersProtein){
+    if (this.adjacentDisordersProtein) {
       this.netex.adjacentDisorders(this.nodeData.nodes, 'proteins').subscribe(response => {
         for (const interaction of response.edges) {
           const edge = {from: interaction.protein, to: interaction.disorder};
@@ -507,20 +518,22 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         }
         this.saveAddNodes(this.adjacentProteinDisorderList);
         this.nodeData.edges.add(this.adjacentProteinDisorderEdgesList);
+        this.updateQueryItems();
       });
-      this.legendContext = 'adjacentDisorders';
-    }else {
+      this.legendContext = this.adjacentDrugs ? 'adjacentDrugsAndDisorders' : 'adjacentDisorders';
+    } else {
       this.saveRemoveDisorders(this.adjacentProteinDisorderList);
       this.nodeData.edges.remove(this.adjacentProteinDisorderEdgesList);
       this.adjacentProteinDisorderList = [];
       this.adjacentProteinDisorderEdgesList = [];
-      this.legendContext = 'explorer';
+      this.legendContext = this.adjacentDisordersDrug ? this.legendContext : this.adjacentDrugs ? 'adjacentDrugs' : 'explorer';
+      this.updateQueryItems();
     }
   }
 
-  public updateAdjacentDrugDisorders(bool: boolean){
+  public updateAdjacentDrugDisorders(bool: boolean) {
     this.adjacentDisordersDrug = bool;
-    if (this.adjacentDisordersDrug){
+    if (this.adjacentDisordersDrug) {
       this.netex.adjacentDisorders(this.nodeData.nodes, 'drugs').subscribe(response => {
         for (const interaction of response.edges) {
           const edge = {from: interaction.drug, to: interaction.disorder};
@@ -533,33 +546,34 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         }
         this.saveAddNodes(this.adjacentDrugDisorderList);
         this.nodeData.edges.add(this.adjacentDrugDisorderEdgesList);
+        this.updateQueryItems();
       });
-      this.legendContext = 'adjacentDisorders';
-    }else {
+      this.legendContext = this.adjacentDrugs ? 'adjacentDrugsAndDisorders' : 'adjacentDisorders';
+    } else {
       this.saveRemoveDisorders(this.adjacentDrugDisorderList);
       this.nodeData.edges.remove(this.adjacentDrugDisorderEdgesList);
       this.adjacentDrugDisorderList = [];
       this.adjacentDrugDisorderEdgesList = [];
-      this.legendContext = 'explorer';
+      this.legendContext = this.adjacentDisordersProtein ? this.legendContext : this.adjacentDrugs ? 'adjacentDrugs' : 'explorer';
+      this.updateQueryItems();
     }
   }
 
-  public saveAddNodes(nodeList: Node[]){
-    const existing = this.nodeData.nodes.get().map(n=>n.id);
-    const toAdd = nodeList.filter(n=>existing.indexOf(n.id)===-1)
+  public saveAddNodes(nodeList: Node[]) {
+    const existing = this.nodeData.nodes.get().map(n => n.id);
+    const toAdd = nodeList.filter(n => existing.indexOf(n.id) === -1)
     this.nodeData.nodes.add(toAdd);
   }
 
-  public saveRemoveDisorders(nodeList: Node[]){
+  public saveRemoveDisorders(nodeList: Node[]) {
     const other = this.adjacentDrugDisorderList === nodeList ? this.adjacentProteinDisorderList : this.adjacentDrugDisorderList
-    if(other==null)
+    if (other == null)
       this.nodeData.nodes.remove(nodeList);
-    else{
-      const otherIds = other.map(d=>d.id);
-      const rest = nodeList.filter(d=>otherIds.indexOf(d.id)===-1)
+    else {
+      const otherIds = other.map(d => d.id);
+      const rest = nodeList.filter(d => otherIds.indexOf(d.id) === -1)
       this.nodeData.nodes.remove(rest)
     }
-
   }
 
   public updateAdjacentDrugs(bool: boolean) {
@@ -577,15 +591,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         }
         this.nodeData.nodes.add(this.adjacentDrugList);
         this.nodeData.edges.add(this.adjacentDrugEdgesList);
+        this.updateQueryItems();
       })
-      this.legendContext = 'adjacentDrugs'
+      this.legendContext = this.adjacentDisordersDrug || this.adjacentDisordersProtein ? 'adjacentDrugsAndDisorders' : 'adjacentDrugs';
     } else {
       this.nodeData.nodes.remove(this.adjacentDrugList);
       this.nodeData.edges.remove(this.adjacentDrugEdgesList);
       this.adjacentDrugList = [];
       this.adjacentDrugEdgesList = [];
 
-      this.legendContext = 'explorer'
+      this.legendContext = this.adjacentDisordersDrug || this.adjacentDisordersProtein ? 'adjacentDisorders' : 'explorer';
+      this.updateQueryItems();
     }
   }
 
@@ -706,7 +722,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
     // changes for either way (analysis open and close)
     this.selectedWrapper = null;
-    this.fillQueryItems(this.currentViewNodes);
+    this.updateQueryItems();
+    // this.fillQueryItems(this.currentViewNodes);
   }
 
   gProfilerLink(): string {
@@ -810,7 +827,14 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.currentViewSelectedTissue = this.selectedTissue;
   }
 
+
   emitTaskEvent(eventObject: object) {
     this.taskEvent.emit(eventObject);
+  }
+
+  hasDrugsLoaded(): boolean {
+    if (this.nodeData == null || this.nodeData.nodes == null)
+      return false;
+    return this.nodeData.nodes.get().filter((node: Node) => node.drugId && node.netexId.startsWith('dr')).length > 0;
   }
 }

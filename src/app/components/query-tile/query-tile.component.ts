@@ -30,32 +30,24 @@ export class QueryTileComponent {
     if (data.ensg === undefined) {
       data.ensg = []
     }
-    ;
     if (data.groupName === undefined) {
       data.groupName = ''
     }
-    ;
     if (data.type === undefined) {
       data.type = ''
     }
-    ;
     if (data.symbol === undefined) {
       data.symbol = ''
     }
-    ;
     if (data.proteinName === undefined) {
       data.proteinName = ''
     }
-    ;
     if (data.uniprotAc === undefined) {
       data.uniprotAc = ''
     }
-    ;
     if (data.drugId === undefined) {
       data.drugId = ''
     }
-    ;
-
     return data.symbol.toLowerCase().indexOf(term) > -1 || data.uniprotAc.toLowerCase().indexOf(term) > -1 ||
       data.label.toLowerCase().indexOf(term) > -1 || this.listStartsWith(data.ensg, term) || data.id.toLowerCase().indexOf(term) > -1
       || data.proteinName.toLowerCase().indexOf(term) > -1 || data.type.toLowerCase().indexOf(term) > -1 ||

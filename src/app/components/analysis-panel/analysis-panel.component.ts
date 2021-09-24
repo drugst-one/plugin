@@ -73,7 +73,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   @Output() tokenChange = new EventEmitter<string | null>();
   @Output() showDetailsChange = new EventEmitter<Wrapper>();
   @Output() visibleItems = new EventEmitter<[any[], [Node[], Tissue], NodeInteraction[]]>();
-
   public task: Task | null = null;
   public result: any = null;
   public myConfig: IConfig = JSON.parse(JSON.stringify(defaultConfig));
@@ -89,6 +88,15 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   public adjacentDrugs = false;
   public adjacentDrugList: Node[] = [];
   public adjacentDrugEdgesList: Node[] = [];
+
+  public adjacentDisordersProtein = false;
+  public adjacentDisordersDrug = false;
+
+  public adjacentProteinDisorderList: Node[] = [];
+  public adjacentProteinDisorderEdgesList: Node[] = [];
+
+  public adjacentDrugDisorderList: Node[] = [];
+  public adjacentDrugDisorderEdgesList: Node[] = [];
 
   public highlightSeeds = false;
   public seedMap: NodeAttributeMap;
@@ -329,7 +337,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     this.emitVisibleItems(true);
 
     this.setLegendContext();
-
   }
 
   public emitVisibleItems(on: boolean) {
@@ -386,6 +393,80 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
       unnormalizeFn(this.tableDrugs);
       unnormalizeFn(this.tableProteins);
       unnormalizeFn(this.tableViralProteins);
+    }
+  }
+
+
+  public saveAddNodes(nodeList: Node[]) {
+    const existing = this.nodeData.nodes.get().map(n => n.id);
+    const toAdd = nodeList.filter(n => existing.indexOf(n.id) === -1)
+    this.nodeData.nodes.add(toAdd);
+  }
+
+  public saveRemoveDisorders(nodeList: Node[]) {
+    const other = this.adjacentDrugDisorderList === nodeList ? this.adjacentProteinDisorderList : this.adjacentDrugDisorderList
+    if (other == null)
+      this.nodeData.nodes.remove(nodeList);
+    else {
+      const otherIds = other.map(d => d.id);
+      const rest = nodeList.filter(d => otherIds.indexOf(d.id) === -1)
+      this.nodeData.nodes.remove(rest)
+    }
+  }
+
+  public updateAdjacentProteinDisorders(bool: boolean) {
+    this.adjacentDisordersProtein = bool;
+    if (this.adjacentDisordersProtein) {
+      this.netex.adjacentDisorders(this.nodeData.nodes, 'proteins').subscribe(response => {
+        for (const interaction of response.edges) {
+          const edge = {from: interaction.protein, to: interaction.disorder};
+          this.adjacentProteinDisorderEdgesList.push(mapCustomEdge(edge, this.myConfig));
+        }
+        for (const disorder of response.disorders) {
+          disorder.group = 'defaultDisorder';
+          disorder.id = disorder.netexId;
+          this.adjacentProteinDisorderList.push(mapCustomNode(disorder, this.myConfig))
+        }
+        this.saveAddNodes(this.adjacentProteinDisorderList);
+        this.nodeData.edges.add(this.adjacentProteinDisorderEdgesList);
+        this.emitVisibleItems(true);
+      });
+      this.legendContext = this.adjacentDrugs ? 'adjacentDrugsAndDisorders' : 'adjacentDisorders';
+    } else {
+      this.saveRemoveDisorders(this.adjacentProteinDisorderList);
+      this.nodeData.edges.remove(this.adjacentProteinDisorderEdgesList);
+      this.adjacentProteinDisorderList = [];
+      this.adjacentProteinDisorderEdgesList = [];
+      this.legendContext = this.adjacentDisordersDrug ? this.legendContext : this.adjacentDrugs ? 'adjacentDrugs' : 'explorer';
+      this.emitVisibleItems(true);
+    }
+  }
+
+  public updateAdjacentDrugDisorders(bool: boolean) {
+    this.adjacentDisordersDrug = bool;
+    if (this.adjacentDisordersDrug) {
+      this.netex.adjacentDisorders(this.nodeData.nodes, 'drugs').subscribe(response => {
+        for (const interaction of response.edges) {
+          const edge = {from: interaction.drug, to: interaction.disorder};
+          this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.myConfig));
+        }
+        for (const disorder of response.disorders) {
+          disorder.group = 'defaultDisorder';
+          disorder.id = disorder.netexId;
+          this.adjacentDrugDisorderList.push(mapCustomNode(disorder, this.myConfig));
+        }
+        this.saveAddNodes(this.adjacentDrugDisorderList);
+        this.nodeData.edges.add(this.adjacentDrugDisorderEdgesList);
+        this.emitVisibleItems(true);
+      });
+      this.legendContext = this.adjacentDrugs ? 'adjacentDrugsAndDisorders' : 'adjacentDisorders';
+    } else {
+      this.saveRemoveDisorders(this.adjacentDrugDisorderList);
+      this.nodeData.edges.remove(this.adjacentDrugDisorderEdgesList);
+      this.adjacentDrugDisorderList = [];
+      this.adjacentDrugDisorderEdgesList = [];
+      this.legendContext = this.adjacentDisordersProtein ? this.legendContext : this.adjacentDrugs ? 'adjacentDrugs' : 'explorer';
+      this.emitVisibleItems(true);
     }
   }
 
@@ -558,31 +639,39 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     this.setLegendContext();
   }
 
+  hasDrugsLoaded(): boolean {
+    if (this.nodeData == null || this.nodeData.nodes == null)
+      return false;
+    return this.nodeData.nodes.get().filter((node: Node) => node.drugId && node.netexId.startsWith('dr')).length > 0;
+  }
+
   public updateAdjacentDrugs(bool: boolean) {
     this.adjacentDrugs = bool;
     if (this.adjacentDrugs) {
-        this.netex.adjacentDrugs(this.myConfig.interactionDrugProtein, this.nodeData.nodes).subscribe(response => {
-          for (const interaction of response.pdis) {
-            const edge = {from: interaction.protein, to: interaction.drug};
-            this.adjacentDrugEdgesList.push(mapCustomEdge(edge, this.myConfig));
-          }
-          for (const drug of response.drugs) {
-            drug.group = 'foundDrug';
-            drug.id = getDrugNodeId(drug)
-            this.adjacentDrugList.push(mapCustomNode(drug, this.myConfig))
-          }
-          this.nodeData.nodes.add(this.adjacentDrugList);
-          this.nodeData.edges.add(this.adjacentDrugEdgesList);
+      this.netex.adjacentDrugs(this.myConfig.interactionDrugProtein, this.nodeData.nodes).subscribe(response => {
+        for (const interaction of response.pdis) {
+          const edge = {from: interaction.protein, to: interaction.drug};
+          this.adjacentDrugEdgesList.push(mapCustomEdge(edge, this.myConfig));
+        }
+        for (const drug of response.drugs) {
+          drug.group = 'foundDrug';
+          drug.id = getDrugNodeId(drug)
+          this.adjacentDrugList.push(mapCustomNode(drug, this.myConfig))
+        }
+        this.nodeData.nodes.add(this.adjacentDrugList);
+        this.nodeData.edges.add(this.adjacentDrugEdgesList);
+        this.emitVisibleItems(true);
       })
+      this.legendContext = this.adjacentDisordersDrug || this.adjacentDisordersProtein ? 'adjacentDrugsAndDisorders' : 'adjacentDrugs';
     } else {
       this.nodeData.nodes.remove(this.adjacentDrugList);
       this.nodeData.edges.remove(this.adjacentDrugEdgesList);
       this.adjacentDrugList = [];
       this.adjacentDrugEdgesList = [];
+
+      this.legendContext = this.adjacentDisordersDrug || this.adjacentDisordersProtein ? 'adjacentDisorders' : 'explorer';
+      this.emitVisibleItems(true);
     }
-    this.setLegendContext()
-    // emit data to update sidebar information
-    this.emitVisibleItems(true);
   }
 
   public updatePhysicsEnabled(bool: boolean) {

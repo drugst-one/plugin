@@ -13,7 +13,8 @@ export class InfoTileComponent implements OnInit {
   @Input() public wrapper: Wrapper;
   @Input() smallStyle: boolean;
 
-  constructor(public analysis: AnalysisService) { }
+  constructor(public analysis: AnalysisService) {
+  }
 
   ngOnInit(): void {
   }
@@ -31,4 +32,12 @@ export class InfoTileComponent implements OnInit {
     return url;
   }
 
+  writeZeros(n: number) {
+    let out = '';
+    while (n > 0) {
+      out += '0';
+      n--;
+    }
+    return out;
+  }
 }

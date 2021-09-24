@@ -14,6 +14,7 @@ export class ToggleComponent implements OnInit {
   @Input() textOff = 'Off';
   @Input() tooltipOn: string;
   @Input() tooltipOff: string;
+  @Input() disabled = false;
 
   @Input() smallStyle: boolean;
 
