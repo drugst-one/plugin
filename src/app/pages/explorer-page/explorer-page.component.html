@@ -7,7 +7,7 @@
       [(show)]="showAnalysisDialog"
       [target]="analysisDialogTarget"
       [config]="myConfig"
-      [inputNetwork]="{ nodes: proteins, edges: edges }"
+      [inputNetwork]="inputNetwork"
       (taskEvent)="emitTaskEvent($event)"
     >
     </app-launch-analysis>
@@ -140,6 +140,7 @@
             [(token)]="selectedAnalysisToken"
             (showDetailsChange)="selectedWrapper = $event"
             (visibleItems)="analysisWindowChanged($event)"
+            (setInputNetwork)="setInputNetwork($event)"
             [config]="myConfig"
             [smallStyle]="smallStyle"
           ></app-analysis-panel>

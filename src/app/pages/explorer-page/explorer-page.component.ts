@@ -174,6 +174,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public selectedAnalysisToken: string | null = null;
 
+  @Input() inputNetwork = { };
+
   @Input() set taskId(token: string | null) {
     if (token == null || token.length === 0)
       this.selectedAnalysisToken = null
@@ -335,7 +337,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
     // remove edges without endpoints
     network.edges = edges;
-
+    this.inputNetwork = network;
     this.proteins = network.nodes;
     this.edges = network.edges;
   }
@@ -836,5 +838,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (this.nodeData == null || this.nodeData.nodes == null)
       return false;
     return this.nodeData.nodes.get().filter((node: Node) => node.drugId && node.netexId.startsWith('dr')).length > 0;
+  }
+
+  setInputNetwork(network: any) {
+    if(network == null)
+      this.inputNetwork={nodes: this.proteins, edges : this.edges}
+    else
+      this.inputNetwork = network;
   }
 }

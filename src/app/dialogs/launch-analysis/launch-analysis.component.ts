@@ -120,9 +120,9 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     parameters.target = this.target === 'drug' ? 'drug' : 'drug-target';
     // pass network data to reconstruct network in analysis result to connect non-proteins to results
     // drop interactions in nodes beforehand to no cause cyclic error, information is contained in edges
-    this.inputNetwork.nodes.forEach(node => {
-      delete node.interactions
-    });
+    // this.inputNetwork.nodes.forEach(node => {
+    //   delete node.interactions
+    // });
 
     if (this.algorithm === 'trustrank') {
       parameters.damping_factor = this.trustrankDampingFactor;
