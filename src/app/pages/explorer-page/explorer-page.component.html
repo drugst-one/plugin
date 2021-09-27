@@ -450,7 +450,7 @@
                           ></i>
                         </span>
                         <span [ngClass]="{ 'text-normal': smallStyle }">
-                          {{ myConfig.taskName }}
+                          {{ myConfig.taskDrugName }}
                         </span>
                       </button>
                     </div>
@@ -511,7 +511,7 @@
                     <span class="icon">
                       <i class="fa fa-crosshairs"></i>
                     </span>
-                    <span> Find Drug Targets </span>
+                    <span>{{ myConfig.taskDrugName }}</span>
                   </button>
                 </div>
               </div>
@@ -538,7 +538,7 @@
                       <i class="fa fa-capsules"></i>
                     </span>
                     <span>
-                      {{ myConfig.taskName }}
+                      {{ myConfig.taskDrugName }}
                     </span>
                   </button>
                 </div>
