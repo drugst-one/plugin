@@ -5,18 +5,26 @@
   --drgstn-warning: #ffdd00;
   --drgstn-danger: #c527ff;
   --drgstn-background: #ffffff;
-  --drgstn-panel: #f8f8f8;
+  --drgstn-panel: #f7f7f7;
   --drgstn-info: #61c43d;
   --drgstn-text-primary: #020202;
   --drgstn-text-secondary: #eeeeee;
   --drgstn-border: rgba(0, 0, 0, 0.2);
   --drgstn-tooltip: rgba(74, 74, 74, 0.9);
-  --drgstn-panel-secondary: #ffffff
+  --drgstn-panel-secondary: #fafafa
 }
 
 #appWindow {
-  background-color: var(--drgstn-background);
+  background-color: var(--drgstn-background) !important;
 
+  .tile.notification.quick-start.warning {
+      background-color: var(--drgstn-info) !important;
+  }
+
+  .tile.notification.quick-start {
+    background-color: var(--drgstn-primary) !important;
+    color: var(--drgstn-text-secondary) !important;
+  }
 
   .card-header-title, .card-content, .title {
     color: var(--drgstn-text-primary) !important;
@@ -38,13 +46,17 @@
     border-color: var(--drgstn-border) !important;
   }
 
+  .fa-spinner {
+    color: var(--drgstn-secondary) !important;
+  }
+
   .tabs.is-toggle a:hover {
     background-color: var(--drgstn-panel) !important;
   }
 
   .tabs li.is-active a, .tabs.is-toggle li.is-active a, .tabs a:hover {
     border-color: var(--drgstn-primary) !important;
-    color: var(--drgstn-primary) !important;
+    color: var(--drgstn-text-primary) !important;
   }
 
   .content h4, .content h6 {
@@ -64,9 +76,17 @@
     background-color: var(--drgstn-border) !important;
   }
 
+  .tr {
+    border-color: var(--drgstn-text-primary) !important;
+  }
+
   // legend styles
   .legend {
-    color: var(--drgstn-text-primary);
+    color: var(--drgstn-text-primary) !important;
+  }
+
+  .modal-card-head, .modal-card-foot {
+    background-color: var(--drgstn-border) !important;
   }
 
   .modal-card-body {
@@ -75,10 +95,15 @@
     }
 
     .input, .select select, .textarea, .box {
-      background-color: var(--drgstn-panel) !important;
+      background-color: var(--drgstn-panel-secondary) !important;
       border-color: var(--drgstn-border) !important;
       color: var(--drgstn-text-primary) !important;
     }
+  }
+
+  .input, .select select, .textarea, .box {
+    background-color: var(--drgstn-panel-secondary) !important;
+    border-color: var(--drgstn-border) !important;
   }
 
 
@@ -106,12 +131,12 @@
     color: var(--drgstn-primary) !important;
   }
 
-  a.dropdown-item:hover, button.dropdown-item:hover{
-    background-color: var(--drgstn-panel-secondary)
+  a.dropdown-item:hover, button.dropdown-item:hover {
+    background-color: var(--drgstn-panel-secondary) !important;
   }
 
   .tissue-dropdown {
-    background-color: var(--drgstn-panel);
+    background-color: var(--drgstn-panel) !important;
   }
 
   .button.is-primary.is-focused, .button.is-primary:focus {
@@ -199,66 +224,70 @@
   }
 
   .ng-select-container, .ng-dropdown-panel.ng-select-bottom {
-    background-color: var(--drgstn-panel-secondary);
-    border-color: var(--drgstn-border);
+    background-color: var(--drgstn-panel-secondary) !important;
+    border-color: var(--drgstn-border) !important;
+
     .ng-value-container {
 
-      .ng-placeholder{
-        color: var(--drgstn-text-primary);
+      .ng-placeholder {
+        color: var(--drgstn-text-primary) !important;
       }
     }
   }
+
   .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
-    background-color: var(--drgstn-panel);
-    color:var(--drgstn-text-primary);
+    background-color: var(--drgstn-panel) !important;
+    color: var(--drgstn-text-primary) !important;
   }
+
   .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
-    background-color: var(--drgstn-panel-secondary);
-    color:var(--drgstn-text-primary);
+    background-color: var(--drgstn-panel-secondary) !important;
+    color: var(--drgstn-text-primary) !important;
   }
 
   .ng-select {
     .ng-arrow-wrapper .ng-arrow {
-      border-top-color: var(--drgstn-text-primary);
+      border-top-color: var(--drgstn-text-primary) !important;
     }
+
     .ng-clear-wrapper, .ng-select-container {
-      color: var(--drgstn-text-primary);
+      color: var(--drgstn-text-primary) !important;
     }
   }
 
 
-  .ng-select.ng-select-opened>.ng-select-container .ng-arrow{
-    border-bottom-color: var(--drgstn-text-primary);
+  .ng-select.ng-select-opened > .ng-select-container .ng-arrow {
+    border-bottom-color: var(--drgstn-text-primary) !important;
   }
 
 
   ::-webkit-scrollbar {
-    width: 5px;
+    width: 10px !important;
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--scrollbarBG);
+    background: var(--scrollbarBG) !important;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--thumbBG);
-    border-radius: 6px;
-    border: 3px solid var(--scrollbarBG);
+    background: var(--thumbBG) !important;
+    border-radius: 6px !important;
+    border: 3px solid var(--scrollbarBG) !important;
   }
 
   ::-moz-scrollbar-button:decrement,
   ::-moz-scrollbar-button:increment,
   ::-webkit-scrollbar-button:decrement,
   ::-webkit-scrollbar-button:increment {
-    width: 0px;
+    width: 0px !important;
   }
 }
 
 // scrolllbar styles
 network-expander {
-  --thumbBG: var(--drgstn-primary);
-  --scrollbarBG: var(--drgstn-background);
+  --thumbBG: var(--drgstn-primary) !important;
+  --scrollbarBG: var(--drgstn-panel) !important;
 
-  scrollbar-width: thin;
-  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+  scrollbar-width: thin !important;
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG) !important;
 }

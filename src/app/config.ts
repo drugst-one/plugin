@@ -157,6 +157,19 @@ export const defaultConfig: IConfig = {
       shape: 'diamond',
       type: 'default drug type',
     },
+    defaultDisorder: {
+      groupName: 'Disorders',
+      color: {
+        border: '#ffa62f',
+        background: '#ffa62f',
+        highlight: {
+          border: '#ffa62f',
+          background: '#ffa62f'
+        },
+      },
+      shape: 'triangle',
+      type: 'default disorder type',
+    },
     seedNode: {
       groupName: 'Seed Nodes',
       shape: 'triangle',

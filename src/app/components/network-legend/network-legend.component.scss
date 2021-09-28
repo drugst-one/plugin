@@ -14,18 +14,19 @@ div.legend {
     // margin-bottom: 1rem;
   }
   td.group-name{
-    color:var(--drgstn-text-primary);
+    color:var(--drgstn-text-primary) !important;
   }
   tr.list-item{
     line-height: calc(#{$legend-row-height} / 2);
+    border-top: var(--drgstn-text-primary) 1px solid;
     th{
       height: $legend-row-height;
       width: $legend-row-height;
       vertical-align: middle !important;
-      padding: 0 !important;
+      padding: 2px !important;
       .text{
         font-style: italic;
-        color:var(--drgstn-text-primary);
+        color:var(--drgstn-text-primary) !important;
       }
       .diamond {
         height: $legend-diamond-size;
@@ -130,8 +131,8 @@ div.legend {
         /* Center edge icon */
         margin: 0 auto;
         &.dashes {
-          border-top: dotted;
-          background-color: transparent;
+          border-top: dotted !important;
+          background-color: transparent !important;
         }
       }
     }

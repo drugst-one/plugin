@@ -1,5 +1,5 @@
 import {Component, Input, Output, EventEmitter} from '@angular/core';
-import { element } from 'protractor';
+import {element} from 'protractor';
 import {Node, Wrapper} from '../../interfaces';
 
 @Component({
@@ -12,6 +12,7 @@ export class QueryTileComponent {
 
   @Output() selectItem: EventEmitter<any> = new EventEmitter();
   @Input() queryItems: Wrapper[];
+  selectedItem = undefined;
 
   private listStartsWith = (elments: any[], term) => {
     for (const e of elments) {
@@ -26,14 +27,27 @@ export class QueryTileComponent {
     term = term.toLowerCase();
     const data = {...item.data}
     // add possible missing attributes to not throw errors
-    if (data.ensg === undefined) {data.ensg = []};
-    if (data.groupName === undefined) {data.groupName = ''};
-    if (data.type === undefined) {data.type = ''};
-    if (data.symbol === undefined) {data.symbol = ''};
-    if (data.proteinName === undefined) {data.proteinName = ''};
-    if (data.uniprotAc === undefined) {data.uniprotAc = ''};
-    if (data.drugId === undefined) {data.drugId = ''};
-
+    if (data.ensg === undefined) {
+      data.ensg = []
+    }
+    if (data.groupName === undefined) {
+      data.groupName = ''
+    }
+    if (data.type === undefined) {
+      data.type = ''
+    }
+    if (data.symbol === undefined) {
+      data.symbol = ''
+    }
+    if (data.proteinName === undefined) {
+      data.proteinName = ''
+    }
+    if (data.uniprotAc === undefined) {
+      data.uniprotAc = ''
+    }
+    if (data.drugId === undefined) {
+      data.drugId = ''
+    }
     return data.symbol.toLowerCase().indexOf(term) > -1 || data.uniprotAc.toLowerCase().indexOf(term) > -1 ||
       data.label.toLowerCase().indexOf(term) > -1 || this.listStartsWith(data.ensg, term) || data.id.toLowerCase().indexOf(term) > -1
       || data.proteinName.toLowerCase().indexOf(term) > -1 || data.type.toLowerCase().indexOf(term) > -1 ||
@@ -41,7 +55,13 @@ export class QueryTileComponent {
   }
 
   select(item) {
+    this.selectedItem = item;
     this.selectItem.emit(item);
   }
 
+  getLabel() {
+    if (this.selectedItem != null)
+      return ""
+    return "Search...";
+  }
 }

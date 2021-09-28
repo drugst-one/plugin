@@ -1,18 +1,24 @@
 @charset "utf-8";
 @import url('https://fonts.googleapis.com/css?family=Varela+Round');
-@import "~@ng-select/ng-select/themes/default.theme.css";
-@import "../../node_modules/bulma/bulma";
-@import "../../node_modules/animate.css/animate.min.css";
-@import "variables";
+@import "../../node_modules/animate.css/animate.min";
 @import "primeng";
+@import "bulma";
+@import "variables";
 
 #appWindow {
-  height: var(--drgstn-height, 500px);
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  @import '~@ng-select/ng-select/themes/default.theme';
+
+  .ng-dropdown-panel .ng-dropdown-panel-items {
+    max-height: 150px !important;
+  }
+
 
   .fullheight {
     height: 100%;
+  }
+
+  .card-content .tabs-header {
+    margin-bottom: 0;
   }
 
   .canvas-content {
@@ -108,7 +114,7 @@
   div.covex.bar-left {
     float: left;
     width: $sidebar-left-width;
-    max-width: 300px;
+    max-width: $sidebar-left-max-width;
     min-width: $sidebar-left-min-width;
     height: 100%;
   }
@@ -116,7 +122,7 @@
   div.covex.bar-right {
     float: left;
     width: $sidebar-right-width;
-    max-width: 450px;
+    max-width: $sidebar-right-max-width;
     min-width: $sidebar-right-min-width;
     /* Hide scrollbar for Chrome, Safari and Opera */
     &::-webkit-scrollbar {
@@ -206,7 +212,7 @@
   .analysis-view {
     height: 100%;
     width: 100%;
-    position: absolute;
+    position: absolute !important;
     margin-top: 0;
     z-index: $analysis-view-z;
 
@@ -219,9 +225,6 @@
     margin-top: 20px;
   }
 
-  .fa-spinner {
-    color: $light-invert;
-  }
 
   .footer-buttons {
     margin-left: 10px;
@@ -232,10 +235,10 @@
     border-top: 2px solid #d0d0d0;
 
     .field {
-      margin-bottom: 0;
+      margin-bottom: 0 !important;
 
       .control {
-        margin-bottom: 0;
+        margin-bottom: 0 !important;
       }
     }
   }
@@ -259,6 +262,17 @@
   }
 
   .button-small {
-    padding: $button-small-padding;
+    padding:  0 10px 0 10px !important;
+    height: 36px !important;
   }
+  .switch-small {
+    padding: $button-small-padding;
+    height: 36px !important;
+  }
+
+  .dropdown-item {
+    color: var(--drgstn-text-primary)
+  }
+
 }
+

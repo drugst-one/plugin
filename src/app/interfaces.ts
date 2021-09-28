@@ -6,6 +6,7 @@ export interface Node {
   id: string;
   type: string;
   netexId?: string;
+  drugId?:string;
   uniprotAc?: string;
   ensg?: Array<string>;
   group?: string;
@@ -31,8 +32,8 @@ export interface Tissue {
   name: string;
 }
 
-export type legendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget' | 
-'drugTargetAndSeeds' | 'drugAndSeeds';
+export type legendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget' |
+'drugTargetAndSeeds' | 'drugAndSeeds' | 'adjacentDisorders' | 'adjacentDrugsAndDisorders';
 
 /// netexId to expressionlvl
 export type NodeAttributeMap = { string: number } | {};
@@ -120,6 +121,12 @@ export function getDrugNodeId(drug: Drug) {
   return drug.netexId
 }
 
+// export function getDisorderNodeId(disorder: Disorder) {
+//   /**
+//    * Returns backend_id of Drug object
+//    */
+//   return disorder.netexId
+
 export function getNodeId(node: Node) {
   /**
    * Returns backend_id of Gene object
@@ -146,16 +153,16 @@ export function getId(gene: Node) {
   return `${gene.id}`;
 }
 
-export function getWrapperFromNode(gene: Node): Wrapper {
+export function getWrapperFromNode(node: Node): Wrapper {
   /**
    * Constructs wrapper interface for gene
    */
   // if node does not have property group, it was custom node from user
-  gene.group = gene.group ? gene.group : 'default';
-  gene.label = gene.label ? gene.label : gene.id
+  node.group = node.group ? node.group : 'default';
+  node.label = node.label ? node.label : node.id
   return {
-    id: gene.id,
-    data: gene,
+    id: node.id,
+    data: node,
   };
 }
 
@@ -182,6 +189,8 @@ export interface Wrapper {
     x?: number;
     y?: number;
     drugId?: string;
+    disorderId?: string;
+    icd10?: string[];
     status?: 'approved' | 'investigational';
     inTrial?: boolean;
     inLiterature?: boolean;

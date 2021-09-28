@@ -110,7 +110,7 @@ export function removeDuplicateObjectsFromList(nodes: Node[], attribute: string)
   const seenIds = new Set();
   const filteredArray = new Array();
   for (const node of nodes) {
-    if (seenIds.has(node[attribute])) {
+    if (node[attribute] != null && seenIds.has(node[attribute])) {
       continue;
     }
     filteredArray.push(node);
@@ -124,12 +124,11 @@ export function removeDuplicateObjectsFromList(nodes: Node[], attribute: string)
  * @param data - Array Buffer data
  * @param type - type of the document.
  */
-export function downLoadFile(data: any, type: string) {
+export function downLoadFile(data: any, type: string, fmt: string) {
   let blob = new Blob([data], { type: type});
   var a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = 'test.graphml';
-  // start download
+  a.download = `drugstone_network_${new Date().getTime()}.${fmt}`;
   a.click();
 }
 

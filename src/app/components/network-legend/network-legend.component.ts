@@ -13,17 +13,21 @@ export class NetworkLegendComponent implements OnInit {
   @Input() config: IConfig;
 
   private contextNodeGroupsToDelete = {
-    'explorer': ['foundNode', 'foundDrug', 'seedNode', 'default'],
-    'adjacentDrugs': ['foundNode', 'seedNode', 'default'],
-    'drugTarget': ['foundDrug', 'seedNode', 'default'],
-    'drug': ['seedNode', 'default'],
-    'drugTargetAndSeeds': ['foundDrug', 'default'],
-    'drugAndSeeds': ['default']
+    'explorer': ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder'],
+    'adjacentDrugs': ['foundNode', 'seedNode', 'default', 'defaultDisorder'],
+    'adjacentDisorders': ['foundDrug', 'foundNode', 'seedNode', 'default'],
+    'adjacentDrugsAndDisorders': ['foundNode', 'seedNode', 'default'],
+    'drugTarget': ['foundDrug', 'seedNode', 'default', 'defaultDisorder'],
+    'drug': ['seedNode', 'default', 'defaultDisorder'],
+    'drugTargetAndSeeds': ['foundDrug', 'default', 'defaultDisorder'],
+    'drugAndSeeds': ['default', 'defaultDisorder']
   }
 
   private contextEdgeGroupsToDelete = {
     'explorer': ['default'],
     'adjacentDrugs': ['default'],
+    'adjacentDisorders': ['default'],
+    'adjacentDrugsAndDisorders' :['default'],
     'drugTarget': ['default'],
     'drug': ['default'],
     'drugTargetAndSeeds': ['default'],
@@ -35,17 +39,11 @@ export class NetworkLegendComponent implements OnInit {
       // selected node is not supposed to appear in legend
       return false;
     }
-    if (this.contextNodeGroupsToDelete[this.context].includes(nodeGroupKey)) {
-      return false;
-    }
-    return true;
+    return !this.contextNodeGroupsToDelete[this.context].includes(nodeGroupKey);
   }
 
   public checkEdgeGroupContext(edgeGroupKey) {
-    if (this.contextEdgeGroupsToDelete[this.context].includes(edgeGroupKey)) {
-      return false;
-    }
-    return true;
+    return !this.contextEdgeGroupsToDelete[this.context].includes(edgeGroupKey);
   }
 
   constructor() { }

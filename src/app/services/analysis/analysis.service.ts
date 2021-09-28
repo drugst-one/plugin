@@ -4,9 +4,16 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {toast} from 'bulma-toast';
 import {Injectable} from '@angular/core';
-import { NetexControllerService } from '../netex-controller/netex-controller.service';
+import {NetexControllerService} from '../netex-controller/netex-controller.service';
 
-export type AlgorithmType = 'trustrank' | 'keypathwayminer' | 'multisteiner' | 'closeness' | 'degree' | 'proximity' | 'betweenness';
+export type AlgorithmType =
+  'trustrank'
+  | 'keypathwayminer'
+  | 'multisteiner'
+  | 'closeness'
+  | 'degree'
+  | 'proximity'
+  | 'betweenness';
 export type QuickAlgorithmType = 'quick' | 'super';
 
 export const algorithmNames = {
@@ -37,7 +44,7 @@ export const MULTISTEINER: Algorithm = {slug: 'multisteiner', name: algorithmNam
 export const MAX_TASKS = 3;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class AnalysisService {
 
@@ -93,7 +100,7 @@ export class AnalysisService {
   }
 
   async getTasks() {
-    return await this.netex.getTasks(this.tokens).catch((e) => {
+    return await this.netex.getTasks(this.finishedTokens.length > 0 && this.tasks.length === 0 ? this.tokens : this.tokens.filter(t => this.finishedTokens.indexOf(t) === -1)).catch((e) => {
       clearInterval(this.intervalId);
     });
   }
@@ -224,7 +231,8 @@ export class AnalysisService {
   }
 
   getSelection(): Wrapper[] {
-    return Array.from(this.selectedItems.values());
+    const out = Array.from(this.selectedItems.values());
+    return out != null ? out : [];
   }
 
   getCount(): number {
@@ -241,6 +249,19 @@ export class AnalysisService {
     if (!this.canLaunchTask()) {
       toast({
         message: `You can only run ${MAX_TASKS} tasks at once. Please wait for one of them to finish or delete it from the task list.`,
+        duration: 5000,
+        dismissible: true,
+        pauseOnHover: true,
+        type: 'is-danger',
+        position: 'top-center',
+        animate: {in: 'fadeIn', out: 'fadeOut'}
+      });
+      return;
+    }
+
+    if (dataset == null) {
+      toast({
+        message: `Passed dataset is null. This feature might be still under development.`,
         duration: 5000,
         dismissible: true,
         pauseOnHover: true,
@@ -336,7 +357,11 @@ export class AnalysisService {
   startWatching() {
     const watch = async () => {
       if (this.tokens.length > 0) {
-        this.tasks = await this.getTasks();
+        const newtasks = await this.getTasks();
+        if(newtasks.length === 0)
+          return;
+        const newTaskIds = newtasks.map(t => t.token.toString());
+        this.tasks = newtasks.concat(this.tasks.filter(t => newTaskIds.indexOf(t.token) === -1));
         if (!this.tasks) {
           return;
         }
