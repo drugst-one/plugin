@@ -149,8 +149,8 @@
 
           <div class="network-footer-toolbar-inner-container">
 
-            <ng-container *ngIf="myConfig.showFooterButtonScreenshot">
-              <button class="button is-primary is-rounded has-tooltip network-footer-toolbar-element footer-buttons"
+            <div *ngIf="myConfig.showFooterButtonScreenshot" class="network-footer-toolbar-element footer-buttons">
+              <button class="button is-primary is-rounded has-tooltip"
                       pTooltip="Take a screenshot of the current network."
                       [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                       tooltipPosition="top"
@@ -163,7 +163,7 @@
                     Screenshot
                   </span>
               </button>
-            </ng-container>
+            </div>
 
             <ng-container *ngIf="myConfig.showFooterButtonExportGraphml">
                 <app-download-button [nodeData]=nodeData [smallStyle]="smallStyle" [buttonId]="'analysis-download'"></app-download-button>
@@ -265,10 +265,10 @@
       </div>
       <div class="content tab-content scrollable table-tab" *ngIf="task && task.info.done"
            [class.is-visible]="tab === 'table'">
-        <div class="field has-addons" *ngIf="tableHasScores && task.info.algorithm !== 'proximity'">
+        <div class="field has-addons is-pulled-right m-1" *ngIf="tableHasScores && task.info.algorithm !== 'proximity'">
           <p class="control">
             <button class="button is-rounded has-tooltip" pTooltip="Normalize the scores" [tooltipStyleClass]="'drgstn drgstn-tooltip'" tooltipPosition="top"
-                    [class.is-primary]="tableNormalize" (click)="toggleNormalization(true)">
+                    [class.is-primary]="tableNormalize" (click)="toggleNormalization(true)" [ngClass]="{ 'button-small': smallStyle }">
                 <span class="icon is-small">
                   <i class="fa fa-ruler-vertical"></i>
                 </span>
@@ -278,7 +278,7 @@
           <p class="control">
             <button class="button is-rounded has-tooltip" pTooltip="Disable normalization of the scores." [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                     tooltipPosition="top"
-                    [class.is-primary]="!tableNormalize" (click)="toggleNormalization(false)">
+                    [class.is-primary]="!tableNormalize" (click)="toggleNormalization(false)" [ngClass]="{ 'button-small': smallStyle }">
               <span>Off</span>
             </button>
           </p>
