@@ -114,8 +114,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (network == null) {
       return;
     }
+    network = '{"nodes":[{"id":"PTEN"}]}';
     console.log(network)
+    console.log(typeof network +": " +JSON.stringify(network))
     this.networkJSON = JSON.stringify(typeof network === 'string' ? JSON5.parse(network) : network);
+    console.log("result:"+this.networkJSON)
     this.createNetwork();
   }
 
