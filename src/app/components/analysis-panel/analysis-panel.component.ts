@@ -72,6 +72,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   }
   @Output() tokenChange = new EventEmitter<string | null>();
   @Output() showDetailsChange = new EventEmitter<Wrapper>();
+  @Output() setInputNetwork = new EventEmitter<any>();
   @Output() visibleItems = new EventEmitter<[any[], [Node[], Tissue], NodeInteraction[]]>();
   public task: Task | null = null;
   public result: any = null;
@@ -184,9 +185,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
         // Create
         const {nodes, edges} = this.createNetwork(this.result);
+        this.setInputNetwork.emit({nodes: nodes, edges: edges});
         this.nodeData.nodes = new vis.DataSet(nodes);
         this.nodeData.edges = new vis.DataSet(edges);
-
         const container = this.networkEl.nativeElement;
         const isBig = nodes.length > 100 || edges.length > 100;
         const options = NetworkSettings.getOptions(isBig ? 'analysis-big' : 'analysis');
@@ -194,7 +195,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
         this.network = new vis.Network(container, this.nodeData, options);
 
-        this.tableDrugs = nodes.filter( e => e.netexId && e.netexId.startsWith('d'));;
+        this.tableDrugs = nodes.filter( e => e.netexId && e.netexId.startsWith('d'));
         this.tableDrugs.forEach((r) => {
           r.rawScore = r.score;
         });
@@ -361,6 +362,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     this.analysis.switchSelection('main');
     this.token = null;
     this.tokenChange.emit(this.token);
+    this.setInputNetwork.emit(undefined);
     this.emitVisibleItems(false);
   }
 
