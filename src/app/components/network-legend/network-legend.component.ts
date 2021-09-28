@@ -11,6 +11,7 @@ export class NetworkLegendComponent implements OnInit {
 
   @Input() context: legendContext;
   @Input() config: IConfig;
+  @Input() smallStyle: boolean;
 
   private contextNodeGroupsToDelete = {
     'explorer': ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder'],

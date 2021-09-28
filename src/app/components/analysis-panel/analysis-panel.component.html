@@ -136,7 +136,7 @@
       <div class="tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'network'">
         <div class="card-image canvas-content" #networkWithLegend>
           <div *ngIf="myConfig.showLegend">
-            <app-network-legend [config]="myConfig" [context]="legendContext"></app-network-legend>
+            <app-network-legend [config]="myConfig" [context]="legendContext" [smallStyle]="smallStyle"></app-network-legend>
           </div>
           <div class="parent fullheight">
             <div class="center image1 fullheight" #network>
@@ -154,6 +154,7 @@
                       pTooltip="Take a screenshot of the current network."
                       [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                       tooltipPosition="top"
+                      [ngClass]="{ 'button-small': smallStyle }"
                       (click)="toImage()">
                   <span class="icon">
                     <i class="fas fa-camera" aria-hidden="true"></i>
