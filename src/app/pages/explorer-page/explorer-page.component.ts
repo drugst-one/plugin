@@ -54,7 +54,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public id: undefined | string;
 
   @Input()
-  public set config(config: string | undefined | object) {
+  public set config(config: string | undefined) {
     if (config == null) {
       return;
     }
@@ -64,7 +64,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }, 200);
     // add settings to config
 
-    const configObj = JSON.stringify(typeof config === 'string' ? JSON5.parse(config) : config);
+    const configObj = typeof config === 'string' ? JSON5.parse(config) : config;
     this.myConfig = merge(this.myConfig, configObj);
 
     // update Drugst.One according to the settings
@@ -110,14 +110,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   @Input()
-  public set network(network: string | undefined | object) {
+  public set network(network: string | undefined) {
     if (network == null) {
       return;
     }
-    console.log(network)
-    console.log(typeof network +": " +JSON.stringify(network))
     this.networkJSON = JSON.stringify(typeof network === 'string' ? JSON5.parse(network) : network);
-    console.log("result:"+this.networkJSON)
     this.createNetwork();
   }
 
