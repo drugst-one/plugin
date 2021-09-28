@@ -26,7 +26,7 @@ import domtoimage from 'dom-to-image';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, InteractionDatabase, NodeGroup} from '../../config';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
-import {downLoadFile, removeDuplicateObjectsFromList} from '../../utils'
+import {downLoadFile, removeDuplicateObjectsFromList} from '../../utils';
 import * as merge from 'lodash/fp/merge';
 import {AnalysisPanelComponent} from 'src/app/components/analysis-panel/analysis-panel.component';
 
@@ -53,8 +53,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public id: undefined | string;
 
   @Input()
-  public set config(config: string | undefined) {
-    if (typeof config === 'undefined') {
+  public set config(config: string | undefined |object) {
+    if (config== null) {
       return;
     }
     if (this.id == null)
@@ -62,7 +62,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.config = config;
       }, 200);
     // add settings to config
-    const configObj = JSON.parse(config);
+    const configObj = typeof config === 'object' ? config : JSON.parse(config);
     this.myConfig = merge(this.myConfig, configObj);
 
     // update Drugst.One according to the settings
@@ -108,12 +108,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   @Input()
-  public set network(network: string | undefined) {
-    if (typeof network === 'undefined') {
+  public set network(network: string | undefined | object) {
+    if (network == null) {
       return;
     }
-
-    this.networkJSON = network;
+    this.networkJSON = typeof network === 'object' ? JSON.stringify(network) : network ;
     this.createNetwork();
   }
 
