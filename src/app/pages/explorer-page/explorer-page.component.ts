@@ -77,22 +77,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         updateNetworkFlag = true;
       } else if (key === 'interactions') {
         this.getInteractions(configObj[key]);
-      } else if (key === 'showLeftSidebar') {
-        if (configObj[key]) {
-          // shrink main column
-          document.getElementById('main-column').classList.remove('leftgone');
-        } else {
-          // extend main column
-          document.getElementById('main-column').classList.add('leftgone');
-        }
-      } else if (key === 'showRightSidebar') {
-        if (configObj[key]) {
-          // shrink main column
-          document.getElementById('main-column').classList.remove('rightgone');
-        } else {
-          // extend main column
-          document.getElementById('main-column').classList.add('rightgone');
-        }
       }
     }
     // trigger updates on config e.g. in legend

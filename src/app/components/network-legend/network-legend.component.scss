@@ -1,32 +1,47 @@
 @import "src/stylesheets/variables";
 
-
 div.legend {
   position: absolute;
   bottom: 0;
   margin-left: 1rem;
+  width: auto;
+  max-width: 11rem;
   z-index: $explorer-networklegend-z;
   &.right {
     right: 0;
+  }
+  &.legend-small {
+    transform-origin: bottom left;
+    zoom: 0.8;
+    -moz-transform: scale(0.8);
+  }
+  table tr:first-child {
+    // no border line on top of first element
+    border-top: none;
   }
   img {
     max-width: 20vw;
     // margin-bottom: 1rem;
   }
-  td.group-name{
-    color:var(--drgstn-text-primary) !important;
+  th {
+    // make all nodes a bit smaller
+    zoom: 0.8;
+    -moz-transform: scale(0.8);
   }
-  tr.list-item{
+  td.group-name {
+    color: var(--drgstn-text-primary) !important;
+  }
+  tr.list-item {
     line-height: calc(#{$legend-row-height} / 2);
     border-top: var(--drgstn-text-primary) 1px solid;
-    th{
+    th {
       height: $legend-row-height;
       width: $legend-row-height;
       vertical-align: middle !important;
       padding: 2px !important;
-      .text{
+      .text {
         font-style: italic;
-        color:var(--drgstn-text-primary) !important;
+        color: var(--drgstn-text-primary) !important;
       }
       .diamond {
         height: $legend-diamond-size;
@@ -36,27 +51,27 @@ div.legend {
         margin-left: 12.5%;
         display: inline-block;
       }
-      .box{
+      .box {
         // class "box" exists in bulma css, only small changes needed
         height: 100%;
         width: 100%;
         display: inline-block;
         padding: unset;
       }
-      .ellipse{
+      .ellipse {
         height: 75%;
         width: 100%;
         border-radius: 50%;
         display: inline-block;
       }
-      .dot{
+      .dot {
         background: $legend-default-background-color;
         border-radius: 50%;
         width: $legend-circle-size;
         height: $legend-circle-size;
         display: inline-block;
       }
-      .circle{
+      .circle {
         background: $legend-default-background-color;
         border-radius: 50%;
         width: $legend-circle-size;
@@ -65,12 +80,12 @@ div.legend {
         text-align: center;
         line-height: $legend-circle-line-height;
       }
-      .triangle{
+      .triangle {
         width: 0;
         height: 0;
         border-left: calc(#{$legend-triangle-size} / 2) solid transparent;
         border-right: calc(#{$legend-triangle-size} / 2) solid transparent;
-        border-bottom: $legend-triangle-height solid black;  // default color will be changed by user input
+        border-bottom: $legend-triangle-height solid black; // default color will be changed by user input
         display: inline-block;
       }
       .triangleDown {
@@ -78,7 +93,7 @@ div.legend {
         height: 0;
         border-left: calc(#{$legend-triangle-size} / 2) solid transparent;
         border-right: calc(#{$legend-triangle-size} / 2) solid transparent;
-        border-top: $legend-triangle-height solid black;  // default color will be changed by user input
+        border-top: $legend-triangle-height solid black; // default color will be changed by user input
         display: inline-block;
       }
       .star {
@@ -86,32 +101,33 @@ div.legend {
         display: inline-block;
         width: 0;
         height: 0;
-        margin-left: .5em;
-        margin-right: .9em;
+        margin-left: 0.5em;
+        margin-right: 0.9em;
         margin-bottom: 1.2em;
-        border-right:  .3em solid transparent;
-        border-bottom: .7em  solid $legend-star-color;
-        border-left:   .3em solid transparent;
+        border-right: 0.3em solid transparent;
+        border-bottom: 0.7em solid $legend-star-color;
+        border-left: 0.3em solid transparent;
         /* Controlls the size of the stars. */
         font-size: $legend-star-size;
-        &:before, &:after {
-          content: '';
+        &:before,
+        &:after {
+          content: "";
           display: block;
           width: 0;
           height: 0;
           position: absolute;
-          top: .6em;
+          top: 0.6em;
           left: -1em;
-          border-right:  1em solid transparent;
-          border-bottom: .7em  solid;
-          border-left:   1em solid transparent;
+          border-right: 1em solid transparent;
+          border-bottom: 0.7em solid;
+          border-left: 1em solid transparent;
           transform: rotate(-35deg);
         }
         &:after {
           transform: rotate(35deg);
         }
       }
-      .square{
+      .square {
         background: $legend-default-background-color;
         width: $legend-square-width;
         height: $legend-square-width;
@@ -125,7 +141,7 @@ div.legend {
         width: $legend-row-height;
         height: $legend-row-height;
       }
-      hr.edge{
+      hr.edge {
         width: $legend-edge-width;
         height: $legend-edge-height;
         /* Center edge icon */
@@ -141,7 +157,5 @@ div.legend {
       vertical-align: middle !important;
       padding: 0 !important;
     }
-
   }
 }
-

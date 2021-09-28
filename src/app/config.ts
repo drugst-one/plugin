@@ -37,8 +37,7 @@ export interface IConfig {
   legendPos: 'left' | 'right';
   taskTargetName: string,
   taskDrugName: string,
-  showLeftSidebar: boolean;
-  showRightSidebar: boolean;
+  // showSidebar: boolean;
   showOverview: boolean;
   showQuery: boolean;
   showItemSelector: boolean;
@@ -58,6 +57,7 @@ export interface IConfig {
   interactionDrugProtein: InteractionDrugProteinDB;
   interactionProteinProtein: InteractionProteinProteinDB;
   autofillEdges: boolean;
+  sidebarPos: 'left' | 'right';
   interactions?: InteractionDatabase;
   identifier?: Identifier;
   nodeShadow?: boolean;
@@ -67,7 +67,6 @@ export interface IConfig {
 /**
  * Provide default values
  */
-
 export const defaultConfig: IConfig = {
   title: 'Drugst.one',
   legendUrl: '', // 'https://exbio.wzw.tum.de/covex/assets/leg1.png' show legend image if set, otherwise default legend
@@ -77,8 +76,7 @@ export const defaultConfig: IConfig = {
   taskDrugName: 'Drug Search',
   showLegendNodes: true,
   showLegendEdges: true,
-  showLeftSidebar: true,
-  showRightSidebar: true,
+  // showSidebar: true,
   showOverview: true,
   showQuery: true,
   showItemSelector: true,
@@ -97,6 +95,7 @@ export const defaultConfig: IConfig = {
   nodeShadow: true,
   edgeShadow: true,
   autofillEdges: true,
+  sidebarPos: 'right',
   nodeGroups: {
     // all NodeGroups but the default group must be set, if not provided by the user, they will be taken from here
     // IMPORTANT: node color must be hexacode!

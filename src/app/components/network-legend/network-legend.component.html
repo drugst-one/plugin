@@ -1,4 +1,4 @@
-<div class="legend" [class.right]="this.config.legendPos === 'right'">
+<div class="legend" [class.right]="this.config.legendPos === 'right'" [ngClass]="{ 'legend-small': smallStyle }">
 
   <!-- default legend in html -->
   <table *ngIf="!this.config.legendUrl.length">
@@ -11,7 +11,7 @@
             <th>
               <img [src]="nodeGroup.value.image" class="legend-icon"/>
             </th>
-            <td class="group-name" [ngClass]="{ 'text-normal': smallStyle }">&nbsp;{{ nodeGroup.value.groupName }}</td>
+            <td class="group-name">&nbsp;{{ nodeGroup.value.groupName }}</td>
           </ng-container>
 
           <ng-container *ngIf="!nodeGroup.value.image" [ngSwitch]="nodeGroup.value.shape">
@@ -56,7 +56,7 @@
               <span class="node {{ nodeGroup.value.shape }}" [style.background-color]=nodeGroup.value.color.background>
               </span>
             </th>
-            <td class="group-name" [ngClass]="{ 'text-normal': smallStyle }">&nbsp;{{ nodeGroup.value.groupName }}</td>
+            <td class="group-name">&nbsp;{{ nodeGroup.value.groupName }}</td>
           </ng-container>
         </ng-container>
       </tr>
@@ -69,7 +69,7 @@
             <hr *ngIf="!edgeGroup.value.dashes" class="edge" [style.background-color]=edgeGroup.value.color>
             <hr *ngIf="edgeGroup.value.dashes" class="edge dashes" [style.color]=edgeGroup.value.color>
           </th>
-          <td class="group-name" [ngClass]="{ 'text-normal': smallStyle }">&nbsp;{{ edgeGroup.value.groupName }}</td>
+          <td class="group-name">&nbsp;{{ edgeGroup.value.groupName }}</td>
         </ng-container>
       </tr>
     </ng-container>

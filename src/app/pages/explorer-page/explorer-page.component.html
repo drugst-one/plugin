@@ -4,7 +4,7 @@
       [(show)]="showAnalysisDialog"
       [target]="analysisDialogTarget"
       [config]="myConfig"
-      [inputNetwork]="inputNetwork"
+      [inputNetwork]="{ nodes: proteins, edges: edges }"
       (taskEvent)="emitTaskEvent($event)"
     >
     </app-launch-analysis>
@@ -27,7 +27,48 @@
     <!-- Start explorer -->
     <div class="covex explorer">
       <!-- Start left sidebar -->
-      <div *ngIf="myConfig.showLeftSidebar" class="covex sidebar bar-left">
+      <div class="covex sidebar" [ngClass]="{ 'is-pulled-right': myConfig.sidebarPos === 'right' }">
+        <div *ngIf="myConfig.showItemSelector" class="card bar-large">
+          <header
+            class="card-header"
+            [ngClass]="{ 'b-text-small': smallStyle }"
+          >
+            <p class="card-header-title">
+              <span *ngIf="!selectedWrapper" class="icon">
+                <i class="fas fa-info" aria-hidden="true"></i>
+              </span>
+              <!-- <i *ngIf="selectedWrapper && selectedWrapper.data.netexId && selectedWrapper.data.netexId.startsWith('p')" class="fas fa-dna" aria-hidden="true"></i>
+              <i *ngIf="selectedWrapper && selectedWrapper.data.netexId && selectedWrapper.data.netexId.startsWith('d')" class="fas fa-capsules"
+                 aria-hidden="true"></i> -->
+              <span *ngIf="!selectedWrapper">No item selected</span>
+              <span *ngIf="selectedWrapper">
+                <span>{{ selectedWrapper.data.type }}</span>
+              </span>
+            </p>
+            <a
+              (click)="collapseDetails = !collapseDetails"
+              data-action="collapse"
+              class="card-header-icon is-hidden-fullscreen"
+              aria-label="more options"
+            >
+              <span *ngIf="collapseDetails" class="icon">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+              <span *ngIf="!collapseDetails" class="icon">
+                <i class="fas fa-angle-left" aria-hidden="true"></i>
+              </span>
+            </a>
+          </header>
+          <div *ngIf="collapseDetails">
+            <div class="card-content">
+              <app-info-tile
+                [wrapper]="selectedWrapper"
+                [smallStyle]="smallStyle"
+              ></app-info-tile>
+            </div>
+          </div>
+        </div>
+
         <div
           *ngIf="myConfig.showOverview"
           class="card bar-large"
@@ -129,230 +170,6 @@
                   ></app-query-tile-component>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Start network block -->
-      <div class="covex network center-panel" id="main-column">
-        <div class="analysis-view" *ngIf="selectedAnalysisToken">
-          <app-analysis-panel
-            [(token)]="selectedAnalysisToken"
-            (showDetailsChange)="selectedWrapper = $event"
-            (visibleItems)="analysisWindowChanged($event)"
-            (setInputNetwork)="setInputNetwork($event)"
-            [config]="myConfig"
-            [smallStyle]="smallStyle"
-          ></app-analysis-panel>
-        </div>
-
-        <div class="card network">
-          <header class="card-header network-header">
-            <p class="card-header-title">
-              {{ myConfig.title }}
-            </p>
-          </header>
-          <div class="card-content explorer-network-view-settings">
-            <div class="card-image canvas-content" #networkWithLegend>
-              <div *ngIf="myConfig.showLegend">
-                <app-network-legend
-                  [config]="myConfig"
-                  [context]="legendContext"
-                  [smallStyle]="smallStyle"
-                ></app-network-legend>
-              </div>
-              <div class="center image1 fullheight" #network>
-                <button class="button is-loading center" alt="loading...">
-                  Loading
-                </button>
-              </div>
-            </div>
-
-            <footer
-              *ngIf="myConfig.showFooter"
-              class="card-footer toolbar network-footer-toolbar"
-            >
-              <div class="network-footer-toolbar-inner-container">
-                <ng-container *ngIf="myConfig.showFooterButtonScreenshot">
-                  <div class="footer-buttons network-footer-toolbar-element">
-                    <button
-                      (click)="toImage()"
-                      class="button is-primary is-rounded has-tooltip"
-                      pTooltip="Take a screenshot of the current network."
-                      [ngClass]="{ 'button-small': smallStyle }"
-                      [tooltipStyleClass]="'drgstn drgstn-tooltip'"
-                      tooltipPosition="top"
-                    >
-                      <span class="icon">
-                        <i class="fas fa-camera" aria-hidden="true"></i>
-                      </span>
-                      <span [ngClass]="{ 'text-normal': smallStyle }"
-                        >Screenshot</span
-                      >
-                    </button>
-                  </div>
-                </ng-container>
-
-                <ng-container *ngIf="myConfig.showFooterButtonExportGraphml">
-                  <app-download-button
-                    [nodeData]="nodeData"
-                    [smallStyle]="smallStyle"
-                    [buttonId]="'explorer-download'"
-                  ></app-download-button>
-                </ng-container>
-
-                <ng-container *ngIf="myConfig.showFooterButtonExpression">
-                  <div
-                    class="
-                      footer-buttons
-                      dropdown
-                      is-up
-                      network-footer-toolbar-element
-                    "
-                    [class.is-active]="expressionExpanded"
-                  >
-                    <div class="dropdown-trigger">
-                      <button
-                        (click)="expressionExpanded = !expressionExpanded"
-                        class="button is-rounded is-primary"
-                        [class.is-outlined]="!selectedTissue"
-                        aria-haspopup="true"
-                        aria-controls="dropdown-menu"
-                        pTooltip="Tissue expression data is provided by the GTEx project."
-                        [tooltipStyleClass]="'drgstn drgstn-tooltip'"
-                        tooltipPosition="top"
-                        [ngClass]="{ 'button-small': smallStyle }"
-                      >
-                        <span
-                          *ngIf="!selectedTissue"
-                          [ngClass]="{ 'text-small': smallStyle }"
-                          >Tissue</span
-                        >
-                        <span *ngIf="selectedTissue">{{
-                          selectedTissue.name
-                        }}</span>
-                        <span *ngIf="expressionExpanded" class="icon is-small">
-                          <i class="fas fa-angle-up" aria-hidden="true"></i>
-                        </span>
-                        <span *ngIf="!expressionExpanded" class="icon is-small">
-                          <i class="fas fa-angle-left" aria-hidden="true"></i>
-                        </span>
-                      </button>
-                    </div>
-                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                      <div class="dropdown-content tissue-dropdown">
-                        <div class="scroll-area">
-                          <a
-                            (click)="selectTissue(null)"
-                            [class.is-active]="!selectedTissue"
-                            class="dropdown-item"
-                          >
-                            None
-                          </a>
-                          <a
-                            *ngFor="let tissue of analysis.getTissues()"
-                            (click)="selectTissue(tissue)"
-                            [class.is-active]="
-                              selectedTissue &&
-                              tissue.netexId === selectedTissue.netexId
-                            "
-                            class="dropdown-item"
-                          >
-                            {{ tissue.name }}
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </ng-container>
-                <app-toggle
-                  class="footer-buttons network-footer-toolbar-element"
-                  textOn="Drugs"
-                  textOff="Off"
-                  tooltipOn="Display adjacent drugs ON."
-                  tooltipOff="Display adjacent drugs OFF."
-                  [smallStyle]="smallStyle"
-                  [value]="adjacentDrugs"
-                  (valueChange)="updateAdjacentDrugs($event)"
-                ></app-toggle>
-                <app-toggle
-                  class="footer-buttons network-footer-toolbar-element"
-                  textOn="Disorders (protein)"
-                  textOff="Off"
-                  tooltipOn="Show disorders adjacent to all currently displayed proteins/genes ON."
-                  tooltipOff="Show disorders adjacent to all currently displayed proteins/genes OFF."
-                  [smallStyle]="smallStyle"
-                  [value]="adjacentDisordersProtein"
-                  (valueChange)="updateAdjacentProteinDisorders($event)"
-                ></app-toggle>
-                <app-toggle
-                  class="footer-buttons network-footer-toolbar-element"
-                  textOn="Disorders (drugs)"
-                  textOff="Off"
-                  tooltipOn="Show disorders adjacent to all currently displayed drugs ON."
-                  tooltipOff="Show disorders adjacent to all currently displayed drugs OFF."
-                  [smallStyle]="smallStyle"
-                  [value]="adjacentDisordersDrug"
-                  [disabled]="!hasDrugsLoaded()"
-                  (valueChange)="updateAdjacentDrugDisorders($event)"
-                ></app-toggle>
-                <app-toggle
-                  class="footer-buttons network-footer-toolbar-element"
-                  textOn="Animation"
-                  textOff="Off"
-                  tooltipOn="Enable the network animation."
-                  tooltipOff="Disable the network animation and freeze nodes."
-                  [smallStyle]="smallStyle"
-                  [value]="physicsEnabled"
-                  (valueChange)="updatePhysicsEnabled($event)"
-                ></app-toggle>
-              </div>
-            </footer>
-          </div>
-        </div>
-      </div>
-
-      <!-- End  network block -->
-
-      <div *ngIf="myConfig.showRightSidebar" class="covex sidebar bar-right">
-        <div *ngIf="myConfig.showItemSelector" class="card bar-large">
-          <header
-            class="card-header"
-            [ngClass]="{ 'b-text-small': smallStyle }"
-          >
-            <p class="card-header-title">
-              <span *ngIf="!selectedWrapper" class="icon">
-                <i class="fas fa-info" aria-hidden="true"></i>
-              </span>
-              <!-- <i *ngIf="selectedWrapper && selectedWrapper.data.netexId && selectedWrapper.data.netexId.startsWith('p')" class="fas fa-dna" aria-hidden="true"></i>
-              <i *ngIf="selectedWrapper && selectedWrapper.data.netexId && selectedWrapper.data.netexId.startsWith('d')" class="fas fa-capsules"
-                 aria-hidden="true"></i> -->
-              <span *ngIf="!selectedWrapper">No item selected</span>
-              <span *ngIf="selectedWrapper">
-                <span>{{ selectedWrapper.data.type }}</span>
-              </span>
-            </p>
-            <a
-              (click)="collapseDetails = !collapseDetails"
-              data-action="collapse"
-              class="card-header-icon is-hidden-fullscreen"
-              aria-label="more options"
-            >
-              <span *ngIf="collapseDetails" class="icon">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-              </span>
-              <span *ngIf="!collapseDetails" class="icon">
-                <i class="fas fa-angle-left" aria-hidden="true"></i>
-              </span>
-            </a>
-          </header>
-          <div *ngIf="collapseDetails">
-            <div class="card-content">
-              <app-info-tile
-                [wrapper]="selectedWrapper"
-                [smallStyle]="smallStyle"
-              ></app-info-tile>
             </div>
           </div>
         </div>
@@ -693,10 +510,7 @@
               class="card-content overflow task-list-container"
               *ngIf="analysis.tasks && analysis.tasks.length > 0"
             >
-              <app-task-list
-                [(token)]="selectedAnalysisToken"
-                [smallStyle]="smallStyle"
-              ></app-task-list>
+              <app-task-list [(token)]="selectedAnalysisToken"></app-task-list>
             </div>
             <footer class="card-footer">
               <a
@@ -874,6 +688,185 @@
           </div>
         </div>
       </div>
+
+      <!-- Start network block -->
+      <div class="covex network center-panel" id="main-column">
+        <div class="analysis-view" *ngIf="selectedAnalysisToken">
+          <app-analysis-panel
+            [(token)]="selectedAnalysisToken"
+            (showDetailsChange)="selectedWrapper = $event"
+            (visibleItems)="analysisWindowChanged($event)"
+            [config]="myConfig"
+            [smallStyle]="smallStyle"
+          ></app-analysis-panel>
+        </div>
+
+        <div class="card network">
+          <header class="card-header network-header">
+            <p class="card-header-title">
+              {{ myConfig.title }}
+            </p>
+          </header>
+          <div class="card-content explorer-network-view-settings">
+            <div class="card-image canvas-content" #networkWithLegend>
+              <div *ngIf="myConfig.showLegend">
+                <app-network-legend
+                  [config]="myConfig"
+                  [context]="legendContext"
+                  [smallStyle]="smallStyle"
+                ></app-network-legend>
+              </div>
+              <div class="center image1 fullheight" #network>
+                <button class="button is-loading center" alt="loading...">
+                  Loading
+                </button>
+              </div>
+            </div>
+
+            <footer
+              *ngIf="myConfig.showFooter"
+              class="card-footer toolbar network-footer-toolbar"
+            >
+              <div class="network-footer-toolbar-inner-container">
+                <ng-container *ngIf="myConfig.showFooterButtonScreenshot">
+                  <div class="footer-buttons network-footer-toolbar-element">
+                    <button
+                      (click)="toImage()"
+                      class="button is-primary is-rounded has-tooltip"
+                      pTooltip="Take a screenshot of the current network."
+                      [ngClass]="{ 'button-small': smallStyle }"
+                      [tooltipStyleClass]="'drgstn drgstn-tooltip'"
+                      tooltipPosition="top"
+                    >
+                      <span class="icon">
+                        <i class="fas fa-camera" aria-hidden="true"></i>
+                      </span>
+                      <span [ngClass]="{ 'text-normal': smallStyle }"
+                        >Screenshot</span
+                      >
+                    </button>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="myConfig.showFooterButtonExportGraphml">
+                  <app-download-button
+                    [nodeData]="nodeData"
+                    [smallStyle]="smallStyle"
+                    [buttonId]="'explorer-download'"
+                  ></app-download-button>
+                </ng-container>
+
+                <ng-container *ngIf="myConfig.showFooterButtonExpression">
+                  <div
+                    class="
+                      footer-buttons
+                      dropdown
+                      is-up
+                      network-footer-toolbar-element
+                    "
+                    [class.is-active]="expressionExpanded"
+                  >
+                    <div class="dropdown-trigger">
+                      <button
+                        (click)="expressionExpanded = !expressionExpanded"
+                        class="button is-rounded is-primary"
+                        [class.is-outlined]="!selectedTissue"
+                        aria-haspopup="true"
+                        aria-controls="dropdown-menu"
+                        pTooltip="Tissue expression data is provided by the GTEx project."
+                        [tooltipStyleClass]="'drgstn drgstn-tooltip'"
+                        tooltipPosition="top"
+                        [ngClass]="{ 'button-small': smallStyle }"
+                      >
+                        <span
+                          *ngIf="!selectedTissue"
+                          [ngClass]="{ 'text-small': smallStyle }"
+                          >Tissue</span
+                        >
+                        <span *ngIf="selectedTissue">{{
+                          selectedTissue.name
+                        }}</span>
+                        <span *ngIf="expressionExpanded" class="icon is-small">
+                          <i class="fas fa-angle-up" aria-hidden="true"></i>
+                        </span>
+                        <span *ngIf="!expressionExpanded" class="icon is-small">
+                          <i class="fas fa-angle-left" aria-hidden="true"></i>
+                        </span>
+                      </button>
+                    </div>
+                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                      <div class="dropdown-content tissue-dropdown">
+                        <div class="scroll-area">
+                          <a
+                            (click)="selectTissue(null)"
+                            [class.is-active]="!selectedTissue"
+                            class="dropdown-item"
+                          >
+                            None
+                          </a>
+                          <a
+                            *ngFor="let tissue of analysis.getTissues()"
+                            (click)="selectTissue(tissue)"
+                            [class.is-active]="
+                              selectedTissue &&
+                              tissue.netexId === selectedTissue.netexId
+                            "
+                            class="dropdown-item"
+                          >
+                            {{ tissue.name }}
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <app-toggle
+                  class="footer-buttons network-footer-toolbar-element"
+                  textOn="Drugs"
+                  textOff="Off"
+                  tooltipOn="Display adjacent drugs ON."
+                  tooltipOff="Display adjacent drugs OFF."
+                  [smallStyle]="smallStyle"
+                  [value]="adjacentDrugs"
+                  (valueChange)="updateAdjacentDrugs($event)"
+                ></app-toggle>
+                <app-toggle
+                  class="footer-buttons network-footer-toolbar-element"
+                  textOn="Disorders (protein)"
+                  textOff="Off"
+                  tooltipOn="Show disorders adjacent to all currently displayed proteins/genes ON."
+                  tooltipOff="Show disorders adjacent to all currently displayed proteins/genes OFF."
+                  [smallStyle]="smallStyle"
+                  [value]="adjacentDisordersProtein"
+                  (valueChange)="updateAdjacentProteinDisorders($event)"
+                ></app-toggle>
+                <app-toggle
+                  class="footer-buttons network-footer-toolbar-element"
+                  textOn="Disorders (drugs)"
+                  textOff="Off"
+                  tooltipOn="Show disorders adjacent to all currently displayed drugs ON."
+                  tooltipOff="Show disorders adjacent to all currently displayed drugs OFF."
+                  [smallStyle]="smallStyle"
+                  [value]="adjacentDisordersDrug"
+                  [disabled]="!hasDrugsLoaded()"
+                  (valueChange)="updateAdjacentDrugDisorders($event)"
+                ></app-toggle>
+                <app-toggle
+                  class="footer-buttons network-footer-toolbar-element"
+                  textOn="Animation"
+                  textOff="Off"
+                  tooltipOn="Enable the network animation."
+                  tooltipOff="Disable the network animation and freeze nodes."
+                  [smallStyle]="smallStyle"
+                  [value]="physicsEnabled"
+                  (valueChange)="updatePhysicsEnabled($event)"
+                ></app-toggle>
+              </div>
+            </footer>
+          </div>
+        </div>
+      </div>
+      <!-- End  network block -->
 
       <div class="is-hidden-tablet mobile-fallback">
         Sorry, CoVex is not available for mobile phones. To find information
