@@ -114,6 +114,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (network == null) {
       return;
     }
+    console.log(network)
     this.networkJSON = JSON.stringify(typeof network === 'string' ? JSON5.parse(network) : network);
     this.createNetwork();
   }
