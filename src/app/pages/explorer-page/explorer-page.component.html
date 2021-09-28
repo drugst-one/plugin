@@ -28,7 +28,7 @@
     <div class="covex explorer">
       <!-- Start left sidebar -->
       <div class="covex sidebar" [ngClass]="{ 'is-pulled-right': myConfig.sidebarPos === 'right' }">
-        <div *ngIf="myConfig.showItemSelector" class="card bar-large">
+        <div *ngIf="myConfig.showItemSelector" class="card bar-large mt-0">
           <header
             class="card-header"
             [ngClass]="{ 'b-text-small': smallStyle }"
@@ -510,7 +510,7 @@
               class="card-content overflow task-list-container"
               *ngIf="analysis.tasks && analysis.tasks.length > 0"
             >
-              <app-task-list [(token)]="selectedAnalysisToken"></app-task-list>
+              <app-task-list [(token)]="selectedAnalysisToken" [smallStyle]="smallStyle"></app-task-list>
             </div>
             <footer class="card-footer">
               <a
