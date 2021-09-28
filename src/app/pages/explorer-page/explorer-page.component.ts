@@ -26,9 +26,10 @@ import domtoimage from 'dom-to-image';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, InteractionDatabase, NodeGroup} from '../../config';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
-import {downLoadFile, removeDuplicateObjectsFromList} from '../../utils'
+import {removeDuplicateObjectsFromList} from '../../utils';
 import * as merge from 'lodash/fp/merge';
 import {AnalysisPanelComponent} from 'src/app/components/analysis-panel/analysis-panel.component';
+import * as JSON5 from 'json5';
 
 declare var vis: any;
 
@@ -54,7 +55,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   @Input()
   public set config(config: string | undefined) {
-    if (typeof config === 'undefined') {
+    if (config == null) {
       return;
     }
     if (this.id == null)
@@ -62,7 +63,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.config = config;
       }, 200);
     // add settings to config
-    const configObj = JSON.parse(config);
+
+    const configObj = typeof config === 'string' ? config.length === 0 ? {}: JSON5.parse(config) : config;
     this.myConfig = merge(this.myConfig, configObj);
 
     // update Drugst.One according to the settings
@@ -93,11 +95,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   @Input()
   public set network(network: string | undefined) {
-    if (typeof network === 'undefined') {
+    if (network == null) {
       return;
     }
-
-    this.networkJSON = network;
+    this.networkJSON = JSON.stringify(typeof network === 'string' ? JSON5.parse(network) : network);
     this.createNetwork();
   }
 
@@ -158,7 +159,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public selectedAnalysisToken: string | null = null;
 
-  @Input() inputNetwork = { };
+  @Input() inputNetwork = {};
 
   @Input() set taskId(token: string | null) {
     if (token == null || token.length === 0)
@@ -274,17 +275,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   private async getNetwork() {
 
     const network = JSON.parse(this.networkJSON);
-
     if (this.myConfig.identifier === 'ensg') {
       // @ts-ignore
       network.nodes.forEach(node => {
         node.id = this.removeEnsemblVersion(node.id);
       });
-      // @ts-ignore
-      network.edges.forEach(edge => {
-        edge.from = this.removeEnsemblVersion(edge.from);
-        edge.to = this.removeEnsemblVersion(edge.to);
-      });
+      if (network.edges != null)
+        // @ts-ignore
+        network.edges.forEach(edge => {
+          edge.from = this.removeEnsemblVersion(edge.from);
+          edge.to = this.removeEnsemblVersion(edge.to);
+        });
     }
 
     // map data to nodes in backend
@@ -300,7 +301,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     // at this point, we have nodes synched with the backend
     // use netexIds where posssible, but use original id as node name if no label given
     const nodeIdMap = {};
-
     network.nodes.forEach((node) => {
       // set node label to original id before node id will be set to netex id
       node.label = node.label ? node.label : node.id;
@@ -311,14 +311,15 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     // adjust edge labels accordingly and filter
     const edges = new Array();
-    network.edges.forEach(edge => {
-      edge.from = nodeIdMap[edge.from];
-      edge.to = nodeIdMap[edge.to];
-      // check if edges have endpoints
-      if (edge.from !== undefined && edge.to !== undefined) {
-        edges.push(edge);
-      }
-    });
+    if (network.edges != null)
+      network.edges.forEach(edge => {
+        edge.from = nodeIdMap[edge.from];
+        edge.to = nodeIdMap[edge.to];
+        // check if edges have endpoints
+        if (edge.from !== undefined && edge.to !== undefined) {
+          edges.push(edge);
+        }
+      });
     // remove edges without endpoints
     network.edges = edges;
     this.inputNetwork = network;
@@ -818,8 +819,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   setInputNetwork(network: any) {
-    if(network == null)
-      this.inputNetwork={nodes: this.proteins, edges : this.edges}
+    if (network == null)
+      this.inputNetwork = {nodes: this.proteins, edges: this.edges}
     else
       this.inputNetwork = network;
   }

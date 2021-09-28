@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  backend: 'http://cosy-test.zbh.uni-hamburg.de/drugstone_api/',
+  backend: 'https://drugst.one/drugstone_api/',
 };
