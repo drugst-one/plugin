@@ -61,7 +61,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       setTimeout(() => {
         this.config = config;
       }, 200);
-    console.log(config)
     // add settings to config
     const configObj = typeof config === 'object' ? config : JSON.parse(config);
     this.myConfig = merge(this.myConfig, configObj);
@@ -110,7 +109,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   @Input()
   public set network(network: string | undefined | object) {
-    console.log(network)
     if (network == null) {
       return;
     }
