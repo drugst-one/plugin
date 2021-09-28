@@ -12,6 +12,7 @@ export class TaskListComponent implements OnInit {
 
   @Input() token: string;
   @Output() tokenChange: EventEmitter<string> = new EventEmitter();
+  @Input() smallStyle: boolean;
 
   public algorithmNames = algorithmNames;
 

@@ -7,6 +7,11 @@
     margin-top: 5px;
     margin-bottom: 5px;
   }
+
+  .icon {
+    display: block !important;
+  }
+
 }
 
 .status-field {
@@ -14,8 +19,8 @@
   padding: 2px;
   font-size: 10px;
   max-width: 215px;
-  height: 20px;
-  overflow: hidden;
+  max-height: 30px;
+  overflow: scroll;
   border: 1px solid var(--drgstn-border);
   display: inline-block;
 }
