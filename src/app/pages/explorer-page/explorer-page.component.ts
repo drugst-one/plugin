@@ -357,6 +357,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public async openSummary(item: Wrapper, zoom: boolean) {
     this.selectedWrapper = item;
+    // add expression information if loaded
+    if (this.expressionMap && this.selectedWrapper.id in this.expressionMap) {
+      this.selectedWrapper.expression = this.expressionMap[this.selectedWrapper.id]
+    }
     if (zoom) {
       this.zoomToNode(item.id);
     }

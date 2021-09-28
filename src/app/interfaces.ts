@@ -197,6 +197,7 @@ export interface Wrapper {
     trialLinks?: string[];
     detailShowLabel?: boolean;
   };
+  expression?: number;
 }
 
 export interface Drug {

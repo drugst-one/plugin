@@ -51,6 +51,13 @@
         <span class="is-capitalized"> {{ ensg }}</span>
       </a>
     </p>
+    <p *ngIf="wrapper.expression" [ngClass]="{'text-normal':smallStyle}">
+      <b><span>Expression:</span></b>
+      <span class="is-capitalized"> {{ wrapper.expression }}</span>
+      <span class="icon" pTooltip="Tissue expression data is provided by the GTEx project. Unit is expression per million."
+      [tooltipStyleClass]="'drgstn drgstn-tooltip'"
+      tooltipPosition="top"><i class="fas fa-info-circle"></i></span>
+    </p>
 
   </div>
 
