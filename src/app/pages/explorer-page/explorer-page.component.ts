@@ -53,14 +53,15 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public id: undefined | string;
 
   @Input()
-  public set config(config: string | undefined |object) {
-    if (config== null) {
+  public set config(config: string | undefined | object) {
+    if (config == null) {
       return;
     }
     if (this.id == null)
       setTimeout(() => {
         this.config = config;
       }, 200);
+    console.log(config)
     // add settings to config
     const configObj = typeof config === 'object' ? config : JSON.parse(config);
     this.myConfig = merge(this.myConfig, configObj);
@@ -109,10 +110,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   @Input()
   public set network(network: string | undefined | object) {
+    console.log(network)
     if (network == null) {
       return;
     }
-    this.networkJSON = typeof network === 'object' ? JSON.stringify(network) : network ;
+    this.networkJSON = typeof network === 'object' ? JSON.stringify(network) : network;
     this.createNetwork();
   }
 
@@ -173,7 +175,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public selectedAnalysisToken: string | null = null;
 
-  @Input() inputNetwork = { };
+  @Input() inputNetwork = {};
 
   @Input() set taskId(token: string | null) {
     if (token == null || token.length === 0)
@@ -289,17 +291,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   private async getNetwork() {
 
     const network = JSON.parse(this.networkJSON);
-
     if (this.myConfig.identifier === 'ensg') {
       // @ts-ignore
       network.nodes.forEach(node => {
         node.id = this.removeEnsemblVersion(node.id);
       });
-      // @ts-ignore
-      network.edges.forEach(edge => {
-        edge.from = this.removeEnsemblVersion(edge.from);
-        edge.to = this.removeEnsemblVersion(edge.to);
-      });
+      if (network.edges != null)
+        // @ts-ignore
+        network.edges.forEach(edge => {
+          edge.from = this.removeEnsemblVersion(edge.from);
+          edge.to = this.removeEnsemblVersion(edge.to);
+        });
     }
 
     // map data to nodes in backend
@@ -315,7 +317,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     // at this point, we have nodes synched with the backend
     // use netexIds where posssible, but use original id as node name if no label given
     const nodeIdMap = {};
-
     network.nodes.forEach((node) => {
       // set node label to original id before node id will be set to netex id
       node.label = node.label ? node.label : node.id;
@@ -326,14 +327,15 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     // adjust edge labels accordingly and filter
     const edges = new Array();
-    network.edges.forEach(edge => {
-      edge.from = nodeIdMap[edge.from];
-      edge.to = nodeIdMap[edge.to];
-      // check if edges have endpoints
-      if (edge.from !== undefined && edge.to !== undefined) {
-        edges.push(edge);
-      }
-    });
+    if (network.edges != null)
+      network.edges.forEach(edge => {
+        edge.from = nodeIdMap[edge.from];
+        edge.to = nodeIdMap[edge.to];
+        // check if edges have endpoints
+        if (edge.from !== undefined && edge.to !== undefined) {
+          edges.push(edge);
+        }
+      });
     // remove edges without endpoints
     network.edges = edges;
     this.inputNetwork = network;
@@ -833,8 +835,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   setInputNetwork(network: any) {
-    if(network == null)
-      this.inputNetwork={nodes: this.proteins, edges : this.edges}
+    if (network == null)
+      this.inputNetwork = {nodes: this.proteins, edges: this.edges}
     else
       this.inputNetwork = network;
   }
