@@ -122,9 +122,9 @@ export class NetexControllerService {
     return this.http.post<any>(`${environment.backend}adjacent_drugs/`, params);
   }
 
-  public graphmlLink(graph_data: { edges: EdgeType[], nodes: Node[] }) {
+  public graphExport(graph_data: { edges: EdgeType[], nodes: Node[] }) {
     /**
-     * Sends complete graph data to backend where it is written to graphml File.
+     * Sends complete graph data to backend where it is written to graphml or json File.
      * The file is returned as download for the user.
      */
     return this.http.post(`${environment.backend}graph_export/`, graph_data, {responseType: 'text'});

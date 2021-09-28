@@ -11,6 +11,7 @@ export class NetworkLegendComponent implements OnInit {
 
   @Input() context: legendContext;
   @Input() config: IConfig;
+  @Input() smallStyle: boolean;
 
   private contextNodeGroupsToDelete = {
     'explorer': ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder'],
@@ -39,17 +40,11 @@ export class NetworkLegendComponent implements OnInit {
       // selected node is not supposed to appear in legend
       return false;
     }
-    if (this.contextNodeGroupsToDelete[this.context].includes(nodeGroupKey)) {
-      return false;
-    }
-    return true;
+    return !this.contextNodeGroupsToDelete[this.context].includes(nodeGroupKey);
   }
 
   public checkEdgeGroupContext(edgeGroupKey) {
-    if (this.contextEdgeGroupsToDelete[this.context].includes(edgeGroupKey)) {
-      return false;
-    }
-    return true;
+    return !this.contextEdgeGroupsToDelete[this.context].includes(edgeGroupKey);
   }
 
   constructor() { }

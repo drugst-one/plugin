@@ -124,11 +124,11 @@ export function removeDuplicateObjectsFromList(nodes: Node[], attribute: string)
  * @param data - Array Buffer data
  * @param type - type of the document.
  */
-export function downLoadFile(data: any, type: string) {
+export function downLoadFile(data: any, type: string, fmt: string) {
   let blob = new Blob([data], { type: type});
   var a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = 'test.graphml';
+  a.download = `drugstone_network_${new Date().getTime()}.${fmt}`;
   a.click();
 }
 

@@ -1,7 +1,4 @@
-<div
-  id="appWindow"
-  (window:resize)="onResize($event)"
->
+<div id="appWindow" (window:resize)="onResize($event)">
   <div class="is-hidden-mobile fullheight" id="appContainer">
     <app-launch-analysis
       [(show)]="showAnalysisDialog"
@@ -73,7 +70,9 @@
                   <div>
                     <p class="heading">Nodes</p>
                     <p class="title">
-                      {{ currentViewNodes != null ? currentViewNodes.length : 0 }}
+                      {{
+                        currentViewNodes != null ? currentViewNodes.length : 0
+                      }}
                     </p>
                   </div>
                 </div>
@@ -81,7 +80,9 @@
                   <div>
                     <p class="heading">Interactions</p>
                     <p class="title">
-                      {{ currentViewEdges != null ? currentViewEdges.length : 0 }}
+                      {{
+                        currentViewEdges != null ? currentViewEdges.length : 0
+                      }}
                     </p>
                   </div>
                 </div>
@@ -158,6 +159,7 @@
                 <app-network-legend
                   [config]="myConfig"
                   [context]="legendContext"
+                  [smallStyle]="smallStyle"
                 ></app-network-legend>
               </div>
               <div class="center image1 fullheight" #network>
@@ -173,58 +175,31 @@
             >
               <div class="network-footer-toolbar-inner-container">
                 <ng-container *ngIf="myConfig.showFooterButtonScreenshot">
-                  <div
-                    class="
-                      footer-buttons
-                      network-footer-toolbar-element
-                    "
-                  >
+                  <div class="footer-buttons network-footer-toolbar-element">
                     <button
                       (click)="toImage()"
-                      class="
-                      button
-                      is-primary is-rounded
-                      has-tooltip
-                    "
+                      class="button is-primary is-rounded has-tooltip"
                       pTooltip="Take a screenshot of the current network."
                       [ngClass]="{ 'button-small': smallStyle }"
                       [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                       tooltipPosition="top"
                     >
-                    <span class="icon">
-                      <i class="fas fa-camera" aria-hidden="true"></i>
-                    </span>
+                      <span class="icon">
+                        <i class="fas fa-camera" aria-hidden="true"></i>
+                      </span>
                       <span [ngClass]="{ 'text-normal': smallStyle }"
-                      >Screenshot</span
+                        >Screenshot</span
                       >
                     </button>
                   </div>
                 </ng-container>
 
                 <ng-container *ngIf="myConfig.showFooterButtonExportGraphml">
-                  <div
-                    class="
-                      footer-buttons
-                      network-footer-toolbar-element"
-                  >
-                    <button
-                      (click)="graphmlLink()"
-                      class="button
-                      is-primary is-rounded
-                      has-tooltip"
-                      [ngClass]="{ 'button-small': smallStyle }"
-                      pTooltip="Export this network as .graphml file."
-                      [tooltipStyleClass]="'drgstn drgstn-tooltip'"
-                      tooltipPosition="top"
-                    >
-                    <span class="icon">
-                      <i class="fas fa-download" aria-hidden="true"></i>
-                    </span>
-                      <span [ngClass]="{ 'text-normal': smallStyle }"
-                      >.graphml</span
-                      >
-                    </button>
-                  </div>
+                  <app-download-button
+                    [nodeData]="nodeData"
+                    [smallStyle]="smallStyle"
+                    [buttonId]="'explorer-download'"
+                  ></app-download-button>
                 </ng-container>
 
                 <ng-container *ngIf="myConfig.showFooterButtonExpression">
@@ -252,10 +227,11 @@
                         <span
                           *ngIf="!selectedTissue"
                           [ngClass]="{ 'text-small': smallStyle }"
-                        >Tissue</span>
+                          >Tissue</span
+                        >
                         <span *ngIf="selectedTissue">{{
                           selectedTissue.name
-                          }}</span>
+                        }}</span>
                         <span *ngIf="expressionExpanded" class="icon is-small">
                           <i class="fas fa-angle-up" aria-hidden="true"></i>
                         </span>
@@ -407,82 +383,147 @@
             </a>
           </header>
           <div *ngIf="collapseAnalysisQuick">
-            <div class="card-content quick-find" [ngClass]="{small:smallStyle}">
+            <div
+              class="card-content quick-find"
+              [ngClass]="{ small: smallStyle }"
+            >
               <div class="field">
                 <div class="control">
-                  <div class="tile notification quick-start warning" [ngClass]="{small:smallStyle}">
+                  <div
+                    class="tile notification quick-start warning"
+                    [ngClass]="{ small: smallStyle }"
+                  >
                     <div class="align-vmiddle">
-                      <div [ngClass]="{'digit':!smallStyle, 'digit-small': smallStyle}">
+                      <div
+                        [ngClass]="{
+                          digit: !smallStyle,
+                          'digit-small': smallStyle
+                        }"
+                      >
                         <i class="fa fa-fast-forward"></i>
                       </div>
-                      <div style="display: flex; justify-content: center; width:100%">
+                      <div
+                        style="
+                          display: flex;
+                          justify-content: center;
+                          width: 100%;
+                        "
+                      >
                         <button
                           (click)="analysis.startQuickAnalysis(true, null)"
                           [disabled]="analysis.isLaunchingQuick()"
-                          class="button is-white is-rounded has-tooltip quick-start-btn"
+                          class="
+                            button
+                            is-white is-rounded
+                            has-tooltip
+                            quick-start-btn
+                          "
                           pTooltip="Find drugs for all proteins."
                           [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                           tooltipPosition="top"
                         >
-                        <span class="icon quick-icon">
-                          <span *ngIf="!analysis.isLaunchingQuick()">
-                          <i class="fa fa-capsules"></i>
+                          <span class="icon quick-icon">
+                            <span *ngIf="!analysis.isLaunchingQuick()">
+                              <i class="fa fa-capsules"></i>
                             </span>
-                          <span *ngIf="analysis.isLaunchingQuick()">
-                          <i class="fa fa-spin fa-spinner"></i>
+                            <span *ngIf="analysis.isLaunchingQuick()">
+                              <i class="fa fa-spin fa-spinner"></i>
+                            </span>
                           </span>
-                        </span>
                           <span [ngClass]="{ 'text-normal': smallStyle }">
-                          Quick Start
-                        </span>
+                            Quick Start
+                          </span>
                         </button>
                       </div>
                     </div>
                   </div>
                   <div class="divisor-rapid">&mdash; or &mdash;</div>
-                  <div class="tile notification quick-start info" [ngClass]="{small:smallStyle}">
+                  <div
+                    class="tile notification quick-start info"
+                    [ngClass]="{ small: smallStyle }"
+                  >
                     <div class="align-vmiddle">
-                      <div [ngClass]="{'digit':!smallStyle, 'digit-small': smallStyle}"
-                           *ngIf="analysis.getCount() == 0">
+                      <div
+                        [ngClass]="{
+                          digit: !smallStyle,
+                          'digit-small': smallStyle
+                        }"
+                        *ngIf="analysis.getCount() == 0"
+                      >
                         1
                       </div>
-                      <div [ngClass]="{ 'digit': !smallStyle, 'digit-small': smallStyle }"
-                           *ngIf="analysis.getCount() > 0">
+                      <div
+                        [ngClass]="{
+                          digit: !smallStyle,
+                          'digit-small': smallStyle
+                        }"
+                        *ngIf="analysis.getCount() > 0"
+                      >
                         <i class="fa fa-check"></i>
                       </div>
-                      <div style="display: flex; justify-content: center; width:100%">
-                        <div [ngClass]="{ 'text-normal': smallStyle }" class="quick-start-btn"
-                        >Select Proteins
-                        </div
+                      <div
+                        style="
+                          display: flex;
+                          justify-content: center;
+                          width: 100%;
+                        "
+                      >
+                        <div
+                          [ngClass]="{ 'text-normal': smallStyle }"
+                          class="quick-start-btn"
                         >
+                          Select Proteins
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div class="tile notification quick-start info" [ngClass]="{small:smallStyle}">
+                  <div
+                    class="tile notification quick-start info"
+                    [ngClass]="{ small: smallStyle }"
+                  >
                     <div class="align-vmiddle">
-                      <div [ngClass]="{'digit':!smallStyle, 'digit-small': smallStyle}">2</div>
-                      <div style="display: flex; justify-content: center; width:100%">
+                      <div
+                        [ngClass]="{
+                          digit: !smallStyle,
+                          'digit-small': smallStyle
+                        }"
+                      >
+                        2
+                      </div>
+                      <div
+                        style="
+                          display: flex;
+                          justify-content: center;
+                          width: 100%;
+                        "
+                      >
                         <button
                           (click)="analysis.startQuickAnalysis(false, null)"
                           [disabled]="
-                          analysis.getCount() === 0 ||
-                          analysis.isLaunchingQuick()
-                        "
-                          class="button is-white is-rounded quick-start-btn drugs-btn"
+                            analysis.getCount() === 0 ||
+                            analysis.isLaunchingQuick()
+                          "
+                          class="
+                            button
+                            is-white is-rounded
+                            quick-start-btn
+                            drugs-btn
+                          "
                           pTooltip="Find drugs for the selected proteins."
                           [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                           tooltipPosition="top"
-                        ><span class="icon quick-icon">
-                          <span *ngIf="!analysis.isLaunchingQuick()">
-                          <i class="fa fa-capsules"></i>
+                        >
+                          <span class="icon quick-icon">
+                            <span *ngIf="!analysis.isLaunchingQuick()">
+                              <i class="fa fa-capsules"></i>
                             </span>
-                          <span *ngIf="analysis.isLaunchingQuick()">
-                          <i class="fa fa-spin fa-spinner"></i>
+                            <span *ngIf="analysis.isLaunchingQuick()">
+                              <i class="fa fa-spin fa-spinner"></i>
+                            </span>
                           </span>
-                        </span>
                           <span [ngClass]="{ 'text-normal': smallStyle }">
-                          Find Drugs
-                        </span>
+                            {{ myConfig.taskDrugName }}
+                          </span>
                         </button>
                       </div>
                     </div>
@@ -543,7 +584,7 @@
                     <span class="icon">
                       <i class="fa fa-crosshairs"></i>
                     </span>
-                    <span> Find Drug Targets </span>
+                    <span>{{ myConfig.taskDrugName }}</span>
                   </button>
                 </div>
               </div>
@@ -570,7 +611,7 @@
                       <i class="fa fa-capsules"></i>
                     </span>
                     <span>
-                      {{ myConfig.taskName }}
+                      {{ myConfig.taskDrugName }}
                     </span>
                   </button>
                 </div>
@@ -652,7 +693,10 @@
               class="card-content overflow task-list-container"
               *ngIf="analysis.tasks && analysis.tasks.length > 0"
             >
-              <app-task-list [(token)]="selectedAnalysisToken"></app-task-list>
+              <app-task-list
+                [(token)]="selectedAnalysisToken"
+                [smallStyle]="smallStyle"
+              ></app-task-list>
             </div>
             <footer class="card-footer">
               <a
@@ -710,45 +754,45 @@
                 *ngIf="analysis.getCount() > 0"
               >
                 <thead>
-                <tr>
-                  <td>Label</td>
-                  <td>Group</td>
-                  <td *ngIf="myConfig.identifier !== 'symbol'">Symbol</td>
-                  <td *ngIf="myConfig.identifier !== 'uniprot'">Uniprot</td>
-                  <td>Actions</td>
-                </tr>
+                  <tr>
+                    <td>Label</td>
+                    <td>Group</td>
+                    <td *ngIf="myConfig.identifier !== 'symbol'">Symbol</td>
+                    <td *ngIf="myConfig.identifier !== 'uniprot'">Uniprot</td>
+                    <td>Actions</td>
+                  </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let p of analysis.getSelection()">
-                  <td>
-                    <p class="is-capitalized">{{ p.data.label }}</p>
-                  </td>
-                  <td>
-                    <p>
-                      {{ myConfig.nodeGroups[p.data.group]["groupName"] }}
-                    </p>
-                  </td>
-                  <td *ngIf="myConfig.identifier !== 'symbol'">
-                    <p>{{ p.data.symbol }}</p>
-                  </td>
-                  <td *ngIf="myConfig.identifier !== 'uniprot'">
-                    <p>{{ p.data.uniprotAc }}</p>
-                  </td>
-                  <td>
-                    <button
-                      (click)="analysis.removeItems([p])"
-                      class="
+                  <tr *ngFor="let p of analysis.getSelection()">
+                    <td>
+                      <p class="is-capitalized">{{ p.data.label }}</p>
+                    </td>
+                    <td>
+                      <p>
+                        {{ myConfig.nodeGroups[p.data.group]["groupName"] }}
+                      </p>
+                    </td>
+                    <td *ngIf="myConfig.identifier !== 'symbol'">
+                      <p>{{ p.data.symbol }}</p>
+                    </td>
+                    <td *ngIf="myConfig.identifier !== 'uniprot'">
+                      <p>{{ p.data.uniprotAc }}</p>
+                    </td>
+                    <td>
+                      <button
+                        (click)="analysis.removeItems([p])"
+                        class="
                           button
                           is-small is-danger is-outlined
                           has-tooltip
                         "
-                      tooltipPosition="top"
-                      pTooltip="Remove from selection."
-                    >
-                      <i class="fa fa-trash"></i>
-                    </button>
-                  </td>
-                </tr>
+                        tooltipPosition="top"
+                        pTooltip="Remove from selection."
+                      >
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
               <i *ngIf="analysis.getCount() === 0">

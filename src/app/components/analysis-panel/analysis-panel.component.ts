@@ -79,7 +79,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   public myConfig: IConfig = JSON.parse(JSON.stringify(defaultConfig));
 
   public network: any;
-  private nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
+  public nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
   private drugNodes: any[] = [];
   private drugEdges: any[] = [];
   public showDrugs = false;
@@ -474,13 +474,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
 
   public downloadLink(view: string): string {
     return `${environment.backend}task_result/?token=${this.token}&view=${view}&fmt=csv`;
-  }
-
-  public graphmlLink() {
-    const data = {nodes: this.nodeData.nodes.get(), edges: this.nodeData.edges.get()}
-    this.netex.graphmlLink(data).subscribe(response => {
-      return downLoadFile(response, "application/xml");
-    })
   }
 
   public inferEdgeGroup(edge: object): EdgeType {

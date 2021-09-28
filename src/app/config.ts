@@ -35,7 +35,8 @@ export interface IConfig {
   legendUrl: string;
   legendClass: string;
   legendPos: 'left' | 'right';
-  taskName: string;
+  taskTargetName: string,
+  taskDrugName: string,
   showLeftSidebar: boolean;
   showRightSidebar: boolean;
   showOverview: boolean;
@@ -72,7 +73,8 @@ export const defaultConfig: IConfig = {
   legendUrl: '', // 'https://exbio.wzw.tum.de/covex/assets/leg1.png' show legend image if set, otherwise default legend
   legendClass: 'legend',
   legendPos: 'left',
-  taskName: 'Find Drug Candidates',
+  taskTargetName: 'Drug Target Search',
+  taskDrugName: 'Drug Search',
   showLegendNodes: true,
   showLegendEdges: true,
   showLeftSidebar: true,

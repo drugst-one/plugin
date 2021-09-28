@@ -1,74 +1,168 @@
 <div class="content">
-  <div class="list is-hoverable">
-    <a *ngFor="let task of analysis.tasks" class="list-item box small-box" [class.is-active]="task.token === token">
+  <div class="list is-hoverable" [ngClass]="{ 'text-normal': smallStyle }">
+    <a
+      *ngFor="let task of analysis.tasks"
+      class="list-item box small-box"
+      [class.is-active]="task.token === token"
+    >
       <div *ngIf="!task.info.startedAt">
-        <p>
-          <span class="is-capitalized"><i class="fa" [class.fa-capsules]="task.info.target === 'drug'"
-                                          [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{algorithmNames[task.info.algorithm]}}</span>
-          <span class="icon is-pulled-right"><i class="fas fa-pause" aria-hidden="true"></i></span>
-        </p>
-        <p>
-          <small *ngIf="task.stats.queueLength > 0 && task.stats.queuePosition === 1">
-            Queued: 1 other task to finish
-          </small>
-          <small *ngIf="task.stats.queueLength > 0 && task.stats.queuePosition > 1">
-            Queued: {{task.stats.queuePosition}} other tasks to finish
-          </small>
-          <small *ngIf="task.stats.queueLength === 0 || task.stats.queuePosition === 0">
-            Execution imminent...
-          </small>
-          <a (click)="analysis.removeTask(task.token)" class="text-danger">
-            <span class="icon is-pulled-right">
-              <i class="fa fa-trash"></i>
-            </span>
-          </a>
-        </p>
+        <div class="columns mb-0">
+          <div class="column is-8">
+            <span class="is-capitalized"
+              ><i
+                class="fa"
+                [class.fa-capsules]="task.info.target === 'drug'"
+                [class.fa-crosshairs]="task.info.target === 'drug-target'"
+              ></i>
+              {{ algorithmNames[task.info.algorithm] }}</span
+            >
+          </div>
+          <div class="column is-2">
+            <span class="icon  "
+              ><i class="fas fa-pause" aria-hidden="true"></i
+            ></span>
+          </div>
+        </div>
+        <div class="columns mb-0">
+          <div class="column is-8 pt-0 pb-0">
+            <small
+              *ngIf="
+                task.stats.queueLength > 0 && task.stats.queuePosition === 1
+              "
+            >
+              Queued: 1 other task to finish
+            </small>
+            <small
+              *ngIf="task.stats.queueLength > 0 && task.stats.queuePosition > 1"
+            >
+              Queued: {{ task.stats.queuePosition }} other tasks to finish
+            </small>
+            <small
+              *ngIf="
+                task.stats.queueLength === 0 || task.stats.queuePosition === 0
+              "
+            >
+              Execution imminent...
+            </small>
+          </div>
+          <div class="column is-2 pt-0 pb-0">
+            <a (click)="analysis.removeTask(task.token)" class="text-danger">
+              <span class="icon">
+                <i class="fa fa-trash"></i>
+              </span>
+            </a>
+          </div>
+        </div>
       </div>
       <div *ngIf="!task.info.done && !task.info.failed && task.info.startedAt">
-        <p>
-          <span class="is-capitalized"><i class="fa" [class.fa-capsules]="task.info.target === 'drug'"
-                                          [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{algorithmNames[task.info.algorithm]}}</span>
-          <span class="icon is-pulled-right"><i class="fas fa-spinner fa-spin" aria-hidden="true"></i></span>
-        </p>
-        <p>
-          <small>Started {{task.info.startedAt | date :'short'}}</small>
-          <a (click)="analysis.removeTask(task.token)" class="is-pulled-right text-danger">
-            <span class="icon is-pulled-right">
-              <i class="fa fa-trash"></i>
-            </span>
-          </a>
-        </p>
-        <progress class="progress is-success" [value]="task.info.progress * 100" max="100"></progress>
+        <div class="columns mb-0">
+          <div class="column is-8">
+            <span class="is-capitalized"
+              ><i
+                class="fa"
+                [class.fa-capsules]="task.info.target === 'drug'"
+                [class.fa-crosshairs]="task.info.target === 'drug-target'"
+              ></i>
+              {{ algorithmNames[task.info.algorithm] }}</span
+            >
+          </div>
+          <div class="column is-2">
+            <span class="icon"
+              ><i class="fas fa-spinner fa-spin" aria-hidden="true"></i
+            ></span>
+          </div>
+        </div>
+        <div class="columns mb-0">
+          <div class="column is-8 pt-0 pb-0">
+            <small>Started {{ task.info.startedAt | date: "short" }}</small>
+          </div>
+          <div class="column is-2 pt-0 pb-0">
+            <a
+              (click)="analysis.removeTask(task.token)"
+              class="  text-danger"
+            >
+              <span class="icon">
+                <i class="fa fa-trash"></i>
+              </span>
+            </a>
+          </div>
+        </div>
+        <progress
+          class="progress is-success"
+          [value]="task.info.progress * 100"
+          max="100"
+        ></progress>
       </div>
-      <div *ngIf="task.info.done" (click)="open(task.token)" pTooltip="Show analysis results" [tooltipStyleClass]="'drgstn drgstn-tooltip'" tooltipPosition="top">
-        <p>
-          <span class="is-capitalized"><i class="fa" [class.fa-capsules]="task.info.target === 'drug'"
-                                          [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{algorithmNames[task.info.algorithm]}}</span>
-          <span class="icon is-pulled-right"><i class="fas fa-check" aria-hidden="true"></i></span>
-        </p>
-        <p>
-          <small>Finished {{task.info.finishedAt | date :'short'}}</small>
-          <a (click)="analysis.removeTask(task.token)" class="is-pulled-right text-danger">
-            <span class="icon is-pulled-right">
-              <i class="fa fa-trash"></i>
-            </span>
-          </a>
-        </p>
+      <div
+        *ngIf="task.info.done"
+        (click)="open(task.token)"
+        pTooltip="Show analysis results"
+        [tooltipStyleClass]="'drgstn drgstn-tooltip'"
+        tooltipPosition="top"
+      >
+        <div class="columns mb-0">
+          <div class="column is-8">
+            <span class="is-capitalized"
+              ><i
+                class="fa"
+                [class.fa-capsules]="task.info.target === 'drug'"
+                [class.fa-crosshairs]="task.info.target === 'drug-target'"
+              ></i>
+              {{ algorithmNames[task.info.algorithm] }}</span
+            >
+          </div>
+          <div class="column is-2">
+            <span class="icon"
+              ><i class="fas fa-check" aria-hidden="true"></i
+            ></span>
+          </div>
+        </div>
+        <div class="columns mb-0">
+          <div class="column is-8 pt-0 pb-0">
+            <small>Finished {{ task.info.finishedAt | date: "short" }}</small>
+          </div>
+          <div class="column is-2 pt-0 pb-0">
+            <a (click)="analysis.removeTask(task.token)" class="text-danger">
+              <span class="icon">
+                <i class="fa fa-trash"></i>
+              </span>
+            </a>
+          </div>
+        </div>
       </div>
       <div *ngIf="task.info.failed">
-        <p>
-          <span class="is-capitalized"><i class="fa" [class.fa-capsules]="task.info.target === 'drug'"
-                                          [class.fa-crosshairs]="task.info.target === 'drug-target'"></i> {{algorithmNames[task.info.algorithm]}}</span>
-          <span class="icon is-pulled-right"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i></span>
-        </p>
-        <p class="text-danger">
-          <small class="status-field">{{task.info.status}}</small>
-          <a (click)="analysis.removeTask(task.token)" class="is-pulled-right text-danger">
-            <span class="icon is-pulled-right">
-              <i class="fa fa-trash"></i>
-            </span>
-          </a>
-        </p>
+        <div class="columns mb-0">
+          <div class="column is-8">
+            <span class="is-capitalized"
+              ><i
+                class="fa"
+                [class.fa-capsules]="task.info.target === 'drug'"
+                [class.fa-crosshairs]="task.info.target === 'drug-target'"
+              ></i>
+              {{ algorithmNames[task.info.algorithm] }}</span
+            >
+          </div>
+          <div class="column is-2">
+            <span class="icon  "
+              ><i class="fas fa-exclamation-triangle" aria-hidden="true"></i
+            ></span>
+          </div>
+        </div>
+        <div class="columns mb-0">
+          <div class="column is-8 pt-0 pb-0 text-danger">
+            <small class="status-field">{{ task.info.status }}</small>
+          </div>
+          <div class="column is-2 pt-0 pb-0">
+            <a
+              (click)="analysis.removeTask(task.token)"
+              class="  text-danger"
+            >
+              <span class="icon  ">
+                <i class="fa fa-trash"></i>
+              </span>
+            </a>
+          </div>
+        </div>
       </div>
     </a>
   </div>
