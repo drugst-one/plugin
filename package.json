@@ -1,6 +1,6 @@
 {
   "name": "netex",
-  "version": "0.9.0-rc5",
+  "version": "0.9.0-rc6",
   "scripts": {
     "ng": "ng",
     "start:local": "ng serve --configuration=local",
@@ -53,6 +53,7 @@
     "bulma-tooltip": "^3.0.2",
     "document-register-element": "^1.7.2",
     "dom-to-image": "^2.6.0",
+    "json5": "^2.2.0",
     "lodash.merge": "^4.6.2",
     "primeicons": "^4.1.0",
     "primeng": "^12.0.1",

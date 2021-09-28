@@ -26,9 +26,10 @@ import domtoimage from 'dom-to-image';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, InteractionDatabase, NodeGroup} from '../../config';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
-import {downLoadFile, removeDuplicateObjectsFromList} from '../../utils';
+import {removeDuplicateObjectsFromList} from '../../utils';
 import * as merge from 'lodash/fp/merge';
 import {AnalysisPanelComponent} from 'src/app/components/analysis-panel/analysis-panel.component';
+import * as JSON5 from 'json5';
 
 declare var vis: any;
 
@@ -62,7 +63,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.config = config;
       }, 200);
     // add settings to config
-    const configObj = typeof config === 'object' ? config : JSON.parse(config);
+
+    const configObj = JSON.stringify(typeof config === 'string' ? JSON5.parse(config) : config);
     this.myConfig = merge(this.myConfig, configObj);
 
     // update Drugst.One according to the settings
@@ -112,7 +114,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (network == null) {
       return;
     }
-    this.networkJSON = typeof network === 'object' ? JSON.stringify(network) : network;
+    this.networkJSON = JSON.stringify(typeof network === 'string' ? JSON5.parse(network) : network);
     this.createNetwork();
   }
 
