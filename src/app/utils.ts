@@ -134,9 +134,6 @@ export function downLoadFile(data: any, type: string, fmt: string) {
 }
 
 export function pieChartContextRenderer({ ctx, x, y, state: { selected, hover }, style, label }) {
-  console.log(style)
-  console.log(label)
-
   ctx.drawPieLabel = function(style, x, y, label) {
     ctx.font = "normal 12px sans-serif";
     ctx.textAlign = "center";
