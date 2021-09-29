@@ -1,5 +1,6 @@
 // From https://stackoverflow.com/a/27709336/3850564
 
+import { ɵisListLikeIterable } from "@angular/core";
 import { Node } from "./interfaces";
 
 export function getGradientColor(startColor: string, endColor: string, percent: number) {
@@ -130,5 +131,64 @@ export function downLoadFile(data: any, type: string, fmt: string) {
   a.href = URL.createObjectURL(blob);
   a.download = `drugstone_network_${new Date().getTime()}.${fmt}`;
   a.click();
+}
+
+export function pieChartContextRenderer({ ctx, x, y, state: { selected, hover }, style, label }) {
+  console.log(style)
+  console.log(label)
+
+  ctx.drawPieLabel = function(style, x, y, label) {
+    ctx.font = "normal 12px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "black";
+    ctx.fillText(label, x, y + style.size + 12);
+  }
+
+  ctx.drawPie = function(style, x, y) {
+    const total = 1;
+    let lastend = 0;
+
+    // color gradient attempt
+    // const gradient = ctx.createLinearGradient(0, 0, 200, 0);
+    // gradient.addColorStop(0, "white");
+    // gradient.addColorStop(1, "red");
+    // ctx.fillStyle = gradient;
+    // ctx.strokeStyle = gradient;
+
+    ctx.fillStyle = style.color ? style.color : "red";
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    var len = (style.opacity/total) * 2 * Math.PI;
+    ctx.arc(x , y, style.size, lastend, lastend + len, false);
+    ctx.lineTo(x, y);
+    ctx.fill();
+    if (style.opacity !== total) {
+      // avoid the inner line when circle is complete
+      ctx.stroke();
+    }
+
+    // draw a cricle
+    ctx.beginPath();
+    ctx.arc(x, y, style.size, 0, 2 * Math.PI);
+    ctx.stroke();
+  }
+
+  return {
+    // bellow arrows
+    // primarily meant for nodes and the labels inside of their boundaries
+    drawNode() {
+      ctx.drawPie(style, x, y);
+    },
+    // above arrows
+    // primarily meant for labels outside of the node
+    drawExternalLabel() {
+      ctx.drawPieLabel(style, x, y, label);
+    },
+    // node dimensions defined by node drawing
+    // nodeDimensions: { width: style.size*2, height: style.size*2 },
+  };
 }
 

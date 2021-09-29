@@ -26,7 +26,7 @@ import domtoimage from 'dom-to-image';
 import {NetworkSettings} from '../../network-settings';
 import {defaultConfig, EdgeGroup, IConfig, InteractionDatabase, NodeGroup} from '../../config';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
-import {removeDuplicateObjectsFromList} from '../../utils';
+import {pieChartContextRenderer, removeDuplicateObjectsFromList} from '../../utils';
 import * as merge from 'lodash/fp/merge';
 import {AnalysisPanelComponent} from 'src/app/components/analysis-panel/analysis-panel.component';
 import * as JSON5 from 'json5';
@@ -801,7 +801,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
               node.isSeed,
               this.analysis.inSelection(wrapper),
               gradient));
-          node.gradient = gradient;
+
+          // try out custom ctx renderer
+          // node.gradient = gradient;
+          node.shape = 'custom';
+          node.ctxRenderer = pieChartContextRenderer;
           updatedNodes.push(node);
         }
         this.nodeData.nodes.update(updatedNodes);
