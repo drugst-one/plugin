@@ -23,6 +23,9 @@
                 "externals": "replace"
               }
             },
+            "allowedCommonJsDependencies": [
+              "lodash"
+            ],
             "outputPath": "dist/netex",
             "index": "src/index.html",
             "main": "src/main.ts",

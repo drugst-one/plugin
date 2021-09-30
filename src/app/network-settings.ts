@@ -3,7 +3,7 @@ import {
   Node,
 } from './interfaces';
 import { IConfig, defaultConfig} from './config';
-import * as merge from 'lodash/fp/merge'; 
+import * as merge from 'lodash/fp/merge';
 
 export class NetworkSettings {
 
@@ -92,7 +92,7 @@ export class NetworkSettings {
 
   static getColor(color: 'protein' | 'approvedDrug' | 'unapprovedDrug' | 'hostFont' | 'drugFont' |
     'nonSeedHost' | 'selectedForAnalysis' | 'selectedForAnalysisText' |
-    'edgeHostDrug' | 'edgeHostDrugHighlight' | 'edgeGeneGene' | 'edgeGeneGeneHighlight') 
+    'edgeHostDrug' | 'edgeHostDrugHighlight' | 'edgeGeneGene' | 'edgeGeneGeneHighlight')
     /**
      * Collection of all colors per use-case
      */
@@ -134,7 +134,7 @@ export class NetworkSettings {
       } else {
         node = merge(node, config.nodeGroups[node.group]);
       }
-      // note that seed and selected node style are applied after the node style is fetched. 
+      // note that seed and selected node style are applied after the node style is fetched.
       // this allows to overwrite only attributes of interest, therefor in e.g. seedNode group
       // certain attributes like shape can remain undefined
       // use lodash merge to not lose deep attributes, e.g. "font.size"

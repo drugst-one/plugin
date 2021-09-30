@@ -1,6 +1,6 @@
 import { defaultConfig, IConfig } from './config';
 import {NodeInteraction, Node, getProteinNodeId, NetexInteraction} from './interfaces';
-import * as merge from 'lodash/fp/merge'; 
+import * as merge from 'lodash/fp/merge';
 
 export function getDatasetFilename(dataset: Array<[string, string]>): string {
   return `network-${JSON.stringify(dataset).replace(/[\[\]\",]/g, '')}.json`;
@@ -66,10 +66,10 @@ export class ProteinNetwork {
 /** Maps user input node to network node object
    * If user input node has no group, fall back to default
    * If user input node has group that is not defined, throw error
-   * 
-   * @param customNode 
-   * @param config 
-   * @returns 
+   *
+   * @param customNode
+   * @param config
+   * @returns
    */
  export function mapCustomNode(customNode: any, config: IConfig): Node {
   let node;
@@ -94,10 +94,10 @@ export class ProteinNetwork {
 /** Maps user input edge to network edge object
  * If user input edge has no group, fall back to default
  * If user input edge has group that is not defined, throw error
- * 
- * @param customEdge 
- * @param config 
- * @returns 
+ *
+ * @param customEdge
+ * @param config
+ * @returns
  */
 export function mapCustomEdge(customEdge: NodeInteraction, config: IConfig): any {
   let edge;
@@ -120,10 +120,10 @@ export function mapCustomEdge(customEdge: NodeInteraction, config: IConfig): any
 
 /** Maps netex retrieved edge to network edge object
  * Uses the default group for edge objects.
- * 
- * @param customEdge 
- * @param config 
- * @returns 
+ *
+ * @param customEdge
+ * @param config
+ * @returns
  */
  export function mapNetexEdge(customEdge: NetexInteraction, config: IConfig): any {
   const edge = JSON.parse(JSON.stringify(config.edgeGroups.default));
