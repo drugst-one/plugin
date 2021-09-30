@@ -153,6 +153,7 @@
 
   .center-panel {
     width: $main-width;
+    max-width: $main-max-width;
   }
 
   div.card.network {
