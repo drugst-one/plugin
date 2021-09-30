@@ -134,7 +134,7 @@ export function downLoadFile(data: any, type: string, fmt: string) {
 }
 
 export function pieChartContextRenderer({ ctx, x, y, state: { selected, hover }, style, label }) {
-  ctx.drawPieLabel = function(style, x, y, label) {
+    ctx.drawPieLabel = function(style, x, y, label) {
     ctx.font = "normal 12px sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -146,19 +146,20 @@ export function pieChartContextRenderer({ ctx, x, y, state: { selected, hover },
     const total = 1;
     let lastend = 0;
 
-    // color gradient attempt
-    // const gradient = ctx.createLinearGradient(0, 0, 200, 0);
-    // gradient.addColorStop(0, "white");
-    // gradient.addColorStop(1, "red");
-    // ctx.fillStyle = gradient;
-    // ctx.strokeStyle = gradient;
+    // draw shadow
+    if (style.shadow) {
+      ctx.shadowColor = style.shadowColor;
+      ctx.shadowOffsetX = style.shadowX;
+      ctx.shadowOffsetY = style.shadowY;
+      ctx.shadowBlur = 10;
+    }
 
     ctx.fillStyle = style.color ? style.color : "red";
     ctx.strokeStyle = "black";
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(x, y);
-    var len = (style.opacity/total) * 2 * Math.PI;
+    var len = style.opacity/total * 2 * Math.PI;
     ctx.arc(x , y, style.size, lastend, lastend + len, false);
     ctx.lineTo(x, y);
     ctx.fill();
