@@ -174,8 +174,9 @@ export function pieChartContextRenderer({ctx, x, y, state: {selected, hover}, st
     }
     // draw white background circle
     ctx.beginPath();
-    // alternatively window.getComputedStyle(document.documentElement).getPropertyValue('--drgstn-panel');?
     ctx.fillStyle = "white"
+    // or fill like background of graph panel
+    // ctx.fillStyle= window.getComputedStyle(document.documentElement).getPropertyValue('--drgstn-panel');
     ctx.arc(x, y, style.size, 0, 2 * Math.PI,false);
     ctx.fill();
     ctx.stroke();
