@@ -31,7 +31,7 @@ import {NetworkSettings} from '../../network-settings';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 import {defaultConfig, IConfig} from 'src/app/config';
 import { mapCustomEdge, mapCustomNode } from 'src/app/main-network';
-import { downLoadFile, removeDuplicateObjectsFromList } from 'src/app/utils';
+import { downLoadFile, pieChartContextRenderer, removeDuplicateObjectsFromList } from 'src/app/utils';
 
 
 declare var vis: any;
@@ -801,7 +801,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
               isSeed,
               this.analysis.inSelection(wrapper),
               this.gradientMap[netexId]));
-          node.gradient = this.gradientMap[netexId];
+          node.shape = 'custom';
+          node.ctxRenderer = pieChartContextRenderer;
           updatedNodes.push(node);
         }
         this.nodeData.nodes.update(updatedNodes);

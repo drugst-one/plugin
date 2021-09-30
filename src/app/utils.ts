@@ -101,7 +101,7 @@ export function rgbToHex(rgb) {
 }
 
 // https://stackoverflow.com/questions/1573053/javascript-function-to-convert-color-names-to-hex-codes/47355187#47355187
-export function standardize_color(str){
+export function standardizeColor(str){
 	var ctx = document.createElement("canvas").getContext("2d");
 	ctx.fillStyle = str;
 	return ctx.fillStyle.toString();
@@ -133,8 +133,22 @@ export function downLoadFile(data: any, type: string, fmt: string) {
   a.click();
 }
 
+export function RGBAtoRGB(rgbaString) {
+  const rgbaStringSplit = rgbaString.slice(5, -1).split(",");
+  const RGBA = {red: rgbaStringSplit[0], green: rgbaStringSplit[1], blue: rgbaStringSplit[2], alpha: rgbaStringSplit[3]};
+  // assume white background
+  const bg = {red: 255, green: 255, blue: 255};
+  const RGB = {red: undefined, green: undefined, blue: undefined};
+  const alpha = 1 - RGBA.alpha;
+  RGB.red = Math.round((RGBA.alpha * (RGBA.red / 255) + (alpha * (bg.red / 255))) * 255);
+  RGB.green = Math.round((RGBA.alpha * (RGBA.green / 255) + (alpha * (bg.green / 255))) * 255);
+  RGB.blue = Math.round((RGBA.alpha * (RGBA.blue / 255) + (alpha * (bg.blue / 255))) * 255);
+  return `rgb(${RGB.red},${RGB.green},${RGB.blue})`;
+}
+
 export function pieChartContextRenderer({ ctx, x, y, state: { selected, hover }, style, label }) {
-    ctx.drawPieLabel = function(style, x, y, label) {
+  console.log(style)
+  ctx.drawPieLabel = function(style, x, y, label) {
     ctx.font = "normal 12px sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -144,7 +158,6 @@ export function pieChartContextRenderer({ ctx, x, y, state: { selected, hover },
 
   ctx.drawPie = function(style, x, y) {
     const total = 1;
-    let lastend = 0;
 
     // draw shadow
     if (style.shadow) {
@@ -154,13 +167,16 @@ export function pieChartContextRenderer({ ctx, x, y, state: { selected, hover },
       ctx.shadowBlur = 10;
     }
 
-    ctx.fillStyle = style.color ? style.color : "red";
+    ctx.fillStyle = style.color ? style.color : 'rgba(255, 0, 0, 1)';
+    // set alpha value to 1
+    // ctx.fillStyle = ctx.fillStyle.replace(/[^,]+(?=\))/, '1')
+    ctx.fillStyle = RGBAtoRGB(ctx.fillStyle)
     ctx.strokeStyle = "black";
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(x, y);
-    var len = style.opacity/total * 2 * Math.PI;
-    ctx.arc(x , y, style.size, lastend, lastend + len, false);
+    const len = style.opacity/total * 2 * Math.PI;
+    ctx.arc(x , y, style.size, 0, 0 + len, false);
     ctx.lineTo(x, y);
     ctx.fill();
     if (style.opacity !== total) {

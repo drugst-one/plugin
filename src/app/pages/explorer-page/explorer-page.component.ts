@@ -803,7 +803,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
               gradient));
 
           // try out custom ctx renderer
-          // node.gradient = gradient;
           node.shape = 'custom';
           node.ctxRenderer = pieChartContextRenderer;
           updatedNodes.push(node);
