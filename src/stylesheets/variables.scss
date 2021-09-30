@@ -34,13 +34,8 @@ $legend-diamond-size: 25px;
 
 $height: 100%;
 
-// Settings Interface Components
-$sidebar-width: 25%;
-$sidebar-min-width: 235px;
-$sidebar-max-width: 320px;
-$main-width: calc(100% - (max(#{$sidebar-width},#{$sidebar-min-width})));
-$main-max-width: calc(100% - (min(#{$sidebar-width},#{$sidebar-max-width})));
-
+$sidebar-max-width: 25%;
+$sidebar-min-width: 240px;
 
 // settings for different screen sizes
 $b-text-small-font-size: 14px;
