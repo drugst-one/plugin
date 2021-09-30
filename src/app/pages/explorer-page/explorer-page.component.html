@@ -25,9 +25,11 @@
     </app-add-expressed-proteins>
 
     <!-- Start explorer -->
-    <div class="covex explorer">
+    <div class="drugstone explorer columns is-gapless" [ngClass]="{ 'is-flex-direction-row-reverse': myConfig.sidebarPos === 'right' }">
       <!-- Start left sidebar -->
-      <div class="covex sidebar" [ngClass]="{ 'is-pulled-right': myConfig.sidebarPos === 'right' }">
+      <div
+        class="drugstone sidebar column"
+      >
         <div *ngIf="myConfig.showItemSelector" class="card bar-large mt-0">
           <header
             class="card-header"
@@ -38,8 +40,8 @@
                 <i class="fas fa-info" aria-hidden="true"></i>
               </span>
               <!-- <i *ngIf="selectedWrapper && selectedWrapper.data.netexId && selectedWrapper.data.netexId.startsWith('p')" class="fas fa-dna" aria-hidden="true"></i>
-              <i *ngIf="selectedWrapper && selectedWrapper.data.netexId && selectedWrapper.data.netexId.startsWith('d')" class="fas fa-capsules"
-                 aria-hidden="true"></i> -->
+                <i *ngIf="selectedWrapper && selectedWrapper.data.netexId && selectedWrapper.data.netexId.startsWith('d')" class="fas fa-capsules"
+                  aria-hidden="true"></i> -->
               <span *ngIf="!selectedWrapper">No item selected</span>
               <span *ngIf="selectedWrapper">
                 <span>{{ selectedWrapper.data.type }}</span>
@@ -99,13 +101,13 @@
             <div class="card-content">
               <nav class="level" *ngIf="proteinData">
                 <!-- TO DO  : CHANGE THIS LATER
-               <div class="level-item has-text-centered">
-                 <div>
-                   <p class="heading">Viral<br>Proteins</p>
-                   <p class="title"> {{ proteinData.effects.length }}</p>
-                 </div>
-               </div>
-               -->
+                <div class="level-item has-text-centered">
+                  <div>
+                    <p class="heading">Viral<br>Proteins</p>
+                    <p class="title"> {{ proteinData.effects.length }}</p>
+                  </div>
+                </div>
+                -->
 
                 <div class="level-item has-text-centered">
                   <div>
@@ -510,7 +512,10 @@
               class="card-content overflow task-list-container"
               *ngIf="analysis.tasks && analysis.tasks.length > 0"
             >
-              <app-task-list [(token)]="selectedAnalysisToken" [smallStyle]="smallStyle"></app-task-list>
+              <app-task-list
+                [(token)]="selectedAnalysisToken"
+                [smallStyle]="smallStyle"
+              ></app-task-list>
             </div>
             <footer class="card-footer">
               <a
@@ -615,60 +620,60 @@
             </div>
 
             <!-- <footer class="card-footer" *ngIf="selectedAnalysisToken">
-                <a (click)="analysis.addSeeds(currentViewNodes)"
-                  class="card-footer-item has-text-success" tooltipPosition="top" pTooltip="Add all visible seeds.">
+                  <a (click)="analysis.addSeeds(currentViewNodes)"
+                    class="card-footer-item has-text-success" tooltipPosition="top" pTooltip="Add all visible seeds.">
 
-              <span class="icon">
-                <i class="fa fa-plus"></i>
-              </span>
-                  <span>
-                Add seeds
-              </span>
-                </a>
-                <a (click)="analysis.removeSeeds(currentViewNodes)"
-                  class="card-footer-item text-danger" tooltipPosition="top" pTooltip="Remove all seeds.">
-              <span class="icon">
-                <i class="fa fa-minus"></i>
-              </span>
-                  <span>
-                Remove seeds
-              </span>
-                </a>
-              </footer>
+                <span class="icon">
+                  <i class="fa fa-plus"></i>
+                </span>
+                    <span>
+                  Add seeds
+                </span>
+                  </a>
+                  <a (click)="analysis.removeSeeds(currentViewNodes)"
+                    class="card-footer-item text-danger" tooltipPosition="top" pTooltip="Remove all seeds.">
+                <span class="icon">
+                  <i class="fa fa-minus"></i>
+                </span>
+                    <span>
+                  Remove seeds
+                </span>
+                  </a>
+                </footer>
 
-              <footer class="card-footer">
-                <a (click)="showCustomProteinsDialog = true"
-                  class="card-footer-item text-primary"
-                  tooltipPosition="top" pTooltip="Add a custom list of proteins.">
-              <span class="icon">
-                <i class="fa fa-upload"></i>
-              </span>
-                  <span>
-                Custom proteins
-              </span>
+                <footer class="card-footer">
+                  <a (click)="showCustomProteinsDialog = true"
+                    class="card-footer-item text-primary"
+                    tooltipPosition="top" pTooltip="Add a custom list of proteins.">
+                <span class="icon">
+                  <i class="fa fa-upload"></i>
+                </span>
+                    <span>
+                  Custom proteins
+                </span>
+                  </a>
+                  <a (click)="showThresholdDialog = true"
+                    class="card-footer-item text-primary"
+                    pTooltip="Add proteins expressed in the tissue." tooltipPosition="top">
+                <span class="icon">
+                  <i class="fas fa-angle-double-up"></i>
+                </span>
+                    <span>
+                  Tissue proteins
+                </span>
                 </a>
-                <a (click)="showThresholdDialog = true"
-                  class="card-footer-item text-primary"
-                  pTooltip="Add proteins expressed in the tissue." tooltipPosition="top">
-              <span class="icon">
-                <i class="fas fa-angle-double-up"></i>
-              </span>
-                  <span>
-                Tissue proteins
-              </span>
-              </a>
-              </footer> -->
+                </footer> -->
 
             <footer class="card-footer">
               <!-- <a (click)="analysis.invertSelection(currentViewNodes)" class="card-footer-item text-primary"
-                  tooltipPosition="top" pTooltip="Invert the current selection.">
-              <span class="icon">
-                <i class="fa fa-sync"></i>
-              </span>
-                  <span>
-                Invert
-              </span>
-                </a> -->
+                    tooltipPosition="top" pTooltip="Invert the current selection.">
+                <span class="icon">
+                  <i class="fa fa-sync"></i>
+                </span>
+                    <span>
+                  Invert
+                </span>
+                  </a> -->
               <a
                 *ngIf="analysis.getSelection().length"
                 (click)="analysis.resetSelection()"
@@ -690,7 +695,7 @@
       </div>
 
       <!-- Start network block -->
-      <div class="covex network center-panel" id="main-column">
+      <div class="drugstone network column" id="main-column">
         <div class="analysis-view" *ngIf="selectedAnalysisToken">
           <app-analysis-panel
             [(token)]="selectedAnalysisToken"
@@ -869,8 +874,8 @@
       <!-- End  network block -->
 
       <div class="is-hidden-tablet mobile-fallback">
-        Sorry, CoVex is not available for mobile phones. To find information
-        about CoVex, please check the <a routerLink="/about">About</a> page or
+        Sorry, drugstone is not available for mobile phones. To find information
+        about drugstone, please check the <a routerLink="/about">About</a> page or
         visit this page with another device with a larger screen.
       </div>
     </div>

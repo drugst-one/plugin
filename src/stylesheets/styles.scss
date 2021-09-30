@@ -104,12 +104,10 @@
     margin-left: 15px;
   }
 
-  div.covex.sidebar {
+  div.drugstone.sidebar {
     height: $height;
     overflow-y: auto;
     overflow-x: hidden;
-    float: left;
-    width: $sidebar-width;
     max-width: $sidebar-max-width;
     min-width: $sidebar-min-width;
     height: 100%;
@@ -144,16 +142,10 @@
     max-height: 350px;
   }
 
-  div.covex.network {
+  div.drugstone.network {
     height: 100%;
-    float: left;
     position: relative;
 
-  }
-
-  .center-panel {
-    width: $main-width;
-    max-width: $main-max-width;
   }
 
   div.card.network {
@@ -176,7 +168,7 @@
   }
 
 
-  div.covex.explorer {
+  div.drugstone.explorer {
     height: #{$height};
     margin-left: 10px;
     margin-right: 10px;
