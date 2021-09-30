@@ -118,8 +118,8 @@
     /* Hide scrollbar for IE, Edge and Firefox */
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
-    @media only screen and (min-width: 1400px) {
-      max-width: $sidebar-max-width;
+    @media only screen and (min-width: #{$screen-lg}) {
+      max-width: 350px;
     }
   }
 

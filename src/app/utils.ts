@@ -155,7 +155,9 @@ export function pieChartContextRenderer({ ctx, x, y, state: { selected, hover },
       ctx.shadowBlur = 10;
     }
 
-    ctx.fillStyle = style.color ? style.color : "red";
+    ctx.fillStyle = style.color ? style.color : 'rgba(255, 0, 0, 1)';
+    // set alpha value to 1
+    ctx.fillStyle = ctx.fillStyle.replace(/[^,]+(?=\))/, '1')
     ctx.strokeStyle = "black";
     ctx.lineWidth = 2;
     ctx.beginPath();
