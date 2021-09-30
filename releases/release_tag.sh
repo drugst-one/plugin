@@ -16,6 +16,9 @@ fi
 VERSION=v$1
 MESSAGE=$2
 
+echo "Adjusting package.json version"
+npm version "$1"
+git commit -am "release of new version $VERSION"
 echo "Tagging Version..."
 git tag -a "$VERSION" -m "$MESSAGE"
 echo "Releasing Version..."
