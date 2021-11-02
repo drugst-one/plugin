@@ -73,7 +73,7 @@ export class NetexControllerService {
      * Tries to map every node to a node object in out database
      * Returns list of mapped nodes if node was found, otherwise original node to not lose information
      */
-    const payload = {nodes: JSON.stringify(nodes), identifier: JSON.stringify(identifier)};
+    const payload = {nodes: nodes, identifier: identifier};
     return this.http.post(`${environment.backend}map_nodes/`, payload).toPromise();
   }
 

@@ -152,7 +152,6 @@ export function RGBAtoRGB(rgbaString) {
 }
 
 export function pieChartContextRenderer({ctx, x, y, state: {selected, hover}, style, label}) {
-  console.log(style)
   ctx.drawPieLabel = function (style, x, y, label) {
     ctx.font = "normal 12px sans-serif";
     ctx.textAlign = "center";
