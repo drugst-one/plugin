@@ -394,7 +394,7 @@ export class AnalysisService {
       clearInterval(this.intervalId);
     }
     // 5000
-    this.intervalId = setInterval(watch, 5000000);
+    this.intervalId = setInterval(watch, 5000);
   }
 
 
