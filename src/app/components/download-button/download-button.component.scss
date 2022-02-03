@@ -2,4 +2,13 @@
 
 .dropdown-menu{
     z-index: $analysis-network-toolbar-dropdown-z !important;
+
+    .dropdown-content {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        .dropdown-item {
+            padding: .375rem 0rem !important;
+            padding-left: 0.5rem !important;
+        }
+    }
 }
