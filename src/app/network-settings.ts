@@ -8,7 +8,7 @@ import * as merge from 'lodash/fp/merge';
 export class NetworkSettings {
 
   // colors
-  private static Grey = '#A0A0A0'
+  private static Grey = '#A0A0A0';
   private static White = '#FFFFFF';
   private static Black = '#000000';
 
@@ -68,24 +68,24 @@ export class NetworkSettings {
   private static drugNotInTrialShape = 'box';
   private static drugInTrialShape = 'triangle';
 
-  static getOptions(network: 'main' | 'analysis' | 'analysis-big') {
+  static getOptions(network: 'main' | 'analysis' | 'analysis-big', physicsOn) {
     if (network === 'main') {
       return {
         layout: this.mainLayout,
         edges: this.mainEdges,
-        physics: this.mainPhysics,
+        physics: physicsOn || this.mainPhysics ,
       };
     } else if (network === 'analysis') {
       return {
         layout: this.analysisLayout,
         edges: this.analysisEdges,
-        physics: this.analysisPhysics,
+        physics: physicsOn ||  this.analysisPhysics,
       };
     } else if (network === 'analysis-big') {
       return {
         layout: this.analysisLayout,
         edges: this.analysisEdges,
-        physics: this.analysisBigPhysics,
+        physics: physicsOn || this.analysisBigPhysics,
       };
     }
   }

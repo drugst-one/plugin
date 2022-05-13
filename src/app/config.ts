@@ -59,6 +59,7 @@ export interface IConfig {
   autofillEdges: boolean;
   sidebarPos: 'left' | 'right';
   interactions?: InteractionDatabase;
+  physicsOn?: boolean;
   identifier?: Identifier;
   nodeShadow?: boolean;
   edgeShadow?: boolean;
@@ -95,6 +96,7 @@ export const defaultConfig: IConfig = {
   nodeShadow: true,
   edgeShadow: true,
   autofillEdges: true,
+  physicsOn: false,
   sidebarPos: 'left',
   nodeGroups: {
     // all NodeGroups but the default group must be set, if not provided by the user, they will be taken from here
