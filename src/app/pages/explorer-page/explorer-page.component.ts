@@ -89,7 +89,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         // a network exists, save node positions
         this.networkPositions = this.networkInternal.getPositions();
       }
-      this.createNetwork();
+      this.createNetwork().then(() => {
+        if(this.myConfig.physicsOn) {
+          this.updatePhysicsEnabled(true);
+        }
+      });
+
     }
   }
 
@@ -400,7 +405,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.nodeData.edges = new vis.DataSet(edges);
     const container = this.networkEl.nativeElement;
 
-    const options = NetworkSettings.getOptions('main');
+    const options = NetworkSettings.getOptions('main',this.myConfig.physicsOn);
 
     this.networkInternal = new vis.Network(container, this.nodeData, options);
 

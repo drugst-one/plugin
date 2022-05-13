@@ -24,4 +24,8 @@ git push
 echo "Releasing Version..."
 git push origin "$VERSION"
 
+echo "$1" > latest
+git commit -am "triggered of v$1"
+git push
+
 echo "Done!"

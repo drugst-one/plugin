@@ -190,7 +190,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         this.nodeData.edges = new vis.DataSet(edges);
         const container = this.networkEl.nativeElement;
         const isBig = nodes.length > 100 || edges.length > 100;
-        const options = NetworkSettings.getOptions(isBig ? 'analysis-big' : 'analysis');
+        const options = NetworkSettings.getOptions(isBig ? 'analysis-big' : 'analysis', this.myConfig.physicsOn);
         this.physicsEnabled = !isBig;
 
         this.network = new vis.Network(container, this.nodeData, options);
