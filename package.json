@@ -17,7 +17,7 @@
     "bundle": "npm run build-prod netex && npm run package-es5 && npm run package-es2015",
     "build:netex": "npm run build-prod netex && node build-netex.js",
     "build:netex-dev": "npm run build-dev netex && node build-netex.js",
-    "build:netex-dock1": "npm run build-old netex && node build-netex.js",
+    "build:netex-old": "npm run build-old netex && node build-netex.js",
     "prefix": "bash prefix_styles.sh",
     "prefixcss": "postcss -r drugsTone-build/styles.css"
   },
