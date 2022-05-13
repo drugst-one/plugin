@@ -9,7 +9,7 @@ const concat = require('concat');
     './dist/netex/main-es5.js'
   ];
   await fs.ensureDir('drugsTone-build');
-  await concat(files, 'drugsTone-build/drugsTone.js');
+  await concat(files, 'drugsTone-build/drugstone.js');
   await fs.copy('./dist/netex/styles.css', 'drugsTone-build/styles.css');
   await fs.copy('./dist/netex/assets/', 'netex/assets/');
 })();
