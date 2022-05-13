@@ -77,10 +77,9 @@ export class AppModule {
       faSpinner, faExclamationTriangle, faPlus, faExpand, faInfo, faRocket, faAngleDown, faSearch,
       faFastForward, faExternalLinkAlt, faTasks, faFilter, faMinus, faUpload, faAngleDoubleDown,
       faSync, faBroom, faAngleDoubleUp);
-    // Convert `PopupComponent` to a custom element.
     const NetworkExpander = createCustomElement(ExplorerPageComponent, {injector});
     // Register the custom element with the browser.
-    customElements.define('network-expander', NetworkExpander);
+    customElements.define('drugst-one', NetworkExpander);
   }
 
   ngDoBootstrap() {
