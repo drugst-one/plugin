@@ -1,7 +1,11 @@
-<div class="legend" [class.right]="this.config.legendPos === 'right'" [ngClass]="{ 'legend-small': smallStyle }">
 
+
+<div class="legend" [class.right]="this.config.legendPos === 'right'" [ngClass]="{ 'legend-small': smallStyle }">
+  <div class="legend-background">
+
+  </div>
   <!-- default legend in html -->
-  <table *ngIf="!this.config.legendUrl.length">
+  <table *ngIf="!this.config.legendUrl.length" class="legend-table">
     <ng-container *ngIf="this.config.showLegendNodes">
       <tr *ngFor="let nodeGroup of this.config.nodeGroups | keyvalue" class="list-item">
 
