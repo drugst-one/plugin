@@ -3,7 +3,11 @@ $screen-lg: 1400px;
 
 $row-data-selector-height: auto;
 $network-header-height: 3rem;
-$network-footer-height: 4rem;
+$network-footer-height: 0rem;
+$network-footer-width: 15rem;
+$network-footer-right-closed: -12rem;
+$network-footer-container-z: 20;
+
 $network-footer-inner-container-height: 25rem;
 $network-footer-space-button-to-border: 0.5rem;
 

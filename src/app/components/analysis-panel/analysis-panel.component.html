@@ -136,7 +136,7 @@
       <div class="tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'network'">
         <div class="card-image canvas-content" #networkWithLegend>
           <div *ngIf="myConfig.showLegend">
-            <app-network-legend [config]="myConfig" [context]="legendContext" [smallStyle]="smallStyle"></app-network-legend>
+            <app-network-legend [config]="myConfig" [context]="legendContext"></app-network-legend>
           </div>
           <div class="parent fullheight">
             <div class="center image1 fullheight" #network>
@@ -145,28 +145,28 @@
           </div>
         </div>
 
-        <footer *ngIf="myConfig.showFooter" class="card-footer toolbar network-footer-toolbar">
+        <footer *ngIf="myConfig.showNetworkMenu" class="card-footer toolbar network-footer-toolbar">
 
           <div class="network-footer-toolbar-inner-container">
 
-            <div *ngIf="myConfig.showFooterButtonScreenshot" class="network-footer-toolbar-element footer-buttons">
+            <div *ngIf="myConfig.showNetworkMenuButtonScreenshot" class="network-footer-toolbar-element">
               <button class="button is-primary is-rounded has-tooltip"
                       pTooltip="Take a screenshot of the current network."
                       [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                       tooltipPosition="top"
-                      [ngClass]="{ 'button-small': smallStyle }"
+                      [ngClass]="{ 'button-small': drugstoneConfig.smallStyle }"
                       (click)="toImage()">
                   <span class="icon">
                     <i class="fas fa-camera" aria-hidden="true"></i>
                   </span>
-                <span [ngClass]="{'text-normal':smallStyle}">
+                <span [ngClass]="{'text-normal':drugstoneConfig.smallStyle}">
                     Screenshot
                   </span>
               </button>
             </div>
 
-            <ng-container *ngIf="myConfig.showFooterButtonExportGraphml">
-                <app-download-button [nodeData]=nodeData [smallStyle]="smallStyle" [buttonId]="'analysis-download'"></app-download-button>
+            <ng-container *ngIf="myConfig.showNetworkMenuButtonExportGraphml">
+                <app-download-button [nodeData]=nodeData [buttonId]="'analysis-download'"></app-download-button>
             </ng-container>
 
             <!--          <div class="field">-->
@@ -183,15 +183,15 @@
             <!--            </p>-->
             <!--          </div>-->
 
-            <div class="footer-buttons dropdown is-up network-footer-toolbar-element"
+            <div class="dropdown is-up network-footer-toolbar-element"
                  [class.is-active]="expressionExpanded">
               <div class="dropdown-trigger">
                 <button (click)="expressionExpanded=!expressionExpanded"
                         class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
-                        aria-haspopup="true" aria-controls="dropdown-menu" [ngClass]="{'button-small':smallStyle}"
+                        aria-haspopup="true" aria-controls="dropdown-menu" [ngClass]="{'button-small':drugstoneConfig.smallStyle}"
                         pTooltip="Tissue expression data is provided by the GTEx project." [tooltipStyleClass]="'drgstn drgstn-tooltip'" tooltipPosition="top"
                 >
-                  <div [ngClass]="{'text-small':smallStyle}">
+                  <div [ngClass]="{'text-small':drugstoneConfig.smallStyle}">
                     <span *ngIf="!selectedTissue">Tissue</span>
                     <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
                     <span class="icon is-small">
@@ -203,8 +203,8 @@
                 </button>
               </div>
               <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                <div class="dropdown-content tissue-dropdown" [ngClass]="{'button-small':smallStyle}">
-                  <div class="scroll-area" [ngClass]="{'text-small':smallStyle}">
+                <div class="dropdown-content tissue-dropdown" [ngClass]="{'button-small':drugstoneConfig.smallStyle}">
+                  <div class="scroll-area" [ngClass]="{'text-small':drugstoneConfig.smallStyle}">
                     <a (click)="selectTissue(null)"
                        [class.is-active]="!selectedTissue"
                        class="dropdown-item">
@@ -221,45 +221,40 @@
               </div>
             </div>
 
-            <app-toggle class="footer-buttons network-footer-toolbar-element" textOn="Seeds On" textOff="Off"
+            <app-toggle class="network-footer-toolbar-element" textOn="Seeds On" textOff="Off"
                         tooltipOn="Highlight seed nodes ON."
                         tooltipOff="Highlight seed nodes OFF."
-                        [smallStyle]="smallStyle"
                         [value]="highlightSeeds" (valueChange)="updateHighlightSeeds($event)"></app-toggle>
 
-            <app-toggle *ngIf="task.info.target === 'drug-target'" class="footer-buttons network-footer-toolbar-element"
+            <app-toggle *ngIf="task.info.target === 'drug-target'" class="network-footer-toolbar-element"
                         textOn="Drugs" textOff="Off"
                         tooltipOn="Display adjacent drugs ON."
                         tooltipOff="Display adjacent drugs OFF."
-                        [smallStyle]="smallStyle"
                         [value]="adjacentDrugs" (valueChange)="updateAdjacentDrugs($event)"></app-toggle>
             <app-toggle
-              class="footer-buttons network-footer-toolbar-element"
+              class="network-footer-toolbar-element"
               textOn="Disorders (protein)"
               textOff="Off"
               tooltipOn="Show disorders adjacent to all currently displayed proteins/genes ON."
               tooltipOff="Show disorders adjacent to all currently displayed proteins/genes OFF."
-              [smallStyle]="smallStyle"
               [value]="adjacentDisordersProtein"
               (valueChange)="updateAdjacentProteinDisorders($event)"
             ></app-toggle>
             <app-toggle
-              class="footer-buttons network-footer-toolbar-element"
+              class="network-footer-toolbar-element"
               textOn="Disorders (drugs)"
               textOff="Off"
               tooltipOn="Show disorders adjacent to all currently displayed drugs ON."
               tooltipOff="Show disorders adjacent to all currently displayed drugs OFF."
-              [smallStyle]="smallStyle"
               [value]="adjacentDisordersDrug"
               [disabled]="!hasDrugsLoaded()"
               (valueChange)="updateAdjacentDrugDisorders($event)"
             ></app-toggle>
 
-            <app-toggle class="footer-buttons network-footer-toolbar-element" textOn="Animation" textOff="Off"
+            <app-toggle class="network-footer-toolbar-element" textOn="Animation" textOff="Off"
                         tooltipOn="Enable the network animation."
                         tooltipOff="Disable the network animation and freeze nodes."
-                        [smallStyle]="smallStyle"
-                        [value]="physicsEnabled" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
+                        [value]="drugstoneConfig.config.physicsOn" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
           </div>
         </footer>
       </div>
@@ -268,7 +263,7 @@
         <div class="field has-addons is-pulled-right m-1" *ngIf="tableHasScores && task.info.algorithm !== 'proximity'">
           <p class="control">
             <button class="button is-rounded has-tooltip" pTooltip="Normalize the scores" [tooltipStyleClass]="'drgstn drgstn-tooltip'" tooltipPosition="top"
-                    [class.is-primary]="tableNormalize" (click)="toggleNormalization(true)" [ngClass]="{ 'button-small': smallStyle }">
+                    [class.is-primary]="tableNormalize" (click)="toggleNormalization(true)" [ngClass]="{ 'button-small': drugstoneConfig.smallStyle }">
                 <span class="icon is-small">
                   <i class="fa fa-ruler-vertical"></i>
                 </span>
@@ -278,7 +273,7 @@
           <p class="control">
             <button class="button is-rounded has-tooltip" pTooltip="Disable normalization of the scores." [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                     tooltipPosition="top"
-                    [class.is-primary]="!tableNormalize" (click)="toggleNormalization(false)" [ngClass]="{ 'button-small': smallStyle }">
+                    [class.is-primary]="!tableNormalize" (click)="toggleNormalization(false)" [ngClass]="{ 'button-small': drugstoneConfig.smallStyle }">
               <span>Off</span>
             </button>
           </p>

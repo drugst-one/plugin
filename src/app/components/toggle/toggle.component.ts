@@ -1,4 +1,5 @@
 import {Component, Directive, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 
 @Component({
   selector: 'app-toggle',
@@ -15,22 +16,20 @@ export class ToggleComponent implements OnInit {
   @Input() tooltipOn: string;
   @Input() tooltipOff: string;
   @Input() disabled = false;
+  @Input() icon: string;
 
-  @Input() smallStyle: boolean;
 
   @Input() value: boolean;
   @Output() valueChange = new EventEmitter<boolean>();
 
-  constructor() {
+  constructor(public drugstoneConfig: DrugstoneConfigService) {
   }
 
   ngOnInit(): void {
   }
 
-  public toggle(value: boolean) {
-    if(this.value === value)
-      return;
-    this.value = value;
+  public toggle(  ) {
+    this.value = !this.value
     this.valueChange.emit(this.value);
   }
 

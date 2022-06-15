@@ -3,7 +3,7 @@
     <app-launch-analysis
       [(show)]="showAnalysisDialog"
       [target]="analysisDialogTarget"
-      [config]="myConfig"
+      [config]="drugstoneConfig.config"
       [inputNetwork]="{ nodes: proteins, edges: edges }"
       (taskEvent)="emitTaskEvent($event)"
     >
@@ -25,15 +25,22 @@
     </app-add-expressed-proteins>
 
     <!-- Start explorer -->
-    <div class="drugstone explorer columns is-gapless" [ngClass]="{ 'is-flex-direction-row-reverse': myConfig.sidebarPos === 'right' }">
+    <div
+      class="drugstone explorer columns is-gapless"
+      [ngClass]="{
+        'is-flex-direction-row-reverse':
+          drugstoneConfig.config.sidebarPos === 'right'
+      }"
+    >
       <!-- Start left sidebar -->
-      <div
-        class="drugstone sidebar column"
-      >
-        <div *ngIf="myConfig.showItemSelector" class="card bar-large mt-0">
+      <div class="drugstone sidebar column">
+        <div
+          *ngIf="drugstoneConfig.config.showItemSelector"
+          class="card bar-large mt-0"
+        >
           <header
             class="card-header"
-            [ngClass]="{ 'b-text-small': smallStyle }"
+            [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
           >
             <p class="card-header-title">
               <span *ngIf="!selectedWrapper" class="icon">
@@ -63,18 +70,15 @@
           </header>
           <div *ngIf="collapseDetails">
             <div class="card-content">
-              <app-info-tile
-                [wrapper]="selectedWrapper"
-                [smallStyle]="smallStyle"
-              ></app-info-tile>
+              <app-info-tile [wrapper]="selectedWrapper"></app-info-tile>
             </div>
           </div>
         </div>
 
         <div
-          *ngIf="myConfig.showOverview"
+          *ngIf="drugstoneConfig.config.showOverview"
           class="card bar-large"
-          [ngClass]="{ 'b-text-small': smallStyle }"
+          [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
         >
           <header class="card-header">
             <p class="card-header-title">
@@ -135,9 +139,9 @@
         </div>
 
         <div
-          *ngIf="myConfig.showQuery"
+          *ngIf="drugstoneConfig.config.showQuery"
           class="card bar-large"
-          [ngClass]="{ 'b-text-small': smallStyle }"
+          [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
         >
           <header class="card-header">
             <p class="card-header-title">
@@ -176,10 +180,13 @@
           </div>
         </div>
 
-        <div *ngIf="myConfig.showSimpleAnalysis" class="card bar-large">
+        <div
+          *ngIf="drugstoneConfig.config.showSimpleAnalysis"
+          class="card bar-large"
+        >
           <header
             class="card-header"
-            [ngClass]="{ 'b-text-small': smallStyle }"
+            [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
           >
             <p class="card-header-title">
               <span class="icon">
@@ -204,19 +211,19 @@
           <div *ngIf="collapseAnalysisQuick">
             <div
               class="card-content quick-find"
-              [ngClass]="{ small: smallStyle }"
+              [ngClass]="{ small: drugstoneConfig.smallStyle }"
             >
               <div class="field">
                 <div class="control">
                   <div
                     class="tile notification quick-start warning"
-                    [ngClass]="{ small: smallStyle }"
+                    [ngClass]="{ small: drugstoneConfig.smallStyle }"
                   >
                     <div class="align-vmiddle">
                       <div
                         [ngClass]="{
-                          digit: !smallStyle,
-                          'digit-small': smallStyle
+                          digit: !drugstoneConfig.smallStyle,
+                          'digit-small': drugstoneConfig.smallStyle
                         }"
                       >
                         <i class="fa fa-fast-forward"></i>
@@ -231,12 +238,7 @@
                         <button
                           (click)="analysis.startQuickAnalysis(true, null)"
                           [disabled]="analysis.isLaunchingQuick()"
-                          class="
-                            button
-                            is-white is-rounded
-                            has-tooltip
-                            quick-start-btn
-                          "
+                          class="button is-white is-rounded has-tooltip quick-start-btn"
                           pTooltip="Find drugs for all proteins."
                           [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                           tooltipPosition="top"
@@ -249,7 +251,11 @@
                               <i class="fa fa-spin fa-spinner"></i>
                             </span>
                           </span>
-                          <span [ngClass]="{ 'text-normal': smallStyle }">
+                          <span
+                            [ngClass]="{
+                              'text-normal': drugstoneConfig.smallStyle
+                            }"
+                          >
                             Quick Start
                           </span>
                         </button>
@@ -259,13 +265,13 @@
                   <div class="divisor-rapid">&mdash; or &mdash;</div>
                   <div
                     class="tile notification quick-start info"
-                    [ngClass]="{ small: smallStyle }"
+                    [ngClass]="{ small: drugstoneConfig.smallStyle }"
                   >
                     <div class="align-vmiddle">
                       <div
                         [ngClass]="{
-                          digit: !smallStyle,
-                          'digit-small': smallStyle
+                          digit: !drugstoneConfig.smallStyle,
+                          'digit-small': drugstoneConfig.smallStyle
                         }"
                         *ngIf="analysis.getCount() == 0"
                       >
@@ -273,8 +279,8 @@
                       </div>
                       <div
                         [ngClass]="{
-                          digit: !smallStyle,
-                          'digit-small': smallStyle
+                          digit: !drugstoneConfig.smallStyle,
+                          'digit-small': drugstoneConfig.smallStyle
                         }"
                         *ngIf="analysis.getCount() > 0"
                       >
@@ -288,7 +294,9 @@
                         "
                       >
                         <div
-                          [ngClass]="{ 'text-normal': smallStyle }"
+                          [ngClass]="{
+                            'text-normal': drugstoneConfig.smallStyle
+                          }"
                           class="quick-start-btn"
                         >
                           Select Proteins
@@ -298,13 +306,13 @@
                   </div>
                   <div
                     class="tile notification quick-start info"
-                    [ngClass]="{ small: smallStyle }"
+                    [ngClass]="{ small: drugstoneConfig.smallStyle }"
                   >
                     <div class="align-vmiddle">
                       <div
                         [ngClass]="{
-                          digit: !smallStyle,
-                          'digit-small': smallStyle
+                          digit: !drugstoneConfig.smallStyle,
+                          'digit-small': drugstoneConfig.smallStyle
                         }"
                       >
                         2
@@ -322,12 +330,7 @@
                             analysis.getCount() === 0 ||
                             analysis.isLaunchingQuick()
                           "
-                          class="
-                            button
-                            is-white is-rounded
-                            quick-start-btn
-                            drugs-btn
-                          "
+                          class="button is-white is-rounded quick-start-btn drugs-btn"
                           pTooltip="Find drugs for the selected proteins."
                           [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                           tooltipPosition="top"
@@ -340,8 +343,12 @@
                               <i class="fa fa-spin fa-spinner"></i>
                             </span>
                           </span>
-                          <span [ngClass]="{ 'text-normal': smallStyle }">
-                            {{ myConfig.taskDrugName }}
+                          <span
+                            [ngClass]="{
+                              'text-normal': drugstoneConfig.smallStyle
+                            }"
+                          >
+                            {{ drugstoneConfig.config.taskDrugName }}
                           </span>
                         </button>
                       </div>
@@ -353,10 +360,13 @@
           </div>
         </div>
 
-        <div *ngIf="myConfig.showAdvAnalysis" class="card bar-large">
+        <div
+          *ngIf="drugstoneConfig.config.showAdvAnalysis"
+          class="card bar-large"
+        >
           <header
             class="card-header"
-            [ngClass]="{ 'b-text-small': smallStyle }"
+            [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
           >
             <p class="card-header-title">
               <span class="icon">
@@ -392,18 +402,14 @@
                       analysisDialogTarget = 'drug-target';
                       showAnalysisDialog = true
                     "
-                    class="
-                      button
-                      is-primary is-fullwidth is-rounded
-                      has-tooltip
-                    "
+                    class="button is-primary is-fullwidth is-rounded has-tooltip"
                     [disabled]="analysis.getCount() === 0"
-                    [ngClass]="{ 'text-small': smallStyle }"
+                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                   >
                     <span class="icon">
                       <i class="fa fa-crosshairs"></i>
                     </span>
-                    <span>{{ myConfig.taskTargetName   }}</span>
+                    <span>{{ drugstoneConfig.config.taskTargetName }}</span>
                   </button>
                 </div>
               </div>
@@ -418,19 +424,15 @@
                     (click)="
                       analysisDialogTarget = 'drug'; showAnalysisDialog = true
                     "
-                    class="
-                      button
-                      is-primary is-fullwidth is-rounded
-                      has-tooltip
-                    "
+                    class="button is-primary is-fullwidth is-rounded has-tooltip"
                     [disabled]="analysis.getCount() === 0"
-                    [ngClass]="{ 'text-small': smallStyle }"
+                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                   >
                     <span class="icon">
                       <i class="fa fa-capsules"></i>
                     </span>
                     <span>
-                      {{ myConfig.taskDrugName }}
+                      {{ drugstoneConfig.config.taskDrugName }}
                     </span>
                   </button>
                 </div>
@@ -441,11 +443,7 @@
                     *ngIf="analysis.getCount() > 0"
                     [href]="gProfilerLink()"
                     target="_blank"
-                    class="
-                      button
-                      is-primary is-fullwidth is-rounded
-                      has-tooltip
-                    "
+                    class="button is-primary is-fullwidth is-rounded has-tooltip"
                     pTooltip="Use enrichment analysis via g:Profiler (external)."
                     [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                     tooltipPosition="top"
@@ -453,18 +451,16 @@
                     <span class="icon">
                       <i class="fa fa-external-link-alt"></i>
                     </span>
-                    <span [ngClass]="{ 'text-small': smallStyle }">
+                    <span
+                      [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                    >
                       Enrichment Analysis
                     </span>
                   </a>
                   <a
                     *ngIf="analysis.getCount() === 0"
                     disabled
-                    class="
-                      button
-                      is-primary is-fullwidth is-rounded
-                      has-tooltip
-                    "
+                    class="button is-primary is-fullwidth is-rounded has-tooltip"
                     pTooltip="Use enrichment analysis via g:Profiler (external)."
                     [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                     tooltipPosition="top"
@@ -472,7 +468,9 @@
                     <span class="icon">
                       <i class="fa fa-external-link-alt"></i>
                     </span>
-                    <span [ngClass]="{ 'text-small': smallStyle }">
+                    <span
+                      [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                    >
                       Enrichment Analysis
                     </span>
                   </a>
@@ -482,10 +480,10 @@
           </div>
         </div>
 
-        <div *ngIf="myConfig.showTasks" class="card bar-large">
+        <div *ngIf="drugstoneConfig.config.showTasks" class="card bar-large">
           <header
             class="card-header"
-            [ngClass]="{ 'b-text-small': smallStyle }"
+            [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
           >
             <p class="card-header-title">
               <span class="icon">
@@ -512,10 +510,7 @@
               class="card-content overflow task-list-container"
               *ngIf="analysis.tasks && analysis.tasks.length > 0"
             >
-              <app-task-list
-                [(token)]="selectedAnalysisToken"
-                [smallStyle]="smallStyle"
-              ></app-task-list>
+              <app-task-list [(token)]="selectedAnalysisToken"></app-task-list>
             </div>
             <footer class="card-footer">
               <a
@@ -537,10 +532,13 @@
           </div>
         </div>
 
-        <div *ngIf="myConfig.showSelection" class="card bar-large">
+        <div
+          *ngIf="drugstoneConfig.config.showSelection"
+          class="card bar-large"
+        >
           <header
             class="card-header"
-            [ngClass]="{ 'b-text-small': smallStyle }"
+            [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
           >
             <p class="card-header-title">
               <span class="icon">
@@ -565,7 +563,7 @@
           <div
             *ngIf="collapseSelection"
             class="seed-selection"
-            [ngClass]="{ 'text-normal': 'smallStyle' }"
+            [ngClass]="{ 'text-normal': 'drugstoneConfig.smallStyle' }"
           >
             <div class="card-content overflow">
               <table
@@ -576,8 +574,12 @@
                   <tr>
                     <td>Label</td>
                     <td>Group</td>
-                    <td *ngIf="myConfig.identifier !== 'symbol'">Symbol</td>
-                    <td *ngIf="myConfig.identifier !== 'uniprot'">Uniprot</td>
+                    <td *ngIf="drugstoneConfig.config.identifier !== 'symbol'">
+                      Symbol
+                    </td>
+                    <td *ngIf="drugstoneConfig.config.identifier !== 'uniprot'">
+                      Uniprot
+                    </td>
                     <td>Actions</td>
                   </tr>
                 </thead>
@@ -588,23 +590,23 @@
                     </td>
                     <td>
                       <p>
-                        {{ myConfig.nodeGroups[p.data.group]["groupName"] }}
+                        {{
+                          drugstoneConfig.config.nodeGroups[p.data.group][
+                            "groupName"
+                          ]
+                        }}
                       </p>
                     </td>
-                    <td *ngIf="myConfig.identifier !== 'symbol'">
+                    <td *ngIf="drugstoneConfig.config.identifier !== 'symbol'">
                       <p>{{ p.data.symbol }}</p>
                     </td>
-                    <td *ngIf="myConfig.identifier !== 'uniprot'">
+                    <td *ngIf="drugstoneConfig.config.identifier !== 'uniprot'">
                       <p>{{ p.data.uniprotAc }}</p>
                     </td>
                     <td>
                       <button
                         (click)="analysis.removeItems([p])"
-                        class="
-                          button
-                          is-small is-danger is-outlined
-                          has-tooltip
-                        "
+                        class="button is-small is-danger is-outlined has-tooltip"
                         tooltipPosition="top"
                         pTooltip="Remove from selection."
                       >
@@ -701,24 +703,22 @@
             [(token)]="selectedAnalysisToken"
             (showDetailsChange)="selectedWrapper = $event"
             (visibleItems)="analysisWindowChanged($event)"
-            [config]="myConfig"
-            [smallStyle]="smallStyle"
+            [config]="drugstoneConfig.config"
           ></app-analysis-panel>
         </div>
 
         <div class="card network">
           <header class="card-header network-header">
             <p class="card-header-title">
-              {{ myConfig.title }}
+              {{ drugstoneConfig.config.title }}
             </p>
           </header>
           <div class="card-content explorer-network-view-settings">
             <div class="card-image canvas-content" #networkWithLegend>
-              <div *ngIf="myConfig.showLegend">
+              <div *ngIf="drugstoneConfig.config.showLegend">
                 <app-network-legend
-                  [config]="myConfig"
+                  [config]="drugstoneConfig.config"
                   [context]="legendContext"
-                  [smallStyle]="smallStyle"
                 ></app-network-legend>
               </div>
               <div class="center image1 fullheight" #network>
@@ -728,146 +728,207 @@
               </div>
             </div>
 
-            <footer
-              *ngIf="myConfig.showFooter"
-              class="card-footer toolbar network-footer-toolbar"
+            <div
+              *ngIf="drugstoneConfig.config.showNetworkMenu"
+              class="network-footer-toolbar drgstn-box-shadow"
+              [ngClass]="networkSidebarOpen ? 'opened' : 'closed'"
             >
               <div class="network-footer-toolbar-inner-container">
-                <ng-container *ngIf="myConfig.showFooterButtonScreenshot">
-                  <div class="footer-buttons network-footer-toolbar-element">
-                    <button
-                      (click)="toImage()"
-                      class="button is-primary is-rounded has-tooltip"
-                      pTooltip="Take a screenshot of the current network."
-                      [ngClass]="{ 'button-small': smallStyle }"
-                      [tooltipStyleClass]="'drgstn drgstn-tooltip'"
-                      tooltipPosition="top"
-                    >
-                      <span class="icon">
-                        <i class="fas fa-camera" aria-hidden="true"></i>
-                      </span>
-                      <span [ngClass]="{ 'text-normal': smallStyle }"
-                        >Screenshot</span
-                      >
-                    </button>
-                  </div>
-                </ng-container>
-
-                <ng-container *ngIf="myConfig.showFooterButtonExportGraphml">
-                  <app-download-button
-                    [nodeData]="nodeData"
-                    [smallStyle]="smallStyle"
-                    [buttonId]="'explorer-download'"
-                  ></app-download-button>
-                </ng-container>
-
-                <ng-container *ngIf="myConfig.showFooterButtonExpression">
+                <button
+                  (click)="toggleNetworkSidebar()"
+                  class="button is-small is-primary network-toolbar-toggle"
+                  [ngClass]="{ rotated: networkSidebarOpen }"
+                >
+                  <i class="fas fa-angle-left"></i>
+                </button>
+                <div class="rows">
                   <div
-                    class="
-                      footer-buttons
-                      dropdown
-                      is-up
-                      network-footer-toolbar-element
+                    class="row is-full m-1"
+                    *ngIf="
+                      drugstoneConfig.config.showNetworkMenuButtonScreenshot
                     "
-                    [class.is-active]="expressionExpanded"
                   >
-                    <div class="dropdown-trigger">
+                    <div class="network-footer-toolbar-element">
                       <button
-                        (click)="expressionExpanded = !expressionExpanded"
-                        class="button is-rounded is-primary"
-                        [class.is-outlined]="!selectedTissue"
-                        aria-haspopup="true"
-                        aria-controls="dropdown-menu"
-                        pTooltip="Tissue expression data is provided by the GTEx project."
+                        (click)="toImage()"
+                        class="button is-primary is-rounded has-tooltip"
+                        pTooltip="Take a screenshot of the current network."
                         [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                         tooltipPosition="top"
-                        [ngClass]="{ 'button-small': smallStyle }"
                       >
+                        <span class="icon">
+                          <i class="fas fa-camera" aria-hidden="true"></i>
+                        </span>
                         <span
-                          *ngIf="!selectedTissue"
-                          [ngClass]="{ 'text-small': smallStyle }"
-                          >Tissue</span
+                          [ngClass]="{
+                            'text-normal': drugstoneConfig.smallStyle
+                          }"
+                          >Screenshot</span
                         >
-                        <span *ngIf="selectedTissue">{{
-                          selectedTissue.name
-                        }}</span>
-                        <span *ngIf="expressionExpanded" class="icon is-small">
-                          <i class="fas fa-angle-up" aria-hidden="true"></i>
-                        </span>
-                        <span *ngIf="!expressionExpanded" class="icon is-small">
-                          <i class="fas fa-angle-left" aria-hidden="true"></i>
-                        </span>
                       </button>
                     </div>
-                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                      <div class="dropdown-content tissue-dropdown">
-                        <div class="scroll-area">
-                          <a
-                            (click)="selectTissue(null)"
-                            [class.is-active]="!selectedTissue"
-                            class="dropdown-item"
+                  </div>
+                  <div
+                    class="row is-full m-1"
+                    *ngIf="
+                      drugstoneConfig.config.showNetworkMenuButtonExportGraphml
+                    "
+                  >
+                    <app-download-button
+                      [nodeData]="nodeData"
+                      [buttonId]="'explorer-download'"
+                    ></app-download-button>
+                  </div>
+                  <div
+                    class="row is-full m-1"
+                    *ngIf="
+                      drugstoneConfig.config.showNetworkMenuButtonExpression
+                    "
+                  >
+                    <div
+                      class="dropdown network-footer-toolbar-element"
+                      [class.is-active]="expressionExpanded"
+                    >
+                      <div class="dropdown-trigger">
+                        <button
+                          (click)="expressionExpanded = !expressionExpanded"
+                          class="button is-rounded is-primary"
+                          [class.is-outlined]="!selectedTissue"
+                          aria-haspopup="true"
+                          aria-controls="dropdown-menu"
+                          pTooltip="Tissue expression data is provided by the GTEx project."
+                          [tooltipStyleClass]="'drgstn drgstn-tooltip'"
+                          tooltipPosition="top"
+                        >
+                        <span class="icon is-small">
+                          <i class="fas fa-child"></i>
+                        </span>
+                          <span
+                            *ngIf="!selectedTissue"
+                            [ngClass]="{
+                              'text-small': drugstoneConfig.smallStyle
+                            }"
+                            >Tissue</span
                           >
-                            None
-                          </a>
-                          <a
-                            *ngFor="let tissue of analysis.getTissues()"
-                            (click)="selectTissue(tissue)"
-                            [class.is-active]="
-                              selectedTissue &&
-                              tissue.netexId === selectedTissue.netexId
-                            "
-                            class="dropdown-item"
+                          <span *ngIf="selectedTissue" [ngClass]="{
+                            'text-small': drugstoneConfig.smallStyle
+                          }">{{
+                            selectedTissue.name
+                          }}</span>
+                          <span
+                            *ngIf="expressionExpanded"
+                            class="icon is-small"
                           >
-                            {{ tissue.name }}
-                          </a>
+                            <i class="fas fa-angle-down" aria-hidden="true"></i>
+                          </span>
+                          <span
+                            *ngIf="!expressionExpanded"
+                            class="icon is-small"
+                          >
+                            <i class="fas fa-angle-left" aria-hidden="true"></i>
+                          </span>
+                        </button>
+                      </div>
+                      <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                        <div class="dropdown-content tissue-dropdown">
+                          <div class="scroll-area">
+                            <a
+                              (click)="selectTissue(null)"
+                              [class.is-active]="!selectedTissue"
+                              class="dropdown-item"
+                            >
+                              None
+                            </a>
+                            <a
+                              *ngFor="let tissue of analysis.getTissues()"
+                              (click)="selectTissue(tissue)"
+                              [class.is-active]="
+                                selectedTissue &&
+                                tissue.netexId === selectedTissue.netexId
+                              "
+                              class="dropdown-item"
+                            >
+                              {{ tissue.name }}
+                            </a>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </ng-container>
-                <app-toggle
-                  class="footer-buttons network-footer-toolbar-element"
-                  textOn="Drugs"
-                  textOff="Off"
-                  tooltipOn="Display adjacent drugs ON."
-                  tooltipOff="Display adjacent drugs OFF."
-                  [smallStyle]="smallStyle"
-                  [value]="adjacentDrugs"
-                  (valueChange)="updateAdjacentDrugs($event)"
-                ></app-toggle>
-                <app-toggle
-                  class="footer-buttons network-footer-toolbar-element"
-                  textOn="Disorders (protein)"
-                  textOff="Off"
-                  tooltipOn="Show disorders adjacent to all currently displayed proteins/genes ON."
-                  tooltipOff="Show disorders adjacent to all currently displayed proteins/genes OFF."
-                  [smallStyle]="smallStyle"
-                  [value]="adjacentDisordersProtein"
-                  (valueChange)="updateAdjacentProteinDisorders($event)"
-                ></app-toggle>
-                <app-toggle
-                  class="footer-buttons network-footer-toolbar-element"
-                  textOn="Disorders (drugs)"
-                  textOff="Off"
-                  tooltipOn="Show disorders adjacent to all currently displayed drugs ON."
-                  tooltipOff="Show disorders adjacent to all currently displayed drugs OFF."
-                  [smallStyle]="smallStyle"
-                  [value]="adjacentDisordersDrug"
-                  [disabled]="!hasDrugsLoaded()"
-                  (valueChange)="updateAdjacentDrugDisorders($event)"
-                ></app-toggle>
-                <app-toggle
-                  class="footer-buttons network-footer-toolbar-element"
-                  textOn="Animation"
-                  textOff="Off"
-                  tooltipOn="Enable the network animation."
-                  tooltipOff="Disable the network animation and freeze nodes."
-                  [smallStyle]="smallStyle"
-                  [value]="physicsEnabled"
-                  (valueChange)="updatePhysicsEnabled($event)"
-                ></app-toggle>
+                  <div
+                    class="row is-full m-1"
+                    *ngIf="
+                      drugstoneConfig.config.showNetworkMenuButtonAdjacentDrugs
+                    "
+                  >
+                    <app-toggle
+                      class="network-footer-toolbar-element"
+                      textOn="Drugs"
+                      textOff="Off"
+                      icon="fas fa-capsules"
+                      tooltipOn="Display adjacent drugs ON."
+                      tooltipOff="Display adjacent drugs OFF."
+                      [value]="adjacentDrugs"
+                      (valueChange)="updateAdjacentDrugs($event)"
+                    ></app-toggle>
+                  </div>
+                  <div
+                    class="row is-full m-1"
+                    *ngIf="
+                      drugstoneConfig.config
+                        .showNetworkMenuButtonAdjacentDisordersProteins
+                    "
+                  >
+                    <app-toggle
+                      class="network-footer-toolbar-element"
+                      textOn="Disorders (protein)"
+                      textOff="Off"
+                      tooltipOn="Show disorders adjacent to all currently displayed proteins/genes ON."
+                      tooltipOff="Show disorders adjacent to all currently displayed proteins/genes OFF."
+                      [value]="adjacentDisordersProtein"
+                      (valueChange)="updateAdjacentProteinDisorders($event)"
+                      icon="fas fa-head-side-mask"
+                    ></app-toggle>
+                  </div>
+                  <div
+                    class="row is-full m-1"
+                    *ngIf="
+                      drugstoneConfig.config
+                        .showNetworkMenuButtonAdjacentDisordersDrugs
+                    "
+                  >
+                    <app-toggle
+                      class="network-footer-toolbar-element"
+                      textOn="Disorders (drug)"
+                      textOff="Off"
+                      tooltipOn="Show disorders adjacent to all currently displayed drugs ON."
+                      tooltipOff="Show disorders adjacent to all currently displayed drugs OFF."
+                      [value]="adjacentDisordersDrug"
+                      [disabled]="!hasDrugsLoaded()"
+                      (valueChange)="updateAdjacentDrugDisorders($event)"
+                      icon="fas fa-biohazard"
+                    ></app-toggle>
+                  </div>
+                  <div
+                    class="row is-full m-1"
+                    *ngIf="
+                      drugstoneConfig.config.showNetworkMenuButtonAnimation
+                    "
+                  >
+                    <app-toggle
+                      class="network-footer-toolbar-element"
+                      textOn="Animation"
+                      textOff="Off"
+                      tooltipOn="Enable the network animation."
+                      tooltipOff="Disable the network animation and freeze nodes."
+                      [value]="drugstoneConfig.config.physicsOn"
+                      (valueChange)="updatePhysicsEnabled($event)"
+                      icon="fas fa-bullseye"
+                    ></app-toggle>
+                  </div>
+                </div>
               </div>
-            </footer>
+            </div>
           </div>
         </div>
       </div>
@@ -875,8 +936,8 @@
 
       <div class="is-hidden-tablet mobile-fallback">
         Sorry, drugstone is not available for mobile phones. To find information
-        about drugstone, please check the <a routerLink="/about">About</a> page or
-        visit this page with another device with a larger screen.
+        about drugstone, please check the <a routerLink="/about">About</a> page
+        or visit this page with another device with a larger screen.
       </div>
     </div>
   </div>

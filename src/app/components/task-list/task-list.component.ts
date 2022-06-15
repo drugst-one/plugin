@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import {AnalysisService, algorithmNames} from '../../services/analysis/analysis.service';
 
 
@@ -12,11 +13,10 @@ export class TaskListComponent implements OnInit {
 
   @Input() token: string;
   @Output() tokenChange: EventEmitter<string> = new EventEmitter();
-  @Input() smallStyle: boolean;
 
   public algorithmNames = algorithmNames;
 
-  constructor(public analysis: AnalysisService) {
+  constructor(public drugstoneConfig: DrugstoneConfigService, public analysis: AnalysisService) {
   }
 
   ngOnInit(): void {

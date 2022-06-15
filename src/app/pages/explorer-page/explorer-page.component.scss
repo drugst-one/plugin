@@ -118,5 +118,17 @@
   padding: 0.5rem !important;
 }
 
+.network-toolbar-toggle {
+  position: relative;
+  top: calc(50% - 10px);
+  display: inline-block;
+  margin: 0px;
+  left: -20px;
+  &.rotated {
+    -ms-transform: rotate(180deg); /* IE 9 */
+    transform: rotate(180deg);
+  }
+}
+
 
 

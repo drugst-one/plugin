@@ -32,6 +32,7 @@ import {NetexControllerService} from 'src/app/services/netex-controller/netex-co
 import {defaultConfig, IConfig} from 'src/app/config';
 import { mapCustomEdge, mapCustomNode } from 'src/app/main-network';
 import { downLoadFile, pieChartContextRenderer, removeDuplicateObjectsFromList } from 'src/app/utils';
+import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 
 
 declare var vis: any;
@@ -60,7 +61,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   @ViewChild('network', {static: false}) networkEl: ElementRef;
   @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
   @Input() token: string | null = null;
-  @Input() public smallStyle = false;
   @Input()
   public set config(config: IConfig | undefined) {
     if (typeof config === 'undefined') {
@@ -84,7 +84,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   private drugEdges: any[] = [];
   public showDrugs = false;
   public tab: 'meta' | 'network' | 'table' = 'table';
-  public physicsEnabled = true;
 
   public adjacentDrugs = false;
   public adjacentDrugList: Node[] = [];
@@ -126,7 +125,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   public expressionMap: NodeAttributeMap;
   public gradientMap: NodeAttributeMap = {};
 
-  constructor(private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService) {
+  constructor(public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService) {
   }
 
   async ngOnInit() {
@@ -191,7 +190,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         const container = this.networkEl.nativeElement;
         const isBig = nodes.length > 100 || edges.length > 100;
         const options = NetworkSettings.getOptions(isBig ? 'analysis-big' : 'analysis', this.myConfig.physicsOn);
-        this.physicsEnabled = !isBig;
+        this.drugstoneConfig.config.physicsOn = !isBig;
 
         this.network = new vis.Network(container, this.nodeData, options);
 
@@ -670,10 +669,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   }
 
   public updatePhysicsEnabled(bool: boolean) {
-    this.physicsEnabled = bool;
+    this.drugstoneConfig.config.physicsOn = bool;
     this.network.setOptions({
       physics: {
-        enabled: this.physicsEnabled,
+        enabled: this.drugstoneConfig.config.physicsOn,
         stabilization: {
           enabled: false,
         },

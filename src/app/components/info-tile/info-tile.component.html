@@ -6,30 +6,30 @@
         wrapper.data.detailShowLabel &&
         wrapper.data.label
       "
-      [ngClass]="{ 'text-normal': smallStyle }"
+      [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
     >
       <b><span>Label:</span></b>
       <span class="is-capitalized"> {{ wrapper.data.label }}</span>
     </p>
     <p
       *ngIf="wrapper.data.proteinName"
-      [ngClass]="{ 'text-normal': smallStyle }"
+      [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
     >
       <b><span>Name:</span></b>
       <span class="is-capitalized"> {{ wrapper.data.proteinName }}</span>
     </p>
-    <p *ngIf="wrapper.data.symbol" [ngClass]="{ 'text-normal': smallStyle }">
+    <p *ngIf="wrapper.data.symbol" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
       <b><span>Symbol:</span></b>
       <span class="is-capitalized"> {{ wrapper.data.symbol }}</span>
     </p>
     <p
       *ngIf="wrapper.data.drugId || wrapper.data.disorderId"
-      [ngClass]="{ 'text-normal': smallStyle }"
+      [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
     >
       <b><span>Name:</span></b>
       <span class="is-capitalized"> {{ wrapper.data.label }}</span>
     </p>
-    <p *ngIf="wrapper.data.icd10" [ngClass]="{ 'text-normal': smallStyle }">
+    <p *ngIf="wrapper.data.icd10" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
       <b><span>ICD10:</span></b>
       <span class="is-capitalized">
         {{
@@ -41,7 +41,7 @@
         }}</span
       >
     </p>
-    <p *ngIf="wrapper.data.drugId" [ngClass]="{ 'text-normal': smallStyle }">
+    <p *ngIf="wrapper.data.drugId" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
       <b><span>DrugBank:</span></b>
       <a
         href="https://go.drugbank.com/drugs/{{ wrapper.data.drugId }}"
@@ -52,7 +52,7 @@
     </p>
     <p
       *ngIf="wrapper.data.disorderId"
-      [ngClass]="{ 'text-normal': smallStyle }"
+      [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
     >
       <b><span>Mondo:</span></b>
       <a
@@ -64,11 +64,11 @@
         <span class="is-capitalized"> MONDO:{{ wrapper.data.disorderId }}</span>
       </a>
     </p>
-    <p *ngIf="wrapper.data.groupName" [ngClass]="{ 'text-normal': smallStyle }">
+    <p *ngIf="wrapper.data.groupName" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
       <b><span>Group:</span></b>
       <span class="is-capitalized"> {{ wrapper.data.groupName }}</span>
     </p>
-    <p *ngIf="wrapper.data.uniprotAc" [ngClass]="{ 'text-normal': smallStyle }">
+    <p *ngIf="wrapper.data.uniprotAc" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
       <b><span>Uniprot:</span></b>
       <a
         href="https://www.uniprot.org/uniprot/{{ wrapper.data.uniprotAc }}"
@@ -77,7 +77,7 @@
         <span class="is-capitalized"> {{ wrapper.data.uniprotAc }}</span>
       </a>
     </p>
-    <p *ngIf="wrapper.data.ensg" [ngClass]="{ 'text-normal': smallStyle }">
+    <p *ngIf="wrapper.data.ensg" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
       <b><span>Ensembl:</span></b>
       <a
         *ngFor="let ensg of wrapper.data.ensg"
@@ -87,7 +87,7 @@
         <span class="is-capitalized"> {{ ensg }}</span>
       </a>
     </p>
-    <p *ngIf="wrapper.expression" [ngClass]="{ 'text-normal': smallStyle }">
+    <p *ngIf="wrapper.expression" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
       <b><span>Expression:</span></b>
       <span class="is-capitalized"> {{ wrapper.expression }}</span>
       <span
@@ -103,7 +103,6 @@
   <app-toggle
     *ngIf="wrapper.data.netexId && wrapper.data.netexId.startsWith('p')"
     [value]="analysis.inSelection(wrapper)"
-    [smallStyle]="smallStyle"
     (valueChange)="
       $event ? analysis.addItems([wrapper]) : analysis.removeItems([wrapper])
     "
@@ -113,6 +112,6 @@
     tooltipOff="Remove protein from selection."
   ></app-toggle>
 </div>
-<div *ngIf="!wrapper" [ngClass]="{ 'text-normal': smallStyle }">
+<div *ngIf="!wrapper" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
   Please select a node for further information.
 </div>

@@ -45,10 +45,14 @@ export interface IConfig {
   showAdvAnalysis: boolean;
   showTasks: boolean;
   showSelection: boolean;
-  showFooter: boolean;
-  showFooterButtonExpression: boolean;
-  showFooterButtonScreenshot: boolean;
-  showFooterButtonExportGraphml: boolean;
+  showNetworkMenu: boolean;
+  showNetworkMenuButtonExpression: boolean;
+  showNetworkMenuButtonScreenshot: boolean;
+  showNetworkMenuButtonExportGraphml: boolean;
+  showNetworkMenuButtonAdjacentDrugs: boolean;
+  showNetworkMenuButtonAdjacentDisordersProteins: boolean;
+  showNetworkMenuButtonAdjacentDisordersDrugs: boolean;
+  showNetworkMenuButtonAnimation: boolean;
   showLegend: boolean;
   showLegendNodes: boolean;
   showLegendEdges: boolean;
@@ -85,11 +89,15 @@ export const defaultConfig: IConfig = {
   showAdvAnalysis: true,
   showSelection: true,
   showTasks: true,
-  showFooter: true,
+  showNetworkMenu: true,
   showLegend: true,
-  showFooterButtonExpression: true,
-  showFooterButtonScreenshot: true,
-  showFooterButtonExportGraphml: true,
+  showNetworkMenuButtonExpression: true,
+  showNetworkMenuButtonScreenshot: true,
+  showNetworkMenuButtonExportGraphml: true,
+  showNetworkMenuButtonAdjacentDrugs: true,
+  showNetworkMenuButtonAdjacentDisordersProteins: true,
+  showNetworkMenuButtonAdjacentDisordersDrugs: true,
+  showNetworkMenuButtonAnimation: true,
   identifier: 'symbol',
   interactionDrugProtein: 'DrugBank',
   interactionProteinProtein: 'STRING',

@@ -1,4 +1,4 @@
-<div class="footer-buttons network-footer-toolbar-element">
+<div class="network-footer-toolbar-element">
   <div class="dropdown is-hoverable is-up">
     <div class="dropdown-trigger">
       <button
@@ -6,12 +6,11 @@
         class="button is-primary is-rounded has-tooltip"
         aria-haspopup="true"
         attr.aria-controls="{{ 'controls-' + buttonId }}"
-        [ngClass]="{ 'button-small': smallStyle }"
       >
         <span class="icon">
           <i class="fas fa-download" aria-hidden="true"></i>
         </span>
-        <span [ngClass]="{ 'text-normal': smallStyle }">Download</span>
+        <span [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">Download</span>
       </button>
     </div>
     <div class="dropdown-menu" id="{{ 'controls-' + buttonId }}" role="menu">
@@ -19,21 +18,21 @@
         <a
           (click)="downloadLink('graphml')"
           class="dropdown-item"
-          [ngClass]="{ 'text-normal': smallStyle }"
+          [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
           >.graphml</a
         >
         <!-- <hr class="dropdown-divider" /> -->
         <a
           (click)="downloadLink('json')"
           class="dropdown-item"
-          [ngClass]="{ 'text-normal': smallStyle }"
+          [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
           >.json</a
         >
         <!-- <hr class="dropdown-divider" /> -->
         <a
           (click)="downloadLink('csv')"
           class="dropdown-item"
-          [ngClass]="{ 'text-normal': smallStyle }"
+          [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
           >.csv</a
         >
       </div>

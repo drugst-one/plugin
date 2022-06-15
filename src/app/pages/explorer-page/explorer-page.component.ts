@@ -30,6 +30,7 @@ import {pieChartContextRenderer, removeDuplicateObjectsFromList} from '../../uti
 import * as merge from 'lodash/fp/merge';
 import {AnalysisPanelComponent} from 'src/app/components/analysis-panel/analysis-panel.component';
 import * as JSON5 from 'json5';
+import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 
 declare var vis: any;
 
@@ -43,9 +44,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private networkJSON = '{"nodes": [], "edges": []}';
   private networkPositions = undefined;
-
-  // set default config on init
-  public myConfig: IConfig = JSON.parse(JSON.stringify(defaultConfig));
 
   @Input()
   public onload: undefined | string;
@@ -65,7 +63,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     // add settings to config
 
     const configObj = typeof config === 'string' ? config.length === 0 ? {}: JSON5.parse(config) : config;
-    this.myConfig = merge(this.myConfig, configObj);
+    this.drugstoneConfig.config = merge(this.drugstoneConfig.config, configObj);
 
     // update Drugst.One according to the settings
     // check if config updates affect network
@@ -82,7 +80,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }
     }
     // trigger updates on config e.g. in legend
-    this.myConfig = {...this.myConfig};
+    this.drugstoneConfig.config = {...this.drugstoneConfig.config};
     if (updateNetworkFlag && typeof this.networkJSON !== 'undefined') {
       // update network if network config has changed and networkJSON exists
       if (this.networkInternal !== undefined) {
@@ -90,7 +88,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.networkPositions = this.networkInternal.getPositions();
       }
       this.createNetwork().then(() => {
-        if(this.myConfig.physicsOn) {
+        if(this.drugstoneConfig.config.physicsOn) {
           this.updatePhysicsEnabled(true);
         }
       });
@@ -115,7 +113,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public windowWidth = 0;
-  public smallStyle = false;
 
   public showDetails = false;
   public selectedWrapper: Wrapper | null = null;
@@ -135,12 +132,13 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public proteins: Node[];
   public edges: NodeInteraction[];
 
+  public networkSidebarOpen = true;
+
   private networkInternal: any;
   // this will store the vis Dataset
   public nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
 
   private dumpPositions = false;
-  public physicsEnabled = false;
   public adjacentDrugs = false;
 
   public adjacentDrugList: Node[] = [];
@@ -196,6 +194,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   constructor(
     public omnipath: OmnipathControllerService,
     public analysis: AnalysisService,
+    public drugstoneConfig: DrugstoneConfigService,
     public netex: NetexControllerService) {
     this.showDetails = false;
     this.analysis.subscribeList(async (items, selected) => {
@@ -220,7 +219,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           node.y = pos[wrapper.id].y;
           const nodeStyled = NetworkSettings.getNodeStyle(
             node,
-            this.myConfig,
+            this.drugstoneConfig.config,
             false,
             selected,
             1.0
@@ -235,11 +234,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.nodeData.nodes.forEach((node) => {
           // const nodeSelected = this.analysis.idInSelection(node.id);
           // if (node.group == 'default') {
-          //   Object.assign(node, this.myConfig.nodeGroups.default);
+          //   Object.assign(node, this.drugstoneConfig.config.nodeGroups.default);
           // } else {
-          //   Object.assign(node, this.myConfig.nodeGroups[node.group]);
+          //   Object.assign(node, this.drugstoneConfig.config.nodeGroups[node.group]);
           // };
-          Object.assign(node, this.myConfig.nodeGroups[node.group]);
+          Object.assign(node, this.drugstoneConfig.config.nodeGroups[node.group]);
 
         });
         this.nodeData.nodes.update(updatedNodes);
@@ -264,6 +263,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       // tslint:disable-next-line:no-eval
       eval(this.onload);
     }
+
   }
 
   async getInteractions(key: InteractionDatabase) {
@@ -272,7 +272,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       const names = this.nodeData.nodes.map((node) => node.label);
       const nameToNetworkId = {};
       this.nodeData.nodes.map((node) => nameToNetworkId[node.label] = node.id);
-      edges = await this.omnipath.getInteractions(names, this.myConfig.identifier, nameToNetworkId);
+      edges = await this.omnipath.getInteractions(names, this.drugstoneConfig.config.identifier, nameToNetworkId);
     }
     this.nodeData.edges.update(edges);
   }
@@ -280,7 +280,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   private async getNetwork() {
 
     const network = JSON.parse(this.networkJSON);
-    if (this.myConfig.identifier === 'ensg') {
+    if (this.drugstoneConfig.config.identifier === 'ensg') {
       // @ts-ignore
       network.nodes.forEach(node => {
         node.id = this.removeEnsemblVersion(node.id);
@@ -295,10 +295,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     // map data to nodes in backend
     if (network.nodes != null && network.nodes.length) {
-      network.nodes = await this.netex.mapNodes(network.nodes, this.myConfig.identifier);
+      network.nodes = await this.netex.mapNodes(network.nodes, this.drugstoneConfig.config.identifier);
     }
 
-    if (this.myConfig.identifier === 'ensg') {
+    if (this.drugstoneConfig.config.identifier === 'ensg') {
       // remove possible duplicate IDs
       network.nodes = removeDuplicateObjectsFromList(network.nodes, 'netexId');
     }
@@ -334,9 +334,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private setWindowWidth(width: number) {
     this.windowWidth = width;
-    this.smallStyle = this.windowWidth < 1250;
+    this.drugstoneConfig.smallStyle = this.windowWidth < 1250;
   }
-
 
   private zoomToNode(id: string) {
     // get network object, depending on whether analysis is open or not
@@ -394,18 +393,18 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     // TODO do we still need this?
     // this.proteinData.linkNodes();
 
-    const {nodes, edges} = this.proteinData.mapDataToNetworkInput(this.myConfig);
+    const {nodes, edges} = this.proteinData.mapDataToNetworkInput(this.drugstoneConfig.config);
 
-    if (this.myConfig.autofillEdges && nodes.length) {
-      const netexEdges = await this.netex.fetchEdges(nodes, this.myConfig.interactionProteinProtein);
-      edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.myConfig)))
+    if (this.drugstoneConfig.config.autofillEdges && nodes.length) {
+      const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.config.interactionProteinProtein);
+      edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.config)))
     }
 
     this.nodeData.nodes = new vis.DataSet(nodes);
     this.nodeData.edges = new vis.DataSet(edges);
     const container = this.networkEl.nativeElement;
 
-    const options = NetworkSettings.getOptions('main',this.myConfig.physicsOn);
+    const options = NetworkSettings.getOptions('main',this.drugstoneConfig.config.physicsOn);
 
     this.networkInternal = new vis.Network(container, this.nodeData, options);
 
@@ -481,10 +480,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public updatePhysicsEnabled(bool: boolean) {
-    this.physicsEnabled = bool;
+    this.drugstoneConfig.config.physicsOn = bool;
     this.networkInternal.setOptions({
       physics: {
-        enabled: this.physicsEnabled,
+        enabled: this.drugstoneConfig.config.physicsOn,
         stabilization: {
           enabled: false,
         },
@@ -498,12 +497,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.netex.adjacentDisorders(this.nodeData.nodes, 'proteins').subscribe(response => {
         for (const interaction of response.edges) {
           const edge = {from: interaction.protein, to: interaction.disorder};
-          this.adjacentProteinDisorderEdgesList.push(mapCustomEdge(edge, this.myConfig));
+          this.adjacentProteinDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.config));
         }
         for (const disorder of response.disorders) {
           disorder.group = 'defaultDisorder';
           disorder.id = disorder.netexId;
-          this.adjacentProteinDisorderList.push(mapCustomNode(disorder, this.myConfig))
+          this.adjacentProteinDisorderList.push(mapCustomNode(disorder, this.drugstoneConfig.config))
         }
         this.saveAddNodes(this.adjacentProteinDisorderList);
         this.nodeData.edges.add(this.adjacentProteinDisorderEdgesList);
@@ -526,12 +525,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.netex.adjacentDisorders(this.nodeData.nodes, 'drugs').subscribe(response => {
         for (const interaction of response.edges) {
           const edge = {from: interaction.drug, to: interaction.disorder};
-          this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.myConfig));
+          this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.config));
         }
         for (const disorder of response.disorders) {
           disorder.group = 'defaultDisorder';
           disorder.id = disorder.netexId;
-          this.adjacentDrugDisorderList.push(mapCustomNode(disorder, this.myConfig));
+          this.adjacentDrugDisorderList.push(mapCustomNode(disorder, this.drugstoneConfig.config));
         }
         this.saveAddNodes(this.adjacentDrugDisorderList);
         this.nodeData.edges.add(this.adjacentDrugDisorderEdgesList);
@@ -568,15 +567,15 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public updateAdjacentDrugs(bool: boolean) {
     this.adjacentDrugs = bool;
     if (this.adjacentDrugs) {
-      this.netex.adjacentDrugs(this.myConfig.interactionDrugProtein, this.nodeData.nodes).subscribe(response => {
+      this.netex.adjacentDrugs(this.drugstoneConfig.config.interactionDrugProtein, this.nodeData.nodes).subscribe(response => {
         for (const interaction of response.pdis) {
           const edge = {from: interaction.protein, to: interaction.drug};
-          this.adjacentDrugEdgesList.push(mapCustomEdge(edge, this.myConfig));
+          this.adjacentDrugEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.config));
         }
         for (const drug of response.drugs) {
           drug.group = 'foundDrug';
           drug.id = getDrugNodeId(drug)
-          this.adjacentDrugList.push(mapCustomNode(drug, this.myConfig))
+          this.adjacentDrugList.push(mapCustomNode(drug, this.drugstoneConfig.config))
         }
         this.nodeData.nodes.add(this.adjacentDrugList);
         this.nodeData.edges.add(this.adjacentDrugEdgesList);
@@ -645,10 +644,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         group.shape = 'image';
       }
       // implement nodeShadow option, it needs to be set for all nodes or none
-      group.shadow = this.myConfig.nodeShadow;
+      group.shadow = this.drugstoneConfig.config.nodeShadow;
     });
 
-    this.myConfig[key] = nodeGroups;
+    this.drugstoneConfig.config[key] = nodeGroups;
   }
 
   /**
@@ -673,9 +672,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }
 
       // implement edgeShadow option, it needs to be set for all nodes or none
-      value.shadow = this.myConfig.edgeShadow;
+      value.shadow = this.drugstoneConfig.config.edgeShadow;
     });
-    this.myConfig[key] = edgeGroups;
+    this.drugstoneConfig.config[key] = edgeGroups;
   }
 
   public toImage() {
@@ -758,7 +757,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           node,
           NetworkSettings.getNodeStyle(
             node,
-            this.myConfig,
+            this.drugstoneConfig.config,
             false,
             this.analysis.inSelection(getWrapperFromNode(item)),
             1.0
@@ -802,7 +801,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           Object.assign(node,
             NetworkSettings.getNodeStyle(
               node,
-              this.myConfig,
+              this.drugstoneConfig.config,
               node.isSeed,
               this.analysis.inSelection(wrapper),
               gradient));
@@ -835,5 +834,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.inputNetwork = {nodes: this.proteins, edges: this.edges}
     else
       this.inputNetwork = network;
+  }
+
+  toggleNetworkSidebar() {
+    this.networkSidebarOpen = !this.networkSidebarOpen;
   }
 }

@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { legendContext } from 'src/app/interfaces';
+import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import {IConfig} from '../../config';
 
 @Component({
@@ -11,7 +12,6 @@ export class NetworkLegendComponent implements OnInit {
 
   @Input() context: legendContext;
   @Input() config: IConfig;
-  @Input() smallStyle: boolean;
 
   private contextNodeGroupsToDelete = {
     'explorer': ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder'],
@@ -47,7 +47,7 @@ export class NetworkLegendComponent implements OnInit {
     return !this.contextEdgeGroupsToDelete[this.context].includes(edgeGroupKey);
   }
 
-  constructor() { }
+  constructor(public drugstoneConfig: DrugstoneConfigService) { }
 
   ngOnInit(): void {
   }
