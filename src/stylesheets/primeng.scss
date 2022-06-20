@@ -1,8 +1,58 @@
 @import '../stylesheets/icons';
+
 .drgstn-tooltip {
   position: absolute !important;
   padding: .25em .5rem !important;
   max-width: 12.5rem !important;
+}
+
+.drgstn-tooltip-top {
+  .p-tooltip-text:before {
+    width: 0;
+    left: 50%;
+    bottom: +7px;
+    border: 6px solid transparent;
+    border-top: 6px solid var(--drgstn-tooltip);
+    border-bottom: 0;
+    transform: translate(-50%, calc(100% + 3px));
+
+  }
+}
+
+.drgstn-tooltip-bottom {
+  .p-tooltip-text:before {
+    width: 0;
+    left: 50%;
+    top: +3px;
+    border: 6px solid transparent;
+    border-bottom: 6px solid var(--drgstn-tooltip);
+    border-top: 0;
+    transform: translate(-50%, -5px);
+  }
+}
+
+.drgstn-tooltip-left {
+  .p-tooltip-text:before {
+    height: 0;
+    top: 50%;
+    right: +7px;
+    border: 6px solid transparent;
+    border-left: 6px solid var(--drgstn-tooltip);
+    border-right: 0;
+    transform: translate(calc(100% - 1px),-50% );
+  }
+}
+
+.drgstn-tooltip-right {
+  .p-tooltip-text:before {
+    height: 0;
+    top: 50%;
+    left: +7px;
+    border: 6px solid transparent;
+    border-right: 6px solid var(--drgstn-tooltip);
+    border-left: 0;
+    transform: translate(-5px,-50% );
+  }
 }
 
 .drgstn {
@@ -23,7 +73,7 @@
     border-radius: 4px !important;
     padding: .5rem 1rem .5rem 1rem !important;
     color: var(--drgstn-text-secondary) !important;
-    font-family: Roboto,Helvetica Neue,sans-serif !important;
+    font-family: Roboto, Helvetica Neue, sans-serif !important;
     font-size: .75rem !important;
   }
 
@@ -31,13 +81,6 @@
     content: '';
     position: absolute;
     display: block;
-    width: 0;
-    left: 50%;
-    bottom: +7px;
-    border: 6px solid transparent;
-    border-bottom: 0;
-    border-top: 6px solid var(--drgstn-tooltip);
-    transform: translate(-50%, calc(100% + 3px));
   }
 
   .p-checkbox .p-checkbox-box {
