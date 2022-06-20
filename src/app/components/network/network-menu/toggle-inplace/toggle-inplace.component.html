@@ -1,0 +1,24 @@
+<button
+  class="button is-rounded has-tooltip"
+  [pTooltip]="tooltip"
+  [tooltipStyleClass]="'drgstn drgstn-tooltip'"
+  tooltipPosition="left"
+  (click)="toggle()"
+  [ngClass]="{
+    'is-primary': value,
+    'is-small': drugstoneConfig.smallStyle
+  }"
+>
+  <span *ngIf="icon" class="icon is-small">
+    <i class="{{ icon }}"></i>
+  </span>
+  <span [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">{{
+    text
+  }}</span>
+  <span *ngIf="!value" class="icon is-small">
+    <i class="fa {{ iconOff }}"></i>
+  </span>
+  <span *ngIf="value" class="icon is-small">
+    <i class="fa {{ iconOn }}"></i>
+  </span>
+</button>

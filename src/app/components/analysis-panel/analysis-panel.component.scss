@@ -6,6 +6,10 @@
   width: 100% !important;
 }
 
+.tab-header-small {
+  padding: 0 !important;
+}
+
 .network-view-settings {
   // remove margin from tab header when network is displayed, so that network
   // does not disappear in empty border
@@ -16,7 +20,7 @@
   }
   .tab-content {
     width: 100%;
-    height: calc(100% - #{$network-header-height} - #{$analysis-tab-header-height} - #{$analysis-tab-header-padding});
+    height: calc(100% - #{$network-header-height} - #{$analysis-tab-header-height});
   }
 }
 
@@ -44,10 +48,6 @@
   }
 }
 
-.table-header {
-  margin-bottom: 50px;
-}
-
 .checkbox-col {
   width: 50px;
 }
@@ -69,12 +69,6 @@
 
 .scroll-y{
   overflow-y: auto;
-}
-
-.network-footer-toolbar{
-  .dropdown-menu{
-    z-index: $analysis-network-toolbar-dropdown-z !important;
-  }
 }
 
 .legend {

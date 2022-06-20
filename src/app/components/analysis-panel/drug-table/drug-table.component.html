@@ -1,4 +1,4 @@
-<p-table *ngIf="tableDrugs.length > 0" [value]="tableDrugs" class="drgstn">
+<p-table styleClass="table is-hoverable is-narrow drgstn" *ngIf="tableDrugs.length > 0" [value]="tableDrugs" class="">
   <ng-template pTemplate="header">
     <tr>
       <th [pSortableColumn]="'drugId'">
@@ -23,10 +23,10 @@
       </th>
       <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
         Score
-        <button class="button is-light has-tooltip tooltip-button"
+        <span class="has-tooltip tooltip-button has-text-info question-icon"
                 [pTooltip]="tableDrugScoreTooltip" [tooltipStyleClass]="'drgstn drgstn-tooltip'" tooltipPosition="top">
           <fa-icon [icon]="faQuestionCircle" class="icon"></fa-icon>
-        </button>
+      </span>
         <p-sortIcon [field]="'score'"></p-sortIcon>
       </th>
     </tr>
@@ -40,7 +40,7 @@
                   <fa-icon [icon]="faCheck" [classes]="['icon']"></fa-icon>
                   Approved
                 </span>
-        <span *ngIf="e.status === 'unapproved'">
+        <span *ngIf="e.status !== 'approved'">
                   <fa-icon [icon]="faTimes" [classes]="['icon']"></fa-icon>
                 </span>
       </td>

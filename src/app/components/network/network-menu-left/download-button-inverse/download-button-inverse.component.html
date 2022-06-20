@@ -1,16 +1,20 @@
-<div class="network-footer-toolbar-element">
-  <div class="dropdown is-hoverable is-up">
+<div class="dropdown is-hoverable">
     <div class="dropdown-trigger">
       <button
         [id]="buttonId"
         class="button is-primary is-rounded has-tooltip"
         aria-haspopup="true"
         attr.aria-controls="{{ 'controls-' + buttonId }}"
+        [ngClass]="{
+          'is-small': drugstoneConfig.smallStyle
+        }"
       >
+        <span [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+          >Download</span
+        >
         <span class="icon">
-          <i class="fas fa-download" aria-hidden="true"></i>
-        </span>
-        <span [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">Download</span>
+            <i class="fas fa-download" aria-hidden="true"></i>
+          </span>
       </button>
     </div>
     <div class="dropdown-menu" id="{{ 'controls-' + buttonId }}" role="menu">
@@ -38,4 +42,4 @@
       </div>
     </div>
   </div>
-</div>
+  

@@ -1,23 +1,27 @@
 @charset "utf-8";
-@import url('https://fonts.googleapis.com/css?family=Varela+Round');
+@import url("https://fonts.googleapis.com/css?family=Varela+Round");
 @import "../../node_modules/animate.css/animate.min";
 @import "primeng";
 @import "bulma";
 @import "variables";
 
 #appWindow {
-  @import '~@ng-select/ng-select/themes/default.theme';
+  @import "~@ng-select/ng-select/themes/default.theme";
 
   .ng-dropdown-panel .ng-dropdown-panel-items {
     max-height: 150px !important;
   }
 
   .drgstn-box-shadow {
-    box-shadow: 0 .125em .25em hsla(0,0%,4%,.1);
+    box-shadow: 0 0.125em 0.25em hsla(0, 0%, 4%, 0.1);
   }
 
   .fullheight {
     height: 100%;
+  }
+
+  .question-icon {
+    vertical-align: middle;
   }
 
   .card-content .tabs-header {
@@ -27,56 +31,6 @@
   .canvas-content {
     height: calc(100% - #{$network-footer-height});
     z-index: $explorer-network-z;
-  }
-
-  @keyframes hideSidebar {
-    from {right: 0;}
-    to {right: $network-footer-right-closed}
-  }
-
-  @keyframes showSidebar {
-    from {right: $network-footer-right-closed}
-    to {right: 0;}
-  }
-
-  // general network settings, some will be overwritten in analysis
-  .network-footer-toolbar {
-    position: absolute;
-    height: calc(100% - #{$network-header-height});
-    width: $network-footer-width;
-    top: $network-header-height;
-    background-color: var(--drgstn-panel-secondary);
-    z-index: $network-footer-container-z;
-
-    &.opened {
-      right: 0;
-      animation-name: showSidebar;
-      animation-duration: 1s;
-    }
-    &.closed {
-      right: $network-footer-right-closed;
-      animation-name: hideSidebar;
-      animation-duration: 1s;
-    }
-
-    &-inner-container {
-      width: 100%;
-      height: $network-footer-inner-container-height;
-      position: absolute;
-    }
-
-    &-element {
-      position: relative;
-      margin-left: 10px;
-    }
-
-    .dropdown-menu {
-      z-index: $explorer-network-toolbar-dropdown-z;
-
-      .scroll-area {
-        height: 15rem;
-      }
-    }
   }
 
   nav.navbar {
@@ -91,12 +45,16 @@
 
   .tissue-dropdown {
     padding: 5px;
-
     .scroll-area {
-      max-height: 600px;
+      max-height: 250px;
       overflow-y: scroll;
       padding-right: 5px;
     }
+  }
+
+  .rotated {
+    -ms-transform: rotate(180deg); /* IE 9 */
+    transform: rotate(180deg);
   }
 
   div.navbar-menu {
@@ -107,11 +65,9 @@
     margin-right: 5px;
   }
 
-
   .mb-3 {
     margin-bottom: 10px;
   }
-
 
   img.inline {
     height: 30px;
@@ -170,12 +126,12 @@
   div.drugstone.network {
     height: 100%;
     position: relative;
-
   }
 
   div.card.network {
     width: 100%;
     height: $height;
+    overflow: hidden;
   }
 
   div.parent {
@@ -191,7 +147,6 @@
     align-items: center;
     justify-content: center;
   }
-
 
   div.drugstone.explorer {
     height: $height;
@@ -233,18 +188,18 @@
     font-size: $b-text-smaller-font-size;
   }
 
-  .button-small {
-    padding:  0 10px 0 10px !important;
-    height: 36px !important;
-  }
-  .switch-small {
-    padding: $button-small-padding;
-    height: 36px !important;
-  }
-
   .dropdown-item {
-    color: var(--drgstn-text-primary)
+    color: var(--drgstn-text-primary);
   }
 
-}
+  // general network settings, some will be overwritten in analysis
 
+  .analysis-view {
+    .network-footer-toolbar {
+      z-index: $analysis-network-footer-container-z;
+      .network-toolbar-toggle {
+        z-index: $analysis-network-footer-container-toggle-z;
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+@import "src/stylesheets/variables";
+
+.dropdown-menu{
+    z-index: $network-tissue-options-z !important;
+    
+    .dropdown-content {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        .dropdown-item {
+            padding: .375rem 0rem !important;
+            padding-left: 0.5rem !important;
+        }
+    }
+}

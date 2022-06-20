@@ -37,7 +37,7 @@ export interface IConfig {
   legendPos: 'left' | 'right';
   taskTargetName: string,
   taskDrugName: string,
-  // showSidebar: boolean;
+  showSidebar: false | 'left' | 'right';
   showOverview: boolean;
   showQuery: boolean;
   showItemSelector: boolean;
@@ -45,14 +45,18 @@ export interface IConfig {
   showAdvAnalysis: boolean;
   showTasks: boolean;
   showSelection: boolean;
-  showNetworkMenu: boolean;
+  showNetworkMenu: false | 'left' | 'right';
   showNetworkMenuButtonExpression: boolean;
   showNetworkMenuButtonScreenshot: boolean;
   showNetworkMenuButtonExportGraphml: boolean;
   showNetworkMenuButtonAdjacentDrugs: boolean;
+  networkMenuButtonAdjacentDrugsLabel: string;
   showNetworkMenuButtonAdjacentDisordersProteins: boolean;
+  networkMenuButtonAdjacentDisordersProteinsLabel: string;
   showNetworkMenuButtonAdjacentDisordersDrugs: boolean;
+  networkMenuButtonAdjacentDisordersDrugsLabel: string;
   showNetworkMenuButtonAnimation: boolean;
+  networkMenuButtonAnimationLabel: string;
   showLegend: boolean;
   showLegendNodes: boolean;
   showLegendEdges: boolean;
@@ -61,7 +65,6 @@ export interface IConfig {
   interactionDrugProtein: InteractionDrugProteinDB;
   interactionProteinProtein: InteractionProteinProteinDB;
   autofillEdges: boolean;
-  sidebarPos: 'left' | 'right';
   interactions?: InteractionDatabase;
   physicsOn?: boolean;
   identifier?: Identifier;
@@ -81,7 +84,7 @@ export const defaultConfig: IConfig = {
   taskDrugName: 'Drug Search',
   showLegendNodes: true,
   showLegendEdges: true,
-  // showSidebar: true,
+  showSidebar: 'left',
   showOverview: true,
   showQuery: true,
   showItemSelector: true,
@@ -89,15 +92,19 @@ export const defaultConfig: IConfig = {
   showAdvAnalysis: true,
   showSelection: true,
   showTasks: true,
-  showNetworkMenu: true,
+  showNetworkMenu: 'right',
   showLegend: true,
   showNetworkMenuButtonExpression: true,
   showNetworkMenuButtonScreenshot: true,
   showNetworkMenuButtonExportGraphml: true,
   showNetworkMenuButtonAdjacentDrugs: true,
+  networkMenuButtonAdjacentDrugsLabel: 'Drugs',
   showNetworkMenuButtonAdjacentDisordersProteins: true,
+  networkMenuButtonAdjacentDisordersProteinsLabel: 'Disorders (protein)',
   showNetworkMenuButtonAdjacentDisordersDrugs: true,
+  networkMenuButtonAdjacentDisordersDrugsLabel: 'Disorders (drug)',
   showNetworkMenuButtonAnimation: true,
+  networkMenuButtonAnimationLabel: 'Animation',
   identifier: 'symbol',
   interactionDrugProtein: 'DrugBank',
   interactionProteinProtein: 'STRING',
@@ -105,7 +112,6 @@ export const defaultConfig: IConfig = {
   edgeShadow: true,
   autofillEdges: true,
   physicsOn: false,
-  sidebarPos: 'left',
   nodeGroups: {
     // all NodeGroups but the default group must be set, if not provided by the user, they will be taken from here
     // IMPORTANT: node color must be hexacode!

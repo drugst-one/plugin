@@ -1,6 +1,6 @@
 <p-table *ngIf="tableProteins.length > 0" selectionMode="multiple"
          [value]="tableProteins" [selection]="tableSelectedProteins" dataKey="uniprotAc"
-         (selectionChange)="tableProteinSelection($event)" class="drgstn">
+         (selectionChange)="tableProteinSelection($event)" styleClass="table is-hoverable is-narrow drgstn">
   <ng-template pTemplate="header">
     <tr>
       <th class="checkbox-col">
@@ -20,10 +20,10 @@
       </th>
       <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
         Score
-        <button class="button is-light has-tooltip tooltip-button"
+        <span class="question-icon has-text-info has-tooltip tooltip-button"
                 [pTooltip]="tableProteinScoreTooltip" [tooltipStyleClass]="'drgstn drgstn-tooltip'" tooltipPosition="top">
           <fa-icon [icon]="faQuestionCircle" class="icon"></fa-icon>
-        </button>
+        </span>
         <p-sortIcon [field]="'score'"></p-sortIcon>
       </th>
       <th [pSortableColumn]="'isSeed'">

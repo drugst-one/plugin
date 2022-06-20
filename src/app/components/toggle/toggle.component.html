@@ -1,4 +1,4 @@
-<!-- <div class="field has-addons">
+<div class="field has-addons">
   <p class="control has-tooltip">
     <button
       class="button is-rounded has-tooltip"
@@ -8,7 +8,7 @@
       tooltipPosition="top"
       [class.is-primary]="value"
       (click)="toggle(true)"
-      [ngClass]="{ 'switch-small': drugstoneConfig.smallStyle }"
+      [ngClass]="{ 'is-small': drugstoneConfig.smallStyle }"
     >
       <span class="icon is-small">
         <i class="fa {{ iconOn }}"></i>
@@ -25,7 +25,7 @@
       tooltipPosition="top"
       [class.is-primary]="!value"
       (click)="toggle(false)"
-      [ngClass]="{ 'switch-small': drugstoneConfig.smallStyle }"
+      [ngClass]="{ 'is-small': drugstoneConfig.smallStyle }"
     >
       <span [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">{{ textOff }}</span>
       <span *ngIf="iconOff" class="icon is-small">
@@ -33,29 +33,4 @@
       </span>
     </button>
   </p>
-</div> -->
-
-<button
-  class="button is-rounded has-tooltip"
-  [pTooltip]="tooltipOff"
-  [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
-  tooltipPosition="left"
-  (click)="toggle()"
-  [ngClass]="{
-    'is-primary': value,
-    'switch-small': drugstoneConfig.smallStyle
-  }"
->
-  <span *ngIf="icon" class="icon is-small">
-    <i class="{{ icon }}"></i>
-  </span>
-  <span [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">{{
-    textOn
-  }}</span>
-  <span *ngIf="!value" class="icon is-small">
-    <i class="fa {{ iconOff }}"></i>
-  </span>
-  <span *ngIf="value" class="icon is-small">
-    <i class="fa {{ iconOn }}"></i>
-  </span>
-</button>
+</div>

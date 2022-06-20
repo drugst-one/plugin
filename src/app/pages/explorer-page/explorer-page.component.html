@@ -11,16 +11,16 @@
 
     <app-custom-proteins
       [(show)]="showCustomProteinsDialog"
-      [visibleNodes]="currentViewNodes"
+      [visibleNodes]="networkHandler.activeNetwork.currentViewNodes"
     >
     </app-custom-proteins>
 
     <app-add-expressed-proteins
       [(show)]="showThresholdDialog"
-      [selectedTissue]="currentViewSelectedTissue"
-      [visibleNodes]="currentViewNodes"
-      [currentViewProteins]="currentViewProteins"
-      [expressionMap]="expressionMap"
+      [selectedTissue]="networkHandler.activeNetwork.currentViewSelectedTissue"
+      [visibleNodes]="networkHandler.activeNetwork.currentViewNodes"
+      [currentViewProteins]="networkHandler.activeNetwork.currentViewProteins"
+      [expressionMap]="networkHandler.activeNetwork.expressionMap"
     >
     </app-add-expressed-proteins>
 
@@ -29,11 +29,11 @@
       class="drugstone explorer columns is-gapless"
       [ngClass]="{
         'is-flex-direction-row-reverse':
-          drugstoneConfig.config.sidebarPos === 'right'
+          drugstoneConfig.config.showSidebar === 'right'
       }"
     >
       <!-- Start left sidebar -->
-      <div class="drugstone sidebar column">
+      <div class="drugstone sidebar column" *ngIf="drugstoneConfig.config.showSidebar">
         <div
           *ngIf="drugstoneConfig.config.showItemSelector"
           class="card bar-large mt-0"
@@ -43,15 +43,19 @@
             [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
           >
             <p class="card-header-title">
-              <span *ngIf="!selectedWrapper" class="icon">
+              <span
+                *ngIf="!networkHandler.activeNetwork.selectedWrapper"
+                class="icon"
+              >
                 <i class="fas fa-info" aria-hidden="true"></i>
               </span>
-              <!-- <i *ngIf="selectedWrapper && selectedWrapper.data.netexId && selectedWrapper.data.netexId.startsWith('p')" class="fas fa-dna" aria-hidden="true"></i>
-                <i *ngIf="selectedWrapper && selectedWrapper.data.netexId && selectedWrapper.data.netexId.startsWith('d')" class="fas fa-capsules"
-                  aria-hidden="true"></i> -->
-              <span *ngIf="!selectedWrapper">No item selected</span>
-              <span *ngIf="selectedWrapper">
-                <span>{{ selectedWrapper.data.type }}</span>
+              <span *ngIf="!networkHandler.activeNetwork.selectedWrapper"
+                >No item selected</span
+              >
+              <span *ngIf="networkHandler.activeNetwork.selectedWrapper">
+                <span>{{
+                  networkHandler.activeNetwork.selectedWrapper.data.type
+                }}</span>
               </span>
             </p>
             <a
@@ -70,7 +74,9 @@
           </header>
           <div *ngIf="collapseDetails">
             <div class="card-content">
-              <app-info-tile [wrapper]="selectedWrapper"></app-info-tile>
+              <app-info-tile
+                [wrapper]="networkHandler.activeNetwork.selectedWrapper"
+              ></app-info-tile>
             </div>
           </div>
         </div>
@@ -118,7 +124,9 @@
                     <p class="heading">Nodes</p>
                     <p class="title">
                       {{
-                        currentViewNodes != null ? currentViewNodes.length : 0
+                        networkHandler.activeNetwork.currentViewNodes != null
+                          ? networkHandler.activeNetwork.currentViewNodes.length
+                          : 0
                       }}
                     </p>
                   </div>
@@ -128,7 +136,9 @@
                     <p class="heading">Interactions</p>
                     <p class="title">
                       {{
-                        currentViewEdges != null ? currentViewEdges.length : 0
+                        networkHandler.activeNetwork.currentViewEdges != null
+                          ? networkHandler.activeNetwork.currentViewEdges.length
+                          : 0
                       }}
                     </p>
                   </div>
@@ -172,7 +182,7 @@
                 <div class="control">
                   <app-query-tile-component
                     (selectItem)="queryAction($event)"
-                    [queryItems]="queryItems"
+                    [queryItems]="networkHandler.activeNetwork.queryItems"
                   ></app-query-tile-component>
                 </div>
               </div>
@@ -518,7 +528,7 @@
                 (click)="
                   analysis.removeAllTasks(); selectedAnalysisToken = null
                 "
-                class="card-footer-item text-danger"
+                class="card-footer-item has-text-danger"
                 pTooltip="Delete all tasks."
                 [tooltipStyleClass]="'drgstn drgstn-tooltip'"
                 tooltipPosition="top"
@@ -633,7 +643,7 @@
                 </span>
                   </a>
                   <a (click)="analysis.removeSeeds(currentViewNodes)"
-                    class="card-footer-item text-danger" tooltipPosition="top" pTooltip="Remove all seeds.">
+                    class="card-footer-item has-text-danger" tooltipPosition="top" pTooltip="Remove all seeds.">
                 <span class="icon">
                   <i class="fa fa-minus"></i>
                 </span>
@@ -679,7 +689,7 @@
               <a
                 *ngIf="analysis.getSelection().length"
                 (click)="analysis.resetSelection()"
-                class="card-footer-item text-danger"
+                class="card-footer-item has-text-danger"
                 tooltipPosition="top"
                 pTooltip="Remove all entries from the selection."
               >
@@ -698,239 +708,23 @@
 
       <!-- Start network block -->
       <div class="drugstone network column" id="main-column">
+        <!-- analysis panel with analysis network -->
         <div class="analysis-view" *ngIf="selectedAnalysisToken">
           <app-analysis-panel
             [(token)]="selectedAnalysisToken"
-            (showDetailsChange)="selectedWrapper = $event"
+            (showDetailsChange)="
+              networkHandler.activeNetwork.selectedWrapper = $event
+            "
             (visibleItems)="analysisWindowChanged($event)"
             [config]="drugstoneConfig.config"
           ></app-analysis-panel>
         </div>
-
-        <div class="card network">
-          <header class="card-header network-header">
-            <p class="card-header-title">
-              {{ drugstoneConfig.config.title }}
-            </p>
-          </header>
-          <div class="card-content explorer-network-view-settings">
-            <div class="card-image canvas-content" #networkWithLegend>
-              <div *ngIf="drugstoneConfig.config.showLegend">
-                <app-network-legend
-                  [config]="drugstoneConfig.config"
-                  [context]="legendContext"
-                ></app-network-legend>
-              </div>
-              <div class="center image1 fullheight" #network>
-                <button class="button is-loading center" alt="loading...">
-                  Loading
-                </button>
-              </div>
-            </div>
-
-            <div
-              *ngIf="drugstoneConfig.config.showNetworkMenu"
-              class="network-footer-toolbar drgstn-box-shadow"
-              [ngClass]="networkSidebarOpen ? 'opened' : 'closed'"
-            >
-              <div class="network-footer-toolbar-inner-container">
-                <button
-                  (click)="toggleNetworkSidebar()"
-                  class="button is-small is-primary network-toolbar-toggle"
-                  [ngClass]="{ rotated: networkSidebarOpen }"
-                >
-                  <i class="fas fa-angle-left"></i>
-                </button>
-                <div class="rows">
-                  <div
-                    class="row is-full m-1"
-                    *ngIf="
-                      drugstoneConfig.config.showNetworkMenuButtonScreenshot
-                    "
-                  >
-                    <div class="network-footer-toolbar-element">
-                      <button
-                        (click)="toImage()"
-                        class="button is-primary is-rounded has-tooltip"
-                        pTooltip="Take a screenshot of the current network."
-                        [tooltipStyleClass]="'drgstn drgstn-tooltip'"
-                        tooltipPosition="top"
-                      >
-                        <span class="icon">
-                          <i class="fas fa-camera" aria-hidden="true"></i>
-                        </span>
-                        <span
-                          [ngClass]="{
-                            'text-normal': drugstoneConfig.smallStyle
-                          }"
-                          >Screenshot</span
-                        >
-                      </button>
-                    </div>
-                  </div>
-                  <div
-                    class="row is-full m-1"
-                    *ngIf="
-                      drugstoneConfig.config.showNetworkMenuButtonExportGraphml
-                    "
-                  >
-                    <app-download-button
-                      [nodeData]="nodeData"
-                      [buttonId]="'explorer-download'"
-                    ></app-download-button>
-                  </div>
-                  <div
-                    class="row is-full m-1"
-                    *ngIf="
-                      drugstoneConfig.config.showNetworkMenuButtonExpression
-                    "
-                  >
-                    <div
-                      class="dropdown network-footer-toolbar-element"
-                      [class.is-active]="expressionExpanded"
-                    >
-                      <div class="dropdown-trigger">
-                        <button
-                          (click)="expressionExpanded = !expressionExpanded"
-                          class="button is-rounded is-primary"
-                          [class.is-outlined]="!selectedTissue"
-                          aria-haspopup="true"
-                          aria-controls="dropdown-menu"
-                          pTooltip="Tissue expression data is provided by the GTEx project."
-                          [tooltipStyleClass]="'drgstn drgstn-tooltip'"
-                          tooltipPosition="top"
-                        >
-                        <span class="icon is-small">
-                          <i class="fas fa-child"></i>
-                        </span>
-                          <span
-                            *ngIf="!selectedTissue"
-                            [ngClass]="{
-                              'text-small': drugstoneConfig.smallStyle
-                            }"
-                            >Tissue</span
-                          >
-                          <span *ngIf="selectedTissue" [ngClass]="{
-                            'text-small': drugstoneConfig.smallStyle
-                          }">{{
-                            selectedTissue.name
-                          }}</span>
-                          <span
-                            *ngIf="expressionExpanded"
-                            class="icon is-small"
-                          >
-                            <i class="fas fa-angle-down" aria-hidden="true"></i>
-                          </span>
-                          <span
-                            *ngIf="!expressionExpanded"
-                            class="icon is-small"
-                          >
-                            <i class="fas fa-angle-left" aria-hidden="true"></i>
-                          </span>
-                        </button>
-                      </div>
-                      <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                        <div class="dropdown-content tissue-dropdown">
-                          <div class="scroll-area">
-                            <a
-                              (click)="selectTissue(null)"
-                              [class.is-active]="!selectedTissue"
-                              class="dropdown-item"
-                            >
-                              None
-                            </a>
-                            <a
-                              *ngFor="let tissue of analysis.getTissues()"
-                              (click)="selectTissue(tissue)"
-                              [class.is-active]="
-                                selectedTissue &&
-                                tissue.netexId === selectedTissue.netexId
-                              "
-                              class="dropdown-item"
-                            >
-                              {{ tissue.name }}
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="row is-full m-1"
-                    *ngIf="
-                      drugstoneConfig.config.showNetworkMenuButtonAdjacentDrugs
-                    "
-                  >
-                    <app-toggle
-                      class="network-footer-toolbar-element"
-                      textOn="Drugs"
-                      textOff="Off"
-                      icon="fas fa-capsules"
-                      tooltipOn="Display adjacent drugs ON."
-                      tooltipOff="Display adjacent drugs OFF."
-                      [value]="adjacentDrugs"
-                      (valueChange)="updateAdjacentDrugs($event)"
-                    ></app-toggle>
-                  </div>
-                  <div
-                    class="row is-full m-1"
-                    *ngIf="
-                      drugstoneConfig.config
-                        .showNetworkMenuButtonAdjacentDisordersProteins
-                    "
-                  >
-                    <app-toggle
-                      class="network-footer-toolbar-element"
-                      textOn="Disorders (protein)"
-                      textOff="Off"
-                      tooltipOn="Show disorders adjacent to all currently displayed proteins/genes ON."
-                      tooltipOff="Show disorders adjacent to all currently displayed proteins/genes OFF."
-                      [value]="adjacentDisordersProtein"
-                      (valueChange)="updateAdjacentProteinDisorders($event)"
-                      icon="fas fa-head-side-mask"
-                    ></app-toggle>
-                  </div>
-                  <div
-                    class="row is-full m-1"
-                    *ngIf="
-                      drugstoneConfig.config
-                        .showNetworkMenuButtonAdjacentDisordersDrugs
-                    "
-                  >
-                    <app-toggle
-                      class="network-footer-toolbar-element"
-                      textOn="Disorders (drug)"
-                      textOff="Off"
-                      tooltipOn="Show disorders adjacent to all currently displayed drugs ON."
-                      tooltipOff="Show disorders adjacent to all currently displayed drugs OFF."
-                      [value]="adjacentDisordersDrug"
-                      [disabled]="!hasDrugsLoaded()"
-                      (valueChange)="updateAdjacentDrugDisorders($event)"
-                      icon="fas fa-biohazard"
-                    ></app-toggle>
-                  </div>
-                  <div
-                    class="row is-full m-1"
-                    *ngIf="
-                      drugstoneConfig.config.showNetworkMenuButtonAnimation
-                    "
-                  >
-                    <app-toggle
-                      class="network-footer-toolbar-element"
-                      textOn="Animation"
-                      textOff="Off"
-                      tooltipOn="Enable the network animation."
-                      tooltipOff="Disable the network animation and freeze nodes."
-                      [value]="drugstoneConfig.config.physicsOn"
-                      (valueChange)="updatePhysicsEnabled($event)"
-                      icon="fas fa-bullseye"
-                    ></app-toggle>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <!-- explorer network -->
+        <app-network
+          networkType="explorer"
+          [nodeData]="nodeData"
+          legendContext="explorer"
+        ></app-network>
       </div>
       <!-- End  network block -->
 

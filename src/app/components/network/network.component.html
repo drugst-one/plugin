@@ -1,0 +1,39 @@
+<div class="card network">
+  <header class="card-header network-header" *ngIf="networkType === 'explorer'">
+    <p class="card-header-title">
+      {{ drugstoneConfig.config.title }}
+    </p>
+  </header>
+  <div
+    class="card-content network-view-settings"
+    [class.analysis]="networkType === 'analysis'"
+  >
+    <div class="card-image canvas-content" #networkWithLegend>
+      <div *ngIf="drugstoneConfig.config.showLegend">
+        <app-network-legend
+          [config]="drugstoneConfig.config"
+          [context]="legendContext"
+        ></app-network-legend>
+      </div>
+      <div class="center image1 fullheight" #network>
+        <button class="button is-loading center" alt="loading...">
+          Loading
+        </button>
+      </div>
+    </div>
+
+    <app-network-menu
+      *ngIf="
+        drugstoneConfig.config.showNetworkMenu &&
+        drugstoneConfig.config.showNetworkMenu === 'right'
+      "
+    ></app-network-menu>
+
+    <app-network-menu-left
+      *ngIf="
+        drugstoneConfig.config.showNetworkMenu &&
+        drugstoneConfig.config.showNetworkMenu === 'left'
+      "
+    ></app-network-menu-left>
+  </div>
+</div>

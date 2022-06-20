@@ -1,0 +1,15 @@
+@import "src/stylesheets/variables";
+
+.network-view-settings {
+  // remove margin from tab header when network is displayed, so that network
+  // does not disappear in empty border
+  padding: 0 !important;
+  height: calc(100% - #{$network-header-height});
+  &.analysis {
+    height: calc(100% - 0.5rem);
+  }
+}
+
+.dropdown-menu{
+    z-index: $network-tissue-options-z !important;
+}

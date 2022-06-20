@@ -22,13 +22,15 @@ div.legend {
   z-index: $explorer-networklegend-z;
   // border size below legend
   margin-bottom: 2px;
+  transform-origin: bottom left;
+  zoom: $legend-scaling;
+  -moz-transform: scale($legend-scaling);
   &.right {
     right: 0;
   }
   &.legend-small {
-    transform-origin: bottom left;
-    zoom: 0.8;
-    -moz-transform: scale(0.8);
+    zoom: $legend-scaling-small;
+    -moz-transform: scale($legend-scaling-small);
   }
   table {
     z-index: $explorer-networklegend-foreground-z;

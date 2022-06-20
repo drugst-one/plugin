@@ -2,20 +2,19 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 
 @Component({
-  selector: 'app-toggle',
-  templateUrl: './toggle.component.html',
-  styleUrls: ['./toggle.component.scss', '../../pages/explorer-page/explorer-page.component.scss']
+  selector: 'app-toggle-inplace',
+  templateUrl: './toggle-inplace.component.html',
+  styleUrls: ['./toggle-inplace.component.scss']
 })
-export class ToggleComponent implements OnInit {
+export class ToggleInplaceComponent implements OnInit {
 
   @Input() iconOn = 'fa-check';
   @Input() iconOff = 'fa-times';
 
-  @Input() textOn = 'On';
-  @Input() textOff = 'Off';
-  @Input() tooltipOn: string;
-  @Input() tooltipOff: string;
+  @Input() text = 'Button';
+  @Input() tooltip: string;
   @Input() disabled = false;
+  @Input() icon: string;
 
   @Input() value: boolean;
   @Output() valueChange = new EventEmitter<boolean>();
@@ -26,9 +25,10 @@ export class ToggleComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public toggle(value) {
-    this.value = value;
+  public toggle() {
+    this.value = !this.value;
     this.valueChange.emit(this.value);
   }
+
 
 }
