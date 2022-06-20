@@ -45,6 +45,7 @@
 
   .tissue-dropdown {
     padding: 5px;
+
     .scroll-area {
       max-height: 250px;
       overflow-y: scroll;
@@ -93,6 +94,7 @@
     &::-webkit-scrollbar {
       display: none;
     }
+
     /* Hide scrollbar for IE, Edge and Firefox */
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
@@ -197,6 +199,7 @@
   .analysis-view {
     .network-footer-toolbar {
       z-index: $analysis-network-footer-container-z;
+
       .network-toolbar-toggle {
         z-index: $analysis-network-footer-container-toggle-z;
       }

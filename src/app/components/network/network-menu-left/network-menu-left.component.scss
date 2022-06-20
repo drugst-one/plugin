@@ -85,8 +85,8 @@
     top: calc(50% - 10px);
     display: inline-block;
     margin: 0px;
-    right: -20px;
-
+    right: -12px;
+    padding: calc(.75em - 1px) !important;
     .dropdown-menu {
       z-index: $network-tissue-options-z;
       .scroll-area {

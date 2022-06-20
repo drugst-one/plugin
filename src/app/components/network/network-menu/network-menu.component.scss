@@ -85,7 +85,8 @@
     top: calc(50% - 10px);
     display: inline-block;
     margin: 0px;
-    left: -20px;
+    left: -12px;
+    padding: calc(.75em - 1px) !important;
     &.rotated {
       -ms-transform: rotate(180deg); /* IE 9 */
       transform: rotate(180deg);
