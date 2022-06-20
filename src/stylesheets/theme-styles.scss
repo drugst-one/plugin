@@ -82,6 +82,7 @@
   .tabs li.is-active a, .tabs.is-toggle li.is-active a, .tabs a:hover {
     border-color: var(--drgstn-primary) !important;
     color: var(--drgstn-text-primary) !important;
+    border-bottom: solid;
   }
 
   .content h4, .content h6 {
