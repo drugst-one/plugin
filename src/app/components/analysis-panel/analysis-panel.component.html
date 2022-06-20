@@ -7,307 +7,319 @@
         </span>
         Analysis Results
       </p>
+
+      <a
+        (click)="analysis.removeTask(token); close()"
+        class="card-header-icon"
+        aria-label="delete"
+      >
+        <span class="icon has-text-danger" title="Delete analysis">
+          <i class="fas fa-trash" aria-hidden="true"></i>
+        </span>
+      </a>
+
       <a (click)="close()" class="card-header-icon" aria-label="close">
-        <span class="icon">
+        <span class="icon" title="Close analysis">
           <i class="fas fa-times" aria-hidden="true"></i>
         </span>
       </a>
     </header>
-    <div class="card-content" [class.network-view-settings]="tab === 'network'">
+    <div
+      class="card-content tab-header-small"
+      [class.network-view-settings]="tab === 'network'"
+    >
       <div class="tabs is-centered tabs-header">
         <ul>
-          <li [class.is-active]="tab === 'table'"><a (click)="tab = 'table'">Table</a></li>
-          <li [class.is-active]="tab === 'network'"><a (click)="tab = 'network'">Network</a></li>
-          <li [class.is-active]="tab === 'meta'"><a (click)="tab = 'meta'">Parameters</a></li>
+          <li [class.is-active]="tab === 'table'">
+            <a (click)="tab = 'table'">Table</a>
+          </li>
+          <li [class.is-active]="tab === 'network'">
+            <a (click)="tab = 'network'">Network</a>
+          </li>
+          <li [class.is-active]="tab === 'meta'">
+            <a (click)="tab = 'meta'">Parameters</a>
+          </li>
         </ul>
       </div>
-      <div class="tab-content meta" *ngIf="task && task.info.done" [class.is-visible]="tab === 'meta'">
+      <div
+        class="tab-content meta"
+        *ngIf="task && task.info.done"
+        [class.is-visible]="tab === 'meta'"
+      >
         <div *ngIf="task">
-          <p *ngIf="task.info.algorithm !== 'quick' && task.info.algorithm !== 'super'">
-            Algorithm: <strong class="has-text-normal">{{algorithmNames[task.info.algorithm]}}</strong>
+          <p
+            *ngIf="
+              task.info.algorithm !== 'quick' && task.info.algorithm !== 'super'
+            "
+          >
+            Algorithm:
+            <strong class="has-text-normal">{{
+              algorithmNames[task.info.algorithm]
+            }}</strong>
           </p>
           <div>
             <table class="table is-narrow">
               <tbody>
-                <tr *ngIf="result && result.geneInteractionDataset !== undefined">
-                  <td>Protein-Protein Interaction Dataset</td>
-                  <td>{{result.geneInteractionDataset.name}} (Version {{result.geneInteractionDataset.version}})</td>
-                </tr>
-                <tr *ngIf="result && result.drugInteractionDataset !== undefined">
-                  <td>Protein-Drug Interaction Dataset</td>
-                  <td>{{result.drugInteractionDataset.name}} (Version {{result.drugInteractionDataset.version}})</td>
-                </tr>
-              <tr *ngIf="task.info.parameters.resultSize !== undefined">
-                <td>Result Size</td>
-                <td>{{task.info.parameters.resultSize}}</td>
-              </tr>
-              <tr *ngIf="task.info.parameters.k !== undefined">
-                <td>K</td>
-                <td>{{task.info.parameters.k}}</td>
-              </tr>
-              <tr *ngIf="task.info.parameters.numTrees !== undefined">
-                <td>Number of trees</td>
-                <td>{{task.info.parameters.numTrees}}</td>
-              </tr>
-              <tr *ngIf="task.info.parameters.tolerance !== undefined">
-                <td>Tolerance</td>
-                <td>{{task.info.parameters.tolerance}}</td>
-              </tr>
-              <tr *ngIf="task.info.parameters.dampingFactor !== undefined">
-                <td>Damping Factor</td>
-                <td>{{task.info.parameters.dampingFactor}}</td>
-              </tr>
-              <tr *ngIf="task.info.parameters.maxDeg !== undefined">
-                <td>Maximum Degree</td>
-                <td>{{task.info.parameters.maxDeg}}</td>
-              </tr>
-              <tr *ngIf="task.info.parameters.hubPenalty !== undefined">
-                <td>Hub Penality</td>
-                <td>{{task.info.parameters.hubPenalty}}</td>
-              </tr>
-              <tr *ngIf="task.info.parameters.includeIndirectDrugs !== undefined && task.info.target === 'drug'">
-                <td>Include indirect drugs</td>
-                <td>
-                  <i *ngIf="task.info.parameters.includeIndirectDrugs" class="fa fa-check"></i>
-                  <i *ngIf="!task.info.parameters.includeIndirectDrugs" class="fa fa-times"></i>
-                </td>
-              </tr>
-              <tr *ngIf="task.info.parameters.includeNonApprovedDrugs !== undefined && task.info.target === 'drug'">
-                <td>Include non-approved drugs</td>
-                <td>
-                  <i *ngIf="task.info.parameters.includeNonApprovedDrugs" class="fa fa-check"></i>
-                  <i *ngIf="!task.info.parameters.includeNonApprovedDrugs" class="fa fa-times"></i>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-          <div *ngIf="task.info.algorithm === 'quick' || task.info.algorithm === 'super'">
-            <p>
-              Algorithm: <strong>{{algorithmNames['multisteiner']}}</strong>
-            </p>
-            <table class="table is-narrow">
-              <tbody>
-              <tr>
-                <td>Number of Trees</td>
-                <td>1</td>
-              </tr>
-              <tr>
-                <td>Tolerance</td>
-                <td>0</td>
-              </tr>
-              <tr>
-                <td>Hub Penality</td>
-                <td>1</td>
-              </tr>
-              </tbody>
-            </table>
-            <p>
-              Algorithm: <strong>{{algorithmNames['closeness']}}</strong>
-            </p>
-            <table class="table is-narrow">
-              <tbody>
-              <tr>
-                <td>Include indirect drugs</td>
-                <td>
-                  <i class="fa fa-times"></i>
-                </td>
-              </tr>
-              <tr>
-                <td>Include non-approved drugs</td>
-                <td>
-                  <i class="fa fa-check"></i>
-                </td>
-              </tr>
-              <tr>
-                <td>Hub Penality</td>
-                <td>1</td>
-              </tr>
-              <tr>
-                <td>Result Size</td>
-                <td>10</td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div class="tab-content" *ngIf="task && task.info.done" [class.is-visible]="tab === 'network'">
-        <div class="card-image canvas-content" #networkWithLegend>
-          <div *ngIf="myConfig.showLegend">
-            <app-network-legend [config]="myConfig" [context]="legendContext"></app-network-legend>
-          </div>
-          <div class="parent fullheight">
-            <div class="center image1 fullheight" #network>
-              <button class="button is-loading center" alt="loading...">Loading</button>
-            </div>
-          </div>
-        </div>
-
-        <footer *ngIf="myConfig.showNetworkMenu" class="card-footer toolbar network-footer-toolbar">
-
-          <div class="network-footer-toolbar-inner-container">
-
-            <div *ngIf="myConfig.showNetworkMenuButtonScreenshot" class="network-footer-toolbar-element">
-              <button class="button is-primary is-rounded has-tooltip"
-                      pTooltip="Take a screenshot of the current network."
-                      [tooltipStyleClass]="'drgstn drgstn-tooltip'"
-                      tooltipPosition="top"
-                      [ngClass]="{ 'button-small': drugstoneConfig.smallStyle }"
-                      (click)="toImage()">
-                  <span class="icon">
-                    <i class="fas fa-camera" aria-hidden="true"></i>
-                  </span>
-                <span [ngClass]="{'text-normal':drugstoneConfig.smallStyle}">
-                    Screenshot
-                  </span>
-              </button>
-            </div>
-
-            <ng-container *ngIf="myConfig.showNetworkMenuButtonExportGraphml">
-                <app-download-button [nodeData]=nodeData [buttonId]="'analysis-download'"></app-download-button>
-            </ng-container>
-
-            <!--          <div class="field">-->
-            <!--            <p class="control footer-buttons">-->
-            <!--              <button class="button is-danger is-rounded has-tooltip" data-tooltip="Delete the current analysis."-->
-            <!--                      (click)="analysis.removeTask(token); close()">-->
-            <!--                <span class="icon">-->
-            <!--                  <i class="fas fa-trash" aria-hidden="true"></i>-->
-            <!--                </span>-->
-            <!--                <span>-->
-            <!--                  Delete Analysis-->
-            <!--                </span>-->
-            <!--              </button>-->
-            <!--            </p>-->
-            <!--          </div>-->
-
-            <div class="dropdown is-up network-footer-toolbar-element"
-                 [class.is-active]="expressionExpanded">
-              <div class="dropdown-trigger">
-                <button (click)="expressionExpanded=!expressionExpanded"
-                        class="button is-rounded is-primary" [class.is-outlined]="!selectedTissue"
-                        aria-haspopup="true" aria-controls="dropdown-menu" [ngClass]="{'button-small':drugstoneConfig.smallStyle}"
-                        pTooltip="Tissue expression data is provided by the GTEx project." [tooltipStyleClass]="'drgstn drgstn-tooltip'" tooltipPosition="top"
+                <tr
+                  *ngIf="result && result.geneInteractionDataset !== undefined"
                 >
-                  <div [ngClass]="{'text-small':drugstoneConfig.smallStyle}">
-                    <span *ngIf="!selectedTissue">Tissue</span>
-                    <span *ngIf="selectedTissue">{{selectedTissue.name}}</span>
-                    <span class="icon is-small">
-                    <i class="fas"
-                       [class.fa-angle-up]="expressionExpanded"
-                       [class.fa-angle-left]="!expressionExpanded" aria-hidden="true"></i>
-                  </span>
-                  </div>
-                </button>
-              </div>
-              <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                <div class="dropdown-content tissue-dropdown" [ngClass]="{'button-small':drugstoneConfig.smallStyle}">
-                  <div class="scroll-area" [ngClass]="{'text-small':drugstoneConfig.smallStyle}">
-                    <a (click)="selectTissue(null)"
-                       [class.is-active]="!selectedTissue"
-                       class="dropdown-item">
-                      None
-                    </a>
-                    <a *ngFor="let tissue of analysis.getTissues()"
-                       (click)="selectTissue(tissue)"
-                       [class.is-active]="selectedTissue && tissue.netexId === selectedTissue.netexId"
-                       class="dropdown-item">
-                      {{tissue.name}}
-                    </a>
-                  </div>
-                </div>
-              </div>
+                  <td>Protein-Protein Interaction Dataset</td>
+                  <td>
+                    {{ result.geneInteractionDataset.name }} (Version
+                    {{ result.geneInteractionDataset.version }})
+                  </td>
+                </tr>
+                <tr
+                  *ngIf="result && result.drugInteractionDataset !== undefined"
+                >
+                  <td>Protein-Drug Interaction Dataset</td>
+                  <td>
+                    {{ result.drugInteractionDataset.name }} (Version
+                    {{ result.drugInteractionDataset.version }})
+                  </td>
+                </tr>
+                <tr *ngIf="task.info.parameters.resultSize !== undefined">
+                  <td>Result Size</td>
+                  <td>{{ task.info.parameters.resultSize }}</td>
+                </tr>
+                <tr *ngIf="task.info.parameters.k !== undefined">
+                  <td>K</td>
+                  <td>{{ task.info.parameters.k }}</td>
+                </tr>
+                <tr *ngIf="task.info.parameters.numTrees !== undefined">
+                  <td>Number of trees</td>
+                  <td>{{ task.info.parameters.numTrees }}</td>
+                </tr>
+                <tr *ngIf="task.info.parameters.tolerance !== undefined">
+                  <td>Tolerance</td>
+                  <td>{{ task.info.parameters.tolerance }}</td>
+                </tr>
+                <tr *ngIf="task.info.parameters.dampingFactor !== undefined">
+                  <td>Damping Factor</td>
+                  <td>{{ task.info.parameters.dampingFactor }}</td>
+                </tr>
+                <tr *ngIf="task.info.parameters.maxDeg !== undefined">
+                  <td>Maximum Degree</td>
+                  <td>{{ task.info.parameters.maxDeg }}</td>
+                </tr>
+                <tr *ngIf="task.info.parameters.hubPenalty !== undefined">
+                  <td>Hub Penality</td>
+                  <td>{{ task.info.parameters.hubPenalty }}</td>
+                </tr>
+                <tr
+                  *ngIf="
+                    task.info.parameters.includeIndirectDrugs !== undefined &&
+                    task.info.target === 'drug'
+                  "
+                >
+                  <td>Include indirect drugs</td>
+                  <td>
+                    <i
+                      *ngIf="task.info.parameters.includeIndirectDrugs"
+                      class="fa fa-check"
+                    ></i>
+                    <i
+                      *ngIf="!task.info.parameters.includeIndirectDrugs"
+                      class="fa fa-times"
+                    ></i>
+                  </td>
+                </tr>
+                <tr
+                  *ngIf="
+                    task.info.parameters.includeNonApprovedDrugs !==
+                      undefined && task.info.target === 'drug'
+                  "
+                >
+                  <td>Include non-approved drugs</td>
+                  <td>
+                    <i
+                      *ngIf="task.info.parameters.includeNonApprovedDrugs"
+                      class="fa fa-check"
+                    ></i>
+                    <i
+                      *ngIf="!task.info.parameters.includeNonApprovedDrugs"
+                      class="fa fa-times"
+                    ></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div
+            *ngIf="
+              task.info.algorithm === 'quick' || task.info.algorithm === 'super'
+            "
+          >
+            <p>
+              Algorithm: <strong>{{ algorithmNames["multisteiner"] }}</strong>
+            </p>
+            <table class="table is-narrow">
+              <tbody>
+                <tr>
+                  <td>Number of Trees</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>Tolerance</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>Hub Penality</td>
+                  <td>1</td>
+                </tr>
+              </tbody>
+            </table>
+            <p>
+              Algorithm: <strong>{{ algorithmNames["closeness"] }}</strong>
+            </p>
+            <table class="table is-narrow">
+              <tbody>
+                <tr>
+                  <td>Include indirect drugs</td>
+                  <td>
+                    <i class="fa fa-times"></i>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Include non-approved drugs</td>
+                  <td>
+                    <i class="fa fa-check"></i>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Hub Penality</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>Result Size</td>
+                  <td>10</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" [class.is-visible]="tab === 'network'">
+        <!-- network start -->
+        <app-network
+          networkType="analysis"
+          [nodeData]="nodeData"
+          [legendContext]="legendContext"
+        ></app-network>
+        <!-- network end -->
+      </div>
+      <div
+        class="content tab-content scrollable table-tab"
+        *ngIf="task && task.info.done"
+        [class.is-visible]="tab === 'table'"
+      >
+        <div class="columns m-1">
+          <!-- column normalization for drugs button START -->
+          <div class="column">
+            <h4 class="is-4">
+              <span class="icon"><i class="fa fa-capsules"></i></span>
+              <span>Drugs</span>
+            </h4>
+          </div>
+          <div class="column">
+            <div class="field has-addons is-pulled-right m-1">
+              <a
+                [href]="downloadLink('drugs')"
+                class="button is-primary control is-outlined is-rounded is-pulled-right is-small"
+              >
+                <span class="icon"><i class="fa fa-download"></i></span>
+                <span>Download</span>
+              </a>
             </div>
 
-            <app-toggle class="network-footer-toolbar-element" textOn="Seeds On" textOff="Off"
-                        tooltipOn="Highlight seed nodes ON."
-                        tooltipOff="Highlight seed nodes OFF."
-                        [value]="highlightSeeds" (valueChange)="updateHighlightSeeds($event)"></app-toggle>
-
-            <app-toggle *ngIf="task.info.target === 'drug-target'" class="network-footer-toolbar-element"
-                        textOn="Drugs" textOff="Off"
-                        tooltipOn="Display adjacent drugs ON."
-                        tooltipOff="Display adjacent drugs OFF."
-                        [value]="adjacentDrugs" (valueChange)="updateAdjacentDrugs($event)"></app-toggle>
-            <app-toggle
-              class="network-footer-toolbar-element"
-              textOn="Disorders (protein)"
-              textOff="Off"
-              tooltipOn="Show disorders adjacent to all currently displayed proteins/genes ON."
-              tooltipOff="Show disorders adjacent to all currently displayed proteins/genes OFF."
-              [value]="adjacentDisordersProtein"
-              (valueChange)="updateAdjacentProteinDisorders($event)"
-            ></app-toggle>
-            <app-toggle
-              class="network-footer-toolbar-element"
-              textOn="Disorders (drugs)"
-              textOff="Off"
-              tooltipOn="Show disorders adjacent to all currently displayed drugs ON."
-              tooltipOff="Show disorders adjacent to all currently displayed drugs OFF."
-              [value]="adjacentDisordersDrug"
-              [disabled]="!hasDrugsLoaded()"
-              (valueChange)="updateAdjacentDrugDisorders($event)"
-            ></app-toggle>
-
-            <app-toggle class="network-footer-toolbar-element" textOn="Animation" textOff="Off"
-                        tooltipOn="Enable the network animation."
-                        tooltipOff="Disable the network animation and freeze nodes."
-                        [value]="drugstoneConfig.config.physicsOn" (valueChange)="updatePhysicsEnabled($event)"></app-toggle>
+            <div
+              class="field has-addons is-pulled-right m-1"
+              *ngIf="tableHasScores && task.info.algorithm !== 'proximity'"
+            >
+              <p class="control">
+                <button
+                  class="button is-rounded has-tooltip is-small"
+                  pTooltip="Normalize the scores"
+                  [tooltipStyleClass]="'drgstn drgstn-tooltip'"
+                  tooltipPosition="top"
+                  [class.is-primary]="tableNormalize"
+                  (click)="toggleNormalization(true)"
+                  [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                >
+                  <span class="icon is-small">
+                    <i class="fa fa-ruler-vertical"></i>
+                  </span>
+                  <span>Normalization On</span>
+                </button>
+              </p>
+              <p class="control">
+                <button
+                  class="button is-rounded has-tooltip is-small"
+                  pTooltip="Disable normalization of the scores."
+                  [tooltipStyleClass]="'drgstn drgstn-tooltip'"
+                  tooltipPosition="top"
+                  [class.is-primary]="!tableNormalize"
+                  (click)="toggleNormalization(false)"
+                  [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                >
+                  <span>Off</span>
+                </button>
+              </p>
+            </div>
           </div>
-        </footer>
-      </div>
-      <div class="content tab-content scrollable table-tab" *ngIf="task && task.info.done"
-           [class.is-visible]="tab === 'table'">
-        <div class="field has-addons is-pulled-right m-1" *ngIf="tableHasScores && task.info.algorithm !== 'proximity'">
-          <p class="control">
-            <button class="button is-rounded has-tooltip" pTooltip="Normalize the scores" [tooltipStyleClass]="'drgstn drgstn-tooltip'" tooltipPosition="top"
-                    [class.is-primary]="tableNormalize" (click)="toggleNormalization(true)" [ngClass]="{ 'button-small': drugstoneConfig.smallStyle }">
-                <span class="icon is-small">
-                  <i class="fa fa-ruler-vertical"></i>
-                </span>
-              <span>Normalization On</span>
-            </button>
-          </p>
-          <p class="control">
-            <button class="button is-rounded has-tooltip" pTooltip="Disable normalization of the scores." [tooltipStyleClass]="'drgstn drgstn-tooltip'"
-                    tooltipPosition="top"
-                    [class.is-primary]="!tableNormalize" (click)="toggleNormalization(false)" [ngClass]="{ 'button-small': drugstoneConfig.smallStyle }">
-              <span>Off</span>
-            </button>
-          </p>
+          <!-- column normalization for drugs button START -->
         </div>
 
-        <div *ngIf="tableDrugs.length === 0 && task.info.target === 'drug'">
-          <i>No drugs have been found.</i>
+        <div class="columns m-1">
+          <!-- drug table or placeholder if no drugs found START -->
+          <div class="column">
+            <div *ngIf="tableDrugs.length === 0 && task.info.target === 'drug'">
+              <i>No drugs have been found.</i>
+            </div>
+            <app-drug-table
+              [tableDrugs]="tableDrugs"
+              [tableDrugScoreTooltip]="tableDrugScoreTooltip"
+              [tableHasScores]="tableHasScores"
+            ></app-drug-table>
+          </div>
+          <!-- drug table or placeholder if no drugs found END -->
         </div>
-        <div *ngIf="tableDrugs.length > 0" class="table-header">
-          <h4 class="is-4">
-            <span class="icon"><i class="fa fa-capsules"></i></span>
-            <span>Drugs</span>
-          </h4>
-          <a [href]="downloadLink('drugs')" class="button is-primary is-outlined is-pulled-right is-small">
-            <span class="icon"><i class="fa fa-download"></i></span>
-            <span>Download</span>
-          </a>
-        </div>
-        <app-drug-table [tableDrugs]="tableDrugs" [tableDrugScoreTooltip]="tableDrugScoreTooltip"
-                        [tableHasScores]="tableHasScores"></app-drug-table>
+
         <div *ngIf="tableProteins.length > 0" class="table-header">
-          <h4 class="is-4">
-            <span class="icon"><i class="fa fa-dna"></i></span>
-            <span>Proteins</span>
-          </h4>
-          <a [href]="downloadLink('proteins')" class="button is-primary is-outlined is-pulled-right is-small">
-            <span class="icon"><i class="fa fa-download"></i></span>
-            <span>Download</span>
-          </a>
+          <div class="columns m-1">
+            <div class="column">
+              <h4 class="is-4">
+                <span class="icon"><i class="fa fa-dna"></i></span>
+                <span>Proteins</span>
+              </h4>
+            </div>
+            <div class="column">
+              <div class="field has-addons is-pulled-right m-1 control">
+                <a
+                  [href]="downloadLink('proteins')"
+                  class="button is-primary is-rounded is-outlined is-pulled-right is-small"
+                >
+                  <span class="icon"><i class="fa fa-download"></i></span>
+                  <span>Download</span>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
-        <app-prot-table [tableHasScores]="tableHasScores" [tableProteins]="tableProteins"
-                        [tableProteinScoreTooltip]="tableDrugScoreTooltip"
-                        [tableProteinSelection]="tableProteinSelection"
-                        [tableSelectedProteins]="tableSelectedProteins"></app-prot-table>
+
+        <div class="columns m-1">
+          <div class="column">
+            <app-prot-table
+            [tableHasScores]="tableHasScores"
+            [tableProteins]="tableProteins"
+            [tableProteinScoreTooltip]="tableDrugScoreTooltip"
+            [tableProteinSelection]="tableProteinSelection"
+            [tableSelectedProteins]="tableSelectedProteins"
+          ></app-prot-table>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

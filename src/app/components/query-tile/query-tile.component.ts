@@ -1,18 +1,32 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
-import {element} from 'protractor';
-import {Node, Wrapper} from '../../interfaces';
+import { Component, Input, Output, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
+import { Wrapper } from '../../interfaces';
 
 @Component({
   selector: 'app-query-tile-component',
   templateUrl: './query-tile.component.html',
   styleUrls: ['./query-tile.component.scss']
 })
-export class QueryTileComponent {
+export class QueryTileComponent implements OnInit {
 
+  constructor(public networkHandler: NetworkHandlerService) {
+
+  } 
+
+  ngOnInit(): void {
+    this.networkHandler.getChange$.forEach(data => this.reset());
+  }
+
+  @ViewChild(NgSelectComponent) ngSelectComponent: NgSelectComponent;
 
   @Output() selectItem: EventEmitter<any> = new EventEmitter();
   @Input() queryItems: Wrapper[];
-  selectedItem = undefined;
+  public selectedItem = undefined;
+
+  public reset() {
+    this.ngSelectComponent.handleClearClick();
+  }
 
   private listStartsWith = (elments: any[], term) => {
     for (const e of elments) {
@@ -25,7 +39,7 @@ export class QueryTileComponent {
 
   querySearch = (term: string, item: Wrapper) => {
     term = term.toLowerCase();
-    const data = {...item.data}
+    const data = { ...item.data }
     // add possible missing attributes to not throw errors
     if (data.ensg === undefined) {
       data.ensg = []

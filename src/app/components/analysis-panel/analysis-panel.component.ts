@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -19,7 +20,7 @@ import {
   getDrugNodeId,
   getProteinNodeId,
   getWrapperFromNode,
-  legendContext,
+  LegendContext,
   Node,
   Task,
   Tissue,
@@ -33,6 +34,7 @@ import {defaultConfig, IConfig} from 'src/app/config';
 import { mapCustomEdge, mapCustomNode } from 'src/app/main-network';
 import { downLoadFile, pieChartContextRenderer, removeDuplicateObjectsFromList } from 'src/app/utils';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
+import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
 
 
 declare var vis: any;
@@ -56,9 +58,8 @@ interface Baited {
   templateUrl: './analysis-panel.component.html',
   styleUrls: ['./analysis-panel.component.scss'],
 })
-export class AnalysisPanelComponent implements OnInit, OnChanges {
+export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit {
 
-  @ViewChild('network', {static: false}) networkEl: ElementRef;
   @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
   @Input() token: string | null = null;
   @Input()
@@ -98,9 +99,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   public adjacentDrugDisorderList: Node[] = [];
   public adjacentDrugDisorderEdgesList: Node[] = [];
 
-  public highlightSeeds = false;
-  public seedMap: NodeAttributeMap;
-
   private proteins: any;
   public effects: any;
 
@@ -112,7 +110,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   public tableNormalize = false;
   public tableHasScores = false;
 
-  public legendContext: legendContext = 'drugTarget';
+  public LegendContext: LegendContext = 'drugTarget';
 
   public expressionExpanded = false;
   public selectedTissue: Tissue | null = null;
@@ -123,12 +121,18 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   public tableProteinScoreTooltip = '';
 
   public expressionMap: NodeAttributeMap;
-  public gradientMap: NodeAttributeMap = {};
 
-  constructor(public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService) {
+  public legendContext: LegendContext = 'drug';
+
+  constructor(public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService) {
   }
 
   async ngOnInit() {
+  }
+
+  ngAfterViewInit() {
+    console.log(this.networkHandler.networks)
+    this.networkHandler.setActiveNetwork('analysis');
   }
 
   async ngOnChanges(changes: SimpleChanges) {
@@ -174,12 +178,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         this.result = await this.netex.getTaskResult(this.token);
         const nodeAttributes = this.result.nodeAttributes || {};
 
-        this.seedMap = nodeAttributes.isSeed || {};
+        this.networkHandler.activeNetwork.seedMap = nodeAttributes.isSeed || {};
 
         // Reset
         this.nodeData = {nodes: null, edges: null};
-        this.networkEl.nativeElement.innerHTML = '';
-        this.network = null;
+        this.networkHandler.activeNetwork.networkEl.nativeElement.innerHTML = '';
+        this.networkHandler.activeNetwork.networkInternal = null;
         this.showDrugs = false;
 
         // Create
@@ -187,12 +191,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         this.setInputNetwork.emit({nodes: nodes, edges: edges});
         this.nodeData.nodes = new vis.DataSet(nodes);
         this.nodeData.edges = new vis.DataSet(edges);
-        const container = this.networkEl.nativeElement;
+        const container = this.networkHandler.activeNetwork.networkEl.nativeElement;
         const isBig = nodes.length > 100 || edges.length > 100;
         const options = NetworkSettings.getOptions(isBig ? 'analysis-big' : 'analysis', this.myConfig.physicsOn);
         this.drugstoneConfig.config.physicsOn = !isBig;
 
-        this.network = new vis.Network(container, this.nodeData, options);
+        this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
 
         this.tableDrugs = nodes.filter( e => e.netexId && e.netexId.startsWith('d'));
         this.tableDrugs.forEach((r) => {
@@ -203,7 +207,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
         this.tableSelectedProteins = [];
         this.tableProteins.forEach((r) => {
           r.rawScore = r.score;
-          r.isSeed = this.seedMap[r.id];
+          r.isSeed = this.networkHandler.activeNetwork.seedMap[r.id];
           const wrapper = getWrapperFromNode(r);
           if (this.analysis.inSelection(wrapper)) {
             this.tableSelectedProteins.push(r);
@@ -221,11 +225,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
           }
         }
 
-        this.network.on('deselectNode', (properties) => {
+        this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {
           this.showDetailsChange.emit(null);
         });
 
-        this.network.on('doubleClick', (properties) => {
+        this.networkHandler.activeNetwork.networkInternal.on('doubleClick', (properties) => {
           const nodeIds: Array<string> = properties.nodes;
           if (nodeIds.length > 0) {
             const nodeId = nodeIds[0];
@@ -244,7 +248,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
           }
         });
 
-        this.network.on('click', (properties) => {
+        this.networkHandler.activeNetwork.networkInternal.on('click', (properties) => {
           const selectedNodes = this.nodeData.nodes.get(properties.nodes);
           if (selectedNodes.length > 0) {
             this.showDetailsChange.emit(getWrapperFromNode(selectedNodes[0]));
@@ -266,11 +270,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
               if (!node) {
                 continue;
               }
-              const pos = this.network.getPositions([item.id]);
+              const pos = this.networkHandler.activeNetwork.networkInternal.getPositions([item.id]);
               node.x = pos[item.id].x;
               node.y = pos[item.id].y;
-              const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
-              const gradient = (this.gradientMap !== {}) && (this.gradientMap[item.id]) ? this.gradientMap[item.id] : 1.0;
+              const isSeed = this.networkHandler.activeNetwork.highlightSeeds ? this.networkHandler.activeNetwork.seedMap[node.id] : false;
+              const gradient = (this.networkHandler.activeNetwork.gradientMap !== {}) && (this.networkHandler.activeNetwork.gradientMap[item.id]) ? this.networkHandler.activeNetwork.gradientMap[item.id] : 1.0;
               const nodeStyled = NetworkSettings.getNodeStyle(
                 node,
                 this.myConfig,
@@ -307,8 +311,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
               //   drugType = node.status;
               //   drugInTrial = node.inTrial;
               // }
-              const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
-              const gradient = (this.gradientMap !== {}) && (this.gradientMap[node.id]) ? this.gradientMap[node.id] : 1.0;
+              const isSeed = this.networkHandler.activeNetwork.highlightSeeds ? this.networkHandler.activeNetwork.seedMap[node.id] : false;
+              const gradient = (this.networkHandler.activeNetwork.gradientMap !== {}) && (this.networkHandler.activeNetwork.gradientMap[node.id]) ? this.networkHandler.activeNetwork.gradientMap[node.id] : 1.0;
               const nodeStyled = NetworkSettings.getNodeStyle(
                 node,
                 this.myConfig,
@@ -336,7 +340,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     }
     this.emitVisibleItems(true);
 
-    this.setLegendContext();
+    this.networkHandler.activeNetwork.setLegendContext();
   }
 
   public emitVisibleItems(on: boolean) {
@@ -352,11 +356,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   }
 
   close() {
-    this.gradientMap = {};
+    this.networkHandler.activeNetwork.gradientMap = {};
     this.expressionExpanded = false;
     this.expressionMap = undefined;
-    this.seedMap = {};
-    this.highlightSeeds = false;
+    this.networkHandler.activeNetwork.seedMap = {};
+    this.networkHandler.activeNetwork.highlightSeeds = false;
     this.showDrugs = false;
     this.analysis.switchSelection('main');
     this.token = null;
@@ -398,78 +402,78 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
   }
 
 
-  public saveAddNodes(nodeList: Node[]) {
-    const existing = this.nodeData.nodes.get().map(n => n.id);
-    const toAdd = nodeList.filter(n => existing.indexOf(n.id) === -1)
-    this.nodeData.nodes.add(toAdd);
-  }
+  // public saveAddNodes(nodeList: Node[]) {
+  //   const existing = this.nodeData.nodes.get().map(n => n.id);
+  //   const toAdd = nodeList.filter(n => existing.indexOf(n.id) === -1)
+  //   this.nodeData.nodes.add(toAdd);
+  // }
 
-  public saveRemoveDisorders(nodeList: Node[]) {
-    const other = this.adjacentDrugDisorderList === nodeList ? this.adjacentProteinDisorderList : this.adjacentDrugDisorderList
-    if (other == null)
-      this.nodeData.nodes.remove(nodeList);
-    else {
-      const otherIds = other.map(d => d.id);
-      const rest = nodeList.filter(d => otherIds.indexOf(d.id) === -1)
-      this.nodeData.nodes.remove(rest)
-    }
-  }
+  // public saveRemoveDisorders(nodeList: Node[]) {
+  //   const other = this.adjacentDrugDisorderList === nodeList ? this.adjacentProteinDisorderList : this.adjacentDrugDisorderList
+  //   if (other == null)
+  //     this.nodeData.nodes.remove(nodeList);
+  //   else {
+  //     const otherIds = other.map(d => d.id);
+  //     const rest = nodeList.filter(d => otherIds.indexOf(d.id) === -1)
+  //     this.nodeData.nodes.remove(rest)
+  //   }
+  // }
 
-  public updateAdjacentProteinDisorders(bool: boolean) {
-    this.adjacentDisordersProtein = bool;
-    if (this.adjacentDisordersProtein) {
-      this.netex.adjacentDisorders(this.nodeData.nodes, 'proteins').subscribe(response => {
-        for (const interaction of response.edges) {
-          const edge = {from: interaction.protein, to: interaction.disorder};
-          this.adjacentProteinDisorderEdgesList.push(mapCustomEdge(edge, this.myConfig));
-        }
-        for (const disorder of response.disorders) {
-          disorder.group = 'defaultDisorder';
-          disorder.id = disorder.netexId;
-          this.adjacentProteinDisorderList.push(mapCustomNode(disorder, this.myConfig))
-        }
-        this.saveAddNodes(this.adjacentProteinDisorderList);
-        this.nodeData.edges.add(this.adjacentProteinDisorderEdgesList);
-        this.emitVisibleItems(true);
-      });
-      this.legendContext = this.adjacentDrugs ? 'adjacentDrugsAndDisorders' : 'adjacentDisorders';
-    } else {
-      this.saveRemoveDisorders(this.adjacentProteinDisorderList);
-      this.nodeData.edges.remove(this.adjacentProteinDisorderEdgesList);
-      this.adjacentProteinDisorderList = [];
-      this.adjacentProteinDisorderEdgesList = [];
-      this.legendContext = this.adjacentDisordersDrug ? this.legendContext : this.adjacentDrugs ? 'adjacentDrugs' : 'explorer';
-      this.emitVisibleItems(true);
-    }
-  }
+  // public updateAdjacentProteinDisorders(bool: boolean) {
+  //   this.adjacentDisordersProtein = bool;
+  //   if (this.adjacentDisordersProtein) {
+  //     this.netex.adjacentDisorders(this.nodeData.nodes, 'proteins').subscribe(response => {
+  //       for (const interaction of response.edges) {
+  //         const edge = {from: interaction.protein, to: interaction.disorder};
+  //         this.adjacentProteinDisorderEdgesList.push(mapCustomEdge(edge, this.myConfig));
+  //       }
+  //       for (const disorder of response.disorders) {
+  //         disorder.group = 'defaultDisorder';
+  //         disorder.id = disorder.netexId;
+  //         this.adjacentProteinDisorderList.push(mapCustomNode(disorder, this.myConfig))
+  //       }
+  //       this.saveAddNodes(this.adjacentProteinDisorderList);
+  //       this.nodeData.edges.add(this.adjacentProteinDisorderEdgesList);
+  //       this.emitVisibleItems(true);
+  //     });
+  //     this.legendContext = this.adjacentDrugs ? 'adjacentDrugsAndDisorders' : 'adjacentDisorders';
+  //   } else {
+  //     this.saveRemoveDisorders(this.adjacentProteinDisorderList);
+  //     this.nodeData.edges.remove(this.adjacentProteinDisorderEdgesList);
+  //     this.adjacentProteinDisorderList = [];
+  //     this.adjacentProteinDisorderEdgesList = [];
+  //     this.legendContext = this.adjacentDisordersDrug ? this.legendContext : this.adjacentDrugs ? 'adjacentDrugs' : 'explorer';
+  //     this.emitVisibleItems(true);
+  //   }
+  // }
 
-  public updateAdjacentDrugDisorders(bool: boolean) {
-    this.adjacentDisordersDrug = bool;
-    if (this.adjacentDisordersDrug) {
-      this.netex.adjacentDisorders(this.nodeData.nodes, 'drugs').subscribe(response => {
-        for (const interaction of response.edges) {
-          const edge = {from: interaction.drug, to: interaction.disorder};
-          this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.myConfig));
-        }
-        for (const disorder of response.disorders) {
-          disorder.group = 'defaultDisorder';
-          disorder.id = disorder.netexId;
-          this.adjacentDrugDisorderList.push(mapCustomNode(disorder, this.myConfig));
-        }
-        this.saveAddNodes(this.adjacentDrugDisorderList);
-        this.nodeData.edges.add(this.adjacentDrugDisorderEdgesList);
-        this.emitVisibleItems(true);
-      });
-      this.legendContext = this.adjacentDrugs ? 'adjacentDrugsAndDisorders' : 'adjacentDisorders';
-    } else {
-      this.saveRemoveDisorders(this.adjacentDrugDisorderList);
-      this.nodeData.edges.remove(this.adjacentDrugDisorderEdgesList);
-      this.adjacentDrugDisorderList = [];
-      this.adjacentDrugDisorderEdgesList = [];
-      this.legendContext = this.adjacentDisordersProtein ? this.legendContext : this.adjacentDrugs ? 'adjacentDrugs' : 'explorer';
-      this.emitVisibleItems(true);
-    }
-  }
+  // public updateAdjacentDrugDisorders(bool: boolean) {
+  //   this.adjacentDisordersDrug = bool;
+  //   if (this.adjacentDisordersDrug) {
+  //     this.netex.adjacentDisorders(this.nodeData.nodes, 'drugs').subscribe(response => {
+  //       for (const interaction of response.edges) {
+  //         const edge = {from: interaction.drug, to: interaction.disorder};
+  //         this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.myConfig));
+  //       }
+  //       for (const disorder of response.disorders) {
+  //         disorder.group = 'defaultDisorder';
+  //         disorder.id = disorder.netexId;
+  //         this.adjacentDrugDisorderList.push(mapCustomNode(disorder, this.myConfig));
+  //       }
+  //       this.saveAddNodes(this.adjacentDrugDisorderList);
+  //       this.nodeData.edges.add(this.adjacentDrugDisorderEdgesList);
+  //       this.emitVisibleItems(true);
+  //     });
+  //     this.legendContext = this.adjacentDrugs ? 'adjacentDrugsAndDisorders' : 'adjacentDisorders';
+  //   } else {
+  //     this.saveRemoveDisorders(this.adjacentDrugDisorderList);
+  //     this.nodeData.edges.remove(this.adjacentDrugDisorderEdgesList);
+  //     this.adjacentDrugDisorderList = [];
+  //     this.adjacentDrugDisorderEdgesList = [];
+  //     this.legendContext = this.adjacentDisordersProtein ? this.legendContext : this.adjacentDrugs ? 'adjacentDrugs' : 'explorer';
+  //     this.emitVisibleItems(true);
+  //   }
+  // }
 
   public downloadLink(view: string): string {
     return `${environment.backend}task_result/?token=${this.token}&view=${view}&fmt=csv`;
@@ -580,124 +584,71 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     };
   }
 
-  public setLegendContext() {
-    const target = this.task.info.target;
-    if (target === 'drug' || this.adjacentDrugs) {
-      if (this.highlightSeeds) {
-        this.legendContext = "drugAndSeeds";
-      } else {
-        this.legendContext = "drug";
-      }
+  // hasDrugsLoaded(): boolean {
+  //   if (this.nodeData == null || this.nodeData.nodes == null)
+  //     return false;
+  //   return this.nodeData.nodes.get().filter((node: Node) => node.drugId && node.netexId.startsWith('dr')).length > 0;
+  // }
 
-    } else if (target === 'drug-target') {
-      if (this.highlightSeeds) {
-        this.legendContext = "drugTargetAndSeeds";
-      } else {
-        this.legendContext = 'drugTarget'
-      }
-    } else {
-      throw `Could not set legend context based on ${target}.`
-    }
-  }
+  // public updateAdjacentDrugs(bool: boolean) {
+  //   this.adjacentDrugs = bool;
+  //   if (this.adjacentDrugs) {
+  //     this.netex.adjacentDrugs(this.myConfig.interactionDrugProtein, this.nodeData.nodes).subscribe(response => {
+  //       for (const interaction of response.pdis) {
+  //         const edge = {from: interaction.protein, to: interaction.drug};
+  //         this.adjacentDrugEdgesList.push(mapCustomEdge(edge, this.myConfig));
+  //       }
+  //       for (const drug of response.drugs) {
+  //         drug.group = 'foundDrug';
+  //         drug.id = getDrugNodeId(drug)
+  //         this.adjacentDrugList.push(mapCustomNode(drug, this.myConfig))
+  //       }
+  //       this.nodeData.nodes.add(this.adjacentDrugList);
+  //       this.nodeData.edges.add(this.adjacentDrugEdgesList);
+  //       this.emitVisibleItems(true);
+  //     })
+  //     this.legendContext = this.adjacentDisordersDrug || this.adjacentDisordersProtein ? 'adjacentDrugsAndDisorders' : 'adjacentDrugs';
+  //   } else {
+  //     this.nodeData.nodes.remove(this.adjacentDrugList);
+  //     this.nodeData.edges.remove(this.adjacentDrugEdgesList);
+  //     this.adjacentDrugList = [];
+  //     this.adjacentDrugEdgesList = [];
 
-  public updateHighlightSeeds(bool: boolean) {
-    this.highlightSeeds = bool;
-    const updatedNodes = [];
-    for (const item of this.proteins) {
-      if (item.netexId === undefined) {
-        // nodes that are not mapped to backend remain untouched
-        continue;
-      }
-      const node: Node = this.nodeData.nodes.get(item.id);
-      if (!node) {
-        continue;
-      }
-      const pos = this.network.getPositions([item.id]);
-      node.x = pos[item.id].x;
-      node.y = pos[item.id].y;
-      const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
-      const gradient = (this.gradientMap !== {}) && (this.gradientMap[item.id]) ? this.gradientMap[item.id] : 1.0;
-      Object.assign(
-        node,
-        NetworkSettings.getNodeStyle(
-          node,
-          this.myConfig,
-          isSeed,
-          this.analysis.inSelection(getWrapperFromNode(item)),
-          gradient
-          )
-      )
-      updatedNodes.push(node);
-    }
-    this.nodeData.nodes.update(updatedNodes);
-    this.setLegendContext();
-  }
+  //     this.legendContext = this.adjacentDisordersDrug || this.adjacentDisordersProtein ? 'adjacentDisorders' : 'explorer';
+  //     this.emitVisibleItems(true);
+  //   }
+  // }
 
-  hasDrugsLoaded(): boolean {
-    if (this.nodeData == null || this.nodeData.nodes == null)
-      return false;
-    return this.nodeData.nodes.get().filter((node: Node) => node.drugId && node.netexId.startsWith('dr')).length > 0;
-  }
+  // public updatePhysicsEnabled(bool: boolean) {
+  //   this.drugstoneConfig.config.physicsOn = bool;
+  //   this.networkHandler.activeNetwork.networkInternal.setOptions({
+  //     physics: {
+  //       enabled: this.drugstoneConfig.config.physicsOn,
+  //       stabilization: {
+  //         enabled: false,
+  //       },
+  //     }
+  //   });
+  // }
 
-  public updateAdjacentDrugs(bool: boolean) {
-    this.adjacentDrugs = bool;
-    if (this.adjacentDrugs) {
-      this.netex.adjacentDrugs(this.myConfig.interactionDrugProtein, this.nodeData.nodes).subscribe(response => {
-        for (const interaction of response.pdis) {
-          const edge = {from: interaction.protein, to: interaction.drug};
-          this.adjacentDrugEdgesList.push(mapCustomEdge(edge, this.myConfig));
-        }
-        for (const drug of response.drugs) {
-          drug.group = 'foundDrug';
-          drug.id = getDrugNodeId(drug)
-          this.adjacentDrugList.push(mapCustomNode(drug, this.myConfig))
-        }
-        this.nodeData.nodes.add(this.adjacentDrugList);
-        this.nodeData.edges.add(this.adjacentDrugEdgesList);
-        this.emitVisibleItems(true);
-      })
-      this.legendContext = this.adjacentDisordersDrug || this.adjacentDisordersProtein ? 'adjacentDrugsAndDisorders' : 'adjacentDrugs';
-    } else {
-      this.nodeData.nodes.remove(this.adjacentDrugList);
-      this.nodeData.edges.remove(this.adjacentDrugEdgesList);
-      this.adjacentDrugList = [];
-      this.adjacentDrugEdgesList = [];
+  // public toImage() {
+  //   this.downloadDom(this.networkWithLegendEl.nativeElement).catch(error => {
+  //     console.error("Falling back to network only screenshot. Some components seem to be inaccessable, most likely the legend is a custom image with CORS access problems on the host server side.")
+  //     this.downloadDom(this.networkHandler.activeNetwork.networkEl.nativeElement).catch(e => {
+  //       console.error("Some network content seems to be inaccessable for saving as a screenshot. This can happen due to custom images used as nodes. Please ensure correct CORS accessability on the images host server.")
+  //       console.error(e)
+  //     });
+  //   });
+  // }
 
-      this.legendContext = this.adjacentDisordersDrug || this.adjacentDisordersProtein ? 'adjacentDisorders' : 'explorer';
-      this.emitVisibleItems(true);
-    }
-  }
-
-  public updatePhysicsEnabled(bool: boolean) {
-    this.drugstoneConfig.config.physicsOn = bool;
-    this.network.setOptions({
-      physics: {
-        enabled: this.drugstoneConfig.config.physicsOn,
-        stabilization: {
-          enabled: false,
-        },
-      }
-    });
-  }
-
-  public toImage() {
-    this.downloadDom(this.networkWithLegendEl.nativeElement).catch(error => {
-      console.error("Falling back to network only screenshot. Some components seem to be inaccessable, most likely the legend is a custom image with CORS access problems on the host server side.")
-      this.downloadDom(this.networkEl.nativeElement).catch(e => {
-        console.error("Some network content seems to be inaccessable for saving as a screenshot. This can happen due to custom images used as nodes. Please ensure correct CORS accessability on the images host server.")
-        console.error(e)
-      });
-    });
-  }
-
-  public downloadDom(dom: object) {
-    return domtoimage.toPng(dom, {bgcolor: '#ffffff'}).then((generatedImage) => {
-      const a = document.createElement('a');
-      a.href = generatedImage;
-      a.download = `Network.png`;
-      a.click();
-    });
-  }
+  // public downloadDom(dom: object) {
+  //   return domtoimage.toPng(dom, {bgcolor: '#ffffff'}).then((generatedImage) => {
+  //     const a = document.createElement('a');
+  //     a.href = generatedImage;
+  //     a.download = `Network.png`;
+  //     a.click();
+  //   });
+  // }
 
   public tableProteinSelection = (e): void => {
     const oldSelection = [...this.tableSelectedProteins];
@@ -728,84 +679,84 @@ export class AnalysisPanelComponent implements OnInit, OnChanges {
     }
   }
 
-  public selectTissue(tissue: Tissue | null) {
-    this.expressionExpanded = false;
-    if (!tissue) {
-      this.selectedTissue = null;
-      const updatedNodes = [];
-      for (const item of this.proteins) {
-        if (item.netexId === undefined) {
-          // nodes that are not mapped to backend remain untouched
-          continue;
-        }
-        const node: Node = this.nodeData.nodes.get(item.id);
-        if (!node) {
-          continue;
-        }
-        const pos = this.network.getPositions([item.id]);
-        node.x = pos[item.id].x;
-        node.y = pos[item.id].y;
-        const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
-        Object.assign(
-          node,
-          NetworkSettings.getNodeStyle(
-            node,
-            this.myConfig,
-            isSeed,
-            this.analysis.inSelection(getWrapperFromNode(item)),
-            1.0
-            )
-        )
-        updatedNodes.push(node);
-      }
-      this.nodeData.nodes.update(updatedNodes);
-      // delete expression values
-      this.expressionMap = undefined;
-      this.gradientMap = {};
-    } else {
-      this.selectedTissue = tissue
-      const minExp = 0.3;
-      // filter out non-proteins, e.g. drugs
-      const proteinNodes = [];
-      this.nodeData.nodes.forEach(element => {
-        if (element.id.startsWith('p') && element.netexId !== undefined) {
-          proteinNodes.push(element);
-        }
-      });
-      this.netex.tissueExpressionGenes(this.selectedTissue, proteinNodes).subscribe((response) => {
-        this.expressionMap = response;
-        const updatedNodes = [];
-        // mapping from netex IDs to network IDs, TODO check if this step is necessary
-        const networkIdMappping = {}
-        this.nodeData.nodes.forEach(element => {
-          networkIdMappping[element.netexId] = element.id
-        });
-        const maxExpr = Math.max(...Object.values(this.expressionMap));
-        for (const [netexId, expressionlvl] of Object.entries(this.expressionMap)) {
-          const networkId = networkIdMappping[netexId]
-          const node = this.nodeData.nodes.get(networkId);
-          if (node === null) {
-            continue;
-          }
-          const wrapper = getWrapperFromNode(node)
-          this.gradientMap[netexId] = expressionlvl !== null ? (Math.pow(expressionlvl / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
-          const pos = this.network.getPositions([networkId]);
-          node.x = pos[networkId].x;
-          node.y = pos[networkId].y;
-          const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
-          Object.assign(node,
-            NetworkSettings.getNodeStyle(
-              node,
-              this.myConfig,
-              isSeed,
-              this.analysis.inSelection(wrapper),
-              this.gradientMap[netexId]));
-          node.shape = 'custom';
-          node.ctxRenderer = pieChartContextRenderer;
-          updatedNodes.push(node);
-        }
-        this.nodeData.nodes.update(updatedNodes);
-      })
-    }
-  }
+  // public selectTissue(tissue: Tissue | null) {
+  //   this.expressionExpanded = false;
+  //   if (!tissue) {
+  //     this.selectedTissue = null;
+  //     const updatedNodes = [];
+  //     for (const item of this.proteins) {
+  //       if (item.netexId === undefined) {
+  //         // nodes that are not mapped to backend remain untouched
+  //         continue;
+  //       }
+  //       const node: Node = this.nodeData.nodes.get(item.id);
+  //       if (!node) {
+  //         continue;
+  //       }
+  //       const pos = this.networkHandler.activeNetwork.networkInternal.getPositions([item.id]);
+  //       node.x = pos[item.id].x;
+  //       node.y = pos[item.id].y;
+  //       const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
+  //       Object.assign(
+  //         node,
+  //         NetworkSettings.getNodeStyle(
+  //           node,
+  //           this.myConfig,
+  //           isSeed,
+  //           this.analysis.inSelection(getWrapperFromNode(item)),
+  //           1.0
+  //           )
+  //       )
+  //       updatedNodes.push(node);
+  //     }
+  //     this.nodeData.nodes.update(updatedNodes);
+  //     // delete expression values
+  //     this.expressionMap = undefined;
+  //     this.gradientMap = {};
+  //   } else {
+  //     this.selectedTissue = tissue
+  //     const minExp = 0.3;
+  //     // filter out non-proteins, e.g. drugs
+  //     const proteinNodes = [];
+  //     this.nodeData.nodes.forEach(element => {
+  //       if (element.id.startsWith('p') && element.netexId !== undefined) {
+  //         proteinNodes.push(element);
+  //       }
+  //     });
+  //     this.netex.tissueExpressionGenes(this.selectedTissue, proteinNodes).subscribe((response) => {
+  //       this.expressionMap = response;
+  //       const updatedNodes = [];
+  //       // mapping from netex IDs to network IDs, TODO check if this step is necessary
+  //       const networkIdMappping = {}
+  //       this.nodeData.nodes.forEach(element => {
+  //         networkIdMappping[element.netexId] = element.id
+  //       });
+  //       const maxExpr = Math.max(...Object.values(this.expressionMap));
+  //       for (const [netexId, expressionlvl] of Object.entries(this.expressionMap)) {
+  //         const networkId = networkIdMappping[netexId]
+  //         const node = this.nodeData.nodes.get(networkId);
+  //         if (node === null) {
+  //           continue;
+  //         }
+  //         const wrapper = getWrapperFromNode(node)
+  //         this.gradientMap[netexId] = expressionlvl !== null ? (Math.pow(expressionlvl / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
+  //         const pos = this.networkHandler.activeNetwork.networkInternal.getPositions([networkId]);
+  //         node.x = pos[networkId].x;
+  //         node.y = pos[networkId].y;
+  //         const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
+  //         Object.assign(node,
+  //           NetworkSettings.getNodeStyle(
+  //             node,
+  //             this.myConfig,
+  //             isSeed,
+  //             this.analysis.inSelection(wrapper),
+  //             this.gradientMap[netexId]));
+  //         node.shape = 'custom';
+  //         node.ctxRenderer = pieChartContextRenderer;
+  //         updatedNodes.push(node);
+  //       }
+  //       this.nodeData.nodes.update(updatedNodes);
+  //     })
+  //   }
+  // }
 }

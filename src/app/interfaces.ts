@@ -32,7 +32,14 @@ export interface Tissue {
   name: string;
 }
 
-export type legendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget' |
+export interface NodeData {
+  nodes: any;
+  edges: any;
+}
+
+export type NetworkType = 'explorer' | 'analysis'
+
+export type LegendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget' |
 'drugTargetAndSeeds' | 'drugAndSeeds' | 'adjacentDisorders' | 'adjacentDrugsAndDisorders';
 
 /// netexId to expressionlvl

@@ -1,7 +1,7 @@
 @import "src/stylesheets/variables";
 
 .dropdown-menu{
-    z-index: $analysis-network-toolbar-dropdown-z !important;
+    z-index: $network-tissue-options-z !important;
 
     .dropdown-content {
         padding-left: 0.5rem;

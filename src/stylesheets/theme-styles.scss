@@ -3,7 +3,7 @@
   --drgstn-secondary: #fd6818;
   --drgstn-success: #48C774;
   --drgstn-warning: #ffdd00;
-  --drgstn-danger: #c527ff;
+  --drgstn-danger: #f14668;
   --drgstn-background: #ffffff;
   --drgstn-panel: #f7f7f7;
   --drgstn-info: #61c43d;
@@ -73,6 +73,10 @@
 
   .tabs.is-toggle a:hover {
     background-color: var(--drgstn-panel) !important;
+  }
+
+  .tabs li a{
+    border-bottom: none;
   }
 
   .tabs li.is-active a, .tabs.is-toggle li.is-active a, .tabs a:hover {
@@ -190,18 +194,13 @@
     color: var(--drgstn-primary) !important;
   }
 
-  footer a .text-danger:focus, footer a .text-danger:hover {
-    color: var(--drgstn-danger) !important;
-  }
-
-  footer .text-danger, a .text-danger {
+  .has-text-danger {
     color: var(--drgstn-danger) !important;
   }
 
   .is-primary {
     background-color: var(--drgstn-primary) !important;
   }
-
 
   .ng-select .ng-select-container .ng-value-container .ng-input > input {
     color: var(--drgstn-text-primary) !important;

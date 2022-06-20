@@ -46,7 +46,7 @@
             </small>
           </div>
           <div class="column is-2 pt-0 pb-0">
-            <a (click)="analysis.removeTask(task.token)" class="text-danger is-pulled-right">
+            <a (click)="analysis.removeTask(task.token)" class="has-text-danger is-pulled-right">
               <span class="icon">
                 <i class="fa fa-trash"></i>
               </span>
@@ -79,7 +79,7 @@
           <div class="column is-2 pt-0 pb-0">
             <a
               (click)="analysis.removeTask(task.token)"
-              class="text-danger is-pulled-right"
+              class="has-text-danger is-pulled-right"
             >
               <span class="icon">
                 <i class="fa fa-trash"></i>
@@ -122,7 +122,7 @@
             <small>Finished {{ task.info.finishedAt | date: "short" }}</small>
           </div>
           <div class="column is-2 pt-0 pb-0">
-            <a (click)="analysis.removeTask(task.token)" class="text-danger is-pulled-right">
+            <a (click)="analysis.removeTask(task.token)" class="has-text-danger is-pulled-right">
               <span class="icon">
                 <i class="fa fa-trash"></i>
               </span>
@@ -149,13 +149,13 @@
           </div>
         </div>
         <div class="columns mb-0">
-          <div class="column is-8 pt-0 pb-0 text-danger">
+          <div class="column is-8 pt-0 pb-0 has-text-danger">
             <small class="status-field">{{ task.info.status }}</small>
           </div>
           <div class="column is-2 pt-0 pb-0">
             <a
               (click)="analysis.removeTask(task.token)"
-              class="text-danger is-pulled-right"
+              class="has-text-danger is-pulled-right"
             >
               <span class="icon  ">
                 <i class="fa fa-trash"></i>

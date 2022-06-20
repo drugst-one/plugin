@@ -5,8 +5,17 @@ $row-data-selector-height: auto;
 $network-header-height: 3rem;
 $network-footer-height: 0rem;
 $network-footer-width: 15rem;
-$network-footer-right-closed: -12rem;
+$network-footer-width-small: 12rem;
+$network-closed-width: 3rem;
+$network-closed-width-small: 2.5rem;
+$network-footer-right-closed: calc(
+  -#{$network-footer-width} + #{$network-closed-width}
+);
+$network-footer-right-closed-small: calc(
+  -#{$network-footer-width-small} + #{$network-closed-width-small}
+);
 $network-footer-container-z: 20;
+$network-footer-container-toggle-z: 21;
 
 $network-footer-inner-container-height: 25rem;
 $network-footer-space-button-to-border: 0.5rem;
@@ -14,13 +23,14 @@ $network-footer-space-button-to-border: 0.5rem;
 $explorer-network-z: 10;
 $explorer-networklegend-z: 20;
 $explorer-networklegend-foreground-z: 21;
-$explorer-network-toolbar-dropdown-z: 20;
 
 $analysis-view-z: 30;
 $analysis-network-z: 40;
 $analysis-network-legend-z: 40;
-$analysis-network-toolbar-dropdown-z: 50;
+$analysis-network-footer-container-z: 60;
+$analysis-network-footer-container-toggle-z: 70;
 
+$network-tissue-options-z: 80;
 
 $analysis-tab-header-height: 2.5rem;
 $analysis-tab-header-padding: 1.5rem;
@@ -34,11 +44,13 @@ $legend-star-size: 20px;
 $legend-square-width: $legend-row-height;
 $legend-edge-width: 20px;
 $legend-edge-height: 3px;
-$legend-star-color: #FC0;
+$legend-star-color: #fc0;
 $legend-triangle-size: $legend-row-height;
 $legend-triangle-height: 29px;
 $legend-hexagon-font-size: 38px;
 $legend-diamond-size: 25px;
+$legend-scaling: 0.8;
+$legend-scaling-small: 0.6;
 
 $height: 100%;
 
@@ -50,6 +62,3 @@ $b-text-small-font-size: 14px;
 $b-text-smaller-font-size: 12px;
 $text-normal-font-size: 12px;
 $text-small-font-size: 11px;
-
-$button-small-padding: 3px 10px 3px 10px;
-

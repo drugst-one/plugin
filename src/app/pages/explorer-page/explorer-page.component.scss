@@ -1,6 +1,5 @@
 @import "src/stylesheets/variables";
 
-
 .quick-icon {
   display: flex;
   align-content: center;
@@ -37,10 +36,9 @@
       margin: auto 0;
       font-weight: bold;
     }
-
   }
   .notification.small {
-    padding: .5rem 1rem !important;
+    padding: 0.5rem 1rem !important;
   }
   .divisor-rapid {
     margin-top: -10px;
@@ -48,21 +46,13 @@
     text-align: center;
   }
 }
-.card-content.quick-find.small{
-  padding: .5rem !important;
+.card-content.quick-find.small {
+  padding: 0.5rem !important;
 }
 
 .card-content.quick-find {
   padding: 1.5rem !important;
 }
-
-.explorer-network-view-settings {
-  // remove margin from tab header when network is displayed, so that network
-  // does not disappear in empty border
-  padding: 0;
-  height: calc(100% - #{$network-header-height});
-}
-
 
 .quick-start-btn {
   align-self: center;
@@ -74,7 +64,7 @@
 }
 
 .align-vmiddle {
-  width:100%;
+  width: 100%;
   display: flex;
   vertical-align: middle;
   height: 50px;
@@ -83,7 +73,9 @@
     display: inline-block;
   }
 
-  button, span, div {
+  button,
+  span,
+  div {
     vertical-align: middle;
     margin-left: 5px;
     margin-right: 5px;
@@ -106,7 +98,7 @@
   }
 }
 
-.scroll-x{
+.scroll-x {
   overflow-x: auto;
 }
 
@@ -117,18 +109,3 @@
 .task-list-container {
   padding: 0.5rem !important;
 }
-
-.network-toolbar-toggle {
-  position: relative;
-  top: calc(50% - 10px);
-  display: inline-block;
-  margin: 0px;
-  left: -20px;
-  &.rotated {
-    -ms-transform: rotate(180deg); /* IE 9 */
-    transform: rotate(180deg);
-  }
-}
-
-
-

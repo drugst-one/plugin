@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import { legendContext } from 'src/app/interfaces';
+import { LegendContext } from 'src/app/interfaces';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import {IConfig} from '../../config';
 
@@ -10,7 +10,7 @@ import {IConfig} from '../../config';
 })
 export class NetworkLegendComponent implements OnInit {
 
-  @Input() context: legendContext;
+  @Input() context: LegendContext;
   @Input() config: IConfig;
 
   private contextNodeGroupsToDelete = {

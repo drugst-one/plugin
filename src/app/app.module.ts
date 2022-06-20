@@ -16,7 +16,7 @@ import { TaskListComponent } from './components/task-list/task-list.component';
 import { ToggleComponent } from './components/toggle/toggle.component';
 import { InfoTileComponent } from './components/info-tile/info-tile.component';
 import { CustomProteinsComponent } from './dialogs/custom-proteins/custom-proteins.component';
-import { DownloadButtonComponent } from './components/download-button/download-button.component';
+import { DownloadButtonComponent } from './components/network/network-menu/download-button/download-button.component';
 
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -34,10 +34,15 @@ import {
   faRulerVertical, faDna, faMicroscope, faBook, faPause, faTrash, faSpinner, faExclamationTriangle, faPlus,
   faExpand, faInfo, faRocket, faAngleDown, faSearch, faFastForward, faExternalLinkAlt, faTasks, faFilter,
   faMinus, faUpload, faAngleDoubleDown, faSync, faBroom, faAngleDoubleUp, faChild, faHeadSideMask, faBiohazard,
-  faBullseye
+  faBullseye, faSeedling
 } from '@fortawesome/free-solid-svg-icons';
 import { TooltipModule } from 'primeng/tooltip';
-import { NetworkMenuComponent } from './components/network-menu/network-menu.component';
+import { NetworkMenuComponent } from './components/network/network-menu/network-menu.component';
+import { NetworkComponent } from './components/network/network.component';
+import { ToggleInplaceComponent } from './components/network/network-menu/toggle-inplace/toggle-inplace.component';
+import { NetworkMenuLeftComponent } from './components/network/network-menu-left/network-menu-left.component';
+import { ToggleInplaceReversedComponent } from './components/network/network-menu-left/toggle-inplace-reversed/toggle-inplace-reversed.component';
+import { DownloadButtonInverseComponent } from './components/network/network-menu-left/download-button-inverse/download-button-inverse.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +61,11 @@ import { NetworkMenuComponent } from './components/network-menu/network-menu.com
     DrugTableComponent,
     DownloadButtonComponent,
     NetworkMenuComponent,
+    NetworkComponent,
+    ToggleInplaceComponent,
+    NetworkMenuLeftComponent,
+    ToggleInplaceReversedComponent,
+    DownloadButtonInverseComponent,
   ],
   imports: [
     BrowserModule,
@@ -80,7 +90,7 @@ export class AppModule {
       faCheck, faCamera, faDownload, faRulerVertical, faDna, faMicroscope, faBook, faPause, faTrash,
       faSpinner, faExclamationTriangle, faPlus, faExpand, faInfo, faRocket, faAngleDown, faSearch,
       faFastForward, faExternalLinkAlt, faTasks, faFilter, faMinus, faUpload, faAngleDoubleDown,
-      faSync, faBroom, faAngleDoubleUp, faChild, faHeadSideMask, faBiohazard, faBullseye);
+      faSync, faBroom, faAngleDoubleUp, faChild, faHeadSideMask, faBiohazard, faBullseye, faSeedling);
     const NetworkExpander = createCustomElement(ExplorerPageComponent, { injector });
     // Register the custom element with the browser.
     customElements.define('drugst-one', NetworkExpander);
