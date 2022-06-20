@@ -241,7 +241,7 @@
                 <button
                   class="button is-rounded has-tooltip is-small"
                   pTooltip="Normalize the scores"
-                  [tooltipStyleClass]="'drgstn drgstn-tooltip'"
+                  [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
                   tooltipPosition="top"
                   [class.is-primary]="tableNormalize"
                   (click)="toggleNormalization(true)"
@@ -257,7 +257,7 @@
                 <button
                   class="button is-rounded has-tooltip is-small"
                   pTooltip="Disable normalization of the scores."
-                  [tooltipStyleClass]="'drgstn drgstn-tooltip'"
+                  [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
                   tooltipPosition="top"
                   [class.is-primary]="!tableNormalize"
                   (click)="toggleNormalization(false)"
