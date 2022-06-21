@@ -24,7 +24,7 @@
       <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
         Score
         <span class="has-tooltip tooltip-button has-text-info question-icon"
-                [pTooltip]="tableDrugScoreTooltip" [tooltipStyleClass]="'drgstn drgstn-tooltip'" tooltipPosition="top">
+                [pTooltip]="tableDrugScoreTooltip" [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">
           <fa-icon [icon]="faQuestionCircle" class="icon"></fa-icon>
       </span>
         <p-sortIcon [field]="'score'"></p-sortIcon>
