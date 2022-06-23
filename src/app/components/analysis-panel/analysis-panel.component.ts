@@ -198,12 +198,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
         this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
 
-        this.tableDrugs = nodes.filter( e => e.netexId && e.netexId.startsWith('d'));
+        this.tableDrugs = nodes.filter( e => e.drugstoneId && e.drugstoneId.startsWith('d'));
         this.tableDrugs.forEach((r) => {
           r.rawScore = r.score;
         });
 
-        this.tableProteins = nodes.filter( e => e.netexId && e.netexId.startsWith('p'));
+        this.tableProteins = nodes.filter( e => e.drugstoneId && e.drugstoneId.startsWith('p'));
         this.tableSelectedProteins = [];
         this.tableProteins.forEach((r) => {
           r.rawScore = r.score;
@@ -234,7 +234,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           if (nodeIds.length > 0) {
             const nodeId = nodeIds[0];
             const node = this.nodeData.nodes.get(nodeId);
-            if (node.nodeType === 'drug' || node.netexId === undefined || !node.netexId.startsWith('p')) {
+            if (node.nodeType === 'drug' || node.drugstoneId === undefined || !node.drugstoneId.startsWith('p')) {
               return;
             }
             const wrapper = getWrapperFromNode(node);
@@ -307,7 +307,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             this.nodeData.nodes.forEach((node) => {
               // let drugType;
               // let drugInTrial;
-              // if (node.netexId && node.netexId.startsWith('d')) {
+              // if (node.drugstoneId && node.drugstoneId.startsWith('d')) {
               //   drugType = node.status;
               //   drugInTrial = node.inTrial;
               // }
@@ -429,7 +429,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   //       }
   //       for (const disorder of response.disorders) {
   //         disorder.group = 'defaultDisorder';
-  //         disorder.id = disorder.netexId;
+  //         disorder.id = disorder.drugstoneId;
   //         this.adjacentProteinDisorderList.push(mapCustomNode(disorder, this.myConfig))
   //       }
   //       this.saveAddNodes(this.adjacentProteinDisorderList);
@@ -457,7 +457,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   //       }
   //       for (const disorder of response.disorders) {
   //         disorder.group = 'defaultDisorder';
-  //         disorder.id = disorder.netexId;
+  //         disorder.id = disorder.drugstoneId;
   //         this.adjacentDrugDisorderList.push(mapCustomNode(disorder, this.myConfig));
   //       }
   //       this.saveAddNodes(this.adjacentDrugDisorderList);
@@ -496,9 +496,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public inferNodeGroup(wrapper: Wrapper): string {
     if (wrapper.data.group !== undefined) {
       return wrapper.data.group;
-    } else if (wrapper.data.netexId !== undefined && wrapper.data.netexId.startsWith('d')) {
+    } else if (wrapper.data.drugstoneId !== undefined && wrapper.data.drugstoneId.startsWith('d')) {
       return 'drug';
-    } else if (wrapper.data.netexId !== undefined && wrapper.data.netexId.startsWith('p')) {
+    } else if (wrapper.data.drugstoneId !== undefined && wrapper.data.drugstoneId.startsWith('p')) {
       return 'protein';
     }
   }
@@ -555,14 +555,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       // convert id to netex Id if exists
       const nodeDetails = details[node];
 
-      nodeDetails.id = nodeDetails.id ? nodeDetails.id : nodeDetails.netexId;
-      if (nodeDetails.netexId && nodeDetails.netexId.startsWith('p')) {
+      nodeDetails.id = nodeDetails.id ? nodeDetails.id : nodeDetails.drugstoneId;
+      if (nodeDetails.drugstoneId && nodeDetails.drugstoneId.startsWith('p')) {
         // node is protein from database, has been mapped on init to backend protein from backend
         // or was found during analysis
         nodeDetails.group = nodeDetails.group ? nodeDetails.group : 'foundNode';
         nodeDetails.label = nodeDetails.label ? nodeDetails.label : nodeDetails[identifier];
         this.proteins.push(nodeDetails);
-      } else if (nodeDetails.netexId && nodeDetails.netexId.startsWith('d')) {
+      } else if (nodeDetails.drugstoneId && nodeDetails.drugstoneId.startsWith('d')) {
         // node is drug, was found during analysis
         nodeDetails.type = 'Drug';
         nodeDetails.group = 'foundDrug';
@@ -587,7 +587,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   // hasDrugsLoaded(): boolean {
   //   if (this.nodeData == null || this.nodeData.nodes == null)
   //     return false;
-  //   return this.nodeData.nodes.get().filter((node: Node) => node.drugId && node.netexId.startsWith('dr')).length > 0;
+  //   return this.nodeData.nodes.get().filter((node: Node) => node.drugId && node.drugstoneId.startsWith('dr')).length > 0;
   // }
 
   // public updateAdjacentDrugs(bool: boolean) {
@@ -685,7 +685,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   //     this.selectedTissue = null;
   //     const updatedNodes = [];
   //     for (const item of this.proteins) {
-  //       if (item.netexId === undefined) {
+  //       if (item.drugstoneId === undefined) {
   //         // nodes that are not mapped to backend remain untouched
   //         continue;
   //       }
@@ -719,7 +719,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   //     // filter out non-proteins, e.g. drugs
   //     const proteinNodes = [];
   //     this.nodeData.nodes.forEach(element => {
-  //       if (element.id.startsWith('p') && element.netexId !== undefined) {
+  //       if (element.id.startsWith('p') && element.drugstoneId !== undefined) {
   //         proteinNodes.push(element);
   //       }
   //     });
@@ -729,17 +729,17 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   //       // mapping from netex IDs to network IDs, TODO check if this step is necessary
   //       const networkIdMappping = {}
   //       this.nodeData.nodes.forEach(element => {
-  //         networkIdMappping[element.netexId] = element.id
+  //         networkIdMappping[element.drugstoneId] = element.id
   //       });
   //       const maxExpr = Math.max(...Object.values(this.expressionMap));
-  //       for (const [netexId, expressionlvl] of Object.entries(this.expressionMap)) {
-  //         const networkId = networkIdMappping[netexId]
+  //       for (const [drugstoneId, expressionlvl] of Object.entries(this.expressionMap)) {
+  //         const networkId = networkIdMappping[drugstoneId]
   //         const node = this.nodeData.nodes.get(networkId);
   //         if (node === null) {
   //           continue;
   //         }
   //         const wrapper = getWrapperFromNode(node)
-  //         this.gradientMap[netexId] = expressionlvl !== null ? (Math.pow(expressionlvl / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
+  //         this.gradientMap[drugstoneId] = expressionlvl !== null ? (Math.pow(expressionlvl / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
   //         const pos = this.networkHandler.activeNetwork.networkInternal.getPositions([networkId]);
   //         node.x = pos[networkId].x;
   //         node.y = pos[networkId].y;
@@ -750,7 +750,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   //             this.myConfig,
   //             isSeed,
   //             this.analysis.inSelection(wrapper),
-  //             this.gradientMap[netexId]));
+  //             this.gradientMap[drugstoneId]));
   //         node.shape = 'custom';
   //         node.ctxRenderer = pieChartContextRenderer;
   //         updatedNodes.push(node);
