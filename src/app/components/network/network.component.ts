@@ -334,7 +334,7 @@ export class NetworkComponent implements OnInit {
               this.analysis.inSelection(wrapper),
               gradient));
 
-          // try out custom ctx renderer
+          // custom ctx renderer for pie chart
           node.shape = 'custom';
           node.ctxRenderer = pieChartContextRenderer;
           updatedNodes.push(node);

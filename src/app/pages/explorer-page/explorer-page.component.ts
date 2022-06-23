@@ -62,8 +62,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   @Input()
   public set network(network: string | undefined) {
-    console.log('setting network data', network)
-
     if (network == null) {
       return;
     }
@@ -182,7 +180,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   async ngAfterViewInit() {
-    console.log(this.networkHandler.networks)
     this.networkHandler.setActiveNetwork('explorer');
 
     if (this.onload) {
@@ -328,7 +325,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   private async getNetwork() {
 
     const network = JSON.parse(this.networkJSON);
-    console.log('network', network)
     if (this.drugstoneConfig.config.identifier === 'ensg') {
       // @ts-ignore
       network.nodes.forEach(node => {
@@ -343,7 +339,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
 
     // map data to nodes in backend
-    console.log('network.nodes', network.nodes)
     if (network.nodes != null && network.nodes.length) {
       network.nodes = await this.netex.mapNodes(network.nodes, this.drugstoneConfig.config.identifier);
     }

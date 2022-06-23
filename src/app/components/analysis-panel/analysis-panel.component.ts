@@ -131,7 +131,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   ngAfterViewInit() {
-    console.log(this.networkHandler.networks)
     this.networkHandler.setActiveNetwork('analysis');
   }
 

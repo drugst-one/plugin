@@ -33,7 +33,10 @@
       }"
     >
       <!-- Start left sidebar -->
-      <div class="drugstone sidebar column" *ngIf="drugstoneConfig.config.showSidebar">
+      <div
+        class="drugstone sidebar column"
+        *ngIf="drugstoneConfig.config.showSidebar"
+      >
         <div
           *ngIf="drugstoneConfig.config.showItemSelector"
           class="card bar-large mt-0"
@@ -43,20 +46,21 @@
             [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
           >
             <p class="card-header-title">
-              <span
+              <ng-container
                 *ngIf="!networkHandler.activeNetwork.selectedWrapper"
-                class="icon"
               >
-                <i class="fas fa-info" aria-hidden="true"></i>
-              </span>
-              <span *ngIf="!networkHandler.activeNetwork.selectedWrapper"
-                >No item selected</span
+                <span class="icon">
+                  <i class="fas fa-info" aria-hidden="true"></i>
+                </span>
+                <span> No item selected </span>
+              </ng-container>
+              <ng-container
+                *ngIf="networkHandler.activeNetwork.selectedWrapper"
               >
-              <span *ngIf="networkHandler.activeNetwork.selectedWrapper">
-                <span>{{
-                  networkHandler.activeNetwork.selectedWrapper.data.type
-                }}</span>
-              </span>
+                <span>
+                  {{ networkHandler.activeNetwork.selectedWrapper.data.group }}
+                </span>
+              </ng-container>
             </p>
             <a
               (click)="collapseDetails = !collapseDetails"
@@ -250,7 +254,9 @@
                           [disabled]="analysis.isLaunchingQuick()"
                           class="button is-white is-rounded has-tooltip quick-start-btn"
                           pTooltip="Find drugs for all proteins."
-                          [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+                          [tooltipStyleClass]="
+                            'drgstn drgstn-tooltip drgstn-tooltip-top'
+                          "
                           tooltipPosition="top"
                         >
                           <span class="icon quick-icon">
@@ -342,7 +348,9 @@
                           "
                           class="button is-white is-rounded quick-start-btn drugs-btn"
                           pTooltip="Find drugs for the selected proteins."
-                          [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+                          [tooltipStyleClass]="
+                            'drgstn drgstn-tooltip drgstn-tooltip-top'
+                          "
                           tooltipPosition="top"
                         >
                           <span class="icon quick-icon">
@@ -404,7 +412,9 @@
                 <div
                   class="control"
                   pTooltip="Find drug targets for the selected proteins."
-                  [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+                  [tooltipStyleClass]="
+                    'drgstn drgstn-tooltip drgstn-tooltip-top'
+                  "
                   tooltipPosition="top"
                 >
                   <button
@@ -427,7 +437,9 @@
                 <div
                   class="control"
                   pTooltip="Find drugs for the selected proteins."
-                  [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+                  [tooltipStyleClass]="
+                    'drgstn drgstn-tooltip drgstn-tooltip-top'
+                  "
                   tooltipPosition="top"
                 >
                   <button
@@ -455,7 +467,9 @@
                     target="_blank"
                     class="button is-primary is-fullwidth is-rounded has-tooltip"
                     pTooltip="Use enrichment analysis via g:Profiler (external)."
-                    [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+                    [tooltipStyleClass]="
+                      'drgstn drgstn-tooltip drgstn-tooltip-top'
+                    "
                     tooltipPosition="top"
                   >
                     <span class="icon">
@@ -472,7 +486,9 @@
                     disabled
                     class="button is-primary is-fullwidth is-rounded has-tooltip"
                     pTooltip="Use enrichment analysis via g:Profiler (external)."
-                    [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+                    [tooltipStyleClass]="
+                      'drgstn drgstn-tooltip drgstn-tooltip-top'
+                    "
                     tooltipPosition="top"
                   >
                     <span class="icon">

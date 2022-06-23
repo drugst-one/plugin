@@ -179,44 +179,6 @@ export class AnalysisService {
     this.selectListSubject.next({items: newSelection, selected: null});
   }
 
-  /*public addExpressedHostProteins(nodes, proteins: Node[], threshold: number): number {
-    const items: Wrapper[] = [];
-    const visibleIds = new Set<string>(nodes.getIds());
-    for (const protein of proteins) {
-      const wrapper = getWrapperFromNode(protein);
-      const found = visibleIds.has(wrapper.nodeId);
-      if (found && !this.inSelection(wrapper) && protein.expressionLevel > threshold) {
-        items.push(wrapper);
-        this.selectedItems.set(wrapper.nodeId, wrapper);
-      }
-    }
-    this.selectListSubject.next({items, selected: true});
-    return items.length;
-  }
-
-  public addVisibleHostProteins(nodes, proteins: Node[]): number {
-    const items: Wrapper[] = [];
-    const visibleIds = new Set<string>(nodes.getIds());
-    for (const protein of proteins) {
-      const wrapper = getWrapperFromNode(protein);
-      const found = visibleIds.has(wrapper.nodeId);
-      if (found && !this.inSelection(wrapper)) {
-        items.push(wrapper);
-        this.selectedItems.set(wrapper.nodeId, wrapper);
-      }
-    }
-    this.selectListSubject.next({items, selected: true});
-    return items.length;
-  }
-
-  public removeAllHostProteins() {
-    const items: Wrapper[] = Array.from(this.selectedItems.values()).filter(p => p.type === 'protein');
-    for (const wrapper of items) {
-      this.selectedItems.delete(wrapper.nodeId);
-    }
-    this.selectListSubject.next({items, selected: false});
-  }*/
-
   resetSelection() {
     this.selectListSubject.next({items: Array.from(this.selectedItems.values()), selected: false});
     this.selectedItems.clear();
