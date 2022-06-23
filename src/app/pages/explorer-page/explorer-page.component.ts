@@ -275,7 +275,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (nodeIds != null && nodeIds.length > 0) {
         const nodeId = nodeIds[0];
         const node = this.nodeData.nodes.get(nodeId);
-        if (node.netexId === undefined || !node.netexId.startsWith('p')) {
+        if (node.drugstoneId === undefined || !node.drugstoneId.startsWith('p')) {
           // skip if node is not a protein mapped to backend
           return;
         }
@@ -345,17 +345,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     if (this.drugstoneConfig.config.identifier === 'ensg') {
       // remove possible duplicate IDs
-      network.nodes = removeDuplicateObjectsFromList(network.nodes, 'netexId');
+      network.nodes = removeDuplicateObjectsFromList(network.nodes, 'drugstoneId');
     }
 
     // at this point, we have nodes synched with the backend
-    // use netexIds where posssible, but use original id as node name if no label given
+    // use drugstoneIds where posssible, but use original id as node name if no label given
     const nodeIdMap = {};
     network.nodes.forEach((node) => {
       // set node label to original id before node id will be set to netex id
       node.label = node.label ? node.label : node.id;
 
-      nodeIdMap[node.id] = node.netexId ? node.netexId : node.id;
+      nodeIdMap[node.id] = node.drugstoneId ? node.drugstoneId : node.id;
       node.id = nodeIdMap[node.id];
     });
 
@@ -494,9 +494,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   gProfilerLink(): string {
-    // nodes in selection have netexId
+    // nodes in selection have drugstoneId
     const queryString = this.analysis.getSelection()
-      .filter(wrapper => wrapper.data.netexId.startsWith('p'))
+      .filter(wrapper => wrapper.data.drugstoneId.startsWith('p'))
       .map(wrapper => wrapper.data.uniprotAc)
       .join('%0A');
     return 'http://biit.cs.ut.ee/gprofiler/gost?' +

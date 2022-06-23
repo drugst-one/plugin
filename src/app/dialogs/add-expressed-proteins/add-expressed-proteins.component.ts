@@ -39,7 +39,7 @@ export class AddExpressedProteinsComponent implements OnChanges {
   public async addProteins() {
     this.loading = true;
     const result = await this.http.post<any>(`${environment.backend}query_tissue_proteins/`,
-      {tissueId: this.selectedTissue.netexId, threshold: this.threshold}).toPromise();
+      {tissueId: this.selectedTissue.drugstoneId, threshold: this.threshold}).toPromise();
     const items = [];
     for (const detail of result) {
       items.push(getWrapperFromNode(detail));
@@ -59,7 +59,7 @@ export class AddExpressedProteinsComponent implements OnChanges {
     if (!this.currentViewProteins || this.expressionMap === undefined) {
       return;
     }
-    this.proteins = this.currentViewProteins.filter(p => this.expressionMap[p.netexId] >= threshold);
+    this.proteins = this.currentViewProteins.filter(p => this.expressionMap[p.drugstoneId] >= threshold);
   }
 
   public close() {
