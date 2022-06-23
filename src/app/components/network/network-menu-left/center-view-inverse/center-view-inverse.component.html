@@ -1,0 +1,21 @@
+<button
+  (click)="fitNetwork()"
+  class="button is-primary is-rounded has-tooltip"
+  pTooltip="Reset the network zoom and position."
+  [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+  tooltipPosition="right"
+  [ngClass]="{
+    'is-small': drugstoneConfig.smallStyle
+  }"
+>
+  <span
+    [ngClass]="{
+      'text-normal': drugstoneConfig.smallStyle
+    }"
+  >
+    Reset View
+  </span>
+  <span class="icon">
+    <i class="fas fa-sync-alt" aria-hidden="true"></i>
+  </span>
+</button>

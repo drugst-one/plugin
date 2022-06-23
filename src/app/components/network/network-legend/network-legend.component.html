@@ -1,0 +1,123 @@
+<div
+  class="legend"
+  [class.right]="this.config.legendPos === 'right'"
+  [ngClass]="{ 'legend-small': drugstoneConfig.smallStyle }"
+>
+  <div class="legend-background"></div>
+  <!-- default legend in html -->
+  <table *ngIf="!this.config.legendUrl.length" class="legend-table">
+    <ng-container *ngIf="this.config.showLegendNodes">
+      <tr
+        *ngFor="let nodeGroup of this.config.nodeGroups | keyvalue"
+        class="list-item"
+      >
+        <ng-container
+          *ngIf="nodeGroup.key && checkNodeGroupContext(nodeGroup.key)"
+        >
+          <ng-container *ngIf="nodeGroup.value.image">
+            <!-- group icon given, use icon in legend -->
+            <th>
+              <img [src]="nodeGroup.value.image" class="legend-icon" />
+            </th>
+            <td class="group-name">&nbsp;{{ nodeGroup.value.groupName }}</td>
+          </ng-container>
+
+          <ng-container
+            *ngIf="!nodeGroup.value.image"
+            [ngSwitch]="nodeGroup.value.shape"
+          >
+            <!-- no image given, create icon programmatically -->
+            <th *ngSwitchCase="'text'">
+              <span class="node text"> text </span>
+            </th>
+            <th *ngSwitchCase="'hexagon'">
+              <span
+                class="node hexagon"
+                [style.color]="nodeGroup.value.color.background"
+              >
+                &#x2B23;
+              </span>
+            </th>
+            <th *ngSwitchCase="'triangle'">
+              <span
+                class="node triangle"
+                [style.border-bottom-color]="nodeGroup.value.color.background"
+              >
+              </span>
+            </th>
+            <th *ngSwitchCase="'triangleDown'">
+              <span
+                class="node triangleDown"
+                [style.border-top-color]="nodeGroup.value.color.background"
+              >
+              </span>
+            </th>
+            <th *ngSwitchCase="'diamond'">
+              <span
+                class="node diamond"
+                [style.background-color]="nodeGroup.value.color.background"
+              >
+              </span>
+            </th>
+            <th *ngSwitchCase="'star'">
+              <span
+                class="node star"
+                [style.border-bottom-color]="nodeGroup.value.color.background"
+                [style.color]="nodeGroup.value.color.background"
+              >
+              </span>
+            </th>
+            <th *ngSwitchCase="'circle'">
+              <span
+                class="node circle"
+                [style.background-color]="nodeGroup.value.color.background"
+              >
+                ...
+              </span>
+            </th>
+            <th *ngSwitchDefault>
+              <span
+                class="node {{ nodeGroup.value.shape }}"
+                [style.background-color]="nodeGroup.value.color.background"
+              >
+              </span>
+            </th>
+            <td class="group-name">&nbsp;{{ nodeGroup.value.groupName }}</td>
+          </ng-container>
+        </ng-container>
+      </tr>
+    </ng-container>
+
+    <ng-container *ngIf="this.config.showLegendEdges">
+      <tr
+        *ngFor="let edgeGroup of this.config.edgeGroups | keyvalue"
+        class="list-item"
+      >
+        <ng-container
+          *ngIf="edgeGroup.key && checkEdgeGroupContext(edgeGroup.key)"
+        >
+          <th>
+            <hr
+              *ngIf="!edgeGroup.value.dashes"
+              class="edge"
+              [style.background-color]="edgeGroup.value.color"
+            />
+            <hr
+              *ngIf="edgeGroup.value.dashes"
+              class="edge dashes"
+              [style.color]="edgeGroup.value.color"
+            />
+          </th>
+          <td class="group-name">&nbsp;{{ edgeGroup.value.groupName }}</td>
+        </ng-container>
+      </tr>
+    </ng-container>
+  </table>
+
+  <!-- custom legend image if url given by user -->
+  <img
+    *ngIf="this.config.legendUrl.length"
+    [src]="this.config.legendUrl"
+    [ngClass]="this.config.legendClass"
+  />
+</div>

@@ -50,6 +50,7 @@ export interface IConfig {
   showNetworkMenuButtonScreenshot: boolean;
   showNetworkMenuButtonExportGraphml: boolean;
   showNetworkMenuButtonAdjacentDrugs: boolean;
+  showNetworkMenuButtonCenter: boolean;
   networkMenuButtonAdjacentDrugsLabel: string;
   showNetworkMenuButtonAdjacentDisordersProteins: boolean;
   networkMenuButtonAdjacentDisordersProteinsLabel: string;
@@ -98,6 +99,7 @@ export const defaultConfig: IConfig = {
   showNetworkMenuButtonScreenshot: true,
   showNetworkMenuButtonExportGraphml: true,
   showNetworkMenuButtonAdjacentDrugs: true,
+  showNetworkMenuButtonCenter: true,
   networkMenuButtonAdjacentDrugsLabel: 'Drugs',
   showNetworkMenuButtonAdjacentDisordersProteins: true,
   networkMenuButtonAdjacentDisordersProteinsLabel: 'Disorders (protein)',

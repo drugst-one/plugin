@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { LegendContext } from 'src/app/interfaces';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
-import {IConfig} from '../../config';
+import {IConfig} from '../../../config';
 
 @Component({
   selector: 'app-network-legend',

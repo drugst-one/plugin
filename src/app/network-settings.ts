@@ -1,8 +1,8 @@
-import {getGradientColor} from './utils';
+import { getGradientColor } from './utils';
 import {
   Node,
 } from './interfaces';
-import { IConfig, defaultConfig} from './config';
+import { IConfig, defaultConfig } from './config';
 import * as merge from 'lodash/fp/merge';
 
 export class NetworkSettings {
@@ -53,10 +53,10 @@ export class NetworkSettings {
   };
   private static mainEdges = {
     smooth: false,
-    length: 250,
+    length: 250
   };
   private static mainPhysics = {
-    enabled: false,
+    enabled: false
   };
 
   // Node size
@@ -73,13 +73,13 @@ export class NetworkSettings {
       return {
         layout: this.mainLayout,
         edges: this.mainEdges,
-        physics: physicsOn || this.mainPhysics ,
+        physics: physicsOn || this.mainPhysics,
       };
     } else if (network === 'analysis') {
       return {
         layout: this.analysisLayout,
         edges: this.analysisEdges,
-        physics: physicsOn ||  this.analysisPhysics,
+        physics: physicsOn || this.analysisPhysics,
       };
     } else if (network === 'analysis-big') {
       return {
@@ -95,8 +95,7 @@ export class NetworkSettings {
     'edgeHostDrug' | 'edgeHostDrugHighlight' | 'edgeGeneGene' | 'edgeGeneGeneHighlight')
     /**
      * Collection of all colors per use-case
-     */
-    {
+     */ {
     if (color === 'protein') {
       return this.hostColor;
     } else if (color === 'approvedDrug') {
@@ -126,40 +125,40 @@ export class NetworkSettings {
     isSeed: boolean,
     isSelected: boolean,
     gradient: number = 1): Node {
-      // delete possible old styles
-      Object.keys(config.nodeGroups.default).forEach(e => delete node[e]);
-      // set group styles
-      if (node.group === 'default') {
-        node = merge(node, config.nodeGroups.default);
-      } else {
-        node = merge(node, config.nodeGroups[node.group]);
-      }
-      // note that seed and selected node style are applied after the node style is fetched.
-      // this allows to overwrite only attributes of interest, therefor in e.g. seedNode group
-      // certain attributes like shape can remain undefined
-      // use lodash merge to not lose deep attributes, e.g. "font.size"
-      if (isSeed) {
-        // apply seed node style to node
-        node = merge(node, config.nodeGroups.seedNode);
-      }
-      // selection on purpose after seed style, so seed style will be combined with selection style
-      if (isSelected) {
-        // apply selected node style to node
-        node = merge(node, config.nodeGroups.selectedNode);
-      }
-
-      // show image if image url is given. If seed nodes are highlighted, ignore image property
-      if (node.image && !isSeed) {
-        node.shape = 'image';
-      }
-
-      // use opactiy as gradient
-      if (gradient === null) {
-          node.opacity = 0
-        } else {
-          node.opacity = gradient
-        }
-      return node;
+    // delete possible old styles
+    Object.keys(config.nodeGroups.default).forEach(e => delete node[e]);
+    // set group styles
+    if (node.group === 'default') {
+      node = merge(node, config.nodeGroups.default);
+    } else {
+      node = merge(node, config.nodeGroups[node.group]);
     }
+    // note that seed and selected node style are applied after the node style is fetched.
+    // this allows to overwrite only attributes of interest, therefor in e.g. seedNode group
+    // certain attributes like shape can remain undefined
+    // use lodash merge to not lose deep attributes, e.g. "font.size"
+    if (isSeed) {
+      // apply seed node style to node
+      node = merge(node, config.nodeGroups.seedNode);
+    }
+    // selection on purpose after seed style, so seed style will be combined with selection style
+    if (isSelected) {
+      // apply selected node style to node
+      node = merge(node, config.nodeGroups.selectedNode);
+    }
+
+    // show image if image url is given. If seed nodes are highlighted, ignore image property
+    if (node.image && !isSeed) {
+      node.shape = 'image';
+    }
+
+    // use opactiy as gradient
+    if (gradient === null) {
+      node.opacity = 0
+    } else {
+      node.opacity = gradient
+    }
+    return node;
+  }
 }
 
