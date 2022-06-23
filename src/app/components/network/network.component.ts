@@ -183,6 +183,10 @@ export class NetworkComponent implements OnInit {
       })
       this.legendContext = this.adjacentDisordersDrug || this.adjacentDisordersProtein ? 'adjacentDrugsAndDisorders' : 'adjacentDrugs';
     } else {
+      // remove adjacent drugs, make sure that also drug associated disorders are removed
+      if (this.adjacentDisordersDrug) {
+        this.updateAdjacentDrugDisorders(false);
+      }
       this.nodeData.nodes.remove(this.adjacentDrugList);
       this.nodeData.edges.remove(this.adjacentDrugEdgesList);
       this.adjacentDrugList = [];
