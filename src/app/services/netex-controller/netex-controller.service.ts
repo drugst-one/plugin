@@ -96,9 +96,9 @@ export class NetexControllerService {
     return this.http.get(`${environment.backend}tissue_expression/`, {params});
   }
 
-  public adjacentDisorders(nodes: Node[], nodeType: string): Observable<any> {
+  public adjacentDisorders(nodes: Node[], nodeType: string, dataset: string): Observable<any> {
 
-    const params = {};
+    const params = {dataset:dataset};
     if (nodeType === 'proteins') {
       // @ts-ignore
       params.proteins = nodes.map((node: Node) => node.drugstoneId && node.drugstoneId.startsWith('p') ? node.drugstoneId.slice(1) : undefined).filter(id => id != null);

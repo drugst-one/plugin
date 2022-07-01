@@ -100,6 +100,7 @@ export class NetworkComponent implements OnInit {
     this.currentViewNodes.forEach((protein) => {
       this.queryItems.push(getWrapperFromNode(protein));
     });
+    console.log(this.queryItems)
   }
 
   public saveAddNodes(nodeList: Node[]) {
@@ -111,7 +112,7 @@ export class NetworkComponent implements OnInit {
   public updateAdjacentProteinDisorders(bool: boolean) {
     this.adjacentDisordersProtein = bool;
     if (this.adjacentDisordersProtein) {
-      this.netex.adjacentDisorders(this.nodeData.nodes, 'proteins').subscribe(response => {
+      this.netex.adjacentDisorders(this.nodeData.nodes, 'proteins', this.drugstoneConfig.config.associatedProteinDisorder).subscribe(response => {
         for (const interaction of response.edges) {
           const edge = { from: interaction.protein, to: interaction.disorder };
           this.adjacentProteinDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.config));
@@ -139,7 +140,7 @@ export class NetworkComponent implements OnInit {
   public updateAdjacentDrugDisorders(bool: boolean) {
     this.adjacentDisordersDrug = bool;
     if (this.adjacentDisordersDrug) {
-      this.netex.adjacentDisorders(this.nodeData.nodes, 'drugs').subscribe(response => {
+      this.netex.adjacentDisorders(this.nodeData.nodes, 'drugs', this.drugstoneConfig.config.indicationDrugDisorder).subscribe(response => {
         for (const interaction of response.edges) {
           const edge = { from: interaction.drug, to: interaction.disorder };
           this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.config));
