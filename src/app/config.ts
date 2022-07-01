@@ -24,8 +24,11 @@ export interface EdgeGroup {
 }
 
 export type Identifier = 'symbol'|'uniprot'|'ensg';
-export type InteractionDrugProteinDB = 'DrugBank'|'Chembl'|'DGIdb';
-export type InteractionProteinProteinDB = 'STRING'|'BioGRID'|'APID';
+export type InteractionDrugProteinDB = 'DrugBank'|'Chembl'|'DGIdb' | 'NeDRex';
+export type InteractionProteinProteinDB = 'STRING'|'BioGRID'|'APID' | 'NeDRex';
+export type IndicationDrugDisorderDB = 'DrugBank' | 'NeDRex';
+export type AssociatedProteinDisorderDB = 'NeDRex' | 'DisGeNET';
+
 
 // TODO: should this be external or integrated in the backend?
 export type InteractionDatabase = 'omnipath';
@@ -35,8 +38,8 @@ export interface IConfig {
   legendUrl: string;
   legendClass: string;
   legendPos: 'left' | 'right';
-  taskTargetName: string,
-  taskDrugName: string,
+  taskTargetName: string;
+  taskDrugName: string;
   showSidebar: false | 'left' | 'right';
   showOverview: boolean;
   showQuery: boolean;
@@ -65,6 +68,8 @@ export interface IConfig {
   edgeGroups: { [key: string]: EdgeGroup };
   interactionDrugProtein: InteractionDrugProteinDB;
   interactionProteinProtein: InteractionProteinProteinDB;
+  indicationDrugDisorder: IndicationDrugDisorderDB;
+  associatedProteinDisorder: AssociatedProteinDisorderDB;
   autofillEdges: boolean;
   interactions?: InteractionDatabase;
   physicsOn?: boolean;
@@ -108,8 +113,10 @@ export const defaultConfig: IConfig = {
   showNetworkMenuButtonAnimation: true,
   networkMenuButtonAnimationLabel: 'Animation',
   identifier: 'symbol',
-  interactionDrugProtein: 'DrugBank',
-  interactionProteinProtein: 'STRING',
+  interactionDrugProtein: 'NeDRex',
+  interactionProteinProtein: 'NeDRex',
+  associatedProteinDisorder: 'NeDRex',
+  indicationDrugDisorder: 'NeDRex',
   nodeShadow: true,
   edgeShadow: true,
   autofillEdges: true,
@@ -226,5 +233,5 @@ export const defaultConfig: IConfig = {
       color: 'black',
       dashes: false
     }
-  },
+  }
 };
