@@ -250,7 +250,7 @@
                         "
                       >
                         <button
-                          (click)="analysis.startQuickAnalysis(true, null)"
+                          (click)="analysis.startQuickAnalysis(true, drugstoneConfig.config,{ nodes: proteins, edges: edges })"
                           [disabled]="analysis.isLaunchingQuick()"
                           class="button is-white is-rounded has-tooltip quick-start-btn"
                           pTooltip="Find drugs for all proteins."
@@ -341,7 +341,7 @@
                         "
                       >
                         <button
-                          (click)="analysis.startQuickAnalysis(false, null)"
+                          (click)="analysis.startQuickAnalysis(false, drugstoneConfig.config,{ nodes: proteins, edges: edges })"
                           [disabled]="
                             analysis.getCount() === 0 ||
                             analysis.isLaunchingQuick()

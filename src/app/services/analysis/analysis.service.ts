@@ -5,6 +5,7 @@ import {environment} from '../../../environments/environment';
 import {toast} from 'bulma-toast';
 import {Injectable} from '@angular/core';
 import {NetexControllerService} from '../netex-controller/netex-controller.service';
+import {IConfig} from "../../config";
 
 export type AlgorithmType =
   'trustrank'
@@ -207,7 +208,7 @@ export class AnalysisService {
     });
   }
 
-  async startQuickAnalysis(isSuper: boolean, dataset: Dataset) {
+  async startQuickAnalysis(isSuper: boolean, config: IConfig, network: any) {
     if (!this.canLaunchTask()) {
       toast({
         message: `You can only run ${MAX_TASKS} tasks at once. Please wait for one of them to finish or delete it from the task list.`,
@@ -221,29 +222,20 @@ export class AnalysisService {
       return;
     }
 
-    if (dataset == null) {
-      toast({
-        message: `Passed dataset is null. This feature might be still under development.`,
-        duration: 5000,
-        dismissible: true,
-        pauseOnHover: true,
-        type: 'is-danger',
-        position: 'top-center',
-        animate: {in: 'fadeIn', out: 'fadeOut'}
-      });
-      return;
-    }
-
     this.launchingQuick = true;
 
+    const params = {
+      ppi_dataset: config.interactionProteinProtein,
+      pdi_dataset: config.interactionDrugProtein,
+      config: config,
+      input_network: network,
+      seeds: isSuper ? network.nodes.filter(n => n.drugstoneId && n.drugstoneId[0] === 'p').map(n => n.drugstoneId) : this.getSelection().map((i) => i.id),
+    };
+    console.log(params)
     const resp = await this.http.post<any>(`${environment.backend}task/`, {
       algorithm: isSuper ? 'super' : 'quick',
       target: 'drug',
-      parameters: {
-        strain_or_drugs: dataset.id,
-        bait_datasets: dataset.data,
-        seeds: isSuper ? [] : this.getSelection().map((i) => i.id),
-      },
+      parameters: params,
     }).toPromise();
     this.tokens.push(resp.token);
     localStorage.setItem(this.tokensCookieKey, JSON.stringify(this.tokens));
@@ -320,7 +312,7 @@ export class AnalysisService {
     const watch = async () => {
       if (this.tokens.length > 0) {
         const newtasks = await this.getTasks();
-        if(newtasks.length === 0)
+        if (newtasks.length === 0)
           return;
         const newTaskIds = newtasks.map(t => t.token.toString());
         this.tasks = newtasks.concat(this.tasks.filter(t => newTaskIds.indexOf(t.token) === -1));
