@@ -1,8 +1,30 @@
-<div class="card network">
+<div class="card network" [ngClass]="{'fullscreen': fullscreen}">
   <header class="card-header network-header" *ngIf="networkType === 'explorer'">
     <p class="card-header-title">
       {{ drugstoneConfig.config.title }}
     </p>
+    <span class="mr-1 is-pulled-right columns is-flex is-vcentered">
+      <button
+        title="open in fullscreen"
+        *ngIf="!fullscreen"
+        (click)="toggleFullscreen()"
+        class="button is-primary is-outlined is-rounded is-small"
+      >
+        <span class="icon is-small">
+          <i class="fas fa-expand"></i>
+        </span>
+      </button>
+      <button
+        title="close fullscreen"
+        *ngIf="fullscreen"
+        (click)="toggleFullscreen()"
+        class="button is-primary is-outlined is-rounded is-small"
+      >
+        <span class="icon is-small">
+          <i class="fas fa-compress"></i>
+        </span>
+      </button>
+    </span>
   </header>
   <div
     class="card-content network-view-settings"

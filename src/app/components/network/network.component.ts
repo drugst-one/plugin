@@ -77,6 +77,7 @@ export class NetworkComponent implements OnInit {
   public expressionMap: NodeAttributeMap = {};
   public gradientMap: NodeAttributeMap = {};
 
+  public fullscreen = false;
 
   constructor(public networkHandler: NetworkHandlerService, public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public netex: NetexControllerService, public omnipath: OmnipathControllerService) { }
 
@@ -402,6 +403,10 @@ export class NetworkComponent implements OnInit {
     }
     this.nodeData.nodes.update(updatedNodes);
     this.setLegendContext();
+  }
+
+  public toggleFullscreen() {
+    this.fullscreen = !this.fullscreen;
   }
 
 }

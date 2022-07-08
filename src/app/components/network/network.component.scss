@@ -13,3 +13,11 @@
 .dropdown-menu{
     z-index: $network-tissue-options-z !important;
 }
+
+.fullscreen{
+  position: fixed !important;
+  height: 100vh !important;
+  width: 100vw !important;
+  top: 0 !important;
+  left: 0 !important;
+}
