@@ -114,14 +114,13 @@
                 >
                   <td>Include indirect drugs</td>
                   <td>
-                    <i
-                      *ngIf="task.info.parameters.includeIndirectDrugs"
-                      class="fa fa-check"
-                    ></i>
-                    <i
-                      *ngIf="!task.info.parameters.includeIndirectDrugs"
-                      class="fa fa-times"
-                    ></i>
+                    <span *ngIf="task.info.parameters.includeIndirectDrugs">
+                      <i class="fa fa-check"></i>
+                    </span>
+                    <span *ngIf="!task.info.parameters.includeIndirectDrugs">
+                      <i class="fa fa-times"></i>
+                    </span>
+
                   </td>
                 </tr>
                 <tr
@@ -132,14 +131,12 @@
                 >
                   <td>Include non-approved drugs</td>
                   <td>
-                    <i
-                      *ngIf="task.info.parameters.includeNonApprovedDrugs"
-                      class="fa fa-check"
-                    ></i>
-                    <i
-                      *ngIf="!task.info.parameters.includeNonApprovedDrugs"
-                      class="fa fa-times"
-                    ></i>
+                    <span *ngIf="task.info.parameters.includeNonApprovedDrugs">
+                      <i class="fa fa-check"></i>
+                    </span>
+                    <span *ngIf="!task.info.parameters.includeNonApprovedDrugs">
+                      <i class="fa fa-times"></i>
+                    </span>
                   </td>
                 </tr>
               </tbody>

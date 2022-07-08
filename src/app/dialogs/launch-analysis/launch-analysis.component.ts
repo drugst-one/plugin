@@ -114,7 +114,6 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       config: this.config,
       input_network: this.inputNetwork
     };
-
     parameters.ppi_dataset = this.config.interactionProteinProtein;
     parameters.pdi_dataset = this.config.interactionDrugProtein;
     parameters.target = this.target === 'drug' ? 'drug' : 'drug-target';

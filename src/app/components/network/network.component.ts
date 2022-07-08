@@ -1,10 +1,10 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import domtoimage from 'dom-to-image';
-import { InteractionDatabase } from 'src/app/config';
-import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
-import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
-import { OmnipathControllerService } from 'src/app/services/omnipath-controller/omnipath-controller.service';
-import { mapCustomEdge, mapCustomNode, mapNetexEdge, ProteinNetwork } from '../../main-network';
+import {InteractionDatabase} from 'src/app/config';
+import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
+import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
+import {OmnipathControllerService} from 'src/app/services/omnipath-controller/omnipath-controller.service';
+import {mapCustomEdge, mapCustomNode, mapNetexEdge, ProteinNetwork} from '../../main-network';
 import {
   getDrugNodeId,
   getWrapperFromNode,
@@ -17,10 +17,10 @@ import {
   Wrapper,
   NetworkType
 } from '../../interfaces';
-import { AnalysisService } from 'src/app/services/analysis/analysis.service';
-import { NetworkSettings } from 'src/app/network-settings';
-import { pieChartContextRenderer } from 'src/app/utils';
-import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
+import {AnalysisService} from 'src/app/services/analysis/analysis.service';
+import {NetworkSettings} from 'src/app/network-settings';
+import {pieChartContextRenderer} from 'src/app/utils';
+import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
 
 
 @Component({
@@ -35,8 +35,8 @@ export class NetworkComponent implements OnInit {
   @Input() public legendContext: LegendContext;
 
 
-  @ViewChild('network', { static: false }) networkEl: ElementRef;
-  @ViewChild('networkWithLegend', { static: false }) networkWithLegendEl: ElementRef;
+  @ViewChild('network', {static: false}) networkEl: ElementRef;
+  @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
 
   public networkInternal: any = null;
 
@@ -78,7 +78,8 @@ export class NetworkComponent implements OnInit {
   public gradientMap: NodeAttributeMap = {};
 
 
-  constructor(public networkHandler: NetworkHandlerService, public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public netex: NetexControllerService, public omnipath: OmnipathControllerService) { }
+  constructor(public networkHandler: NetworkHandlerService, public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public netex: NetexControllerService, public omnipath: OmnipathControllerService) {
+  }
 
   ngOnInit(): void {
     this.networkHandler.networks[this.networkType] = this;
@@ -114,7 +115,7 @@ export class NetworkComponent implements OnInit {
     if (this.adjacentDisordersProtein) {
       this.netex.adjacentDisorders(this.nodeData.nodes, 'proteins', this.drugstoneConfig.config.associatedProteinDisorder).subscribe(response => {
         for (const interaction of response.edges) {
-          const edge = { from: interaction.protein, to: interaction.disorder };
+          const edge = {from: interaction.protein, to: interaction.disorder};
           this.adjacentProteinDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.config));
         }
         for (const disorder of response.disorders) {
@@ -142,7 +143,7 @@ export class NetworkComponent implements OnInit {
     if (this.adjacentDisordersDrug) {
       this.netex.adjacentDisorders(this.nodeData.nodes, 'drugs', this.drugstoneConfig.config.indicationDrugDisorder).subscribe(response => {
         for (const interaction of response.edges) {
-          const edge = { from: interaction.drug, to: interaction.disorder };
+          const edge = {from: interaction.drug, to: interaction.disorder};
           this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.config));
         }
         for (const disorder of response.disorders) {
@@ -168,16 +169,21 @@ export class NetworkComponent implements OnInit {
   public updateAdjacentDrugs(bool: boolean) {
     this.adjacentDrugs = bool;
     if (this.adjacentDrugs) {
+      // console.log(this.nodeData.nodes)
       this.netex.adjacentDrugs(this.drugstoneConfig.config.interactionDrugProtein, this.nodeData.nodes).subscribe(response => {
+        const existingDrugIDs = this.nodeData.nodes.get().filter(n => n.drugstoneId).map(n => n.drugstoneId);
         for (const interaction of response.pdis) {
-          const edge = { from: interaction.protein, to: interaction.drug };
+          const edge = {from: interaction.protein, to: interaction.drug};
           this.adjacentDrugEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.config));
         }
         for (const drug of response.drugs) {
           drug.group = 'foundDrug';
-          drug.id = getDrugNodeId(drug)
-          this.adjacentDrugList.push(mapCustomNode(drug, this.drugstoneConfig.config))
+          drug.id = getDrugNodeId(drug);
+          if (existingDrugIDs.indexOf(drug.drugstoneId) === -1) {
+            this.adjacentDrugList.push(mapCustomNode(drug, this.drugstoneConfig.config))
+          }
         }
+
         this.nodeData.nodes.add(this.adjacentDrugList);
         this.nodeData.edges.add(this.adjacentDrugEdgesList);
         this.updateQueryItems();
@@ -220,7 +226,7 @@ export class NetworkComponent implements OnInit {
   }
 
   public downloadDom(dom: object) {
-    return domtoimage.toPng(dom, { bgcolor: '#ffffff' }).then((generatedImage) => {
+    return domtoimage.toPng(dom, {bgcolor: '#ffffff'}).then((generatedImage) => {
       const a = document.createElement('a');
       a.href = generatedImage;
       a.download = `Network.png`;
@@ -254,7 +260,7 @@ export class NetworkComponent implements OnInit {
       zoomScale = 3.0;
     }
     this.networkInternal.moveTo({
-      position: { x: coords.x, y: coords.y },
+      position: {x: coords.x, y: coords.y},
       scale: zoomScale,
       animation: true,
     });

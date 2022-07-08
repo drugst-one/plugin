@@ -23,11 +23,11 @@ export interface EdgeGroup {
   shadow?: any;
 }
 
-export type Identifier = 'symbol'|'uniprot'|'ensg';
-export type InteractionDrugProteinDB = 'DrugBank'|'Chembl'|'DGIdb' | 'NeDRex';
-export type InteractionProteinProteinDB = 'STRING'|'BioGRID'|'APID' | 'NeDRex';
-export type IndicationDrugDisorderDB = 'DrugBank' | 'NeDRex';
-export type AssociatedProteinDisorderDB = 'NeDRex' | 'DisGeNET';
+export type Identifier = 'symbol' | 'uniprot' | 'ensg' | 'entrez';
+export type InteractionDrugProteinDB = 'NeDRex' | 'DrugBank' | 'Drug Central' | 'ChEMBL' | 'DGIdb';
+export type InteractionProteinProteinDB = 'NeDRex' | 'BioGRID' | 'IID' | 'IntAct' | 'STRING' | 'APID';
+export type IndicationDrugDisorderDB = 'NeDRex' | 'CTD' | 'Drug Central' | 'DrugBank';
+export type AssociatedProteinDisorderDB = 'NeDRex' | 'DisGeNET' | 'OMIM';
 
 
 // TODO: should this be external or integrated in the backend?
