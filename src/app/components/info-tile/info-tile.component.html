@@ -101,7 +101,7 @@
   </div>
 
   <app-toggle
-    *ngIf="wrapper.data.drugstoneId && wrapper.data.drugstoneId.startsWith('p')"
+    *ngIf="wrapper.data.netexId && wrapper.data.netexId.startsWith('p')"
     [value]="analysis.inSelection(wrapper)"
     (valueChange)="
       $event ? analysis.addItems([wrapper]) : analysis.removeItems([wrapper])

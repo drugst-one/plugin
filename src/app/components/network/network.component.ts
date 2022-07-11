@@ -73,7 +73,7 @@ export class NetworkComponent implements OnInit {
   public highlightSeeds = false;
   public seedMap: NodeAttributeMap = {};
 
-  // keys are node drugstoneIds
+  // keys are node netexIds
   public expressionMap: NodeAttributeMap = {};
   public gradientMap: NodeAttributeMap = {};
 
@@ -119,7 +119,7 @@ export class NetworkComponent implements OnInit {
         }
         for (const disorder of response.disorders) {
           disorder.group = 'defaultDisorder';
-          disorder.id = disorder.drugstoneId;
+          disorder.id = disorder.netexId;
           this.adjacentProteinDisorderList.push(mapCustomNode(disorder, this.drugstoneConfig.config))
         }
         this.saveAddNodes(this.adjacentProteinDisorderList);
@@ -147,7 +147,7 @@ export class NetworkComponent implements OnInit {
         }
         for (const disorder of response.disorders) {
           disorder.group = 'defaultDisorder';
-          disorder.id = disorder.drugstoneId;
+          disorder.id = disorder.netexId;
           this.adjacentDrugDisorderList.push(mapCustomNode(disorder, this.drugstoneConfig.config));
         }
         this.saveAddNodes(this.adjacentDrugDisorderList);
@@ -271,7 +271,7 @@ export class NetworkComponent implements OnInit {
       const updatedNodes = [];
       // for (const item of this.proteins) {
       for (const item of this.currentViewProteins) {
-        if (item.drugstoneId === undefined) {
+        if (item.netexId === undefined) {
           // nodes that are not mapped to backend remain untouched
           continue;
         }
@@ -303,7 +303,7 @@ export class NetworkComponent implements OnInit {
       // filter out non-proteins, e.g. drugs
       const proteinNodes = [];
       this.nodeData.nodes.forEach(element => {
-        if (element.id.startsWith('p') && element.drugstoneId !== undefined) {
+        if (element.id.startsWith('p') && element.netexId !== undefined) {
           proteinNodes.push(element);
         }
       });
@@ -313,11 +313,11 @@ export class NetworkComponent implements OnInit {
         // mapping from netex IDs to network IDs, TODO check if this step is necessary
         const networkIdMappping = {}
         this.nodeData.nodes.forEach(element => {
-          networkIdMappping[element.drugstoneId] = element.id
+          networkIdMappping[element.netexId] = element.id
         });
         const maxExpr = Math.max(...Object.values(this.expressionMap));
-        for (const [drugstoneId, expressionlvl] of Object.entries(this.expressionMap)) {
-          const networkId = networkIdMappping[drugstoneId]
+        for (const [netexId, expressionlvl] of Object.entries(this.expressionMap)) {
+          const networkId = networkIdMappping[netexId]
           const node = this.nodeData.nodes.get(networkId);
           if (node === null) {
             continue;
@@ -349,7 +349,7 @@ export class NetworkComponent implements OnInit {
   public hasDrugsLoaded(): boolean {
     if (this.nodeData == null || this.nodeData.nodes == null)
       return false;
-    return this.nodeData.nodes.get().filter((node: Node) => node.drugId && node.drugstoneId.startsWith('dr')).length > 0;
+    return this.nodeData.nodes.get().filter((node: Node) => node.drugId && node.netexId.startsWith('dr')).length > 0;
   }
 
   public setLegendContext() {
@@ -376,7 +376,7 @@ export class NetworkComponent implements OnInit {
     this.highlightSeeds = bool;
     const updatedNodes = [];
     for (const item of this.currentViewProteins) {
-      if (item.drugstoneId === undefined) {
+      if (item.netexId === undefined) {
         // nodes that are not mapped to backend remain untouched
         continue;
       }

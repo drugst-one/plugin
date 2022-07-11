@@ -133,6 +133,7 @@ export class NetworkSettings {
     } else {
       node = merge(node, config.nodeGroups[node.group]);
     }
+
     // note that seed and selected node style are applied after the node style is fetched.
     // this allows to overwrite only attributes of interest, therefor in e.g. seedNode group
     // certain attributes like shape can remain undefined

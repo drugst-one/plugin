@@ -40,7 +40,7 @@ declare var vis: any;
 
 export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
-  private networkJSON = '{"nodes": [], "edges": []}';
+  private networkJSON = undefined;  //'{"nodes": [], "edges": []}'
   public _config: string;
 
   @Input()
@@ -65,7 +65,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (network == null) {
       return;
     }
-    this.networkJSON = JSON.stringify(typeof network === 'string' ? JSON5.parse(network) : network);
+    try {
+      this.networkJSON = JSON.stringify(typeof network === 'string' ? JSON5.parse(network) : network);
+    } catch {
+      console.log('ERROR: Failed parsing input network')
+    }
     this.activateConfig();
   }
 
@@ -122,7 +126,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     public networkHandler: NetworkHandlerService) {
     this.showDetails = false;
     this.analysis.subscribeList(async (items, selected) => {
-
       // return if analysis panel is open or no nodes are loaded
       if (this.selectedAnalysisToken || !this.nodeData.nodes) {
         return;
@@ -275,7 +278,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (nodeIds != null && nodeIds.length > 0) {
         const nodeId = nodeIds[0];
         const node = this.nodeData.nodes.get(nodeId);
-        if (node.drugstoneId === undefined || !node.drugstoneId.startsWith('p')) {
+        if (node.netexId === undefined || !node.netexId.startsWith('p')) {
           // skip if node is not a protein mapped to backend
           return;
         }
@@ -345,17 +348,16 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     if (this.drugstoneConfig.config.identifier === 'ensg') {
       // remove possible duplicate IDs
-      network.nodes = removeDuplicateObjectsFromList(network.nodes, 'drugstoneId');
+      network.nodes = removeDuplicateObjectsFromList(network.nodes, 'netexId');
     }
 
     // at this point, we have nodes synched with the backend
-    // use drugstoneIds where posssible, but use original id as node name if no label given
+    // use netexIds where posssible, but use original id as node name if no label given
     const nodeIdMap = {};
     network.nodes.forEach((node) => {
       // set node label to original id before node id will be set to netex id
       node.label = node.label ? node.label : node.id;
-
-      nodeIdMap[node.id] = node.drugstoneId ? node.drugstoneId : node.id;
+      nodeIdMap[node.id] = node.netexId ? node.netexId : node.id;
       node.id = nodeIdMap[node.id];
     });
 
@@ -461,6 +463,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }
       // implement nodeShadow option, it needs to be set for all nodes or none
       group.shadow = this.drugstoneConfig.config.nodeShadow;
+
+      // group must not have id, otherwise node id's would be overwritten which causes duplciates
+      if (group.hasOwnProperty('id')) {
+        delete group['id'];
+      }
     });
 
     this.drugstoneConfig.config[key] = nodeGroups;
@@ -494,9 +501,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   gProfilerLink(): string {
-    // nodes in selection have drugstoneId
+    // nodes in selection have netexId
     const queryString = this.analysis.getSelection()
-      .filter(wrapper => wrapper.data.drugstoneId.startsWith('p'))
+      .filter(wrapper => wrapper.data.netexId.startsWith('p'))
       .map(wrapper => wrapper.data.uniprotAc)
       .join('%0A');
     return 'http://biit.cs.ut.ee/gprofiler/gost?' +

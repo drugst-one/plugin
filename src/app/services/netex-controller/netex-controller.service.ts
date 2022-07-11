@@ -89,9 +89,9 @@ export class NetexControllerService {
      * Returns the expression in the given tissue for given nodes and cancerNodes
      */
       // slice prefix of netex id away for direct lookup in db, if node not mapped to db, replace by undefined
-    const genesBackendIds = nodes.map((node: Node) => node.drugstoneId ? node.drugstoneId.slice(1) : undefined);
+    const genesBackendIds = nodes.map((node: Node) => node.netexId ? node.netexId.slice(1) : undefined);
     const params = new HttpParams()
-      .set('tissue', tissue.drugstoneId)
+      .set('tissue', tissue.netexId)
       .set('proteins', JSON.stringify(genesBackendIds));
     return this.http.get(`${environment.backend}tissue_expression/`, {params});
   }
@@ -101,10 +101,10 @@ export class NetexControllerService {
     const params = {};
     if (nodeType === 'proteins') {
       // @ts-ignore
-      params.proteins = nodes.map((node: Node) => node.drugstoneId && node.drugstoneId.startsWith('p') ? node.drugstoneId.slice(1) : undefined).filter(id => id != null);
+      params.proteins = nodes.map((node: Node) => node.netexId && node.netexId.startsWith('p') ? node.netexId.slice(1) : undefined).filter(id => id != null);
     } else if (nodeType === 'drugs') {
       // @ts-ignore
-      params.drugs = nodes.map((node: Node) => node.drugId && node.drugstoneId.startsWith('dr') ? node.drugstoneId.slice(2) : undefined).filter(id => id != null);
+      params.drugs = nodes.map((node: Node) => node.drugId && node.netexId.startsWith('dr') ? node.netexId.slice(2) : undefined).filter(id => id != null);
     }
     return this.http.post<any>(`${environment.backend}adjacent_disorders/`, params);
   }
@@ -114,7 +114,7 @@ export class NetexControllerService {
      * Returns the expression in the given tissue for given nodes and cancerNodes
      */
       // slice prefix of netex id away for direct lookup in db, if node not mapped to db, replace by undefined
-    const genesBackendIds = nodes.map((node: Node) => node.drugstoneId && node.drugstoneId.startsWith('p') ? node.drugstoneId.slice(1) : undefined).filter(id => id != null);
+    const genesBackendIds = nodes.map((node: Node) => node.netexId && node.netexId.startsWith('p') ? node.netexId.slice(1) : undefined).filter(id => id != null);
     const params = {
       pdi_dataset: pdiDataset,
       proteins: genesBackendIds

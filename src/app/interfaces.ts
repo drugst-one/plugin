@@ -5,7 +5,7 @@ export interface Node {
   symbol: string;
   id: string;
   type: string;
-  drugstoneId?: string;
+  netexId?: string;
   drugId?:string;
   uniprotAc?: string;
   ensg?: Array<string>;
@@ -28,7 +28,7 @@ export interface Node {
 }
 
 export interface Tissue {
-  drugstoneId: number;
+  netexId: number;
   name: string;
 }
 
@@ -42,7 +42,7 @@ export type NetworkType = 'explorer' | 'analysis'
 export type LegendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget' |
 'drugTargetAndSeeds' | 'drugAndSeeds' | 'adjacentDisorders' | 'adjacentDrugsAndDisorders';
 
-/// drugstoneId to expressionlvl
+/// netexId to expressionlvl
 export type NodeAttributeMap = { string: number } | {};
 
 export interface NetexInteraction {
@@ -125,21 +125,21 @@ export function getDrugNodeId(drug: Drug) {
   /**
    * Returns backend_id of Drug object
    */
-  return drug.drugstoneId
+  return drug.netexId
 }
 
 // export function getDisorderNodeId(disorder: Disorder) {
 //   /**
 //    * Returns backend_id of Drug object
 //    */
-//   return disorder.drugstoneId
+//   return disorder.netexId
 
 export function getNodeId(node: Node) {
   /**
    * Returns backend_id of Gene object
    */
-  //  if ('drugstoneId' in node) {
-  //    return node['drugstoneId']
+  //  if ('netexId' in node) {
+  //    return node['netexId']
   //  } else {
   //    return node.id
   //  }
@@ -150,7 +150,7 @@ export function getNetworkId(node: Node) {
   /**
    * Returns ID of a network node
    */
-  return node.drugstoneId
+  return node.netexId
 }
 
 export function getId(gene: Node) {
@@ -165,6 +165,7 @@ export function getWrapperFromNode(node: Node): Wrapper {
    * Constructs wrapper interface for gene
    */
   // if node does not have property group, it was custom node from user
+  console.log(node.groupName)
   node.group = node.group ? node.group : 'default';
   node.label = node.label ? node.label : node.id
   return {
@@ -182,7 +183,7 @@ export interface Wrapper {
     label: string;
     type?: string;
     symbol?: string;
-    drugstoneId?: string;
+    netexId?: string;
     ensg?: Array<string>;
     shape?: string;
     color?: string;
@@ -215,7 +216,7 @@ export interface Drug {
   inTrial: boolean;
   inLiterature: boolean;
   trialLinks: string[];
-  drugstoneId: string;
+  netexId: string;
   group: string;
 }
 

@@ -465,7 +465,7 @@
                     *ngIf="analysis.getCount() > 0"
                     [href]="gProfilerLink()"
                     target="_blank"
-                    class="button is-primary is-fullwidth is-rounded has-tooltip"
+                    class="button is-primary is-fullwidth is-rounded has-tooltip is-small"
                     pTooltip="Use enrichment analysis via g:Profiler (external)."
                     [tooltipStyleClass]="
                       'drgstn drgstn-tooltip drgstn-tooltip-top'
@@ -484,7 +484,7 @@
                   <a
                     *ngIf="analysis.getCount() === 0"
                     disabled
-                    class="button is-primary is-fullwidth is-rounded has-tooltip"
+                    class="button is-primary is-fullwidth is-rounded has-tooltip is-small"
                     pTooltip="Use enrichment analysis via g:Profiler (external)."
                     [tooltipStyleClass]="
                       'drgstn drgstn-tooltip drgstn-tooltip-top'
