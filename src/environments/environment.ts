@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  backend: 'https://api.drugst.one/',
+  backend: 'http://localhost:8001/',//'https://api.drugst.one/',
 };
 
 

@@ -76,6 +76,7 @@ export interface IConfig {
   identifier?: Identifier;
   nodeShadow?: boolean;
   edgeShadow?: boolean;
+  useNedrexLicensed?: boolean;
 }
 
 /**
@@ -121,6 +122,7 @@ export const defaultConfig: IConfig = {
   edgeShadow: true,
   autofillEdges: true,
   physicsOn: false,
+  useNedrexLicensed: true,
   nodeGroups: {
     // all NodeGroups but the default group must be set, if not provided by the user, they will be taken from here
     // IMPORTANT: node color must be hexacode!

@@ -1,5 +1,8 @@
 <div id="appWindow" (window:resize)="onResize($event)">
   <div class="is-hidden-mobile fullheight" id="appContainer">
+
+    <app-license-agreement></app-license-agreement>
+
     <app-launch-analysis
       [(show)]="showAnalysisDialog"
       [target]="analysisDialogTarget"
@@ -465,7 +468,8 @@
                     *ngIf="analysis.getCount() > 0"
                     [href]="gProfilerLink()"
                     target="_blank"
-                    class="button is-primary is-fullwidth is-rounded has-tooltip is-small"
+                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                    class="button is-primary is-fullwidth is-rounded has-tooltip"
                     pTooltip="Use enrichment analysis via g:Profiler (external)."
                     [tooltipStyleClass]="
                       'drgstn drgstn-tooltip drgstn-tooltip-top'
@@ -484,7 +488,8 @@
                   <a
                     *ngIf="analysis.getCount() === 0"
                     disabled
-                    class="button is-primary is-fullwidth is-rounded has-tooltip is-small"
+                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                    class="button is-primary is-fullwidth is-rounded has-tooltip"
                     pTooltip="Use enrichment analysis via g:Profiler (external)."
                     [tooltipStyleClass]="
                       'drgstn drgstn-tooltip drgstn-tooltip-top'

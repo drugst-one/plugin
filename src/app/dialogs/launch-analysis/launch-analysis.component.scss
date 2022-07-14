@@ -12,7 +12,7 @@
   margin-bottom: 15px;
 }
 
-.help.info {
+.has-text-info.info {
   margin-bottom: 20px;
 
   .icon {
@@ -23,4 +23,8 @@
 .doc-link {
   margin-top: 15px;
   font-size: 11px;
+}
+
+div.is-active {
+  background-color: var(--drgstn-primary);
 }

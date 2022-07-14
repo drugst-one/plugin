@@ -1,0 +1,28 @@
+<div
+  class="modal absolute"
+  [class.is-active]="show && drugstoneConfig.config.useNedrexLicensed && license"
+>
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">
+        <span class="icon"><i class="fa fa-key"></i></span>
+        NeDRex License
+      </p>
+    </header>
+    <section class="modal-card-body">
+      <div [innerHTML]="license"></div>
+    </section>
+    <footer class="modal-card-foot">
+      <button
+        (click)="close()"
+        class="button is-rounded has-tooltip is-success"
+        pTooltip="Agree and close."
+        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+        tooltipPosition="top"
+      >
+        I agree
+      </button>
+    </footer>
+  </div>
+</div>

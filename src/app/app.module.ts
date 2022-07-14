@@ -34,7 +34,7 @@ import {
   faRulerVertical, faDna, faMicroscope, faBook, faPause, faTrash, faSpinner, faExclamationTriangle, faPlus,
   faExpand, faInfo, faRocket, faAngleDown, faSearch, faFastForward, faExternalLinkAlt, faTasks, faFilter,
   faMinus, faUpload, faAngleDoubleDown, faSync, faBroom, faAngleDoubleUp, faChild, faHeadSideMask, faBiohazard,
-  faBullseye, faSeedling, faSyncAlt, faCompress
+  faBullseye, faSeedling, faSyncAlt, faCompress, faKey
 } from '@fortawesome/free-solid-svg-icons';
 import { TooltipModule } from 'primeng/tooltip';
 import { NetworkMenuComponent } from './components/network/network-menu/network-menu.component';
@@ -46,6 +46,7 @@ import { DownloadButtonInverseComponent } from './components/network/network-men
 import { NetworkControlComponent } from './components/network-control/network-control.component';
 import { CenterViewComponent } from './components/network/network-menu/center-view/center-view.component';
 import { CenterViewInverseComponent } from './components/network/network-menu-left/center-view-inverse/center-view-inverse.component';
+import { LicenseAgreementComponent } from './components/license-agreement/license-agreement.component';
 
 
 @NgModule({
@@ -73,6 +74,7 @@ import { CenterViewInverseComponent } from './components/network/network-menu-le
     NetworkControlComponent,
     CenterViewComponent,
     CenterViewInverseComponent,
+    LicenseAgreementComponent,
   ],
   imports: [
     BrowserModule,
@@ -98,7 +100,7 @@ export class AppModule {
       faSpinner, faExclamationTriangle, faPlus, faExpand, faInfo, faRocket, faAngleDown, faSearch,
       faFastForward, faExternalLinkAlt, faTasks, faFilter, faMinus, faUpload, faAngleDoubleDown,
       faSync, faBroom, faAngleDoubleUp, faChild, faHeadSideMask, faBiohazard, faBullseye, faSeedling, 
-      faSyncAlt, faExpand, faCompress);
+      faSyncAlt, faExpand, faCompress, faKey);
     const NetworkExpander = createCustomElement(ExplorerPageComponent, { injector });
     // Register the custom element with the browser.
     customElements.define('drugst-one', NetworkExpander);

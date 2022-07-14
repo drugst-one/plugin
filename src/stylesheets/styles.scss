@@ -6,6 +6,7 @@
 @import "variables";
 
 #appWindow {
+  position: relative;
   @import "~@ng-select/ng-select/themes/default.theme";
 
   .ng-dropdown-panel .ng-dropdown-panel-items {
@@ -26,6 +27,10 @@
 
   .card-content .tabs-header {
     margin-bottom: 0;
+  }
+
+  .is-fullwidth{
+    width: 100%;
   }
 
   .canvas-content {
