@@ -66,6 +66,7 @@ export interface IConfig {
   showLegendEdges: boolean;
   nodeGroups: { [key: string]: NodeGroup };
   edgeGroups: { [key: string]: EdgeGroup };
+  selfReferences: boolean;
   interactionDrugProtein: InteractionDrugProteinDB;
   interactionProteinProtein: InteractionProteinProteinDB;
   indicationDrugDisorder: IndicationDrugDisorderDB;
@@ -123,6 +124,7 @@ export const defaultConfig: IConfig = {
   autofillEdges: true,
   physicsOn: false,
   useNedrexLicensed: true,
+  selfReferences: false,
   nodeGroups: {
     // all NodeGroups but the default group must be set, if not provided by the user, they will be taken from here
     // IMPORTANT: node color must be hexacode!

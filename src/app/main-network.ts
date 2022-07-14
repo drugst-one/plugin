@@ -51,7 +51,13 @@ export class ProteinNetwork {
       nodes.push(mapCustomNode(protein, config));
     }
 
+    // remove self-edges/loops
+    if (!config.selfReferences) {
+      this.edges = this.edges.filter(el => el.from !== el.to)
+    }
+
     for (const edge of this.edges) {
+      console.log(edge)
       edges.push(mapCustomEdge(edge, config));
     }
 

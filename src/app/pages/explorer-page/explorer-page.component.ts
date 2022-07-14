@@ -6,7 +6,6 @@ import {
   Input,
   OnInit,
   Output,
-  ViewChild,
 } from '@angular/core';
 import {
   getWrapperFromNode,
@@ -23,11 +22,9 @@ import { defaultConfig, EdgeGroup, NodeGroup } from '../../config';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
 import { removeDuplicateObjectsFromList } from '../../utils';
 import * as merge from 'lodash/fp/merge';
-import { AnalysisPanelComponent } from 'src/app/components/analysis-panel/analysis-panel.component';
 import * as JSON5 from 'json5';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
-import { NetworkComponent } from 'src/app/components/network/network.component';
 
 
 declare var vis: any;

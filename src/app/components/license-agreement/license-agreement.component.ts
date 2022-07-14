@@ -17,7 +17,6 @@ export class LicenseAgreementComponent implements OnInit {
   constructor(public drugstoneConfig: DrugstoneConfigService, public netex: NetexControllerService) { }
 
   public getAgreed() {
-    console.log(sessionStorage.getItem(this.licenseStorageKey) === 'true')
     return sessionStorage.getItem(this.licenseStorageKey) === 'true';
   }
 
