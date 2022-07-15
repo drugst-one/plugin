@@ -13,6 +13,7 @@ export interface NodeGroup {
   borderWidthSelected?: number;
   background?: any;
   shadow?: any;
+  ctxRenderer?: any;
 }
 
 export interface EdgeGroup {
@@ -132,6 +133,7 @@ export const defaultConfig: IConfig = {
       // this default group is used for default node group values
       // and is fallback in case user does not provide any nodeGroup
       groupName: 'Default Node Group',
+      ctxRenderer: null,
       color: {
         border: '#FFFF00',
         background: '#FFFF00',

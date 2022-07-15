@@ -79,6 +79,8 @@ export class NetworkComponent implements OnInit {
 
   public fullscreen = false;
 
+  public nodeRenderer = null;
+
   constructor(public networkHandler: NetworkHandlerService, public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public netex: NetexControllerService, public omnipath: OmnipathControllerService) { }
 
   ngOnInit(): void {
@@ -267,7 +269,12 @@ export class NetworkComponent implements OnInit {
   public selectTissue(tissue: Tissue | null) {
     this.expressionExpanded = false;
     if (!tissue) {
+      // delete expression values
+      this.expressionMap = {};
+      // delete gradient map
+      this.gradientMap = {};
       this.selectedTissue = null;
+      this.nodeRenderer = null;
       const updatedNodes = [];
       // for (const item of this.proteins) {
       for (const item of this.currentViewProteins) {
@@ -289,14 +296,14 @@ export class NetworkComponent implements OnInit {
             this.drugstoneConfig.config,
             false,
             this.analysis.inSelection(getWrapperFromNode(item)),
-            1.0
+            1.0,
+            this.nodeRenderer
           )
         )
         updatedNodes.push(node);
       }
       this.nodeData.nodes.update(updatedNodes);
-      // delete expression values
-      this.expressionMap = undefined;
+
     } else {
       this.selectedTissue = tissue
       const minExp = 0.3;
@@ -310,6 +317,7 @@ export class NetworkComponent implements OnInit {
       this.netex.tissueExpressionGenes(this.selectedTissue, proteinNodes).subscribe((response) => {
         this.expressionMap = response;
         const updatedNodes = [];
+        this.nodeRenderer = pieChartContextRenderer;
         // mapping from netex IDs to network IDs, TODO check if this step is necessary
         const networkIdMappping = {}
         this.nodeData.nodes.forEach(element => {
@@ -324,6 +332,7 @@ export class NetworkComponent implements OnInit {
           }
           const wrapper = getWrapperFromNode(node)
           const gradient = expressionlvl !== null ? (Math.pow(expressionlvl / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
+          this.gradientMap[drugstoneId] = gradient;
           const pos = this.networkInternal.getPositions([networkId]);
           node.x = pos[networkId].x;
           node.y = pos[networkId].y;
@@ -333,11 +342,10 @@ export class NetworkComponent implements OnInit {
               this.drugstoneConfig.config,
               node.isSeed,
               this.analysis.inSelection(wrapper),
-              gradient));
-
-          // custom ctx renderer for pie chart
-          node.shape = 'custom';
-          node.ctxRenderer = pieChartContextRenderer;
+              gradient,
+              this.nodeRenderer
+            )
+          );
           updatedNodes.push(node);
         }
         this.nodeData.nodes.update(updatedNodes);
@@ -368,6 +376,10 @@ export class NetworkComponent implements OnInit {
     }
   }
 
+  public getGradient(nodeId: string) {
+    return (this.gradientMap !== {}) && (this.gradientMap[nodeId]) ? this.gradientMap[nodeId] : 1.0;
+  }
+
   /**
    * To highlight the seeds in the analysis network, not used in the browser network
    * @param bool
@@ -388,7 +400,6 @@ export class NetworkComponent implements OnInit {
       node.x = pos[item.id].x;
       node.y = pos[item.id].y;
       const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
-      const gradient = (this.gradientMap !== {}) && (this.gradientMap[item.id]) ? this.gradientMap[item.id] : 1.0;
       Object.assign(
         node,
         NetworkSettings.getNodeStyle(
@@ -396,7 +407,8 @@ export class NetworkComponent implements OnInit {
           this.drugstoneConfig.config,
           isSeed,
           this.analysis.inSelection(getWrapperFromNode(item)),
-          gradient
+          this.getGradient(item.id),
+          this.nodeRenderer
         )
       )
       updatedNodes.push(node);

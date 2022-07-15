@@ -146,7 +146,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
             this.drugstoneConfig.config,
             false,
             selected,
-            1.0
+            this.networkHandler.activeNetwork.getGradient(wrapper.id),
+            this.networkHandler.activeNetwork.nodeRenderer
           )
           nodeStyled.x = pos[wrapper.id].x;
           nodeStyled.y = pos[wrapper.id].y;

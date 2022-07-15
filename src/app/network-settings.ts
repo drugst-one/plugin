@@ -59,15 +59,6 @@ export class NetworkSettings {
     enabled: false
   };
 
-  // Node size
-  private static hostSize = 20;
-  private static drugSize = 15;
-
-  // Node shape
-  private static hostShape = 'ellipse';
-  private static drugNotInTrialShape = 'box';
-  private static drugInTrialShape = 'triangle';
-
   static getOptions(network: 'main' | 'analysis' | 'analysis-big', physicsOn) {
     if (network === 'main') {
       return {
@@ -90,43 +81,16 @@ export class NetworkSettings {
     }
   }
 
-  static getColor(color: 'protein' | 'approvedDrug' | 'unapprovedDrug' | 'hostFont' | 'drugFont' |
-    'nonSeedHost' | 'selectedForAnalysis' | 'selectedForAnalysisText' |
-    'edgeHostDrug' | 'edgeHostDrugHighlight' | 'edgeGeneGene' | 'edgeGeneGeneHighlight')
-    /**
-     * Collection of all colors per use-case
-     */ {
-    if (color === 'protein') {
-      return this.hostColor;
-    } else if (color === 'approvedDrug') {
-      return this.approvedDrugColor;
-    } else if (color === 'unapprovedDrug') {
-      return this.unapprovedDrugColor;
-    } else if (color === 'hostFont') {
-      return this.hostFontColor;
-    } else if (color === 'drugFont') {
-      return this.drugFontColor;
-    } else if (color === 'nonSeedHost') {
-      return this.nonSeedHostColor;
-    } else if (color === 'edgeHostDrug') {
-      return this.edgeHostDrugColor;
-    } else if (color === 'edgeHostDrugHighlight') {
-      return this.edgeHostDrugHighlightColor;
-    } else if (color === 'edgeGeneGene') {
-      return this.edgeGeneGeneColor;
-    } else if (color === 'edgeGeneGeneHighlight') {
-      return this.edgeGeneGeneHighlightColor;
-    }
-  }
-
   static getNodeStyle(
     node: Node,
     config: IConfig,
     isSeed: boolean,
     isSelected: boolean,
-    gradient: number = 1): Node {
+    gradient: number = 1,
+    renderer = null): Node {
     // delete possible old styles
     Object.keys(config.nodeGroups.default).forEach(e => delete node[e]);
+
     // set group styles
     if (node.group === 'default') {
       node = merge(node, config.nodeGroups.default);
@@ -135,7 +99,7 @@ export class NetworkSettings {
     }
 
     // note that seed and selected node style are applied after the node style is fetched.
-    // this allows to overwrite only attributes of interest, therefor in e.g. seedNode group
+    // this allows to overwrite only attributes of interest, therefore in e.g. seedNode group
     // certain attributes like shape can remain undefined
     // use lodash merge to not lose deep attributes, e.g. "font.size"
     if (isSeed) {
@@ -147,17 +111,20 @@ export class NetworkSettings {
       // apply selected node style to node
       node = merge(node, config.nodeGroups.selectedNode);
     }
-
     // show image if image url is given. If seed nodes are highlighted, ignore image property
     if (node.image && !isSeed) {
       node.shape = 'image';
     }
-
     // use opactiy as gradient
     if (gradient === null) {
       node.opacity = 0
     } else {
       node.opacity = gradient
+    }
+    // custom ctx renderer for e.g. pie chart
+    if (renderer !== null) {
+      node.shape = 'custom';
+      node.ctxRenderer = renderer;
     }
     return node;
   }

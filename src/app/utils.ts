@@ -162,7 +162,6 @@ export function pieChartContextRenderer({ctx, x, y, state: {selected, hover}, st
 
   ctx.drawPie = function (style, x, y) {
     const total = 1;
-
     // draw shadow
     if (style.shadow) {
       ctx.save()
@@ -183,7 +182,6 @@ export function pieChartContextRenderer({ctx, x, y, state: {selected, hover}, st
     // prepare pi-chart
     ctx.fillStyle = style.color ? style.color : 'rgba(255, 0, 0, 1)';
     // set alpha value to 1
-    // ctx.fillStyle = ctx.fillStyle.replace(/[^,]+(?=\))/, '1')
     ctx.fillStyle = RGBAtoRGB(ctx.fillStyle)
     ctx.beginPath();
     ctx.moveTo(x, y);
@@ -195,7 +193,7 @@ export function pieChartContextRenderer({ctx, x, y, state: {selected, hover}, st
       // removing shadow application of future fill or stroke calls
       ctx.restore();
     }
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = style.borderColor ? style.borderColor : 'black';
     ctx.lineWidth = selected ? 3 : 2;
     if (style.opacity !== total) {
       // avoid the inner line when circle is complete
@@ -205,6 +203,7 @@ export function pieChartContextRenderer({ctx, x, y, state: {selected, hover}, st
     // draw the surrounding border circle
     ctx.beginPath();
     ctx.arc(x, y, style.size, 0, 2 * Math.PI);
+    ctx.strokeStyle = style.borderColor ? style.borderColor : 'black';
     ctx.stroke();
   }
 

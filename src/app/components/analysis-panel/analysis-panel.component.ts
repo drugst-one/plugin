@@ -10,9 +10,9 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
-import {algorithmNames, AnalysisService} from '../../services/analysis/analysis.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { algorithmNames, AnalysisService } from '../../services/analysis/analysis.service';
 import {
   Drug,
   EdgeType,
@@ -28,9 +28,9 @@ import {
   NodeInteraction,
 } from '../../interfaces';
 import domtoimage from 'dom-to-image';
-import {NetworkSettings} from '../../network-settings';
-import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
-import {defaultConfig, IConfig} from 'src/app/config';
+import { NetworkSettings } from '../../network-settings';
+import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
+import { defaultConfig, IConfig } from 'src/app/config';
 import { mapCustomEdge, mapCustomNode } from 'src/app/main-network';
 import { downLoadFile, pieChartContextRenderer, removeDuplicateObjectsFromList } from 'src/app/utils';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
@@ -60,7 +60,7 @@ interface Baited {
 })
 export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit {
 
-  @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
+  @ViewChild('networkWithLegend', { static: false }) networkWithLegendEl: ElementRef;
   @Input() token: string | null = null;
   @Input()
   public set config(config: IConfig | undefined) {
@@ -80,7 +80,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public myConfig: IConfig = JSON.parse(JSON.stringify(defaultConfig));
 
   public network: any;
-  public nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
+  public nodeData: { nodes: any, edges: any } = { nodes: null, edges: null };
   private drugNodes: any[] = [];
   private drugEdges: any[] = [];
   public showDrugs = false;
@@ -180,14 +180,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         this.networkHandler.activeNetwork.seedMap = nodeAttributes.isSeed || {};
 
         // Reset
-        this.nodeData = {nodes: null, edges: null};
+        this.nodeData = { nodes: null, edges: null };
         this.networkHandler.activeNetwork.networkEl.nativeElement.innerHTML = '';
         this.networkHandler.activeNetwork.networkInternal = null;
         this.showDrugs = false;
 
         // Create
-        const {nodes, edges} = this.createNetwork(this.result);
-        this.setInputNetwork.emit({nodes: nodes, edges: edges});
+        const { nodes, edges } = this.createNetwork(this.result);
+        this.setInputNetwork.emit({ nodes: nodes, edges: edges });
         this.nodeData.nodes = new vis.DataSet(nodes);
         this.nodeData.edges = new vis.DataSet(edges);
         const container = this.networkHandler.activeNetwork.networkEl.nativeElement;
@@ -197,12 +197,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
         this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
 
-        this.tableDrugs = nodes.filter( e => e.drugstoneId && e.drugstoneId.startsWith('d'));
+        this.tableDrugs = nodes.filter(e => e.drugstoneId && e.drugstoneId.startsWith('d'));
         this.tableDrugs.forEach((r) => {
           r.rawScore = r.score;
         });
 
-        this.tableProteins = nodes.filter( e => e.drugstoneId && e.drugstoneId.startsWith('p'));
+        this.tableProteins = nodes.filter(e => e.drugstoneId && e.drugstoneId.startsWith('p'));
         this.tableSelectedProteins = [];
         this.tableProteins.forEach((r) => {
           r.rawScore = r.score;
@@ -273,14 +273,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               node.x = pos[item.id].x;
               node.y = pos[item.id].y;
               const isSeed = this.networkHandler.activeNetwork.highlightSeeds ? this.networkHandler.activeNetwork.seedMap[node.id] : false;
-              const gradient = (this.networkHandler.activeNetwork.gradientMap !== {}) && (this.networkHandler.activeNetwork.gradientMap[item.id]) ? this.networkHandler.activeNetwork.gradientMap[item.id] : 1.0;
               const nodeStyled = NetworkSettings.getNodeStyle(
                 node,
                 this.myConfig,
                 isSeed,
                 selected,
-                gradient
-                )
+                this.networkHandler.activeNetwork.getGradient(item.id),
+                this.networkHandler.activeNetwork.nodeRenderer
+              )
               updatedNodes.push(nodeStyled);
             }
             this.nodeData.nodes.update(updatedNodes);
@@ -311,14 +311,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               //   drugInTrial = node.inTrial;
               // }
               const isSeed = this.networkHandler.activeNetwork.highlightSeeds ? this.networkHandler.activeNetwork.seedMap[node.id] : false;
-              const gradient = (this.networkHandler.activeNetwork.gradientMap !== {}) && (this.networkHandler.activeNetwork.gradientMap[node.id]) ? this.networkHandler.activeNetwork.gradientMap[node.id] : 1.0;
               const nodeStyled = NetworkSettings.getNodeStyle(
                 node,
                 this.myConfig,
                 isSeed,
                 selected,
-                gradient
-                )
+                this.networkHandler.activeNetwork.getGradient(node.id),
+                this.networkHandler.activeNetwork.nodeRenderer
+              )
               updatedNodes.push(nodeStyled);
             });
             this.nodeData.nodes.update(updatedNodes);
@@ -531,7 +531,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public createNetwork(result: any): { edges: any[], nodes: any[] } {
     const config = result.parameters.config;
     this.myConfig = config;
-    
+
     const identifier = this.myConfig.identifier;
 
     // add drugGroup and foundNodesGroup for added nodes
@@ -572,7 +572,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       }
       // further analysis and the button function can be used to highlight seeds
       // option to use scores[node] as gradient, but sccores are very small
-      nodes.push(NetworkSettings.getNodeStyle(nodeDetails as Node, config, false, false, 1))
+      nodes.push(NetworkSettings.getNodeStyle(nodeDetails as Node, config, false, false, 1, this.networkHandler.activeNetwork.nodeRenderer))
     }
 
     // remove self-edges/loops

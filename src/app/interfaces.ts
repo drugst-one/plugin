@@ -1,6 +1,7 @@
 import {AlgorithmType, QuickAlgorithmType} from './services/analysis/analysis.service';
 
 export interface Node {
+  ctxRenderer?: any;
   label: string;
   symbol: string;
   id: string;
