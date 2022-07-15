@@ -1,15 +1,13 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import {
-  Algorithm,
-  AlgorithmType,
   AnalysisService, BETWEENNESS_CENTRALITY, CLOSENESS_CENTRALITY,
   DEGREE_CENTRALITY,
   KEYPATHWAYMINER, MAX_TASKS,
   MULTISTEINER, NETWORK_PROXIMITY,
-  QuickAlgorithmType,
   TRUSTRANK
 } from '../../services/analysis/analysis.service';
-import { IConfig } from 'src/app/config';
+import { Algorithm, AlgorithmType, QuickAlgorithmType } from 'src/app/interfaces';
+import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 
 @Component({
   selector: 'app-launch-analysis',
@@ -23,9 +21,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   @Input()
   public target: 'drug' | 'drug-target';
   @Input()
-  public inputNetwork: {nodes: any, edges: any};
-  @Input()
-  public config: IConfig;
+  public inputNetwork: { nodes: any, edges: any };
   @Output()
   public showChange = new EventEmitter<boolean>();
   @Output()
@@ -82,7 +78,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   public maxTasks = MAX_TASKS;
 
-  constructor(public analysis: AnalysisService) {
+  constructor(public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService) {
   }
 
   ngOnInit(): void {
@@ -91,10 +87,18 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (this.target === 'drug-target') {
       this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, BETWEENNESS_CENTRALITY];
-      this.algorithm = MULTISTEINER.slug;
     } else if (this.target === 'drug') {
       this.algorithms = [TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, NETWORK_PROXIMITY];
-      this.algorithm = TRUSTRANK.slug;
+    } else {
+      // return because this.target === undefined
+      return
+    }
+    this.algorithms = this.algorithms.filter(algorithm => this.drugstoneConfig.config.algorithms[this.target].includes(algorithm.slug));
+    // sanity check to fallback algorithm, trustrank works on all targets
+    if (!this.algorithms.length) {
+      this.algorithms = [TRUSTRANK];
+    } else {
+      this.algorithm = this.algorithms[0].slug;
     }
   }
 
@@ -111,12 +115,12 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     });
     const parameters: any = {
       seeds: seedsFiltered,
-      config: this.config,
+      config: this.drugstoneConfig.config,
       input_network: this.inputNetwork
     };
 
-    parameters.ppi_dataset = this.config.interactionProteinProtein;
-    parameters.pdi_dataset = this.config.interactionDrugProtein;
+    parameters.ppi_dataset = this.drugstoneConfig.config.interactionProteinProtein;
+    parameters.pdi_dataset = this.drugstoneConfig.config.interactionDrugProtein;
     parameters.target = this.target === 'drug' ? 'drug' : 'drug-target';
     // pass network data to reconstruct network in analysis result to connect non-proteins to results
     // drop interactions in nodes beforehand to no cause cyclic error, information is contained in edges
@@ -176,7 +180,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.hub_penalty = this.multisteinerHubPenalty;
     }
     const token = await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
-    const object = {taskId: token, algorithm: this.algorithm, target: this.target, params: parameters};
+    const object = { taskId: token, algorithm: this.algorithm, target: this.target, params: parameters };
     this.taskEvent.emit(object);
   }
 

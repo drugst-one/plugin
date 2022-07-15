@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {AlgorithmType, QuickAlgorithmType} from '../analysis/analysis.service';
 import {Observable} from 'rxjs';
-import {Tissue, Node, EdgeType} from 'src/app/interfaces';
+import {Tissue, Node, EdgeType, QuickAlgorithmType, AlgorithmType} from 'src/app/interfaces';
 import {InteractionDrugProteinDB, InteractionProteinProteinDB} from 'src/app/config';
 
 @Injectable({

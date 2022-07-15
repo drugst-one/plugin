@@ -1,3 +1,5 @@
+import { AlgorithmTarget, AlgorithmType, QuickAlgorithmType } from "./interfaces";
+
 // https://visjs.github.io/vis-network/docs/network/nodes.html
 export interface NodeGroup {
   groupName?: string;
@@ -24,9 +26,9 @@ export interface EdgeGroup {
   shadow?: any;
 }
 
-export type Identifier = 'symbol'|'uniprot'|'ensg';
-export type InteractionDrugProteinDB = 'DrugBank'|'Chembl'|'DGIdb' | 'NeDRex';
-export type InteractionProteinProteinDB = 'STRING'|'BioGRID'|'APID' | 'NeDRex';
+export type Identifier = 'symbol' | 'uniprot' | 'ensg';
+export type InteractionDrugProteinDB = 'DrugBank' | 'Chembl' | 'DGIdb' | 'NeDRex';
+export type InteractionProteinProteinDB = 'STRING' | 'BioGRID' | 'APID' | 'NeDRex';
 export type IndicationDrugDisorderDB = 'DrugBank' | 'NeDRex';
 export type AssociatedProteinDisorderDB = 'NeDRex' | 'DisGeNET';
 
@@ -79,6 +81,7 @@ export interface IConfig {
   nodeShadow?: boolean;
   edgeShadow?: boolean;
   useNedrexLicensed?: boolean;
+  algorithms: { [key in AlgorithmTarget]: Array<AlgorithmType | QuickAlgorithmType> }
 }
 
 /**
@@ -126,6 +129,10 @@ export const defaultConfig: IConfig = {
   physicsOn: false,
   useNedrexLicensed: true,
   selfReferences: false,
+  algorithms: { 
+    'drug': ['trustrank', 'closeness', 'degree', 'proximity'], 
+    'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness'] 
+  },
   nodeGroups: {
     // all NodeGroups but the default group must be set, if not provided by the user, they will be taken from here
     // IMPORTANT: node color must be hexacode!

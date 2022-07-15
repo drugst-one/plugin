@@ -1,20 +1,10 @@
-import {Wrapper, Task, getWrapperFromNode, Node, Dataset, Tissue} from '../../interfaces';
+import {Wrapper, Task, getWrapperFromNode, Node, Dataset, Tissue, Algorithm} from '../../interfaces';
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {toast} from 'bulma-toast';
 import {Injectable} from '@angular/core';
 import {NetexControllerService} from '../netex-controller/netex-controller.service';
-
-export type AlgorithmType =
-  'trustrank'
-  | 'keypathwayminer'
-  | 'multisteiner'
-  | 'closeness'
-  | 'degree'
-  | 'proximity'
-  | 'betweenness';
-export type QuickAlgorithmType = 'quick' | 'super';
 
 export const algorithmNames = {
   trustrank: 'TrustRank',
@@ -27,11 +17,6 @@ export const algorithmNames = {
   quick: 'Simple',
   super: 'Quick-Start',
 };
-
-export interface Algorithm {
-  slug: AlgorithmType | QuickAlgorithmType;
-  name: string;
-}
 
 export const TRUSTRANK: Algorithm = {slug: 'trustrank', name: algorithmNames.trustrank};
 export const CLOSENESS_CENTRALITY: Algorithm = {slug: 'closeness', name: algorithmNames.closeness};

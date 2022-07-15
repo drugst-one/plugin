@@ -1,5 +1,3 @@
-import {AlgorithmType, QuickAlgorithmType} from './services/analysis/analysis.service';
-
 export interface Node {
   ctxRenderer?: any;
   label: string;
@@ -67,10 +65,12 @@ export interface NetworkEdge {
   label: string;
 }
 
+export type AlgorithmTarget = 'drug' | 'drug-target'
+
 export interface Task {
   token: string;
   info: {
-    target: 'drug' | 'drug-target',
+    target: AlgorithmTarget,
     algorithm: AlgorithmType | QuickAlgorithmType;
     parameters?: { [key: string]: any };
 
@@ -230,4 +230,19 @@ export interface Dataset {
   datasetNames: string;
   id: string;
   data: Array<[string, string]>;
+}
+
+export type AlgorithmType =
+  'trustrank'
+  | 'keypathwayminer'
+  | 'multisteiner'
+  | 'closeness'
+  | 'degree'
+  | 'proximity'
+  | 'betweenness';
+export type QuickAlgorithmType = 'quick' | 'super';
+
+export interface Algorithm {
+  slug: AlgorithmType | QuickAlgorithmType;
+  name: string;
 }

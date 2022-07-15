@@ -6,7 +6,6 @@
     <app-launch-analysis
       [(show)]="showAnalysisDialog"
       [target]="analysisDialogTarget"
-      [config]="drugstoneConfig.config"
       [inputNetwork]="{ nodes: proteins, edges: edges }"
       (taskEvent)="emitTaskEvent($event)"
     >
