@@ -227,6 +227,7 @@ export class AnalysisService {
     const params = {
       ppi_dataset: config.interactionProteinProtein,
       pdi_dataset: config.interactionDrugProtein,
+      licenced: config.licencedDatasets,
       config: config,
       input_network: network,
       seeds: isSuper ? network.nodes.filter(n => n.drugstoneId && n.drugstoneId[0] === 'p').map(n => n.drugstoneId) : this.getSelection().map((i) => i.id),

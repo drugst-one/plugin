@@ -69,6 +69,7 @@ export interface IConfig {
   interactionDrugProtein: InteractionDrugProteinDB;
   interactionProteinProtein: InteractionProteinProteinDB;
   indicationDrugDisorder: IndicationDrugDisorderDB;
+  licencedDatasets: boolean;
   associatedProteinDisorder: AssociatedProteinDisorderDB;
   autofillEdges: boolean;
   interactions?: InteractionDatabase;
@@ -117,6 +118,7 @@ export const defaultConfig: IConfig = {
   interactionProteinProtein: 'NeDRex',
   associatedProteinDisorder: 'NeDRex',
   indicationDrugDisorder: 'NeDRex',
+  licencedDatasets: false,
   nodeShadow: true,
   edgeShadow: true,
   autofillEdges: true,

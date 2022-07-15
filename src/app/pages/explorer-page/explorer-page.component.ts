@@ -258,7 +258,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     const { nodes, edges } = this.proteinData.mapDataToNetworkInput(this.drugstoneConfig.config);
     if (this.drugstoneConfig.config.autofillEdges && nodes.length) {
-      const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.config.interactionProteinProtein);
+      const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.config.interactionProteinProtein, this.drugstoneConfig.config.licencedDatasets);
       edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.config)))
     }
 

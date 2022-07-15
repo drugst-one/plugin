@@ -14,12 +14,12 @@ export class NetexControllerService {
   constructor(private http: HttpClient) {
   }
 
-  public async getTask(token): Promise<any> {
-    /**
-     * returns promise of task status
-     */
-    return this.http.get(`${environment.backend}task/?tokens=${token}`).toPromise();
-  }
+  // public async getTask(token): Promise<any> {
+  //   /**
+  //    * returns promise of task status
+  //    */
+  //   return this.http.get(`${environment.backend}task/?tokens=${token}`).toPromise();
+  // }
 
   public async getTasks(tokens): Promise<any> {
     /**
@@ -35,38 +35,38 @@ export class NetexControllerService {
     return this.http.get<any>(`${environment.backend}task_result/?token=${token}`).toPromise();
   }
 
-  public async getTaskResultDrug(token): Promise<any> {
-    /**
-     * returns promise of drug view of task result of COMPLETED task
-     */
-    return this.http.get<any>(`${environment.backend}task_result/?token=${token}&view=drugs`).toPromise();
-  }
+  // public async getTaskResultDrug(token): Promise<any> {
+  //   /**
+  //    * returns promise of drug view of task result of COMPLETED task
+  //    */
+  //   return this.http.get<any>(`${environment.backend}task_result/?token=${token}&view=drugs`).toPromise();
+  // }
 
-  public async getTaskResultGene(token): Promise<any> {
-    /**
-     * returns promise of gene view of task result of COMPLETED task
-     */
-    return this.http.get<any>(`${environment.backend}task_result/?token=${token}&view=genes`).toPromise();
-  }
+  // public async getTaskResultGene(token): Promise<any> {
+  //   /**
+  //    * returns promise of gene view of task result of COMPLETED task
+  //    */
+  //   return this.http.get<any>(`${environment.backend}task_result/?token=${token}&view=genes`).toPromise();
+  // }
 
-  public async getTaskResultCancerNode(token): Promise<any> {
-    /**
-     * returns promise of cancer driver gene view of task result of COMPLETED task
-     */
-    return this.http.get<any>(`${environment.backend}task_result/?token=${token}&view=cancer_driver_genes`).toPromise();
-  }
+  // public async getTaskResultCancerNode(token): Promise<any> {
+  //   /**
+  //    * returns promise of cancer driver gene view of task result of COMPLETED task
+  //    */
+  //   return this.http.get<any>(`${environment.backend}task_result/?token=${token}&view=cancer_driver_genes`).toPromise();
+  // }
 
-  public async postTask(algorithm: QuickAlgorithmType | AlgorithmType, target, parameters,) {
-    /**
-     * sends a task to task service
-     */
-
-    return this.http.post<any>(`${environment.backend}task/`, {
-      algorithm,
-      target,
-      parameters,
-    }).toPromise();
-  }
+  // public async postTask(algorithm: QuickAlgorithmType | AlgorithmType, target, parameters,) {
+  //   /**
+  //    * sends a task to task service
+  //    */
+  //
+  //   return this.http.post<any>(`${environment.backend}task/`, {
+  //     algorithm,
+  //     target,
+  //     parameters,
+  //   }).toPromise();
+  // }
 
   public async mapNodes(nodes, identifier): Promise<any> {
     /**
@@ -96,9 +96,9 @@ export class NetexControllerService {
     return this.http.get(`${environment.backend}tissue_expression/`, {params});
   }
 
-  public adjacentDisorders(nodes: Node[], nodeType: string, dataset: string): Observable<any> {
+  public adjacentDisorders(nodes: Node[], nodeType: string, dataset: string, licenced:boolean): Observable<any> {
 
-    const params = {dataset:dataset};
+    const params = {dataset:dataset, licenced:licenced};
     if (nodeType === 'proteins') {
       // @ts-ignore
       params.proteins = nodes.map((node: Node) => node.drugstoneId && node.drugstoneId.startsWith('p') ? node.drugstoneId.slice(1) : undefined).filter(id => id != null);
@@ -109,7 +109,7 @@ export class NetexControllerService {
     return this.http.post<any>(`${environment.backend}adjacent_disorders/`, params);
   }
 
-  public adjacentDrugs(pdiDataset: InteractionDrugProteinDB, nodes: Node[]): Observable<any> {
+  public adjacentDrugs(pdiDataset: InteractionDrugProteinDB, licenced: boolean, nodes: Node[]): Observable<any> {
     /**
      * Returns the expression in the given tissue for given nodes and cancerNodes
      */
@@ -117,7 +117,8 @@ export class NetexControllerService {
     const genesBackendIds = nodes.map((node: Node) => node.drugstoneId && node.drugstoneId.startsWith('p') ? node.drugstoneId.slice(1) : undefined).filter(id => id != null);
     const params = {
       pdi_dataset: pdiDataset,
-      proteins: genesBackendIds
+      proteins: genesBackendIds,
+      licenced: licenced
     };
     return this.http.post<any>(`${environment.backend}adjacent_drugs/`, params);
   }
@@ -130,12 +131,12 @@ export class NetexControllerService {
     return this.http.post(`${environment.backend}graph_export/`, graph_data, {responseType: 'text'});
   }
 
-  public async fetchEdges(nodes: Node[], dataset: InteractionProteinProteinDB): Promise<any> {
+  public async fetchEdges(nodes: Node[], dataset: InteractionProteinProteinDB, licenced: boolean): Promise<any> {
     /**
      * Tries to map every node to a node object in out database
      * Returns list of mapped nodes if node was found, otherwise original node to not lose information
      */
-    const payload = {nodes: nodes, dataset: dataset};
+    const payload = {nodes: nodes, dataset: dataset, licenced: licenced};
     return this.http.post(`${environment.backend}fetch_edges/`, payload).toPromise();
   }
 }
