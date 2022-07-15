@@ -206,7 +206,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     let configObj = typeof this._config === 'string' ? this._config.length === 0 ? {} : JSON5.parse(this._config) : this._config;
     const groupsObj = typeof this._groups === 'string' ? this._groups.length === 0 ? {} : JSON5.parse(this._groups) : this._groups;
     configObj = merge(configObj, groupsObj);
-
     this.drugstoneConfig.config = merge(this.drugstoneConfig.config, configObj);
 
     // update Drugst.One according to the settings
