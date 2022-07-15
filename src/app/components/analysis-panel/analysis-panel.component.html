@@ -47,103 +47,116 @@
         [class.is-visible]="tab === 'meta'"
       >
         <div *ngIf="task">
-          <p
-            *ngIf="
-              task.info.algorithm !== 'quick' && task.info.algorithm !== 'super'
-            "
-          >
-            Algorithm:
-            <strong class="has-text-normal">{{
-              algorithmNames[task.info.algorithm]
-            }}</strong>
-          </p>
-          <div>
-            <table class="table is-narrow">
-              <tbody>
-                <tr
-                  *ngIf="result && result.geneInteractionDataset !== undefined"
-                >
-                  <td>Protein-Protein Interaction Dataset</td>
-                  <td>
-                    {{ result.geneInteractionDataset.name }} (Version
-                    {{ result.geneInteractionDataset.version }})
-                  </td>
-                </tr>
-                <tr
-                  *ngIf="result && result.drugInteractionDataset !== undefined"
-                >
-                  <td>Protein-Drug Interaction Dataset</td>
-                  <td>
-                    {{ result.drugInteractionDataset.name }} (Version
-                    {{ result.drugInteractionDataset.version }})
-                  </td>
-                </tr>
-                <tr *ngIf="task.info.parameters.resultSize !== undefined">
-                  <td>Result Size</td>
-                  <td>{{ task.info.parameters.resultSize }}</td>
-                </tr>
-                <tr *ngIf="task.info.parameters.k !== undefined">
-                  <td>K</td>
-                  <td>{{ task.info.parameters.k }}</td>
-                </tr>
-                <tr *ngIf="task.info.parameters.numTrees !== undefined">
-                  <td>Number of trees</td>
-                  <td>{{ task.info.parameters.numTrees }}</td>
-                </tr>
-                <tr *ngIf="task.info.parameters.tolerance !== undefined">
-                  <td>Tolerance</td>
-                  <td>{{ task.info.parameters.tolerance }}</td>
-                </tr>
-                <tr *ngIf="task.info.parameters.dampingFactor !== undefined">
-                  <td>Damping Factor</td>
-                  <td>{{ task.info.parameters.dampingFactor }}</td>
-                </tr>
-                <tr *ngIf="task.info.parameters.maxDeg !== undefined">
-                  <td>Maximum Degree</td>
-                  <td>{{ task.info.parameters.maxDeg }}</td>
-                </tr>
-                <tr *ngIf="task.info.parameters.hubPenalty !== undefined">
-                  <td>Hub Penality</td>
-                  <td>{{ task.info.parameters.hubPenalty }}</td>
-                </tr>
-                <tr
-                  *ngIf="
-                    task.info.parameters.includeIndirectDrugs !== undefined &&
-                    task.info.target === 'drug'
-                  "
-                >
-                  <td>Include indirect drugs</td>
-                  <td>
-                    <i
-                      *ngIf="task.info.parameters.includeIndirectDrugs"
-                      class="fa fa-check"
-                    ></i>
-                    <i
-                      *ngIf="!task.info.parameters.includeIndirectDrugs"
-                      class="fa fa-times"
-                    ></i>
-                  </td>
-                </tr>
-                <tr
-                  *ngIf="
-                    task.info.parameters.includeNonApprovedDrugs !==
-                      undefined && task.info.target === 'drug'
-                  "
-                >
-                  <td>Include non-approved drugs</td>
-                  <td>
-                    <i
-                      *ngIf="task.info.parameters.includeNonApprovedDrugs"
-                      class="fa fa-check"
-                    ></i>
-                    <i
-                      *ngIf="!task.info.parameters.includeNonApprovedDrugs"
-                      class="fa fa-times"
-                    ></i>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="columns m-1">
+            <div class="column content">
+              <h4
+                class="is-4 has-text-weight-bold"
+                *ngIf="
+                  task.info.algorithm !== 'quick' &&
+                  task.info.algorithm !== 'super'
+                "
+              >
+              <span class="icon">
+                <i class="fas fa-wrench" aria-hidden="true"></i>
+              </span>
+                Algorithm:
+                {{ algorithmNames[task.info.algorithm] }}
+              </h4>
+            </div>
+          </div>
+          <div class="columns m-1">
+            <div class="column">
+              <table class="table is-narrow">
+                <tbody>
+                  <tr
+                    *ngIf="
+                      result && result.geneInteractionDataset !== undefined
+                    "
+                  >
+                    <td>Protein-Protein Interaction Dataset</td>
+                    <td>
+                      {{ result.geneInteractionDataset.name }} (Version
+                      {{ result.geneInteractionDataset.version }})
+                    </td>
+                  </tr>
+                  <tr
+                    *ngIf="
+                      result && result.drugInteractionDataset !== undefined
+                    "
+                  >
+                    <td>Protein-Drug Interaction Dataset</td>
+                    <td>
+                      {{ result.drugInteractionDataset.name }} (Version
+                      {{ result.drugInteractionDataset.version }})
+                    </td>
+                  </tr>
+                  <tr *ngIf="task.info.parameters.resultSize !== undefined">
+                    <td>Result Size</td>
+                    <td>{{ task.info.parameters.resultSize }}</td>
+                  </tr>
+                  <tr *ngIf="task.info.parameters.k !== undefined">
+                    <td>K</td>
+                    <td>{{ task.info.parameters.k }}</td>
+                  </tr>
+                  <tr *ngIf="task.info.parameters.numTrees !== undefined">
+                    <td>Number of trees</td>
+                    <td>{{ task.info.parameters.numTrees }}</td>
+                  </tr>
+                  <tr *ngIf="task.info.parameters.tolerance !== undefined">
+                    <td>Tolerance</td>
+                    <td>{{ task.info.parameters.tolerance }}</td>
+                  </tr>
+                  <tr *ngIf="task.info.parameters.dampingFactor !== undefined">
+                    <td>Damping Factor</td>
+                    <td>{{ task.info.parameters.dampingFactor }}</td>
+                  </tr>
+                  <tr *ngIf="task.info.parameters.maxDeg !== undefined">
+                    <td>Maximum Degree</td>
+                    <td>{{ task.info.parameters.maxDeg }}</td>
+                  </tr>
+                  <tr *ngIf="task.info.parameters.hubPenalty !== undefined">
+                    <td>Hub Penality</td>
+                    <td>{{ task.info.parameters.hubPenalty }}</td>
+                  </tr>
+                  <tr
+                    *ngIf="
+                      task.info.parameters.includeIndirectDrugs !== undefined &&
+                      task.info.target === 'drug'
+                    "
+                  >
+                    <td>Include indirect drugs</td>
+                    <td>
+                      <i
+                        *ngIf="task.info.parameters.includeIndirectDrugs"
+                        class="fa fa-check"
+                      ></i>
+                      <i
+                        *ngIf="!task.info.parameters.includeIndirectDrugs"
+                        class="fa fa-times"
+                      ></i>
+                    </td>
+                  </tr>
+                  <tr
+                    *ngIf="
+                      task.info.parameters.includeNonApprovedDrugs !==
+                        undefined && task.info.target === 'drug'
+                    "
+                  >
+                    <td>Include non-approved drugs</td>
+                    <td>
+                      <i
+                        *ngIf="task.info.parameters.includeNonApprovedDrugs"
+                        class="fa fa-check"
+                      ></i>
+                      <i
+                        *ngIf="!task.info.parameters.includeNonApprovedDrugs"
+                        class="fa fa-times"
+                      ></i>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
           <div
             *ngIf="
@@ -241,7 +254,9 @@
                 <button
                   class="button is-rounded has-tooltip is-small"
                   pTooltip="Normalize the scores"
-                  [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+                  [tooltipStyleClass]="
+                    'drgstn drgstn-tooltip drgstn-tooltip-top'
+                  "
                   tooltipPosition="top"
                   [class.is-primary]="tableNormalize"
                   (click)="toggleNormalization(true)"
@@ -257,7 +272,9 @@
                 <button
                   class="button is-rounded has-tooltip is-small"
                   pTooltip="Disable normalization of the scores."
-                  [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+                  [tooltipStyleClass]="
+                    'drgstn drgstn-tooltip drgstn-tooltip-top'
+                  "
                   tooltipPosition="top"
                   [class.is-primary]="!tableNormalize"
                   (click)="toggleNormalization(false)"
@@ -311,15 +328,14 @@
         <div class="columns m-1">
           <div class="column">
             <app-prot-table
-            [tableHasScores]="tableHasScores"
-            [tableProteins]="tableProteins"
-            [tableProteinScoreTooltip]="tableDrugScoreTooltip"
-            [tableProteinSelection]="tableProteinSelection"
-            [tableSelectedProteins]="tableSelectedProteins"
-          ></app-prot-table>
+              [tableHasScores]="tableHasScores"
+              [tableProteins]="tableProteins"
+              [tableProteinScoreTooltip]="tableDrugScoreTooltip"
+              [tableProteinSelection]="tableProteinSelection"
+              [tableSelectedProteins]="tableSelectedProteins"
+            ></app-prot-table>
           </div>
         </div>
-
       </div>
     </div>
   </div>

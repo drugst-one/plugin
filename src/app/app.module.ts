@@ -34,7 +34,7 @@ import {
   faRulerVertical, faDna, faMicroscope, faBook, faPause, faTrash, faSpinner, faExclamationTriangle, faPlus,
   faExpand, faInfo, faRocket, faAngleDown, faSearch, faFastForward, faExternalLinkAlt, faTasks, faFilter,
   faMinus, faUpload, faAngleDoubleDown, faSync, faBroom, faAngleDoubleUp, faChild, faHeadSideMask, faBiohazard,
-  faBullseye, faSeedling, faSyncAlt, faCompress, faKey, faInfoCircle
+  faBullseye, faSeedling, faSyncAlt, faCompress, faKey, faInfoCircle, faWrench
 } from '@fortawesome/free-solid-svg-icons';
 import { TooltipModule } from 'primeng/tooltip';
 import { NetworkMenuComponent } from './components/network/network-menu/network-menu.component';
@@ -100,7 +100,7 @@ export class AppModule {
       faSpinner, faExclamationTriangle, faPlus, faExpand, faInfo, faRocket, faAngleDown, faSearch,
       faFastForward, faExternalLinkAlt, faTasks, faFilter, faMinus, faUpload, faAngleDoubleDown,
       faSync, faBroom, faAngleDoubleUp, faChild, faHeadSideMask, faBiohazard, faBullseye, faSeedling, 
-      faSyncAlt, faExpand, faCompress, faKey, faInfoCircle);
+      faSyncAlt, faExpand, faCompress, faKey, faInfoCircle,faWrench);
     const NetworkExpander = createCustomElement(ExplorerPageComponent, { injector });
     // Register the custom element with the browser.
     customElements.define('drugst-one', NetworkExpander);

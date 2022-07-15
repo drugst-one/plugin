@@ -57,7 +57,6 @@ export class ProteinNetwork {
     }
 
     for (const edge of this.edges) {
-      console.log(edge)
       edges.push(mapCustomEdge(edge, config));
     }
 
