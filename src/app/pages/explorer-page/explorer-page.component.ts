@@ -39,6 +39,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   private networkJSON = undefined;  //'{"nodes": [], "edges": []}'
   public _config: string;
+  public _groups: string;
 
   @Input()
   public onload: undefined | string;
@@ -52,6 +53,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       return;
     }
     this._config = config;
+    if (this.id !== null) {
+      this.activateConfig();
+    }
+  }
+
+  @Input()
+  public set groups(groups: string | undefined) {
+    if (groups == null) {
+      return;
+    }
+    this._groups = groups;
     if (this.id !== null) {
       this.activateConfig();
     }
@@ -191,7 +203,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public activateConfig() {
 
-    const configObj = typeof this._config === 'string' ? this._config.length === 0 ? {} : JSON5.parse(this._config) : this._config;
+    let configObj = typeof this._config === 'string' ? this._config.length === 0 ? {} : JSON5.parse(this._config) : this._config;
+    const groupsObj = typeof this._groups === 'string' ? this._groups.length === 0 ? {} : JSON5.parse(this._groups) : this._groups;
+    configObj = merge(configObj, groupsObj);
+
     this.drugstoneConfig.config = merge(this.drugstoneConfig.config, configObj);
 
     // update Drugst.One according to the settings
