@@ -89,7 +89,7 @@
     </p>
     <p *ngIf="wrapper.expression" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
       <b><span>Expression:</span></b>
-      <span class="is-capitalized"> {{ wrapper.expression }}</span>
+      <span class="is-capitalized"> {{ wrapper.expression | number }}</span>
       <span
         class="icon has-text-info"
         pTooltip="Tissue expression data is provided by the GTEx project. Unit is transcript per million."
