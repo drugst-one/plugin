@@ -227,11 +227,11 @@ export class AnalysisService {
     const params = {
       ppi_dataset: config.interactionProteinProtein,
       pdi_dataset: config.interactionDrugProtein,
+      licenced: config.licencedDatasets,
       config: config,
       input_network: network,
       seeds: isSuper ? network.nodes.filter(n => n.drugstoneId && n.drugstoneId[0] === 'p').map(n => n.drugstoneId) : this.getSelection().map((i) => i.id),
     };
-    console.log(params)
     const resp = await this.http.post<any>(`${environment.backend}task/`, {
       algorithm: isSuper ? 'super' : 'quick',
       target: 'drug',
@@ -310,7 +310,9 @@ export class AnalysisService {
 
   startWatching() {
     const watch = async () => {
-      if (this.tokens.length > 0) {
+      const finished = JSON.parse(localStorage.getItem(this.tokensFinishedCookieKey));
+      const unfinished = this.tokens.filter(t => finished.indexOf(t) === -1);
+      if (unfinished.length > 0) {
         const newtasks = await this.getTasks();
         if (newtasks.length === 0)
           return;

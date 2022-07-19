@@ -59,7 +59,7 @@ export class AddExpressedProteinsComponent implements OnChanges {
     if (!this.currentViewProteins || this.expressionMap === undefined) {
       return;
     }
-    this.proteins = this.currentViewProteins.filter(p => this.expressionMap[p.drugstoneId] >= threshold);
+    this.proteins = this.currentViewProteins.flatMap(p => p.drugstoneId).filter(p => this.expressionMap[p] >= threshold);
   }
 
   public close() {

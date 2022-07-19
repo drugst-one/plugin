@@ -1,7 +1,7 @@
-import { Component, Input, Output, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { NgSelectComponent } from '@ng-select/ng-select';
-import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
-import { Wrapper } from '../../interfaces';
+import {Component, Input, Output, EventEmitter, OnInit, ViewChild} from '@angular/core';
+import {NgSelectComponent} from '@ng-select/ng-select';
+import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
+import {Wrapper} from '../../interfaces';
 
 @Component({
   selector: 'app-query-tile-component',
@@ -12,7 +12,7 @@ export class QueryTileComponent implements OnInit {
 
   constructor(public networkHandler: NetworkHandlerService) {
 
-  } 
+  }
 
   ngOnInit(): void {
     this.networkHandler.getChange$.forEach(data => this.reset());
@@ -28,18 +28,13 @@ export class QueryTileComponent implements OnInit {
     this.ngSelectComponent.handleClearClick();
   }
 
-  private listStartsWith = (elments: any[], term) => {
-    for (const e of elments) {
-      if (e.toLowerCase().indexOf(term) > -1) {
-        return true;
-      }
-    }
-    return false;
+  private entryInList = (elements: any[], term) => {
+    return elements.filter(s => s.toLowerCase().indexOf(term) !== -1).length > 0;
   }
 
   querySearch = (term: string, item: Wrapper) => {
     term = term.toLowerCase();
-    const data = { ...item.data }
+    const data = {...item.data}
     // add possible missing attributes to not throw errors
     if (data.ensg === undefined) {
       data.ensg = []
@@ -51,20 +46,21 @@ export class QueryTileComponent implements OnInit {
       data.type = ''
     }
     if (data.symbol === undefined) {
-      data.symbol = ''
+      data.symbol = []
     }
     if (data.proteinName === undefined) {
-      data.proteinName = ''
+      data.proteinName = []
     }
     if (data.uniprotAc === undefined) {
-      data.uniprotAc = ''
+      data.uniprotAc = []
     }
     if (data.drugId === undefined) {
       data.drugId = ''
     }
-    return data.symbol.toLowerCase().indexOf(term) > -1 || data.uniprotAc.toLowerCase().indexOf(term) > -1 ||
-      data.label.toLowerCase().indexOf(term) > -1 || this.listStartsWith(data.ensg, term) || data.id.toLowerCase().indexOf(term) > -1
-      || data.proteinName.toLowerCase().indexOf(term) > -1 || data.type.toLowerCase().indexOf(term) > -1 ||
+    const query = term.toLowerCase();
+    return this.entryInList(data.symbol, query) || this.entryInList(data.uniprotAc, query) ||
+      data.label.toLowerCase().indexOf(term) > -1 || this.entryInList(data.ensg, query) || data.id.toLowerCase().indexOf(term) > -1
+      || this.entryInList(data.proteinName, query) || data.type.toLowerCase().indexOf(term) > -1 ||
       data.groupName.toLowerCase().indexOf(term) > -1 || data.drugId.toLowerCase().indexOf(term) > -1;
   }
 

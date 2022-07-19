@@ -2,16 +2,18 @@ import {AlgorithmType, QuickAlgorithmType} from './services/analysis/analysis.se
 
 export interface Node {
   label: string;
-  symbol: string;
+  symbol: Array<string>;
   id: string;
   type: string;
-  drugstoneId?: string;
-  drugId?:string;
-  uniprotAc?: string;
+  drugstoneId?: Array<string> | string;
+  drugstoneType: NodeType;
+  drugId?: string;
+  uniprotAc?: Array<string>;
   ensg?: Array<string>;
+  entrez?: Array<string>;
   group?: string;
   groupName?: string;
-  proteinName?: string;
+  proteinName?: Array<string>;
   color?: string | any; // mostly any, but vis js allows detail settings
   shape?: string;
   image?: string;
@@ -37,10 +39,12 @@ export interface NodeData {
   edges: any;
 }
 
+export type NodeType= 'protein' | 'drug' | 'disorder' | 'other'
+
 export type NetworkType = 'explorer' | 'analysis'
 
 export type LegendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget' |
-'drugTargetAndSeeds' | 'drugAndSeeds' | 'adjacentDisorders' | 'adjacentDrugsAndDisorders';
+  'drugTargetAndSeeds' | 'drugAndSeeds' | 'adjacentDisorders' | 'adjacentDrugsAndDisorders';
 
 /// drugstoneId to expressionlvl
 export type NodeAttributeMap = { string: number } | {};
@@ -181,16 +185,18 @@ export interface Wrapper {
     id: string;
     label: string;
     type?: string;
-    symbol?: string;
-    drugstoneId?: string;
+    symbol?: Array<string>;
+    drugstoneId?: Array<string> |string;
+    drugstoneType: NodeType,
     ensg?: Array<string>;
+    entrez?: Array<string>;
     shape?: string;
     color?: string;
     interactions?: any;
     group?: string;
     groupName?: string;
-    proteinName?: string;
-    uniprotAc?: string;
+    proteinName?: Array<string>;
+    uniprotAc?: Array<string>;
     expressionLevel?: number;
     gradient?: number;
     x?: number;

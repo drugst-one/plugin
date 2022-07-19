@@ -116,6 +116,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     };
     parameters.ppi_dataset = this.config.interactionProteinProtein;
     parameters.pdi_dataset = this.config.interactionDrugProtein;
+    parameters.licenced = this.config.licencedDatasets;
     parameters.target = this.target === 'drug' ? 'drug' : 'drug-target';
     // pass network data to reconstruct network in analysis result to connect non-proteins to results
     // drop interactions in nodes beforehand to no cause cyclic error, information is contained in edges

@@ -101,7 +101,6 @@ export class NetworkComponent implements OnInit {
     this.currentViewNodes.forEach((protein) => {
       this.queryItems.push(getWrapperFromNode(protein));
     });
-    console.log(this.queryItems)
   }
 
   public saveAddNodes(nodeList: Node[]) {
@@ -113,10 +112,26 @@ export class NetworkComponent implements OnInit {
   public updateAdjacentProteinDisorders(bool: boolean) {
     this.adjacentDisordersProtein = bool;
     if (this.adjacentDisordersProtein) {
-      this.netex.adjacentDisorders(this.nodeData.nodes, 'proteins', this.drugstoneConfig.config.associatedProteinDisorder).subscribe(response => {
+
+      this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'proteins', this.drugstoneConfig.config.associatedProteinDisorder, this.drugstoneConfig.config.licencedDatasets).subscribe(response => {
+        const proteinMap = this.getProteinMap()
+        const addedEdge = {}
         for (const interaction of response.edges) {
-          const edge = {from: interaction.protein, to: interaction.disorder};
-          this.adjacentProteinDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.config));
+          const edge = mapCustomEdge({from: interaction.protein, to: interaction.disorder}, this.drugstoneConfig.config)
+
+          if (edge.from[0] === 'p')
+            edge.from = proteinMap[edge.from]
+          if (edge.to[0] === 'p')
+            edge.to = proteinMap[edge.to]
+          if (addedEdge[edge.to] && addedEdge[edge.to].indexOf(edge.from) !== -1)
+            continue
+          if (addedEdge[edge.from] && addedEdge[edge.from].indexOf(edge.to) !== -1)
+            continue
+          if (!addedEdge[edge.to])
+            addedEdge[edge.to] = [edge.from]
+          else
+            addedEdge[edge.to].push(edge.from)
+          this.adjacentProteinDisorderEdgesList.push(edge);
         }
         for (const disorder of response.disorders) {
           disorder.group = 'defaultDisorder';
@@ -141,7 +156,7 @@ export class NetworkComponent implements OnInit {
   public updateAdjacentDrugDisorders(bool: boolean) {
     this.adjacentDisordersDrug = bool;
     if (this.adjacentDisordersDrug) {
-      this.netex.adjacentDisorders(this.nodeData.nodes, 'drugs', this.drugstoneConfig.config.indicationDrugDisorder).subscribe(response => {
+      this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'drugs', this.drugstoneConfig.config.indicationDrugDisorder, this.drugstoneConfig.config.licencedDatasets).subscribe(response => {
         for (const interaction of response.edges) {
           const edge = {from: interaction.drug, to: interaction.disorder};
           this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.config));
@@ -166,15 +181,32 @@ export class NetworkComponent implements OnInit {
     }
   }
 
+  public getProteinMap() {
+    const proteinMap = {}
+    this.nodeData.nodes.get().forEach(n => {
+      if (n.drugstoneType === 'protein') {
+        n.drugstoneId.forEach(id => {
+          proteinMap[id] = n.id;
+        });
+      }
+    });
+    return proteinMap
+  }
+
   public updateAdjacentDrugs(bool: boolean) {
     this.adjacentDrugs = bool;
     if (this.adjacentDrugs) {
-      // console.log(this.nodeData.nodes)
-      this.netex.adjacentDrugs(this.drugstoneConfig.config.interactionDrugProtein, this.nodeData.nodes).subscribe(response => {
-        const existingDrugIDs = this.nodeData.nodes.get().filter(n => n.drugstoneId).map(n => n.drugstoneId);
+      const proteinMap = this.getProteinMap()
+      this.netex.adjacentDrugs(this.drugstoneConfig.config.interactionDrugProtein, this.drugstoneConfig.config.licencedDatasets, this.nodeData.nodes.get()).subscribe(response => {
+        const existingDrugIDs = this.nodeData.nodes.get().filter(n => n.drugstoneId && n.drugstoneType === 'drug').map(n => n.drugstoneId);
         for (const interaction of response.pdis) {
-          const edge = {from: interaction.protein, to: interaction.drug};
-          this.adjacentDrugEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.config));
+          let edge = mapCustomEdge({from: interaction.protein, to: interaction.drug}, this.drugstoneConfig.config)
+          if (edge.from[0] === 'p')
+            edge.from = proteinMap[edge.from]
+          if (edge.to[0] === 'p')
+            edge.to = proteinMap[edge.to]
+
+          this.adjacentDrugEdgesList.push(edge);
         }
         for (const drug of response.drugs) {
           drug.group = 'foundDrug';
@@ -309,53 +341,68 @@ export class NetworkComponent implements OnInit {
       // filter out non-proteins, e.g. drugs
       const proteinNodes = [];
       this.nodeData.nodes.forEach(element => {
-        if (element.id.startsWith('p') && element.drugstoneId !== undefined) {
+        if (element.drugstoneType === 'protein') {
           proteinNodes.push(element);
         }
       });
       this.netex.tissueExpressionGenes(this.selectedTissue, proteinNodes).subscribe((response) => {
-        this.expressionMap = response;
-        const updatedNodes = [];
-        // mapping from netex IDs to network IDs, TODO check if this step is necessary
-        const networkIdMappping = {}
-        this.nodeData.nodes.forEach(element => {
-          networkIdMappping[element.drugstoneId] = element.id
-        });
-        const maxExpr = Math.max(...Object.values(this.expressionMap));
-        for (const [drugstoneId, expressionlvl] of Object.entries(this.expressionMap)) {
-          const networkId = networkIdMappping[drugstoneId]
-          const node = this.nodeData.nodes.get(networkId);
-          if (node === null) {
-            continue;
+          this.expressionMap = response;
+          const updatedNodes = [];
+          // mapping from netex IDs to network IDs, TODO check if this step is necessary
+          const networkIdMappping = {}
+          this.nodeData.nodes.get().forEach(element => {
+            if (element.drugstoneType === 'protein') {
+              element.drugstoneId.forEach(id => {
+                networkIdMappping[id] = element.id;
+              });
+            }
+          });
+          const maxExpr = Math.max(...Object.values(this.expressionMap));
+          const exprMap = {}
+          for (const [drugstoneId, expressionlvl] of Object.entries(this.expressionMap)) {
+            const networkId = networkIdMappping[drugstoneId]
+            if (!exprMap[networkId])
+              exprMap[networkId] = [expressionlvl]
+            else
+              exprMap[networkId].push(expressionlvl)
           }
-          const wrapper = getWrapperFromNode(node)
-          const gradient = expressionlvl !== null ? (Math.pow(expressionlvl / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
-          const pos = this.networkInternal.getPositions([networkId]);
-          node.x = pos[networkId].x;
-          node.y = pos[networkId].y;
-          Object.assign(node,
-            NetworkSettings.getNodeStyle(
-              node,
-              this.drugstoneConfig.config,
-              node.isSeed,
-              this.analysis.inSelection(wrapper),
-              gradient));
-
-          // custom ctx renderer for pie chart
-          node.shape = 'custom';
-          node.ctxRenderer = pieChartContextRenderer;
-          updatedNodes.push(node);
+          this.expressionMap = {}
+          Object.keys(exprMap).forEach(networkId => {
+            const expressionlvl = exprMap[networkId] ? exprMap[networkId].reduce((a, b) => a + b) / exprMap[networkId].length : null;
+            this.expressionMap[networkId] = expressionlvl
+            const node = this.nodeData.nodes.get(networkId);
+            if (node === null) {
+              return;
+            }
+            const wrapper = getWrapperFromNode(node);
+            const gradient = expressionlvl !== null ? (Math.pow(expressionlvl / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
+            const pos = this.networkInternal.getPositions([networkId]);
+            node.x = pos[networkId].x;
+            node.y = pos[networkId].y;
+            Object.assign(node,
+              NetworkSettings.getNodeStyle(
+                node,
+                this.drugstoneConfig.config,
+                node.isSeed,
+                this.analysis.inSelection(wrapper),
+                gradient));
+            // custom ctx renderer for pie chart
+            node.shape = 'custom';
+            node.ctxRenderer = pieChartContextRenderer;
+            updatedNodes.push(node);
+          })
+          this.nodeData.nodes.update(updatedNodes);
         }
-        this.nodeData.nodes.update(updatedNodes);
-      })
+      )
     }
+
     this.currentViewSelectedTissue = this.selectedTissue;
   }
 
   public hasDrugsLoaded(): boolean {
     if (this.nodeData == null || this.nodeData.nodes == null)
       return false;
-    return this.nodeData.nodes.get().filter((node: Node) => node.drugId && node.drugstoneId.startsWith('dr')).length > 0;
+    return this.nodeData.nodes.get().filter((node: Node) => node.drugId).map(node => node.drugstoneId).filter(id => id.startsWith('dr')).length > 0;
   }
 
   public setLegendContext() {
