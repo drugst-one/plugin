@@ -285,6 +285,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
 
+    if (!this.drugstoneConfig.config.showSidebar) {
+      // skip network options for selecting nodes when there are no options to use it
+      return
+    }
+
     this.networkHandler.activeNetwork.networkInternal.on('doubleClick', (properties) => {
       const nodeIds: Array<string> = properties.nodes;
       if (nodeIds != null && nodeIds.length > 0) {
