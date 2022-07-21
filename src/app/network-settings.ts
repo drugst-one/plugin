@@ -56,7 +56,8 @@ export class NetworkSettings {
     length: 250
   };
   private static mainPhysics = {
-    enabled: false
+    enabled: true,
+    stabilization: true
   };
 
   static getOptions(network: 'main' | 'analysis' | 'analysis-big', physicsOn) {
