@@ -14,13 +14,6 @@ export class NetexControllerService {
   constructor(private http: HttpClient) {
   }
 
-  // public async getTask(token): Promise<any> {
-  //   /**
-  //    * returns promise of task status
-  //    */
-  //   return this.http.get(`${environment.backend}task/?tokens=${token}`).toPromise();
-  // }
-
   public async getTasks(tokens): Promise<any> {
     /**
      * returns promise of tasks status
@@ -34,39 +27,6 @@ export class NetexControllerService {
      */
     return this.http.get<any>(`${environment.backend}task_result/?token=${token}`).toPromise();
   }
-
-  // public async getTaskResultDrug(token): Promise<any> {
-  //   /**
-  //    * returns promise of drug view of task result of COMPLETED task
-  //    */
-  //   return this.http.get<any>(`${environment.backend}task_result/?token=${token}&view=drugs`).toPromise();
-  // }
-
-  // public async getTaskResultGene(token): Promise<any> {
-  //   /**
-  //    * returns promise of gene view of task result of COMPLETED task
-  //    */
-  //   return this.http.get<any>(`${environment.backend}task_result/?token=${token}&view=genes`).toPromise();
-  // }
-
-  // public async getTaskResultCancerNode(token): Promise<any> {
-  //   /**
-  //    * returns promise of cancer driver gene view of task result of COMPLETED task
-  //    */
-  //   return this.http.get<any>(`${environment.backend}task_result/?token=${token}&view=cancer_driver_genes`).toPromise();
-  // }
-
-  // public async postTask(algorithm: QuickAlgorithmType | AlgorithmType, target, parameters,) {
-  //   /**
-  //    * sends a task to task service
-  //    */
-  //
-  //   return this.http.post<any>(`${environment.backend}task/`, {
-  //     algorithm,
-  //     target,
-  //     parameters,
-  //   }).toPromise();
-  // }
 
   public async mapNodes(nodes, identifier): Promise<any> {
     /**

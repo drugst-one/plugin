@@ -67,6 +67,8 @@ export class AnalysisService {
 
   private launchingQuick = false;
 
+  private initialTasksLoaded = false
+
   private tissues: Tissue[] = [];
 
   constructor(private http: HttpClient, public netex: NetexControllerService) {
@@ -312,7 +314,8 @@ export class AnalysisService {
     const watch = async () => {
       const finished = JSON.parse(localStorage.getItem(this.tokensFinishedCookieKey));
       const unfinished = this.tokens.filter(t => finished.indexOf(t) === -1);
-      if (unfinished.length > 0) {
+      if (unfinished.length > 0 || ! this.initialTasksLoaded) {
+        this.initialTasksLoaded = true;
         const newtasks = await this.getTasks();
         if (newtasks.length === 0)
           return;

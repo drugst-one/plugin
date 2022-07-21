@@ -256,16 +256,23 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     let {nodes, edges} = this.proteinData.mapDataToNetworkInput(this.drugstoneConfig.config);
     if (this.drugstoneConfig.config.autofillEdges && nodes.length) {
       let node_map = {};
-      nodes.filter(n => n[this.drugstoneConfig.config.identifier]).forEach(node => {
-        if (typeof node.drugstoneId === 'string')
-          node_map[node.drugstoneId] = node.id;
-        else
+      nodes.filter(n => n.drugstoneType === 'protein').forEach(node => {
+        if (typeof node.drugstoneId === 'string') {
+          if (node_map[node.drugstoneId])
+            node_map[node.drugstoneId].push(node.id);
+          else
+            node_map[node.drugstoneId] = [node.id];
+        } else {
           node.drugstoneId.forEach(n => {
-            node_map[n] = node.id;
+            if (node_map[n])
+              node_map[n].push(node.id);
+            else
+              node_map[n] = [node.id];
           })
+        }
       })
       const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.config.interactionProteinProtein, this.drugstoneConfig.config.licencedDatasets);
-      edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.config, node_map)));
+      edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.config, node_map)).flatMap(e => e));
     }
 
     const edge_map = {}
@@ -273,9 +280,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     edges = edges.filter(edge => {
       if (edge_map[edge.to] && edge_map[edge.to].indexOf(edge.from) !== -1)
         return false
-      if (edge_map[edge.from] && edge_map[edge.from].indexOf(edge.to) !==-1)
+      if (edge_map[edge.from] && edge_map[edge.from].indexOf(edge.to) !== -1)
         return false
-      if(!edge_map[edge.from])
+      if (!edge_map[edge.from])
         edge_map[edge.from] = [edge.to]
       else
         edge_map[edge.from].push(edge.to)

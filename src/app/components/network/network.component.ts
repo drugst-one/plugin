@@ -118,20 +118,20 @@ export class NetworkComponent implements OnInit {
         const addedEdge = {}
         for (const interaction of response.edges) {
           const edge = mapCustomEdge({from: interaction.protein, to: interaction.disorder}, this.drugstoneConfig.config)
-
-          if (edge.from[0] === 'p')
-            edge.from = proteinMap[edge.from]
-          if (edge.to[0] === 'p')
-            edge.to = proteinMap[edge.to]
-          if (addedEdge[edge.to] && addedEdge[edge.to].indexOf(edge.from) !== -1)
-            continue
-          if (addedEdge[edge.from] && addedEdge[edge.from].indexOf(edge.to) !== -1)
-            continue
-          if (!addedEdge[edge.to])
-            addedEdge[edge.to] = [edge.from]
-          else
-            addedEdge[edge.to].push(edge.from)
-          this.adjacentProteinDisorderEdgesList.push(edge);
+          if (proteinMap[edge.from]) {
+            proteinMap[edge.from].forEach(from => {
+              if (addedEdge[from] && addedEdge[from].indexOf(edge.to) !== -1)
+                return
+              const e = JSON.parse(JSON.stringify(edge))
+              e.from = from
+              e.to = edge.to
+              this.adjacentProteinDisorderEdgesList.push(e);
+              if (!addedEdge[from])
+                addedEdge[from] = [edge.to]
+              else
+                addedEdge[from].push(edge.to)
+            })
+          }
         }
         for (const disorder of response.disorders) {
           disorder.group = 'defaultDisorder';
@@ -186,7 +186,19 @@ export class NetworkComponent implements OnInit {
     this.nodeData.nodes.get().forEach(n => {
       if (n.drugstoneType === 'protein') {
         n.drugstoneId.forEach(id => {
-          proteinMap[id] = n.id;
+          if (typeof id === 'string') {
+            if (proteinMap[id])
+              proteinMap[id].push(n.id)
+            else
+              proteinMap[id] = [n.id];
+          } else {
+            n.id.forEach(single_id => {
+              if (proteinMap[single_id])
+                proteinMap[single_id].push(n.id)
+              else
+                proteinMap[single_id] = [n.id];
+            })
+          }
         });
       }
     });
@@ -196,17 +208,27 @@ export class NetworkComponent implements OnInit {
   public updateAdjacentDrugs(bool: boolean) {
     this.adjacentDrugs = bool;
     if (this.adjacentDrugs) {
+      const addedEdge = {}
       const proteinMap = this.getProteinMap()
       this.netex.adjacentDrugs(this.drugstoneConfig.config.interactionDrugProtein, this.drugstoneConfig.config.licencedDatasets, this.nodeData.nodes.get()).subscribe(response => {
         const existingDrugIDs = this.nodeData.nodes.get().filter(n => n.drugstoneId && n.drugstoneType === 'drug').map(n => n.drugstoneId);
         for (const interaction of response.pdis) {
-          let edge = mapCustomEdge({from: interaction.protein, to: interaction.drug}, this.drugstoneConfig.config)
-          if (edge.from[0] === 'p')
-            edge.from = proteinMap[edge.from]
-          if (edge.to[0] === 'p')
-            edge.to = proteinMap[edge.to]
+          const edge = mapCustomEdge({from: interaction.protein, to: interaction.drug}, this.drugstoneConfig.config)
 
-          this.adjacentDrugEdgesList.push(edge);
+          if (proteinMap[edge.from]) {
+            proteinMap[edge.from].forEach(from => {
+              if (addedEdge[from] && addedEdge[from].indexOf(edge.to) !== -1)
+                return
+              const e = JSON.parse(JSON.stringify(edge))
+              e.from = from
+              e.to = edge.to
+              this.adjacentDrugEdgesList.push(e);
+              if (!addedEdge[from])
+                addedEdge[from] = [edge.to]
+              else
+                addedEdge[from].push(edge.to)
+            })
+          }
         }
         for (const drug of response.drugs) {
           drug.group = 'foundDrug';
@@ -349,22 +371,26 @@ export class NetworkComponent implements OnInit {
           this.expressionMap = response;
           const updatedNodes = [];
           // mapping from netex IDs to network IDs, TODO check if this step is necessary
-          const networkIdMappping = {}
+          const networkIdMapping = {}
           this.nodeData.nodes.get().forEach(element => {
             if (element.drugstoneType === 'protein') {
               element.drugstoneId.forEach(id => {
-                networkIdMappping[id] = element.id;
+                if (networkIdMapping[id])
+                  networkIdMapping[id].push(element.id);
+                else
+                  networkIdMapping[id] = [element.id]
               });
             }
           });
           const maxExpr = Math.max(...Object.values(this.expressionMap));
           const exprMap = {}
           for (const [drugstoneId, expressionlvl] of Object.entries(this.expressionMap)) {
-            const networkId = networkIdMappping[drugstoneId]
-            if (!exprMap[networkId])
-              exprMap[networkId] = [expressionlvl]
-            else
-              exprMap[networkId].push(expressionlvl)
+            networkIdMapping[drugstoneId].forEach(networkId => {
+              if (!exprMap[networkId])
+                exprMap[networkId] = [expressionlvl]
+              else
+                exprMap[networkId].push(expressionlvl)
+            })
           }
           this.expressionMap = {}
           Object.keys(exprMap).forEach(networkId => {

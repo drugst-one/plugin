@@ -105,10 +105,8 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   public async startTask() {
     // all nodes in selection have drugstoneId, hence exist in the backend
-    const seeds = this.analysis.getSelection().map((item) => item.data.drugstoneId)
-    const seedsFiltered = seeds.filter(function (el) {
-      return el != null;
-    });
+    const seeds = this.analysis.getSelection().map((item) => item.data.drugstoneId).flatMap(l => l)
+    const seedsFiltered = seeds.filter(el => el != null);
     const parameters: any = {
       seeds: seedsFiltered,
       config: this.config,

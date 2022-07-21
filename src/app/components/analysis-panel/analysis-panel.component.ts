@@ -31,10 +31,10 @@ import domtoimage from 'dom-to-image';
 import {NetworkSettings} from '../../network-settings';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 import {defaultConfig, IConfig} from 'src/app/config';
-import { mapCustomEdge, mapCustomNode } from 'src/app/main-network';
-import { downLoadFile, pieChartContextRenderer, removeDuplicateObjectsFromList } from 'src/app/utils';
-import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
-import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
+import {mapCustomEdge, mapCustomNode} from 'src/app/main-network';
+import {downLoadFile, pieChartContextRenderer, removeDuplicateObjectsFromList} from 'src/app/utils';
+import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
+import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
 
 
 declare var vis: any;
@@ -62,6 +62,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
   @Input() token: string | null = null;
+
   @Input()
   public set config(config: IConfig | undefined) {
     if (typeof config === 'undefined') {
@@ -71,6 +72,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       this.myConfig[key] = config[key];
     }
   }
+
   @Output() tokenChange = new EventEmitter<string | null>();
   @Output() showDetailsChange = new EventEmitter<Wrapper>();
   @Output() setInputNetwork = new EventEmitter<any>();
@@ -175,6 +177,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
       if (this.task && this.task.info.done) {
         this.result = await this.netex.getTaskResult(this.token);
+        console.log(this.result)
         const nodeAttributes = this.result.nodeAttributes || {};
 
         this.networkHandler.activeNetwork.seedMap = nodeAttributes.isSeed || {};
@@ -187,6 +190,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
         // Create
         const {nodes, edges} = this.createNetwork(this.result);
+        console.log(nodes)
+        console.log(edges)
         this.setInputNetwork.emit({nodes: nodes, edges: edges});
         this.nodeData.nodes = new vis.DataSet(nodes);
         this.nodeData.edges = new vis.DataSet(edges);
@@ -197,12 +202,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
         this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
 
-        this.tableDrugs = nodes.filter( e => e.drugstoneId && e.drugstoneId.drugstoneType === 'drug');
+        this.tableDrugs = nodes.filter(e => e.drugstoneId && e.drugstoneId.drugstoneType === 'drug');
         this.tableDrugs.forEach((r) => {
           r.rawScore = r.score;
         });
 
-        this.tableProteins = nodes.filter( e => e.drugstoneId && e.drugstoneType === 'protein');
+        this.tableProteins = nodes.filter(e => e.drugstoneId && e.drugstoneType === 'protein');
         this.tableSelectedProteins = [];
         this.tableProteins.forEach((r) => {
           r.rawScore = r.score;
@@ -280,7 +285,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
                 isSeed,
                 selected,
                 gradient
-                )
+              )
               updatedNodes.push(nodeStyled);
             }
             this.nodeData.nodes.update(updatedNodes);
@@ -312,7 +317,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
                 isSeed,
                 selected,
                 gradient
-                )
+              )
               updatedNodes.push(nodeStyled);
             });
             this.nodeData.nodes.update(updatedNodes);
@@ -414,7 +419,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     // add drugGroup and foundNodesGroup for added nodes
     // these groups can be overwritten by the user
     const nodes = [];
-    const edges = [];
 
     const attributes = result.nodeAttributes || {};
 
@@ -422,21 +426,34 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.effects = [];
     const network = result.network;
 
-    const nodeTypes = attributes.nodeTypes || {};
-    const isSeed = attributes.isSeed || {};
-    const scores = attributes.scores || {};
+    // const nodeTypes = attributes.nodeTypes || {};
+    // const isSeed = attributes.isSeed || {};
+    // const scores = attributes.scores || {};
     const details = attributes.details || {};
+    const nodeIdMap = {}
+    // const reverseNodeIdMap = {}
+    // @ts-ignore
+    Object.entries(details).filter(e => e[1].drugstoneType === 'protein').forEach(e => {
+      // let id =
+      // @ts-ignore
+      e[1].drugstoneId.forEach(id=>{
+         nodeIdMap[id] = e[1][identifier][0]
+      })
 
-    for (const node of network.nodes) {
-      // convert id to netex Id if exists
-      const nodeDetails = details[node];
-
-      nodeDetails.id = nodeDetails.id ? nodeDetails.id :  (typeof nodeDetails.drugstoneId === 'string' ? nodeDetails.drugstoneId : nodeDetails.drugstoneId[0]);
+      // if (!nodeIdMap[id])
+      //   nodeIdMap[id] = [e[0]]
+      // else
+      //   nodeIdMap[id].push(e[0])
+    })
+    for (const nodeId of Object.keys(details)) {
+      const nodeDetails = details[nodeId]
+      nodeDetails.id = nodeDetails.id ? nodeDetails.id : (typeof nodeDetails.drugstoneId === 'string' ? nodeDetails.drugstoneId : nodeDetails.drugstoneId[0]);
       if (nodeDetails.drugstoneId && nodeDetails.drugstoneType === 'protein') {
         // node is protein from database, has been mapped on init to backend protein from backend
         // or was found during analysis
         nodeDetails.group = nodeDetails.group ? nodeDetails.group : 'foundNode';
         nodeDetails.label = nodeDetails.label ? nodeDetails.label : nodeDetails[identifier];
+        nodeDetails.id = nodeDetails[identifier][0] ? nodeDetails[identifier][0] : nodeDetails.id;
         this.proteins.push(nodeDetails);
       } else if (nodeDetails.drugstoneId && nodeDetails.drugstoneType === 'drug') {
         // node is drug, was found during analysis
@@ -451,9 +468,16 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       // option to use scores[node] as gradient, but sccores are very small
       nodes.push(NetworkSettings.getNodeStyle(nodeDetails as Node, config, false, false, 1))
     }
+
+    const edges = [];
+
     for (const edge of network.edges) {
-      edges.push(mapCustomEdge(edge, this.myConfig));
+      const e = mapCustomEdge(edge, this.myConfig)
+      e.from = e.from[0] === 'p' ? nodeIdMap[e.from] : e.from
+      e.to = e.to[0] === 'p' ? nodeIdMap[e.to] : e.to
+      edges.push(e);
     }
+    console.log(edges)
     return {
       nodes,
       edges,

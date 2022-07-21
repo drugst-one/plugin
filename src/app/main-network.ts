@@ -126,9 +126,16 @@ export function mapCustomEdge(customEdge: NodeInteraction, config: IConfig): any
  * @returns
  */
 export function mapNetexEdge(customEdge: NetexInteraction, config: IConfig, node_map: object): any {
-  const edge = JSON.parse(JSON.stringify(config.edgeGroups.default));
-  edge['from'] = node_map[customEdge['proteinA']];
-  edge['to'] = node_map[customEdge['proteinB']];
-  edge['dataset'] = customEdge['dataset'];
-  return edge;
+  const edges = []
+  node_map[customEdge['proteinA']].forEach(from => {
+    node_map[customEdge['proteinB']].forEach(to => {
+      const edge = JSON.parse(JSON.stringify(config.edgeGroups.default));
+      edge['from'] = from;
+      edge['to'] = to;
+      edge['dataset'] = customEdge['dataset'];
+      edges.push(edge)
+    })
+  })
+
+  return edges;
 }
