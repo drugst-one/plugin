@@ -34,7 +34,7 @@ import {
   faRulerVertical, faDna, faMicroscope, faBook, faPause, faTrash, faSpinner, faExclamationTriangle, faPlus,
   faExpand, faInfo, faRocket, faAngleDown, faSearch, faFastForward, faExternalLinkAlt, faTasks, faFilter,
   faMinus, faUpload, faAngleDoubleDown, faSync, faBroom, faAngleDoubleUp, faChild, faHeadSideMask, faBiohazard,
-  faBullseye, faSeedling, faSyncAlt, faCompress, faKey, faInfoCircle, faWrench
+  faBullseye, faSeedling, faSyncAlt, faCompress, faKey, faInfoCircle, faWrench, faProjectDiagram
 } from '@fortawesome/free-solid-svg-icons';
 import { TooltipModule } from 'primeng/tooltip';
 import { NetworkMenuComponent } from './components/network/network-menu/network-menu.component';
@@ -47,6 +47,8 @@ import { NetworkControlComponent } from './components/network-control/network-co
 import { CenterViewComponent } from './components/network/network-menu/center-view/center-view.component';
 import { CenterViewInverseComponent } from './components/network/network-menu-left/center-view-inverse/center-view-inverse.component';
 import { LicenseAgreementComponent } from './components/license-agreement/license-agreement.component';
+import { QuickDrugTargetComponent } from './components/quick-drug-target/quick-drug-target.component';
+import { QuickDrugComponent } from './components/quick-drug/quick-drug.component';
 
 
 @NgModule({
@@ -75,6 +77,8 @@ import { LicenseAgreementComponent } from './components/license-agreement/licens
     CenterViewComponent,
     CenterViewInverseComponent,
     LicenseAgreementComponent,
+    QuickDrugTargetComponent,
+    QuickDrugComponent,
   ],
   imports: [
     BrowserModule,
@@ -100,7 +104,7 @@ export class AppModule {
       faSpinner, faExclamationTriangle, faPlus, faExpand, faInfo, faRocket, faAngleDown, faSearch,
       faFastForward, faExternalLinkAlt, faTasks, faFilter, faMinus, faUpload, faAngleDoubleDown,
       faSync, faBroom, faAngleDoubleUp, faChild, faHeadSideMask, faBiohazard, faBullseye, faSeedling, 
-      faSyncAlt, faExpand, faCompress, faKey, faInfoCircle,faWrench);
+      faSyncAlt, faExpand, faCompress, faKey, faInfoCircle, faWrench, faProjectDiagram);
     const NetworkExpander = createCustomElement(ExplorerPageComponent, { injector });
     // Register the custom element with the browser.
     customElements.define('drugst-one', NetworkExpander);

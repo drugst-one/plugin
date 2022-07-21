@@ -1,10 +1,12 @@
-import {Wrapper, Task, getWrapperFromNode, Node, Dataset, Tissue, Algorithm} from '../../interfaces';
+import {Wrapper, Task, getWrapperFromNode, Node, Dataset, Tissue, Algorithm, QuickAlgorithmType} from '../../interfaces';
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {toast} from 'bulma-toast';
 import {Injectable} from '@angular/core';
 import {NetexControllerService} from '../netex-controller/netex-controller.service';
+import { DrugstoneConfigService } from '../drugstone-config/drugstone-config.service';
+import { NetworkHandlerService } from '../network-handler/network-handler.service';
 
 export const algorithmNames = {
   trustrank: 'TrustRank',
@@ -16,6 +18,8 @@ export const algorithmNames = {
   betweenness: 'Betweenness Centrality',
   quick: 'Simple',
   super: 'Quick-Start',
+  connect: 'Connect All',
+  connectSelected: 'Connect Selected',
 };
 
 export const TRUSTRANK: Algorithm = {slug: 'trustrank', name: algorithmNames.trustrank};
@@ -35,6 +39,8 @@ export class AnalysisService {
 
   private selection = 'main';
 
+  public inputNetwork = {};
+
   private selectedItems = new Map<string, Wrapper>();
   private selectListSubject = new Subject<{ items: Wrapper[], selected: boolean | null }>();
 
@@ -53,7 +59,11 @@ export class AnalysisService {
 
   private tissues: Tissue[] = [];
 
-  constructor(private http: HttpClient, public netex: NetexControllerService) {
+  constructor(
+    private http: HttpClient, 
+    public netex: NetexControllerService,
+    public drugstoneConfig: DrugstoneConfigService,
+    public networkHandler: NetworkHandlerService) {
     const tokens = localStorage.getItem(this.tokensCookieKey);
     const finishedTokens = localStorage.getItem(this.tokensFinishedCookieKey);
 
@@ -192,7 +202,7 @@ export class AnalysisService {
     });
   }
 
-  async startQuickAnalysis(isSuper: boolean, dataset: Dataset) {
+  async startQuickAnalysis(isSuper: boolean, algorithm: QuickAlgorithmType) {
     if (!this.canLaunchTask()) {
       toast({
         message: `You can only run ${MAX_TASKS} tasks at once. Please wait for one of them to finish or delete it from the task list.`,
@@ -206,36 +216,48 @@ export class AnalysisService {
       return;
     }
 
-    if (dataset == null) {
-      toast({
-        message: `Passed dataset is null. This feature might be still under development.`,
-        duration: 5000,
-        dismissible: true,
-        pauseOnHover: true,
-        type: 'is-danger',
-        position: 'top-center',
-        animate: {in: 'fadeIn', out: 'fadeOut'}
-      });
-      return;
-    }
-
     this.launchingQuick = true;
 
+    const seeds = [];
+    if (isSuper) {
+      // get ids for selected nodes
+      this.getSelection().forEach((item: Wrapper) => {
+        if (item.data.drugstoneId != null) {
+          seeds.push(item.data.drugstoneId);
+        }
+      })
+    } else {
+      // get all node ids
+      this.networkHandler.activeNetwork.currentViewProteins.forEach((item: Node) => {
+        if (item.drugstoneId != null) {
+          seeds.push(item.drugstoneId);
+        }
+      })
+    }
+    const target = ['connect', 'connectSelected'].includes(algorithm) ? 'drug-target' : 'drug'
+    console.log(target)
+    const parameters: any = {
+      seeds: seeds,
+      config: this.drugstoneConfig.config,
+      input_network: this.inputNetwork,
+      ppi_dataset: this.drugstoneConfig.config.interactionProteinProtein,
+      pdi_dataset: this.drugstoneConfig.config.interactionDrugProtein,
+      target: target,
+      num_trees: 5,
+      tolerance: 10,
+    };
+
     const resp = await this.http.post<any>(`${environment.backend}task/`, {
-      algorithm: isSuper ? 'super' : 'quick',
-      target: 'drug',
-      parameters: {
-        strain_or_drugs: dataset.id,
-        bait_datasets: dataset.data,
-        seeds: isSuper ? [] : this.getSelection().map((i) => i.id),
-      },
+      algorithm: algorithm,
+      target: target,
+      parameters: parameters,
     }).toPromise();
     this.tokens.push(resp.token);
     localStorage.setItem(this.tokensCookieKey, JSON.stringify(this.tokens));
     this.startWatching();
 
     toast({
-      message: 'Quick analysis started. This may take a while.' +
+      message: 'Quick analysis started.' +
         ' Once the computation finished you can view the results in the task list to the right.',
       duration: 10000,
       dismissible: true,

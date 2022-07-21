@@ -210,4 +210,8 @@
       }
     }
   }
+
+  button.is-secondary, button.is-secondary:hover {
+    background-color: var(--drgstn-secondary) !important;
+  }
 }

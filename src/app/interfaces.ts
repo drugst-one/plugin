@@ -240,7 +240,7 @@ export type AlgorithmType =
   | 'degree'
   | 'proximity'
   | 'betweenness';
-export type QuickAlgorithmType = 'quick' | 'super';
+export type QuickAlgorithmType = 'quick' | 'super' | 'connect' | 'connectSelected';
 
 export interface Algorithm {
   slug: AlgorithmType | QuickAlgorithmType;

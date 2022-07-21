@@ -20,8 +20,6 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public show = false;
   @Input()
   public target: 'drug' | 'drug-target';
-  @Input()
-  public inputNetwork: { nodes: any, edges: any };
   @Output()
   public showChange = new EventEmitter<boolean>();
   @Output()
@@ -116,7 +114,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     const parameters: any = {
       seeds: seedsFiltered,
       config: this.drugstoneConfig.config,
-      input_network: this.inputNetwork
+      input_network: this.analysis.inputNetwork
     };
 
     parameters.ppi_dataset = this.drugstoneConfig.config.interactionProteinProtein;
@@ -124,7 +122,8 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     parameters.target = this.target === 'drug' ? 'drug' : 'drug-target';
     // pass network data to reconstruct network in analysis result to connect non-proteins to results
     // drop interactions in nodes beforehand to no cause cyclic error, information is contained in edges
-    this.inputNetwork.nodes.forEach(node => {
+    // @ts-ignore
+    this.analysis.inputNetwork.nodes.forEach(node => {
       delete node.interactions
     });
 
