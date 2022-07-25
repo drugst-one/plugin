@@ -190,8 +190,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
         // Create
         const {nodes, edges} = this.createNetwork(this.result);
-        console.log(nodes)
-        console.log(edges)
         this.setInputNetwork.emit({nodes: nodes, edges: edges});
         this.nodeData.nodes = new vis.DataSet(nodes);
         this.nodeData.edges = new vis.DataSet(edges);
@@ -447,11 +445,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     })
     for (const nodeId of Object.keys(details)) {
       const nodeDetails = details[nodeId]
+      console.log(nodeId)
       nodeDetails.id = nodeDetails.id ? nodeDetails.id : (typeof nodeDetails.drugstoneId === 'string' ? nodeDetails.drugstoneId : nodeDetails.drugstoneId[0]);
       if (nodeDetails.drugstoneId && nodeDetails.drugstoneType === 'protein') {
         // node is protein from database, has been mapped on init to backend protein from backend
         // or was found during analysis
-        nodeDetails.group = nodeDetails.group ? nodeDetails.group : 'foundNode';
+        nodeDetails.group = result.targetNodes && result.targetNodes.indexOf(nodeId) !== -1 ? 'foundNode' : (nodeDetails.group ? nodeDetails.group : 'default' );
         nodeDetails.label = nodeDetails.label ? nodeDetails.label : nodeDetails[identifier];
         nodeDetails.id = nodeDetails[identifier][0] ? nodeDetails[identifier][0] : nodeDetails.id;
         this.proteins.push(nodeDetails);
@@ -466,6 +465,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       }
       // further analysis and the button function can be used to highlight seeds
       // option to use scores[node] as gradient, but sccores are very small
+      console.log(nodeDetails)
       nodes.push(NetworkSettings.getNodeStyle(nodeDetails as Node, config, false, false, 1))
     }
 
@@ -477,7 +477,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       e.to = e.to[0] === 'p' ? nodeIdMap[e.to] : e.to
       edges.push(e);
     }
-    console.log(edges)
     return {
       nodes,
       edges,

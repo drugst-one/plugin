@@ -232,7 +232,7 @@ export class AnalysisService {
       licenced: config.licencedDatasets,
       config: config,
       input_network: network,
-      seeds: isSuper ? network.nodes.filter(n => n.drugstoneId && n.drugstoneId[0] === 'p').map(n => n.drugstoneId) : this.getSelection().map((i) => i.id),
+      seeds: isSuper ? network.nodes.filter(n => n.drugstoneId && n.drugstoneId[0] === 'p').map(n => n.id) : this.getSelection().map((i) => i.id),
     };
     const resp = await this.http.post<any>(`${environment.backend}task/`, {
       algorithm: isSuper ? 'super' : 'quick',
