@@ -7,11 +7,9 @@
   <!-- default legend in html -->
   <table *ngIf="!this.config.legendUrl.length" class="legend-table">
     <ng-container *ngIf="this.config.showLegendNodes">
-      <tr
-        *ngFor="let nodeGroup of this.config.nodeGroups | keyvalue"
-        class="list-item"
-      >
-        <ng-container
+      <ng-container *ngFor="let nodeGroup of this.config.nodeGroups | keyvalue">
+        <tr
+          class="list-item"
           *ngIf="nodeGroup.key && checkNodeGroupContext(nodeGroup.key)"
         >
           <ng-container *ngIf="nodeGroup.value.image">
@@ -84,8 +82,8 @@
             </th>
             <td class="group-name">&nbsp;{{ nodeGroup.value.groupName }}</td>
           </ng-container>
-        </ng-container>
-      </tr>
+        </tr>
+      </ng-container>
     </ng-container>
 
     <ng-container *ngIf="this.config.showLegendEdges">
