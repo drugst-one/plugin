@@ -445,7 +445,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     })
     for (const nodeId of Object.keys(details)) {
       const nodeDetails = details[nodeId]
-      console.log(nodeId)
       nodeDetails.id = nodeDetails.id ? nodeDetails.id : (typeof nodeDetails.drugstoneId === 'string' ? nodeDetails.drugstoneId : nodeDetails.drugstoneId[0]);
       if (nodeDetails.drugstoneId && nodeDetails.drugstoneType === 'protein') {
         // node is protein from database, has been mapped on init to backend protein from backend
