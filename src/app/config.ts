@@ -79,6 +79,42 @@ export interface IConfig {
   edgeShadow?: boolean;
 }
 
+
+const defaultNodeGroup: NodeGroup = {
+      // this default group is used for default node group values
+      // and is fallback in case user does not provide any nodeGroup
+      groupName: 'Default Node Group',
+      color: {
+        border: '#FFFF00',
+        background: '#FFFF00',
+        highlight: {
+          border: '#FF0000',
+          background: '#FF0000'
+        },
+      },
+      shape: 'triangle',
+      type: 'default type',
+      detailShowLabel: false,
+      font: {
+        color: '#000000',
+        size: 14,
+        face: 'arial',
+        background: undefined,
+        strokeWidth: 0,
+        strokeColor: '#ffffff',
+        align: 'center',
+        bold: false,
+        ital: false,
+        boldital: false,
+        mono: false,
+      },
+      borderWidth: 1,
+      borderWidthSelected: 2
+    };
+const connectorNodeGroup: NodeGroup = JSON.parse(JSON.stringify(defaultNodeGroup));
+connectorNodeGroup.groupName = 'Connector Node';
+
+// @ts-ignore
 /**
  * Provide default values
  */
@@ -126,37 +162,7 @@ export const defaultConfig: IConfig = {
   nodeGroups: {
     // all NodeGroups but the default group must be set, if not provided by the user, they will be taken from here
     // IMPORTANT: node color must be hexacode!
-    default: {
-      // this default group is used for default node group values
-      // and is fallback in case user does not provide any nodeGroup
-      groupName: 'Default Node Group',
-      color: {
-        border: '#FFFF00',
-        background: '#FFFF00',
-        highlight: {
-          border: '#FF0000',
-          background: '#FF0000'
-        },
-      },
-      shape: 'triangle',
-      type: 'default type',
-      detailShowLabel: false,
-      font: {
-        color: '#000000',
-        size: 14,
-        face: 'arial',
-        background: undefined,
-        strokeWidth: 0,
-        strokeColor: '#ffffff',
-        align: 'center',
-        bold: false,
-        ital: false,
-        boldital: false,
-        mono: false,
-      },
-      borderWidth: 1,
-      borderWidthSelected: 2
-    },
+    default: defaultNodeGroup,
     foundNode: {
       groupName: 'Found Nodes',
       color: {
@@ -170,6 +176,7 @@ export const defaultConfig: IConfig = {
       shape: 'circle',
       type: 'default node type',
     },
+    connectorNode: connectorNodeGroup,
     foundDrug: {
       groupName: 'Drugs',
       color: {

@@ -426,9 +426,11 @@ export class NetworkComponent implements OnInit {
   }
 
   public hasDrugsLoaded(): boolean {
-    if (this.nodeData == null || this.nodeData.nodes == null)
-      return false;
-    return this.nodeData.nodes.get().filter((node: Node) => node.drugId).map(node => node.drugstoneId).filter(id => id.startsWith('dr')).length > 0;
+    if(this.nodeData && this.nodeData.nodes)
+      for(const node of this.nodeData.nodes.get())
+        if(node.drugstoneType && node.drugstoneId === 'drug')
+          return true;
+    return false;
   }
 
   public setLegendContext() {
@@ -442,9 +444,10 @@ export class NetworkComponent implements OnInit {
       if (this.highlightSeeds) {
         this.legendContext = "drugTargetAndSeeds";
       } else {
-        this.legendContext = 'drugTarget'
+        this.legendContext = 'drugTarget';
       }
     }
+    console.log(this.legendContext)
   }
 
   /**

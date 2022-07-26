@@ -200,10 +200,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
         this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
 
-        this.tableDrugs = nodes.filter(e => e.drugstoneId && e.drugstoneId.drugstoneType === 'drug');
+        this.tableDrugs = nodes.filter(e => e.drugstoneId && e.drugstoneType === 'drug');
         this.tableDrugs.forEach((r) => {
           r.rawScore = r.score;
         });
+        console.log(this.tableDrugs)
 
         this.tableProteins = nodes.filter(e => e.drugstoneId && e.drugstoneType === 'protein');
         this.tableSelectedProteins = [];
@@ -411,7 +412,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public createNetwork(result: any): { edges: any[], nodes: any[] } {
     const config = result.parameters.config;
     this.myConfig = config;
-
     const identifier = this.myConfig.identifier;
 
     // add drugGroup and foundNodesGroup for added nodes
@@ -424,24 +424,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.effects = [];
     const network = result.network;
 
-    // const nodeTypes = attributes.nodeTypes || {};
-    // const isSeed = attributes.isSeed || {};
-    // const scores = attributes.scores || {};
     const details = attributes.details || {};
     const nodeIdMap = {}
-    // const reverseNodeIdMap = {}
     // @ts-ignore
     Object.entries(details).filter(e => e[1].drugstoneType === 'protein').forEach(e => {
-      // let id =
       // @ts-ignore
-      e[1].drugstoneId.forEach(id=>{
-         nodeIdMap[id] = e[1][identifier][0]
+      e[1].drugstoneId.forEach(id => {
+        nodeIdMap[id] = e[1][identifier][0]
       })
-
-      // if (!nodeIdMap[id])
-      //   nodeIdMap[id] = [e[0]]
-      // else
-      //   nodeIdMap[id].push(e[0])
     })
     for (const nodeId of Object.keys(details)) {
       const nodeDetails = details[nodeId]
@@ -449,7 +439,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       if (nodeDetails.drugstoneId && nodeDetails.drugstoneType === 'protein') {
         // node is protein from database, has been mapped on init to backend protein from backend
         // or was found during analysis
-        nodeDetails.group = result.targetNodes && result.targetNodes.indexOf(nodeId) !== -1 ? 'foundNode' : (nodeDetails.group ? nodeDetails.group : 'default' );
+        // FIXME connectorNodes are not visualized correctly
+        nodeDetails.group = result.targetNodes && result.targetNodes.indexOf(nodeId) !== -1 ? 'foundNode' : (nodeDetails.group ? nodeDetails.group : 'connectorNode');
+        console.log(nodeDetails)
         nodeDetails.label = nodeDetails.label ? nodeDetails.label : nodeDetails[identifier];
         nodeDetails.id = nodeDetails[identifier][0] ? nodeDetails[identifier][0] : nodeDetails.id;
         this.proteins.push(nodeDetails);
@@ -464,17 +456,21 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       }
       // further analysis and the button function can be used to highlight seeds
       // option to use scores[node] as gradient, but sccores are very small
-      console.log(nodeDetails)
       nodes.push(NetworkSettings.getNodeStyle(nodeDetails as Node, config, false, false, 1))
     }
 
     const edges = [];
+    let uniqEdges = []
 
     for (const edge of network.edges) {
       const e = mapCustomEdge(edge, this.myConfig)
       e.from = e.from[0] === 'p' ? nodeIdMap[e.from] : e.from
       e.to = e.to[0] === 'p' ? nodeIdMap[e.to] : e.to
-      edges.push(e);
+      const hash = e.from + "_" + e.to;
+      if (uniqEdges.indexOf(hash) === -1) {
+        uniqEdges.push(hash);
+        edges.push(e);
+      }
     }
     return {
       nodes,
