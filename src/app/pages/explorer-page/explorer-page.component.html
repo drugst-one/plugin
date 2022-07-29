@@ -4,7 +4,7 @@
       [(show)]="showAnalysisDialog"
       [target]="analysisDialogTarget"
       [config]="drugstoneConfig.config"
-      [inputNetwork]="{ nodes: proteins, edges: edges }"
+      [inputNetwork]="{ nodes: getNodes(), edges: getEdges()}"
       (taskEvent)="emitTaskEvent($event)"
     >
     </app-launch-analysis>
@@ -721,7 +721,7 @@
       <div class="drugstone network column" id="main-column">
         <!-- analysis panel with analysis network -->
         <div class="analysis-view" *ngIf="selectedAnalysisToken">
-          <app-analysis-panel
+          <app-analysis-panel #analysisPanel
             [(token)]="selectedAnalysisToken"
             (showDetailsChange)="
               networkHandler.activeNetwork.selectedWrapper = $event

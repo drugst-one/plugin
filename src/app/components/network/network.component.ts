@@ -447,7 +447,6 @@ export class NetworkComponent implements OnInit {
         this.legendContext = 'drugTarget';
       }
     }
-    console.log(this.legendContext)
   }
 
   /**

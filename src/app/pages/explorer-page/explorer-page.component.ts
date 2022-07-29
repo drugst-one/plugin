@@ -538,6 +538,20 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       'background=';
   }
 
+  @ViewChild('analysisPanel') analysisPanel;
+
+  getNodes() :any {
+    if (this.selectedAnalysisToken && this.analysisPanel)
+      return this.analysisPanel.getResultNodes()
+    return this.proteins
+  }
+
+  getEdges() :any {
+    if(this.selectedAnalysisToken && this.analysisPanel)
+      return this.analysisPanel.getResultEdges()
+    return this.edges
+  }
+
 
   emitTaskEvent(eventObject: object) {
     this.taskEvent.emit(eventObject);

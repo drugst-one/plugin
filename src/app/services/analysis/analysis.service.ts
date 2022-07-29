@@ -103,6 +103,8 @@ export class AnalysisService {
   }
 
   async getTasks() {
+    if (!this.finishedTokens)
+      this.finishedTokens = []
     return await this.netex.getTasks(this.finishedTokens.length > 0 && this.tasks.length === 0 ? this.tokens : this.tokens.filter(t => this.finishedTokens.indexOf(t) === -1)).catch((e) => {
       clearInterval(this.intervalId);
     });
@@ -256,6 +258,7 @@ export class AnalysisService {
   }
 
   async startAnalysis(algorithm, target: 'drug' | 'drug-target', parameters) {
+    console.log(parameters)
     if (!this.canLaunchTask()) {
       toast({
         message: `You can only run ${MAX_TASKS} tasks at once. Please wait for one of them to finish or delete it from the task list.`,
@@ -312,7 +315,9 @@ export class AnalysisService {
 
   startWatching() {
     const watch = async () => {
-      const finished = JSON.parse(localStorage.getItem(this.tokensFinishedCookieKey));
+      let finished = JSON.parse(localStorage.getItem(this.tokensFinishedCookieKey));
+      if(!finished)
+        finished = []
       const unfinished = this.tokens.filter(t => finished.indexOf(t) === -1);
       if (unfinished.length > 0 || ! this.initialTasksLoaded) {
         this.initialTasksLoaded = true;

@@ -204,8 +204,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         this.tableDrugs.forEach((r) => {
           r.rawScore = r.score;
         });
-        console.log(this.tableDrugs)
-
         this.tableProteins = nodes.filter(e => e.drugstoneId && e.drugstoneType === 'protein');
         this.tableSelectedProteins = [];
         this.tableProteins.forEach((r) => {
@@ -441,7 +439,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         // or was found during analysis
         // FIXME connectorNodes are not visualized correctly
         nodeDetails.group = result.targetNodes && result.targetNodes.indexOf(nodeId) !== -1 ? 'foundNode' : (nodeDetails.group ? nodeDetails.group : 'connectorNode');
-        console.log(nodeDetails)
         nodeDetails.label = nodeDetails.label ? nodeDetails.label : nodeDetails[identifier];
         nodeDetails.id = nodeDetails[identifier][0] ? nodeDetails[identifier][0] : nodeDetails.id;
         this.proteins.push(nodeDetails);
@@ -476,6 +473,18 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       nodes,
       edges,
     };
+  }
+
+  getResultNodes(){
+    if(this.nodeData && this.nodeData['nodes'])
+      return this.nodeData['nodes'].get()
+    return []
+  }
+
+  getResultEdges(){
+    if(this.nodeData && this.nodeData['edges'])
+      return this.nodeData['edges'].get().filter(e=> !e.id || !e.groupName || (typeof e.from === 'string' && typeof e.to === 'string'))
+    return []
   }
 
   public tableProteinSelection = (e): void => {
