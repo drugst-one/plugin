@@ -32,7 +32,7 @@
 <input type="checkbox" onclick=changeConfigStr('{"showQuery":'+this.checked+'}') /> Show query<br>
 <!-- <input type="checkbox" onclick=changeConfigStr('{"showSidebar":'+this.checked+'}') checked /> Show sidebar<br> -->
 <input type="checkbox" onclick=changeConfigStr('{"showItemSelector":'+this.checked+'}') checked /> Show ItemSelector<br>
-<input type="checkbox" onclick=changeConfigStr('{"showConnectNodes":'+this.checked+'}') /> Show Connect Nodes<br>
+<input type="checkbox" onclick=changeConfigStr('{"showConnectGenes":'+this.checked+'}') /> Show Connect Genes<br>
 <input type="checkbox" onclick=changeConfigStr('{"showSimpleAnalysis":'+this.checked+'}') /> Show Simple Analysis<br>
 <input type="checkbox" onclick=changeConfigStr('{"showAdvAnalysis":'+this.checked+'}') checked /> Show Advanced Analysis<br>
 <input type="checkbox" onclick=changeConfigStr('{"showTasks":'+this.checked+'}') checked /> Show Tasks<br>
@@ -69,7 +69,7 @@
   <drugst-one id="netexp1"
               pluginId="2"
               groups='{"nodeGroups":{"node":{"type":"Gene","color":"#0000FF","font":{"color":"#ffffff"},"groupName":"Node","shape":"ellipse"}, "gene":{"type":"Gene","color":"#CD5C5C","font":{"color":"#000000"},"groupName":"Gene","shape":"ellipse"}}}'
-              config='{"physicsOn":false,"identifier":"symbol","title":"Breast cancer example network","nodeShadow":true,"edgeShadow":false,"autofillEdges":false,"showLegend":true}'
+              config='{"legendPos": null, "physicsOn":false,"identifier":"symbol","title":"Breast cancer example network","nodeShadow":true,"edgeShadow":false,"autofillEdges":false,"showLegend":true}'
               network='{"nodes":[{id: "PTEN", group: "gene"}, {id: "Node2", group: "node"}, {id: "Node3", group: "node"}, {id: "Node4", group: "node"}],
               "edges":[{"from": "PTENP1", "to": "Node2"}, {"from": "PTEN", "to": "Node3"}, {"from": "PTEN", "to": "Node4"}]}'
    >
