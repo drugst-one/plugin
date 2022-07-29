@@ -258,7 +258,6 @@ export class AnalysisService {
   }
 
   async startAnalysis(algorithm, target: 'drug' | 'drug-target', parameters) {
-    console.log(parameters)
     if (!this.canLaunchTask()) {
       toast({
         message: `You can only run ${MAX_TASKS} tasks at once. Please wait for one of them to finish or delete it from the task list.`,

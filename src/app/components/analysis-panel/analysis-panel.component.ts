@@ -177,7 +177,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
       if (this.task && this.task.info.done) {
         this.result = await this.netex.getTaskResult(this.token);
-        console.log(this.result)
         const nodeAttributes = this.result.nodeAttributes || {};
 
         this.networkHandler.activeNetwork.seedMap = nodeAttributes.isSeed || {};
