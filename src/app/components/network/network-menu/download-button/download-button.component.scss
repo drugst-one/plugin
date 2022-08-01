@@ -2,7 +2,7 @@
 
 .dropdown-menu{
     z-index: $network-tissue-options-z !important;
-    
+
     .dropdown-content {
         padding-left: 0.5rem;
         padding-right: 0.5rem;
@@ -10,5 +10,9 @@
             padding: .375rem 0rem !important;
             padding-left: 0.5rem !important;
         }
+          margin-left: calc(-150px - 16px);
+          margin-right: calc(-150px - 16px);
+          width: 150px;
+          margin-top: -45px;
     }
 }
