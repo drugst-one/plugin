@@ -5,7 +5,9 @@
     </p>
     <span class="mr-1 is-pulled-right columns is-flex is-vcentered">
       <button
-        title="open in fullscreen"
+        pTooltip="open in fullscreen"
+        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+        tooltipPosition="left"
         *ngIf="!fullscreen"
         (click)="toggleFullscreen()"
         class="button is-primary is-outlined is-rounded is-small"
