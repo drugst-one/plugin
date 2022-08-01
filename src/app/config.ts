@@ -79,10 +79,10 @@ export interface IConfig {
   autofillEdges: boolean;
   interactions?: InteractionDatabase;
   physicsOn?: boolean;
+  licensedDatasets?: boolean;
   identifier?: Identifier;
   nodeShadow?: boolean;
   edgeShadow?: boolean;
-  useNedrexLicensed?: boolean;
   algorithms: { [key in AlgorithmTarget]: Array<AlgorithmType | QuickAlgorithmType> }
 }
 
@@ -163,12 +163,11 @@ export const defaultConfig: IConfig = {
   interactionProteinProtein: 'NeDRex',
   associatedProteinDisorder: 'NeDRex',
   indicationDrugDisorder: 'NeDRex',
-  licencedDatasets: false,
+  licensedDatasets: false,
   nodeShadow: true,
   edgeShadow: true,
   autofillEdges: true,
   physicsOn: false,
-  useNedrexLicensed: true,
   selfReferences: false,
   algorithms: {
     'drug': ['trustrank', 'closeness', 'degree', 'proximity'],

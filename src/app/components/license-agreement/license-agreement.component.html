@@ -1,17 +1,18 @@
 <div
   class="modal absolute"
-  [class.is-active]="show && drugstoneConfig.config.useNedrexLicensed && license"
+  [class.is-active]="show && drugstoneConfig.config.licensedDatasets && license"
 >
   <div class="modal-background"></div>
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">
         <span class="icon"><i class="fa fa-key"></i></span>
-        NeDRex License
+        Data License Agreement
       </p>
     </header>
     <section class="modal-card-body">
-      <div [innerHTML]="license"></div>
+      <div class="is-text-align-justify" style="margin-bottom: 16px"> <i>For the use of licenced data of sources like DrugBank and OMIM, partially provided by the NeDRex database, the terms of use for data of the NeDRex platform have to be accepted:</i></div>
+      <div [innerHTML]="license" class="is-text-align-justify"></div>
     </section>
     <footer class="modal-card-foot">
       <button
