@@ -68,92 +68,92 @@
             <div class="column">
               <table class="table is-narrow">
                 <tbody>
-                  <tr
-                    *ngIf="
+                <tr
+                  *ngIf="
                       result && result.geneInteractionDataset !== undefined
                     "
-                  >
-                    <td>Protein-Protein Interaction Dataset</td>
-                    <td>
-                      {{ result.geneInteractionDataset.name }} (Version
-                      {{ result.geneInteractionDataset.version }})
-                    </td>
-                  </tr>
-                  <tr
-                    *ngIf="
+                >
+                  <td>Protein-Protein Interaction Dataset</td>
+                  <td>
+                    {{ result.geneInteractionDataset.name }} (Version
+                    {{ result.geneInteractionDataset.version }})
+                  </td>
+                </tr>
+                <tr
+                  *ngIf="
                       result && result.drugInteractionDataset !== undefined
                     "
-                  >
-                    <td>Protein-Drug Interaction Dataset</td>
-                    <td>
-                      {{ result.drugInteractionDataset.name }} (Version
-                      {{ result.drugInteractionDataset.version }})
-                    </td>
-                  </tr>
-                  <tr *ngIf="task.info.parameters.resultSize !== undefined">
-                    <td>Result Size</td>
-                    <td>{{ task.info.parameters.resultSize }}</td>
-                  </tr>
-                  <tr *ngIf="task.info.parameters.k !== undefined">
-                    <td>K</td>
-                    <td>{{ task.info.parameters.k }}</td>
-                  </tr>
-                  <tr *ngIf="task.info.parameters.numTrees !== undefined">
-                    <td>Number of trees</td>
-                    <td>{{ task.info.parameters.numTrees }}</td>
-                  </tr>
-                  <tr *ngIf="task.info.parameters.tolerance !== undefined">
-                    <td>Tolerance</td>
-                    <td>{{ task.info.parameters.tolerance }}</td>
-                  </tr>
-                  <tr *ngIf="task.info.parameters.dampingFactor !== undefined">
-                    <td>Damping Factor</td>
-                    <td>{{ task.info.parameters.dampingFactor }}</td>
-                  </tr>
-                  <tr *ngIf="task.info.parameters.maxDeg !== undefined">
-                    <td>Maximum Degree</td>
-                    <td>{{ task.info.parameters.maxDeg }}</td>
-                  </tr>
-                  <tr *ngIf="task.info.parameters.hubPenalty !== undefined">
-                    <td>Hub Penality</td>
-                    <td>{{ task.info.parameters.hubPenalty }}</td>
-                  </tr>
-                  <tr
-                    *ngIf="
+                >
+                  <td>Protein-Drug Interaction Dataset</td>
+                  <td>
+                    {{ result.drugInteractionDataset.name }} (Version
+                    {{ result.drugInteractionDataset.version }})
+                  </td>
+                </tr>
+                <tr *ngIf="task.info.parameters.resultSize !== undefined">
+                  <td>Result Size</td>
+                  <td>{{ task.info.parameters.resultSize }}</td>
+                </tr>
+                <tr *ngIf="task.info.parameters.k !== undefined">
+                  <td>K</td>
+                  <td>{{ task.info.parameters.k }}</td>
+                </tr>
+                <tr *ngIf="task.info.parameters.numTrees !== undefined">
+                  <td>Number of trees</td>
+                  <td>{{ task.info.parameters.numTrees }}</td>
+                </tr>
+                <tr *ngIf="task.info.parameters.tolerance !== undefined">
+                  <td>Tolerance</td>
+                  <td>{{ task.info.parameters.tolerance }}</td>
+                </tr>
+                <tr *ngIf="task.info.parameters.dampingFactor !== undefined">
+                  <td>Damping Factor</td>
+                  <td>{{ task.info.parameters.dampingFactor }}</td>
+                </tr>
+                <tr *ngIf="task.info.parameters.maxDeg !== undefined">
+                  <td>Maximum Degree</td>
+                  <td>{{ task.info.parameters.maxDeg }}</td>
+                </tr>
+                <tr *ngIf="task.info.parameters.hubPenalty !== undefined">
+                  <td>Hub Penality</td>
+                  <td>{{ task.info.parameters.hubPenalty }}</td>
+                </tr>
+                <tr
+                  *ngIf="
                       task.info.parameters.includeIndirectDrugs !== undefined &&
                       task.info.target === 'drug'
                     "
-                  >
-                    <td>Include indirect drugs</td>
-                    <td>
-                      <i
-                        *ngIf="task.info.parameters.includeIndirectDrugs"
-                        class="fa fa-check"
-                      ></i>
-                      <i
-                        *ngIf="!task.info.parameters.includeIndirectDrugs"
-                        class="fa fa-times"
-                      ></i>
-                    </td>
-                  </tr>
-                  <tr
-                    *ngIf="
+                >
+                  <td>Include indirect drugs</td>
+                  <td>
+                    <i
+                      *ngIf="task.info.parameters.includeIndirectDrugs"
+                      class="fa fa-check"
+                    ></i>
+                    <i
+                      *ngIf="!task.info.parameters.includeIndirectDrugs"
+                      class="fa fa-times"
+                    ></i>
+                  </td>
+                </tr>
+                <tr
+                  *ngIf="
                       task.info.parameters.includeNonApprovedDrugs !==
                         undefined && task.info.target === 'drug'
                     "
-                  >
-                    <td>Include non-approved drugs</td>
-                    <td>
-                      <i
-                        *ngIf="task.info.parameters.includeNonApprovedDrugs"
-                        class="fa fa-check"
-                      ></i>
-                      <i
-                        *ngIf="!task.info.parameters.includeNonApprovedDrugs"
-                        class="fa fa-times"
-                      ></i>
-                    </td>
-                  </tr>
+                >
+                  <td>Include non-approved drugs</td>
+                  <td>
+                    <i
+                      *ngIf="task.info.parameters.includeNonApprovedDrugs"
+                      class="fa fa-check"
+                    ></i>
+                    <i
+                      *ngIf="!task.info.parameters.includeNonApprovedDrugs"
+                      class="fa fa-times"
+                    ></i>
+                  </td>
+                </tr>
                 </tbody>
               </table>
             </div>
@@ -168,18 +168,18 @@
             </p>
             <table class="table is-narrow">
               <tbody>
-                <tr>
-                  <td>Number of Trees</td>
-                  <td>1</td>
-                </tr>
-                <tr>
-                  <td>Tolerance</td>
-                  <td>0</td>
-                </tr>
-                <tr>
-                  <td>Hub Penality</td>
-                  <td>1</td>
-                </tr>
+              <tr>
+                <td>Number of Trees</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>Tolerance</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>Hub Penality</td>
+                <td>1</td>
+              </tr>
               </tbody>
             </table>
             <p>
@@ -187,26 +187,26 @@
             </p>
             <table class="table is-narrow">
               <tbody>
-                <tr>
-                  <td>Include indirect drugs</td>
-                  <td>
-                    <i class="fa fa-times"></i>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Include non-approved drugs</td>
-                  <td>
-                    <i class="fa fa-check"></i>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Hub Penality</td>
-                  <td>1</td>
-                </tr>
-                <tr>
-                  <td>Result Size</td>
-                  <td>10</td>
-                </tr>
+              <tr>
+                <td>Include indirect drugs</td>
+                <td>
+                  <i class="fa fa-times"></i>
+                </td>
+              </tr>
+              <tr>
+                <td>Include non-approved drugs</td>
+                <td>
+                  <i class="fa fa-check"></i>
+                </td>
+              </tr>
+              <tr>
+                <td>Hub Penality</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>Result Size</td>
+                <td>10</td>
+              </tr>
               </tbody>
             </table>
           </div>
@@ -227,82 +227,83 @@
         *ngIf="task && task.info.done"
         [class.is-visible]="tab === 'table'"
       >
-        <div class="columns m-1">
-          <!-- column normalization for drugs button START -->
-          <div class="column">
-            <h4 class="is-4">
-              <span class="icon"><i class="fa fa-capsules"></i></span>
-              <span>Drugs</span>
-            </h4>
-          </div>
-          <div class="column">
-            <div class="field has-addons is-pulled-right m-1">
-              <a
-                [href]="downloadLink('drugs')"
-                class="button is-primary control is-outlined is-rounded is-pulled-right is-small"
-              >
-                <span class="icon"><i class="fa fa-download"></i></span>
-                <span>Download</span>
-              </a>
+        <div *ngIf="task.info.target === 'drug'">
+          <div class="columns m-1">
+            <!-- column normalization for drugs button START -->
+            <div class="column">
+              <h4 class="is-4">
+                <span class="icon"><i class="fa fa-capsules"></i></span>
+                <span>Drugs</span>
+              </h4>
             </div>
+            <div class="column">
+              <div class="field has-addons is-pulled-right m-1">
+                <a
+                  [href]="downloadLink('drugs')"
+                  class="button is-primary control is-outlined is-rounded is-pulled-right is-small"
+                >
+                  <span class="icon"><i class="fa fa-download"></i></span>
+                  <span>Download</span>
+                </a>
+              </div>
 
-            <div
-              class="field has-addons is-pulled-right m-1"
-              *ngIf="tableHasScores && task.info.algorithm !== 'proximity'"
-            >
-              <p class="control">
-                <button
-                  class="button is-rounded has-tooltip is-small"
-                  pTooltip="Normalize the scores"
-                  [tooltipStyleClass]="
+              <div
+                class="field has-addons is-pulled-right m-1"
+                *ngIf="tableHasScores && task.info.algorithm !== 'proximity'"
+              >
+                <p class="control">
+                  <button
+                    class="button is-rounded has-tooltip is-small"
+                    pTooltip="Normalize the scores"
+                    [tooltipStyleClass]="
                     'drgstn drgstn-tooltip drgstn-tooltip-top'
                   "
-                  tooltipPosition="top"
-                  [class.is-primary]="tableNormalize"
-                  (click)="toggleNormalization(true)"
-                  [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
-                >
+                    tooltipPosition="top"
+                    [class.is-primary]="tableNormalize"
+                    (click)="toggleNormalization(true)"
+                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                  >
                   <span class="icon is-small">
                     <i class="fa fa-ruler-vertical"></i>
                   </span>
-                  <span>Normalization On</span>
-                </button>
-              </p>
-              <p class="control">
-                <button
-                  class="button is-rounded has-tooltip is-small"
-                  pTooltip="Disable normalization of the scores."
-                  [tooltipStyleClass]="
+                    <span>Normalization On</span>
+                  </button>
+                </p>
+                <p class="control">
+                  <button
+                    class="button is-rounded has-tooltip is-small"
+                    pTooltip="Disable normalization of the scores."
+                    [tooltipStyleClass]="
                     'drgstn drgstn-tooltip drgstn-tooltip-top'
                   "
-                  tooltipPosition="top"
-                  [class.is-primary]="!tableNormalize"
-                  (click)="toggleNormalization(false)"
-                  [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
-                >
-                  <span>Off</span>
-                </button>
-              </p>
+                    tooltipPosition="top"
+                    [class.is-primary]="!tableNormalize"
+                    (click)="toggleNormalization(false)"
+                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                  >
+                    <span>Off</span>
+                  </button>
+                </p>
+              </div>
             </div>
+            <!-- column normalization for drugs button START -->
           </div>
-          <!-- column normalization for drugs button START -->
-        </div>
 
-        <div class="columns m-1">
-          <!-- drug table or placeholder if no drugs found START -->
-          <div class="column">
-            <div *ngIf="tableDrugs.length === 0 && task.info.target === 'drug'">
-              <i>No drugs have been found.</i>
+          <div class="columns m-1">
+            <!-- drug table or placeholder if no drugs found START -->
+            <div class="column">
+              <div *ngIf="tableDrugs.length === 0">
+                <i>No drugs have been found.</i>
+              </div>
+              <app-drug-table
+                [tableDrugs]="tableDrugs"
+                [tableDrugScoreTooltip]="tableDrugScoreTooltip"
+                [tableHasScores]="tableHasScores"
+              ></app-drug-table>
             </div>
-            <app-drug-table
-              [tableDrugs]="tableDrugs"
-              [tableDrugScoreTooltip]="tableDrugScoreTooltip"
-              [tableHasScores]="tableHasScores"
-            ></app-drug-table>
+            <!-- drug table or placeholder if no drugs found END -->
           </div>
-          <!-- drug table or placeholder if no drugs found END -->
         </div>
-
         <div *ngIf="tableProteins.length > 0" class="table-header">
           <div class="columns m-1">
             <div class="column">
@@ -311,6 +312,7 @@
                 <span>Proteins</span>
               </h4>
             </div>
+
             <div class="column">
               <div class="field has-addons is-pulled-right m-1 control">
                 <a
@@ -321,6 +323,44 @@
                   <span>Download</span>
                 </a>
               </div>
+              <div
+                class="field has-addons is-pulled-right m-1"
+                *ngIf="tableHasScores && task.info.target !== 'drug'"
+              >
+                <p class="control">
+                  <button
+                    class="button is-rounded has-tooltip is-small"
+                    pTooltip="Normalize the scores"
+                    [tooltipStyleClass]="
+                    'drgstn drgstn-tooltip drgstn-tooltip-top'
+                  "
+                    tooltipPosition="top"
+                    [class.is-primary]="tableNormalize"
+                    (click)="toggleNormalization(true)"
+                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                  >
+                  <span class="icon is-small">
+                    <i class="fa fa-ruler-vertical"></i>
+                  </span>
+                    <span>Normalization On</span>
+                  </button>
+                </p>
+                <p class="control">
+                  <button
+                    class="button is-rounded has-tooltip is-small"
+                    pTooltip="Disable normalization of the scores."
+                    [tooltipStyleClass]="
+                    'drgstn drgstn-tooltip drgstn-tooltip-top'
+                  "
+                    tooltipPosition="top"
+                    [class.is-primary]="!tableNormalize"
+                    (click)="toggleNormalization(false)"
+                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                  >
+                    <span>Off</span>
+                  </button>
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -328,13 +368,13 @@
         <div class="columns m-1">
           <div class="column">
             <app-prot-table
-            [tableHasScores]="tableHasScores"
-            [tableProteins]="tableProteins"
-            [tableProteinScoreTooltip]="tableDrugScoreTooltip"
-            [tableProteinSelection]="tableProteinSelection"
-            [tableSelectedProteins]="tableSelectedProteins"
-            [identifier]="myConfig.identifier"
-          ></app-prot-table>
+              [tableHasScores]="tableHasScores"
+              [tableProteins]="tableProteins"
+              [tableProteinScoreTooltip]="tableDrugScoreTooltip"
+              [tableProteinSelection]="tableProteinSelection"
+              [tableSelectedProteins]="tableSelectedProteins"
+              [identifier]="myConfig.identifier"
+            ></app-prot-table>
           </div>
         </div>
       </div>

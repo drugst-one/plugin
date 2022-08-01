@@ -10,9 +10,9 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
-import { algorithmNames, AnalysisService } from '../../services/analysis/analysis.service';
+import {HttpClient} from '@angular/common/http';
+import {environment} from '../../../environments/environment';
+import {algorithmNames, AnalysisService} from '../../services/analysis/analysis.service';
 import {
   Drug,
   EdgeType,
@@ -28,13 +28,13 @@ import {
   NodeInteraction,
 } from '../../interfaces';
 import domtoimage from 'dom-to-image';
-import { NetworkSettings } from '../../network-settings';
-import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
-import { defaultConfig, IConfig } from 'src/app/config';
-import { mapCustomEdge, mapCustomNode } from 'src/app/main-network';
-import { downLoadFile, pieChartContextRenderer, removeDuplicateObjectsFromList } from 'src/app/utils';
-import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
-import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
+import {NetworkSettings} from '../../network-settings';
+import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
+import {defaultConfig, IConfig} from 'src/app/config';
+import {mapCustomEdge, mapCustomNode} from 'src/app/main-network';
+import {downLoadFile, pieChartContextRenderer, removeDuplicateObjectsFromList} from 'src/app/utils';
+import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
+import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
 
 
 declare var vis: any;
@@ -48,10 +48,9 @@ interface Seeded {
   isSeed: boolean;
 }
 
-interface Baited {
-  closestViralProteins: string[];
-  closestDistance: number;
-}
+// interface Baited {
+//   closestDistance: number;
+// }
 
 @Component({
   selector: 'app-analysis-panel',
@@ -60,8 +59,9 @@ interface Baited {
 })
 export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit {
 
-  @ViewChild('networkWithLegend', { static: false }) networkWithLegendEl: ElementRef;
+  @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
   @Input() token: string | null = null;
+
   @Input()
   public set config(config: IConfig | undefined) {
     if (typeof config === 'undefined') {
@@ -71,6 +71,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       this.myConfig[key] = config[key];
     }
   }
+
   @Output() tokenChange = new EventEmitter<string | null>();
   @Output() showDetailsChange = new EventEmitter<Wrapper>();
   @Output() setInputNetwork = new EventEmitter<any>();
@@ -80,33 +81,31 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public myConfig: IConfig = JSON.parse(JSON.stringify(defaultConfig));
 
   public network: any;
-  public nodeData: { nodes: any, edges: any } = { nodes: null, edges: null };
-  private drugNodes: any[] = [];
-  private drugEdges: any[] = [];
+  public nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
+  // private drugNodes: any[] = [];
+  // private drugEdges: any[] = [];
   public showDrugs = false;
   public tab: 'meta' | 'network' | 'table' = 'table';
 
-  public adjacentDrugs = false;
-  public adjacentDrugList: Node[] = [];
-  public adjacentDrugEdgesList: Node[] = [];
-
-  public adjacentDisordersProtein = false;
-  public adjacentDisordersDrug = false;
-
-  public adjacentProteinDisorderList: Node[] = [];
-  public adjacentProteinDisorderEdgesList: Node[] = [];
-
-  public adjacentDrugDisorderList: Node[] = [];
-  public adjacentDrugDisorderEdgesList: Node[] = [];
+  // public adjacentDrugs = false;
+  // public adjacentDrugList: Node[] = [];
+  // public adjacentDrugEdgesList: Node[] = [];
+  //
+  // public adjacentDisordersProtein = false;
+  // public adjacentDisordersDrug = false;
+  //
+  // public adjacentProteinDisorderList: Node[] = [];
+  // public adjacentProteinDisorderEdgesList: Node[] = [];
+  //
+  // public adjacentDrugDisorderList: Node[] = [];
+  // public adjacentDrugDisorderEdgesList: Node[] = [];
 
   private proteins: any;
   public effects: any;
 
-  public tableDrugs: Array<Drug & Scored & Baited> = [];
-  public tableProteins: Array<Node & Scored & Seeded & Baited> = [];
-  public tableSelectedProteins: Array<Node & Scored & Seeded & Baited> = [];
-  public tableViralProteins: Array<Scored & Seeded> = [];
-  public tableSelectedViralProteins: Array<Scored & Seeded> = [];
+  public tableDrugs: Array<Drug & Scored> = [];
+  public tableProteins: Array<Node & Scored & Seeded> = [];
+  public tableSelectedProteins: Array<Node & Scored & Seeded> = [];
   public tableNormalize = false;
   public tableHasScores = false;
 
@@ -180,14 +179,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         this.networkHandler.activeNetwork.seedMap = nodeAttributes.isSeed || {};
 
         // Reset
-        this.nodeData = { nodes: null, edges: null };
+        this.nodeData = {nodes: null, edges: null};
         this.networkHandler.activeNetwork.networkEl.nativeElement.innerHTML = '';
         this.networkHandler.activeNetwork.networkInternal = null;
         this.showDrugs = false;
 
         // Create
-        const { nodes, edges } = this.createNetwork(this.result);
-        this.analysis.inputNetwork = { nodes: nodes, edges: edges };
+        const {nodes, edges} = this.createNetwork(this.result);
+        this.analysis.inputNetwork = {nodes: nodes, edges: edges};
         this.nodeData.nodes = new vis.DataSet(nodes);
         this.nodeData.edges = new vis.DataSet(edges);
         const container = this.networkHandler.activeNetwork.networkEl.nativeElement;
@@ -218,14 +217,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         });
 
 
-        this.tableHasScores = ['trustrank', 'closeness', 'degree', 'proximity', 'betweenness', 'quick', 'super']
+        this.tableHasScores = ['trustrank', 'closeness', 'degree', 'betweenness', 'quick', 'super']
           .indexOf(this.task.info.algorithm) !== -1;
         if (this.tableHasScores) {
-          if (this.task.info.algorithm !== 'proximity') {
-            this.toggleNormalization(true);
-          } else {
-            this.toggleNormalization(false);
-          }
+          this.toggleNormalization(true);
         }
 
         this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {
@@ -290,7 +285,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             this.nodeData.nodes.update(updatedNodes);
 
             const proteinSelection = this.tableSelectedProteins;
-            const viralProteinSelection = this.tableSelectedViralProteins;
             for (const item of items) {
               // TODO: Refactor!
               const found = proteinSelection.findIndex((i) => getProteinNodeId(i) === item.id);
@@ -303,7 +297,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               }
             }
             this.tableSelectedProteins = [...proteinSelection];
-            this.tableSelectedViralProteins = [...viralProteinSelection];
           } else {
             // else: selected is null
             const updatedNodes = [];
@@ -322,7 +315,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             this.nodeData.nodes.update(updatedNodes);
 
             const proteinSelection = [];
-            const viralProteinSelection = [];
             for (const item of items) {
               const tableItem = this.tableProteins.find((i) => getProteinNodeId(i) === item.id);
               if (tableItem) {
@@ -330,7 +322,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               }
             }
             this.tableSelectedProteins = [...proteinSelection];
-            this.tableSelectedViralProteins = [...viralProteinSelection];
           }
         });
       }
@@ -388,13 +379,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     };
 
     if (normalize) {
-      normalizeFn(this.tableDrugs);
       normalizeFn(this.tableProteins);
-      normalizeFn(this.tableViralProteins);
+      if (this.task.info.target === 'drug')
+        normalizeFn(this.tableDrugs)
     } else {
-      unnormalizeFn(this.tableDrugs);
       unnormalizeFn(this.tableProteins);
-      unnormalizeFn(this.tableViralProteins);
+      if (this.task.info.target === 'drug')
+        unnormalizeFn(this.tableDrugs)
     }
   }
 
@@ -482,15 +473,15 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     };
   }
 
-  getResultNodes(){
-    if(this.nodeData && this.nodeData['nodes'])
+  getResultNodes() {
+    if (this.nodeData && this.nodeData['nodes'])
       return this.nodeData['nodes'].get()
     return []
   }
 
-  getResultEdges(){
-    if(this.nodeData && this.nodeData['edges'])
-      return this.nodeData['edges'].get().filter(e=> !e.id || !e.groupName || (typeof e.from === 'string' && typeof e.to === 'string'))
+  getResultEdges() {
+    if (this.nodeData && this.nodeData['edges'])
+      return this.nodeData['edges'].get().filter(e => !e.id || !e.groupName || (typeof e.from === 'string' && typeof e.to === 'string'))
     return []
   }
 

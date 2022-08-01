@@ -58,7 +58,7 @@
         <a *ngFor="let ensg of e.ensg; index as i"  href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={{ensg }}" target="_blank">{{ ensg +(i == e.ensg.length -1 ? "":", ")}}</a>
       </td>
       <td>{{e.proteinName}}</td>
-      <td *ngIf="tableHasScores">{{e.score | number}}</td>
+      <td *ngIf="tableHasScores">{{e.score.toString() | number}}</td>
       <td>
         <span *ngIf="e.isSeed">
             <fa-icon [icon]="faCheck" [classes]="['icon']"></fa-icon>
