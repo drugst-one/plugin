@@ -26,11 +26,11 @@ export interface EdgeGroup {
   shadow?: any;
 }
 
-export type Identifier = 'symbol' | 'uniprot' | 'ensg';
-export type InteractionDrugProteinDB = 'DrugBank' | 'Chembl' | 'DGIdb' | 'NeDRex';
-export type InteractionProteinProteinDB = 'STRING' | 'BioGRID' | 'APID' | 'NeDRex';
-export type IndicationDrugDisorderDB = 'DrugBank' | 'NeDRex';
-export type AssociatedProteinDisorderDB = 'NeDRex' | 'DisGeNET';
+export type Identifier = 'symbol' | 'uniprot' | 'ensg' | 'entrez';
+export type InteractionDrugProteinDB = 'NeDRex' | 'DrugBank' | 'Drug Central' | 'ChEMBL' | 'DGIdb';
+export type InteractionProteinProteinDB = 'NeDRex' | 'BioGRID' | 'IID' | 'IntAct' | 'STRING' | 'APID';
+export type IndicationDrugDisorderDB = 'NeDRex' | 'CTD' | 'Drug Central' | 'DrugBank';
+export type AssociatedProteinDisorderDB = 'NeDRex' | 'DisGeNET' | 'OMIM';
 
 
 // TODO: should this be external or integrated in the backend?
@@ -74,6 +74,7 @@ export interface IConfig {
   interactionDrugProtein: InteractionDrugProteinDB;
   interactionProteinProtein: InteractionProteinProteinDB;
   indicationDrugDisorder: IndicationDrugDisorderDB;
+  licencedDatasets?: boolean;
   associatedProteinDisorder: AssociatedProteinDisorderDB;
   autofillEdges: boolean;
   interactions?: InteractionDatabase;
@@ -85,6 +86,43 @@ export interface IConfig {
   algorithms: { [key in AlgorithmTarget]: Array<AlgorithmType | QuickAlgorithmType> }
 }
 
+
+const defaultNodeGroup: NodeGroup = {
+      // this default group is used for default node group values
+      // and is fallback in case user does not provide any nodeGroup
+      groupName: 'Default Node Group',
+      ctxRenderer: null,
+      color: {
+        border: '#FFFF00',
+        background: '#FFFF00',
+        highlight: {
+          border: '#FF0000',
+          background: '#FF0000'
+        },
+      },
+      shape: 'triangle',
+      type: 'default type',
+      detailShowLabel: false,
+      font: {
+        color: '#000000',
+        size: 14,
+        face: 'arial',
+        background: undefined,
+        strokeWidth: 0,
+        strokeColor: '#ffffff',
+        align: 'center',
+        bold: false,
+        ital: false,
+        boldital: false,
+        mono: false,
+      },
+      borderWidth: 1,
+      borderWidthSelected: 2
+    };
+const connectorNodeGroup: NodeGroup = JSON.parse(JSON.stringify(defaultNodeGroup));
+connectorNodeGroup.groupName = 'Connector Node';
+
+// @ts-ignore
 /**
  * Provide default values
  */
@@ -125,51 +163,21 @@ export const defaultConfig: IConfig = {
   interactionProteinProtein: 'NeDRex',
   associatedProteinDisorder: 'NeDRex',
   indicationDrugDisorder: 'NeDRex',
+  licencedDatasets: false,
   nodeShadow: true,
   edgeShadow: true,
   autofillEdges: true,
   physicsOn: false,
   useNedrexLicensed: true,
   selfReferences: false,
-  algorithms: { 
-    'drug': ['trustrank', 'closeness', 'degree', 'proximity'], 
-    'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness'] 
+  algorithms: {
+    'drug': ['trustrank', 'closeness', 'degree', 'proximity'],
+    'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness']
   },
   nodeGroups: {
     // all NodeGroups but the default group must be set, if not provided by the user, they will be taken from here
     // IMPORTANT: node color must be hexacode!
-    default: {
-      // this default group is used for default node group values
-      // and is fallback in case user does not provide any nodeGroup
-      groupName: 'Default Node Group',
-      ctxRenderer: null,
-      color: {
-        border: '#FFFF00',
-        background: '#FFFF00',
-        highlight: {
-          border: '#FF0000',
-          background: '#FF0000'
-        },
-      },
-      shape: 'triangle',
-      type: 'default type',
-      detailShowLabel: false,
-      font: {
-        color: '#000000',
-        size: 14,
-        face: 'arial',
-        background: undefined,
-        strokeWidth: 0,
-        strokeColor: '#ffffff',
-        align: 'center',
-        bold: false,
-        ital: false,
-        boldital: false,
-        mono: false,
-      },
-      borderWidth: 1,
-      borderWidthSelected: 2
-    },
+    default: defaultNodeGroup,
     foundNode: {
       groupName: 'Found Nodes',
       color: {
@@ -183,6 +191,7 @@ export const defaultConfig: IConfig = {
       shape: 'circle',
       type: 'default node type',
     },
+    connectorNode: connectorNodeGroup,
     foundDrug: {
       groupName: 'Drugs',
       color: {

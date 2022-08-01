@@ -328,12 +328,13 @@
         <div class="columns m-1">
           <div class="column">
             <app-prot-table
-              [tableHasScores]="tableHasScores"
-              [tableProteins]="tableProteins"
-              [tableProteinScoreTooltip]="tableDrugScoreTooltip"
-              [tableProteinSelection]="tableProteinSelection"
-              [tableSelectedProteins]="tableSelectedProteins"
-            ></app-prot-table>
+            [tableHasScores]="tableHasScores"
+            [tableProteins]="tableProteins"
+            [tableProteinScoreTooltip]="tableDrugScoreTooltip"
+            [tableProteinSelection]="tableProteinSelection"
+            [tableSelectedProteins]="tableSelectedProteins"
+            [identifier]="myConfig.identifier"
+          ></app-prot-table>
           </div>
         </div>
       </div>

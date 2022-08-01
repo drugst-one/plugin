@@ -32,7 +32,7 @@
         <div class="control">
           <div style="display: flex; justify-content: center">
             <button
-              (click)="analysis.startQuickAnalysis(false, 'connect')"
+              (click)="analysis.startQuickAnalysis(true, 'connect')"
               [disabled]="analysis.isLaunchingQuick()"
               [ngClass]="{
                 'text-small': drugstoneConfig.smallStyle
@@ -64,7 +64,7 @@
           </div>
           <div style="display: flex; justify-content: center">
             <button
-              (click)="analysis.startQuickAnalysis(true, 'connectSelected')"
+              (click)="analysis.startQuickAnalysis(false, 'connectSelected')"
               [disabled]="
                 analysis.getCount() === 0 || analysis.isLaunchingQuick()
               "

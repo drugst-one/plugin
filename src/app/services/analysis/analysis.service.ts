@@ -1,12 +1,22 @@
-import {Wrapper, Task, getWrapperFromNode, Node, Dataset, Tissue, Algorithm, QuickAlgorithmType} from '../../interfaces';
+import {Wrapper, Task, getWrapperFromNode, Node, Dataset, Tissue} from '../../interfaces';
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {toast} from 'bulma-toast';
 import {Injectable} from '@angular/core';
 import {NetexControllerService} from '../netex-controller/netex-controller.service';
-import { DrugstoneConfigService } from '../drugstone-config/drugstone-config.service';
-import { NetworkHandlerService } from '../network-handler/network-handler.service';
+import {DrugstoneConfigService} from "../drugstone-config/drugstone-config.service";
+import {NetworkHandlerService} from "../network-handler/network-handler.service";
+
+export type AlgorithmType =
+  'trustrank'
+  | 'keypathwayminer'
+  | 'multisteiner'
+  | 'closeness'
+  | 'degree'
+  | 'proximity'
+  | 'betweenness';
+export type QuickAlgorithmType = 'quick' | 'super' | 'connect' | 'connectSelected';
 
 export const algorithmNames = {
   trustrank: 'TrustRank',
@@ -19,8 +29,13 @@ export const algorithmNames = {
   quick: 'Simple',
   super: 'Quick-Start',
   connect: 'Connect All',
-  connectSelected: 'Connect Selected',
+  connectSelected: 'Connect Selected'
 };
+
+export interface Algorithm {
+  slug: AlgorithmType | QuickAlgorithmType;
+  name: string;
+}
 
 export const TRUSTRANK: Algorithm = {slug: 'trustrank', name: algorithmNames.trustrank};
 export const CLOSENESS_CENTRALITY: Algorithm = {slug: 'closeness', name: algorithmNames.closeness};
@@ -39,16 +54,14 @@ export class AnalysisService {
 
   private selection = 'main';
 
-  public inputNetwork = {};
-
   private selectedItems = new Map<string, Wrapper>();
   private selectListSubject = new Subject<{ items: Wrapper[], selected: boolean | null }>();
-
+  public inputNetwork = {};
   private selections = new Map<string, Map<string, Wrapper>>();
 
   public tokens: string[] = [];
-  private tokensCookieKey = `drugstone-tokens-${window.location.host}`;
-  private tokensFinishedCookieKey = `drugstone-finishedTokens-${window.location.host}`;
+  private tokensCookieKey = `netex-tokens-${window.location.host}`;
+  private tokensFinishedCookieKey = `netex-finishedTokens-${window.location.host}`;
   public finishedTokens: string[] = [];
   public tasks: Task[] = [];
 
@@ -59,11 +72,11 @@ export class AnalysisService {
 
   private tissues: Tissue[] = [];
 
-  constructor(
-    private http: HttpClient, 
-    public netex: NetexControllerService,
-    public drugstoneConfig: DrugstoneConfigService,
-    public networkHandler: NetworkHandlerService) {
+  constructor(private http: HttpClient,
+              public netex: NetexControllerService,
+              public drugstoneConfig: DrugstoneConfigService,
+              public networkHandler: NetworkHandlerService
+  ) {
     const tokens = localStorage.getItem(this.tokensCookieKey);
     const finishedTokens = localStorage.getItem(this.tokensFinishedCookieKey);
 
@@ -217,25 +230,20 @@ export class AnalysisService {
     }
 
     this.launchingQuick = true;
-
-    const seeds = [];
-    if (isSuper) {
+    let seeds = [];
+    if (!isSuper) {
       // get ids for selected nodes
-      this.getSelection().forEach((item: Wrapper) => {
-        if (item.data.drugstoneId != null) {
-          seeds.push(item.data.drugstoneId);
-        }
-      })
+      seeds = this.getSelection().map((item: Wrapper) => item.id);
     } else {
       // get all node ids
       this.networkHandler.activeNetwork.currentViewProteins.forEach((item: Node) => {
-        if (item.drugstoneId != null) {
-          seeds.push(item.drugstoneId);
+        if (item.drugstoneType === 'protein') {
+          seeds.push(item.id);
         }
       })
     }
     const target = ['connect', 'connectSelected'].includes(algorithm) ? 'drug-target' : 'drug'
-    console.log(target)
+
     const parameters: any = {
       seeds: seeds,
       config: this.drugstoneConfig.config,
@@ -247,6 +255,7 @@ export class AnalysisService {
       tolerance: 10,
     };
 
+
     const resp = await this.http.post<any>(`${environment.backend}task/`, {
       algorithm: algorithm,
       target: target,
@@ -257,7 +266,7 @@ export class AnalysisService {
     this.startWatching();
 
     toast({
-      message: 'Quick analysis started.' +
+      message: 'Quick analysis started. This may take a while.' +
         ' Once the computation finished you can view the results in the task list to the right.',
       duration: 10000,
       dismissible: true,
@@ -288,7 +297,7 @@ export class AnalysisService {
     }).toPromise();
 
     this.tokens.push(resp.token);
-    localStorage.setItem(`drugstone-tokens-${window.location.host}`, JSON.stringify(this.tokens));
+    localStorage.setItem(`netex-tokens-${window.location.host}`, JSON.stringify(this.tokens));
     this.startWatching();
     return resp.token;
   }
@@ -327,7 +336,7 @@ export class AnalysisService {
     const watch = async () => {
       if (this.tokens.length > 0) {
         const newtasks = await this.getTasks();
-        if(newtasks.length === 0)
+        if (newtasks.length === 0)
           return;
         const newTaskIds = newtasks.map(t => t.token.toString());
         this.tasks = newtasks.concat(this.tasks.filter(t => newTaskIds.indexOf(t.token) === -1));

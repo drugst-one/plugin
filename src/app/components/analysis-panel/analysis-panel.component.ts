@@ -73,6 +73,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
   @Output() tokenChange = new EventEmitter<string | null>();
   @Output() showDetailsChange = new EventEmitter<Wrapper>();
+  @Output() setInputNetwork = new EventEmitter<any>();
   @Output() visibleItems = new EventEmitter<[any[], [Node[], Tissue], NodeInteraction[]]>();
   public task: Task | null = null;
   public result: any = null;
@@ -174,7 +175,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
       if (this.task && this.task.info.done) {
         this.result = await this.netex.getTaskResult(this.token);
-        console.log(this.result)
         const nodeAttributes = this.result.nodeAttributes || {};
 
         this.networkHandler.activeNetwork.seedMap = nodeAttributes.isSeed || {};
@@ -202,13 +202,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             this.networkHandler.activeNetwork.updatePhysicsEnabled(false);
           }
         });
-        
-        this.tableDrugs = nodes.filter(e => e.drugstoneId && e.drugstoneId.startsWith('d'));
+        this.tableDrugs = nodes.filter(e => e.drugstoneId && e.drugstoneType === 'drug');
         this.tableDrugs.forEach((r) => {
           r.rawScore = r.score;
         });
-
-        this.tableProteins = nodes.filter(e => e.drugstoneId && e.drugstoneId.startsWith('p'));
+        this.tableProteins = nodes.filter(e => e.drugstoneId && e.drugstoneType === 'protein');
         this.tableSelectedProteins = [];
         this.tableProteins.forEach((r) => {
           r.rawScore = r.score;
@@ -239,7 +237,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           if (nodeIds.length > 0) {
             const nodeId = nodeIds[0];
             const node = this.nodeData.nodes.get(nodeId);
-            if (node.nodeType === 'drug' || node.drugstoneId === undefined || !node.drugstoneId.startsWith('p')) {
+            if (node.nodeType === 'drug' || node.drugstoneId === undefined || node.drugstoneType !== 'protein') {
               return;
             }
             const wrapper = getWrapperFromNode(node);
@@ -310,12 +308,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             // else: selected is null
             const updatedNodes = [];
             this.nodeData.nodes.forEach((node) => {
-              // let drugType;
-              // let drugInTrial;
-              // if (node.drugstoneId && node.drugstoneId.startsWith('d')) {
-              //   drugType = node.status;
-              //   drugInTrial = node.inTrial;
-              // }
               const isSeed = this.networkHandler.activeNetwork.highlightSeeds ? this.networkHandler.activeNetwork.seedMap[node.id] : false;
               const nodeStyled = NetworkSettings.getNodeStyle(
                 node,
@@ -410,50 +402,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     return `${environment.backend}task_result/?token=${this.token}&view=${view}&fmt=csv`;
   }
 
-  public inferEdgeGroup(edge: object): EdgeType {
-    if (edge['to'].startsWith('d')) {
-      return 'protein-drug';
-    }
-    return 'protein-protein';
-  }
-
-  /**
-   * Infers wrapper type of node returned from backend.
-   * Node can only be either an input node from the user with a defined group,
-   * a drug found in the backend with either user defined type or default drug group,
-   * or an intermediate protein added by the shortest path to the found drug.
-   * For the third case, fall back to a default case which can also be set by user.
-   */
-  public inferNodeGroup(wrapper: Wrapper): string {
-    if (wrapper.data.group !== undefined) {
-      return wrapper.data.group;
-    } else if (wrapper.data.drugstoneId !== undefined && wrapper.data.drugstoneId.startsWith('d')) {
-      return 'drug';
-    } else if (wrapper.data.drugstoneId !== undefined && wrapper.data.drugstoneId.startsWith('p')) {
-      return 'protein';
-    }
-  }
-
-  public inferNodeLabel(config: IConfig, wrapper: Wrapper): string {
-    if (wrapper.data.label) {
-      return wrapper.data.label;
-    }
-    const identifier = config.identifier;
-    if (identifier === 'uniprot') {
-      return wrapper.data.uniprotAc;
-    } else if (identifier === 'symbol') {
-      return wrapper.data.symbol;
-    } else if (identifier === 'ensg') {
-      // heuristc to find most important ensg is to look for smallest id
-      // parse ensg numbers to integers
-      const ensg_numbers = wrapper.data.ensg.map(x => parseInt(x));
-      // get index of smalles number
-      const i = ensg_numbers.reduce((iMin, x, i, arr) => x < arr[iMin] ? i : iMin, 0);
-      // return ensg-ID
-      return wrapper.data.ensg[i];
-    }
-  }
-
   /**
    * Maps analysis result returned from database to valid Vis.js network input
    *
@@ -469,7 +417,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     // add drugGroup and foundNodesGroup for added nodes
     // these groups can be overwritten by the user
     const nodes = [];
-    const edges = [];
+    let edges = [];
 
     const attributes = result.nodeAttributes || {};
 
@@ -477,23 +425,27 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.effects = [];
     const network = result.network;
 
-    const nodeTypes = attributes.nodeTypes || {};
-    const isSeed = attributes.isSeed || {};
-    const scores = attributes.scores || {};
     const details = attributes.details || {};
-
-    for (const node of network.nodes) {
-      // convert id to netex Id if exists
-      const nodeDetails = details[node];
-
-      nodeDetails.id = nodeDetails.id ? nodeDetails.id : nodeDetails.drugstoneId;
-      if (nodeDetails.drugstoneId && nodeDetails.drugstoneId.startsWith('p')) {
+    const nodeIdMap = {}
+    // @ts-ignore
+    Object.entries(details).filter(e => e[1].drugstoneType === 'protein').forEach(e => {
+      // @ts-ignore
+      e[1].drugstoneId.forEach(id => {
+        nodeIdMap[id] = e[1][identifier][0]
+      })
+    })
+    for (const nodeId of Object.keys(details)) {
+      const nodeDetails = details[nodeId]
+      nodeDetails.id = nodeDetails.id ? nodeDetails.id : (typeof nodeDetails.drugstoneId === 'string' ? nodeDetails.drugstoneId : nodeDetails.drugstoneId[0]);
+      if (nodeDetails.drugstoneId && nodeDetails.drugstoneType === 'protein') {
         // node is protein from database, has been mapped on init to backend protein from backend
         // or was found during analysis
-        nodeDetails.group = nodeDetails.group ? nodeDetails.group : 'foundNode';
+        // FIXME connectorNodes are not visualized correctly
+        nodeDetails.group = result.targetNodes && result.targetNodes.indexOf(nodeId) !== -1 ? 'foundNode' : (nodeDetails.group ? nodeDetails.group : 'connectorNode');
         nodeDetails.label = nodeDetails.label ? nodeDetails.label : nodeDetails[identifier];
+        nodeDetails.id = nodeDetails[identifier][0] ? nodeDetails[identifier][0] : nodeDetails.id;
         this.proteins.push(nodeDetails);
-      } else if (nodeDetails.drugstoneId && nodeDetails.drugstoneId.startsWith('d')) {
+      } else if (nodeDetails.drugstoneId && nodeDetails.drugstoneType === 'drug') {
         // node is drug, was found during analysis
         nodeDetails.type = 'Drug';
         nodeDetails.group = 'foundDrug';
@@ -507,18 +459,39 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       nodes.push(NetworkSettings.getNodeStyle(nodeDetails as Node, config, false, false, 1, this.networkHandler.activeNetwork.nodeRenderer))
     }
 
-    // remove self-edges/loops
-    if (!config.selfReferences) {
-      network.edges = network.edges.filter(el => el.from !== el.to)
-    }
+
+    const uniqEdges = [];
 
     for (const edge of network.edges) {
-      edges.push(mapCustomEdge(edge, this.myConfig));
+      const e = mapCustomEdge(edge, this.myConfig)
+      e.from = e.from[0] === 'p' ? nodeIdMap[e.from] : e.from
+      e.to = e.to[0] === 'p' ? nodeIdMap[e.to] : e.to
+      const hash = e.from + "_" + e.to;
+      if (uniqEdges.indexOf(hash) === -1) {
+        uniqEdges.push(hash);
+        edges.push(e);
+      }
+    }
+    // remove self-edges/loops
+    if (!config.selfReferences) {
+      edges = edges.filter(el => el.from !== el.to)
     }
     return {
       nodes,
       edges,
     };
+  }
+
+  getResultNodes(){
+    if(this.nodeData && this.nodeData['nodes'])
+      return this.nodeData['nodes'].get()
+    return []
+  }
+
+  getResultEdges(){
+    if(this.nodeData && this.nodeData['edges'])
+      return this.nodeData['edges'].get().filter(e=> !e.id || !e.groupName || (typeof e.from === 'string' && typeof e.to === 'string'))
+    return []
   }
 
   public tableProteinSelection = (e): void => {
@@ -541,93 +514,4 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.analysis.addItems(addItems);
     this.analysis.removeItems(removeItems);
   }
-
-  public previewStringArray(arr: string[], count: number): string {
-    if (arr.length < count) {
-      return arr.join(', ');
-    } else {
-      return arr.slice(0, count).join(', ') + `, ... (${arr.length})`;
-    }
-  }
-
-  // public selectTissue(tissue: Tissue | null) {
-  //   this.expressionExpanded = false;
-  //   if (!tissue) {
-  //     this.selectedTissue = null;
-  //     const updatedNodes = [];
-  //     for (const item of this.proteins) {
-  //       if (item.drugstoneId === undefined) {
-  //         // nodes that are not mapped to backend remain untouched
-  //         continue;
-  //       }
-  //       const node: Node = this.nodeData.nodes.get(item.id);
-  //       if (!node) {
-  //         continue;
-  //       }
-  //       const pos = this.networkHandler.activeNetwork.networkInternal.getPositions([item.id]);
-  //       node.x = pos[item.id].x;
-  //       node.y = pos[item.id].y;
-  //       const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
-  //       Object.assign(
-  //         node,
-  //         NetworkSettings.getNodeStyle(
-  //           node,
-  //           this.myConfig,
-  //           isSeed,
-  //           this.analysis.inSelection(getWrapperFromNode(item)),
-  //           1.0
-  //           )
-  //       )
-  //       updatedNodes.push(node);
-  //     }
-  //     this.nodeData.nodes.update(updatedNodes);
-  //     // delete expression values
-  //     this.expressionMap = undefined;
-  //     this.gradientMap = {};
-  //   } else {
-  //     this.selectedTissue = tissue
-  //     const minExp = 0.3;
-  //     // filter out non-proteins, e.g. drugs
-  //     const proteinNodes = [];
-  //     this.nodeData.nodes.forEach(element => {
-  //       if (element.id.startsWith('p') && element.drugstoneId !== undefined) {
-  //         proteinNodes.push(element);
-  //       }
-  //     });
-  //     this.netex.tissueExpressionGenes(this.selectedTissue, proteinNodes).subscribe((response) => {
-  //       this.expressionMap = response;
-  //       const updatedNodes = [];
-  //       // mapping from netex IDs to network IDs, TODO check if this step is necessary
-  //       const networkIdMappping = {}
-  //       this.nodeData.nodes.forEach(element => {
-  //         networkIdMappping[element.drugstoneId] = element.id
-  //       });
-  //       const maxExpr = Math.max(...Object.values(this.expressionMap));
-  //       for (const [drugstoneId, expressionlvl] of Object.entries(this.expressionMap)) {
-  //         const networkId = networkIdMappping[drugstoneId]
-  //         const node = this.nodeData.nodes.get(networkId);
-  //         if (node === null) {
-  //           continue;
-  //         }
-  //         const wrapper = getWrapperFromNode(node)
-  //         this.gradientMap[drugstoneId] = expressionlvl !== null ? (Math.pow(expressionlvl / maxExpr, 1 / 3) * (1 - minExp) + minExp) : -1;
-  //         const pos = this.networkHandler.activeNetwork.networkInternal.getPositions([networkId]);
-  //         node.x = pos[networkId].x;
-  //         node.y = pos[networkId].y;
-  //         const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
-  //         Object.assign(node,
-  //           NetworkSettings.getNodeStyle(
-  //             node,
-  //             this.myConfig,
-  //             isSeed,
-  //             this.analysis.inSelection(wrapper),
-  //             this.gradientMap[drugstoneId]));
-  //         node.shape = 'custom';
-  //         node.ctxRenderer = pieChartContextRenderer;
-  //         updatedNodes.push(node);
-  //       }
-  //       this.nodeData.nodes.update(updatedNodes);
-  //     })
-  //   }
-  // }
 }

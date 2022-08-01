@@ -107,18 +107,18 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   public async startTask() {
     // all nodes in selection have drugstoneId, hence exist in the backend
-    const seeds = this.analysis.getSelection().map((item) => item.data.drugstoneId)
-    const seedsFiltered = seeds.filter(function (el) {
-      return el != null;
-    });
+    const seeds = this.analysis.getSelection().map((item) => item.id);
+    const seedsFiltered = seeds.filter(el => el != null);
     const parameters: any = {
       seeds: seedsFiltered,
       config: this.drugstoneConfig.config,
       input_network: this.analysis.inputNetwork
     };
-
     parameters.ppi_dataset = this.drugstoneConfig.config.interactionProteinProtein;
     parameters.pdi_dataset = this.drugstoneConfig.config.interactionDrugProtein;
+    parameters.licenced = this.drugstoneConfig.config.licencedDatasets;
+
+
     parameters.target = this.target === 'drug' ? 'drug' : 'drug-target';
     // pass network data to reconstruct network in analysis result to connect non-proteins to results
     // drop interactions in nodes beforehand to no cause cyclic error, information is contained in edges

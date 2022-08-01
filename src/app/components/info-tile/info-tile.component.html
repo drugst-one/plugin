@@ -71,10 +71,11 @@
     <p *ngIf="wrapper.data.uniprotAc" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
       <b><span>Uniprot:</span></b>
       <a
-        href="https://www.uniprot.org/uniprot/{{ wrapper.data.uniprotAc }}"
+        *ngFor="let uniprotAc of wrapper.data.uniprotAc"
+        href="https://www.uniprot.org/uniprot/{{ uniprotAc }}"
         target="_blank"
       >
-        <span class="is-capitalized"> {{ wrapper.data.uniprotAc }}</span>
+        <span class="is-capitalized"> {{ uniprotAc }}</span>
       </a>
     </p>
     <p *ngIf="wrapper.data.ensg" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
@@ -85,6 +86,16 @@
         target="_blank"
       >
         <span class="is-capitalized"> {{ ensg }}</span>
+      </a>
+    </p>
+        <p *ngIf="wrapper.data.entrez" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
+      <b><span>Entrez:</span></b>
+      <a
+        *ngFor="let entrez of wrapper.data.entrez"
+        href="https://www.ncbi.nlm.nih.gov/gene/{{ entrez }}"
+        target="_blank"
+      >
+        <span class="is-capitalized"> {{ entrez }}</span>
       </a>
     </p>
     <p *ngIf="wrapper.expression" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
@@ -98,10 +109,11 @@
         ><i class="fas fa-info-circle"></i
       ></span>
     </p>
+
   </div>
 
   <app-toggle
-    *ngIf="wrapper.data.drugstoneId && wrapper.data.drugstoneId.startsWith('p')"
+    *ngIf="wrapper.data.drugstoneId && wrapper.data.drugstoneType ==='protein'"
     [value]="analysis.inSelection(wrapper)"
     (valueChange)="
       $event ? analysis.addItems([wrapper]) : analysis.removeItems([wrapper])

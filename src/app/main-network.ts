@@ -1,4 +1,4 @@
-import { defaultConfig, IConfig } from './config';
+import {defaultConfig, IConfig} from './config';
 import {NodeInteraction, Node, getProteinNodeId, NetexInteraction} from './interfaces';
 import * as merge from 'lodash/fp/merge';
 
@@ -51,11 +51,6 @@ export class ProteinNetwork {
       nodes.push(mapCustomNode(protein, config));
     }
 
-    // remove self-edges/loops
-    if (!config.selfReferences) {
-      this.edges = this.edges.filter(el => el.from !== el.to)
-    }
-
     for (const edge of this.edges) {
       edges.push(mapCustomEdge(edge, config));
     }
@@ -69,14 +64,14 @@ export class ProteinNetwork {
 }
 
 /** Maps user input node to network node object
-   * If user input node has no group, fall back to default
-   * If user input node has group that is not defined, throw error
-   *
-   * @param customNode
-   * @param config
-   * @returns
-   */
- export function mapCustomNode(customNode: any, config: IConfig): Node {
+ * If user input node has no group, fall back to default
+ * If user input node has group that is not defined, throw error
+ *
+ * @param customNode
+ * @param config
+ * @returns
+ */
+export function mapCustomNode(customNode: any, config: IConfig): Node {
   let node;
   if (customNode.group === undefined) {
     // fallback to default node
@@ -130,10 +125,17 @@ export function mapCustomEdge(customEdge: NodeInteraction, config: IConfig): any
  * @param config
  * @returns
  */
- export function mapNetexEdge(customEdge: NetexInteraction, config: IConfig): any {
-  const edge = JSON.parse(JSON.stringify(config.edgeGroups.default));
-  edge['from'] = customEdge['proteinA'];
-  edge['to'] = customEdge['proteinB'];
-  edge['dataset'] = customEdge['dataset'];
-  return edge;
+export function mapNetexEdge(customEdge: NetexInteraction, config: IConfig, node_map: object): any {
+  const edges = []
+  node_map[customEdge['proteinA']].forEach(from => {
+    node_map[customEdge['proteinB']].forEach(to => {
+      const edge = JSON.parse(JSON.stringify(config.edgeGroups.default));
+      edge['from'] = from;
+      edge['to'] = to;
+      edge['dataset'] = customEdge['dataset'];
+      edges.push(edge)
+    })
+  })
+
+  return edges;
 }

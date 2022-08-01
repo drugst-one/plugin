@@ -6,6 +6,7 @@ import {
   Input,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core';
 import {
   getWrapperFromNode,
@@ -14,13 +15,13 @@ import {
   Tissue,
   Wrapper
 } from '../../interfaces';
-import { ProteinNetwork, mapNetexEdge } from '../../main-network';
-import { AnalysisService } from '../../services/analysis/analysis.service';
-import { OmnipathControllerService } from '../../services/omnipath-controller/omnipath-controller.service';
-import { NetworkSettings } from '../../network-settings';
-import { defaultConfig, EdgeGroup, NodeGroup } from '../../config';
-import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
-import { removeDuplicateObjectsFromList } from '../../utils';
+import {ProteinNetwork, mapNetexEdge} from '../../main-network';
+import {AnalysisService} from '../../services/analysis/analysis.service';
+import {OmnipathControllerService} from '../../services/omnipath-controller/omnipath-controller.service';
+import {NetworkSettings} from '../../network-settings';
+import {defaultConfig, EdgeGroup, NodeGroup} from '../../config';
+import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
+import {removeDuplicateObjectsFromList} from '../../utils';
 import * as merge from 'lodash/fp/merge';
 import * as JSON5 from 'json5';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
@@ -108,7 +109,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public edges: NodeInteraction[];
 
   // this will store the vis Dataset
-  public nodeData: { nodes: any, edges: any } = { nodes: null, edges: null };
+  public nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
 
   public showAnalysisDialog = false;
   public showThresholdDialog = false;
@@ -220,7 +221,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }
     }
     // trigger updates on config e.g. in legend
-    this.drugstoneConfig.config = { ...this.drugstoneConfig.config };
+    this.drugstoneConfig.config = {...this.drugstoneConfig.config};
     if (updateNetworkFlag && typeof this.networkJSON !== 'undefined') {
       // update network if network config has changed and networkJSON exists
       if (this.networkHandler.activeNetwork.networkInternal !== null) {
@@ -263,16 +264,48 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.proteinData = new ProteinNetwork(this.proteins, this.edges);
 
     if (this.networkHandler.activeNetwork.networkPositions) {
-      this.proteinData.updateNodePositions(this.networkHandler.activeNetwork.networkPositions)
+      this.proteinData.updateNodePositions(this.networkHandler.activeNetwork.networkPositions);
     }
-    // TODO do we still need this?
-    // this.proteinData.linkNodes();
-
-    const { nodes, edges } = this.proteinData.mapDataToNetworkInput(this.drugstoneConfig.config);
+    let {nodes, edges} = this.proteinData.mapDataToNetworkInput(this.drugstoneConfig.config);
     if (this.drugstoneConfig.config.autofillEdges && nodes.length) {
-      const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.config.interactionProteinProtein);
-      edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.config)))
+      let node_map = {};
+      nodes.filter(n => n.drugstoneType === 'protein').forEach(node => {
+        if (typeof node.drugstoneId === 'string') {
+          if (node_map[node.drugstoneId])
+            node_map[node.drugstoneId].push(node.id);
+          else
+            node_map[node.drugstoneId] = [node.id];
+        } else {
+          node.drugstoneId.forEach(n => {
+            if (node_map[n])
+              node_map[n].push(node.id);
+            else
+              node_map[n] = [node.id];
+          })
+        }
+      })
+      const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.config.interactionProteinProtein, this.drugstoneConfig.config.licencedDatasets);
+      edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.config, node_map)).flatMap(e => e));
     }
+
+    const edge_map = {}
+
+    edges = edges.filter(edge => {
+      if (edge_map[edge.to] && edge_map[edge.to].indexOf(edge.from) !== -1)
+        return false
+      if (edge_map[edge.from] && edge_map[edge.from].indexOf(edge.to) !== -1)
+        return false
+      if (!edge_map[edge.from])
+        edge_map[edge.from] = [edge.to]
+      else
+        edge_map[edge.from].push(edge.to)
+      return true
+    })
+
+     // @ts-ignore
+    if (!this.drugstoneConfig.selfReferences) {
+       edges = edges.filter(el => el.from !== el.to);
+     }
 
     this.nodeData.nodes = new vis.DataSet(nodes);
     this.nodeData.edges = new vis.DataSet(edges);
@@ -298,7 +331,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (nodeIds != null && nodeIds.length > 0) {
         const nodeId = nodeIds[0];
         const node = this.nodeData.nodes.get(nodeId);
-        if (node.drugstoneId === undefined || !node.drugstoneId.startsWith('p')) {
+        if (node.drugstoneId === undefined || node.drugstoneType !== 'protein') {
           // skip if node is not a protein mapped to backend
           return;
         }
@@ -366,28 +399,24 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       network.nodes = await this.netex.mapNodes(network.nodes, this.drugstoneConfig.config.identifier);
     }
 
-    if (this.drugstoneConfig.config.identifier === 'ensg') {
-      // remove possible duplicate IDs
-      network.nodes = removeDuplicateObjectsFromList(network.nodes, 'drugstoneId');
-    }
+    // if (this.drugstoneConfig.config.identifier === 'ensg') {
+    // remove possible duplicate IDs
+    // network.nodes = removeDuplicateObjectsFromList(network.nodes, 'drugstoneId');
+    // }
 
     // at this point, we have nodes synched with the backend
     // use drugstoneIds where posssible, but use original id as node name if no label given
-    const nodeIdMap = {};
+    // const nodeIdMap = {};
     network.nodes.forEach((node) => {
       // set node label to original id before node id will be set to netex id
       node.label = node.label ? node.label : node.id;
-      nodeIdMap[node.id] = node.drugstoneId ? node.drugstoneId : node.id;
-      node.id = nodeIdMap[node.id];
+
     });
 
     // adjust edge labels accordingly and filter
     const edges = new Array();
     if (network.edges != null)
       network.edges.forEach(edge => {
-        edge.from = nodeIdMap[edge.from];
-        edge.to = nodeIdMap[edge.to];
-        // check if edges have endpoints
         if (edge.from !== undefined && edge.to !== undefined) {
           edges.push(edge);
         }
@@ -523,7 +552,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   gProfilerLink(): string {
     // nodes in selection have drugstoneId
     const queryString = this.analysis.getSelection()
-      .filter(wrapper => wrapper.data.drugstoneId.startsWith('p'))
+      .filter(wrapper => wrapper.data.drugstoneType === 'protein')
       .map(wrapper => wrapper.data.uniprotAc)
       .join('%0A');
     return 'http://biit.cs.ut.ee/gprofiler/gost?' +
@@ -542,11 +571,27 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       'background=';
   }
 
+  //TODO change to access through network service
+  @ViewChild('analysisPanel') analysisPanel;
+
+  getNodes() :any {
+    if (this.selectedAnalysisToken && this.analysisPanel)
+      return this.analysisPanel.getResultNodes()
+    return this.proteins
+  }
+
+  getEdges() :any {
+    if(this.selectedAnalysisToken && this.analysisPanel)
+      return this.analysisPanel.getResultEdges()
+    return this.edges
+  }
+
 
   emitTaskEvent(eventObject: object) {
     this.taskEvent.emit(eventObject);
   }
 
+  //TODO check if used
   setInputNetwork(network: any) {
     if (network == null)
       this.analysis.inputNetwork = { nodes: this.proteins, edges: this.edges }

@@ -15,7 +15,6 @@ import { AnalysisPanelComponent } from './components/analysis-panel/analysis-pan
 import { TaskListComponent } from './components/task-list/task-list.component';
 import { ToggleComponent } from './components/toggle/toggle.component';
 import { InfoTileComponent } from './components/info-tile/info-tile.component';
-import { CustomProteinsComponent } from './dialogs/custom-proteins/custom-proteins.component';
 import { DownloadButtonComponent } from './components/network/network-menu/download-button/download-button.component';
 
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -61,7 +60,6 @@ import { QuickDrugComponent } from './components/quick-drug/quick-drug.component
     TaskListComponent,
     ToggleComponent,
     InfoTileComponent,
-    CustomProteinsComponent,
     AddExpressedProteinsComponent,
     NetworkLegendComponent,
     ProtTableComponent,
