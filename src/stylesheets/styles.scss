@@ -29,7 +29,7 @@
     margin-bottom: 0;
   }
 
-  .is-fullwidth{
+  .is-fullwidth {
     width: 100%;
   }
 
@@ -41,6 +41,7 @@
   nav.navbar {
     height: 60px;
   }
+
   .modal-card {
     max-height: 90% !important;
   }
@@ -217,4 +218,24 @@
   button.is-secondary, button.is-secondary:hover {
     background-color: var(--drgstn-secondary) !important;
   }
+
+  .row > * {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .col > * {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+.row > * {
+  padding-right: calc(1.5rem * .5);
+  padding-left: calc(1.5rem * .5);
+}
+
+.col > * {
+  padding-right: calc(1.5rem * .5);
+  padding-left: calc(1.5rem * .5);
 }
