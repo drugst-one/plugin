@@ -228,6 +228,10 @@
     padding-right: 0;
     padding-left: 0;
   }
+  .card-header {
+    padding: 0 0;
+    line-height: 18px;
+  }
 }
 
 .row > * {
@@ -238,4 +242,9 @@
 .col > * {
   padding-right: calc(1.5rem * .5);
   padding-left: calc(1.5rem * .5);
+}
+
+.card-header {
+  padding: 0.5rem 1rem;
+  line-height: 24px;
 }
