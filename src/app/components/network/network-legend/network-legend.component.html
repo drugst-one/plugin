@@ -1,13 +1,13 @@
 <div
   class="legend"
-  [class.right]="this.config.legendPos === 'right'"
+  [class.right]="config.legendPos === 'right'"
   [ngClass]="{ 'legend-small': drugstoneConfig.smallStyle }"
 >
   <div class="legend-background"></div>
   <!-- default legend in html -->
-  <table *ngIf="!this.config.legendUrl.length" class="legend-table">
-    <ng-container *ngIf="this.config.showLegendNodes">
-      <ng-container *ngFor="let nodeGroup of this.config.nodeGroups | keyvalue">
+  <table *ngIf="!config.legendUrl.length" class="legend-table">
+    <ng-container *ngIf="config.showLegendNodes">
+      <ng-container *ngFor="let nodeGroup of config.nodeGroups | keyvalue">
         <tr
           class="list-item"
           *ngIf="nodeGroup.key && checkNodeGroupContext(nodeGroup.key)"
@@ -86,9 +86,9 @@
       </ng-container>
     </ng-container>
 
-    <ng-container *ngIf="this.config.showLegendEdges">
+    <ng-container *ngIf="config.showLegendEdges && _emptyEdgeConfig">
       <tr
-        *ngFor="let edgeGroup of this.config.edgeGroups | keyvalue"
+        *ngFor="let edgeGroup of config.edgeGroups | keyvalue"
         class="list-item"
       >
         <ng-container
@@ -114,8 +114,8 @@
 
   <!-- custom legend image if url given by user -->
   <img
-    *ngIf="this.config.legendUrl.length"
-    [src]="this.config.legendUrl"
-    [ngClass]="this.config.legendClass"
+    *ngIf="config.legendUrl.length"
+    [src]="config.legendUrl"
+    [ngClass]="config.legendClass"
   />
 </div>
