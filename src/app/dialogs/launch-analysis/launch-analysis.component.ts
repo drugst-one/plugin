@@ -8,6 +8,7 @@ import {
 } from '../../services/analysis/analysis.service';
 import { Algorithm, AlgorithmType, QuickAlgorithmType } from 'src/app/interfaces';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
+import {NetworkHandlerService} from "../../services/network-handler/network-handler.service";
 
 @Component({
   selector: 'app-launch-analysis',
@@ -76,7 +77,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   public maxTasks = MAX_TASKS;
 
-  constructor(public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService) {
+  constructor(public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public networkHandler: NetworkHandlerService) {
   }
 
   ngOnInit(): void {
@@ -112,7 +113,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     const parameters: any = {
       seeds: seedsFiltered,
       config: this.drugstoneConfig.config,
-      input_network: this.analysis.inputNetwork
+      input_network: this.networkHandler.activeNetwork.inputNetwork
     };
     parameters.ppi_dataset = this.drugstoneConfig.config.interactionProteinProtein;
     parameters.pdi_dataset = this.drugstoneConfig.config.interactionDrugProtein;
@@ -123,7 +124,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     // pass network data to reconstruct network in analysis result to connect non-proteins to results
     // drop interactions in nodes beforehand to no cause cyclic error, information is contained in edges
     // @ts-ignore
-    this.analysis.inputNetwork.nodes.forEach(node => {
+    this.networkHandler.activeNetwork.inputNetwork.nodes.forEach(node => {
       delete node.interactions
     });
 

@@ -105,8 +105,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public proteinData: ProteinNetwork;
 
-  public proteins: Node[];
-  public edges: NodeInteraction[];
+  // public proteins: Node[];
+  // public edges: NodeInteraction[];
 
   // this will store the vis Dataset
   public nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
@@ -261,7 +261,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.networkHandler.activeNetwork.selectedWrapper = null;
     // getNetwork synchronizes the input network with the database
     await this.getNetwork();
-    this.proteinData = new ProteinNetwork(this.proteins, this.edges);
+    this.proteinData = new ProteinNetwork(this.networkHandler.activeNetwork.inputNetwork.nodes,this.networkHandler.activeNetwork.inputNetwork.edges);
 
     if (this.networkHandler.activeNetwork.networkPositions) {
       this.proteinData.updateNodePositions(this.networkHandler.activeNetwork.networkPositions);
@@ -367,7 +367,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     this.networkHandler.activeNetwork.queryItems = [];
     this.networkHandler.activeNetwork.updateQueryItems();
-    this.networkHandler.activeNetwork.currentViewProteins = this.proteins;
+    this.networkHandler.activeNetwork.currentViewProteins = this.networkHandler.activeNetwork.inputNetwork.nodes;
     // this.fillQueryItems(this.currentViewNodes);
     if (this.networkHandler.activeNetwork.selectedWrapper) {
       this.networkHandler.activeNetwork.networkInternal.selectNodes([this.networkHandler.activeNetwork.selectedWrapper.id]);
@@ -423,9 +423,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       });
     // remove edges without endpoints
     network.edges = edges;
-    this.analysis.inputNetwork = network;
-    this.proteins = network.nodes;
-    this.edges = network.edges;
+    this.networkHandler.activeNetwork.inputNetwork = network;
+    // this.proteins = network.nodes;
+    // this.edges = network.edges;
   }
 
   private setWindowWidth(width: number) {
@@ -577,13 +577,13 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   getNodes() :any {
     if (this.selectedAnalysisToken && this.analysisPanel)
       return this.analysisPanel.getResultNodes()
-    return this.proteins
+    return this.networkHandler.activeNetwork.inputNetwork.nodes;
   }
 
   getEdges() :any {
     if(this.selectedAnalysisToken && this.analysisPanel)
       return this.analysisPanel.getResultEdges()
-    return this.edges
+    return this.networkHandler.activeNetwork.inputNetwork.edges
   }
 
 
@@ -591,12 +591,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.taskEvent.emit(eventObject);
   }
 
-  //TODO check if used
-  setInputNetwork(network: any) {
-    if (network == null)
-      this.analysis.inputNetwork = { nodes: this.proteins, edges: this.edges }
-    else
-      this.analysis.inputNetwork = network;
-  }
-
+  // //TODO check if used
+  // setInputNetwork(network: any) {
+  //   if (network == null)
+  //     this.analysis.inputNetwork = { nodes: this.proteins, edges: this.edges }
+  //   else
+  //     this.analysis.inputNetwork = network;
+  // }
+//
 }

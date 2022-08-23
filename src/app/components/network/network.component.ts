@@ -15,7 +15,7 @@ import {
   NodeInteraction,
   Tissue,
   Wrapper,
-  NetworkType
+  NetworkType, NetworkData
 } from '../../interfaces';
 import {AnalysisService} from 'src/app/services/analysis/analysis.service';
 import {NetworkSettings} from 'src/app/network-settings';
@@ -39,6 +39,7 @@ export class NetworkComponent implements OnInit {
   @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
 
   public networkInternal: any = null;
+  public inputNetwork: NetworkData = {nodes: [], edges: []};
 
   public selectedWrapper: Wrapper | null = null;
 

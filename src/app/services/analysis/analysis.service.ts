@@ -243,11 +243,10 @@ export class AnalysisService {
       })
     }
     const target = ['connect', 'connectSelected'].includes(algorithm) ? 'drug-target' : 'drug'
-
     const parameters: any = {
       seeds: seeds,
       config: this.drugstoneConfig.config,
-      input_network: this.inputNetwork,
+      input_network: this.networkHandler.activeNetwork.inputNetwork,
       ppi_dataset: this.drugstoneConfig.config.interactionProteinProtein,
       pdi_dataset: this.drugstoneConfig.config.interactionDrugProtein,
       target: target,

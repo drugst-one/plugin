@@ -38,6 +38,11 @@ export interface NodeData {
   edges: any;
 }
 
+export interface NetworkData {
+  nodes: any[],
+  edges: NetworkEdge[]
+}
+
 export type NodeType= 'protein' | 'drug' | 'disorder' | 'other'
 
 export type NetworkType = 'explorer' | 'analysis'

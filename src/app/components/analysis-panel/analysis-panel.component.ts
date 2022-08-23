@@ -186,7 +186,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
         // Create
         const {nodes, edges} = this.createNetwork(this.result);
-        this.analysis.inputNetwork = {nodes: nodes, edges: edges};
+        this.networkHandler.activeNetwork.inputNetwork = {nodes: nodes, edges: edges};
         this.nodeData.nodes = new vis.DataSet(nodes);
         this.nodeData.edges = new vis.DataSet(edges);
         const container = this.networkHandler.activeNetwork.networkEl.nativeElement;
@@ -353,7 +353,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.analysis.switchSelection('main');
     this.token = null;
     this.tokenChange.emit(this.token);
-    this.analysis.inputNetwork = {};
     this.emitVisibleItems(false);
   }
 
@@ -455,8 +454,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
     for (const edge of network.edges) {
       const e = mapCustomEdge(edge, this.myConfig)
-      e.from = e.from[0] === 'p' ? nodeIdMap[e.from] : e.from
-      e.to = e.to[0] === 'p' ? nodeIdMap[e.to] : e.to
+      e.from = e.from[0] === 'p' &&  nodeIdMap[e.from] ? nodeIdMap[e.from] : e.from
+      e.to = e.to[0] === 'p' &&  nodeIdMap[e.to] ? nodeIdMap[e.to] : e.to
       const hash = e.from + "_" + e.to;
       if (uniqEdges.indexOf(hash) === -1) {
         uniqEdges.push(hash);
