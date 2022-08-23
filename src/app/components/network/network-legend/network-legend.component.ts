@@ -10,7 +10,12 @@ import {IConfig} from '../../../config';
 })
 export class NetworkLegendComponent implements OnInit {
 
-  @Input() context: LegendContext;
+  _context = 'explorer'; 
+  _emptyEdgeConfig = false;
+  @Input() set context (value: LegendContext) {
+    this._context = value;
+    this._emptyEdgeConfig = this.checkIfEdgeConfigEmpty();
+  };
   @Input() config: IConfig;
 
   private contextNodeGroupsToDelete = {
@@ -40,11 +45,15 @@ export class NetworkLegendComponent implements OnInit {
       // selected node is not supposed to appear in legend
       return false;
     }
-    return !this.contextNodeGroupsToDelete[this.context].includes(nodeGroupKey);
+    return !this.contextNodeGroupsToDelete[this._context].includes(nodeGroupKey);
   }
 
   public checkEdgeGroupContext(edgeGroupKey) {
-    return !this.contextEdgeGroupsToDelete[this.context].includes(edgeGroupKey);
+    return !this.contextEdgeGroupsToDelete[this._context].includes(edgeGroupKey);
+  }
+
+  public checkIfEdgeConfigEmpty() {
+    return Object.keys(this.config.edgeGroups).some(key => this.checkEdgeGroupContext(key));
   }
 
   constructor(public drugstoneConfig: DrugstoneConfigService) { }
