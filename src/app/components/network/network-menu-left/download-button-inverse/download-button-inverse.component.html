@@ -17,7 +17,7 @@
           </span>
       </button>
     </div>
-    <div class="dropdown-menu" id="{{ 'controls-' + buttonId }}" role="menu">
+    <div class="dropdown-menu" id="{{ 'controls-' + buttonId }}" role="menu" [ngClass]="{ 'inner-dropdown': !networkHandler.activeNetwork.networkSidebarOpen }">
       <div class="dropdown-content">
         <a
           (click)="downloadLink('graphml')"
@@ -42,4 +42,3 @@
       </div>
     </div>
   </div>
-  

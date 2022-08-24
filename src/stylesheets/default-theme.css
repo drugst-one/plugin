@@ -1,0 +1,16 @@
+:root {
+  --drgstn-primary: #347eee;
+  --drgstn-secondary: #2e42f2;
+  --drgstn-success: #48C774;
+  --drgstn-warning: #ffdd00;
+  --drgstn-danger: #ff2744;
+  --drgstn-background: #f8f9fa;
+  --drgstn-panel: #ffffff;
+  --drgstn-info: #61c43d;
+  --drgstn-text-primary: #151515;
+  --drgstn-text-secondary: #eeeeee;
+  --drgstn-border: rgba(0, 0, 0, 0.2);
+  --drgstn-tooltip: rgba(74, 74, 74, 0.9);
+  --drgstn-panel-secondary: #FFFFFF;
+  --drgstn-height: 600px;
+}

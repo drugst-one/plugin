@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
 import { downLoadFile } from 'src/app/utils';
+import {NetworkHandlerService} from "../../../../services/network-handler/network-handler.service";
 
 @Component({
   selector: 'app-download-button',
@@ -13,7 +14,7 @@ export class DownloadButtonComponent implements OnInit {
   @Input() nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
   @Input() buttonId: string;
 
-  constructor(public drugstoneConfig: DrugstoneConfigService, public netex: NetexControllerService) { }
+  constructor(public drugstoneConfig: DrugstoneConfigService, public netex: NetexControllerService, public networkHandler: NetworkHandlerService) { }
 
   ngOnInit(): void {
   }

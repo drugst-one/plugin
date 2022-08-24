@@ -83,6 +83,7 @@
         <div
           class="dropdown network-footer-toolbar-element"
           [class.is-active]="networkHandler.activeNetwork.expressionExpanded"
+          [ngClass]="{ 'inner-dropdown': !networkHandler.activeNetwork.networkSidebarOpen }"
         >
           <div class="dropdown-trigger">
             <button

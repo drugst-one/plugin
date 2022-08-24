@@ -106,21 +106,26 @@
   z-index: $network-tissue-options-z !important;
 
   .dropdown-content {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-
-    .dropdown-item {
-      padding: .375rem 0rem !important;
-      padding-left: 0.5rem !important;
+    .scroll-area {
+      height: 15rem;
+      padding: 5px;
     }
+  }
+}
 
-    margin-left: calc(-250px - 12px);
-    margin-right: calc(-250px - 12px);
+.inner-dropdown {
+  .dropdown-menu {
+    margin-left: calc(-250px - 1px);
     width: 250px;
     margin-top: -45px;
-  }
 
-  .scroll-area {
-    height: 15rem;
+    .dropdown-content {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+
+      .dropdown-item {
+        padding: .375rem 0 !important;
+      }
+    }
   }
 }
