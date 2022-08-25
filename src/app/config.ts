@@ -139,7 +139,7 @@ export const defaultConfig: IConfig = {
   showOverview: true,
   showQuery: true,
   showItemSelector: true,
-  showSimpleAnalysis: false,
+  showSimpleAnalysis: true,
   showAdvAnalysis: true,
   showSelection: true,
   showTasks: true,
