@@ -51,15 +51,11 @@
             <div class="column content">
               <h4
                 class="is-4 has-text-weight-bold"
-                *ngIf="
-                  task.info.algorithm !== 'quick' &&
-                  task.info.algorithm !== 'super'
-                "
               >
               <span class="icon">
                 <i class="fas fa-wrench" aria-hidden="true"></i>
               </span>
-                Algorithm:
+                {{(['quick', 'super', 'connect', 'connectSelected'].indexOf(task.info.algorithm) === -1) ? 'Algorithm:' : 'Method:' }}
                 {{ algorithmNames[task.info.algorithm] }}
               </h4>
             </div>
@@ -158,57 +154,69 @@
               </table>
             </div>
           </div>
-          <div
-            *ngIf="
-              task.info.algorithm === 'quick' || task.info.algorithm === 'super'
-            "
+          <div class="columns m-1"
+               *ngIf="['quick','super','connect','connectSelected'].indexOf(task.info.algorithm) > -1"
           >
-            <p>
-              Algorithm: <strong>{{ algorithmNames["multisteiner"] }}</strong>
-            </p>
-            <table class="table is-narrow">
-              <tbody>
-              <tr>
-                <td>Number of Trees</td>
-                <td>1</td>
-              </tr>
-              <tr>
-                <td>Tolerance</td>
-                <td>0</td>
-              </tr>
-              <tr>
-                <td>Hub Penality</td>
-                <td>1</td>
-              </tr>
-              </tbody>
-            </table>
-            <p>
-              Algorithm: <strong>{{ algorithmNames["closeness"] }}</strong>
-            </p>
-            <table class="table is-narrow">
-              <tbody>
-              <tr>
-                <td>Include indirect drugs</td>
-                <td>
-                  <i class="fa fa-times"></i>
-                </td>
-              </tr>
-              <tr>
-                <td>Include non-approved drugs</td>
-                <td>
-                  <i class="fa fa-check"></i>
-                </td>
-              </tr>
-              <tr>
-                <td>Hub Penality</td>
-                <td>1</td>
-              </tr>
-              <tr>
-                <td>Result Size</td>
-                <td>10</td>
-              </tr>
-              </tbody>
-            </table>
+            <div class="column">
+              <h4 class="is-4 has-text-weight-bold">
+              <span class="icon">
+                <i class="fas fa-wrench" aria-hidden="true"></i>
+              </span>
+                Algorithm:
+                {{ algorithmNames["multisteiner"] }}
+              </h4>
+              <table class="table is-narrow">
+                <tbody>
+                <tr>
+                  <td>Number of Trees</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>Tolerance</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>Hub Penality</td>
+                  <td>1</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="columns m-1" *ngIf="['quick','super'].indexOf(task.info.algorithm) > -1">
+            <div class="column">
+              <h4 class="is-4 has-text-weight-bold">
+              <span class="icon">
+                <i class="fas fa-wrench" aria-hidden="true"></i>
+              </span>
+                Algorithm:
+                {{ algorithmNames["closeness"] }}
+              </h4>
+              <table class="table is-narrow">
+                <tbody>
+                <tr>
+                  <td>Include indirect drugs</td>
+                  <td>
+                    <i class="fa fa-times"></i>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Include non-approved drugs</td>
+                  <td>
+                    <i class="fa fa-check"></i>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Hub Penality</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>Result Size</td>
+                  <td>10</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
