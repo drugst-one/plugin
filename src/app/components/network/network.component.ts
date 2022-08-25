@@ -117,7 +117,7 @@ export class NetworkComponent implements OnInit {
     this.adjacentDisordersProtein = bool;
     if (this.adjacentDisordersProtein) {
 
-      this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'proteins', this.drugstoneConfig.config.associatedProteinDisorder, this.drugstoneConfig.config.licencedDatasets).subscribe(response => {
+      this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'proteins', this.drugstoneConfig.config.associatedProteinDisorder, this.drugstoneConfig.config.licensedDatasets).subscribe(response => {
         const proteinMap = this.getProteinMap()
         const addedEdge = {}
         for (const interaction of response.edges) {
@@ -160,7 +160,7 @@ export class NetworkComponent implements OnInit {
   public updateAdjacentDrugDisorders(bool: boolean) {
     this.adjacentDisordersDrug = bool;
     if (this.adjacentDisordersDrug) {
-      this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'drugs', this.drugstoneConfig.config.indicationDrugDisorder, this.drugstoneConfig.config.licencedDatasets).subscribe(response => {
+      this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'drugs', this.drugstoneConfig.config.indicationDrugDisorder, this.drugstoneConfig.config.licensedDatasets).subscribe(response => {
         for (const interaction of response.edges) {
           const edge = {from: interaction.drug, to: interaction.disorder};
           this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.config));
@@ -214,7 +214,7 @@ export class NetworkComponent implements OnInit {
     if (this.adjacentDrugs) {
       const addedEdge = {}
       const proteinMap = this.getProteinMap()
-      this.netex.adjacentDrugs(this.drugstoneConfig.config.interactionDrugProtein, this.drugstoneConfig.config.licencedDatasets, this.nodeData.nodes.get()).subscribe(response => {
+      this.netex.adjacentDrugs(this.drugstoneConfig.config.interactionDrugProtein, this.drugstoneConfig.config.licensedDatasets, this.nodeData.nodes.get()).subscribe(response => {
         const existingDrugIDs = this.nodeData.nodes.get().filter(n => n.drugstoneId && n.drugstoneType === 'drug').map(n => n.drugstoneId);
         for (const interaction of response.pdis) {
           const edge = mapCustomEdge({from: interaction.protein, to: interaction.drug}, this.drugstoneConfig.config)

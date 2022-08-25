@@ -284,7 +284,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           })
         }
       })
-      const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.config.interactionProteinProtein, this.drugstoneConfig.config.licencedDatasets);
+      const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.config.interactionProteinProtein, this.drugstoneConfig.config.licensedDatasets);
       edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.config, node_map)).flatMap(e => e));
     }
 

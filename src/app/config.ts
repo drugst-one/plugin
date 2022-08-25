@@ -74,7 +74,6 @@ export interface IConfig {
   interactionDrugProtein: InteractionDrugProteinDB;
   interactionProteinProtein: InteractionProteinProteinDB;
   indicationDrugDisorder: IndicationDrugDisorderDB;
-  licencedDatasets?: boolean;
   associatedProteinDisorder: AssociatedProteinDisorderDB;
   autofillEdges: boolean;
   interactions?: InteractionDatabase;
