@@ -274,6 +274,7 @@ export class AnalysisService {
       position: 'top-center',
       animate: {in: 'fadeIn', out: 'fadeOut'}
     });
+    return { taskId: resp.token, algorithm: algorithm, target: target, params: parameters }
   }
 
   async startAnalysis(algorithm, target: 'drug' | 'drug-target', parameters) {

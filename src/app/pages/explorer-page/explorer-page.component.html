@@ -190,9 +190,9 @@
           </div>
         </div>
 
-        <app-quick-drug-target *ngIf="drugstoneConfig.config.showConnectGenes"></app-quick-drug-target>
+        <app-quick-drug-target *ngIf="drugstoneConfig.config.showConnectGenes" (taskEvent)="emitTaskEvent($event)"></app-quick-drug-target>
 
-        <app-quick-drug *ngIf="drugstoneConfig.config.showSimpleAnalysis"></app-quick-drug>
+        <app-quick-drug *ngIf="drugstoneConfig.config.showSimpleAnalysis" (taskEvent)="emitTaskEvent($event)"></app-quick-drug>
 
         <div
           *ngIf="drugstoneConfig.config.showAdvAnalysis"

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { AnalysisService } from 'src/app/services/analysis/analysis.service';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 
@@ -8,6 +8,8 @@ import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugst
   styleUrls: ['./quick-drug.component.scss']
 })
 export class QuickDrugComponent implements OnInit {
+  @Output()
+  public taskEvent = new EventEmitter<object>();
 
   constructor(
     public drugstoneConfig: DrugstoneConfigService,
@@ -16,5 +18,10 @@ export class QuickDrugComponent implements OnInit {
   public collapseAnalysisQuick = false;
 
   ngOnInit(): void {
+  }
+
+  public async runQuickAnalysis(isSuper, algorithm) {
+    const object = await this.analysis.startQuickAnalysis(isSuper, algorithm);
+    this.taskEvent.emit(object);
   }
 }
