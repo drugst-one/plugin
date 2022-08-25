@@ -132,7 +132,6 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.damping_factor = this.trustrankDampingFactor;
       parameters.include_indirect_drugs = this.trustrankIncludeIndirectDrugs;
       parameters.include_non_approved_drugs = this.trustrankIncludeNonApprovedDrugs;
-      parameters.ignore_non_seed_baits = !this.trustrankIncludeViralNonSeeds;
       if (this.trustrankMaxDeg && this.trustrankMaxDeg > 0) {
         parameters.max_deg = this.trustrankMaxDeg;
       }
@@ -141,7 +140,6 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     } else if (this.algorithm === 'closeness') {
       parameters.include_indirect_drugs = this.closenessIncludeIndirectDrugs;
       parameters.include_non_approved_drugs = this.closenessIncludeNonApprovedDrugs;
-      parameters.ignore_non_seed_baits = !this.closenessIncludeViralNonSeeds;
       if (this.closenessMaxDeg && this.closenessMaxDeg > 0) {
         parameters.max_deg = this.closenessMaxDeg;
       }
@@ -149,7 +147,6 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.result_size = this.closenessResultSize;
     } else if (this.algorithm === 'degree') {
       parameters.include_non_approved_drugs = this.degreeIncludeNonApprovedDrugs;
-      parameters.ignore_non_seed_baits = !this.degreeIncludeViralNonSeeds;
       if (this.degreeMaxDeg && this.degreeMaxDeg > 0) {
         parameters.max_deg = this.degreeMaxDeg;
       }
@@ -162,7 +159,6 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.hub_penalty = this.proximityHubPenalty;
       parameters.result_size = this.proximityResultSize;
     } else if (this.algorithm === 'betweenness') {
-      parameters.ignore_non_seed_baits = !this.betweennessIncludeViralNonSeeds;
       if (this.betweennessMaxDeg && this.betweennessMaxDeg > 0) {
         parameters.max_deg = this.betweennessMaxDeg;
       }
@@ -173,7 +169,6 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     } else if (this.algorithm === 'multisteiner') {
       parameters.num_trees = this.multisteinerNumTrees;
       parameters.tolerance = this.multisteinerTolerance;
-      parameters.ignore_non_seed_baits = !this.multisteinerIncludeViralNonSeeds;
       if (this.multisteinerMaxDeg && this.multisteinerMaxDeg > 0) {
         parameters.max_deg = this.multisteinerMaxDeg;
       }
