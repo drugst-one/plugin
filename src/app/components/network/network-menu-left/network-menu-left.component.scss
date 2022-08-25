@@ -41,7 +41,7 @@
   height: calc(100% - #{$network-header-height});
   width: $network-footer-width;
   top: $network-header-height;
-  background-color: var(--drgstn-panel-secondary);
+  background-color: var(--drgstn-panel);
   z-index: $network-footer-container-z;
 
   &.small-sidebar {
