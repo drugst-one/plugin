@@ -27,9 +27,9 @@ export interface EdgeGroup {
 }
 
 export type Identifier = 'symbol' | 'uniprot' | 'ensg' | 'entrez';
-export type InteractionDrugProteinDB = 'NeDRex' | 'DrugBank' | 'Drug Central' | 'ChEMBL' | 'DGIdb';
+export type InteractionDrugProteinDB = 'NeDRex' | 'DrugBank' | 'DrugCentral' | 'ChEMBL' | 'DGIdb';
 export type InteractionProteinProteinDB = 'NeDRex' | 'BioGRID' | 'IID' | 'IntAct' | 'STRING' | 'APID';
-export type IndicationDrugDisorderDB = 'NeDRex' | 'CTD' | 'Drug Central' | 'DrugBank';
+export type IndicationDrugDisorderDB = 'NeDRex' | 'CTD' | 'DrugCentral' | 'DrugBank';
 export type AssociatedProteinDisorderDB = 'NeDRex' | 'DisGeNET' | 'OMIM';
 
 
@@ -128,14 +128,14 @@ connectorNodeGroup.groupName = 'Connector Node';
  */
 export const defaultConfig: IConfig = {
   title: 'Drugst.one',
-  legendUrl: '', // 'https://exbio.wzw.tum.de/covex/assets/leg1.png' show legend image if set, otherwise default legend
+  legendUrl: '',
   legendClass: 'legend',
   legendPos: 'left',
   taskTargetName: 'Drug Target Search',
   taskDrugName: 'Drug Search',
+  showSidebar: 'left',
   showLegendNodes: true,
   showLegendEdges: true,
-  showSidebar: 'left',
   showOverview: true,
   showQuery: true,
   showItemSelector: true,
@@ -150,25 +150,26 @@ export const defaultConfig: IConfig = {
   showNetworkMenuButtonExportGraphml: true,
   showNetworkMenuButtonAdjacentDrugs: true,
   showNetworkMenuButtonCenter: true,
+  showNetworkMenuButtonAnimation: true,
+
+  showNetworkMenuButtonAdjacentDisordersProteins: true,
+  showNetworkMenuButtonAdjacentDisordersDrugs: true,
   showConnectGenes: true,
   networkMenuButtonAdjacentDrugsLabel: 'Drugs',
-  showNetworkMenuButtonAdjacentDisordersProteins: true,
   networkMenuButtonAdjacentDisordersProteinsLabel: 'Disorders (protein)',
-  showNetworkMenuButtonAdjacentDisordersDrugs: true,
   networkMenuButtonAdjacentDisordersDrugsLabel: 'Disorders (drug)',
-  showNetworkMenuButtonAnimation: true,
   networkMenuButtonAnimationLabel: 'Animation',
   identifier: 'symbol',
+  selfReferences: false,
   interactionDrugProtein: 'NeDRex',
   interactionProteinProtein: 'NeDRex',
-  associatedProteinDisorder: 'NeDRex',
   indicationDrugDisorder: 'NeDRex',
-  licensedDatasets: false,
-  nodeShadow: true,
-  edgeShadow: true,
+  associatedProteinDisorder: 'NeDRex',
   autofillEdges: true,
   physicsOn: false,
-  selfReferences: false,
+  nodeShadow: true,
+  edgeShadow: true,
+  licensedDatasets: false,
   algorithms: {
     'drug': ['trustrank', 'closeness', 'degree', 'proximity'],
     'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness']
