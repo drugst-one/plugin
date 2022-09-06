@@ -1,6 +1,7 @@
 @import "toast";
+@import "../../node_modules/bulma/css/bulma.min.css";
+
 #appWindow {
-  @import "../../node_modules/bulma/bulma";
 
   // bulma variables
   $dropdown-content-radius: 20px;
