@@ -1,6 +1,6 @@
 <div class="toast-holder">
     <div *ngFor="let toast of toasts | keyvalue">
-        <div class="toast {{toast.value.type}}">
+        <div class="toast drugstone-prefix-{{toast.value.type}}">
             <a (click)="close(toast.key)" aria-label="close" class="close">
                 <span class="icon" title="Close analysis">
                     <i class="fas fa-times" aria-hidden="true"></i>
