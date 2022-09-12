@@ -13,12 +13,18 @@ export class ToastComponent implements OnInit {
 
   public toastIdPrefix = 'drugstone-toast-id-';
 
+
+
   constructor(public toast: ToastService) { }
 
   ngOnInit(): void {
     this.toast.getToasts$.forEach(data => {
       this.toasts = data;
     })
+  }
+
+  public getDrugstoneClass(type: string) {
+    return 'drugstone-plugin-' + type
   }
 
   public close(id: number) {
