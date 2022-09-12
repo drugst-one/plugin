@@ -16,19 +16,19 @@
   box-shadow: 0 0.5em 1em -0.125em hsla(0, 0%, 4%, 0.1),
     0 0 0 1px hsla(0, 0%, 4%, 0.02);
   margin: 0 auto;
-  &.danger {
+  &.drugstone-prefix-danger {
     color: var(--drgstn-text-secondary);
     background-color: var(--drgstn-danger);
   }
-  &.success {
+  &.drugstone-prefix-success {
     color: var(--drgstn-text-secondary) !important;
     background-color: var(--drgstn-success);
   }
-  &.warning {
+  &.drugstone-prefix-warning {
     color: var(--drgstn-text-secondary);
     background-color: var(--drgstn-warning);
   }
-  &.info {
+  &.drugstone-prefix-info {
     color: var(--drgstn-text-secondary);
     background-color: var(--drgstn-info);
   }

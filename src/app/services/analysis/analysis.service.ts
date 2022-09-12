@@ -2,7 +2,6 @@ import {Wrapper, Task, getWrapperFromNode, Node, Dataset, Tissue} from '../../in
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
-import {toast} from 'bulma-toast';
 import {Injectable} from '@angular/core';
 import {NetexControllerService} from '../netex-controller/netex-controller.service';
 import {DrugstoneConfigService} from "../drugstone-config/drugstone-config.service";

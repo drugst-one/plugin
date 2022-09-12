@@ -10,7 +10,6 @@ import { ToastService } from 'src/app/services/toast/toast.service';
 export class ToastComponent implements OnInit {
 
   public toasts: LiveToasts = {};
-  public seen: any = new Set();
 
   public toastIdPrefix = 'drugstone-toast-id-';
 
@@ -22,19 +21,8 @@ export class ToastComponent implements OnInit {
     })
   }
 
-  public isSeen(id) {
-    console.log(this.seen.has(id))
-    if (this.seen.has(id)) {
-      return true
-    } else {
-      this.seen.add(id);
-      return false
-    }
-  }
-
   public close(id: number) {
     this.toast.deleteToast(id);
-    document.getElementById(`${this.toastIdPrefix}` + id).remove();
   }
   
 }
