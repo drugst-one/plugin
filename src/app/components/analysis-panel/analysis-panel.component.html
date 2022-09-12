@@ -20,7 +20,7 @@
 
       <a (click)="close()" class="card-header-icon" aria-label="close">
         <span class="icon" title="Close analysis">
-          <i class="fas fa-times" aria-hidden="true"></i>
+          <i class="fas fa-times color-danger" aria-hidden="true"></i>
         </span>
       </a>
     </header>
@@ -132,7 +132,7 @@
                     ></i>
                     <i
                       *ngIf="!task.info.parameters.includeIndirectDrugs"
-                      class="fa fa-times"
+                      class="fa fa-times color-danger"
                     ></i>
                   </td>
                 </tr>
@@ -150,7 +150,7 @@
                     ></i>
                     <i
                       *ngIf="!task.info.parameters.includeNonApprovedDrugs"
-                      class="fa fa-times"
+                      class="fa fa-times color-danger"
                     ></i>
                   </td>
                 </tr>
@@ -190,7 +190,7 @@
               <tr>
                 <td>Include indirect drugs</td>
                 <td>
-                  <i class="fa fa-times"></i>
+                  <i class="fa fa-times color-danger"></i>
                 </td>
               </tr>
               <tr>

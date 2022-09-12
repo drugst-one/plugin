@@ -1,0 +1,43 @@
+@import "src/stylesheets/variables";
+
+.toast-holder {
+  z-index: $toast-z;
+  top: 3rem;
+  position: fixed;
+  left: 0;
+  right: 0;
+}
+
+.toast {
+  position: relative;
+  max-width: 60vw;
+  padding: 10px 15px;
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5em 1em -0.125em hsla(0, 0%, 4%, 0.1),
+    0 0 0 1px hsla(0, 0%, 4%, 0.02);
+  margin: 0 auto;
+  &.danger {
+    color: var(--drgstn-text-secondary);
+    background-color: var(--drgstn-danger);
+  }
+  &.success {
+    color: var(--drgstn-text-secondary) !important;
+    background-color: var(--drgstn-success);
+  }
+  &.warning {
+    color: var(--drgstn-text-secondary);
+    background-color: var(--drgstn-warning);
+  }
+  &.info {
+    color: var(--drgstn-text-secondary);
+    background-color: var(--drgstn-info);
+  }
+  .close {
+    display: inline;
+    float: right;
+  }
+}
+
+.fa-times {
+  color: white;
+}
