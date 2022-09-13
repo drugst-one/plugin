@@ -9,6 +9,7 @@
 }
 
 .toast {
+  z-index: $toast-z;
   position: relative;
   max-width: 60vw;
   padding: 10px 15px;
