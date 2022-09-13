@@ -17,7 +17,7 @@
     "package-es2015": "cd dist/netex && cat runtime-es2015.js polyfills-es2015.js main-es2015.js > bundle-es2015.js",
     "bundle": "npm run build-prod netex && npm run package-es5 && npm run package-es2015",
     "build:netex": "npm run build-prod netex && node build-netex.js",
-    "build:netex-dev": "python prefixCSS.py --parse && npm run build-dev netex && node build-netex.js && python prefixCSS.py --cleanup",
+    "build:netex-dev": "python prefixCSS.py --stage parse && npm run build-dev netex && node build-netex.js && python prefixCSS.py --stage cleanup",
     "build:netex-old": "npm run build-old netex && node build-netex.js",
     "prefix": "bash prefix_styles.sh",
     "prefixcss": "postcss -r drugsTone-build/styles.css"

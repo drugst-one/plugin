@@ -48,3 +48,6 @@ Thumbs.db
 .idea
 drugsTone-build
 package-lock.jsondrugsTone-build
+
+.ipynb_checkpoints/
+*.ipynb

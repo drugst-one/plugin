@@ -174,12 +174,12 @@ class ParserJS:
     
     ELEMENTBYIDSTRING = 'document.getElementById('
     
-    def findId(self, line):
+    def findIdPos(self, line):
         start = line.find(self.ELEMENTBYIDSTRING) + len(self.ELEMENTBYIDSTRING)+1
         return start
 
     def replaceElementById(self, line):
-        start = self.findId(line)
+        start = self.findIdPos(line)
         line = line[:start] + self.PREFIX + line[start:]
         return line
     
@@ -353,6 +353,7 @@ class BuildManager:
 ORIGDIR = 'original'
 
 def parse():
+    print('Starting parsing...')
     buildManager = BuildManager(ORIGDIR)
     try:
         buildManager.buildDevDir()
@@ -360,10 +361,14 @@ def parse():
     except:
         buildManager.cleanup() 
         raise Exception('ERROR: CSS prefix script failed.')
-    
+    print('Parsing done!')
+
 def cleanup():
+    print('Starting cleanup...')
     buildManager = BuildManager(ORIGDIR)
     buildManager.cleanup() 
+    print('Cleanup done!')
+    
     
     
 parser = argparse.ArgumentParser()
@@ -380,5 +385,5 @@ if __name__ == '__main__':
     elif args.stage == 'cleanup':
         cleanup()
     else:
-        raise Exception(f'ERROR: Unknown argument for --stage: {args.stage}. Should be "parse" or "stage"').
+        raise Exception(f'ERROR: Unknown argument for --stage: {args.stage}. Should be "parse" or "stage."')
        
