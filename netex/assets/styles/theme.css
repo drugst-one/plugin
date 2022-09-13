@@ -1342,7 +1342,7 @@ p-radiobutton.ng-dirty.ng-invalid > .p-radiobutton > .p-radiobutton-box {
 .p-rating .p-rating-icon:first-child {
   margin-left: 0;
 }
-.p-rating .p-rating-icon.drugstone-plugin-pi-star {
+.p-rating .p-rating-icon.pi-star {
   color: #CE93D8;
 }
 .p-rating:not(.p-disabled):not(.p-readonly) .p-rating-icon:hover {
@@ -4991,7 +4991,7 @@ p-togglebutton.ng-dirty.ng-invalid > .p-togglebutton.p-button {
 .p-chip .p-chip-icon {
   margin-right: 0.5rem;
 }
-.p-chip .drugstone-plugin-pi-chip-remove-icon {
+.p-chip .pi-chip-remove-icon {
   margin-left: 0.5rem;
 }
 .p-chip img {
@@ -5000,11 +5000,11 @@ p-togglebutton.ng-dirty.ng-invalid > .p-togglebutton.p-button {
   margin-left: -1rem;
   margin-right: 0.5rem;
 }
-.p-chip .drugstone-plugin-pi-chip-remove-icon {
+.p-chip .pi-chip-remove-icon {
   border-radius: 4px;
   transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
 }
-.p-chip .drugstone-plugin-pi-chip-remove-icon:focus {
+.p-chip .pi-chip-remove-icon:focus {
   outline: 0 none;
   outline-offset: 0;
   box-shadow: none;
@@ -5576,7 +5576,7 @@ p-cascadeselect.ng-dirty.ng-invalid .p-cascadeselect:not(.p-disabled).p-focus {
 .p-checkbox .p-checkbox-box.p-highlight:not(.p-disabled).p-focus {
   border-color: #CE93D8;
 }
-.p-checkbox .p-checkbox-box.p-highlight .p-checkbox-icon.drugstone-plugin-pi-check:before {
+.p-checkbox .p-checkbox-box.p-highlight .p-checkbox-icon.pi-check:before {
   content: "";
   position: absolute;
   top: 6px;
