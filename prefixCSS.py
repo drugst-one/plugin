@@ -261,7 +261,7 @@ class ParserCSS:
     def prefixClasses(self, classListString):
         classListStringList = classListString.split('.')
         classListStringList = [x for x in classListStringList if len(x)]
-        classListStringList = [self.PREFIXCLASS + x if not (x.startswith('ng-') or x.startswith('p-') or x.startswith('drugstone-plugin-') or x.startswith('fa-')) else '.' + x for x in classListStringList]
+        classListStringList = [self.PREFIXCLASS + x if not (x.startswith('ng-') or x.startswith('p-') or x.startswith('pi-') or x.startswith('drugstone-plugin-') or x.startswith('fa-')) else '.' + x for x in classListStringList]
         return '.'.join(classListStringList)
     
     def prefixId(self, classListString):
@@ -378,14 +378,14 @@ def parse():
         buildManager.buildDevDir()
         buildManager.parseApp()
     except:
-        buildManager.cleanup() 
+        buildManager.cleanup()
         raise Exception('ERROR: CSS prefix script failed.')
     print('Parsing done!')
 
 def cleanup():
     print('Starting cleanup...')
     buildManager = BuildManager(ORIGDIR)
-    buildManager.cleanup() 
+    buildManager.cleanup()
     print('Cleanup done!')
     
     
