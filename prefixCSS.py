@@ -5,6 +5,7 @@ import subprocess
 import argparse
 
 
+
 def find_nth(haystack, needle, n):
     start = haystack.find(needle)
     while start >= 0 and n > 1:
@@ -31,15 +32,26 @@ class ParserHTML:
     def prefixNgClassStrings(self, line, classStart):
         start = False
         classIndices = []
+        stringComparison = False
+        seenQuestionmark = False
         for i, c in enumerate(line[classStart:], classStart):
-            if c == "'":
+            if c == "'" and not stringComparison:
                 if not start:
                     classIndices.append(i+1)
                     start = True
                 else:
                     start = False
-            elif c == '}':
+            elif c == '}' or c =='"':
                 break
+            elif c == ':' and not seenQuestionmark:
+                stringComparison = True
+            elif c == ',':
+                stringComparison = False
+                seenQuestionmark = False
+            elif c == '?':
+                # if we see a ?, the following : does not implicate a string comparison but a case separation
+                seenQuestionmark = True
+            
         for i, start in enumerate(classIndices):
             start += i * len(self.PREFIX)
             line = line[:start] + self.PREFIX + line[start:]
@@ -105,17 +117,24 @@ class ParserHTML:
         newLines = []
         with open(path) as f:
             content = ''
-            iTagOpen = False
             # remove linebreaks in tags
+            stringOpen = False
             for line in f:
                 if not len(line.strip()):
                     continue
                 # line.count('"') % 2 --> opened but not closed like [ngClass]="
                 if line.count('"') % 2 and not line.strip().endswith('>'):
                     content += line.strip() + ' '
+                    stringOpen = not stringOpen
                 else:
-                    content += line + '\n'         
-
+                    if stringOpen:
+                        # no new line
+                        content += line.strip() + ' '
+                    else:
+                        # new line
+                        content += line + '\n'   
+                    
+            iTagOpen = False
             for line in content.split('\n'):
                 line = line.strip()
                 if '<i' in line:
@@ -174,12 +193,12 @@ class ParserJS:
     
     ELEMENTBYIDSTRING = 'document.getElementById('
     
-    def findIdPos(self, line):
+    def findId(self, line):
         start = line.find(self.ELEMENTBYIDSTRING) + len(self.ELEMENTBYIDSTRING)+1
         return start
 
     def replaceElementById(self, line):
-        start = self.findIdPos(line)
+        start = self.findId(line)
         line = line[:start] + self.PREFIX + line[start:]
         return line
     

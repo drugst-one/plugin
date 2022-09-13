@@ -200,7 +200,7 @@
   }
 
 
-  .fa-exclamation-triangle, .color-danger, .help, .delete:after, .delete:before, .modal-close:after, .modal-close:before {
+  .fa-exclamation-triangle, .fa-times, .color-danger, .help, .delete:after, .delete:before, .modal-close:after, .modal-close:before {
     color: var(--drgstn-danger) !important;
   }
 
@@ -288,6 +288,10 @@
   ::-webkit-scrollbar-button:decrement,
   ::-webkit-scrollbar-button:increment {
     width: 0px !important;
+  }
+  
+  .toast-times {
+    color: var(--drgstn-text-secondary) !important;
   }
 }
 

@@ -27,7 +27,7 @@ export class ToastService {
   public setTimer(id: number) {
     setTimeout(() => {
       this.deleteToast(id);
-    }, 10000);
+    }, 100000000);
   }
 
   public deleteToast(id: number) {
