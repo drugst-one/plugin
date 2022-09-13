@@ -10,7 +10,7 @@
 
   height: var(--drgstn-height, 500px);
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: var(--drgstn-font-family);
 
   p {
     margin-bottom: .4rem !important;

@@ -6,6 +6,8 @@
 @import "variables";
 
 #appWindow {
+  font-family: var(--drgstn-font-family) !important;
+  all: initial;
   position: relative;
   @import "~@ng-select/ng-select/themes/default.theme";
 
