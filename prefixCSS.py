@@ -378,7 +378,6 @@ def parse():
         buildManager.buildDevDir()
         buildManager.parseApp()
     except:
-        buildManager.cleanup()
         raise Exception('ERROR: CSS prefix script failed.')
     print('Parsing done!')
 
@@ -400,7 +399,16 @@ if __name__ == '__main__':
         raise Exception('Value for --stage is missing.')
        
     if args.stage == 'parse':
-        parse()
+        try:
+            parse()
+        except:
+            # in case it fails, try again after running a cleanup
+            cleanup()
+            try:
+                parse()
+            except:
+                cleanup()
+            
     elif args.stage == 'cleanup':
         cleanup()
     else:

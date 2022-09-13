@@ -51,3 +51,6 @@ package-lock.jsondrugsTone-build
 
 .ipynb_checkpoints/
 *.ipynb
+
+# temp dir for css prefixing
+original/*
