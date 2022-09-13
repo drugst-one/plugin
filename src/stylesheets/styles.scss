@@ -7,6 +7,8 @@
 
 #appWindow {
   font-family: var(--drgstn-font-family) !important;
+  height: var(--drgstn-height, 500px) !important;
+  display: block !important;
   all: initial;
   position: relative;
   @import "~@ng-select/ng-select/themes/default.theme";
@@ -163,8 +165,6 @@
 
   div.drugstone.explorer {
     height: $height;
-    margin-left: 10px;
-    margin-right: 10px;
     overflow: hidden;
   }
 
