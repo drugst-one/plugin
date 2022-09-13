@@ -257,3 +257,12 @@ export interface Algorithm {
   slug: AlgorithmType | QuickAlgorithmType;
   name: string;
 }
+
+export interface Toast {
+  message: string;
+  type: 'success' | 'info' | 'warning' | 'danger'
+}
+
+export interface LiveToasts {
+  [id: number]: Toast
+}

@@ -2,11 +2,11 @@ import {Wrapper, Task, getWrapperFromNode, Node, Dataset, Tissue} from '../../in
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
-import {toast} from 'bulma-toast';
 import {Injectable} from '@angular/core';
 import {NetexControllerService} from '../netex-controller/netex-controller.service';
 import {DrugstoneConfigService} from "../drugstone-config/drugstone-config.service";
 import {NetworkHandlerService} from "../network-handler/network-handler.service";
+import { ToastService } from '../toast/toast.service';
 
 export type AlgorithmType =
   'trustrank'
@@ -72,7 +72,9 @@ export class AnalysisService {
 
   private tissues: Tissue[] = [];
 
-  constructor(private http: HttpClient,
+  constructor(
+              public toast: ToastService,
+              private http: HttpClient,
               public netex: NetexControllerService,
               public drugstoneConfig: DrugstoneConfigService,
               public networkHandler: NetworkHandlerService
@@ -217,14 +219,9 @@ export class AnalysisService {
 
   async startQuickAnalysis(isSuper: boolean, algorithm: QuickAlgorithmType) {
     if (!this.canLaunchTask()) {
-      toast({
+      this.toast.setNewToast({
         message: `You can only run ${MAX_TASKS} tasks at once. Please wait for one of them to finish or delete it from the task list.`,
-        duration: 5000,
-        dismissible: true,
-        pauseOnHover: true,
-        type: 'is-danger',
-        position: 'top-center',
-        animate: {in: 'fadeIn', out: 'fadeOut'}
+        type: 'danger'
       });
       return;
     }
@@ -264,29 +261,19 @@ export class AnalysisService {
     localStorage.setItem(this.tokensCookieKey, JSON.stringify(this.tokens));
     this.startWatching();
 
-    toast({
+    this.toast.setNewToast({
       message: 'Quick analysis started. This may take a while.' +
         ' Once the computation finished you can view the results in the task list to the right.',
-      duration: 10000,
-      dismissible: true,
-      pauseOnHover: true,
-      type: 'is-success',
-      position: 'top-center',
-      animate: {in: 'fadeIn', out: 'fadeOut'}
+      type: 'success'
     });
     return { taskId: resp.token, algorithm: algorithm, target: target, params: parameters }
   }
 
   async startAnalysis(algorithm, target: 'drug' | 'drug-target', parameters) {
     if (!this.canLaunchTask()) {
-      toast({
+      this.toast.setNewToast({
         message: `You can only run ${MAX_TASKS} tasks at once. Please wait for one of them to finish or delete it from the task list.`,
-        duration: 5000,
-        dismissible: true,
-        pauseOnHover: true,
-        type: 'is-danger',
-        position: 'top-center',
-        animate: {in: 'fadeIn', out: 'fadeOut'}
+        type: 'danger',
       });
       return '';
     }
@@ -311,20 +298,15 @@ export class AnalysisService {
     let toastType;
     if (status === 'DONE') {
       toastMessage = 'Computation finished successfully. Click the task in the task list to view the results.';
-      toastType = 'is-success';
+      toastType = 'success';
     } else if (status === 'FAILED') {
       toastMessage = 'Computation failed.';
-      toastType = 'is-danger';
+      toastType = 'danger';
     }
 
-    toast({
+    this.toast.setNewToast({
       message: toastMessage,
-      duration: 5000,
-      dismissible: true,
-      pauseOnHover: true,
       type: toastType,
-      position: 'top-center',
-      animate: {in: 'fadeIn', out: 'fadeOut'}
     });
   }
 

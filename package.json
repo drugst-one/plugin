@@ -1,6 +1,6 @@
 {
   "name": "netex",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "scripts": {
     "ng": "ng",
     "start:dev": "ng serve --configuration=dev",
@@ -17,7 +17,7 @@
     "package-es2015": "cd dist/netex && cat runtime-es2015.js polyfills-es2015.js main-es2015.js > bundle-es2015.js",
     "bundle": "npm run build-prod netex && npm run package-es5 && npm run package-es2015",
     "build:netex": "npm run build-prod netex && node build-netex.js",
-    "build:netex-dev": "npm run build-dev netex && node build-netex.js",
+    "build:netex-dev": "python prefixCSS.py --stage parse && npm run build-dev netex && node build-netex.js && python prefixCSS.py --stage cleanup",
     "build:netex-old": "npm run build-old netex && node build-netex.js",
     "prefix": "bash prefix_styles.sh",
     "prefixcss": "postcss -r drugsTone-build/styles.css"
@@ -45,7 +45,7 @@
     "@ng-select/ng-select": "^6.1.0",
     "animate.css": "^4.1.1",
     "bulma": "^0.9.2",
-    "bulma-toast": "^2.3.1",
+    "bulma-toast": "^2.4.1",
     "bulma-tooltip": "^3.0.2",
     "document-register-element": "^1.7.2",
     "dom-to-image": "^2.6.0",
@@ -55,6 +55,7 @@
     "primeng": "^12.0.1",
     "python": "0.0.4",
     "python-shell": "^3.0.0",
+    "remove": "^0.1.5",
     "rxjs": "~7.1.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"

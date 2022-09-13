@@ -48,6 +48,7 @@ import { CenterViewInverseComponent } from './components/network/network-menu-le
 import { LicenseAgreementComponent } from './components/license-agreement/license-agreement.component';
 import { QuickDrugTargetComponent } from './components/quick-drug-target/quick-drug-target.component';
 import { QuickDrugComponent } from './components/quick-drug/quick-drug.component';
+import { ToastComponent } from './components/toast/toast.component';
 
 
 @NgModule({
@@ -77,6 +78,7 @@ import { QuickDrugComponent } from './components/quick-drug/quick-drug.component
     LicenseAgreementComponent,
     QuickDrugTargetComponent,
     QuickDrugComponent,
+    ToastComponent,
   ],
   imports: [
     BrowserModule,

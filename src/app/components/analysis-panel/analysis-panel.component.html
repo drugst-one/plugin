@@ -20,7 +20,7 @@
 
       <a (click)="close()" class="card-header-icon" aria-label="close">
         <span class="icon" title="Close analysis">
-          <i class="fas fa-times" aria-hidden="true"></i>
+          <i class="fas fa-times color-danger" aria-hidden="true"></i>
         </span>
       </a>
     </header>
@@ -128,7 +128,7 @@
                     ></i>
                     <i
                       *ngIf="!task.info.parameters.includeIndirectDrugs"
-                      class="fa fa-times"
+                      class="fa fa-times color-danger"
                     ></i>
                   </td>
                 </tr>
@@ -146,7 +146,7 @@
                     ></i>
                     <i
                       *ngIf="!task.info.parameters.includeNonApprovedDrugs"
-                      class="fa fa-times"
+                      class="fa fa-times color-danger"
                     ></i>
                   </td>
                 </tr>
@@ -157,6 +157,7 @@
           <div class="columns m-1"
                *ngIf="['quick','super','connect','connectSelected'].indexOf(task.info.algorithm) > -1"
           >
+<<<<<<< HEAD
             <div class="column">
               <h4 class="is-4 has-text-weight-bold">
               <span class="icon">
@@ -217,6 +218,54 @@
                 </tbody>
               </table>
             </div>
+=======
+            <p>
+              Algorithm: <strong>{{ algorithmNames["multisteiner"] }}</strong>
+            </p>
+            <table class="table is-narrow">
+              <tbody>
+              <tr>
+                <td>Number of Trees</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>Tolerance</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>Hub Penality</td>
+                <td>1</td>
+              </tr>
+              </tbody>
+            </table>
+            <p>
+              Algorithm: <strong>{{ algorithmNames["closeness"] }}</strong>
+            </p>
+            <table class="table is-narrow">
+              <tbody>
+              <tr>
+                <td>Include indirect drugs</td>
+                <td>
+                  <i class="fa fa-times color-danger"></i>
+                </td>
+              </tr>
+              <tr>
+                <td>Include non-approved drugs</td>
+                <td>
+                  <i class="fa fa-check"></i>
+                </td>
+              </tr>
+              <tr>
+                <td>Hub Penality</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>Result Size</td>
+                <td>10</td>
+              </tr>
+              </tbody>
+            </table>
+>>>>>>> prefixStyles
           </div>
         </div>
       </div>
