@@ -115,9 +115,6 @@
           }
         },
         "extract-i18n": {
-          "customWebpackConfig": {
-            "path": "./extra-webpack.config.js"
-          },
           "builder": "@angular-builders/custom-webpack:extract-i18n",
           "options": {
             "browserTarget": "netex:build"
