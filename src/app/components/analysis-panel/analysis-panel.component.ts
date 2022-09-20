@@ -35,7 +35,7 @@ import {mapCustomEdge, mapCustomNode} from 'src/app/main-network';
 import {downLoadFile, pieChartContextRenderer, removeDuplicateObjectsFromList} from 'src/app/utils';
 import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
 import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
-
+import {LegendService} from 'src/app/services/legend-service/legend-service.service';
 
 declare var vis: any;
 
@@ -84,7 +84,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
   // private drugNodes: any[] = [];
   // private drugEdges: any[] = [];
-  public showDrugs = false;
   public tab: 'meta' | 'network' | 'table' = 'table';
 
   // public adjacentDrugs = false;
@@ -121,9 +120,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   public expressionMap: NodeAttributeMap;
 
-  public legendContext: LegendContext = 'drug';
-
-  constructor(public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService) {
+  constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService) {
   }
 
   async ngOnInit() {
@@ -174,6 +171,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
       if (this.task && this.task.info.done) {
         this.result = await this.netex.getTaskResult(this.token);
+        if (this.result.parameters.target === 'drug') {
+          this.legendService.add_to_context('drug')
+        } else {
+          this.legendService.add_to_context('drugTarget')
+        }
         const nodeAttributes = this.result.nodeAttributes || {};
 
         this.networkHandler.activeNetwork.seedMap = nodeAttributes.isSeed || {};
@@ -182,7 +184,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         this.nodeData = {nodes: null, edges: null};
         this.networkHandler.activeNetwork.networkEl.nativeElement.innerHTML = '';
         this.networkHandler.activeNetwork.networkInternal = null;
-        this.showDrugs = false;
 
         // Create
         const {nodes, edges} = this.createNetwork(this.result);
@@ -328,7 +329,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     }
     this.emitVisibleItems(true);
 
-    this.networkHandler.activeNetwork.setLegendContext();
   }
 
   public emitVisibleItems(on: boolean) {
@@ -349,10 +349,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.expressionMap = undefined;
     this.networkHandler.activeNetwork.seedMap = {};
     this.networkHandler.activeNetwork.highlightSeeds = false;
-    this.showDrugs = false;
     this.analysis.switchSelection('main');
     this.token = null;
     this.tokenChange.emit(this.token);
+    this.legendService.remove_from_context('drug')
+    this.legendService.remove_from_context('drugTarget')
     this.emitVisibleItems(false);
   }
 
@@ -454,8 +455,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
     for (const edge of network.edges) {
       const e = mapCustomEdge(edge, this.myConfig)
-      e.from = e.from[0] === 'p' &&  nodeIdMap[e.from] ? nodeIdMap[e.from] : e.from
-      e.to = e.to[0] === 'p' &&  nodeIdMap[e.to] ? nodeIdMap[e.to] : e.to
+      e.from = e.from[0] === 'p' && nodeIdMap[e.from] ? nodeIdMap[e.from] : e.from
+      e.to = e.to[0] === 'p' && nodeIdMap[e.to] ? nodeIdMap[e.to] : e.to
       const hash = e.from + "_" + e.to;
       if (uniqEdges.indexOf(hash) === -1) {
         uniqEdges.push(hash);

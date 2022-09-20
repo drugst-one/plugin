@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import { LegendContext } from 'src/app/interfaces';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import {IConfig} from '../../../config';
+import {LegendService} from "src/app/services/legend-service/legend-service.service";
 
 @Component({
   selector: 'app-network-legend',
@@ -17,17 +18,6 @@ export class NetworkLegendComponent implements OnInit {
     this._emptyEdgeConfig = this.checkIfEdgeConfigEmpty();
   };
   @Input() config: IConfig;
-
-  private contextNodeGroupsToDelete = {
-    'explorer': ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder', 'connectorNode'],
-    'adjacentDrugs': ['foundNode', 'seedNode', 'default', 'defaultDisorder', 'connectorNode'],
-    'adjacentDisorders': ['foundDrug', 'foundNode', 'seedNode', 'default', 'connectorNode'],
-    'adjacentDrugsAndDisorders': ['foundNode', 'seedNode', 'default', 'connectorNode'],
-    'drugTarget': ['foundDrug', 'seedNode', 'default', 'defaultDisorder'],
-    'drug': ['seedNode', 'default', 'defaultDisorder'],
-    'drugTargetAndSeeds': ['foundDrug', 'default', 'defaultDisorder'],
-    'drugAndSeeds': ['default', 'defaultDisorder']
-  }
 
   private contextEdgeGroupsToDelete = {
     'explorer': ['default'],
@@ -45,7 +35,7 @@ export class NetworkLegendComponent implements OnInit {
       // selected node is not supposed to appear in legend
       return false;
     }
-    return !this.contextNodeGroupsToDelete[this._context].includes(nodeGroupKey);
+    return !this.legendService.get_nodes_to_delete().includes(nodeGroupKey);
   }
 
   public checkEdgeGroupContext(edgeGroupKey) {
@@ -56,7 +46,7 @@ export class NetworkLegendComponent implements OnInit {
     return Object.keys(this.config.edgeGroups).some(key => this.checkEdgeGroupContext(key));
   }
 
-  constructor(public drugstoneConfig: DrugstoneConfigService) { }
+  constructor(public drugstoneConfig: DrugstoneConfigService, public legendService: LegendService) { }
 
   ngOnInit(): void {
   }

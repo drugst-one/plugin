@@ -21,6 +21,7 @@ import {AnalysisService} from 'src/app/services/analysis/analysis.service';
 import {NetworkSettings} from 'src/app/network-settings';
 import {pieChartContextRenderer} from 'src/app/utils';
 import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
+import {LegendService} from "../../services/legend-service/legend-service.service";
 
 
 @Component({
@@ -32,8 +33,6 @@ export class NetworkComponent implements OnInit {
 
   @Input() public networkType: NetworkType;
   @Input() public nodeData: NodeData;
-  @Input() public legendContext: LegendContext;
-
 
   @ViewChild('network', {static: false}) networkEl: ElementRef;
   @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
@@ -82,7 +81,7 @@ export class NetworkComponent implements OnInit {
 
   public nodeRenderer = null;
 
-  constructor(public networkHandler: NetworkHandlerService, public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public netex: NetexControllerService, public omnipath: OmnipathControllerService) {
+  constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public netex: NetexControllerService, public omnipath: OmnipathControllerService) {
   }
 
   ngOnInit(): void {
@@ -116,7 +115,7 @@ export class NetworkComponent implements OnInit {
   public updateAdjacentProteinDisorders(bool: boolean) {
     this.adjacentDisordersProtein = bool;
     if (this.adjacentDisordersProtein) {
-
+      this.legendService.add_to_context('adjacentDisorders')
       this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'proteins', this.drugstoneConfig.config.associatedProteinDisorder, this.drugstoneConfig.config.licensedDatasets).subscribe(response => {
         const proteinMap = this.getProteinMap()
         const addedEdge = {}
@@ -146,13 +145,14 @@ export class NetworkComponent implements OnInit {
         this.nodeData.edges.add(this.adjacentProteinDisorderEdgesList);
         this.updateQueryItems();
       });
-      this.legendContext = this.adjacentDrugs ? 'adjacentDrugsAndDisorders' : 'adjacentDisorders';
     } else {
+      if (!this.adjacentDisordersDrug) {
+        this.legendService.remove_from_context('adjacentDisorders');
+      }
       this.saveRemoveDisorders(this.adjacentProteinDisorderList);
       this.nodeData.edges.remove(this.adjacentProteinDisorderEdgesList);
       this.adjacentProteinDisorderList = [];
       this.adjacentProteinDisorderEdgesList = [];
-      this.legendContext = this.adjacentDisordersDrug ? this.legendContext : this.adjacentDrugs ? 'adjacentDrugs' : 'explorer';
       this.updateQueryItems();
     }
   }
@@ -160,6 +160,7 @@ export class NetworkComponent implements OnInit {
   public updateAdjacentDrugDisorders(bool: boolean) {
     this.adjacentDisordersDrug = bool;
     if (this.adjacentDisordersDrug) {
+      this.legendService.add_to_context('adjacentDisorders');
       this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'drugs', this.drugstoneConfig.config.indicationDrugDisorder, this.drugstoneConfig.config.licensedDatasets).subscribe(response => {
         for (const interaction of response.edges) {
           const edge = {from: interaction.drug, to: interaction.disorder};
@@ -174,13 +175,13 @@ export class NetworkComponent implements OnInit {
         this.nodeData.edges.add(this.adjacentDrugDisorderEdgesList);
         this.updateQueryItems();
       });
-      this.legendContext = this.adjacentDrugs ? 'adjacentDrugsAndDisorders' : 'adjacentDisorders';
     } else {
+      if (!this.adjacentDisordersProtein)
+        this.legendService.remove_from_context('adjacentDisorders');
       this.saveRemoveDisorders(this.adjacentDrugDisorderList);
       this.nodeData.edges.remove(this.adjacentDrugDisorderEdgesList);
       this.adjacentDrugDisorderList = [];
       this.adjacentDrugDisorderEdgesList = [];
-      this.legendContext = this.adjacentDisordersProtein ? this.legendContext : this.adjacentDrugs ? 'adjacentDrugs' : 'explorer';
       this.updateQueryItems();
     }
   }
@@ -212,6 +213,7 @@ export class NetworkComponent implements OnInit {
   public updateAdjacentDrugs(bool: boolean) {
     this.adjacentDrugs = bool;
     if (this.adjacentDrugs) {
+      this.legendService.add_to_context("adjacentDrugs")
       const addedEdge = {}
       const proteinMap = this.getProteinMap()
       this.netex.adjacentDrugs(this.drugstoneConfig.config.interactionDrugProtein, this.drugstoneConfig.config.licensedDatasets, this.nodeData.nodes.get()).subscribe(response => {
@@ -245,18 +247,19 @@ export class NetworkComponent implements OnInit {
         this.nodeData.edges.add(this.adjacentDrugEdgesList);
         this.updateQueryItems();
       })
-      this.legendContext = this.adjacentDisordersDrug || this.adjacentDisordersProtein ? 'adjacentDrugsAndDisorders' : 'adjacentDrugs';
     } else {
       // remove adjacent drugs, make sure that also drug associated disorders are removed
       if (this.adjacentDisordersDrug) {
         this.updateAdjacentDrugDisorders(false);
       }
+      this.legendService.remove_from_context('adjacentDrugs');
+      // if (!this.adjacentDisordersProtein)
+      //   this.legendService.remove_from_context('adjacentDisorders')
       this.nodeData.nodes.remove(this.adjacentDrugList);
       this.nodeData.edges.remove(this.adjacentDrugEdgesList);
       this.adjacentDrugList = [];
       this.adjacentDrugEdgesList = [];
 
-      this.legendContext = this.adjacentDisordersDrug || this.adjacentDisordersProtein ? 'adjacentDisorders' : 'explorer';
       this.updateQueryItems();
     }
   }
@@ -436,27 +439,11 @@ export class NetworkComponent implements OnInit {
   }
 
   public hasDrugsLoaded(): boolean {
-    if(this.nodeData && this.nodeData.nodes)
-      for(const node of this.nodeData.nodes.get())
-        if(node.drugstoneType && node.drugstoneId === 'drug')
+    if (this.nodeData && this.nodeData.nodes)
+      for (const node of this.nodeData.nodes.get())
+        if (node.drugstoneType && node.drugstoneId === 'drug')
           return true;
     return false;
-  }
-
-  public setLegendContext() {
-    if (this.hasDrugsLoaded() || this.adjacentDrugs) {
-      if (this.highlightSeeds) {
-        this.legendContext = "drugAndSeeds";
-      } else {
-        this.legendContext = "drug";
-      }
-    } else {
-      if (this.highlightSeeds) {
-        this.legendContext = "drugTargetAndSeeds";
-      } else {
-        this.legendContext = 'drugTarget';
-      }
-    }
   }
 
   public getGradient(nodeId: string) {
@@ -470,6 +457,10 @@ export class NetworkComponent implements OnInit {
   public updateHighlightSeeds(bool: boolean) {
     this.highlightSeeds = bool;
     const updatedNodes = [];
+    if (this.highlightSeeds)
+      this.legendService.add_to_context('seeds')
+    else
+      this.legendService.remove_from_context('seeds')
     for (const item of this.currentViewProteins) {
       if (item.drugstoneId === undefined) {
         // nodes that are not mapped to backend remain untouched
@@ -497,7 +488,8 @@ export class NetworkComponent implements OnInit {
       updatedNodes.push(node);
     }
     this.nodeData.nodes.update(updatedNodes);
-    this.setLegendContext();
+
+
   }
 
   public toggleFullscreen() {
