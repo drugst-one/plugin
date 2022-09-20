@@ -10,19 +10,19 @@ import {IConfig} from '../../../config';
 })
 export class NetworkLegendComponent implements OnInit {
 
-  _context = 'explorer'; 
+  _context = 'explorer';
   _emptyEdgeConfig = false;
   @Input() set context (value: LegendContext) {
-    this._context = value;
+    this._context = value
     this._emptyEdgeConfig = this.checkIfEdgeConfigEmpty();
   };
   @Input() config: IConfig;
 
   private contextNodeGroupsToDelete = {
-    'explorer': ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder'],
-    'adjacentDrugs': ['foundNode', 'seedNode', 'default', 'defaultDisorder'],
-    'adjacentDisorders': ['foundDrug', 'foundNode', 'seedNode', 'default'],
-    'adjacentDrugsAndDisorders': ['foundNode', 'seedNode', 'default'],
+    'explorer': ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder', 'connectorNode'],
+    'adjacentDrugs': ['foundNode', 'seedNode', 'default', 'defaultDisorder', 'connectorNode'],
+    'adjacentDisorders': ['foundDrug', 'foundNode', 'seedNode', 'default', 'connectorNode'],
+    'adjacentDrugsAndDisorders': ['foundNode', 'seedNode', 'default', 'connectorNode'],
     'drugTarget': ['foundDrug', 'seedNode', 'default', 'defaultDisorder'],
     'drug': ['seedNode', 'default', 'defaultDisorder'],
     'drugTargetAndSeeds': ['foundDrug', 'default', 'defaultDisorder'],
