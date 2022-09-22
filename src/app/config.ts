@@ -1,4 +1,4 @@
-import { AlgorithmTarget, AlgorithmType, QuickAlgorithmType } from "./interfaces";
+import { AlgorithmTarget, AlgorithmType, QuickAlgorithmType } from './interfaces';
 
 // https://visjs.github.io/vis-network/docs/network/nodes.html
 export interface NodeGroup {
@@ -52,6 +52,7 @@ export interface IConfig {
   showTasks: boolean;
   showSelection: boolean;
   showNetworkMenu: false | 'left' | 'right';
+  expandNetworkMenu: boolean;
   showNetworkMenuButtonExpression: boolean;
   showNetworkMenuButtonScreenshot: boolean;
   showNetworkMenuButtonExportGraphml: boolean;
@@ -82,7 +83,7 @@ export interface IConfig {
   identifier?: Identifier;
   nodeShadow?: boolean;
   edgeShadow?: boolean;
-  algorithms: { [key in AlgorithmTarget]: Array<AlgorithmType | QuickAlgorithmType> }
+  algorithms: { [key in AlgorithmTarget]: Array<AlgorithmType | QuickAlgorithmType> };
 }
 
 
@@ -144,6 +145,7 @@ export const defaultConfig: IConfig = {
   showTasks: true,
   showNetworkMenu: 'right',
   showLegend: true,
+  expandNetworkMenu: false,
   showNetworkMenuButtonExpression: true,
   showNetworkMenuButtonScreenshot: true,
   showNetworkMenuButtonExportGraphml: true,
@@ -170,7 +172,7 @@ export const defaultConfig: IConfig = {
   edgeShadow: true,
   licensedDatasets: false,
   algorithms: {
-    'drug': ['trustrank', 'closeness', 'degree', 'proximity'],
+    drug: ['trustrank', 'closeness', 'degree', 'proximity'],
     'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness']
   },
   nodeGroups: {

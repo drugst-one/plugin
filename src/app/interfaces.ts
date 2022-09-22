@@ -47,8 +47,7 @@ export type NodeType= 'protein' | 'drug' | 'disorder' | 'other'
 
 export type NetworkType = 'explorer' | 'analysis'
 
-export type LegendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget' |
-   'seeds' | 'adjacentDisorders';
+export type LegendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget' | 'seeds' | 'adjacentDisorders';
 
 /// drugstoneId to expressionlvl
 export type NodeAttributeMap = { string: number } | {};

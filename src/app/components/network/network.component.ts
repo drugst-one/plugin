@@ -4,11 +4,10 @@ import {InteractionDatabase} from 'src/app/config';
 import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 import {OmnipathControllerService} from 'src/app/services/omnipath-controller/omnipath-controller.service';
-import {mapCustomEdge, mapCustomNode, mapNetexEdge, ProteinNetwork} from '../../main-network';
+import {mapCustomEdge, mapCustomNode} from '../../main-network';
 import {
   getDrugNodeId,
   getWrapperFromNode,
-  LegendContext,
   Node,
   NodeData,
   NodeAttributeMap,
@@ -21,7 +20,7 @@ import {AnalysisService} from 'src/app/services/analysis/analysis.service';
 import {NetworkSettings} from 'src/app/network-settings';
 import {pieChartContextRenderer} from 'src/app/utils';
 import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
-import {LegendService} from "../../services/legend-service/legend-service.service";
+import {LegendService} from 'src/app/services/legend-service/legend-service.service';
 
 
 @Component({
@@ -81,16 +80,17 @@ export class NetworkComponent implements OnInit {
 
   public nodeRenderer = null;
 
-  constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public netex: NetexControllerService, public omnipath: OmnipathControllerService) {
+  constructor(public configService: DrugstoneConfigService, public legendService: LegendService, public networkHandler: NetworkHandlerService, public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public netex: NetexControllerService, public omnipath: OmnipathControllerService) {
   }
 
   ngOnInit(): void {
     this.networkHandler.networks[this.networkType] = this;
+    this.networkSidebarOpen = this.configService.config.expandNetworkMenu || false;
   }
 
   async getInteractions(key: InteractionDatabase) {
     let edges = [];
-    if (key == 'omnipath') {
+    if (key === 'omnipath') {
       const names = this.nodeData.nodes.map((node) => node.label);
       const nameToNetworkId = {};
       this.nodeData.nodes.map((node) => nameToNetworkId[node.label] = node.id);

@@ -19,7 +19,7 @@ export class NetworkHandlerService {
   private change = new Subject<any>();
 
   public networks: { NetworkType: NetworkComponent } | {} = {};
-  public activeNetwork: NetworkComponent = new NetworkComponent(this.legendService, this.networkHandler, this.analysis, this.drugstoneConfig, this.netex, this.omnipath);
+  public activeNetwork: NetworkComponent = new NetworkComponent(this.drugstoneConfig, this.legendService, this.networkHandler, this.analysis, this.drugstoneConfig, this.netex, this.omnipath);
 
   public setActiveNetwork(network: NetworkType) {
     this.triggerChange();
