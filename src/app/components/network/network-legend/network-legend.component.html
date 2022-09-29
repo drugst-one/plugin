@@ -86,7 +86,7 @@
       </ng-container>
     </ng-container>
 
-    <ng-container *ngIf="config.showLegendEdges && _emptyEdgeConfig">
+    <ng-container *ngIf="config.showLegendEdges && !_emptyEdgeConfig">
       <tr
         *ngFor="let edgeGroup of config.edgeGroups | keyvalue"
         class="list-item"
