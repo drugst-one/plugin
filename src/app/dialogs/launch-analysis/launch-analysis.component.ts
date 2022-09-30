@@ -9,7 +9,6 @@ import {
 import { Algorithm, AlgorithmType, QuickAlgorithmType } from 'src/app/interfaces';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import {NetworkHandlerService} from "../../services/network-handler/network-handler.service";
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Component({
   selector: 'app-launch-analysis',

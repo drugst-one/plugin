@@ -27,7 +27,7 @@
               <div
                 [class.is-active]="algorithm === algo.slug"
                 *ngFor="let algo of algorithms"
-                class="is-fullwidth"
+                class="is-fullwidth algorithm-button"
               >
                 <a (click)="algorithm = algo.slug" class="is-boxed is-medium">
                   {{ algo.name }}

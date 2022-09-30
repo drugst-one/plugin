@@ -55,12 +55,12 @@
     border-color: var(--drgstn-border) !important;
   }
 
-  .fa-spinner {
-    color: var(--drgstn-secondary) !important;
-  }
-
   .tabs.is-toggle a:hover {
     background-color: var(--drgstn-panel) !important;
+  }
+
+  .fa-spinner {
+    color: var(--drgstn-secondary) !important;
   }
 
   .tabs li a {
@@ -178,7 +178,6 @@
     color: var(--drgstn-text-secondary) !important;
   }
 
-
   .text-primary {
     color: var(--drgstn-primary) !important;
   }
@@ -263,11 +262,9 @@
     }
   }
 
-
   .ng-select.ng-select-opened > .ng-select-container .ng-arrow {
     border-bottom-color: var(--drgstn-text-primary) !important;
   }
-
 
   ::-webkit-scrollbar {
     width: 10px !important;
@@ -293,7 +290,17 @@
   .toast-times {
     color: var(--drgstn-text-secondary) !important;
   }
+
+  .algorithm-button.is-active {
+    a {
+      background-color: var(--drgstn-primary) !important;
+    }
+    a:hover {
+      background-color: var(--drgstn-primary) !important;
+    }
+  }
 }
+
 
 // scrolllbar styles
 network-expander {
