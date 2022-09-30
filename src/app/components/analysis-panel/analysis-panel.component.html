@@ -150,6 +150,19 @@
                     ></i>
                   </td>
                 </tr>
+                <tr *ngIf="task.info.parameters.customEdges !== undefined">
+                  <td>Include all displayed edges</td>
+                  <td>
+                    <i
+                      *ngIf="task.info.parameters.customEdges"
+                      class="fa fa-check"
+                    ></i>
+                    <i
+                      *ngIf="!task.info.parameters.customEdges"
+                      class="fa fa-times color-danger"
+                    ></i>
+                  </td>
+                </tr>
                 </tbody>
               </table>
             </div>

@@ -249,6 +249,7 @@ export class AnalysisService {
       target: target,
       num_trees: 5,
       tolerance: 10,
+      custom_edges: this.drugstoneConfig.config.customEdges.default,
     };
 
 

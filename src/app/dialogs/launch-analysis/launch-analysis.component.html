@@ -162,6 +162,25 @@
               </div>
               <p class="has-text-info is-size-7">Penalty parameter for hubs.</p>
             </div>
+
+            <div
+              class="field"
+              *ngIf="drugstoneConfig.config.customEdges.selectable"
+            >
+              <label class="label">Include all displayed edges</label>
+              <app-toggle
+                textOn="Include"
+                textOff="Ignore"
+                tooltipOn="Use all edges from the visualized network and the Drugst.One database."
+                tooltipOff="Use only Drugst.One edges."
+                [(value)]="trustrankCustomEdges"
+              >
+              </app-toggle>
+              <p class="has-text-info is-size-7">
+                Include PPI edges from displayed network in the algorithms or
+                use only edges from the Drugst.One database.
+              </p>
+            </div>
           </div>
 
           <div *ngIf="algorithm === 'closeness'">
@@ -261,6 +280,25 @@
               </div>
               <p class="has-text-info is-size-7">Penalty parameter for hubs.</p>
             </div>
+
+            <div
+              class="field"
+              *ngIf="drugstoneConfig.config.customEdges.selectable"
+            >
+              <label class="label">Include all displayed edges</label>
+              <app-toggle
+                textOn="Include"
+                textOff="Ignore"
+                tooltipOn="Use all edges from the visualized network and the Drugst.One database."
+                tooltipOff="Use only Drugst.One edges."
+                [(value)]="closenessCustomEdges"
+              >
+              </app-toggle>
+              <p class="has-text-info is-size-7">
+                Include PPI edges from displayed network in the algorithms or
+                use only edges from the Drugst.One database.
+              </p>
+            </div>
           </div>
 
           <div *ngIf="algorithm === 'degree'">
@@ -325,6 +363,25 @@
               <p class="has-text-info is-size-7">
                 All nodes with degree greater than this value will be ignored.
                 Disabled if equal to 0.
+              </p>
+            </div>
+
+            <div
+              class="field"
+              *ngIf="drugstoneConfig.config.customEdges.selectable"
+            >
+              <label class="label">Include all displayed edges</label>
+              <app-toggle
+                textOn="Include"
+                textOff="Ignore"
+                tooltipOn="Use all edges from the visualized network and the Drugst.One database."
+                tooltipOff="Use only Drugst.One edges."
+                [(value)]="degreeCustomEdges"
+              >
+              </app-toggle>
+              <p class="has-text-info is-size-7">
+                Include PPI edges from displayed network in the algorithms or
+                use only edges from the Drugst.One database.
               </p>
             </div>
           </div>
@@ -407,6 +464,25 @@
               </div>
               <p class="has-text-info is-size-7">Penalty parameter for hubs.</p>
             </div>
+
+            <div
+              class="field"
+              *ngIf="drugstoneConfig.config.customEdges.selectable"
+            >
+              <label class="label">Include all displayed edges</label>
+              <app-toggle
+                textOn="Include"
+                textOff="Ignore"
+                tooltipOn="Use all edges from the visualized network and the Drugst.One database."
+                tooltipOff="Use only Drugst.One edges."
+                [(value)]="proximityCustomEdges"
+              >
+              </app-toggle>
+              <p class="has-text-info is-size-7">
+                Include PPI edges from displayed network in the algorithms or
+                use only edges from the Drugst.One database.
+              </p>
+            </div>
           </div>
 
           <div *ngIf="algorithm === 'betweenness'">
@@ -477,6 +553,25 @@
               </div>
               <p class="has-text-info is-size-7">Penalty parameter for hubs.</p>
             </div>
+
+            <div
+              class="field"
+              *ngIf="drugstoneConfig.config.customEdges.selectable"
+            >
+              <label class="label">Include all displayed edges</label>
+              <app-toggle
+                textOn="Include"
+                textOff="Ignore"
+                tooltipOn="Use all edges from the visualized network and the Drugst.One database."
+                tooltipOff="Use only Drugst.One edges."
+                [(value)]="betweennessCustomEdges"
+              >
+              </app-toggle>
+              <p class="has-text-info is-size-7">
+                Include PPI edges from displayed network in the algorithms or
+                use only edges from the Drugst.One database.
+              </p>
+            </div>
           </div>
 
           <div *ngIf="algorithm === 'keypathwayminer'">
@@ -537,8 +632,9 @@
                     <p>
                       The Multi-level Steiner Tree algorithm can be used to
                       approximate a minimum spanning subnetwork between seed
-                      nodes, which happen to be central interaction partners between the seed nodes, and thus represent
-                      favorable drug-targets (Ahmed et al. 2019).
+                      nodes, which happen to be central interaction partners
+                      between the seed nodes, and thus represent favorable
+                      drug-targets (Ahmed et al. 2019).
                     </p>
                   </div>
                 </div>
@@ -627,8 +723,26 @@
               </div>
               <p class="has-text-info is-size-7">Penalty parameter for hubs.</p>
             </div>
-          </div>
 
+            <div
+              class="field"
+              *ngIf="drugstoneConfig.config.customEdges.selectable"
+            >
+              <label class="label">Include all displayed edges</label>
+              <app-toggle
+                textOn="Include"
+                textOff="Ignore"
+                tooltipOn="Use all edges from the visualized network and the Drugst.One database."
+                tooltipOff="Use only Drugst.One edges."
+                [(value)]="multisteinerCustomEdges"
+              >
+              </app-toggle>
+              <p class="has-text-info is-size-7">
+                Include PPI edges from displayed network in the algorithms or
+                use only edges from the Drugst.One database.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>

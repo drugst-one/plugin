@@ -72,6 +72,7 @@ export interface IConfig {
   nodeGroups: { [key: string]: NodeGroup };
   edgeGroups: { [key: string]: EdgeGroup };
   selfReferences: boolean;
+  customEdges: {default: boolean, selectable: boolean};
   interactionDrugProtein: InteractionDrugProteinDB;
   interactionProteinProtein: InteractionProteinProteinDB;
   indicationDrugDisorder: IndicationDrugDisorderDB;
@@ -162,6 +163,7 @@ export const defaultConfig: IConfig = {
   networkMenuButtonAnimationLabel: 'Animation',
   identifier: 'symbol',
   selfReferences: false,
+  customEdges: {default: true, selectable: false},
   interactionDrugProtein: 'NeDRex',
   interactionProteinProtein: 'NeDRex',
   indicationDrugDisorder: 'NeDRex',

@@ -9,6 +9,7 @@ import {
 import { Algorithm, AlgorithmType, QuickAlgorithmType } from 'src/app/interfaces';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import {NetworkHandlerService} from "../../services/network-handler/network-handler.service";
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Component({
   selector: 'app-launch-analysis',
@@ -16,6 +17,9 @@ import {NetworkHandlerService} from "../../services/network-handler/network-hand
   styleUrls: ['./launch-analysis.component.scss']
 })
 export class LaunchAnalysisComponent implements OnInit, OnChanges {
+
+  constructor(public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public networkHandler: NetworkHandlerService) {
+  }
 
   @Input()
   public show = false;
@@ -33,37 +37,38 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   // Trustrank Parameters
   public trustrankIncludeIndirectDrugs = false;
   public trustrankIncludeNonApprovedDrugs = false;
-  public trustrankIncludeViralNonSeeds = true;
   public trustrankDampingFactor = 0.85;
   public trustrankMaxDeg = 0;
   public trustrankHubPenalty = 0.0;
   public trustrankResultSize = 20;
+  public trustrankCustomEdges = this.drugstoneConfig.config.customEdges.default;
 
   // Closeness Parameters
   public closenessIncludeIndirectDrugs = false;
   public closenessIncludeNonApprovedDrugs = false;
-  public closenessIncludeViralNonSeeds = true;
   public closenessMaxDeg = 0;
   public closenessHubPenalty = 0.0;
   public closenessResultSize = 20;
+  public closenessCustomEdges = this.drugstoneConfig.config.customEdges.default;
 
   // Degree Parameters
   public degreeIncludeNonApprovedDrugs = false;
-  public degreeIncludeViralNonSeeds = true;
   public degreeMaxDeg = 0;
   public degreeResultSize = 20;
+  public degreeCustomEdges = this.drugstoneConfig.config.customEdges.default;
 
   // Network proximity
   public proximityIncludeNonApprovedDrugs = false;
   public proximityMaxDeg = 0;
   public proximityHubPenalty = 0.0;
   public proximityResultSize = 20;
+  public proximityCustomEdges = this.drugstoneConfig.config.customEdges.default;
 
   // Betweenness Parameters
-  public betweennessIncludeViralNonSeeds = true;
   public betweennessMaxDeg = 0;
   public betweennessHubPenalty = 0.0;
   public betweennessResultSize = 20;
+  public betweennessCustomEdges = this.drugstoneConfig.config.customEdges.default;
 
   // Keypathwayminer Parameters
   public keypathwayminerK = 5;
@@ -71,14 +76,11 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   // Multisteiner Parameters
   public multisteinerNumTrees = 5;
   public multisteinerTolerance = 10;
-  public multisteinerIncludeViralNonSeeds = true;
   public multisteinerMaxDeg = 0;
   public multisteinerHubPenalty = 0.0;
+  public multisteinerCustomEdges = this.drugstoneConfig.config.customEdges.default;
 
   public maxTasks = MAX_TASKS;
-
-  constructor(public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public networkHandler: NetworkHandlerService) {
-  }
 
   ngOnInit(): void {
   }
@@ -115,6 +117,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       config: this.drugstoneConfig.config,
       input_network: this.networkHandler.activeNetwork.inputNetwork
     };
+    console.log(parameters)
     parameters.ppi_dataset = this.drugstoneConfig.config.interactionProteinProtein;
     parameters.pdi_dataset = this.drugstoneConfig.config.interactionDrugProtein;
     parameters.licenced = this.drugstoneConfig.config.licensedDatasets;
@@ -137,6 +140,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       }
       parameters.hub_penalty = this.trustrankHubPenalty;
       parameters.result_size = this.trustrankResultSize;
+      parameters.custom_edges = this.trustrankCustomEdges;
     } else if (this.algorithm === 'closeness') {
       parameters.include_indirect_drugs = this.closenessIncludeIndirectDrugs;
       parameters.include_non_approved_drugs = this.closenessIncludeNonApprovedDrugs;
@@ -145,12 +149,14 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       }
       parameters.hub_penalty = this.closenessHubPenalty;
       parameters.result_size = this.closenessResultSize;
+      parameters.custom_edges = this.closenessCustomEdges;
     } else if (this.algorithm === 'degree') {
       parameters.include_non_approved_drugs = this.degreeIncludeNonApprovedDrugs;
       if (this.degreeMaxDeg && this.degreeMaxDeg > 0) {
         parameters.max_deg = this.degreeMaxDeg;
       }
       parameters.result_size = this.degreeResultSize;
+      parameters.custom_edges = this.degreeCustomEdges;
     } else if (this.algorithm === 'proximity') {
       parameters.include_non_approved_drugs = this.proximityIncludeNonApprovedDrugs;
       if (this.proximityMaxDeg && this.proximityMaxDeg > 0) {
@@ -158,12 +164,14 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       }
       parameters.hub_penalty = this.proximityHubPenalty;
       parameters.result_size = this.proximityResultSize;
+      parameters.custom_edges = this.proximityCustomEdges;
     } else if (this.algorithm === 'betweenness') {
       if (this.betweennessMaxDeg && this.betweennessMaxDeg > 0) {
         parameters.max_deg = this.betweennessMaxDeg;
       }
       parameters.hub_penalty = this.betweennessHubPenalty;
       parameters.result_size = this.betweennessResultSize;
+      parameters.custom_edges = this.betweennessCustomEdges;
     } else if (this.algorithm === 'keypathwayminer') {
       parameters.k = this.keypathwayminerK;
     } else if (this.algorithm === 'multisteiner') {
@@ -173,6 +181,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
         parameters.max_deg = this.multisteinerMaxDeg;
       }
       parameters.hub_penalty = this.multisteinerHubPenalty;
+      parameters.custom_edges = this.multisteinerCustomEdges;
     }
     const token = await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
     const object = { taskId: token, algorithm: this.algorithm, target: this.target, params: parameters };
