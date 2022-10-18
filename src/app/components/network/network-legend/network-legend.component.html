@@ -73,6 +73,13 @@
                 ...
               </span>
             </th>
+            <th *ngSwitchCase="'ellipse'">
+              <span
+                class="node ellipse"
+                [style.background-color]="nodeGroup.value.color.background"
+              >
+              </span>
+            </th>
             <th *ngSwitchDefault>
               <span
                 class="node {{ nodeGroup.value.shape }}"
