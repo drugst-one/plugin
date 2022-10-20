@@ -1,6 +1,5 @@
 <div id="appWindow" (window:resize)="onResize($event)">
   <div class="is-hidden-mobile fullheight" id="appContainer">
-
     <app-license-agreement></app-license-agreement>
 
     <app-launch-analysis
@@ -9,7 +8,6 @@
       (taskEvent)="emitTaskEvent($event)"
     >
     </app-launch-analysis>
-
 
     <app-add-expressed-proteins
       [(show)]="showThresholdDialog"
@@ -190,9 +188,15 @@
           </div>
         </div>
 
-        <app-quick-drug-target *ngIf="drugstoneConfig.config.showConnectGenes" (taskEvent)="emitTaskEvent($event)"></app-quick-drug-target>
+        <app-quick-drug-target
+          *ngIf="drugstoneConfig.config.showConnectGenes"
+          (taskEvent)="emitTaskEvent($event)"
+        ></app-quick-drug-target>
 
-        <app-quick-drug *ngIf="drugstoneConfig.config.showSimpleAnalysis" (taskEvent)="emitTaskEvent($event)"></app-quick-drug>
+        <app-quick-drug
+          *ngIf="drugstoneConfig.config.showSimpleAnalysis"
+          (taskEvent)="emitTaskEvent($event)"
+        ></app-quick-drug>
 
         <div
           *ngIf="drugstoneConfig.config.showAdvAnalysis"
@@ -465,17 +469,18 @@
               </i>
             </div>
 
-
             <footer class="card-footer">
-              <!-- <a (click)="analysis.invertSelection(currentViewNodes)" class="card-footer-item text-primary"
-                    tooltipPosition="top" pTooltip="Invert the current selection.">
+              <a
+                (click)="analysis.invertSelection(networkHandler.activeNetwork.currentViewNodes)"
+                class="card-footer-item text-primary"
+                tooltipPosition="top"
+                pTooltip="Invert the current selection."
+              >
                 <span class="icon">
                   <i class="fa fa-sync"></i>
                 </span>
-                    <span>
-                  Invert
-                </span>
-                  </a> -->
+                <span> Invert </span>
+              </a>
               <a
                 *ngIf="analysis.getSelection().length"
                 (click)="analysis.resetSelection()"
@@ -510,10 +515,7 @@
           ></app-analysis-panel>
         </div>
         <!-- explorer network -->
-        <app-network
-          networkType="explorer"
-          [nodeData]="nodeData"
-        ></app-network>
+        <app-network networkType="explorer" [nodeData]="nodeData"></app-network>
       </div>
       <!-- End  network block -->
 

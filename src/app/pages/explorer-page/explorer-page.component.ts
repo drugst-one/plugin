@@ -466,7 +466,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
    * @param key
    * @param values
    */
-  public setConfigNodeGroup(key: string, nodeGroups: { [key: string]: NodeGroup }) {
+  public setConfigNodeGroup(key: string, nodeGroups: { [key: string]: NodeGroup } | {}) {
     // make sure that return-groups (seeds, drugs, found nodes) are set
     const defaultNodeGroups = JSON.parse(JSON.stringify(defaultConfig.nodeGroups));
     // user merge function to do deep merge

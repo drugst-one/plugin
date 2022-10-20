@@ -1,5 +1,5 @@
 <div *ngIf="token">
-  <div class="card analysis">
+  <div class="card analysis" [ngClass]="{'fullscreen': fullscreen}">
     <header class="card-header">
       <p class="card-header-title">
         <span class="icon">
@@ -12,15 +12,48 @@
         (click)="analysis.removeTask(token); close()"
         class="card-header-icon"
         aria-label="delete"
+        pTooltip="Delete analysis"
+        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+        tooltipPosition="left"
       >
         <span class="icon has-text-danger" title="Delete analysis">
           <i class="fas fa-trash" aria-hidden="true"></i>
         </span>
       </a>
 
-      <a (click)="close()" class="card-header-icon" aria-label="close">
+      <a
+        (click)="close()"
+        class="card-header-icon"
+        aria-label="close"
+        pTooltip="Close analysis"
+        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+        tooltipPosition="left"
+      >
         <span class="icon" title="Close analysis">
           <i class="fas fa-times color-danger" aria-hidden="true"></i>
+        </span>
+      </a>
+
+      <a
+        pTooltip="Open in fullscreen"
+        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+        tooltipPosition="left"
+        *ngIf="!fullscreen"
+        (click)="toggleFullscreen()"
+        class="card-header-icon"
+      >
+        <span class="icon is-small">
+          <i class="fas fa-expand"></i>
+        </span>
+      </a>
+      <a
+        title="close fullscreen"
+        *ngIf="fullscreen"
+        (click)="toggleFullscreen()"
+        class="card-header-icon"
+      >
+        <span class="icon is-small">
+          <i class="fas fa-compress"></i>
         </span>
       </a>
     </header>
@@ -49,13 +82,17 @@
         <div *ngIf="task">
           <div class="columns m-1">
             <div class="column content">
-              <h4
-                class="is-4 has-text-weight-bold"
-              >
-              <span class="icon">
-                <i class="fas fa-wrench" aria-hidden="true"></i>
-              </span>
-                {{(['quick', 'super', 'connect', 'connectSelected'].indexOf(task.info.algorithm) === -1) ? 'Algorithm:' : 'Method:' }}
+              <h4 class="is-4 has-text-weight-bold">
+                <span class="icon">
+                  <i class="fas fa-wrench" aria-hidden="true"></i>
+                </span>
+                {{
+                  ["quick", "super", "connect", "connectSelected"].indexOf(
+                    task.info.algorithm
+                  ) === -1
+                    ? "Algorithm:"
+                    : "Method:"
+                }}
                 {{ algorithmNames[task.info.algorithm] }}
               </h4>
             </div>
@@ -64,156 +101,177 @@
             <div class="column">
               <table class="table is-narrow">
                 <tbody>
-                <tr
-                  *ngIf="
+                  <tr
+                    *ngIf="
                       result && result.geneInteractionDataset !== undefined
                     "
-                >
-                  <td>Protein-Protein Interaction Dataset</td>
-                  <td>
-                    {{ result.geneInteractionDataset.name }} (Version
-                    {{ result.geneInteractionDataset.version }})
-                  </td>
-                </tr>
-                <tr
-                  *ngIf="
+                  >
+                    <td>Protein-Protein Interaction Dataset</td>
+                    <td>
+                      {{ result.geneInteractionDataset.name }} (Version
+                      {{ result.geneInteractionDataset.version }})
+                    </td>
+                  </tr>
+                  <tr
+                    *ngIf="
                       result && result.drugInteractionDataset !== undefined
                     "
-                >
-                  <td>Protein-Drug Interaction Dataset</td>
-                  <td>
-                    {{ result.drugInteractionDataset.name }} (Version
-                    {{ result.drugInteractionDataset.version }})
-                  </td>
-                </tr>
-                <tr *ngIf="task.info.parameters.resultSize !== undefined">
-                  <td>Result Size</td>
-                  <td>{{ task.info.parameters.resultSize }}</td>
-                </tr>
-                <tr *ngIf="task.info.parameters.k !== undefined">
-                  <td>K</td>
-                  <td>{{ task.info.parameters.k }}</td>
-                </tr>
-                <tr *ngIf="task.info.parameters.numTrees !== undefined">
-                  <td>Number of trees</td>
-                  <td>{{ task.info.parameters.numTrees }}</td>
-                </tr>
-                <tr *ngIf="task.info.parameters.tolerance !== undefined">
-                  <td>Tolerance</td>
-                  <td>{{ task.info.parameters.tolerance }}</td>
-                </tr>
-                <tr *ngIf="task.info.parameters.dampingFactor !== undefined">
-                  <td>Damping Factor</td>
-                  <td>{{ task.info.parameters.dampingFactor }}</td>
-                </tr>
-                <tr *ngIf="task.info.parameters.maxDeg !== undefined">
-                  <td>Maximum Degree</td>
-                  <td>{{ task.info.parameters.maxDeg }}</td>
-                </tr>
-                <tr *ngIf="task.info.parameters.hubPenalty !== undefined">
-                  <td>Hub Penality</td>
-                  <td>{{ task.info.parameters.hubPenalty }}</td>
-                </tr>
-                <tr
-                  *ngIf="
+                  >
+                    <td>Protein-Drug Interaction Dataset</td>
+                    <td>
+                      {{ result.drugInteractionDataset.name }} (Version
+                      {{ result.drugInteractionDataset.version }})
+                    </td>
+                  </tr>
+                  <tr *ngIf="task.info.parameters.resultSize !== undefined">
+                    <td>Result Size</td>
+                    <td>{{ task.info.parameters.resultSize }}</td>
+                  </tr>
+                  <tr *ngIf="task.info.parameters.k !== undefined">
+                    <td>K</td>
+                    <td>{{ task.info.parameters.k }}</td>
+                  </tr>
+                  <tr *ngIf="task.info.parameters.numTrees !== undefined">
+                    <td>Number of trees</td>
+                    <td>{{ task.info.parameters.numTrees }}</td>
+                  </tr>
+                  <tr *ngIf="task.info.parameters.tolerance !== undefined">
+                    <td>Tolerance</td>
+                    <td>{{ task.info.parameters.tolerance }}</td>
+                  </tr>
+                  <tr *ngIf="task.info.parameters.dampingFactor !== undefined">
+                    <td>Damping Factor</td>
+                    <td>{{ task.info.parameters.dampingFactor }}</td>
+                  </tr>
+                  <tr *ngIf="task.info.parameters.maxDeg !== undefined">
+                    <td>Maximum Degree</td>
+                    <td>{{ task.info.parameters.maxDeg }}</td>
+                  </tr>
+                  <tr *ngIf="task.info.parameters.hubPenalty !== undefined">
+                    <td>Hub Penality</td>
+                    <td>{{ task.info.parameters.hubPenalty }}</td>
+                  </tr>
+                  <tr
+                    *ngIf="
                       task.info.parameters.includeIndirectDrugs !== undefined &&
                       task.info.target === 'drug'
                     "
-                >
-                  <td>Include indirect drugs</td>
-                  <td>
-                    <i
-                      *ngIf="task.info.parameters.includeIndirectDrugs"
-                      class="fa fa-check"
-                    ></i>
-                    <i
-                      *ngIf="!task.info.parameters.includeIndirectDrugs"
-                      class="fa fa-times color-danger"
-                    ></i>
-                  </td>
-                </tr>
-                <tr
-                  *ngIf="
+                  >
+                    <td>Include indirect drugs</td>
+                    <td>
+                      <i
+                        *ngIf="task.info.parameters.includeIndirectDrugs"
+                        class="fa fa-check"
+                      ></i>
+                      <i
+                        *ngIf="!task.info.parameters.includeIndirectDrugs"
+                        class="fa fa-times color-danger"
+                      ></i>
+                    </td>
+                  </tr>
+                  <tr
+                    *ngIf="
                       task.info.parameters.includeNonApprovedDrugs !==
                         undefined && task.info.target === 'drug'
                     "
-                >
-                  <td>Include non-approved drugs</td>
-                  <td>
-                    <i
-                      *ngIf="task.info.parameters.includeNonApprovedDrugs"
-                      class="fa fa-check"
-                    ></i>
-                    <i
-                      *ngIf="!task.info.parameters.includeNonApprovedDrugs"
-                      class="fa fa-times color-danger"
-                    ></i>
-                  </td>
-                </tr>
+                  >
+                    <td>Include non-approved drugs</td>
+                    <td>
+                      <i
+                        *ngIf="task.info.parameters.includeNonApprovedDrugs"
+                        class="fa fa-check"
+                      ></i>
+                      <i
+                        *ngIf="!task.info.parameters.includeNonApprovedDrugs"
+                        class="fa fa-times color-danger"
+                      ></i>
+                    </td>
+                  </tr>
+                  <tr *ngIf="task.info.parameters.customEdges !== undefined">
+                    <td>Include all displayed edges</td>
+                    <td>
+                      <i
+                        *ngIf="task.info.parameters.customEdges"
+                        class="fa fa-check"
+                      ></i>
+                      <i
+                        *ngIf="!task.info.parameters.customEdges"
+                        class="fa fa-times color-danger"
+                      ></i>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
-          <div class="columns m-1"
-               *ngIf="['quick','super','connect','connectSelected'].indexOf(task.info.algorithm) > -1"
+          <div
+            class="columns m-1"
+            *ngIf="
+              ['quick', 'super', 'connect', 'connectSelected'].indexOf(
+                task.info.algorithm
+              ) > -1
+            "
           >
             <div class="column">
               <h4 class="is-4 has-text-weight-bold">
-              <span class="icon">
-                <i class="fas fa-wrench" aria-hidden="true"></i>
-              </span>
+                <span class="icon">
+                  <i class="fas fa-wrench" aria-hidden="true"></i>
+                </span>
                 Algorithm:
                 {{ algorithmNames["multisteiner"] }}
               </h4>
               <table class="table is-narrow">
                 <tbody>
-                <tr>
-                  <td>Number of Trees</td>
-                  <td>1</td>
-                </tr>
-                <tr>
-                  <td>Tolerance</td>
-                  <td>0</td>
-                </tr>
-                <tr>
-                  <td>Hub Penality</td>
-                  <td>1</td>
-                </tr>
+                  <tr>
+                    <td>Number of Trees</td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
+                    <td>Tolerance</td>
+                    <td>0</td>
+                  </tr>
+                  <tr>
+                    <td>Hub Penality</td>
+                    <td>1</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
-          <div class="columns m-1" *ngIf="['quick','super'].indexOf(task.info.algorithm) > -1">
+          <div
+            class="columns m-1"
+            *ngIf="['quick', 'super'].indexOf(task.info.algorithm) > -1"
+          >
             <div class="column">
               <h4 class="is-4 has-text-weight-bold">
-              <span class="icon">
-                <i class="fas fa-wrench" aria-hidden="true"></i>
-              </span>
+                <span class="icon">
+                  <i class="fas fa-wrench" aria-hidden="true"></i>
+                </span>
                 Algorithm:
                 {{ algorithmNames["closeness"] }}
               </h4>
               <table class="table is-narrow">
                 <tbody>
-                <tr>
-                  <td>Include indirect drugs</td>
-                  <td>
-                    <i class="fa fa-times"></i>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Include non-approved drugs</td>
-                  <td>
-                    <i class="fa fa-check"></i>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Hub Penality</td>
-                  <td>1</td>
-                </tr>
-                <tr>
-                  <td>Result Size</td>
-                  <td>10</td>
-                </tr>
+                  <tr>
+                    <td>Include indirect drugs</td>
+                    <td>
+                      <i class="fa fa-times"></i>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Include non-approved drugs</td>
+                    <td>
+                      <i class="fa fa-check"></i>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Hub Penality</td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
+                    <td>Result Size</td>
+                    <td>10</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -223,10 +281,7 @@
 
       <div class="tab-content" [class.is-visible]="tab === 'network'">
         <!-- network start -->
-        <app-network
-          networkType="analysis"
-          [nodeData]="nodeData"
-        ></app-network>
+        <app-network networkType="analysis" [nodeData]="nodeData"></app-network>
         <!-- network end -->
       </div>
       <div
@@ -263,16 +318,16 @@
                     class="button is-rounded has-tooltip is-small"
                     pTooltip="Normalize the scores"
                     [tooltipStyleClass]="
-                    'drgstn drgstn-tooltip drgstn-tooltip-top'
-                  "
+                      'drgstn drgstn-tooltip drgstn-tooltip-top'
+                    "
                     tooltipPosition="top"
                     [class.is-primary]="tableNormalize"
                     (click)="toggleNormalization(true)"
                     [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                   >
-                  <span class="icon is-small">
-                    <i class="fa fa-ruler-vertical"></i>
-                  </span>
+                    <span class="icon is-small">
+                      <i class="fa fa-ruler-vertical"></i>
+                    </span>
                     <span>Normalization On</span>
                   </button>
                 </p>
@@ -281,8 +336,8 @@
                     class="button is-rounded has-tooltip is-small"
                     pTooltip="Disable normalization of the scores."
                     [tooltipStyleClass]="
-                    'drgstn drgstn-tooltip drgstn-tooltip-top'
-                  "
+                      'drgstn drgstn-tooltip drgstn-tooltip-top'
+                    "
                     tooltipPosition="top"
                     [class.is-primary]="!tableNormalize"
                     (click)="toggleNormalization(false)"
@@ -339,16 +394,16 @@
                     class="button is-rounded has-tooltip is-small"
                     pTooltip="Normalize the scores"
                     [tooltipStyleClass]="
-                    'drgstn drgstn-tooltip drgstn-tooltip-top'
-                  "
+                      'drgstn drgstn-tooltip drgstn-tooltip-top'
+                    "
                     tooltipPosition="top"
                     [class.is-primary]="tableNormalize"
                     (click)="toggleNormalization(true)"
                     [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                   >
-                  <span class="icon is-small">
-                    <i class="fa fa-ruler-vertical"></i>
-                  </span>
+                    <span class="icon is-small">
+                      <i class="fa fa-ruler-vertical"></i>
+                    </span>
                     <span>Normalization On</span>
                   </button>
                 </p>
@@ -357,8 +412,8 @@
                     class="button is-rounded has-tooltip is-small"
                     pTooltip="Disable normalization of the scores."
                     [tooltipStyleClass]="
-                    'drgstn drgstn-tooltip drgstn-tooltip-top'
-                  "
+                      'drgstn drgstn-tooltip drgstn-tooltip-top'
+                    "
                     tooltipPosition="top"
                     [class.is-primary]="!tableNormalize"
                     (click)="toggleNormalization(false)"

@@ -177,16 +177,20 @@ export class AnalysisService {
   public invertSelection(nodes) {
     const newSelection = [];
     nodes.forEach((node: Node) => {
+      if (node.drugstoneType !== 'protein') {
+        // only consider proteins
+        return
+      }
       const wrapper = getWrapperFromNode(node);
       if (!this.inSelection(wrapper)) {
         newSelection.push(wrapper);
       }
     });
-    this.selectedItems.clear();
+    this.resetSelection()
     for (const wrapper of newSelection) {
-      this.selectedItems.set(wrapper.nodeId, wrapper);
+      this.selectedItems.set(wrapper.id, wrapper);
     }
-    this.selectListSubject.next({items: newSelection, selected: null});
+    this.selectListSubject.next({items: newSelection, selected: true});
   }
 
   resetSelection() {
@@ -249,6 +253,7 @@ export class AnalysisService {
       target: target,
       num_trees: 5,
       tolerance: 10,
+      custom_edges: this.drugstoneConfig.config.customEdges.default,
     };
 
 
