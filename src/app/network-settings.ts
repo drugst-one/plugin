@@ -1,8 +1,8 @@
-import { getGradientColor } from './utils';
+import {getGradientColor} from './utils';
 import {
   Node,
 } from './interfaces';
-import { IConfig, defaultConfig } from './config';
+import {IConfig, defaultConfig} from './config';
 import * as merge from 'lodash/fp/merge';
 
 export class NetworkSettings {
@@ -93,39 +93,69 @@ export class NetworkSettings {
     Object.keys(config.nodeGroups.default).forEach(e => delete node[e]);
 
     // set group styles
-    if (node.group === 'default') {
-      node = merge(node, config.nodeGroups.default);
-    } else {
-      node = merge(node, config.nodeGroups[node.group]);
-    }
+    // if (node.group === 'default') {
+    //   node = merge(node, config.nodeGroups.default);
+    // } else {
+    // node = merge(node, config.nodeGroups[node.group]);
+    // if (node.label === 'F11R' || node.label === 'GNAI1')
+    //   console.log(node)
+    // }
 
     // note that seed and selected node style are applied after the node style is fetched.
     // this allows to overwrite only attributes of interest, therefore in e.g. seedNode group
     // certain attributes like shape can remain undefined
     // use lodash merge to not lose deep attributes, e.g. "font.size"
+    // @ts-ignore
+    if (node._group)
+      // @ts-ignore
+      node.group = node._group
     if (isSeed) {
       // apply seed node style to node
-      node = merge(node, config.nodeGroups.seedNode);
+      // @ts-ignore
+      node._group = node.group
+      node.group = 'seedNode'
     }
     // selection on purpose after seed style, so seed style will be combined with selection style
     if (isSelected) {
+      // @ts-ignore
+      node._group = node.group
       // apply selected node style to node
-      node = merge(node, config.nodeGroups.selectedNode);
+      node.group = 'selectedNode'
     }
     // show image if image url is given. If seed nodes are highlighted, ignore image property
     if (node.image && !isSeed) {
       node.shape = 'image';
     }
     // use opactiy as gradient
-    if (gradient === null) {
-      node.opacity = 0
-    } else {
-      node.opacity = gradient
-    }
+    // if (gradient === null) {
+    //   node.opacity = 0
+    // } else {
+    //   node.opacity = gradient
+    // }
     // custom ctx renderer for e.g. pie chart
     if (renderer !== null) {
+      // @ts-ignore
+      node._shape = node.shape
       node.shape = 'custom';
+      node.color = {opacity: gradient}
+      node.opacity = gradient
+      // @ts-ignore
+      if (config.nodeGroups[node.group].shadow) {
+        node.shadow = {enabled: config.nodeGroups[node.group].shadow}
+        node.shadow.color = '#000000'
+      } else {
+        node.shadow = {color: '#000000'}
+      }
       node.ctxRenderer = renderer;
+    } else {
+      node.opacity = undefined
+      // @ts-ignore
+      if (node._shape) {
+        // @ts-ignore
+        node.shape = node._shape;
+      } else
+        delete node.shape
+      delete node.ctxRenderer
     }
     return node;
   }

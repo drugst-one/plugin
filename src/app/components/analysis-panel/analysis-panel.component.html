@@ -87,11 +87,11 @@
                   <i class="fas fa-wrench" aria-hidden="true"></i>
                 </span>
                 {{
-                  ["quick", "super", "connect", "connectSelected"].indexOf(
-                    task.info.algorithm
-                  ) === -1
-                    ? "Algorithm:"
-                    : "Method:"
+                ["quick", "super", "connect", "connectSelected"].indexOf(
+                  task.info.algorithm
+                ) === -1
+                  ? "Algorithm:"
+                  : "Method:"
                 }}
                 {{ algorithmNames[task.info.algorithm] }}
               </h4>
@@ -101,105 +101,105 @@
             <div class="column">
               <table class="table is-narrow">
                 <tbody>
-                  <tr
-                    *ngIf="
+                <tr
+                  *ngIf="
                       result && result.geneInteractionDataset !== undefined
                     "
-                  >
-                    <td>Protein-Protein Interaction Dataset</td>
-                    <td>
-                      {{ result.geneInteractionDataset.name }} (Version
-                      {{ result.geneInteractionDataset.version }})
-                    </td>
-                  </tr>
-                  <tr
-                    *ngIf="
+                >
+                  <td>Protein-Protein Interaction Dataset</td>
+                  <td>
+                    {{ result.geneInteractionDataset.name }} (Version
+                    {{ result.geneInteractionDataset.version }})
+                  </td>
+                </tr>
+                <tr
+                  *ngIf="
                       result && result.drugInteractionDataset !== undefined
                     "
-                  >
-                    <td>Protein-Drug Interaction Dataset</td>
-                    <td>
-                      {{ result.drugInteractionDataset.name }} (Version
-                      {{ result.drugInteractionDataset.version }})
-                    </td>
-                  </tr>
-                  <tr *ngIf="task.info.parameters.resultSize !== undefined">
-                    <td>Result Size</td>
-                    <td>{{ task.info.parameters.resultSize }}</td>
-                  </tr>
-                  <tr *ngIf="task.info.parameters.k !== undefined">
-                    <td>K</td>
-                    <td>{{ task.info.parameters.k }}</td>
-                  </tr>
-                  <tr *ngIf="task.info.parameters.numTrees !== undefined">
-                    <td>Number of trees</td>
-                    <td>{{ task.info.parameters.numTrees }}</td>
-                  </tr>
-                  <tr *ngIf="task.info.parameters.tolerance !== undefined">
-                    <td>Tolerance</td>
-                    <td>{{ task.info.parameters.tolerance }}</td>
-                  </tr>
-                  <tr *ngIf="task.info.parameters.dampingFactor !== undefined">
-                    <td>Damping Factor</td>
-                    <td>{{ task.info.parameters.dampingFactor }}</td>
-                  </tr>
-                  <tr *ngIf="task.info.parameters.maxDeg !== undefined">
-                    <td>Maximum Degree</td>
-                    <td>{{ task.info.parameters.maxDeg }}</td>
-                  </tr>
-                  <tr *ngIf="task.info.parameters.hubPenalty !== undefined">
-                    <td>Hub Penality</td>
-                    <td>{{ task.info.parameters.hubPenalty }}</td>
-                  </tr>
-                  <tr
-                    *ngIf="
+                >
+                  <td>Protein-Drug Interaction Dataset</td>
+                  <td>
+                    {{ result.drugInteractionDataset.name }} (Version
+                    {{ result.drugInteractionDataset.version }})
+                  </td>
+                </tr>
+                <tr *ngIf="task.info.parameters.resultSize !== undefined">
+                  <td>Result Size</td>
+                  <td>{{ task.info.parameters.resultSize }}</td>
+                </tr>
+                <tr *ngIf="task.info.parameters.k !== undefined">
+                  <td>K</td>
+                  <td>{{ task.info.parameters.k }}</td>
+                </tr>
+                <tr *ngIf="task.info.parameters.numTrees !== undefined">
+                  <td>Number of trees</td>
+                  <td>{{ task.info.parameters.numTrees }}</td>
+                </tr>
+                <tr *ngIf="task.info.parameters.tolerance !== undefined">
+                  <td>Tolerance</td>
+                  <td>{{ task.info.parameters.tolerance }}</td>
+                </tr>
+                <tr *ngIf="task.info.parameters.dampingFactor !== undefined">
+                  <td>Damping Factor</td>
+                  <td>{{ task.info.parameters.dampingFactor }}</td>
+                </tr>
+                <tr *ngIf="task.info.parameters.maxDeg !== undefined">
+                  <td>Maximum Degree</td>
+                  <td>{{ task.info.parameters.maxDeg }}</td>
+                </tr>
+                <tr *ngIf="task.info.parameters.hubPenalty !== undefined">
+                  <td>Hub Penality</td>
+                  <td>{{ task.info.parameters.hubPenalty }}</td>
+                </tr>
+                <tr
+                  *ngIf="
                       task.info.parameters.includeIndirectDrugs !== undefined &&
                       task.info.target === 'drug'
                     "
-                  >
-                    <td>Include indirect drugs</td>
-                    <td>
-                      <i
-                        *ngIf="task.info.parameters.includeIndirectDrugs"
-                        class="fa fa-check"
-                      ></i>
-                      <i
-                        *ngIf="!task.info.parameters.includeIndirectDrugs"
-                        class="fa fa-times color-danger"
-                      ></i>
-                    </td>
-                  </tr>
-                  <tr
-                    *ngIf="
+                >
+                  <td>Include indirect drugs</td>
+                  <td>
+                    <i
+                      *ngIf="task.info.parameters.includeIndirectDrugs"
+                      class="fa fa-check"
+                    ></i>
+                    <i
+                      *ngIf="!task.info.parameters.includeIndirectDrugs"
+                      class="fa fa-times color-danger"
+                    ></i>
+                  </td>
+                </tr>
+                <tr
+                  *ngIf="
                       task.info.parameters.includeNonApprovedDrugs !==
                         undefined && task.info.target === 'drug'
                     "
-                  >
-                    <td>Include non-approved drugs</td>
-                    <td>
-                      <i
-                        *ngIf="task.info.parameters.includeNonApprovedDrugs"
-                        class="fa fa-check"
-                      ></i>
-                      <i
-                        *ngIf="!task.info.parameters.includeNonApprovedDrugs"
-                        class="fa fa-times color-danger"
-                      ></i>
-                    </td>
-                  </tr>
-                  <tr *ngIf="task.info.parameters.customEdges !== undefined">
-                    <td>Include all displayed edges</td>
-                    <td>
-                      <i
-                        *ngIf="task.info.parameters.customEdges"
-                        class="fa fa-check"
-                      ></i>
-                      <i
-                        *ngIf="!task.info.parameters.customEdges"
-                        class="fa fa-times color-danger"
-                      ></i>
-                    </td>
-                  </tr>
+                >
+                  <td>Include non-approved drugs</td>
+                  <td>
+                    <i
+                      *ngIf="task.info.parameters.includeNonApprovedDrugs"
+                      class="fa fa-check"
+                    ></i>
+                    <i
+                      *ngIf="!task.info.parameters.includeNonApprovedDrugs"
+                      class="fa fa-times color-danger"
+                    ></i>
+                  </td>
+                </tr>
+                <tr *ngIf="task.info.parameters.customEdges !== undefined">
+                  <td>Include all displayed edges</td>
+                  <td>
+                    <i
+                      *ngIf="task.info.parameters.customEdges"
+                      class="fa fa-check"
+                    ></i>
+                    <i
+                      *ngIf="!task.info.parameters.customEdges"
+                      class="fa fa-times color-danger"
+                    ></i>
+                  </td>
+                </tr>
                 </tbody>
               </table>
             </div>
@@ -222,18 +222,18 @@
               </h4>
               <table class="table is-narrow">
                 <tbody>
-                  <tr>
-                    <td>Number of Trees</td>
-                    <td>1</td>
-                  </tr>
-                  <tr>
-                    <td>Tolerance</td>
-                    <td>0</td>
-                  </tr>
-                  <tr>
-                    <td>Hub Penality</td>
-                    <td>1</td>
-                  </tr>
+                <tr>
+                  <td>Number of Trees</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>Tolerance</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>Hub Penality</td>
+                  <td>1</td>
+                </tr>
                 </tbody>
               </table>
             </div>
@@ -252,26 +252,26 @@
               </h4>
               <table class="table is-narrow">
                 <tbody>
-                  <tr>
-                    <td>Include indirect drugs</td>
-                    <td>
-                      <i class="fa fa-times"></i>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Include non-approved drugs</td>
-                    <td>
-                      <i class="fa fa-check"></i>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Hub Penality</td>
-                    <td>1</td>
-                  </tr>
-                  <tr>
-                    <td>Result Size</td>
-                    <td>10</td>
-                  </tr>
+                <tr>
+                  <td>Include indirect drugs</td>
+                  <td>
+                    <i class="fa fa-times"></i>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Include non-approved drugs</td>
+                  <td>
+                    <i class="fa fa-check"></i>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Hub Penality</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>Result Size</td>
+                  <td>10</td>
+                </tr>
                 </tbody>
               </table>
             </div>
