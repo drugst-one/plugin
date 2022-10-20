@@ -128,7 +128,7 @@ connectorNodeGroup.groupName = 'Connector Node';
  * Provide default values
  */
 export const defaultConfig: IConfig = {
-  title: 'Drugst.one',
+  title: 'Drugst.One',
   legendUrl: '',
   legendClass: 'legend',
   legendPos: 'left',
@@ -146,7 +146,7 @@ export const defaultConfig: IConfig = {
   showTasks: true,
   showNetworkMenu: 'right',
   showLegend: true,
-  expandNetworkMenu: false,
+  expandNetworkMenu: true,
   showNetworkMenuButtonExpression: true,
   showNetworkMenuButtonScreenshot: true,
   showNetworkMenuButtonExportGraphml: true,
