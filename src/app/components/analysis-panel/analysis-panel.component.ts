@@ -80,6 +80,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public result: any = null;
   public myConfig: IConfig = JSON.parse(JSON.stringify(defaultConfig));
 
+  public fullscreen = false;
+
   public network: any;
   public nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
   // private drugNodes: any[] = [];
@@ -504,5 +506,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     }
     this.analysis.addItems(addItems);
     this.analysis.removeItems(removeItems);
+  }
+
+  public toggleFullscreen() {
+    this.fullscreen = !this.fullscreen;
+    console.log('this.fullscreen', this.fullscreen)
   }
 }

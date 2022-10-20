@@ -163,7 +163,7 @@ export const defaultConfig: IConfig = {
   networkMenuButtonAnimationLabel: 'Animation',
   identifier: 'symbol',
   selfReferences: false,
-  customEdges: {default: true, selectable: false},
+  customEdges: {default: true, selectable: true},
   interactionDrugProtein: 'NeDRex',
   interactionProteinProtein: 'NeDRex',
   indicationDrugDisorder: 'NeDRex',
