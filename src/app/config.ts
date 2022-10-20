@@ -145,7 +145,7 @@ export const defaultConfig: IConfig = {
   showTasks: true,
   showNetworkMenu: 'right',
   showLegend: true,
-  expandNetworkMenu: false,
+  expandNetworkMenu: true,
   showNetworkMenuButtonExpression: true,
   showNetworkMenuButtonScreenshot: true,
   showNetworkMenuButtonExportGraphml: true,
