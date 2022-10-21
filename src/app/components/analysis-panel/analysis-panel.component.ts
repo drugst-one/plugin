@@ -344,11 +344,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
                 this.tableSelectedProteins = [...proteinSelection];
               }
             });
+            this.emitVisibleItems(true);
           });
         });
       }
     }
-    this.emitVisibleItems(true);
+
 
   }
 
