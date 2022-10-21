@@ -7,6 +7,7 @@ import {NetexControllerService} from '../netex-controller/netex-controller.servi
 import {DrugstoneConfigService} from "../drugstone-config/drugstone-config.service";
 import {NetworkHandlerService} from "../network-handler/network-handler.service";
 import { ToastService } from '../toast/toast.service';
+import { NodeGroup } from 'src/app/config';
 
 export type AlgorithmType =
   'trustrank'
@@ -152,27 +153,51 @@ export class AnalysisService {
     this.selectListSubject.next({items: removedWrappers, selected: false});
   }
 
-  public addSeeds(nodes) {
-    const addedWrappers: Wrapper[] = [];
-    nodes.forEach((node) => {
-      if (node.isSeed === true && !this.inSelection(node)) {
-        addedWrappers.push(node);
-        this.selectedItems.set(node.id, node);
+  public addGroupToSelection(group: NodeGroup) {
+    const wrappers: Wrapper[] = [];
+    this.networkHandler.activeNetwork.currentViewNodes.forEach((node) => {
+      if (node.groupName !== group.groupName || node.drugstoneType !== 'protein') {
+        // only consider nodes of group and proteins
+        return
       }
+      wrappers.push(getWrapperFromNode(node));
     });
-    this.selectListSubject.next({items: addedWrappers, selected: true});
+    this.addItems(wrappers)
   }
 
-  public removeSeeds(nodes) {
-    const removedWrappers: Wrapper[] = [];
-    nodes.forEach((node) => {
-      if (node.isSeed === true && this.inSelection(node)) {
-        removedWrappers.push(node);
-        this.selectedItems.delete(node.id);
+  public addAllToSelection() {
+    const wrappers: Wrapper[] = [];
+    this.networkHandler.activeNetwork.currentViewNodes.forEach((node) => {
+      if (node.drugstoneType !== 'protein') {
+        // only consider proteins
+        return
       }
+      wrappers.push(getWrapperFromNode(node));
     });
-    this.selectListSubject.next({items: removedWrappers, selected: false});
+    this.addItems(wrappers)
   }
+
+  // public addSeeds(nodes) {
+  //   const addedWrappers: Wrapper[] = [];
+  //   nodes.forEach((node) => {
+  //     if (node.isSeed === true && !this.inSelection(node)) {
+  //       addedWrappers.push(node);
+  //       this.selectedItems.set(node.id, node);
+  //     }
+  //   });
+  //   this.selectListSubject.next({items: addedWrappers, selected: true});
+  // }
+
+  // public removeSeeds(nodes) {
+  //   const removedWrappers: Wrapper[] = [];
+  //   nodes.forEach((node) => {
+  //     if (node.isSeed === true && this.inSelection(node)) {
+  //       removedWrappers.push(node);
+  //       this.selectedItems.delete(node.id);
+  //     }
+  //   });
+  //   this.selectListSubject.next({items: removedWrappers, selected: false});
+  // }
 
   public invertSelection(nodes) {
     const newSelection = [];

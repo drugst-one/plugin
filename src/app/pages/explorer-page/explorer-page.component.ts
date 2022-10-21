@@ -591,12 +591,4 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.taskEvent.emit(eventObject);
   }
 
-  // //TODO check if used
-  // setInputNetwork(network: any) {
-  //   if (network == null)
-  //     this.analysis.inputNetwork = { nodes: this.proteins, edges: this.edges }
-  //   else
-  //     this.analysis.inputNetwork = network;
-  // }
-//
 }

@@ -49,6 +49,7 @@ import { LicenseAgreementComponent } from './components/license-agreement/licens
 import { QuickDrugTargetComponent } from './components/quick-drug-target/quick-drug-target.component';
 import { QuickDrugComponent } from './components/quick-drug/quick-drug.component';
 import { ToastComponent } from './components/toast/toast.component';
+import { GroupSelectionComponent } from './pages/explorer-page/group-selection/group-selection.component';
 
 
 @NgModule({
@@ -79,6 +80,7 @@ import { ToastComponent } from './components/toast/toast.component';
     QuickDrugTargetComponent,
     QuickDrugComponent,
     ToastComponent,
+    GroupSelectionComponent,
   ],
   imports: [
     BrowserModule,

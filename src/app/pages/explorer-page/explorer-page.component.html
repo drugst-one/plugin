@@ -471,7 +471,41 @@
 
             <footer class="card-footer">
               <a
-                (click)="analysis.invertSelection(networkHandler.activeNetwork.currentViewNodes)"
+                (click)="analysis.addAllToSelection()"
+                class="card-footer-item text-primary"
+                tooltipPosition="top"
+                pTooltip="Add all proteins to the selection."
+              >
+                <span class="icon">
+                  <i class="fa fa-plus"></i>
+                </span>
+                <span> Add all </span>
+              </a>
+            </footer>
+            <footer class="card-footer">
+              <a
+                class="card-footer-item text-primary"
+                tooltipPosition="top"
+                pTooltip="Add all proteins to the selection."
+              >
+                <span class="icon">
+                  <i class="fa fa-plus"></i>
+                </span>
+                <span class="is-fullwidth">
+                  <app-group-selection
+                    (selectGroupEmitter)="analysis.addGroupToSelection($event)"
+                    [nodeGroups]="drugstoneConfig.config.nodeGroups"
+                  ></app-group-selection>
+                </span>
+              </a>
+            </footer>
+            <footer class="card-footer">
+              <a
+                (click)="
+                  analysis.invertSelection(
+                    networkHandler.activeNetwork.currentViewNodes
+                  )
+                "
                 class="card-footer-item text-primary"
                 tooltipPosition="top"
                 pTooltip="Invert the current selection."

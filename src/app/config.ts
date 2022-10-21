@@ -121,7 +121,7 @@ const defaultNodeGroup: NodeGroup = {
       borderWidthSelected: 2
     };
 const connectorNodeGroup: NodeGroup = JSON.parse(JSON.stringify(defaultNodeGroup));
-connectorNodeGroup.groupName = 'Connector Node';
+connectorNodeGroup.groupName = 'Connector Nodes';
 
 // @ts-ignore
 /**
