@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { NodeGroup } from 'src/app/config';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {NodeGroup} from 'src/app/config';
 
 @Component({
   selector: 'app-group-selection',
@@ -8,7 +8,8 @@ import { NodeGroup } from 'src/app/config';
 })
 export class GroupSelectionComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }
@@ -18,9 +19,12 @@ export class GroupSelectionComponent implements OnInit {
   public _nodeGroupsList: NodeGroup[];
 
   @Output() selectGroupEmitter: EventEmitter<NodeGroup> = new EventEmitter();
+
   @Input() set nodeGroups(value: { string: NodeGroup }) {
+    Object.entries(value).forEach(e => e[1].groupID = e[0])
     this._nodeGroupsList = Object.values(value).filter(nodeGroup => !this.unselecableGroups.includes(nodeGroup.groupName));
   }
+
   public selectedGroup = null;
 
   selectGroup(item) {
