@@ -200,7 +200,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             this.nodeData.edges = new vis.DataSet(edges);
             const container = this.networkHandler.activeNetwork.networkEl.nativeElement;
             const isBig = nodes.length > 100 || edges.length > 100;
-            const options = NetworkSettings.getOptions(isBig ? 'analysis-big' : 'analysis', this.myConfig.physicsOn);
+            const options = NetworkSettings.getOptions(isBig ? 'analysis-big' : 'analysis', this.myConfig);
             // @ts-ignore
             options.groups = this.drugstoneConfig.config.nodeGroups;
             // @ts-ignore
@@ -208,7 +208,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               // @ts-ignore
               delete g.renderer
             }
-            console.log(options)
             this.drugstoneConfig.config.physicsOn = !isBig;
             this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
             this.networkHandler.activeNetwork.networkInternal.on('stabilizationIterationsDone', () => {
@@ -321,6 +320,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
                 const updatedNodes = [];
                 this.nodeData.nodes.forEach((node) => {
                   const isSeed = this.networkHandler.activeNetwork.highlightSeeds ? this.networkHandler.activeNetwork.seedMap[node.id] : false;
+                  if (!isSeed)
+                    return
                   const nodeStyled = NetworkSettings.getNodeStyle(
                     node,
                     this.myConfig,

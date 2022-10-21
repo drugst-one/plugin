@@ -107,9 +107,10 @@ export class NetworkComponent implements OnInit {
 
   updateQueryItems() {
     this.queryItems = [];
-    this.currentViewNodes.forEach((protein) => {
-      this.queryItems.push(getWrapperFromNode(protein));
-    });
+    if (this.currentViewNodes)
+      this.currentViewNodes.forEach((protein) => {
+        this.queryItems.push(getWrapperFromNode(protein));
+      });
   }
 
   public saveAddNodes(nodeList: Node[]) {
@@ -364,7 +365,7 @@ export class NetworkComponent implements OnInit {
           NetworkSettings.getNodeStyle(
             node,
             this.drugstoneConfig.config,
-            false,
+            node.isSeed && this.networkHandler.activeNetwork.highlightSeeds,
             this.analysis.inSelection(getWrapperFromNode(node)),
             1.0,
             this.nodeRenderer
@@ -428,7 +429,7 @@ export class NetworkComponent implements OnInit {
               NetworkSettings.getNodeStyle(
                 node,
                 this.drugstoneConfig.config,
-                node.isSeed,
+                node.isSeed && this.networkHandler.activeNetwork.highlightSeeds,
                 this.analysis.inSelection(wrapper),
                 gradient,
                 this.nodeRenderer));
