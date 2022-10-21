@@ -1,8 +1,8 @@
-import { getGradientColor } from './utils';
+import {getGradientColor} from './utils';
 import {
   Node,
 } from './interfaces';
-import { IConfig, defaultConfig } from './config';
+import {IConfig, defaultConfig} from './config';
 import * as merge from 'lodash/fp/merge';
 
 export class NetworkSettings {
@@ -60,24 +60,29 @@ export class NetworkSettings {
     stabilization: true
   };
 
-  static getOptions(network: 'main' | 'analysis' | 'analysis-big', physicsOn) {
+  static getOptions(network: 'main' | 'analysis' | 'analysis-big', config) {
+    const physicsOn = config.physicsOn;
+    const groups = config.nodeGroups;
     if (network === 'main') {
       return {
         layout: this.mainLayout,
         edges: this.mainEdges,
         physics: physicsOn || this.mainPhysics,
+        groups,
       };
     } else if (network === 'analysis') {
       return {
         layout: this.analysisLayout,
         edges: this.analysisEdges,
         physics: physicsOn || this.analysisPhysics,
+        groups,
       };
     } else if (network === 'analysis-big') {
       return {
         layout: this.analysisLayout,
         edges: this.analysisEdges,
         physics: physicsOn || this.analysisBigPhysics,
+        groups,
       };
     }
   }
@@ -92,41 +97,77 @@ export class NetworkSettings {
     // delete possible old styles
     Object.keys(config.nodeGroups.default).forEach(e => delete node[e]);
 
-    // set group styles
-    if (node.group === 'default') {
-      node = merge(node, config.nodeGroups.default);
-    } else {
-      node = merge(node, config.nodeGroups[node.group]);
-    }
-
     // note that seed and selected node style are applied after the node style is fetched.
     // this allows to overwrite only attributes of interest, therefore in e.g. seedNode group
     // certain attributes like shape can remain undefined
     // use lodash merge to not lose deep attributes, e.g. "font.size"
+    // @ts-ignore
+    if (node._group)
+      // @ts-ignore
+      node.group = node._group
+    // @ts-ignore
+    if (node._shadow) { // @ts-ignore
+      node.shadow = node._shadow
+    }else{
+      if (config.nodeGroups[node.group].shadow) {
+        node.shadow = {enabled: config.nodeGroups[node.group].shadow}
+        node.shadow.color = 'rgba(0,0,0,0.5)'
+      } else {
+        node.shadow = {color: 'rgba(0,0,0,0.5)'}
+      }
+    }
     if (isSeed) {
       // apply seed node style to node
-      node = merge(node, config.nodeGroups.seedNode);
+      // @ts-ignore
+      node._group = node.group
+      node.group = 'seedNode'
     }
     // selection on purpose after seed style, so seed style will be combined with selection style
     if (isSelected) {
+      // @ts-ignore
+      node._group = node.group
       // apply selected node style to node
-      node = merge(node, config.nodeGroups.selectedNode);
+      node.group = 'selectedNode'
+      if (config.nodeGroups[node.group].shadow) {
+        node.shadow = {enabled: config.nodeGroups[node.group].shadow}
+        node.shadow.color = '#000000'
+      } else {
+        node.shadow = {color: '#000000'}
+      }
     }
+
     // show image if image url is given. If seed nodes are highlighted, ignore image property
     if (node.image && !isSeed) {
       node.shape = 'image';
     }
-    // use opactiy as gradient
-    if (gradient === null) {
-      node.opacity = 0
-    } else {
-      node.opacity = gradient
-    }
+
     // custom ctx renderer for e.g. pie chart
     if (renderer !== null) {
+      // @ts-ignore
       node.shape = 'custom';
+      node.color = {opacity: gradient}
+      node.opacity = gradient
+      if (isSeed) {
+        // apply seed node style to node
+        // @ts-ignore
+        node.color = config.nodeGroups[node.group].color
+      }else{
+        delete node.color
+      }
+      // @ts-ignore
+      node._shadow = node.shadow
+      if (config.nodeGroups[node.group].shadow) {
+        node.shadow = {enabled: config.nodeGroups[node.group].shadow}
+        node.shadow.color = 'rgba(0,0,0,0.5)'
+      } else {
+        node.shadow = {color: 'rgba(0,0,0,0.5)'}
+      }
       node.ctxRenderer = renderer;
+    } else {
+      node.opacity = undefined
+      delete node.ctxRenderer;
     }
+
     return node;
   }
 }

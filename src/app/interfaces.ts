@@ -22,6 +22,7 @@ export interface Node {
   borderWidth: number;
   borderWidthSelected: number;
   opacity?: number;
+  shadow?:any;
   font: {
     color: string;
     size: number;
@@ -43,7 +44,7 @@ export interface NetworkData {
   edges: NetworkEdge[]
 }
 
-export type NodeType= 'protein' | 'drug' | 'disorder' | 'other'
+export type NodeType = 'protein' | 'drug' | 'disorder' | 'other'
 
 export type NetworkType = 'explorer' | 'analysis'
 
@@ -191,7 +192,7 @@ export interface Wrapper {
     label: string;
     type?: string;
     symbol?: Array<string>;
-    drugstoneId?: Array<string> |string;
+    drugstoneId?: Array<string> | string;
     drugstoneType: NodeType,
     ensg?: Array<string>;
     entrez?: Array<string>;

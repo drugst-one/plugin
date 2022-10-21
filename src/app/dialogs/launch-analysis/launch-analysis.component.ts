@@ -116,7 +116,6 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       config: this.drugstoneConfig.config,
       input_network: this.networkHandler.activeNetwork.inputNetwork
     };
-    console.log(parameters)
     parameters.ppi_dataset = this.drugstoneConfig.config.interactionProteinProtein;
     parameters.pdi_dataset = this.drugstoneConfig.config.interactionDrugProtein;
     parameters.licenced = this.drugstoneConfig.config.licensedDatasets;

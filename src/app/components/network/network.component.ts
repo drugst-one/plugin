@@ -80,12 +80,18 @@ export class NetworkComponent implements OnInit {
 
   public nodeRenderer = null;
 
+  public loading = false
+
   constructor(public configService: DrugstoneConfigService, public legendService: LegendService, public networkHandler: NetworkHandlerService, public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public netex: NetexControllerService, public omnipath: OmnipathControllerService) {
   }
 
   ngOnInit(): void {
     this.networkHandler.networks[this.networkType] = this;
     this.networkSidebarOpen = this.configService.config.expandNetworkMenu || false;
+  }
+
+  setLoading(bool: boolean): void {
+    this.loading = bool;
   }
 
   async getInteractions(key: InteractionDatabase) {
@@ -101,9 +107,10 @@ export class NetworkComponent implements OnInit {
 
   updateQueryItems() {
     this.queryItems = [];
-    this.currentViewNodes.forEach((protein) => {
-      this.queryItems.push(getWrapperFromNode(protein));
-    });
+    if (this.currentViewNodes)
+      this.currentViewNodes.forEach((protein) => {
+        this.queryItems.push(getWrapperFromNode(protein));
+      });
   }
 
   public saveAddNodes(nodeList: Node[]) {
@@ -341,25 +348,25 @@ export class NetworkComponent implements OnInit {
       this.nodeRenderer = null;
       const updatedNodes = [];
       // for (const item of this.proteins) {
-      for (const item of this.currentViewProteins) {
-        if (item.drugstoneId === undefined) {
+      for (const node of this.nodeData.nodes.get().filter(n => n.drugstoneType === 'protein')) {
+        if (node.drugstoneId === undefined) {
           // nodes that are not mapped to backend remain untouched
           continue;
         }
-        const node: Node = this.nodeData.nodes.get(item.id);
+        // const node: Node = this.nodeData.nodes.get(item.id);
         if (!node) {
           continue;
         }
-        const pos = this.networkInternal.getPositions([item.id]);
-        node.x = pos[item.id].x;
-        node.y = pos[item.id].y;
+        const pos = this.networkInternal.getPositions([node.id]);
+        node.x = pos[node.id].x;
+        node.y = pos[node.id].y;
         Object.assign(
           node,
           NetworkSettings.getNodeStyle(
             node,
             this.drugstoneConfig.config,
-            false,
-            this.analysis.inSelection(getWrapperFromNode(item)),
+            node.isSeed && this.networkHandler.activeNetwork.highlightSeeds,
+            this.analysis.inSelection(getWrapperFromNode(node)),
             1.0,
             this.nodeRenderer
           )
@@ -422,7 +429,7 @@ export class NetworkComponent implements OnInit {
               NetworkSettings.getNodeStyle(
                 node,
                 this.drugstoneConfig.config,
-                node.isSeed,
+                node.isSeed && this.networkHandler.activeNetwork.highlightSeeds,
                 this.analysis.inSelection(wrapper),
                 gradient,
                 this.nodeRenderer));
@@ -461,18 +468,18 @@ export class NetworkComponent implements OnInit {
       this.legendService.add_to_context('seeds')
     else
       this.legendService.remove_from_context('seeds')
-    for (const item of this.currentViewProteins) {
-      if (item.drugstoneId === undefined) {
+    for (const node of this.nodeData.nodes.get().filter(n => n.drugstoneType === 'protein')) {
+      if (node.drugstoneId === undefined) {
         // nodes that are not mapped to backend remain untouched
         continue;
       }
-      const node: Node = this.nodeData.nodes.get(item.id);
+      // const node: Node = this.nodeData.nodes.get(item.id);
       if (!node) {
         continue;
       }
-      const pos = this.networkHandler.activeNetwork.networkInternal.getPositions([item.id]);
-      node.x = pos[item.id].x;
-      node.y = pos[item.id].y;
+      const pos = this.networkHandler.activeNetwork.networkInternal.getPositions([node.id]);
+      node.x = pos[node.id].x;
+      node.y = pos[node.id].y;
       const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;
       Object.assign(
         node,
@@ -480,8 +487,8 @@ export class NetworkComponent implements OnInit {
           node,
           this.drugstoneConfig.config,
           isSeed,
-          this.analysis.inSelection(getWrapperFromNode(item)),
-          this.getGradient(item.id),
+          this.analysis.inSelection(getWrapperFromNode(node)),
+          this.getGradient(node.id),
           this.nodeRenderer
         )
       )
