@@ -448,7 +448,7 @@
                     <td *ngIf="drugstoneConfig.config.identifier !== 'symbol'">
                       <p>{{ p.data.symbol }}</p>
                     </td>
-                    <td *ngIf="drugstoneConfig.config.identifier !== 'uniprot'">
+                    <td *ngIf="drugstoneConfig.config.identifier !== 'uniprot'" class="uniprot" title="{{p.data.uniprotAc}}">
                       <p>{{ p.data.uniprotAc }}</p>
                     </td>
                     <td>

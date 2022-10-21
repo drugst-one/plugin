@@ -20,7 +20,6 @@ export class GroupSelectionComponent implements OnInit {
   @Output() selectGroupEmitter: EventEmitter<NodeGroup> = new EventEmitter();
   @Input() set nodeGroups(value: { string: NodeGroup }) {
     this._nodeGroupsList = Object.values(value).filter(nodeGroup => !this.unselecableGroups.includes(nodeGroup.groupName));
-    console.log(this._nodeGroupsList)
   }
   public selectedGroup = null;
 

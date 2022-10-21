@@ -109,3 +109,10 @@
 .task-list-container {
   padding: 0.5rem !important;
 }
+
+.uniprot p {
+    max-width: 50px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
