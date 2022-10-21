@@ -48,9 +48,6 @@ interface Seeded {
   isSeed: boolean;
 }
 
-// interface Baited {
-//   closestDistance: number;
-// }
 
 @Component({
   selector: 'app-analysis-panel',
