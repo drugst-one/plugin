@@ -3,6 +3,7 @@ import { AlgorithmTarget, AlgorithmType, QuickAlgorithmType } from './interfaces
 // https://visjs.github.io/vis-network/docs/network/nodes.html
 export interface NodeGroup {
   groupName?: string;
+  groupID?:string;
   color?: any;
   shape?: 'circle' | 'triangle' | 'star' | 'square' | 'image' | 'text' | 'ellipse' | 'box' | 'diamond' | 'dot';
   type?: string;

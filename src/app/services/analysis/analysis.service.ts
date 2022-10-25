@@ -156,7 +156,7 @@ export class AnalysisService {
   public addGroupToSelection(group: NodeGroup) {
     const wrappers: Wrapper[] = [];
     this.networkHandler.activeNetwork.currentViewNodes.forEach((node) => {
-      if (node.groupName !== group.groupName || node.drugstoneType !== 'protein') {
+      if (node.group !== group.groupID || node.drugstoneType !== 'protein') {
         // only consider nodes of group and proteins
         return
       }

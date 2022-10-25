@@ -24,8 +24,8 @@ import {NetexControllerService} from 'src/app/services/netex-controller/netex-co
 import {removeDuplicateObjectsFromList} from '../../utils';
 import * as merge from 'lodash/fp/merge';
 import * as JSON5 from 'json5';
-import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
-import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
+import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
+import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
 
 
 declare var vis: any;
@@ -164,19 +164,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           updatedNodes.push(nodeStyled);
         }
         this.nodeData.nodes.update(updatedNodes);
-      } else {
-        const updatedNodes = [];
-        this.nodeData.nodes.forEach((node) => {
-          // const nodeSelected = this.analysis.idInSelection(node.id);
-          // if (node.group == 'default') {
-          //   Object.assign(node, this.drugstoneConfig.config.nodeGroups.default);
-          // } else {
-          //   Object.assign(node, this.drugstoneConfig.config.nodeGroups[node.group]);
-          // };
-          Object.assign(node, this.drugstoneConfig.config.nodeGroups[node.group]);
-
-        });
-        this.nodeData.nodes.update(updatedNodes);
       }
     });
   }
@@ -261,8 +248,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.networkHandler.activeNetwork.selectedWrapper = null;
     // getNetwork synchronizes the input network with the database
     await this.getNetwork();
-    this.proteinData = new ProteinNetwork(this.networkHandler.activeNetwork.inputNetwork.nodes,this.networkHandler.activeNetwork.inputNetwork.edges);
-
+    this.proteinData = new ProteinNetwork(this.networkHandler.activeNetwork.inputNetwork.nodes, this.networkHandler.activeNetwork.inputNetwork.edges);
     if (this.networkHandler.activeNetwork.networkPositions) {
       this.proteinData.updateNodePositions(this.networkHandler.activeNetwork.networkPositions);
     }
@@ -302,16 +288,16 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       return true
     })
 
-     // @ts-ignore
+    // @ts-ignore
     if (!this.drugstoneConfig.selfReferences) {
-       edges = edges.filter(el => el.from !== el.to);
-     }
+      edges = edges.filter(el => el.from !== el.to);
+    }
 
     this.nodeData.nodes = new vis.DataSet(nodes);
     this.nodeData.edges = new vis.DataSet(edges);
     const container = this.networkHandler.activeNetwork.networkEl.nativeElement;
 
-    const options = NetworkSettings.getOptions('main', this.drugstoneConfig.config.physicsOn);
+    const options = NetworkSettings.getOptions('main', this.drugstoneConfig.config);
 
     this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
 
@@ -410,7 +396,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     network.nodes.forEach((node) => {
       // set node label to original id before node id will be set to netex id
       node.label = node.label ? node.label : node.id;
-
     });
 
     // adjust edge labels accordingly and filter
@@ -574,14 +559,14 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   //TODO change to access through network service
   @ViewChild('analysisPanel') analysisPanel;
 
-  getNodes() :any {
+  getNodes(): any {
     if (this.selectedAnalysisToken && this.analysisPanel)
       return this.analysisPanel.getResultNodes()
     return this.networkHandler.activeNetwork.inputNetwork.nodes;
   }
 
-  getEdges() :any {
-    if(this.selectedAnalysisToken && this.analysisPanel)
+  getEdges(): any {
+    if (this.selectedAnalysisToken && this.analysisPanel)
       return this.analysisPanel.getResultEdges()
     return this.networkHandler.activeNetwork.inputNetwork.edges
   }

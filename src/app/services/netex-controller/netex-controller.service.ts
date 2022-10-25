@@ -20,7 +20,7 @@ export class NetexControllerService {
     return this.http.post<any>(`${environment.backend}tasks/`, {tokens: JSON.stringify(tokens)}).toPromise();
   }
 
-  public async getTaskResult(token): Promise<any> {
+  public getTaskResult(token) {
     /**
      * returns promise of task result of COMPLETED task
      */

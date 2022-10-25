@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
+import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
 import {Wrapper} from '../../interfaces';
 import {AnalysisService} from '../../services/analysis/analysis.service';
 
@@ -10,13 +10,18 @@ import {AnalysisService} from '../../services/analysis/analysis.service';
   styleUrls: ['./info-tile.component.scss', '../../pages/explorer-page/explorer-page.component.scss']
 })
 export class InfoTileComponent implements OnInit {
-
   @Input() public wrapper: Wrapper;
+  @Input() public expressions: any;
 
   constructor(public drugstoneConfig: DrugstoneConfigService, public analysis: AnalysisService) {
+
   }
 
   ngOnInit(): void {
+  }
+
+  public getExpressionScore() {
+    return this.expressions[this.wrapper.id]
   }
 
   public beautify(url: string): string {

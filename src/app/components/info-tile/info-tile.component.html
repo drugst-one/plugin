@@ -1,11 +1,7 @@
 <div *ngIf="wrapper">
   <div>
     <p
-      *ngIf="
-        !wrapper.data.drugId &&
-        wrapper.data.detailShowLabel &&
-        wrapper.data.label
-      "
+      *ngIf="!wrapper.data.drugstoneId && wrapper.data.label"
       [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
     >
       <b><span>Label:</span></b>
@@ -73,11 +69,11 @@
       </a>
     </p>
     <p
-      *ngIf="wrapper.expression"
+      *ngIf="getExpressionScore() != null"
       [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
     >
       <b><span>Expression:</span></b>
-      <span class="is-capitalized"> {{ wrapper.expression | number }}</span>
+      <span class="is-capitalized"> {{ getExpressionScore() | number }}</span>
       <span
         class="icon has-text-info"
         pTooltip="Tissue expression data is provided by the GTEx project. Unit is transcript per million."

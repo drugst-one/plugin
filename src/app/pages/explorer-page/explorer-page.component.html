@@ -50,7 +50,7 @@
                 *ngIf="networkHandler.activeNetwork.selectedWrapper"
               >
                 <span>
-                  {{ networkHandler.activeNetwork.selectedWrapper.data.group }}
+                  {{ drugstoneConfig.config.nodeGroups[networkHandler.activeNetwork.selectedWrapper.data.group].groupName }}
                 </span>
               </ng-container>
             </p>
@@ -73,6 +73,7 @@
           <div *ngIf="collapseDetails">
             <div class="card-content">
               <app-info-tile
+                [expressions]="networkHandler.activeNetwork.expressionMap"
                 [wrapper]="networkHandler.activeNetwork.selectedWrapper"
               ></app-info-tile>
             </div>
@@ -433,7 +434,7 @@
                     <td>
                       <p>
                         {{
-                          drugstoneConfig.config.nodeGroups[p.data.group][
+                          drugstoneConfig.config.nodeGroups[p.data['_group']][
                             "groupName"
                           ]
                         }}
