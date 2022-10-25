@@ -2,62 +2,74 @@
   <div class="card analysis" [ngClass]="{ fullscreen: fullscreen }">
     <header class="card-header">
       <p class="card-header-title">
-        <span class="icon">
-          <i class="fas fa-flask" aria-hidden="true"></i>
-        </span>
+        <app-fa-solid-icon icon="flask"></app-fa-solid-icon>
         Analysis Results
       </p>
 
-      <a
-        (click)="analysis.removeTask(token); close()"
-        class="card-header-icon"
-        aria-label="delete"
-        pTooltip="Delete analysis"
-        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
-        tooltipPosition="left"
-      >
-        <span class="icon has-text-danger" title="Delete analysis">
-          <i class="fas fa-trash" aria-hidden="true"></i>
-        </span>
-      </a>
-
-      <a
-        pTooltip="Open in fullscreen"
-        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
-        tooltipPosition="left"
-        *ngIf="!fullscreen"
-        (click)="toggleFullscreen()"
-        class="card-header-icon"
-      >
-        <span class="icon is-small">
-          <i class="fas fa-expand"></i>
-        </span>
-      </a>
-      <a
-        pTooltip="Close fullscreen"
-        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
-        tooltipPosition="left"
-        *ngIf="fullscreen"
-        (click)="toggleFullscreen()"
-        class="card-header-icon"
-      >
-        <span class="icon is-small">
-          <i class="fas fa-compress"></i>
-        </span>
-      </a>
-
-      <a
-        (click)="close()"
-        class="card-header-icon"
-        aria-label="close"
-        pTooltip="Close analysis"
-        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
-        tooltipPosition="left"
-      >
-        <span class="icon" title="Close analysis">
-          <i class="fas fa-times color-danger" aria-hidden="true"></i>
-        </span>
-      </a>
+      <span class="mr-1 is-pulled-right columns is-flex is-vcentered">
+        <div class="field has-addons">
+          <p class="control" *ngIf="!fullscreen">
+            <button
+              (click)="analysis.removeTask(token); close()"
+              class="button is-rounded is-small is-outlined highlight-danger has-text-danger"
+              aria-label="delete"
+              pTooltip="Delete analysis"
+              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+              tooltipPosition="left"
+            >
+              <app-fa-solid-icon
+                classString="only-item-in-button"
+                icon="trash"
+                title="Delete analysis"
+              ></app-fa-solid-icon>
+            </button>
+          </p>
+          <p class="control">
+            <button
+              pTooltip="Open in fullscreen"
+              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+              tooltipPosition="left"
+              *ngIf="!fullscreen"
+              (click)="toggleFullscreen()"
+              class="button is-rounded is-small is-outlined highlight-primary"
+            >
+              <app-fa-solid-icon
+                icon="expand"
+                classString="only-item-in-button"
+              ></app-fa-solid-icon>
+            </button>
+            <button
+              pTooltip="Close fullscreen"
+              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+              tooltipPosition="left"
+              *ngIf="fullscreen"
+              (click)="toggleFullscreen()"
+              class="button is-rounded is-small is-outlined highlight-primary"
+            >
+              <app-fa-solid-icon
+                icon="compress"
+                classString="only-item-in-button"
+              ></app-fa-solid-icon>
+            </button>
+          </p>
+          <p class="control">
+            <button
+              class="button is-rounded is-small is-outlined highlight-danger has-text-danger"
+              (click)="close()"
+              aria-label="close"
+              pTooltip="Close analysis"
+              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+              tooltipPosition="left"
+            >
+              <app-fa-solid-icon
+                icon="times"
+                classString="only-item-in-button"
+                title="Close analysis"
+              ></app-fa-solid-icon>
+            </button>
+          </p>
+        </div>
+      </span>
     </header>
     <div
       class="card-content tab-header-small"
@@ -85,9 +97,10 @@
           <div class="columns m-1">
             <div class="column content">
               <h4 class="is-4 has-text-weight-bold">
-                <span class="icon">
-                  <i class="fas fa-wrench" aria-hidden="true"></i>
-                </span>
+                <app-fa-solid-icon
+                  icon="wrench"
+                  title="Algorithm"
+                ></app-fa-solid-icon>
                 {{
                   ["quick", "super", "connect", "connectSelected"].indexOf(
                     task.info.algorithm
@@ -161,14 +174,18 @@
                   >
                     <td>Include indirect drugs</td>
                     <td>
-                      <i
+                      <app-fa-solid-icon
                         *ngIf="task.info.parameters.includeIndirectDrugs"
-                        class="fa fa-check"
-                      ></i>
-                      <i
+                        icon="check"
+                        title="indirect drugs included"
+                        classString="has-text-success"
+                      ></app-fa-solid-icon>
+                      <app-fa-solid-icon
                         *ngIf="!task.info.parameters.includeIndirectDrugs"
-                        class="fa fa-times color-danger"
-                      ></i>
+                        icon="times"
+                        classString="has-text-danger"
+                        title="indirect drugs excluded"
+                      ></app-fa-solid-icon>
                     </td>
                   </tr>
                   <tr
@@ -179,27 +196,35 @@
                   >
                     <td>Include non-approved drugs</td>
                     <td>
-                      <i
+                      <app-fa-solid-icon
                         *ngIf="task.info.parameters.includeNonApprovedDrugs"
-                        class="fa fa-check"
-                      ></i>
-                      <i
-                        *ngIf="!task.info.parameters.includeNonApprovedDrugs"
-                        class="fa fa-times color-danger"
-                      ></i>
+                        icon="check"
+                        title="non-approved drugs included"
+                        classString="has-text-success"
+                      ></app-fa-solid-icon>
+                      <app-fa-solid-icon
+                        *ngIf="task.info.parameters.includeNonApprovedDrugs"
+                        icon="times"
+                        classString="has-text-danger"
+                        title="non-approved drugs excluded"
+                      ></app-fa-solid-icon>
                     </td>
                   </tr>
                   <tr *ngIf="task.info.parameters.customEdges !== undefined">
                     <td>Include all displayed edges</td>
                     <td>
-                      <i
+                      <app-fa-solid-icon
                         *ngIf="task.info.parameters.customEdges"
-                        class="fa fa-check"
-                      ></i>
-                      <i
-                        *ngIf="!task.info.parameters.customEdges"
-                        class="fa fa-times color-danger"
-                      ></i>
+                        icon="check"
+                        title="custom edges drugs included"
+                        classString="has-text-success"
+                      ></app-fa-solid-icon>
+                      <app-fa-solid-icon
+                        *ngIf="task.info.parameters.customEdges"
+                        icon="times"
+                        classString="has-text-danger"
+                        title="custom edges drugs excluded"
+                      ></app-fa-solid-icon>
                     </td>
                   </tr>
                 </tbody>
@@ -216,9 +241,10 @@
           >
             <div class="column">
               <h4 class="is-4 has-text-weight-bold">
-                <span class="icon">
-                  <i class="fas fa-wrench" aria-hidden="true"></i>
-                </span>
+                <app-fa-solid-icon
+                  icon="wrench"
+                  title="algorithm"
+                ></app-fa-solid-icon>
                 Algorithm:
                 {{ algorithmNames["multisteiner"] }}
               </h4>
@@ -246,9 +272,10 @@
           >
             <div class="column">
               <h4 class="is-4 has-text-weight-bold">
-                <span class="icon">
-                  <i class="fas fa-wrench" aria-hidden="true"></i>
-                </span>
+                <app-fa-solid-icon
+                  icon="wrench"
+                  title="algorithm"
+                ></app-fa-solid-icon>
                 Algorithm:
                 {{ algorithmNames["closeness"] }}
               </h4>
@@ -257,13 +284,21 @@
                   <tr>
                     <td>Include indirect drugs</td>
                     <td>
-                      <i class="fa fa-times"></i>
+                      <app-fa-solid-icon
+                        icon="times"
+                        classString="has-text-danger"
+                        title="indirect drugs excluded"
+                      ></app-fa-solid-icon>
                     </td>
                   </tr>
                   <tr>
                     <td>Include non-approved drugs</td>
                     <td>
-                      <i class="fa fa-check"></i>
+                      <app-fa-solid-icon
+                        icon="check"
+                        title="non-approved drugs included"
+                        classString="has-text-success"
+                      ></app-fa-solid-icon>
                     </td>
                   </tr>
                   <tr>
@@ -296,7 +331,10 @@
             <!-- column normalization for drugs button START -->
             <div class="column">
               <h4 class="is-4">
-                <span class="icon"><i class="fa fa-capsules"></i></span>
+                <app-fa-solid-icon
+                  icon="capsules"
+                  title="drug icon"
+                ></app-fa-solid-icon>
                 <span>Drugs</span>
               </h4>
             </div>
@@ -306,7 +344,10 @@
                   [href]="downloadLink('drugs')"
                   class="button is-primary control is-outlined is-rounded is-pulled-right is-small"
                 >
-                  <span class="icon"><i class="fa fa-download"></i></span>
+                  <app-fa-solid-icon
+                    icon="download"
+                    title="download resulting drugs"
+                  ></app-fa-solid-icon>
                   <span>Download</span>
                 </a>
               </div>
@@ -327,9 +368,11 @@
                     (click)="toggleNormalization(true)"
                     [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                   >
-                    <span class="icon is-small">
-                      <i class="fa fa-ruler-vertical"></i>
-                    </span>
+                    <app-fa-solid-icon
+                      icon="ruler-vertical"
+                      title="normalization icon"
+                      classString="is-small"
+                    ></app-fa-solid-icon>
                     <span>Normalization On</span>
                   </button>
                 </p>
@@ -372,7 +415,10 @@
           <div class="columns m-1">
             <div class="column">
               <h4 class="is-4">
-                <span class="icon"><i class="fa fa-dna"></i></span>
+                <app-fa-solid-icon
+                  icon="dna"
+                  title="protein table"
+                ></app-fa-solid-icon>
                 <span>Proteins</span>
               </h4>
             </div>
@@ -383,7 +429,10 @@
                   [href]="downloadLink('proteins')"
                   class="button is-primary is-rounded is-outlined is-pulled-right is-small"
                 >
-                  <span class="icon"><i class="fa fa-download"></i></span>
+                  <app-fa-solid-icon
+                    icon="download"
+                    title="download resulting proteins"
+                  ></app-fa-solid-icon>
                   <span>Download</span>
                 </a>
               </div>
@@ -403,9 +452,11 @@
                     (click)="toggleNormalization(true)"
                     [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                   >
-                    <span class="icon is-small">
-                      <i class="fa fa-ruler-vertical"></i>
-                    </span>
+                    <app-fa-solid-icon
+                      classString="is-small"
+                      icon="ruler-vertical"
+                      title="normalization for drug target results"
+                    ></app-fa-solid-icon>
                     <span>Normalization On</span>
                   </button>
                 </p>

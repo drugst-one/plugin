@@ -1,44 +1,49 @@
 <div class="dropdown is-hoverable">
-    <div class="dropdown-trigger">
-      <button
-        [id]="buttonId"
-        class="button is-primary is-rounded has-tooltip"
-        aria-haspopup="true"
-        attr.aria-controls="{{ 'controls-' + buttonId }}"
-        [ngClass]="{
-          'is-small': drugstoneConfig.smallStyle
-        }"
+  <div class="dropdown-trigger">
+    <button
+      [id]="buttonId"
+      class="button is-primary is-rounded has-tooltip"
+      aria-haspopup="true"
+      attr.aria-controls="{{ 'controls-' + buttonId }}"
+      [ngClass]="{
+        'is-small': drugstoneConfig.smallStyle
+      }"
+    >
+      <span [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+        >Download</span
       >
-        <span [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
-          >Download</span
-        >
-        <span class="icon">
-            <i class="fas fa-download" aria-hidden="true"></i>
-          </span>
-      </button>
-    </div>
-    <div class="dropdown-menu" id="{{ 'controls-' + buttonId }}" role="menu" [ngClass]="{ 'inner-dropdown': !networkHandler.activeNetwork.networkSidebarOpen }">
-      <div class="dropdown-content">
-        <a
-          (click)="downloadLink('graphml')"
-          class="dropdown-item"
-          [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
-          >.graphml</a
-        >
-        <!-- <hr class="dropdown-divider" /> -->
-        <a
-          (click)="downloadLink('json')"
-          class="dropdown-item"
-          [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
-          >.json</a
-        >
-        <!-- <hr class="dropdown-divider" /> -->
-        <a
-          (click)="downloadLink('csv')"
-          class="dropdown-item"
-          [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
-          >.csv</a
-        >
-      </div>
+      <app-fa-solid-icon icon="download"  classString="is-small last-item-in-button"></app-fa-solid-icon>
+    </button>
+  </div>
+  <div
+    class="dropdown-menu"
+    id="{{ 'controls-' + buttonId }}"
+    role="menu"
+    [ngClass]="{
+      'inner-dropdown': !networkHandler.activeNetwork.networkSidebarOpen
+    }"
+  >
+    <div class="dropdown-content">
+      <a
+        (click)="downloadLink('graphml')"
+        class="dropdown-item"
+        [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+        >.graphml</a
+      >
+      <!-- <hr class="dropdown-divider" /> -->
+      <a
+        (click)="downloadLink('json')"
+        class="dropdown-item"
+        [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+        >.json</a
+      >
+      <!-- <hr class="dropdown-divider" /> -->
+      <a
+        (click)="downloadLink('csv')"
+        class="dropdown-item"
+        [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+        >.csv</a
+      >
     </div>
   </div>
+</div>

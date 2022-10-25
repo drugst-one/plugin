@@ -26,15 +26,6 @@ import { NetworkLegendComponent } from './components/network/network-legend/netw
 import { ProtTableComponent } from './components/analysis-panel/prot-table/prot-table.component';
 import { DrugTableComponent } from './components/analysis-panel/drug-table/drug-table.component';
 
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import fontawesome from '@fortawesome/fontawesome';
-import {
-  faTimes, faAngleUp, faAngleLeft, faCapsules, faCrosshairs, faFlask, faCheck, faCamera, faDownload,
-  faRulerVertical, faDna, faMicroscope, faBook, faPause, faTrash, faSpinner, faExclamationTriangle, faPlus,
-  faExpand, faInfo, faRocket, faAngleDown, faSearch, faFastForward, faExternalLinkAlt, faTasks, faFilter,
-  faMinus, faUpload, faAngleDoubleDown, faSync, faBroom, faAngleDoubleUp, faChild, faHeadSideMask, faBiohazard,
-  faBullseye, faSeedling, faSyncAlt, faCompress, faKey, faInfoCircle, faWrench, faProjectDiagram
-} from '@fortawesome/free-solid-svg-icons';
 import { TooltipModule } from 'primeng/tooltip';
 import { NetworkMenuComponent } from './components/network/network-menu/network-menu.component';
 import { NetworkComponent } from './components/network/network.component';
@@ -50,6 +41,7 @@ import { QuickDrugTargetComponent } from './components/quick-drug-target/quick-d
 import { QuickDrugComponent } from './components/quick-drug/quick-drug.component';
 import { ToastComponent } from './components/toast/toast.component';
 import { GroupSelectionComponent } from './pages/explorer-page/group-selection/group-selection.component';
+import { FaSolidIconComponent } from './components/fa-solid-icon/fa-solid-icon.component';
 
 
 @NgModule({
@@ -81,6 +73,7 @@ import { GroupSelectionComponent } from './pages/explorer-page/group-selection/g
     QuickDrugComponent,
     ToastComponent,
     GroupSelectionComponent,
+    FaSolidIconComponent,
   ],
   imports: [
     BrowserModule,
@@ -90,7 +83,6 @@ import { GroupSelectionComponent } from './pages/explorer-page/group-selection/g
     HttpClientModule,
     BrowserAnimationsModule,
     TableModule,
-    FontAwesomeModule,
     MatTooltipModule,
     TooltipModule,
   ],
@@ -100,13 +92,6 @@ export class AppModule {
 
 
   constructor(injector: Injector) {
-    // @ts-ignore
-    fontawesome.library.add(faTimes, faTimes, faAngleUp, faAngleLeft, faCapsules, faCrosshairs, faFlask,
-      faCheck, faCamera, faDownload, faRulerVertical, faDna, faMicroscope, faBook, faPause, faTrash,
-      faSpinner, faExclamationTriangle, faPlus, faExpand, faInfo, faRocket, faAngleDown, faSearch,
-      faFastForward, faExternalLinkAlt, faTasks, faFilter, faMinus, faUpload, faAngleDoubleDown,
-      faSync, faBroom, faAngleDoubleUp, faChild, faHeadSideMask, faBiohazard, faBullseye, faSeedling, 
-      faSyncAlt, faExpand, faCompress, faKey, faInfoCircle, faWrench, faProjectDiagram);
     const NetworkExpander = createCustomElement(ExplorerPageComponent, { injector });
     // Register the custom element with the browser.
     customElements.define('drugst-one', NetworkExpander);

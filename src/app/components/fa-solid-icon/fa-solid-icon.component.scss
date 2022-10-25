@@ -1,0 +1,19 @@
+.icon {
+  &.only-item-in-button {
+    height: 1.5rem !important;
+  }
+  &:not(.only-item-in-button) {
+    margin-right: unset !important;
+  }
+  &.first-item-in-button {
+    margin-right: unset !important;
+    margin-left: calc(-0.5em - 1px) !important;
+  }
+  &.last-item-in-button {
+    margin-left: unset !important;
+    margin-right: calc(-0.5em - 1px) !important;
+  }
+  &-height-normal {
+    height: 1em;
+  }
+}

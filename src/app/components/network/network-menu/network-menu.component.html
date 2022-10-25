@@ -6,13 +6,16 @@
   [class.no-header]="networkHandler.activeNetwork.networkType === 'analysis'"
   [class.small-sidebar]="drugstoneConfig.smallStyle"
 >
-  <button
+  <a
     (click)="networkHandler.activeNetwork.toggleNetworkSidebar()"
     class="button is-small is-primary network-toolbar-toggle"
-    [ngClass]="{ 'rotated': networkHandler.activeNetwork.networkSidebarOpen }"
+    [ngClass]="{ rotated: networkHandler.activeNetwork.networkSidebarOpen }"
   >
-    <i class="fas fa-angle-left"></i>
-  </button>
+    <app-fa-solid-icon
+      icon="angle-left"
+      classString="only-item-in-button"
+    ></app-fa-solid-icon>
+  </a>
   <div class="network-footer-toolbar-inner-container">
     <div class="rows">
       <div
@@ -27,7 +30,7 @@
           (valueChange)="
             networkHandler.activeNetwork.updateHighlightSeeds($event)
           "
-          icon="fas fa-seedling"
+          icon="seedling"
         ></app-toggle-inplace>
       </div>
       <div
@@ -53,9 +56,7 @@
               'is-small': drugstoneConfig.smallStyle
             }"
           >
-            <span class="icon">
-              <i class="fas fa-camera" aria-hidden="true"></i>
-            </span>
+            <app-fa-solid-icon icon="camera"></app-fa-solid-icon>
             <span
               [ngClass]="{
                 'text-normal': drugstoneConfig.smallStyle
@@ -83,7 +84,9 @@
         <div
           class="dropdown network-footer-toolbar-element"
           [class.is-active]="networkHandler.activeNetwork.expressionExpanded"
-          [ngClass]="{ 'inner-dropdown': !networkHandler.activeNetwork.networkSidebarOpen }"
+          [ngClass]="{
+            'inner-dropdown': !networkHandler.activeNetwork.networkSidebarOpen
+          }"
         >
           <div class="dropdown-trigger">
             <button
@@ -102,9 +105,8 @@
                 'is-small': drugstoneConfig.smallStyle
               }"
             >
-              <span class="icon is-small">
-                <i class="fas fa-child"></i>
-              </span>
+              <app-fa-solid-icon icon="child"></app-fa-solid-icon>
+
               <span
                 *ngIf="!networkHandler.activeNetwork.selectedTissue"
                 [ngClass]="{
@@ -119,18 +121,16 @@
                 }"
                 >{{ networkHandler.activeNetwork.selectedTissue.name }}</span
               >
-              <span
+              <app-fa-solid-icon
+                icon="angle-down"
+                classString="is-small last-item-in-button"
                 *ngIf="networkHandler.activeNetwork.expressionExpanded"
-                class="icon is-small"
-              >
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-              </span>
-              <span
+              ></app-fa-solid-icon>
+              <app-fa-solid-icon
+                icon="angle-left"
+                classString="is-small last-item-in-button"
                 *ngIf="!networkHandler.activeNetwork.expressionExpanded"
-                class="icon is-small"
-              >
-                <i class="fas fa-angle-left" aria-hidden="true"></i>
-              </span>
+              ></app-fa-solid-icon>
             </button>
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
@@ -173,7 +173,7 @@
           text="{{
             drugstoneConfig.config.networkMenuButtonAdjacentDrugsLabel
           }}"
-          icon="fas fa-capsules"
+          icon="capsules"
           tooltip="Display adjacent drugs."
           [value]="networkHandler.activeNetwork.adjacentDrugs"
           (valueChange)="
@@ -198,7 +198,7 @@
           (valueChange)="
             networkHandler.activeNetwork.updateAdjacentProteinDisorders($event)
           "
-          icon="fas fa-head-side-mask"
+          icon="head-side-mask"
         ></app-toggle-inplace>
       </div>
       <div
@@ -218,7 +218,7 @@
           (valueChange)="
             networkHandler.activeNetwork.updateAdjacentDrugDisorders($event)
           "
-          icon="fas fa-biohazard"
+          icon="biohazard"
         ></app-toggle-inplace>
       </div>
       <div
@@ -233,7 +233,7 @@
           (valueChange)="
             networkHandler.activeNetwork.updatePhysicsEnabled($event)
           "
-          icon="fas fa-bullseye"
+          icon="bullseye"
         ></app-toggle-inplace>
       </div>
     </div>

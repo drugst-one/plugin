@@ -217,7 +217,8 @@
     }
   }
 
-  button.is-secondary, button.is-secondary:hover {
+  button.is-secondary,
+  button.is-secondary:hover {
     background-color: var(--drgstn-secondary) !important;
   }
 
@@ -235,21 +236,37 @@
     padding: 0 0;
     line-height: 18px;
   }
+
+  .has-text-danger {
+    color: var(--drgstn-danger) !important;
+  }
+
+  .has-text-warning {
+    color: var(--drgstn-warning) !important;
+  }
+
+  .highlight-primary:hover {
+    background-color: var(--drgstn-primary) !important;
+    color: var(--drgstn-text-secondary) !important;
+  }
+
+  .highlight-danger:hover {
+    background-color: var(--drgstn-danger) !important;
+    color: var(--drgstn-text-secondary) !important;
+  }
 }
 
 .row > * {
-  padding-right: calc(1.5rem * .5);
-  padding-left: calc(1.5rem * .5);
+  padding-right: calc(1.5rem * 0.5);
+  padding-left: calc(1.5rem * 0.5);
 }
 
 .col > * {
-  padding-right: calc(1.5rem * .5);
-  padding-left: calc(1.5rem * .5);
+  padding-right: calc(1.5rem * 0.5);
+  padding-left: calc(1.5rem * 0.5);
 }
 
 .card-header {
   padding: 0.5rem 1rem;
   line-height: 24px;
 }
-
-

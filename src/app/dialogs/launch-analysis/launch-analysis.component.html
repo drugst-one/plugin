@@ -3,11 +3,11 @@
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title" *ngIf="target === 'drug'">
-        <span class="icon"><i class="fa fa-capsules"></i></span>
+        <app-fa-solid-icon icon="capsules"></app-fa-solid-icon>
         Find Drugs
       </p>
       <p class="modal-card-title" *ngIf="target === 'drug-target'">
-        <span class="icon"><i class="fa fa-crosshairs"></i></span>
+        <app-fa-solid-icon icon="crosshairs"></app-fa-solid-icon>
         Find Drug Targets
       </p>
       <button (click)="close()" class="delete" aria-label="close"></button>
@@ -41,7 +41,7 @@
             <div class="box">
               <article class="media">
                 <div class="media-left">
-                  <span class="icon"><i class="fa fa-info"></i></span>
+                  <app-fa-solid-icon icon="info"></app-fa-solid-icon>
                 </div>
                 <div class="media-content">
                   <div class="content">
@@ -187,7 +187,7 @@
             <div class="box">
               <article class="media">
                 <div class="media-left">
-                  <span class="icon"><i class="fa fa-info"></i></span>
+                  <app-fa-solid-icon icon="info"></app-fa-solid-icon>
                 </div>
                 <div class="media-content">
                   <div class="content">
@@ -305,7 +305,7 @@
             <div class="box">
               <article class="media">
                 <div class="media-left">
-                  <span class="icon"><i class="fa fa-info"></i></span>
+                  <app-fa-solid-icon icon="info"></app-fa-solid-icon>
                 </div>
                 <div class="media-content">
                   <div class="content">
@@ -390,7 +390,7 @@
             <div class="box">
               <article class="media">
                 <div class="media-left">
-                  <span class="icon"><i class="fa fa-info"></i></span>
+                  <app-fa-solid-icon icon="info"></app-fa-solid-icon>
                 </div>
                 <div class="media-content">
                   <div class="content">
@@ -489,7 +489,7 @@
             <div class="box">
               <article class="media">
                 <div class="media-left">
-                  <span class="icon"><i class="fa fa-info"></i></span>
+                  <app-fa-solid-icon icon="info"></app-fa-solid-icon>
                 </div>
                 <div class="media-content">
                   <div class="content">
@@ -578,7 +578,7 @@
             <div class="box">
               <article class="media">
                 <div class="media-left">
-                  <span class="icon"><i class="fa fa-info"></i></span>
+                  <app-fa-solid-icon icon="info"></app-fa-solid-icon>
                 </div>
                 <div class="media-content">
                   <div class="content">
@@ -624,7 +624,7 @@
             <div class="box">
               <article class="media">
                 <div class="media-left">
-                  <span class="icon"><i class="fa fa-info"></i></span>
+                  <app-fa-solid-icon icon="info"></app-fa-solid-icon>
                 </div>
                 <div class="media-content">
                   <div class="content">
@@ -756,9 +756,7 @@
         tooltipPosition="top"
         [disabled]="!analysis.canLaunchTask()"
       >
-        <span class="icon">
-          <i class="fa fa-rocket"></i>
-        </span>
+        <app-fa-solid-icon icon="rocket"></app-fa-solid-icon>
         <span> Launch </span>
       </button>
       <button

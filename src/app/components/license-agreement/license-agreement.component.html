@@ -6,12 +6,18 @@
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">
-        <span class="icon"><i class="fa fa-key"></i></span>
+        <app-fa-solid-icon icon="key"></app-fa-solid-icon>
         Data License Agreement
       </p>
     </header>
     <section class="modal-card-body">
-      <div class="is-text-align-justify" style="margin-bottom: 16px"> <i>For the use of licenced data of sources like DrugBank and OMIM, partially provided by the NeDRex database, the terms of use for data of the NeDRex platform have to be accepted:</i></div>
+      <div class="is-text-align-justify" style="margin-bottom: 16px">
+        <i
+          >For the use of licenced data of sources like DrugBank and OMIM,
+          partially provided by the NeDRex database, the terms of use for data
+          of the NeDRex platform have to be accepted:</i
+        >
+      </div>
       <div [innerHTML]="license" class="is-text-align-justify"></div>
     </section>
     <footer class="modal-card-foot">

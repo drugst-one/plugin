@@ -4,9 +4,7 @@
     [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
   >
     <p class="card-header-title">
-      <span class="icon">
-        <i class="fas fa-flask" aria-hidden="true"></i>
-      </span>
+      <app-fa-solid-icon icon="flask"></app-fa-solid-icon>
       Simple Analysis
     </p>
     <a
@@ -15,12 +13,14 @@
       class="card-header-icon is-hidden-fullscreen"
       aria-label="more options"
     >
-      <span *ngIf="collapseAnalysisQuick" class="icon">
-        <i class="fas fa-angle-down" aria-hidden="true"></i>
-      </span>
-      <span *ngIf="!collapseAnalysisQuick" class="icon">
-        <i class="fas fa-angle-left" aria-hidden="true"></i>
-      </span>
+      <app-fa-solid-icon
+        *ngIf="collapseAnalysisQuick"
+        icon="angle-down"
+      ></app-fa-solid-icon>
+      <app-fa-solid-icon
+        *ngIf="!collapseAnalysisQuick"
+        icon="angle-left"
+      ></app-fa-solid-icon>
     </a>
   </header>
   <div *ngIf="collapseAnalysisQuick">
@@ -42,14 +42,8 @@
               [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
               tooltipPosition="top"
             >
-              <span class="icon quick-icon">
-                <span *ngIf="!analysis.isLaunchingQuick()">
-                  <i class="fa fa-capsules"></i>
-                </span>
-                <span *ngIf="analysis.isLaunchingQuick()">
-                  <i class="fa fa-spin fa-spinner"></i>
-                </span>
-              </span>
+            <app-fa-solid-icon *ngIf="!analysis.isLaunchingQuick()" classString="quick-icon" icon="capsules"></app-fa-solid-icon>
+            <app-fa-solid-icon *ngIf="analysis.isLaunchingQuick()" classString="quick-icon" icon="spinner"></app-fa-solid-icon>
               <span
                 [ngClass]="{
                   'text-normal': drugstoneConfig.smallStyle
@@ -80,14 +74,8 @@
               [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
               tooltipPosition="top"
             >
-              <span class="icon quick-icon">
-                <span *ngIf="!analysis.isLaunchingQuick()">
-                  <i class="fa fa-capsules"></i>
-                </span>
-                <span *ngIf="analysis.isLaunchingQuick()">
-                  <i class="fa fa-spin fa-spinner"></i>
-                </span>
-              </span>
+            <app-fa-solid-icon *ngIf="!analysis.isLaunchingQuick()" classString="quick-icon" icon="capsules"></app-fa-solid-icon>
+            <app-fa-solid-icon *ngIf="analysis.isLaunchingQuick()" classString="quick-icon" icon="spinner"></app-fa-solid-icon>
               <span
                 [ngClass]="{
                   'text-normal': drugstoneConfig.smallStyle

@@ -182,10 +182,6 @@
     color: var(--drgstn-primary) !important;
   }
 
-  .has-text-danger {
-    color: var(--drgstn-danger) !important;
-  }
-
   .is-primary {
     background-color: var(--drgstn-primary) !important;
   }
@@ -199,7 +195,7 @@
   }
 
 
-  .fa-exclamation-triangle, .fa-times, .color-danger, .help, .delete:after, .delete:before, .modal-close:after, .modal-close:before {
+  .fa-exclamation-triangle, .fa-times, .help, .delete:after, .delete:before, .modal-close:after, .modal-close:before {
     color: var(--drgstn-danger) !important;
   }
 
@@ -217,8 +213,8 @@
   }
 
   .button.is-hovered, .button:hover, .button {
-    background-color: var(--drgstn-panel) !important;
-    color: var(--drgstn-text-primary) !important;
+    // background-color: var(--drgstn-panel) !important;
+    // color: var(--drgstn-text-primary) !important;
     border-color: var(--drgstn-border) !important;
   }
 

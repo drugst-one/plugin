@@ -10,10 +10,13 @@
       (click)="toggle(true)"
       [ngClass]="{ 'is-small': drugstoneConfig.smallStyle }"
     >
-      <span class="icon is-small">
-        <i class="fa {{ iconOn }}"></i>
-      </span>
-      <span [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">{{ textOn }}</span>
+      <app-fa-solid-icon
+        classString="is-small"
+        [icon]="iconOn"
+      ></app-fa-solid-icon>
+      <span [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">{{
+        textOn
+      }}</span>
     </button>
   </p>
   <p class="control">
@@ -27,10 +30,14 @@
       (click)="toggle(false)"
       [ngClass]="{ 'is-small': drugstoneConfig.smallStyle }"
     >
-      <span [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">{{ textOff }}</span>
-      <span *ngIf="iconOff" class="icon is-small">
-        <i class="fa {{ iconOff }}"></i>
-      </span>
+      <span [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">{{
+        textOff
+      }}</span>
+      <app-fa-solid-icon
+        *ngIf="iconOff"
+        classString="is-small"
+        [icon]="iconOff"
+      ></app-fa-solid-icon>
     </button>
   </p>
 </div>

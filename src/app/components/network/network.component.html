@@ -1,4 +1,4 @@
-<div class="card network" [ngClass]="{'fullscreen': fullscreen}">
+<div class="card network" [ngClass]="{ fullscreen: fullscreen }">
   <header class="card-header network-header" *ngIf="networkType === 'explorer'">
     <p class="card-header-title">
       {{ drugstoneConfig.config.title }}
@@ -10,21 +10,17 @@
         tooltipPosition="left"
         *ngIf="!fullscreen"
         (click)="toggleFullscreen()"
-        class="button is-primary is-outlined is-rounded is-small"
+        class="button is-primary is-rounded is-small is-outlined"
       >
-        <span class="icon is-small">
-          <i class="fas fa-expand"></i>
-        </span>
-      </button>
+        <app-fa-solid-icon icon="expand" classString="only-item-in-button"></app-fa-solid-icon>
+    </button>
       <button
         title="close fullscreen"
         *ngIf="fullscreen"
         (click)="toggleFullscreen()"
-        class="button is-primary is-outlined is-rounded is-small"
+        class="button is-primary is-rounded is-small is-outlined"
       >
-        <span class="icon is-small">
-          <i class="fas fa-compress"></i>
-        </span>
+        <app-fa-solid-icon icon="compress" classString="only-item-in-button"></app-fa-solid-icon>
       </button>
     </span>
   </header>

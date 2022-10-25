@@ -1,14 +1,14 @@
 <div class="toast-holder">
-    <div *ngFor="let toast of toasts | keyvalue">
-        <div class="toast {{getDrugstoneClass(toast.value.type)}}">
-            <a (click)="close(toast.key)" aria-label="close" class="close">
-                <span class="icon" title="Close analysis">
-                    <i class="fas fa-times toast-times" aria-hidden="true"></i>
-                </span>
-            </a>
-            <p>{{toast.value.message}}</p>
-        </div>
+  <div *ngFor="let toast of toasts | keyvalue">
+    <div class="toast {{ getDrugstoneClass(toast.value.type) }}">
+      <a (click)="close(toast.key)" aria-label="close" class="close">
+        <app-fa-solid-icon
+          classString="toast-times"
+          title="Close analysis"
+          icon="times"
+        ></app-fa-solid-icon>
+      </a>
+      <p>{{ toast.value.message }}</p>
     </div>
+  </div>
 </div>
-
-

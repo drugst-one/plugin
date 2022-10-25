@@ -9,8 +9,8 @@ import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugst
 })
 export class ToggleInplaceReversedComponent implements OnInit {
 
-  @Input() iconOn = 'fa-check';
-  @Input() iconOff = 'fa-times';
+  @Input() iconOn = 'check';
+  @Input() iconOff = 'times';
 
   @Input() text = 'Button';
   @Input() tooltip: string;

@@ -1,5 +1,8 @@
 <div class="content">
-  <div class="list is-hoverable" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
+  <div
+    class="list is-hoverable"
+    [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+  >
     <a
       *ngFor="let task of analysis.tasks"
       class="list-item box small-box"
@@ -18,9 +21,10 @@
             >
           </div>
           <div class="column">
-            <span class="icon is-pulled-right"
-              ><i class="fas fa-pause" aria-hidden="true"></i
-            ></span>
+            <app-fa-solid-icon
+              classString="is-pulled-right has-text-warning"
+              icon="pause"
+            ></app-fa-solid-icon>
           </div>
         </div>
         <div class="columns mb-0">
@@ -46,10 +50,11 @@
             </small>
           </div>
           <div class="column pt-0 pb-0">
-            <a (click)="analysis.removeTask(task.token)" class="has-text-danger is-pulled-right">
-              <span class="icon">
-                <i class="fa fa-trash"></i>
-              </span>
+            <a
+              (click)="analysis.removeTask(task.token)"
+              class="has-text-danger is-pulled-right"
+            >
+              <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
             </a>
           </div>
         </div>
@@ -67,9 +72,10 @@
             >
           </div>
           <div class="column">
-            <span class="icon is-pulled-right"
-              ><i class="fas fa-spinner fa-spin" aria-hidden="true"></i
-            ></span>
+            <app-fa-solid-icon
+              classString="is-pulled-right"
+              icon="spinner"
+            ></app-fa-solid-icon>
           </div>
         </div>
         <div class="columns mb-0">
@@ -81,9 +87,7 @@
               (click)="analysis.removeTask(task.token)"
               class="has-text-danger is-pulled-right"
             >
-              <span class="icon">
-                <i class="fa fa-trash"></i>
-              </span>
+              <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
             </a>
           </div>
         </div>
@@ -112,9 +116,10 @@
             >
           </div>
           <div class="column">
-            <span class="icon is-pulled-right"
-              ><i class="fas fa-check" aria-hidden="true"></i
-            ></span>
+            <app-fa-solid-icon
+              classString="is-pulled-right has-text-success"
+              icon="check"
+            ></app-fa-solid-icon>
           </div>
         </div>
         <div class="columns mb-0">
@@ -122,10 +127,11 @@
             <small>Finished {{ task.info.finishedAt | date: "short" }}</small>
           </div>
           <div class="column pt-0 pb-0">
-            <a (click)="analysis.removeTask(task.token)" class="has-text-danger is-pulled-right">
-              <span class="icon">
-                <i class="fa fa-trash"></i>
-              </span>
+            <a
+              (click)="analysis.removeTask(task.token)"
+              class="has-text-danger is-pulled-right"
+            >
+              <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
             </a>
           </div>
         </div>
@@ -143,9 +149,10 @@
             >
           </div>
           <div class="column">
-            <span class="icon is-pulled-right"
-              ><i class="fas fa-exclamation-triangle" aria-hidden="true"></i
-            ></span>
+            <app-fa-solid-icon
+              classString="is-pulled-right"
+              icon="exclamation-triangle"
+            ></app-fa-solid-icon>
           </div>
         </div>
         <div class="columns mb-0">
@@ -157,9 +164,7 @@
               (click)="analysis.removeTask(task.token)"
               class="has-text-danger is-pulled-right"
             >
-              <span class="icon  ">
-                <i class="fa fa-trash"></i>
-              </span>
+              <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
             </a>
           </div>
         </div>

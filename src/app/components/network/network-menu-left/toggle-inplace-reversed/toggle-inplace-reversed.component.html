@@ -9,16 +9,24 @@
     'is-small': drugstoneConfig.smallStyle
   }"
 >
-  <span *ngIf="!value" class="icon is-small">
-    <i class="fa {{ iconOff }}"></i>
-  </span>
-  <span *ngIf="value" class="icon is-small">
-    <i class="fa {{ iconOn }}"></i>
-  </span>
+  <app-fa-solid-icon
+    *ngIf="value"
+    [icon]="iconOn"
+    classString="is-small first-item-in-button has-text-success"
+  ></app-fa-solid-icon>
+  <app-fa-solid-icon
+    *ngIf="!value"
+    [icon]="iconOff"
+    classString="is-small first-item-in-button has-text-danger"
+  ></app-fa-solid-icon>
+
   <span [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">{{
     text
   }}</span>
-  <span *ngIf="icon" class="icon is-small">
-    <i class="{{ icon }}"></i>
-  </span>
+
+  <app-fa-solid-icon
+    *ngIf="icon"
+    classString="is-small last-item-in-button"
+    [icon]="icon"
+  ></app-fa-solid-icon>
 </button>

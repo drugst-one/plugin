@@ -1,12 +1,18 @@
-<p-table *ngIf="tableProteins.length > 0" selectionMode="multiple"
-         [value]="tableProteins" [selection]="tableSelectedProteins" dataKey="uniprotAc"
-         (selectionChange)="tableProteinSelection($event)" styleClass="table is-hoverable is-narrow drgstn">
+<p-table
+  *ngIf="tableProteins.length > 0"
+  selectionMode="multiple"
+  [value]="tableProteins"
+  [selection]="tableSelectedProteins"
+  dataKey="uniprotAc"
+  (selectionChange)="tableProteinSelection($event)"
+  styleClass="table is-hoverable is-narrow drgstn"
+>
   <ng-template pTemplate="header">
     <tr>
       <th class="checkbox-col">
         <p-tableHeaderCheckbox class="drgstn"></p-tableHeaderCheckbox>
       </th>
-      <th *ngIf="identifier === 'symbol'"  [pSortableColumn]="'symbol'">
+      <th *ngIf="identifier === 'symbol'" [pSortableColumn]="'symbol'">
         Symbol
         <p-sortIcon [field]="'symbol'"></p-sortIcon>
       </th>
@@ -14,11 +20,11 @@
         UniProt Code
         <p-sortIcon [field]="'uniprotAc'"></p-sortIcon>
       </th>
-      <th *ngIf="identifier === 'entrez'"  [pSortableColumn]="'entrez'">
+      <th *ngIf="identifier === 'entrez'" [pSortableColumn]="'entrez'">
         Entrez
         <p-sortIcon [field]="'entrez'"></p-sortIcon>
       </th>
-       <th *ngIf="identifier === 'ensg'"  [pSortableColumn]="'ensg'">
+      <th *ngIf="identifier === 'ensg'" [pSortableColumn]="'ensg'">
         Ensembl GeneID
         <p-sortIcon [field]="'ensg'"></p-sortIcon>
       </th>
@@ -28,9 +34,16 @@
       </th>
       <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
         Score
-        <span class="question-icon has-text-info has-tooltip tooltip-button"
-                [pTooltip]="tableProteinScoreTooltip" [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">
-          <fa-icon [icon]="faQuestionCircle" class="icon"></fa-icon>
+        <span
+          class="question-icon has-text-info has-tooltip tooltip-button"
+          [pTooltip]="tableProteinScoreTooltip"
+          [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+          tooltipPosition="top"
+        >
+          <app-fa-solid-icon
+            classString="icon"
+            icon="question-circle"
+          ></app-fa-solid-icon>
         </span>
         <p-sortIcon [field]="'score'"></p-sortIcon>
       </th>
@@ -45,27 +58,53 @@
       <td>
         <p-tableCheckbox [value]="e" class="drgstn"></p-tableCheckbox>
       </td>
-       <td *ngIf="identifier === 'symbol'" >
-        <a *ngFor="let symbol of e.symbol; index as i"  href="https://www.genecards.org/cgi-bin/carddisp.pl?gene={{symbol }}" target="_blank">{{ symbol +(i == e.symbol.length -1 ? "":", ")}}</a>
+      <td *ngIf="identifier === 'symbol'">
+        <a
+          *ngFor="let symbol of e.symbol; index as i"
+          href="https://www.genecards.org/cgi-bin/carddisp.pl?gene={{ symbol }}"
+          target="_blank"
+          >{{ symbol + (i == e.symbol.length - 1 ? "" : ", ") }}</a
+        >
       </td>
-      <td *ngIf="identifier === 'uniprot'" >
-        <a *ngFor="let uniprot of e.uniprotAc; index as i"  href="https://www.uniprot.org/uniprot/{{uniprot }}" target="_blank">{{ uniprot +(i == e.uniprotAc.length -1 ? "":", ")}}</a>
+      <td *ngIf="identifier === 'uniprot'">
+        <a
+          *ngFor="let uniprot of e.uniprotAc; index as i"
+          href="https://www.uniprot.org/uniprot/{{ uniprot }}"
+          target="_blank"
+          >{{ uniprot + (i == e.uniprotAc.length - 1 ? "" : ", ") }}</a
+        >
       </td>
-       <td *ngIf="identifier === 'entrez'" >
-        <a *ngFor="let entrez of e.entrez; index as i"  href="https://www.ncbi.nlm.nih.gov/gene/{{entrez }}" target="_blank">{{ entrez +(i == e.entrez.length -1 ? "":", ")}}</a>
+      <td *ngIf="identifier === 'entrez'">
+        <a
+          *ngFor="let entrez of e.entrez; index as i"
+          href="https://www.ncbi.nlm.nih.gov/gene/{{ entrez }}"
+          target="_blank"
+          >{{ entrez + (i == e.entrez.length - 1 ? "" : ", ") }}</a
+        >
       </td>
-      <td *ngIf="identifier === 'ensg'" >
-        <a *ngFor="let ensg of e.ensg; index as i"  href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={{ensg }}" target="_blank">{{ ensg +(i == e.ensg.length -1 ? "":", ")}}</a>
+      <td *ngIf="identifier === 'ensg'">
+        <a
+          *ngFor="let ensg of e.ensg; index as i"
+          href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={{ ensg }}"
+          target="_blank"
+          >{{ ensg + (i == e.ensg.length - 1 ? "" : ", ") }}</a
+        >
       </td>
-      <td>{{e.proteinName}}</td>
-      <td *ngIf="tableHasScores">{{e.score.toString() | number}}</td>
+      <td>{{ e.proteinName }}</td>
+      <td *ngIf="tableHasScores">{{ e.score.toString() | number }}</td>
       <td>
         <span *ngIf="e.isSeed">
-            <fa-icon [icon]="faCheck" [classes]="['icon']"></fa-icon>
+          <app-fa-solid-icon
+            classString="icon has-text-success"
+            icon="check"
+          ></app-fa-solid-icon>
           Seed
         </span>
         <span *ngIf="!e.isSeed">
-            <fa-icon [icon]="faTimes" [classes]="['icon']"></fa-icon>
+          <app-fa-solid-icon
+            classString="icon has-text-danger"
+            icon="times"
+          ></app-fa-solid-icon>
         </span>
       </td>
     </tr>

@@ -43,9 +43,7 @@
               <ng-container
                 *ngIf="!networkHandler.activeNetwork.selectedWrapper"
               >
-                <span class="icon">
-                  <i class="fas fa-info" aria-hidden="true"></i>
-                </span>
+                <app-fa-solid-icon icon="info"></app-fa-solid-icon>
                 <span> No item selected </span>
               </ng-container>
               <ng-container
@@ -62,12 +60,14 @@
               class="card-header-icon is-hidden-fullscreen"
               aria-label="more options"
             >
-              <span *ngIf="collapseDetails" class="icon">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-              </span>
-              <span *ngIf="!collapseDetails" class="icon">
-                <i class="fas fa-angle-left" aria-hidden="true"></i>
-              </span>
+              <app-fa-solid-icon
+                *ngIf="collapseDetails"
+                icon="angle-down"
+              ></app-fa-solid-icon>
+              <app-fa-solid-icon
+                *ngIf="!collapseDetails"
+                icon="angle-left"
+              ></app-fa-solid-icon>
             </a>
           </header>
           <div *ngIf="collapseDetails">
@@ -86,9 +86,7 @@
         >
           <header class="card-header">
             <p class="card-header-title">
-              <span class="icon">
-                <i class="fas fa-info" aria-hidden="true"></i>
-              </span>
+              <app-fa-solid-icon icon="info"></app-fa-solid-icon>
               Network Overview
             </p>
             <a
@@ -97,12 +95,14 @@
               class="card-header-icon is-hidden-fullscreen"
               aria-label="more options"
             >
-              <span *ngIf="collapseOverview" class="icon">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-              </span>
-              <span *ngIf="!collapseOverview" class="icon">
-                <i class="fas fa-angle-left" aria-hidden="true"></i>
-              </span>
+              <app-fa-solid-icon
+                *ngIf="collapseOverview"
+                icon="angle-down"
+              ></app-fa-solid-icon>
+              <app-fa-solid-icon
+                *ngIf="!collapseOverview"
+                icon="angle-left"
+              ></app-fa-solid-icon>
             </a>
           </header>
           <div *ngIf="collapseOverview">
@@ -153,9 +153,7 @@
         >
           <header class="card-header">
             <p class="card-header-title">
-              <span class="icon">
-                <i class="fas fa-search" aria-hidden="true"></i>
-              </span>
+              <app-fa-solid-icon icon="search"></app-fa-solid-icon>
               Query Node
             </p>
             <a
@@ -164,14 +162,14 @@
               class="card-header-icon is-hidden-fullscreen"
               aria-label="more options"
             >
-              <span class="icon">
-                <span *ngIf="collapseQuery" class="icon">
-                  <i class="fas fa-angle-down" aria-hidden="true"></i>
-                </span>
-                <span *ngIf="!collapseQuery" class="icon">
-                  <i class="fas fa-angle-left" aria-hidden="true"></i>
-                </span>
-              </span>
+              <app-fa-solid-icon
+                *ngIf="collapseQuery"
+                icon="angle-down"
+              ></app-fa-solid-icon>
+              <app-fa-solid-icon
+                *ngIf="!collapseQuery"
+                icon="angle-left"
+              ></app-fa-solid-icon>
             </a>
           </header>
           <div *ngIf="collapseQuery">
@@ -207,9 +205,7 @@
             [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
           >
             <p class="card-header-title">
-              <span class="icon">
-                <i class="fas fa-flask" aria-hidden="true"></i>
-              </span>
+              <app-fa-solid-icon icon="flask"></app-fa-solid-icon>
               Analysis
             </p>
             <a
@@ -218,12 +214,14 @@
               class="card-header-icon is-hidden-fullscreen"
               aria-label="more options"
             >
-              <span *ngIf="collapseAnalysis" class="icon">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-              </span>
-              <span *ngIf="!collapseAnalysis" class="icon">
-                <i class="fas fa-angle-left" aria-hidden="true"></i>
-              </span>
+              <app-fa-solid-icon
+                *ngIf="collapseAnalysis"
+                icon="angle-down"
+              ></app-fa-solid-icon>
+              <app-fa-solid-icon
+                *ngIf="!collapseAnalysis"
+                icon="angle-left"
+              ></app-fa-solid-icon>
             </a>
           </header>
           <div *ngIf="collapseAnalysis">
@@ -246,9 +244,7 @@
                     [disabled]="analysis.getCount() === 0"
                     [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                   >
-                    <span class="icon">
-                      <i class="fa fa-crosshairs"></i>
-                    </span>
+                    <app-fa-solid-icon icon="crosshairs" classString="first-item-in-button"></app-fa-solid-icon>
                     <span>{{ drugstoneConfig.config.taskTargetName }}</span>
                   </button>
                 </div>
@@ -270,9 +266,7 @@
                     [disabled]="analysis.getCount() === 0"
                     [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                   >
-                    <span class="icon">
-                      <i class="fa fa-capsules"></i>
-                    </span>
+                      <app-fa-solid-icon icon="capsules" classString="first-item-in-button"></app-fa-solid-icon>
                     <span>
                       {{ drugstoneConfig.config.taskDrugName }}
                     </span>
@@ -293,9 +287,10 @@
                     "
                     tooltipPosition="top"
                   >
-                    <span class="icon">
-                      <i class="fa fa-external-link-alt"></i>
-                    </span>
+                    <app-fa-solid-icon
+                      classString="first-item-in-button"
+                      icon="external-link-alt"
+                    ></app-fa-solid-icon>
                     <span
                       [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                     >
@@ -313,9 +308,10 @@
                     "
                     tooltipPosition="top"
                   >
-                    <span class="icon">
-                      <i class="fa fa-external-link-alt"></i>
-                    </span>
+                    <app-fa-solid-icon
+                      icon="external-link-alt"
+                      classString="first-item-in-button"
+                    ></app-fa-solid-icon>
                     <span
                       [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                     >
@@ -334,9 +330,7 @@
             [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
           >
             <p class="card-header-title">
-              <span class="icon">
-                <i class="fas fa-tasks" aria-hidden="true"></i>
-              </span>
+              <app-fa-solid-icon icon="tasks"></app-fa-solid-icon>
               Tasks ({{ analysis.tasks != null ? analysis.tasks.length : 0 }})
             </p>
             <a
@@ -345,12 +339,14 @@
               class="card-header-icon is-hidden-fullscreen"
               aria-label="more options"
             >
-              <span *ngIf="collapseTask" class="icon">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-              </span>
-              <span *ngIf="!collapseTask" class="icon">
-                <i class="fas fa-angle-left" aria-hidden="true"></i>
-              </span>
+              <app-fa-solid-icon
+                *ngIf="collapseTask"
+                icon="angle-down"
+              ></app-fa-solid-icon>
+              <app-fa-solid-icon
+                *ngIf="!collapseTask"
+                icon="angle-left"
+              ></app-fa-solid-icon>
             </a>
           </header>
           <div *ngIf="collapseTask">
@@ -371,9 +367,7 @@
                 [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
                 tooltipPosition="top"
               >
-                <span class="icon">
-                  <i class="fa fa-trash"></i>
-                </span>
+                <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
                 <span> Delete all </span>
               </a>
             </footer>
@@ -389,9 +383,7 @@
             [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
           >
             <p class="card-header-title">
-              <span class="icon">
-                <i class="fas fa-filter" aria-hidden="true"></i>
-              </span>
+              <app-fa-solid-icon icon="filter"></app-fa-solid-icon>
               Selection ({{ analysis.getCount() }})
             </p>
             <a
@@ -400,12 +392,14 @@
               class="card-header-icon is-hidden-fullscreen"
               aria-label="more options"
             >
-              <span *ngIf="collapseSelection" class="icon">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-              </span>
-              <span *ngIf="!collapseSelection" class="icon">
-                <i class="fas fa-angle-left" aria-hidden="true"></i>
-              </span>
+              <app-fa-solid-icon
+                *ngIf="collapseSelection"
+                icon="angle-down"
+              ></app-fa-solid-icon>
+              <app-fa-solid-icon
+                *ngIf="!collapseSelection"
+                icon="angle-left"
+              ></app-fa-solid-icon>
             </a>
           </header>
           <div
@@ -448,7 +442,11 @@
                     <td *ngIf="drugstoneConfig.config.identifier !== 'symbol'">
                       <p>{{ p.data.symbol }}</p>
                     </td>
-                    <td *ngIf="drugstoneConfig.config.identifier !== 'uniprot'" class="uniprot" title="{{p.data.uniprotAc}}">
+                    <td
+                      *ngIf="drugstoneConfig.config.identifier !== 'uniprot'"
+                      class="uniprot"
+                      title="{{ p.data.uniprotAc }}"
+                    >
                       <p>{{ p.data.uniprotAc }}</p>
                     </td>
                     <td>
@@ -458,7 +456,7 @@
                         tooltipPosition="top"
                         pTooltip="Remove from selection."
                       >
-                        <i class="fa fa-trash"></i>
+                        <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
                       </button>
                     </td>
                   </tr>
@@ -476,9 +474,7 @@
                 tooltipPosition="top"
                 pTooltip="Add all proteins to the selection."
               >
-                <span class="icon">
-                  <i class="fa fa-plus"></i>
-                </span>
+                <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
                 <span> Add all </span>
               </a>
             </footer>
@@ -488,9 +484,7 @@
                 tooltipPosition="top"
                 pTooltip="Add all proteins to the selection."
               >
-                <span class="icon">
-                  <i class="fa fa-plus"></i>
-                </span>
+                <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
                 <span class="is-fullwidth">
                   <app-group-selection
                     (selectGroupEmitter)="analysis.addGroupToSelection($event)"
@@ -510,9 +504,7 @@
                 tooltipPosition="top"
                 pTooltip="Invert the current selection."
               >
-                <span class="icon">
-                  <i class="fa fa-sync"></i>
-                </span>
+                <app-fa-solid-icon icon="sync"></app-fa-solid-icon>
                 <span> Invert </span>
               </a>
               <a
@@ -522,9 +514,7 @@
                 tooltipPosition="top"
                 pTooltip="Remove all entries from the selection."
               >
-                <span class="icon">
-                  <i class="fa fa-broom"></i>
-                </span>
+                <app-fa-solid-icon icon="broom"></app-fa-solid-icon>
                 <span> Reset </span>
               </a>
             </footer>
