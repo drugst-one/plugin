@@ -203,7 +203,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             // @ts-ignore
             for (const g of Object.values(options.groups)) {
               // @ts-ignore
-              delete g.renderer
+              delete g.renderer;
             }
             this.drugstoneConfig.config.physicsOn = !isBig;
             this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
@@ -247,7 +247,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               if (nodeIds.length > 0) {
                 const nodeId = nodeIds[0];
                 const node = this.nodeData.nodes.get(nodeId);
-                if (node.nodeType === 'drug' || node.drugstoneId === undefined || node.drugstoneType !== 'protein') {
+                if (node.drugstoneId === undefined || node.nodeType === 'drug' || node.drugstoneType !== 'protein') {
+                  this.analysis.unmappedNodeToast();
                   return;
                 }
                 const wrapper = getWrapperFromNode(node);
@@ -294,7 +295,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
                     selected,
                     this.networkHandler.activeNetwork.getGradient(item.id),
                     this.networkHandler.activeNetwork.nodeRenderer
-                  )
+                  );
                   updatedNodes.push(nodeStyled);
                 }
                 this.nodeData.nodes.update(updatedNodes);
@@ -317,8 +318,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
                 const updatedNodes = [];
                 this.nodeData.nodes.forEach((node) => {
                   const isSeed = this.networkHandler.activeNetwork.highlightSeeds ? this.networkHandler.activeNetwork.seedMap[node.id] : false;
-                  if (!isSeed)
-                    return
+                  if (!isSeed) {
+                    return;
+                  }
                   const nodeStyled = NetworkSettings.getNodeStyle(
                     node,
                     this.myConfig,
@@ -371,8 +373,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.analysis.switchSelection('main');
     this.token = null;
     this.tokenChange.emit(this.token);
-    this.legendService.remove_from_context('drug')
-    this.legendService.remove_from_context('drugTarget')
+    this.legendService.remove_from_context('drug');
+    this.legendService.remove_from_context('drugTarget');
     this.emitVisibleItems(false);
   }
 
@@ -399,12 +401,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
     if (normalize) {
       normalizeFn(this.tableProteins);
-      if (this.task.info.target === 'drug')
-        normalizeFn(this.tableDrugs)
+      if (this.task.info.target === 'drug') {
+        normalizeFn(this.tableDrugs);
+      }
     } else {
       unnormalizeFn(this.tableProteins);
-      if (this.task.info.target === 'drug')
-        unnormalizeFn(this.tableDrugs)
+      if (this.task.info.target === 'drug') {
+        unnormalizeFn(this.tableDrugs);
+      }
     }
   }
 
@@ -434,20 +438,20 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.proteins = [];
     this.effects = [];
     const network = result.network;
-    network.nodes = [...new Set<string>(network.nodes)]
+    network.nodes = [...new Set<string>(network.nodes)];
 
     const details = attributes.details || {};
-    const nodeIdMap = {}
+    const nodeIdMap = {};
     // @ts-ignore
     Object.entries(details).filter(e => e[1].drugstoneType === 'protein').forEach(e => {
       // @ts-ignore
       e[1].drugstoneId.forEach(id => {
-        nodeIdMap[id] = e[1][identifier][0]
-      })
-    })
+        nodeIdMap[id] = e[1][identifier][0];
+      });
+    });
     for (const nodeId of network.nodes) {
       if (details[nodeId]) {
-        const nodeDetails = details[nodeId]
+        const nodeDetails = details[nodeId];
         nodeDetails.id = nodeDetails.id ? nodeDetails.id : (typeof nodeDetails.drugstoneId === 'string' ? nodeDetails.drugstoneId : nodeDetails.drugstoneId[0]);
         if (nodeDetails.drugstoneId && nodeDetails.drugstoneType === 'protein') {
           // node is protein from database, has been mapped on init to backend protein from backend
@@ -464,13 +468,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         } else {
           // node is custom input from user, could not be mapped to backend protein
           nodeDetails.group = nodeDetails.group ? nodeDetails.group : 'default';
-          nodeDetails.label = nodeDetails.label ? nodeDetails.label : nodeDetails[identifier]
+          nodeDetails.label = nodeDetails.label ? nodeDetails.label : nodeDetails[identifier];
         }
         // further analysis and the button function can be used to highlight seeds
         // option to use scores[node] as gradient, but sccores are very small
-        nodes.push(NetworkSettings.getNodeStyle(nodeDetails as Node, config, false, false, 1, this.networkHandler.activeNetwork.nodeRenderer))
+        nodes.push(NetworkSettings.getNodeStyle(nodeDetails as Node, config, false, false, 1, this.networkHandler.activeNetwork.nodeRenderer));
       } else {
-        console.log("Missing details for " + nodeId)
+        console.log('Missing details for ' + nodeId);
       }
     }
 
@@ -478,10 +482,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     const uniqEdges = [];
 
     for (const edge of network.edges) {
-      const e = mapCustomEdge(edge, this.myConfig)
-      e.from = e.from[0] === 'p' && nodeIdMap[e.from] ? nodeIdMap[e.from] : e.from
-      e.to = e.to[0] === 'p' && nodeIdMap[e.to] ? nodeIdMap[e.to] : e.to
-      const hash = e.from + "_" + e.to;
+      const e = mapCustomEdge(edge, this.myConfig);
+      e.from = e.from[0] === 'p' && nodeIdMap[e.from] ? nodeIdMap[e.from] : e.from;
+      e.to = e.to[0] === 'p' && nodeIdMap[e.to] ? nodeIdMap[e.to] : e.to;
+      const hash = e.from + '_' + e.to;
       if (uniqEdges.indexOf(hash) === -1) {
         uniqEdges.push(hash);
         edges.push(e);
@@ -489,7 +493,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     }
     // remove self-edges/loops
     if (!config.selfReferences) {
-      edges = edges.filter(el => el.from !== el.to)
+      edges = edges.filter(el => el.from !== el.to);
     }
     return {
       nodes,
@@ -498,15 +502,17 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   getResultNodes() {
-    if (this.nodeData && this.nodeData['nodes'])
-      return this.nodeData['nodes'].get()
-    return []
+    if (this.nodeData && this.nodeData['nodes']) {
+      return this.nodeData['nodes'].get();
+    }
+    return [];
   }
 
   getResultEdges() {
-    if (this.nodeData && this.nodeData['edges'])
-      return this.nodeData['edges'].get().filter(e => !e.id || !e.groupName || (typeof e.from === 'string' && typeof e.to === 'string'))
-    return []
+    if (this.nodeData && this.nodeData['edges']) {
+      return this.nodeData['edges'].get().filter(e => !e.id || !e.groupName || (typeof e.from === 'string' && typeof e.to === 'string'));
+    }
+    return [];
   }
 
   public tableProteinSelection = (e): void => {
@@ -528,7 +534,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     }
     this.analysis.addItems(addItems);
     this.analysis.removeItems(removeItems);
-  }
+  };
 
   public toggleFullscreen() {
     this.fullscreen = !this.fullscreen;

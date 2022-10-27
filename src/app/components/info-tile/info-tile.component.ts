@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
 import {Wrapper} from '../../interfaces';
 import {AnalysisService} from '../../services/analysis/analysis.service';
+import {NetworkHandlerService} from '../../services/network-handler/network-handler.service';
 
 
 @Component({
@@ -13,7 +14,7 @@ export class InfoTileComponent implements OnInit {
   @Input() public wrapper: Wrapper;
   @Input() public expressions: any;
 
-  constructor(public drugstoneConfig: DrugstoneConfigService, public analysis: AnalysisService) {
+  constructor(public drugstoneConfig: DrugstoneConfigService, public analysis: AnalysisService, public networkHandler: NetworkHandlerService) {
 
   }
 

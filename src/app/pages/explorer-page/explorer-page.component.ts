@@ -309,7 +309,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     if (!this.drugstoneConfig.config.showSidebar) {
       // skip network options for selecting nodes when there are no options to use it
-      return
+      return;
     }
 
     this.networkHandler.activeNetwork.networkInternal.on('doubleClick', (properties) => {
@@ -318,6 +318,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         const nodeId = nodeIds[0];
         const node = this.nodeData.nodes.get(nodeId);
         if (node.drugstoneId === undefined || node.drugstoneType !== 'protein') {
+          this.analysis.unmappedNodeToast();
           // skip if node is not a protein mapped to backend
           return;
         }

@@ -132,11 +132,11 @@
       </a>
     </p>
     <p
-      *ngIf="wrapper.data.groupName"
+      *ngIf="drugstoneConfig.config.nodeGroups[networkHandler.activeNetwork.selectedWrapper.data[networkHandler.activeNetwork.selectedWrapper.data.group === 'selectedNode' ? '_group':'group']].groupName"
       [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
     >
       <b><span>Group:</span></b>
-      <span class="is-capitalized"> {{ wrapper.data.groupName }}</span>
+      <span class="is-capitalized"> {{drugstoneConfig.config.nodeGroups[networkHandler.activeNetwork.selectedWrapper.data[networkHandler.activeNetwork.selectedWrapper.data.group === 'selectedNode' ? '_group':'group']].groupName }}</span>
     </p>
   </div>
 
@@ -146,7 +146,7 @@
     (valueChange)="
       $event ? analysis.addItems([wrapper]) : analysis.removeItems([wrapper])
     "
-    textOn="Seed"
+    textOn="Selected"
     textOff="Off"
     tooltipOn="Add protein to selection."
     tooltipOff="Remove protein from selection."

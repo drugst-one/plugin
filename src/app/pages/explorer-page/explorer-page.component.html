@@ -50,7 +50,7 @@
                 *ngIf="networkHandler.activeNetwork.selectedWrapper"
               >
                 <span>
-                  {{ drugstoneConfig.config.nodeGroups[networkHandler.activeNetwork.selectedWrapper.data.group].groupName }}
+                  {{ drugstoneConfig.config.nodeGroups[networkHandler.activeNetwork.selectedWrapper.data[networkHandler.activeNetwork.selectedWrapper.data.group === 'selectedNode' ? '_group':'group']].groupName}}
                 </span>
               </ng-container>
             </p>
@@ -123,9 +123,9 @@
                     <p class="heading">Nodes</p>
                     <p class="title">
                       {{
-                        networkHandler.activeNetwork.currentViewNodes != null
-                          ? networkHandler.activeNetwork.currentViewNodes.length
-                          : 0
+                      networkHandler.activeNetwork.currentViewNodes != null
+                        ? networkHandler.activeNetwork.currentViewNodes.length
+                        : 0
                       }}
                     </p>
                   </div>
@@ -135,9 +135,9 @@
                     <p class="heading">Edges</p>
                     <p class="title">
                       {{
-                        networkHandler.activeNetwork.currentViewEdges != null
-                          ? networkHandler.activeNetwork.currentViewEdges.length
-                          : 0
+                      networkHandler.activeNetwork.currentViewEdges != null
+                        ? networkHandler.activeNetwork.currentViewEdges.length
+                        : 0
                       }}
                     </p>
                   </div>
@@ -227,7 +227,8 @@
           </header>
           <div *ngIf="collapseAnalysis">
             <div class="card-content">
-              <div class="field">
+              <div class="field"
+                   *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('drug-search')">
                 <div
                   class="control"
                   pTooltip="Find drug targets for the selected proteins."
@@ -250,7 +251,7 @@
                   </button>
                 </div>
               </div>
-              <div class="field">
+              <div class="field" *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('drug-target-search')">
                 <div
                   class="control"
                   pTooltip="Find drugs for the selected proteins."
@@ -267,14 +268,14 @@
                     [disabled]="analysis.getCount() === 0"
                     [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                   >
-                      <app-fa-solid-icon icon="capsules" classString="first-item-in-button"></app-fa-solid-icon>
+                    <app-fa-solid-icon icon="capsules" classString="first-item-in-button"></app-fa-solid-icon>
                     <span>
                       {{ drugstoneConfig.config.taskDrugName }}
                     </span>
                   </button>
                 </div>
               </div>
-              <div class="field">
+              <div class="field" *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('enrichment-gprofiler')">
                 <div class="control">
                   <a
                     *ngIf="analysis.getCount() > 0"
@@ -414,53 +415,53 @@
                 *ngIf="analysis.getCount() > 0"
               >
                 <thead>
-                  <tr>
-                    <td>Label</td>
-                    <td>Group</td>
-                    <td *ngIf="drugstoneConfig.config.identifier !== 'symbol'">
-                      Symbol
-                    </td>
-                    <td *ngIf="drugstoneConfig.config.identifier !== 'uniprot'">
-                      Uniprot
-                    </td>
-                    <td>Actions</td>
-                  </tr>
+                <tr>
+                  <td>Label</td>
+                  <td>Group</td>
+                  <td *ngIf="drugstoneConfig.config.identifier !== 'symbol'">
+                    Symbol
+                  </td>
+                  <td *ngIf="drugstoneConfig.config.identifier !== 'uniprot'">
+                    Uniprot
+                  </td>
+                  <td>Actions</td>
+                </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let p of analysis.getSelection()">
-                    <td>
-                      <p class="is-capitalized">{{ p.data.label }}</p>
-                    </td>
-                    <td>
-                      <p>
-                        {{
-                          drugstoneConfig.config.nodeGroups[p.data['_group']][
-                            "groupName"
-                          ]
-                        }}
-                      </p>
-                    </td>
-                    <td *ngIf="drugstoneConfig.config.identifier !== 'symbol'">
-                      <p>{{ p.data.symbol }}</p>
-                    </td>
-                    <td
-                      *ngIf="drugstoneConfig.config.identifier !== 'uniprot'"
-                      class="uniprot"
-                      title="{{ p.data.uniprotAc }}"
+                <tr *ngFor="let p of analysis.getSelection()">
+                  <td>
+                    <p class="is-capitalized">{{ p.data.label }}</p>
+                  </td>
+                  <td>
+                    <p>
+                      {{
+                      drugstoneConfig.config.nodeGroups[p.data['_group']][
+                        "groupName"
+                        ]
+                      }}
+                    </p>
+                  </td>
+                  <td *ngIf="drugstoneConfig.config.identifier !== 'symbol'">
+                    <p>{{ p.data.symbol }}</p>
+                  </td>
+                  <td
+                    *ngIf="drugstoneConfig.config.identifier !== 'uniprot'"
+                    class="uniprot"
+                    title="{{ p.data.uniprotAc }}"
+                  >
+                    <p>{{ p.data.uniprotAc }}</p>
+                  </td>
+                  <td>
+                    <button
+                      (click)="analysis.removeItems([p])"
+                      class="button is-small is-danger is-outlined has-tooltip"
+                      tooltipPosition="top"
+                      pTooltip="Remove from selection."
                     >
-                      <p>{{ p.data.uniprotAc }}</p>
-                    </td>
-                    <td>
-                      <button
-                        (click)="analysis.removeItems([p])"
-                        class="button is-small is-danger is-outlined has-tooltip"
-                        tooltipPosition="top"
-                        pTooltip="Remove from selection."
-                      >
-                        <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
-                      </button>
-                    </td>
-                  </tr>
+                      <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
+                    </button>
+                  </td>
+                </tr>
                 </tbody>
               </table>
               <i *ngIf="analysis.getCount() === 0">

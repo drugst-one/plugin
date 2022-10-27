@@ -1,9 +1,9 @@
-import { AlgorithmTarget, AlgorithmType, QuickAlgorithmType } from './interfaces';
+import {AlgorithmTarget, AlgorithmType, QuickAlgorithmType} from './interfaces';
 
 // https://visjs.github.io/vis-network/docs/network/nodes.html
 export interface NodeGroup {
   groupName?: string;
-  groupID?:string;
+  groupID?: string;
   color?: any;
   shape?: 'circle' | 'triangle' | 'star' | 'square' | 'image' | 'text' | 'ellipse' | 'box' | 'diamond' | 'dot';
   type?: string;
@@ -32,6 +32,7 @@ export type InteractionDrugProteinDB = 'NeDRex' | 'DrugBank' | 'DrugCentral' | '
 export type InteractionProteinProteinDB = 'NeDRex' | 'BioGRID' | 'IID' | 'IntAct' | 'STRING' | 'APID';
 export type IndicationDrugDisorderDB = 'NeDRex' | 'CTD' | 'DrugCentral' | 'DrugBank';
 export type AssociatedProteinDisorderDB = 'NeDRex' | 'DisGeNET' | 'OMIM';
+export type AdvAnalysisContentTypes = 'drug-target-search' | 'drug-search' | 'enrichment-gprofiler';
 
 
 // TODO: should this be external or integrated in the backend?
@@ -50,6 +51,7 @@ export interface IConfig {
   showItemSelector: boolean;
   showSimpleAnalysis: boolean;
   showAdvAnalysis: boolean;
+  showAdvAnalysisContent: Array<AdvAnalysisContentTypes>;
   showTasks: boolean;
   showSelection: boolean;
   showNetworkMenu: false | 'left' | 'right';
@@ -73,7 +75,7 @@ export interface IConfig {
   nodeGroups: { [key: string]: NodeGroup };
   edgeGroups: { [key: string]: EdgeGroup };
   selfReferences: boolean;
-  customEdges: {default: boolean, selectable: boolean};
+  customEdges: { default: boolean, selectable: boolean };
   interactionDrugProtein: InteractionDrugProteinDB;
   interactionProteinProtein: InteractionProteinProteinDB;
   indicationDrugDisorder: IndicationDrugDisorderDB;
@@ -90,37 +92,37 @@ export interface IConfig {
 
 
 const defaultNodeGroup: NodeGroup = {
-      // this default group is used for default node group values
-      // and is fallback in case user does not provide any nodeGroup
-      groupName: 'Default Node Group',
-      ctxRenderer: null,
-      color: {
-        border: '#FFFF00',
-        background: '#FFFF00',
-        highlight: {
-          border: '#FF0000',
-          background: '#FF0000'
-        },
-      },
-      shape: 'triangle',
-      type: 'default type',
-      detailShowLabel: false,
-      font: {
-        color: '#000000',
-        size: 14,
-        face: 'arial',
-        background: undefined,
-        strokeWidth: 0,
-        strokeColor: '#ffffff',
-        align: 'center',
-        bold: false,
-        ital: false,
-        boldital: false,
-        mono: false,
-      },
-      borderWidth: 1,
-      borderWidthSelected: 2
-    };
+  // this default group is used for default node group values
+  // and is fallback in case user does not provide any nodeGroup
+  groupName: 'Default Node Group',
+  ctxRenderer: null,
+  color: {
+    border: '#FFFF00',
+    background: '#FFFF00',
+    highlight: {
+      border: '#FF0000',
+      background: '#FF0000'
+    },
+  },
+  shape: 'triangle',
+  type: 'default type',
+  detailShowLabel: false,
+  font: {
+    color: '#000000',
+    size: 14,
+    face: 'arial',
+    background: undefined,
+    strokeWidth: 0,
+    strokeColor: '#ffffff',
+    align: 'center',
+    bold: false,
+    ital: false,
+    boldital: false,
+    mono: false,
+  },
+  borderWidth: 1,
+  borderWidthSelected: 2
+};
 const connectorNodeGroup: NodeGroup = JSON.parse(JSON.stringify(defaultNodeGroup));
 connectorNodeGroup.groupName = 'Connector Nodes';
 
@@ -143,6 +145,7 @@ export const defaultConfig: IConfig = {
   showItemSelector: true,
   showSimpleAnalysis: true,
   showAdvAnalysis: true,
+  showAdvAnalysisContent: ['drug-search', 'drug-target-search', 'enrichment-gprofiler'],
   showSelection: true,
   showTasks: true,
   showNetworkMenu: 'right',

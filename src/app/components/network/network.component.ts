@@ -348,15 +348,26 @@ export class NetworkComponent implements OnInit {
       this.nodeRenderer = null;
       const updatedNodes = [];
       // for (const item of this.proteins) {
-      for (const node of this.nodeData.nodes.get().filter(n => n.drugstoneType === 'protein')) {
-        if (node.drugstoneId === undefined) {
-          // nodes that are not mapped to backend remain untouched
-          continue;
-        }
-        // const node: Node = this.nodeData.nodes.get(item.id);
-        if (!node) {
-          continue;
-        }
+      const proteins = this.nodeData.nodes.get().filter(n => n.drugstoneId && n.drugstoneType === 'protein')
+      for (const node of proteins) {
+        const pos = this.networkInternal.getPositions([node.id]);
+        node.x = pos[node.id].x;
+        node.y = pos[node.id].y;
+        Object.assign(
+          node,
+          NetworkSettings.getNodeStyle(
+            node,
+            this.drugstoneConfig.config,
+            node.isSeed && this.networkHandler.activeNetwork.highlightSeeds,
+            false,
+            1.0,
+            this.nodeRenderer
+          )
+        );
+        updatedNodes.push(node);
+      }
+      this.nodeData.nodes.update(updatedNodes);
+      for (const node of proteins) {
         const pos = this.networkInternal.getPositions([node.id]);
         node.x = pos[node.id].x;
         node.y = pos[node.id].y;
@@ -370,13 +381,13 @@ export class NetworkComponent implements OnInit {
             1.0,
             this.nodeRenderer
           )
-        )
+        );
         updatedNodes.push(node);
       }
       this.nodeData.nodes.update(updatedNodes);
 
     } else {
-      this.selectedTissue = tissue
+      this.selectedTissue = tissue;
       const minExp = 0.3;
       // filter out non-proteins, e.g. drugs
       const proteinNodes = [];

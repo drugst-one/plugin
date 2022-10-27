@@ -4,10 +4,10 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {Injectable} from '@angular/core';
 import {NetexControllerService} from '../netex-controller/netex-controller.service';
-import {DrugstoneConfigService} from "../drugstone-config/drugstone-config.service";
-import {NetworkHandlerService} from "../network-handler/network-handler.service";
-import { ToastService } from '../toast/toast.service';
-import { NodeGroup } from 'src/app/config';
+import {DrugstoneConfigService} from '../drugstone-config/drugstone-config.service';
+import {NetworkHandlerService} from '../network-handler/network-handler.service';
+import {ToastService} from '../toast/toast.service';
+import {NodeGroup} from 'src/app/config';
 
 export type AlgorithmType =
   'trustrank'
@@ -74,11 +74,11 @@ export class AnalysisService {
   private tissues: Tissue[] = [];
 
   constructor(
-              public toast: ToastService,
-              private http: HttpClient,
-              public netex: NetexControllerService,
-              public drugstoneConfig: DrugstoneConfigService,
-              public networkHandler: NetworkHandlerService
+    public toast: ToastService,
+    private http: HttpClient,
+    public netex: NetexControllerService,
+    public drugstoneConfig: DrugstoneConfigService,
+    public networkHandler: NetworkHandlerService
   ) {
     const tokens = localStorage.getItem(this.tokensCookieKey);
     const finishedTokens = localStorage.getItem(this.tokensFinishedCookieKey);
@@ -158,11 +158,11 @@ export class AnalysisService {
     this.networkHandler.activeNetwork.currentViewNodes.forEach((node) => {
       if (node.group !== group.groupID || node.drugstoneType !== 'protein') {
         // only consider nodes of group and proteins
-        return
+        return;
       }
       wrappers.push(getWrapperFromNode(node));
     });
-    this.addItems(wrappers)
+    this.addItems(wrappers);
   }
 
   public addAllToSelection() {
@@ -170,11 +170,11 @@ export class AnalysisService {
     this.networkHandler.activeNetwork.currentViewNodes.forEach((node) => {
       if (node.drugstoneType !== 'protein') {
         // only consider proteins
-        return
+        return;
       }
       wrappers.push(getWrapperFromNode(node));
     });
-    this.addItems(wrappers)
+    this.addItems(wrappers);
   }
 
   // public addSeeds(nodes) {
@@ -204,14 +204,14 @@ export class AnalysisService {
     nodes.forEach((node: Node) => {
       if (node.drugstoneType !== 'protein') {
         // only consider proteins
-        return
+        return;
       }
       const wrapper = getWrapperFromNode(node);
       if (!this.inSelection(wrapper)) {
         newSelection.push(wrapper);
       }
     });
-    this.resetSelection()
+    this.resetSelection();
     for (const wrapper of newSelection) {
       this.selectedItems.set(wrapper.id, wrapper);
     }
@@ -266,9 +266,9 @@ export class AnalysisService {
         if (item.drugstoneType === 'protein') {
           seeds.push(item.id);
         }
-      })
+      });
     }
-    const target = ['connect', 'connectSelected'].includes(algorithm) ? 'drug-target' : 'drug'
+    const target = ['connect', 'connectSelected'].includes(algorithm) ? 'drug-target' : 'drug';
     const parameters: any = {
       seeds: seeds,
       config: this.drugstoneConfig.config,
@@ -296,7 +296,7 @@ export class AnalysisService {
         ' Once the computation finished you can view the results in the task list to the right.',
       type: 'success'
     });
-    return { taskId: resp.token, algorithm: algorithm, target: target, params: parameters }
+    return {taskId: resp.token, algorithm: algorithm, target: target, params: parameters};
   }
 
   async startAnalysis(algorithm, target: 'drug' | 'drug-target', parameters) {
@@ -340,6 +340,13 @@ export class AnalysisService {
     });
   }
 
+  unmappedNodeToast() {
+    this.toast.setNewToast({
+      message: 'This node cannot be selected because either it could not be mapped correctly or it is not of type gene or protein.',
+      type: 'warning',
+    });
+  }
+
   public canLaunchTask(): boolean {
     return this.canLaunchNewTask;
   }
@@ -348,8 +355,9 @@ export class AnalysisService {
     const watch = async () => {
       if (this.tokens.length > 0) {
         const newtasks = await this.getTasks();
-        if (newtasks.length === 0)
+        if (newtasks.length === 0) {
           return;
+        }
         const newTaskIds = newtasks.map(t => t.token.toString());
         this.tasks = newtasks.concat(this.tasks.filter(t => newTaskIds.indexOf(t.token) === -1));
         if (!this.tasks) {

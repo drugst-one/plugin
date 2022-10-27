@@ -200,6 +200,7 @@ export interface Wrapper {
     color?: string;
     interactions?: any;
     group?: string;
+    _group?: string;
     groupName?: string;
     proteinName?: Array<string>;
     uniprotAc?: Array<string>;

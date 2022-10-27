@@ -103,36 +103,38 @@ export class NetworkSettings {
     // use lodash merge to not lose deep attributes, e.g. "font.size"
     // @ts-ignore
     if (node._group)
+    {
       // @ts-ignore
-      node.group = node._group
+      node.group = node._group;
+    }
     // @ts-ignore
     if (node._shadow) { // @ts-ignore
-      node.shadow = node._shadow
-    }else{
+      node.shadow = node._shadow;
+    } else {
       if (config.nodeGroups[node.group].shadow) {
-        node.shadow = {enabled: config.nodeGroups[node.group].shadow}
-        node.shadow.color = 'rgba(0,0,0,0.5)'
+        node.shadow = {enabled: config.nodeGroups[node.group].shadow};
+        node.shadow.color = 'rgba(0,0,0,0.5)';
       } else {
-        node.shadow = {color: 'rgba(0,0,0,0.5)'}
+        node.shadow = {color: 'rgba(0,0,0,0.5)'};
       }
     }
     if (isSeed) {
       // apply seed node style to node
       // @ts-ignore
-      node._group = node.group
-      node.group = 'seedNode'
+      node._group = node.group;
+      node.group = 'seedNode';
     }
     // selection on purpose after seed style, so seed style will be combined with selection style
     if (isSelected) {
       // @ts-ignore
-      node._group = node.group
+      node._group = node.group;
       // apply selected node style to node
-      node.group = 'selectedNode'
+      node.group = 'selectedNode';
       if (config.nodeGroups[node.group].shadow) {
-        node.shadow = {enabled: config.nodeGroups[node.group].shadow}
-        node.shadow.color = '#000000'
+        node.shadow = {enabled: config.nodeGroups[node.group].shadow};
+        node.shadow.color = '#000000';
       } else {
-        node.shadow = {color: '#000000'}
+        node.shadow = {color: '#000000'};
       }
     }
 
@@ -145,26 +147,26 @@ export class NetworkSettings {
     if (renderer !== null) {
       // @ts-ignore
       node.shape = 'custom';
-      node.color = {opacity: gradient}
-      node.opacity = gradient
+      node.color = {opacity: gradient};
+      node.opacity = gradient;
       if (isSeed) {
         // apply seed node style to node
         // @ts-ignore
-        node.color = config.nodeGroups[node.group].color
-      }else{
-        delete node.color
+        node.color = config.nodeGroups[node.group].color;
+      } else {
+        delete node.color;
       }
       // @ts-ignore
-      node._shadow = node.shadow
+      node._shadow = node.shadow;
       if (config.nodeGroups[node.group].shadow) {
-        node.shadow = {enabled: config.nodeGroups[node.group].shadow}
-        node.shadow.color = 'rgba(0,0,0,0.5)'
+        node.shadow = {enabled: config.nodeGroups[node.group].shadow};
+        node.shadow.color = 'rgba(0,0,0,0.5)';
       } else {
-        node.shadow = {color: 'rgba(0,0,0,0.5)'}
+        node.shadow = {color: 'rgba(0,0,0,0.5)'};
       }
       node.ctxRenderer = renderer;
     } else {
-      node.opacity = undefined
+      node.opacity = undefined;
       delete node.ctxRenderer;
     }
 
