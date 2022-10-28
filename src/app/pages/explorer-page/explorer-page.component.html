@@ -281,7 +281,7 @@
                 <div class="control">
                   <a
                     *ngIf="analysis.getCount() > 0"
-                    [href]="gProfilerLink()"
+                    (click)="openExternal(gProfilerLink())"
                     target="_blank"
                     [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                     class="button is-primary is-fullwidth is-rounded has-tooltip"
@@ -298,7 +298,7 @@
                     <span
                       [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                     >
-                      Enrichment Analysis
+                      g:Profiler Enrichment Analysis
                     </span>
                   </a>
                   <a
@@ -319,7 +319,54 @@
                     <span
                       [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                     >
-                      Enrichment Analysis
+                      g:Profiler Enrichment Analysis
+                    </span>
+                  </a>
+                </div>
+              </div>
+              <div class="field" *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('enrichment-digest')">
+                <div class="control">
+                  <a
+                    *ngIf="analysis.getCount() > 0"
+                    (click)="openDigest()"
+                    target="_blank"
+                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                    class="button is-primary is-fullwidth is-rounded has-tooltip"
+                    pTooltip="Use enrichment analysis via DIGEST (external)."
+                    [tooltipStyleClass]="
+                      'drgstn drgstn-tooltip drgstn-tooltip-top'
+                    "
+                    tooltipPosition="top"
+                  >
+                    <app-fa-solid-icon
+                      classString="first-item-in-button"
+                      icon="external-link-alt"
+                    ></app-fa-solid-icon>
+                    <span
+                      [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                    >
+                      DIGEST Enrichment Analysis
+                    </span>
+                  </a>
+                  <a
+                    *ngIf="analysis.getCount() === 0"
+                    disabled
+                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                    class="button is-primary is-fullwidth is-rounded has-tooltip"
+                    pTooltip="Use enrichment analysis via DIGEST (external)."
+                    [tooltipStyleClass]="
+                      'drgstn drgstn-tooltip drgstn-tooltip-top'
+                    "
+                    tooltipPosition="top"
+                  >
+                    <app-fa-solid-icon
+                      icon="external-link-alt"
+                      classString="first-item-in-button"
+                    ></app-fa-solid-icon>
+                    <span
+                      [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                    >
+                      DIGEST Enrichment Analysis
                     </span>
                   </a>
                 </div>
