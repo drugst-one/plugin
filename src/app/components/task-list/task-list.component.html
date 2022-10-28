@@ -12,11 +12,14 @@
         <div class="columns mb-0">
           <div class="column is-8">
             <span class="is-capitalized"
-              ><i
-                class="fa"
-                [class.fa-capsules]="task.info.target === 'drug'"
-                [class.fa-crosshairs]="task.info.target === 'drug-target'"
-              ></i>
+              ><app-fa-solid-icon
+                icon="crosshairs"
+                *ngIf="task.info.target === 'drug-target'"
+              ></app-fa-solid-icon>
+              <app-fa-solid-icon
+                icon="capsules"
+                *ngIf="task.info.target === 'drug'"
+              ></app-fa-solid-icon>
               {{ algorithmNames[task.info.algorithm] }}</span
             >
           </div>
@@ -63,11 +66,14 @@
         <div class="columns mb-0">
           <div class="column is-8">
             <span class="is-capitalized"
-              ><i
-                class="fa"
-                [class.fa-capsules]="task.info.target === 'drug'"
-                [class.fa-crosshairs]="task.info.target === 'drug-target'"
-              ></i>
+              ><app-fa-solid-icon
+                icon="crosshairs"
+                *ngIf="task.info.target === 'drug-target'"
+              ></app-fa-solid-icon>
+              <app-fa-solid-icon
+                icon="capsules"
+                *ngIf="task.info.target === 'drug'"
+              ></app-fa-solid-icon>
               {{ algorithmNames[task.info.algorithm] }}</span
             >
           </div>
@@ -107,11 +113,14 @@
         <div class="columns mb-0">
           <div class="column is-8">
             <span class="is-capitalized"
-              ><i
-                class="fa"
-                [class.fa-capsules]="task.info.target === 'drug'"
-                [class.fa-crosshairs]="task.info.target === 'drug-target'"
-              ></i>
+              ><app-fa-solid-icon
+                icon="crosshairs"
+                *ngIf="task.info.target === 'drug-target'"
+              ></app-fa-solid-icon>
+              <app-fa-solid-icon
+                icon="capsules"
+                *ngIf="task.info.target === 'drug'"
+              ></app-fa-solid-icon>
               {{ algorithmNames[task.info.algorithm] }}</span
             >
           </div>
@@ -140,11 +149,14 @@
         <div class="columns mb-0">
           <div class="column is-8">
             <span class="is-capitalized"
-              ><i
-                class="fa"
-                [class.fa-capsules]="task.info.target === 'drug'"
-                [class.fa-crosshairs]="task.info.target === 'drug-target'"
-              ></i>
+              ><app-fa-solid-icon
+                icon="crosshairs"
+                *ngIf="task.info.target === 'drug-target'"
+              ></app-fa-solid-icon>
+              <app-fa-solid-icon
+                icon="capsules"
+                *ngIf="task.info.target === 'drug'"
+              ></app-fa-solid-icon>
               {{ algorithmNames[task.info.algorithm] }}</span
             >
           </div>

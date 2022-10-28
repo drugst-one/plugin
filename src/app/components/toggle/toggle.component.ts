@@ -8,8 +8,8 @@ import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugst
 })
 export class ToggleComponent implements OnInit {
 
-  @Input() iconOn = 'fa-check';
-  @Input() iconOff = 'fa-times';
+  @Input() iconOn = 'check';
+  @Input() iconOff = 'times';
 
   @Input() textOn = 'On';
   @Input() textOff = 'Off';

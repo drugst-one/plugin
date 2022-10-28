@@ -11,7 +11,7 @@
       [ngClass]="{ 'is-small': drugstoneConfig.smallStyle }"
     >
       <app-fa-solid-icon
-        classString="is-small"
+        classString="is-small first-item-in-button has-text-success"
         [icon]="iconOn"
       ></app-fa-solid-icon>
       <span [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">{{
@@ -35,7 +35,7 @@
       }}</span>
       <app-fa-solid-icon
         *ngIf="iconOff"
-        classString="is-small"
+        classString="is-small last-item-in-button has-text-danger"
         [icon]="iconOff"
       ></app-fa-solid-icon>
     </button>
