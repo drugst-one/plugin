@@ -231,7 +231,7 @@
           <div *ngIf="collapseAnalysis">
             <div class="card-content">
               <div class="field"
-                   *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('drug-search')">
+                   *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('drug-target-search')">
                 <div
                   class="control"
                   pTooltip="Find drug targets for the selected proteins."
@@ -254,7 +254,7 @@
                   </button>
                 </div>
               </div>
-              <div class="field" *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('drug-target-search')">
+              <div class="field" *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('drug-search')">
                 <div
                   class="control"
                   pTooltip="Find drugs for the selected proteins."
