@@ -5,7 +5,7 @@
   >
     <p class="card-header-title">
       <app-fa-solid-icon icon="flask"></app-fa-solid-icon>
-      Simple Analysis
+      Quick Drug Search
     </p>
     <a
       (click)="collapseAnalysisQuick = !collapseAnalysisQuick"
@@ -49,7 +49,7 @@
                   'text-normal': drugstoneConfig.smallStyle
                 }"
               >
-                Quick Start
+                Drugs for all proteins
               </span>
             </button>
           </div>
@@ -69,7 +69,7 @@
               [ngClass]="{
                 'text-small': drugstoneConfig.smallStyle
               }"
-              class="button is-primary is-rounded quick-start-btn drugs-btn is-fullwidth"
+              class="button is-primary is-rounded has-tooltip quick-start-btn drugs-btn is-fullwidth"
               pTooltip="Find drugs for the selected proteins."
               [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
               tooltipPosition="top"
@@ -81,7 +81,7 @@
                   'text-normal': drugstoneConfig.smallStyle
                 }"
               >
-                Seed Analysis
+                Drugs for selected proteins
               </span>
             </button>
           </div>
