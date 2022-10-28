@@ -77,11 +77,11 @@
               {{ algorithmNames[task.info.algorithm] }}</span
             >
           </div>
-          <div class="column">
-            <app-fa-solid-icon
-              classString="is-pulled-right"
-              icon="spinner"
-            ></app-fa-solid-icon>
+          <div class="column p-0">
+            <div
+              class="control is-loading center"
+              alt="loading..."
+            ></div>
           </div>
         </div>
         <div class="columns mb-0">
@@ -162,7 +162,7 @@
           </div>
           <div class="column">
             <app-fa-solid-icon
-              classString="is-pulled-right"
+              classString="is-pulled-right has-text-danger"
               icon="exclamation-triangle"
             ></app-fa-solid-icon>
           </div>

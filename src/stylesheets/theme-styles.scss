@@ -283,7 +283,11 @@
     width: 0px !important;
   }
   
-  .toast-times {
+  .has-text-primary {
+    color: var(--drgstn-text-primary) !important;
+  }
+
+  .has-text-secondary {
     color: var(--drgstn-text-secondary) !important;
   }
 

@@ -292,8 +292,8 @@ export class AnalysisService {
     this.startWatching();
 
     this.toast.setNewToast({
-      message: 'Quick analysis started. This may take a while.' +
-        ' Once the computation finished you can view the results in the task list to the right.',
+      message: 'Quick analysis started. This may take a while. ' +
+        `Once the computation finished you can view the results in the task list to the ${this.drugstoneConfig.config.showSidebar}.`,
       type: 'success'
     });
     return {taskId: resp.token, algorithm: algorithm, target: target, params: parameters};
@@ -316,6 +316,12 @@ export class AnalysisService {
     this.tokens.push(resp.token);
     localStorage.setItem(`netex-tokens-${window.location.host}`, JSON.stringify(this.tokens));
     this.startWatching();
+
+    this.toast.setNewToast({
+      message: 'Analysis task started. This may take a while. ' +
+        `Once the computation finished you can view the results in the task list to the ${this.drugstoneConfig.config.showSidebar}.`,
+      type: 'success'
+    });
     return resp.token;
   }
 

@@ -270,3 +270,41 @@
   padding: 0.5rem 1rem;
   line-height: 24px;
 }
+
+.toast {
+  z-index: $toast-z;
+  position: relative;
+  max-width: 60vw;
+  padding: 10px 15px;
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5em 1em -0.125em hsla(0, 0%, 4%, 0.1),
+    0 0 0 1px hsla(0, 0%, 4%, 0.02);
+  margin: 0 auto;
+  &.drugstone-plugin-danger {
+    color: var(--drgstn-text-secondary);
+    background-color: var(--drgstn-danger);
+  }
+  &.drugstone-plugin-success {
+    color: var(--drgstn-text-secondary) !important;
+    background-color: var(--drgstn-success);
+  }
+  &.drugstone-plugin-warning {
+    color: var(--drgstn-text-primary);
+    background-color: var(--drgstn-warning);
+    .icon {
+      color: var(--drgstn-text-primary) !important;
+    }
+  }
+  &.drugstone-plugin-info {
+    color: var(--drgstn-text-secondary);
+    background-color: var(--drgstn-info);
+  }
+  .close {
+    display: inline;
+    float: right;
+    .icon {
+      color: var(--drgstn-text-secondary);
+    }
+  }
+}
+
