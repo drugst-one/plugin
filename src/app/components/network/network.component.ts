@@ -1,6 +1,6 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import domtoimage from 'dom-to-image';
-import {InteractionDatabase} from 'src/app/config';
+import {IConfig, InteractionDatabase} from 'src/app/config';
 import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 import {OmnipathControllerService} from 'src/app/services/omnipath-controller/omnipath-controller.service';
@@ -21,6 +21,7 @@ import {NetworkSettings} from 'src/app/network-settings';
 import {pieChartContextRenderer} from 'src/app/utils';
 import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
 import {LegendService} from 'src/app/services/legend-service/legend-service.service';
+import { LoadingScreenService } from 'src/app/services/loading-screen/loading-screen.service';
 
 
 @Component({
@@ -82,8 +83,16 @@ export class NetworkComponent implements OnInit {
 
   public loading = false
 
-  constructor(public configService: DrugstoneConfigService, public legendService: LegendService, public networkHandler: NetworkHandlerService, public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public netex: NetexControllerService, public omnipath: OmnipathControllerService) {
-  }
+  constructor(
+    public configService: DrugstoneConfigService, 
+    public legendService: LegendService, 
+    public networkHandler: NetworkHandlerService, 
+    public analysis: AnalysisService, 
+    public drugstoneConfig: DrugstoneConfigService, 
+    public netex: NetexControllerService, 
+    public omnipath: OmnipathControllerService, 
+    public loadingScreen: LoadingScreenService) 
+    {}
 
   ngOnInit(): void {
     this.networkHandler.networks[this.networkType] = this;
@@ -120,6 +129,7 @@ export class NetworkComponent implements OnInit {
   }
 
   public updateAdjacentProteinDisorders(bool: boolean) {
+    this.loadingScreen.stateUpdate(true);
     this.adjacentDisordersProtein = bool;
     if (this.adjacentDisordersProtein) {
       this.legendService.add_to_context('adjacentDisorders')
@@ -151,6 +161,7 @@ export class NetworkComponent implements OnInit {
         this.saveAddNodes(this.adjacentProteinDisorderList);
         this.nodeData.edges.add(this.adjacentProteinDisorderEdgesList);
         this.updateQueryItems();
+        this.loadingScreen.stateUpdate(false);
       });
     } else {
       if (!this.adjacentDisordersDrug) {
@@ -161,10 +172,12 @@ export class NetworkComponent implements OnInit {
       this.adjacentProteinDisorderList = [];
       this.adjacentProteinDisorderEdgesList = [];
       this.updateQueryItems();
+      this.loadingScreen.stateUpdate(false);
     }
   }
 
   public updateAdjacentDrugDisorders(bool: boolean) {
+    this.loadingScreen.stateUpdate(true);
     this.adjacentDisordersDrug = bool;
     if (this.adjacentDisordersDrug) {
       this.legendService.add_to_context('adjacentDisorders');
@@ -181,6 +194,7 @@ export class NetworkComponent implements OnInit {
         this.saveAddNodes(this.adjacentDrugDisorderList);
         this.nodeData.edges.add(this.adjacentDrugDisorderEdgesList);
         this.updateQueryItems();
+        this.loadingScreen.stateUpdate(false);
       });
     } else {
       if (!this.adjacentDisordersProtein)
@@ -190,6 +204,7 @@ export class NetworkComponent implements OnInit {
       this.adjacentDrugDisorderList = [];
       this.adjacentDrugDisorderEdgesList = [];
       this.updateQueryItems();
+      this.loadingScreen.stateUpdate(false);
     }
   }
 
@@ -218,6 +233,7 @@ export class NetworkComponent implements OnInit {
   }
 
   public updateAdjacentDrugs(bool: boolean) {
+    this.loadingScreen.stateUpdate(true);
     this.adjacentDrugs = bool;
     if (this.adjacentDrugs) {
       this.legendService.add_to_context("adjacentDrugs")
@@ -253,6 +269,7 @@ export class NetworkComponent implements OnInit {
         this.nodeData.nodes.add(this.adjacentDrugList);
         this.nodeData.edges.add(this.adjacentDrugEdgesList);
         this.updateQueryItems();
+        this.loadingScreen.stateUpdate(false);
       })
     } else {
       // remove adjacent drugs, make sure that also drug associated disorders are removed
@@ -268,6 +285,7 @@ export class NetworkComponent implements OnInit {
       this.adjacentDrugEdgesList = [];
 
       this.updateQueryItems();
+      this.loadingScreen.stateUpdate(false);
     }
   }
 
@@ -338,6 +356,7 @@ export class NetworkComponent implements OnInit {
   }
 
   public selectTissue(tissue: Tissue | null) {
+    this.loadingScreen.stateUpdate(true);
     this.expressionExpanded = false;
     if (!tissue) {
       // delete expression values
@@ -385,6 +404,7 @@ export class NetworkComponent implements OnInit {
         updatedNodes.push(node);
       }
       this.nodeData.nodes.update(updatedNodes);
+      this.loadingScreen.stateUpdate(true);
 
     } else {
       this.selectedTissue = tissue;
@@ -450,6 +470,7 @@ export class NetworkComponent implements OnInit {
             updatedNodes.push(node);
           })
           this.nodeData.nodes.update(updatedNodes);
+          this.loadingScreen.stateUpdate(false);
         }
       )
     }
@@ -465,7 +486,7 @@ export class NetworkComponent implements OnInit {
   }
 
   public getGradient(nodeId: string) {
-    return (this.gradientMap !== {}) && (this.gradientMap[nodeId]) ? this.gradientMap[nodeId] : 1.0;
+    return (Object.keys(this.gradientMap).length) && (this.gradientMap[nodeId]) ? this.gradientMap[nodeId] : 1.0;
   }
 
   /**
@@ -473,6 +494,7 @@ export class NetworkComponent implements OnInit {
    * @param bool
    */
   public updateHighlightSeeds(bool: boolean) {
+    this.loadingScreen.stateUpdate(true);
     this.highlightSeeds = bool;
     const updatedNodes = [];
     if (this.highlightSeeds)
@@ -488,6 +510,7 @@ export class NetworkComponent implements OnInit {
       if (!node) {
         continue;
       }
+      console.log(node)
       const pos = this.networkHandler.activeNetwork.networkInternal.getPositions([node.id]);
       node.x = pos[node.id].x;
       node.y = pos[node.id].y;
@@ -506,12 +529,12 @@ export class NetworkComponent implements OnInit {
       updatedNodes.push(node);
     }
     this.nodeData.nodes.update(updatedNodes);
-
-
+    this.loadingScreen.stateUpdate(false);
   }
 
   public toggleFullscreen() {
     this.fullscreen = !this.fullscreen;
+    this.loadingScreen.fullscreenUpdate(this.fullscreen);
   }
 
 }
