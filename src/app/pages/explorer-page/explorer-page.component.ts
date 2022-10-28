@@ -78,7 +78,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     try {
       this.networkJSON = JSON.stringify(typeof network === 'string' ? JSON5.parse(network) : network);
     } catch {
-      console.log('ERROR: Failed parsing input network')
+      console.log('ERROR: Failed parsing input network');
     }
     this.activateConfig();
   }
@@ -120,8 +120,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public selectedAnalysisToken: string | null = null;
 
   @Input() set taskId(token: string | null) {
-    if (token == null || token.length === 0)
-      this.selectedAnalysisToken = null
+    if (token == null || token.length === 0) {
+      this.selectedAnalysisToken = null;
+    }
     this.selectedAnalysisToken = token;
   }
 
@@ -158,7 +159,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
             selected,
             this.networkHandler.activeNetwork.getGradient(wrapper.id),
             this.networkHandler.activeNetwork.nodeRenderer
-          )
+          );
           nodeStyled.x = pos[wrapper.id].x;
           nodeStyled.y = pos[wrapper.id].y;
           updatedNodes.push(nodeStyled);
@@ -257,36 +258,41 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       let node_map = {};
       nodes.filter(n => n.drugstoneType === 'protein').forEach(node => {
         if (typeof node.drugstoneId === 'string') {
-          if (node_map[node.drugstoneId])
+          if (node_map[node.drugstoneId]) {
             node_map[node.drugstoneId].push(node.id);
-          else
+          } else {
             node_map[node.drugstoneId] = [node.id];
+          }
         } else {
           node.drugstoneId.forEach(n => {
-            if (node_map[n])
+            if (node_map[n]) {
               node_map[n].push(node.id);
-            else
+            } else {
               node_map[n] = [node.id];
-          })
+            }
+          });
         }
-      })
+      });
       const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.config.interactionProteinProtein, this.drugstoneConfig.config.licensedDatasets);
       edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.config, node_map)).flatMap(e => e));
     }
 
-    const edge_map = {}
+    const edge_map = {};
 
     edges = edges.filter(edge => {
-      if (edge_map[edge.to] && edge_map[edge.to].indexOf(edge.from) !== -1)
-        return false
-      if (edge_map[edge.from] && edge_map[edge.from].indexOf(edge.to) !== -1)
-        return false
-      if (!edge_map[edge.from])
-        edge_map[edge.from] = [edge.to]
-      else
-        edge_map[edge.from].push(edge.to)
-      return true
-    })
+      if (edge_map[edge.to] && edge_map[edge.to].indexOf(edge.from) !== -1) {
+        return false;
+      }
+      if (edge_map[edge.from] && edge_map[edge.from].indexOf(edge.to) !== -1) {
+        return false;
+      }
+      if (!edge_map[edge.from]) {
+        edge_map[edge.from] = [edge.to];
+      } else {
+        edge_map[edge.from].push(edge.to);
+      }
+      return true;
+    });
 
     // @ts-ignore
     if (!this.drugstoneConfig.selfReferences) {
@@ -375,10 +381,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       });
       if (network.edges != null)
         // @ts-ignore
+      {
         network.edges.forEach(edge => {
           edge.from = this.removeEnsemblVersion(edge.from);
           edge.to = this.removeEnsemblVersion(edge.to);
         });
+      }
     }
 
     // map data to nodes in backend
@@ -401,12 +409,13 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     // adjust edge labels accordingly and filter
     const edges = new Array();
-    if (network.edges != null)
+    if (network.edges != null) {
       network.edges.forEach(edge => {
         if (edge.from !== undefined && edge.to !== undefined) {
           edges.push(edge);
         }
       });
+    }
     // remove edges without endpoints
     network.edges = edges;
     this.networkHandler.activeNetwork.inputNetwork = network;
@@ -423,7 +432,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.networkHandler.activeNetwork.selectedWrapper = item;
     // add expression information if loaded
     if (this.networkHandler.activeNetwork.expressionMap && this.networkHandler.activeNetwork.selectedWrapper.id in this.networkHandler.activeNetwork.expressionMap) {
-      this.networkHandler.activeNetwork.selectedWrapper.expression = this.networkHandler.activeNetwork.expressionMap[this.networkHandler.activeNetwork.selectedWrapper.id]
+      this.networkHandler.activeNetwork.selectedWrapper.expression = this.networkHandler.activeNetwork.expressionMap[this.networkHandler.activeNetwork.selectedWrapper.id];
     }
     if (zoom) {
       this.zoomToNode(item.id);
@@ -490,7 +499,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
             border: group.color,
             background: group.color
           }
-        }
+        };
       }
       // if image is given, set node shape to image
       if (group.image) {
@@ -539,9 +548,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     // nodes in selection have drugstoneId
     const queryString = this.analysis.getSelection()
       .filter(wrapper => wrapper.data.drugstoneType === 'protein')
-      .map(wrapper => wrapper.data.uniprotAc)
+      .map(wrapper => wrapper.data.id)
       .join('%0A');
-    return 'http://biit.cs.ut.ee/gprofiler/gost?' +
+    return 'https://biit.cs.ut.ee/gprofiler/gost?' +
       'organism=hsapiens&' +
       `query=${queryString}&` +
       'ordered=false&' +
@@ -557,19 +566,44 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       'background=';
   }
 
+  openExternal(url) {
+    window.open(url, '_blank').focus();
+  }
+
+  async openDigest() {
+    let proteins = this.analysis.getSelection()
+      .filter(wrapper => wrapper.data.drugstoneType === 'protein')
+      .map(wrapper => wrapper.data.id);
+    let params = {
+      runs: 1000,
+      replace: 100,
+      distance: 'jaccard',
+      background_model: 'complete',
+      type: 'gene',
+      target: proteins,
+      target_id: this.drugstoneConfig.config.identifier
+    };
+
+    let resp = await this.netex.digest_request(params).catch(err => console.error(err));
+    let url = 'https://digest-validation.net/result?id=' + resp.task;
+    this.openExternal(url)
+  }
+
   //TODO change to access through network service
   @ViewChild('analysisPanel') analysisPanel;
 
   getNodes(): any {
-    if (this.selectedAnalysisToken && this.analysisPanel)
-      return this.analysisPanel.getResultNodes()
+    if (this.selectedAnalysisToken && this.analysisPanel) {
+      return this.analysisPanel.getResultNodes();
+    }
     return this.networkHandler.activeNetwork.inputNetwork.nodes;
   }
 
   getEdges(): any {
-    if (this.selectedAnalysisToken && this.analysisPanel)
-      return this.analysisPanel.getResultEdges()
-    return this.networkHandler.activeNetwork.inputNetwork.edges
+    if (this.selectedAnalysisToken && this.analysisPanel) {
+      return this.analysisPanel.getResultEdges();
+    }
+    return this.networkHandler.activeNetwork.inputNetwork.edges;
   }
 
 

@@ -43,6 +43,10 @@ export class NetexControllerService {
     return this.http.get<Tissue[]>(`${environment.backend}tissues/`);
   }
 
+  public digest_request(payload): Promise<any> {
+    return this.http.post('https://api.digest-validation.net/set', payload).toPromise();
+  }
+
   public tissueExpressionGenes(tissue: Tissue, nodes: Node[]): Observable<any> {
     /**
      * Returns the expression in the given tissue for given nodes and cancerNodes
@@ -58,9 +62,9 @@ export class NetexControllerService {
   public adjacentDisorders(nodes: Node[], nodeType: string, dataset: string, licenced: boolean): Observable<any> {
     const params = {dataset: dataset, licenced: licenced};
     if (nodeType === 'proteins') {
-      params["proteins"] = nodes.filter((node: Node) => node.drugstoneId && node.drugstoneType === 'protein').flatMap((node: Node) => node.drugstoneId).map(id => id.slice(1));
+      params['proteins'] = nodes.filter((node: Node) => node.drugstoneId && node.drugstoneType === 'protein').flatMap((node: Node) => node.drugstoneId).map(id => id.slice(1));
     } else if (nodeType === 'drugs') {
-      params["drugs"] = nodes.map((node: Node) => node.drugId && node.drugstoneType === 'drug' ? node.drugstoneId.slice(2) : undefined).filter(id => id != null);
+      params['drugs'] = nodes.map((node: Node) => node.drugId && node.drugstoneType === 'drug' ? node.drugstoneId.slice(2) : undefined).filter(id => id != null);
     }
     return this.http.post<any>(`${environment.backend}adjacent_disorders/`, params);
   }
