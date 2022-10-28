@@ -42,6 +42,7 @@ import { QuickDrugComponent } from './components/quick-drug/quick-drug.component
 import { ToastComponent } from './components/toast/toast.component';
 import { GroupSelectionComponent } from './pages/explorer-page/group-selection/group-selection.component';
 import { FaSolidIconComponent } from './components/fa-solid-icon/fa-solid-icon.component';
+import { FaIconsComponent } from './pages/explorer-page/fa-icons/fa-icons.component';
 
 
 @NgModule({
@@ -74,6 +75,7 @@ import { FaSolidIconComponent } from './components/fa-solid-icon/fa-solid-icon.c
     ToastComponent,
     GroupSelectionComponent,
     FaSolidIconComponent,
+    FaIconsComponent,
   ],
   imports: [
     BrowserModule,
