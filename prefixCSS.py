@@ -181,6 +181,8 @@ class ParserHTML:
         for root, dirs, files in os.walk(directory):
             for file in files:
                 if file.endswith(".component.html"):
+                    if ('fa-icons' in file):
+                        continue
                     path = os.path.join(root, file)
                     print('parsing', path)
                     html = self.parseHtml(path)
