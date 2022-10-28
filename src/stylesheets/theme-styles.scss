@@ -1,22 +1,6 @@
 @import "default-theme.css";
 
 // For testing theme override
-//:root {
-//  --drgstn-primary: #347eee;
-//  --drgstn-secondary: #2e42f2;
-//  --drgstn-success: #48C774;
-//  --drgstn-warning: #ffdd00;
-//  --drgstn-danger: #ff2744;
-//  --drgstn-background: #f8f9fa;
-//  --drgstn-panel: #e14242;
-//  --drgstn-info: #61c43d;
-//  --drgstn-text-primary: #151515;
-//  --drgstn-text-secondary: #eeeeee;
-//  --drgstn-border: rgba(0, 0, 0, 0.2);
-//  --drgstn-tooltip: rgba(74, 74, 74, 0.9);
-//  --drgstn-panel-secondary: #FFFFFF;
-//  --drgstn-height: 600px;
-//}
 
 #appWindow {
   background-color: var(--drgstn-background) !important;
@@ -35,7 +19,9 @@
     color: var(--drgstn-text-secondary) !important;
   }
 
-  .card-header-title, .card-content, .title {
+  .card-header-title,
+  .card-content,
+  .title {
     color: var(--drgstn-text-primary) !important;
   }
 
@@ -43,7 +29,10 @@
     background-color: var(--drgstn-panel) !important;
   }
 
-  .card-footer, .card-footer-item:not(:last-child), .tabs ul, .tabs a .tabs a:hover {
+  .card-footer,
+  .card-footer-item:not(:last-child),
+  .tabs ul,
+  .tabs a .tabs a:hover {
     border-color: var(--drgstn-border) !important;
   }
 
@@ -67,25 +56,31 @@
     border-bottom: none;
   }
 
-  .tabs li.is-active a, .tabs.is-toggle li.is-active a, .tabs a:hover {
+  .tabs li.is-active a,
+  .tabs.is-toggle li.is-active a,
+  .tabs a:hover {
     border-color: var(--drgstn-primary) !important;
     color: var(--drgstn-text-primary) !important;
     border-bottom: solid;
   }
 
-  .content h4, .content h6 {
+  .content h4,
+  .content h6 {
     color: var(--drgstn-text-primary) !important;
   }
 
-  .has-text-normal, .modal-card-title {
+  .has-text-normal,
+  .modal-card-title {
     color: var(--drgstn-text-primary) !important;
   }
 
-  .modal-card, .modal-card-body {
+  .modal-card,
+  .modal-card-body {
     background-color: var(--drgstn-panel) !important;
   }
 
-  .modal-card-head, .modal-card-foot {
+  .modal-card-head,
+  .modal-card-foot {
     border-color: var(--drgstn-border) !important;
     background-color: var(--drgstn-border) !important;
   }
@@ -99,7 +94,8 @@
     color: var(--drgstn-text-primary) !important;
   }
 
-  .modal-card-head, .modal-card-foot {
+  .modal-card-head,
+  .modal-card-foot {
     background-color: var(--drgstn-border) !important;
   }
 
@@ -108,24 +104,30 @@
       color: var(--drgstn-text-primary) !important;
     }
 
-    .input, .select select, .textarea, .box {
+    .input,
+    .select select,
+    .textarea,
+    .box {
       background-color: var(--drgstn-panel-secondary) !important;
       border-color: var(--drgstn-border) !important;
       color: var(--drgstn-text-primary) !important;
     }
   }
 
-  .input, .select select, .textarea, .box {
+  .input,
+  .select select,
+  .textarea,
+  .box {
     background-color: var(--drgstn-panel-secondary) !important;
     border-color: var(--drgstn-border) !important;
   }
-
 
   .fa-check {
     color: var(--drgstn-success) !important;
   }
 
-  app-task-list a, a.card-header-icon {
+  app-task-list a,
+  a.card-header-icon {
     color: var(--drgstn-secondary) !important;
   }
 
@@ -145,7 +147,8 @@
     color: var(--drgstn-primary) !important;
   }
 
-  a.dropdown-item:hover, button.dropdown-item:hover {
+  a.dropdown-item:hover,
+  button.dropdown-item:hover {
     background-color: var(--drgstn-panel-secondary) !important;
   }
 
@@ -153,18 +156,21 @@
     background-color: var(--drgstn-panel) !important;
   }
 
-  .button.is-primary.is-focused, .button.is-primary:focus {
+  .button.is-primary.is-focused,
+  .button.is-primary:focus {
     background-color: var(--drgstn-primary) !important;
     border-color: transparent !important;
     color: var(--drgstn-text-secondary) !important;
   }
 
-  .button.is-primary.button.is-hovered, .button.is-primary.button:hover {
+  .button.is-primary.button.is-hovered,
+  .button.is-primary.button:hover {
     color: var(--drgstn-text-secondary) !important;
     background-color: var(--drgstn-primary) !important;
   }
 
-  .button.is-primary.is-focused:not(:active), .button.is-primary:focus:not(:active) {
+  .button.is-primary.is-focused:not(:active),
+  .button.is-primary:focus:not(:active) {
     box-shadow: none !important;
   }
 
@@ -190,12 +196,18 @@
     color: var(--drgstn-text-primary) !important;
   }
 
-  .fa-search.investigational, .fa-pause {
+  .fa-search.investigational,
+  .fa-pause {
     color: var(--drgstn-warning) !important;
   }
 
-
-  .fa-exclamation-triangle, .fa-times, .help, .delete:after, .delete:before, .modal-close:after, .modal-close:before {
+  .fa-exclamation-triangle,
+  .fa-times,
+  .help,
+  .delete:after,
+  .delete:before,
+  .modal-close:after,
+  .modal-close:before {
     color: var(--drgstn-danger) !important;
   }
 
@@ -208,13 +220,14 @@
     color: var(--drgstn-text-primary) !important;
   }
 
-  .table thead td, .table thead th {
+  .table thead td,
+  .table thead th {
     color: var(--drgstn-text-primary) !important;
   }
 
-  .button.is-hovered, .button:hover, .button {
-    // background-color: var(--drgstn-panel) !important;
-    // color: var(--drgstn-text-primary) !important;
+  .button.is-hovered,
+  .button:hover,
+  .button {
     border-color: var(--drgstn-border) !important;
   }
 
@@ -223,15 +236,15 @@
   }
 
   a:hover {
-    color: var(--drgstn-text-primary)
+    color: var(--drgstn-text-primary);
   }
 
-  .ng-select-container, .ng-dropdown-panel.ng-select-bottom {
+  .ng-select-container,
+  .ng-dropdown-panel.ng-select-bottom {
     background-color: var(--drgstn-panel-secondary) !important;
     border-color: var(--drgstn-border) !important;
 
     .ng-value-container {
-
       .ng-placeholder {
         color: var(--drgstn-text-primary) !important;
       }
@@ -253,7 +266,8 @@
       border-top-color: var(--drgstn-text-primary) !important;
     }
 
-    .ng-clear-wrapper, .ng-select-container {
+    .ng-clear-wrapper,
+    .ng-select-container {
       color: var(--drgstn-text-primary) !important;
     }
   }
@@ -282,13 +296,17 @@
   ::-webkit-scrollbar-button:increment {
     width: 0px !important;
   }
-  
+
   .has-text-primary {
     color: var(--drgstn-text-primary) !important;
   }
 
   .has-text-secondary {
     color: var(--drgstn-text-secondary) !important;
+  }
+
+  .has-background-panel {
+    color: var(--drgstn-panel) !important;
   }
 
   .algorithm-button.is-active {
@@ -300,7 +318,6 @@
     }
   }
 }
-
 
 // scrolllbar styles
 network-expander {

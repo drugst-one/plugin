@@ -97,8 +97,8 @@
                 networkHandler.activeNetwork.expressionExpanded =
                   !networkHandler.activeNetwork.expressionExpanded
               "
-              class="button is-rounded is-primary"
-              [class.is-outlined]="!networkHandler.activeNetwork.selectedTissue"
+              class="button is-rounded"
+              [class.is-primary]="networkHandler.activeNetwork.selectedTissue"
               aria-haspopup="true"
               aria-controls="dropdown-menu"
               pTooltip="Tissue expression data is provided by the GTEx project."

@@ -10,7 +10,7 @@
         tooltipPosition="left"
         *ngIf="!fullscreen"
         (click)="toggleFullscreen()"
-        class="button is-primary is-rounded is-small is-outlined"
+        class="button is-rounded is-small is-outlined highlight-primary"
       >
         <app-fa-solid-icon icon="expand" classString="only-item-in-button"></app-fa-solid-icon>
     </button>
@@ -18,7 +18,7 @@
         title="close fullscreen"
         *ngIf="fullscreen"
         (click)="toggleFullscreen()"
-        class="button is-primary is-rounded is-small is-outlined"
+        class="button is-rounded is-small is-outlined highlight-primary"
       >
         <app-fa-solid-icon icon="compress" classString="only-item-in-button"></app-fa-solid-icon>
       </button>
