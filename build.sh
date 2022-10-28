@@ -1,1 +1,1 @@
-ng build --prod --output-path /var/www/html
+ng build --configuration production --output-path /var/www/html
