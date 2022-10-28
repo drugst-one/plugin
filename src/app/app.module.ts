@@ -43,6 +43,7 @@ import { ToastComponent } from './components/toast/toast.component';
 import { GroupSelectionComponent } from './pages/explorer-page/group-selection/group-selection.component';
 import { FaSolidIconComponent } from './components/fa-solid-icon/fa-solid-icon.component';
 import { FaIconsComponent } from './pages/explorer-page/fa-icons/fa-icons.component';
+import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
 
 
 @NgModule({
@@ -76,6 +77,7 @@ import { FaIconsComponent } from './pages/explorer-page/fa-icons/fa-icons.compon
     GroupSelectionComponent,
     FaSolidIconComponent,
     FaIconsComponent,
+    LoadingScreenComponent,
   ],
   imports: [
     BrowserModule,

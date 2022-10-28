@@ -36,6 +36,7 @@ import {downLoadFile, pieChartContextRenderer, removeDuplicateObjectsFromList} f
 import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
 import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
 import {LegendService} from 'src/app/services/legend-service/legend-service.service';
+import { LoadingScreenService } from 'src/app/services/loading-screen/loading-screen.service';
 
 declare var vis: any;
 
@@ -121,7 +122,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   public loading = false;
 
-  constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService) {
+  constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService, public loadingScreen: LoadingScreenService) {
   }
 
   async ngOnInit() {
@@ -137,6 +138,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   private async refresh() {
     if (this.token) {
+      this.loadingScreen.stateUpdate(true);
       this.task = await this.getTask(this.token);
       this.analysis.switchSelection(this.token);
 
@@ -345,6 +347,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             });
             this.emitVisibleItems(true);
           });
+        this.loadingScreen.stateUpdate(false);
+
         });
       }
     }
@@ -477,10 +481,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         console.log('Missing details for ' + nodeId);
       }
     }
-
-
     const uniqEdges = [];
-
     for (const edge of network.edges) {
       const e = mapCustomEdge(edge, this.myConfig);
       e.from = e.from[0] === 'p' && nodeIdMap[e.from] ? nodeIdMap[e.from] : e.from;
@@ -538,6 +539,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   public toggleFullscreen() {
     this.fullscreen = !this.fullscreen;
-    console.log('this.fullscreen', this.fullscreen)
+    this.loadingScreen.fullscreenUpdate(this.fullscreen)
   }
 }
