@@ -31,7 +31,7 @@
     <div class="card-image canvas-content" #networkWithLegend>
       <div *ngIf="drugstoneConfig.config.showLegend">
         <app-network-legend
-          [config]="drugstoneConfig.config"
+          [config]="drugstoneConfig.currentConfig()"
         ></app-network-legend>
       </div>
       <div class="center image1 fullheight" #network>

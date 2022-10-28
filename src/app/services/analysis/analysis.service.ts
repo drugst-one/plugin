@@ -271,14 +271,14 @@ export class AnalysisService {
     const target = ['connect', 'connectSelected'].includes(algorithm) ? 'drug-target' : 'drug';
     const parameters: any = {
       seeds: seeds,
-      config: this.drugstoneConfig.config,
+      config: this.drugstoneConfig.currentConfig(),
       input_network: this.networkHandler.activeNetwork.inputNetwork,
-      ppi_dataset: this.drugstoneConfig.config.interactionProteinProtein,
-      pdi_dataset: this.drugstoneConfig.config.interactionDrugProtein,
+      ppi_dataset: this.drugstoneConfig.currentConfig().interactionProteinProtein,
+      pdi_dataset: this.drugstoneConfig.currentConfig().interactionDrugProtein,
       target: target,
       num_trees: 5,
       tolerance: 10,
-      custom_edges: this.drugstoneConfig.config.customEdges.default,
+      custom_edges: this.drugstoneConfig.currentConfig().customEdges.default,
     };
 
 

@@ -100,7 +100,7 @@ export class NetworkComponent implements OnInit {
       const names = this.nodeData.nodes.map((node) => node.label);
       const nameToNetworkId = {};
       this.nodeData.nodes.map((node) => nameToNetworkId[node.label] = node.id);
-      edges = await this.omnipath.getInteractions(names, this.drugstoneConfig.config.identifier, nameToNetworkId);
+      edges = await this.omnipath.getInteractions(names, this.drugstoneConfig.currentConfig().identifier, nameToNetworkId);
     }
     this.nodeData.edges.update(edges);
   }
@@ -146,7 +146,7 @@ export class NetworkComponent implements OnInit {
         for (const disorder of response.disorders) {
           disorder.group = 'defaultDisorder';
           disorder.id = disorder.drugstoneId;
-          this.adjacentProteinDisorderList.push(mapCustomNode(disorder, this.drugstoneConfig.config))
+          this.adjacentProteinDisorderList.push(mapCustomNode(disorder, this.drugstoneConfig.currentConfig()))
         }
         this.saveAddNodes(this.adjacentProteinDisorderList);
         this.nodeData.edges.add(this.adjacentProteinDisorderEdgesList);
@@ -171,12 +171,12 @@ export class NetworkComponent implements OnInit {
       this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'drugs', this.drugstoneConfig.config.indicationDrugDisorder, this.drugstoneConfig.config.licensedDatasets).subscribe(response => {
         for (const interaction of response.edges) {
           const edge = {from: interaction.drug, to: interaction.disorder};
-          this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.config));
+          this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.currentConfig()));
         }
         for (const disorder of response.disorders) {
           disorder.group = 'defaultDisorder';
           disorder.id = disorder.drugstoneId;
-          this.adjacentDrugDisorderList.push(mapCustomNode(disorder, this.drugstoneConfig.config));
+          this.adjacentDrugDisorderList.push(mapCustomNode(disorder, this.drugstoneConfig.currentConfig()));
         }
         this.saveAddNodes(this.adjacentDrugDisorderList);
         this.nodeData.edges.add(this.adjacentDrugDisorderEdgesList);
@@ -226,7 +226,7 @@ export class NetworkComponent implements OnInit {
       this.netex.adjacentDrugs(this.drugstoneConfig.config.interactionDrugProtein, this.drugstoneConfig.config.licensedDatasets, this.nodeData.nodes.get()).subscribe(response => {
         const existingDrugIDs = this.nodeData.nodes.get().filter(n => n.drugstoneId && n.drugstoneType === 'drug').map(n => n.drugstoneId);
         for (const interaction of response.pdis) {
-          const edge = mapCustomEdge({from: interaction.protein, to: interaction.drug}, this.drugstoneConfig.config)
+          const edge = mapCustomEdge({from: interaction.protein, to: interaction.drug}, this.drugstoneConfig.currentConfig())
 
           if (proteinMap[edge.from]) {
             proteinMap[edge.from].forEach(from => {
@@ -247,7 +247,7 @@ export class NetworkComponent implements OnInit {
           drug.group = 'foundDrug';
           drug.id = getDrugNodeId(drug);
           if (existingDrugIDs.indexOf(drug.drugstoneId) === -1) {
-            this.adjacentDrugList.push(mapCustomNode(drug, this.drugstoneConfig.config))
+            this.adjacentDrugList.push(mapCustomNode(drug, this.drugstoneConfig.currentConfig()))
           }
         }
         this.nodeData.nodes.add(this.adjacentDrugList);
@@ -357,7 +357,7 @@ export class NetworkComponent implements OnInit {
           node,
           NetworkSettings.getNodeStyle(
             node,
-            this.drugstoneConfig.config,
+            this.drugstoneConfig.currentConfig(),
             node.isSeed && this.networkHandler.activeNetwork.highlightSeeds,
             false,
             1.0,
@@ -375,7 +375,7 @@ export class NetworkComponent implements OnInit {
           node,
           NetworkSettings.getNodeStyle(
             node,
-            this.drugstoneConfig.config,
+            this.drugstoneConfig.currentConfig(),
             node.isSeed && this.networkHandler.activeNetwork.highlightSeeds,
             this.analysis.inSelection(getWrapperFromNode(node)),
             1.0,
@@ -439,7 +439,7 @@ export class NetworkComponent implements OnInit {
             Object.assign(node,
               NetworkSettings.getNodeStyle(
                 node,
-                this.drugstoneConfig.config,
+                this.drugstoneConfig.currentConfig(),
                 node.isSeed && this.networkHandler.activeNetwork.highlightSeeds,
                 this.analysis.inSelection(wrapper),
                 gradient,
@@ -496,7 +496,7 @@ export class NetworkComponent implements OnInit {
         node,
         NetworkSettings.getNodeStyle(
           node,
-          this.drugstoneConfig.config,
+          this.drugstoneConfig.currentConfig(),
           isSeed,
           this.analysis.inSelection(getWrapperFromNode(node)),
           this.getGradient(node.id),

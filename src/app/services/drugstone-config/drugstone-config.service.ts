@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {defaultConfig, IConfig} from '../../config';
 
 @Injectable({
@@ -7,7 +7,22 @@ import {defaultConfig, IConfig} from '../../config';
 export class DrugstoneConfigService {
 
   public config: IConfig = JSON.parse(JSON.stringify(defaultConfig));
+  public analysisConfig: IConfig = undefined;
   public smallStyle = false;
 
-  constructor() { }
+  constructor() {
+  }
+
+  set_analysisConfig(config) {
+    this.analysisConfig = config;
+  }
+
+  remove_analysisConfig() {
+    this.analysisConfig = undefined;
+  }
+
+  currentConfig():IConfig {
+    return this.analysisConfig ? this.analysisConfig : this.config;
+  }
+
 }

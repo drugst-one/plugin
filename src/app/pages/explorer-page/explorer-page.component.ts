@@ -154,7 +154,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           node.y = pos[wrapper.id].y;
           const nodeStyled = NetworkSettings.getNodeStyle(
             node,
-            this.drugstoneConfig.config,
+            this.drugstoneConfig.currentConfig(),
             false,
             selected,
             this.networkHandler.activeNetwork.getGradient(wrapper.id),
@@ -192,7 +192,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     let configObj = typeof this._config === 'string' ? this._config.length === 0 ? {} : JSON5.parse(this._config) : this._config;
     const groupsObj = typeof this._groups === 'string' ? this._groups.length === 0 ? {} : JSON5.parse(this._groups) : this._groups;
     configObj = merge(configObj, groupsObj);
-    this.drugstoneConfig.config = merge(this.drugstoneConfig.config, configObj);
+    if (this.drugstoneConfig.analysisConfig) {
+      this.drugstoneConfig.set_analysisConfig(merge(this.drugstoneConfig.analysisConfig, configObj));
+    } else {
+      this.drugstoneConfig.config = merge(this.drugstoneConfig.config, configObj);
+    }
 
     // update Drugst.One according to the settings
     // check if config updates affect network
@@ -209,7 +213,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }
     }
     // trigger updates on config e.g. in legend
-    this.drugstoneConfig.config = {...this.drugstoneConfig.config};
+    if (this.drugstoneConfig.analysisConfig) {
+      this.drugstoneConfig.analysisConfig = {...this.drugstoneConfig.analysisConfig};
+    } else {
+      this.drugstoneConfig.config = {...this.drugstoneConfig.config};
+    }
     if (updateNetworkFlag && typeof this.networkJSON !== 'undefined') {
       // update network if network config has changed and networkJSON exists
       if (this.networkHandler.activeNetwork.networkInternal !== null) {
@@ -253,7 +261,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (this.networkHandler.activeNetwork.networkPositions) {
       this.proteinData.updateNodePositions(this.networkHandler.activeNetwork.networkPositions);
     }
-    let {nodes, edges} = this.proteinData.mapDataToNetworkInput(this.drugstoneConfig.config);
+    let {nodes, edges} = this.proteinData.mapDataToNetworkInput(this.drugstoneConfig.currentConfig());
     if (this.drugstoneConfig.config.autofillEdges && nodes.length) {
       let node_map = {};
       nodes.filter(n => n.drugstoneType === 'protein').forEach(node => {
@@ -274,7 +282,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         }
       });
       const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.config.interactionProteinProtein, this.drugstoneConfig.config.licensedDatasets);
-      edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.config, node_map)).flatMap(e => e));
+      edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.currentConfig(), node_map)).flatMap(e => e));
     }
 
     const edge_map = {};
@@ -303,7 +311,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.nodeData.edges = new vis.DataSet(edges);
     const container = this.networkHandler.activeNetwork.networkEl.nativeElement;
 
-    const options = NetworkSettings.getOptions('main', this.drugstoneConfig.config);
+    const options = NetworkSettings.getOptions('main', this.drugstoneConfig.currentConfig());
 
     this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
 
@@ -374,7 +382,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   private async getNetwork() {
 
     const network = JSON.parse(this.networkJSON);
-    if (this.drugstoneConfig.config.identifier === 'ensg') {
+    if (this.drugstoneConfig.currentConfig().identifier === 'ensg') {
       // @ts-ignore
       network.nodes.forEach(node => {
         node.id = this.removeEnsemblVersion(node.id);
@@ -391,7 +399,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     // map data to nodes in backend
     if (network.nodes != null && network.nodes.length) {
-      network.nodes = await this.netex.mapNodes(network.nodes, this.drugstoneConfig.config.identifier);
+      network.nodes = await this.netex.mapNodes(network.nodes, this.drugstoneConfig.currentConfig().identifier);
     }
 
     // if (this.drugstoneConfig.config.identifier === 'ensg') {
@@ -506,7 +514,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         group.shape = 'image';
       }
       // implement nodeShadow option, it needs to be set for all nodes or none
-      group.shadow = this.drugstoneConfig.config.nodeShadow;
+      group.shadow = this.drugstoneConfig.currentConfig().nodeShadow;
 
       // group must not have id, otherwise node id's would be overwritten which causes duplciates
       if (group.hasOwnProperty('id')) {
@@ -514,7 +522,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.drugstoneConfig.config[key] = nodeGroups;
+    this.drugstoneConfig.currentConfig()[key] = nodeGroups;
   }
 
   /**
@@ -539,9 +547,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }
 
       // implement edgeShadow option, it needs to be set for all nodes or none
-      value.shadow = this.drugstoneConfig.config.edgeShadow;
+      value.shadow = this.drugstoneConfig.currentConfig().edgeShadow;
     });
-    this.drugstoneConfig.config[key] = edgeGroups;
+    this.drugstoneConfig.currentConfig()[key] = edgeGroups;
   }
 
   gProfilerLink(): string {
@@ -581,12 +589,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       background_model: 'complete',
       type: 'gene',
       target: proteins,
-      target_id: this.drugstoneConfig.config.identifier
+      target_id: this.drugstoneConfig.currentConfig().identifier
     };
-
     let resp = await this.netex.digest_request(params).catch(err => console.error(err));
     let url = 'https://digest-validation.net/result?id=' + resp.task;
-    this.openExternal(url)
+    this.openExternal(url);
   }
 
   //TODO change to access through network service

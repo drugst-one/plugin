@@ -52,7 +52,7 @@
                 *ngIf="networkHandler.activeNetwork.selectedWrapper"
               >
                 <span>
-                  {{ drugstoneConfig.config.nodeGroups[networkHandler.activeNetwork.selectedWrapper.data[networkHandler.activeNetwork.selectedWrapper.data.group === 'selectedNode' ? '_group':'group']].groupName}}
+                  {{ drugstoneConfig.currentConfig().nodeGroups[networkHandler.activeNetwork.selectedWrapper.data[networkHandler.activeNetwork.selectedWrapper.data.group === 'selectedNode' ? '_group':'group']].groupName}}
                 </span>
               </ng-container>
             </p>
@@ -467,10 +467,10 @@
                 <tr>
                   <td>Label</td>
                   <td>Group</td>
-                  <td *ngIf="drugstoneConfig.config.identifier !== 'symbol'">
+                  <td *ngIf="drugstoneConfig.currentConfig().identifier !== 'symbol'">
                     Symbol
                   </td>
-                  <td *ngIf="drugstoneConfig.config.identifier !== 'uniprot'">
+                  <td *ngIf="drugstoneConfig.currentConfig().identifier !== 'uniprot'">
                     Uniprot
                   </td>
                   <td>Actions</td>
@@ -484,17 +484,17 @@
                   <td>
                     <p>
                       {{
-                      drugstoneConfig.config.nodeGroups[p.data['_group']][
+                      drugstoneConfig.currentConfig().nodeGroups[p.data['_group']][
                         "groupName"
                         ]
                       }}
                     </p>
                   </td>
-                  <td *ngIf="drugstoneConfig.config.identifier !== 'symbol'">
+                  <td *ngIf="drugstoneConfig.currentConfig().identifier !== 'symbol'">
                     <p>{{ p.data.symbol }}</p>
                   </td>
                   <td
-                    *ngIf="drugstoneConfig.config.identifier !== 'uniprot'"
+                    *ngIf="drugstoneConfig.currentConfig().identifier !== 'uniprot'"
                     class="uniprot"
                     title="{{ p.data.uniprotAc }}"
                   >
@@ -539,7 +539,7 @@
                 <span class="is-fullwidth">
                   <app-group-selection
                     (selectGroupEmitter)="analysis.addGroupToSelection($event)"
-                    [nodeGroups]="drugstoneConfig.config.nodeGroups"
+                    [nodeGroups]="drugstoneConfig.currentConfig().nodeGroups"
                   ></app-group-selection>
                 </span>
               </a>
@@ -586,7 +586,6 @@
               networkHandler.activeNetwork.selectedWrapper = $event
             "
             (visibleItems)="analysisWindowChanged($event)"
-            [config]="drugstoneConfig.config"
           ></app-analysis-panel>
         </div>
         <!-- explorer network -->

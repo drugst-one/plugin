@@ -132,11 +132,11 @@
       </a>
     </p>
     <p
-      *ngIf="drugstoneConfig.config.nodeGroups[networkHandler.activeNetwork.selectedWrapper.data[networkHandler.activeNetwork.selectedWrapper.data.group === 'selectedNode' ? '_group':'group']].groupName"
+      *ngIf="drugstoneConfig.currentConfig().nodeGroups[networkHandler.activeNetwork.selectedWrapper.data[networkHandler.activeNetwork.selectedWrapper.data.group === 'selectedNode' ? '_group':'group']].groupName"
       [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
     >
       <b><span>Group:</span></b>
-      <span class="is-capitalized"> {{drugstoneConfig.config.nodeGroups[networkHandler.activeNetwork.selectedWrapper.data[networkHandler.activeNetwork.selectedWrapper.data.group === 'selectedNode' ? '_group':'group']].groupName }}</span>
+      <span class="is-capitalized"> {{drugstoneConfig.currentConfig().nodeGroups[networkHandler.activeNetwork.selectedWrapper.data[networkHandler.activeNetwork.selectedWrapper.data.group === 'selectedNode' ? '_group':'group']].groupName }}</span>
     </p>
   </div>
 

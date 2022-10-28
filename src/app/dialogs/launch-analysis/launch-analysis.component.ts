@@ -113,7 +113,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     const seedsFiltered = seeds.filter(el => el != null);
     const parameters: any = {
       seeds: seedsFiltered,
-      config: this.drugstoneConfig.config,
+      config: this.drugstoneConfig.currentConfig(),
       input_network: this.networkHandler.activeNetwork.inputNetwork
     };
     parameters.ppi_dataset = this.drugstoneConfig.config.interactionProteinProtein;

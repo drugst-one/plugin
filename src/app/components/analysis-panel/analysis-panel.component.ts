@@ -59,15 +59,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
   @Input() token: string | null = null;
 
-  @Input()
-  public set config(config: IConfig | undefined) {
-    if (typeof config === 'undefined') {
-      return;
-    }
-    for (const key of Object.keys(config)) {
-      this.myConfig[key] = config[key];
-    }
-  }
 
   @Output() tokenChange = new EventEmitter<string | null>();
   @Output() showDetailsChange = new EventEmitter<Wrapper>();
@@ -75,7 +66,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   @Output() visibleItems = new EventEmitter<[any[], [Node[], Tissue], NodeInteraction[]]>();
   public task: Task | null = null;
   public result: any = null;
-  public myConfig: IConfig = JSON.parse(JSON.stringify(defaultConfig));
 
   public fullscreen = false;
 
@@ -173,6 +163,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       if (this.task && this.task.info.done) {
         this.loading = true;
         this.netex.getTaskResult(this.token).then(result => {
+          this.drugstoneConfig.set_analysisConfig(result.parameters.config);
           this.result = result;
           if (this.result.parameters.target === 'drug') {
             this.legendService.add_to_context('drug');
@@ -197,9 +188,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             this.nodeData.edges = new vis.DataSet(edges);
             const container = this.networkHandler.activeNetwork.networkEl.nativeElement;
             const isBig = nodes.length > 100 || edges.length > 100;
-            const options = NetworkSettings.getOptions(isBig ? 'analysis-big' : 'analysis', this.myConfig);
+            const options = NetworkSettings.getOptions(isBig ? 'analysis-big' : 'analysis', this.drugstoneConfig.currentConfig());
             // @ts-ignore
-            options.groups = this.drugstoneConfig.config.nodeGroups;
+            options.groups = this.drugstoneConfig.currentConfig().nodeGroups;
             // @ts-ignore
             for (const g of Object.values(options.groups)) {
               // @ts-ignore
@@ -290,7 +281,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
                   const isSeed = this.networkHandler.activeNetwork.highlightSeeds ? this.networkHandler.activeNetwork.seedMap[node.id] : false;
                   const nodeStyled = NetworkSettings.getNodeStyle(
                     node,
-                    this.myConfig,
+                    this.drugstoneConfig.currentConfig(),
                     isSeed,
                     selected,
                     this.networkHandler.activeNetwork.getGradient(item.id),
@@ -323,7 +314,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
                   }
                   const nodeStyled = NetworkSettings.getNodeStyle(
                     node,
-                    this.myConfig,
+                    this.drugstoneConfig.currentConfig(),
                     isSeed,
                     selected,
                     this.networkHandler.activeNetwork.getGradient(node.id),
@@ -366,6 +357,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   close() {
     this.networkHandler.activeNetwork.gradientMap = {};
+    this.drugstoneConfig.remove_analysisConfig();
     this.expressionExpanded = false;
     this.expressionMap = undefined;
     this.networkHandler.activeNetwork.seedMap = {};
@@ -423,10 +415,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
    * @returns
    */
   public async createNetwork(result: any): Promise<{ edges: any[]; nodes: any[]; }> {
-    const config = result.parameters.config;
-    this.myConfig = config;
-
-    const identifier = this.myConfig.identifier;
+    const identifier = this.drugstoneConfig.currentConfig().identifier;
 
     // add drugGroup and foundNodesGroup for added nodes
     // these groups can be overwritten by the user
@@ -472,7 +461,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         }
         // further analysis and the button function can be used to highlight seeds
         // option to use scores[node] as gradient, but sccores are very small
-        nodes.push(NetworkSettings.getNodeStyle(nodeDetails as Node, config, false, false, 1, this.networkHandler.activeNetwork.nodeRenderer));
+        nodes.push(NetworkSettings.getNodeStyle(nodeDetails as Node, this.drugstoneConfig.currentConfig(), false, false, 1, this.networkHandler.activeNetwork.nodeRenderer));
       } else {
         console.log('Missing details for ' + nodeId);
       }
@@ -482,7 +471,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     const uniqEdges = [];
 
     for (const edge of network.edges) {
-      const e = mapCustomEdge(edge, this.myConfig);
+      const e = mapCustomEdge(edge, this.drugstoneConfig.currentConfig());
       e.from = e.from[0] === 'p' && nodeIdMap[e.from] ? nodeIdMap[e.from] : e.from;
       e.to = e.to[0] === 'p' && nodeIdMap[e.to] ? nodeIdMap[e.to] : e.to;
       const hash = e.from + '_' + e.to;
@@ -492,7 +481,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       }
     }
     // remove self-edges/loops
-    if (!config.selfReferences) {
+    if (!this.drugstoneConfig.currentConfig().selfReferences) {
       edges = edges.filter(el => el.from !== el.to);
     }
     return {
