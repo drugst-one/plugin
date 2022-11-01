@@ -404,7 +404,7 @@ export class NetworkComponent implements OnInit {
         updatedNodes.push(node);
       }
       this.nodeData.nodes.update(updatedNodes);
-      this.loadingScreen.stateUpdate(true);
+      this.loadingScreen.stateUpdate(false);
 
     } else {
       this.selectedTissue = tissue;
