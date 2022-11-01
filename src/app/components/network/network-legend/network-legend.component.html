@@ -3,7 +3,7 @@
   [class.right]="config.legendPos === 'right'"
   [ngClass]="{ 'legend-small': drugstoneConfig.smallStyle }"
 >
-  <div class="legend-background"></div>
+  <div class="legend-background" *ngIf="!config.legendUrl.length"></div>
   <!-- default legend in html -->
   <table *ngIf="!config.legendUrl.length" class="legend-table">
     <ng-container *ngIf="config.showLegendNodes">
