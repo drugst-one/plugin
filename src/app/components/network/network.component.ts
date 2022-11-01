@@ -84,14 +84,14 @@ export class NetworkComponent implements OnInit {
   public loading = false
 
   constructor(
-    public configService: DrugstoneConfigService, 
-    public legendService: LegendService, 
-    public networkHandler: NetworkHandlerService, 
-    public analysis: AnalysisService, 
-    public drugstoneConfig: DrugstoneConfigService, 
-    public netex: NetexControllerService, 
-    public omnipath: OmnipathControllerService, 
-    public loadingScreen: LoadingScreenService) 
+    public configService: DrugstoneConfigService,
+    public legendService: LegendService,
+    public networkHandler: NetworkHandlerService,
+    public analysis: AnalysisService,
+    public drugstoneConfig: DrugstoneConfigService,
+    public netex: NetexControllerService,
+    public omnipath: OmnipathControllerService,
+    public loadingScreen: LoadingScreenService)
     {}
 
   ngOnInit(): void {
