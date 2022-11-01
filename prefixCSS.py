@@ -16,6 +16,7 @@ def find_nth(haystack, needle, n):
 class ParserHTML:
     PREFIX = 'drugstone-plugin-'
     CLASSSEARCHPATTERN = 'class="'
+    ICONCLASSSEARCHPATTERN = 'classString="'
     IDSEARCHPATTERN = 'id="'
     NGCLASSSEARCHPATTERN = '[ngClass]="'
     PARSEDFILENEDING = '.parsed'
@@ -144,7 +145,13 @@ class ParserHTML:
                     classStart += len(self.CLASSSEARCHPATTERN)
                     classIndices, classEnd = self.findClassStrings(line, classStart)
                     line = self.updateClassStrings(line, classIndices, classStart, classEnd, iTagOpen)
-                    
+
+                iconClassStart = line.find(self.ICONCLASSSEARCHPATTERN)
+                if iconClassStart > -1:
+                    iconClassStart += len(self.ICONCLASSSEARCHPATTERN)
+                    classIndices, classEnd = self.findClassStrings(line, iconClassStart)
+                    line = self.updateClassStrings(line, classIndices, iconClassStart, classEnd, iTagOpen)
+
                 ngClassStart = line.find(self.NGCLASSSEARCHPATTERN)
                 if ngClassStart > -1:
                     ngClassStart += len(self.NGCLASSSEARCHPATTERN)
