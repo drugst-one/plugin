@@ -44,7 +44,7 @@ export class NetworkHandlerService {
       this.activeNetwork.adjacentDisordersProtein = true;
       await this.activeNetwork.updateAdjacentProteinDisorders(true);
     }
-    if (this.drugstoneConfig.config.activateNetworkMenuButtonAdjacentDisorderDrugs) {
+    if (this.drugstoneConfig.config.activateNetworkMenuButtonAdjacentDisordersDrugs) {
       this.activeNetwork.adjacentDisordersDrug = true;
       await this.activeNetwork.updateAdjacentDrugDisorders(true);
     }
