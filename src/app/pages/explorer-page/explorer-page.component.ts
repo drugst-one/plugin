@@ -228,6 +228,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         if (this.drugstoneConfig.config.physicsOn) {
           this.networkHandler.activeNetwork.updatePhysicsEnabled(true);
         }
+        this.networkHandler.updateAdjacentNodes();
       });
     }
   }

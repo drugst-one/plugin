@@ -60,11 +60,14 @@ export interface IConfig {
   showNetworkMenuButtonScreenshot: boolean;
   showNetworkMenuButtonExportGraphml: boolean;
   showNetworkMenuButtonAdjacentDrugs: boolean;
+  activateNetworkMenuButtonAdjacentDrugs: boolean;
   showNetworkMenuButtonCenter: boolean;
   showConnectGenes: boolean;
   networkMenuButtonAdjacentDrugsLabel: string;
   showNetworkMenuButtonAdjacentDisordersProteins: boolean;
+  activateNetworkMenuButtonAdjacentDisorders: boolean;
   networkMenuButtonAdjacentDisordersProteinsLabel: string;
+  activateNetworkMenuButtonAdjacentDisorderDrugs: boolean;
   showNetworkMenuButtonAdjacentDisordersDrugs: boolean;
   networkMenuButtonAdjacentDisordersDrugsLabel: string;
   showNetworkMenuButtonAnimation: boolean;
@@ -155,10 +158,12 @@ export const defaultConfig: IConfig = {
   showNetworkMenuButtonScreenshot: true,
   showNetworkMenuButtonExportGraphml: true,
   showNetworkMenuButtonAdjacentDrugs: true,
+  activateNetworkMenuButtonAdjacentDrugs: false,
   showNetworkMenuButtonCenter: true,
   showNetworkMenuButtonAnimation: true,
-
+  activateNetworkMenuButtonAdjacentDisorders: false,
   showNetworkMenuButtonAdjacentDisordersProteins: true,
+  activateNetworkMenuButtonAdjacentDisorderDrugs: false,
   showNetworkMenuButtonAdjacentDisordersDrugs: true,
   showConnectGenes: true,
   networkMenuButtonAdjacentDrugsLabel: 'Drugs',

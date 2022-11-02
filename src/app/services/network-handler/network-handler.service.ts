@@ -6,8 +6,8 @@ import {AnalysisService} from '../analysis/analysis.service';
 import {DrugstoneConfigService} from '../drugstone-config/drugstone-config.service';
 import {NetexControllerService} from '../netex-controller/netex-controller.service';
 import {OmnipathControllerService} from '../omnipath-controller/omnipath-controller.service';
-import {LegendService} from "../legend-service/legend-service.service";
-import { LoadingScreenService } from '../loading-screen/loading-screen.service';
+import {LegendService} from '../legend-service/legend-service.service';
+import {LoadingScreenService} from '../loading-screen/loading-screen.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,5 +33,20 @@ export class NetworkHandlerService {
 
   get getChange$() {
     return this.change.asObservable();
+  }
+
+  async updateAdjacentNodes() {
+    if (this.drugstoneConfig.config.activateNetworkMenuButtonAdjacentDrugs) {
+      this.activeNetwork.adjacentDrugs = true;
+      await this.activeNetwork.updateAdjacentDrugs(true);
+    }
+    if (this.drugstoneConfig.config.activateNetworkMenuButtonAdjacentDisorders) {
+      this.activeNetwork.adjacentDisordersProtein = true;
+      await this.activeNetwork.updateAdjacentProteinDisorders(true);
+    }
+    if (this.drugstoneConfig.config.activateNetworkMenuButtonAdjacentDisorderDrugs) {
+      this.activeNetwork.adjacentDisordersDrug = true;
+      await this.activeNetwork.updateAdjacentDrugDisorders(true);
+    }
   }
 }
