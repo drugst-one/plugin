@@ -152,12 +152,13 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           const pos = this.networkHandler.activeNetwork.networkInternal.getPositions([wrapper.id]);
           node.x = pos[wrapper.id].x;
           node.y = pos[wrapper.id].y;
+
           const nodeStyled = NetworkSettings.getNodeStyle(
             node,
             this.drugstoneConfig.currentConfig(),
             false,
             selected,
-            this.networkHandler.activeNetwork.getGradient(wrapper.id),
+            this.networkHandler.activeNetwork.getGradient(node.id),
             this.networkHandler.activeNetwork.nodeRenderer
           );
           nodeStyled.x = pos[wrapper.id].x;

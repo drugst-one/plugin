@@ -6,43 +6,60 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script type="text/javascript" src="http://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
-<!--  <link rel="stylesheet" type="text/css" href="./stylesheets/default-theme.css">-->
+  <!--  <link rel="stylesheet" type="text/css" href="./stylesheets/default-theme.css">-->
 
 </head>
 <body>
 
-<input type="checkbox" onclick=changeConfigStr('{"showOverview":'+this.checked+'}') checked /> Show overview<br>
-<input type="checkbox" onclick=changeConfigStr('{"showQuery":'+this.checked+'}') /> Show query<br>
-<input type="checkbox" onclick=changeConfigStr('{"showItemSelector":'+this.checked+'}') checked /> Show ItemSelector<br>
-<input type="checkbox" onclick=changeConfigStr('{"showConnectGenes":'+this.checked+'}') /> Show Connect Genes<br>
-<input type="checkbox" onclick=changeConfigStr('{"showSimpleAnalysis":'+this.checked+'}') checked /> Show Simple Analysis<br>
-<input type="checkbox" onclick=changeConfigStr('{"showAdvAnalysis":'+this.checked+'}') checked /> Show Advanced Analysis<br>
-<input type="checkbox" onclick=changeConfigStr('{"showTasks":'+this.checked+'}') checked /> Show Tasks<br>
-<input type="checkbox" onclick=changeConfigStr('{"showSelection":'+this.checked+'}') checked /> Show Selection<br>
-<input type="checkbox" onclick=changeConfigStr('{"showNetworkMenu":'+this.checked+'}') checked /> Show Footer<br>
-<input type="checkbox" onclick=changeConfigStr('{"showLegend":'+this.checked+'}') checked /> Show Legend<br>
-<input type="checkbox" onclick=changeConfigStr('{"showNetworkMenuButtonScreenshot":'+this.checked+'}') checked /> Show Screenshot button<br>
-<input type="checkbox" onclick=changeConfigStr('{"showNetworkMenuButtonExportGraphml":'+this.checked+'}') checked /> Show Export As Graphml Button<br>
+<input type="checkbox" onclick=changeConfigStr('{"showOverview":'+this.checked+'}') checked/> Show overview<br>
+<input type="checkbox" onclick=changeConfigStr('{"showQuery":'+this.checked+'}')/> Show query<br>
+<input type="checkbox" onclick=changeConfigStr('{"showItemSelector":'+this.checked+'}') checked/> Show ItemSelector<br>
+<input type="checkbox" onclick=changeConfigStr('{"showConnectGenes":'+this.checked+'}')/> Show Connect Genes<br>
+<input type="checkbox" onclick=changeConfigStr('{"showSimpleAnalysis":'+this.checked+'}') checked/> Show Simple Analysis<br>
+<input type="checkbox" onclick=changeConfigStr('{"showAdvAnalysis":'+this.checked+'}') checked/> Show Advanced
+Analysis<br>
+<input type="checkbox" onclick=changeConfigStr('{"showTasks":'+this.checked+'}') checked/> Show Tasks<br>
+<input type="checkbox" onclick=changeConfigStr('{"showSelection":'+this.checked+'}') checked/> Show Selection<br>
+<input type="checkbox" onclick=changeConfigStr('{"showNetworkMenu":'+this.checked+'}') checked/> Show Footer<br>
+<input type="checkbox" onclick=changeConfigStr('{"showLegend":'+this.checked+'}') checked/> Show Legend<br>
+<input type="checkbox" onclick=changeConfigStr('{"showNetworkMenuButtonScreenshot":'+this.checked+'}') checked/> Show
+Screenshot button<br>
+<input type="checkbox" onclick=changeConfigStr('{"showNetworkMenuButtonExportGraphml":'+this.checked+'}') checked/> Show
+Export As Graphml Button<br>
 
 
-<input id="new_color" type="text" /> <button onclick=changeColor(document.getElementById("new_color").value) >Set Color </button> <br>
-<button onclick=changeConfigStr('{"legendPos":"left"}') > Legend to Left </button> <br>
-<button onclick=changeConfigStr('{"legendPos":"right"}') > Legend to Right </button> <br>
-<button onclick=changeConfigStr('{"interactions":"omnipath"}') >Get Omnipath Interactions </button> <br>
-<button onclick=changeConfigStr('{"showSidebar":false}') > Hide sidebar</button><br>
-<button onclick=changeConfigStr('{"showSidebar":"left"}') > Mode sidebar to left</button><br>
-<button onclick=changeConfigStr('{"showSidebar":"right"}') > Move sidebr to right</button><br>
-<button onclick=changeConfigStr('{"showNetworkMenu":false}') > Hide networkMenu</button><br>
-<button onclick=changeConfigStr('{"showNetworkMenu":"left"}') > Mode networkMenu to left</button><br>
-<button onclick=changeConfigStr('{"showNetworkMenu":"right"}') > Move networkMenu to right</button><br>
-<button onclick="initTaskEventListener()">Init Task-Eventlistener</button> <br>
+<input id="new_color" type="text"/>
+<button onclick=changeColor(document.getElementById("new_color").value)>Set Color</button>
+<br>
+<button onclick=changeConfigStr('{"legendPos":"left"}')> Legend to Left</button>
+<br>
+<button onclick=changeConfigStr('{"legendPos":"right"}')> Legend to Right</button>
+<br>
+<button onclick=changeConfigStr('{"interactions":"omnipath"}')>Get Omnipath Interactions</button>
+<br>
+<button onclick=changeConfigStr('{"showSidebar":false}')> Hide sidebar</button>
+<br>
+<button onclick=changeConfigStr('{"showSidebar":"left"}')> Mode sidebar to left</button>
+<br>
+<button onclick=changeConfigStr('{"showSidebar":"right"}')> Move sidebr to right</button>
+<br>
+<button onclick=changeConfigStr('{"showNetworkMenu":false}')> Hide networkMenu</button>
+<br>
+<button onclick=changeConfigStr('{"showNetworkMenu":"left"}')> Mode networkMenu to left</button>
+<br>
+<button onclick=changeConfigStr('{"showNetworkMenu":"right"}')> Move networkMenu to right</button>
+<br>
+<button onclick="initTaskEventListener()">Init Task-Eventlistener</button>
+<br>
 
-<input id="taskID" type="text" /> <button onclick=loadTaskID(document.getElementById("taskID").value) class="button is-primary" >Load TaskID</button> <br>
+<input id="taskID" type="text"/>
+<button onclick=loadTaskID(document.getElementById("taskID").value) class="button is-primary">Load TaskID</button>
+<br>
 
 <br>
 <br>
 <b>Datasets</b>
-<input type="checkbox" onclick=changeLicenced(this.checked) /> Use licenced datasets<br>
+<input type="checkbox" onclick=changeLicenced(this.checked)/> Use licenced datasets<br>
 <div>
   <i>Protein-Protein Interactions</i>
   <select name="Protein-Protein Interactions" onchange="applyDataset()" id="ppi-dataset">
@@ -75,7 +92,7 @@
   </select>
 </div>
 <div>
-        <i>Protein-Disorder Associations</i>
+  <i>Protein-Disorder Associations</i>
   <select name="Protein-Disorder Associations" onchange="applyDataset()" id="pdis-dataset">
     <option value="NeDRex">NeDRex</option>
     <option value="DisGeNET">DisGeNET</option>
@@ -86,8 +103,6 @@
 <!--<input type="checkbox" onclick=changeConfigStr('{"showSimpleAnalysis":'+this.checked+'}') checked /> Show SimpleAnalysis<br>-->
 
 
-
-
 <br>
 
 
@@ -96,27 +111,27 @@
 <div style="max-width: 80vw; width: 1276px; height: 500px">
 
   <drugst-one id="tatata"
-  groups= '{ "nodeGroups" : { "selectedNode": { "borderWidth": 3,"borderWidthSelected": 4,"color": { "border": "#ffffff","highlight": {"border": "#ffffff"}},"font": { "color": "#F8981","size": 14 }},"Protein":{"shape":"circle","groupName":"Protein","type":"Protein","color":"#172b4d","font":{"color":"#ffffff"}}}}'
-  config='{ "activateNetworkMenuButtonAdjacentDrugs": true,"activateNetworkMenuButtonAdjacentDisorders": true, "activateNetworkMenuButtonAdjacentDisordersDrugs": true, "identifier":"symbol","title":"ROBUST output network", "taskDrugName": "Drug Search", "showLegendNodes": true, "showLegendEdges": true, "showSidebar": "left", "showOverview": true, "legendPos": "left", "legendClass": "legend", "showQuery": true, "showItemSelector": true,"showSimpleAnalysis": false,"showAdvAnalysis": true,"showSelection": true,"showTasks": true,"showNetworkMenu": "right","showLegend": true,"showNetworkMenuButtonExpression": true, "showNetworkMenuButtonScreenshot": true,"showNetworkMenuButtonExportGraphml": true,"showNetworkMenuButtonAdjacentDrugs": true,"showNetworkMenuButtonCenter": true,"showConnectGenes": false,"networkMenuButtonAdjacentDrugsLabel": "Drugs","showNetworkMenuButtonAdjacentDisordersProteins": true,"networkMenuButtonAdjacentDisordersProteinsLabel": "Disorders (protein)","showNetworkMenuButtonAdjacentDisordersDrugs": true,"networkMenuButtonAdjacentDisordersDrugsLabel": "Disorders (drug)","showNetworkMenuButtonAnimation": true,"networkMenuButtonAnimationLabel": "Animation", "autofillEdges": true, "physicsOn": false,"useNedrexLicenced": true,"selfReferences": false, "interactionDrugProtein": "NeDRex", "indicationDrugDisorder": "NeDRex","nodeShadow": true,"edgeShadow": true, "algorithms": {"drug": ["trustrank", "closeness", "degree", "proximity"], "drug-target": ["trustrank", "multisteiner", "keypathwayminer", "degree", "closeness", "betweenness"]}, "associatedProteinDisorder": "NeDRex", "expandNetworkMenu": true}'
-  network='{"nodes": [{"id":"PSEN1","group":"Protein","label":"PSEN1"},{"id":"PSEN2","group":"Protein","label":"PSEN2"},{"id":"APP","group":"Protein","label":"APP"},{"id":"APOE","group":"Protein","label":"APOE"},{"id":"RNF32","group":"Protein","label":"RNF32"},{"id":"STX5","group":"Protein","label":"STX5"},{"id":"TRAF3IP1","group":"Protein","label":"TRAF3IP1"},{"id":"PHB1","group":"Protein","label":"PHB1"},{"id":"MAPT","group":"Protein","label":"MAPT"},{"id":"ESR1","group":"Protein","label":"ESR1"},{"id":"IRF3","group":"Protein","label":"IRF3"},{"id":"DYNC1H1","group":"Protein","label":"DYNC1H1"},{"id":"CUL3","group":"Protein","label":"CUL3"},{"id":"HMGB1","group":"Protein","label":"HMGB1"},{"id":"DNAJC7","group":"Protein","label":"DNAJC7"},{"id":"NEFM","group":"Protein","label":"NEFM"},{"id":"DISC1","group":"Protein","label":"DISC1"},{"id":"PPP5C","group":"Protein","label":"PPP5C"},{"id":"CTNNB1","group":"Protein","label":"CTNNB1"},{"id":"KRAS","group":"Protein","label":"KRAS"}]}'
+              groups='{ "nodeGroups" : { "selectedNode": { "borderWidth": 3,"borderWidthSelected": 4,"color": { "border": "#ff1818","highlight": {"border": "#ff1818"}},"font": { "color": "#F8981","size": 14 }},"Protein":{"shape":"circle","groupName":"Protein","type":"Protein","color":"#172b4d","font":{"color":"#ffffff"}}}}'
+              config='{ "identifier":"symbol","title":"ROBUST output network", "taskDrugName": "Drug Search", "showLegendNodes": true, "showLegendEdges": true, "showSidebar": "left", "showOverview": true, "legendPos": "left", "legendClass": "legend", "showQuery": true, "showItemSelector": true,"showSimpleAnalysis": false,"showAdvAnalysis": true,"showSelection": true,"showTasks": true,"showNetworkMenu": "right","showLegend": true,"showNetworkMenuButtonExpression": true, "showNetworkMenuButtonScreenshot": true,"showNetworkMenuButtonExportGraphml": true,"showNetworkMenuButtonAdjacentDrugs": true,"showNetworkMenuButtonCenter": true,"showConnectGenes": false,"networkMenuButtonAdjacentDrugsLabel": "Drugs","showNetworkMenuButtonAdjacentDisordersProteins": true,"networkMenuButtonAdjacentDisordersProteinsLabel": "Disorders (protein)","showNetworkMenuButtonAdjacentDisordersDrugs": true,"networkMenuButtonAdjacentDisordersDrugsLabel": "Disorders (drug)","showNetworkMenuButtonAnimation": true,"networkMenuButtonAnimationLabel": "Animation", "autofillEdges": true, "physicsOn": false,"useNedrexLicenced": true,"selfReferences": false, "interactionDrugProtein": "NeDRex", "indicationDrugDisorder": "NeDRex","nodeShadow": true,"edgeShadow": true, "algorithms": {"drug": ["trustrank", "closeness", "degree", "proximity"], "drug-target": ["trustrank", "multisteiner", "keypathwayminer", "degree", "closeness", "betweenness"]}, "associatedProteinDisorder": "NeDRex", "expandNetworkMenu": true}'
+              network='{"nodes": [{"id":"PSEN1","group":"Protein","label":"PSEN1"},{"id":"PSEN2","group":"Protein","label":"PSEN2"},{"id":"APP","group":"Protein","label":"APP"},{"id":"APOE","group":"Protein","label":"APOE"},{"id":"RNF32","group":"Protein","label":"RNF32"},{"id":"STX5","group":"Protein","label":"STX5"},{"id":"TRAF3IP1","group":"Protein","label":"TRAF3IP1"},{"id":"PHB1","group":"Protein","label":"PHB1"},{"id":"MAPT","group":"Protein","label":"MAPT"},{"id":"ESR1","group":"Protein","label":"ESR1"},{"id":"IRF3","group":"Protein","label":"IRF3"},{"id":"DYNC1H1","group":"Protein","label":"DYNC1H1"},{"id":"CUL3","group":"Protein","label":"CUL3"},{"id":"HMGB1","group":"Protein","label":"HMGB1"},{"id":"DNAJC7","group":"Protein","label":"DNAJC7"},{"id":"NEFM","group":"Protein","label":"NEFM"},{"id":"DISC1","group":"Protein","label":"DISC1"},{"id":"PPP5C","group":"Protein","label":"PPP5C"},{"id":"CTNNB1","group":"Protein","label":"CTNNB1"},{"id":"KRAS","group":"Protein","label":"KRAS"}]}'
   ></drugst-one>
 
-<!--  <drugst-one id="netexp1"-->
-<!--              pluginId="2"-->
-<!--              groups='{"nodeGroups":{"patient":{"type":"patient","color":"#000000","font":{"color":"#000000"},"groupName":"Patient","shape":"image","image":"https://static.thenounproject.com/png/22780-200.png"},"condition":{"type":"condition","color":"#000000","font":{"color":"#000000"},"groupName":"Condition","shape":"text"},"important":{"type":"gene","color":"#ff881f","font":{"color":"#000000"},"groupName":"Important Gene","shape":"star"},"gene":{"type":"gene","color":"#ff084e","font":{"color":"#000000"},"groupName":"Gene","shape":"diamond"},"foundDrug":{"type":"drug","color":"#F12590","font":{"color":"#000000"},"groupName":"Drug","shape":"diamond"}},"edgeGroups":{"genotype":{"color":"#000000","groupName":"Relevant Gene"},"has-condition":{"color":"#000000","groupName":"Has Condition","dashes":[2,2]},"default":{"color":"#000000","groupName":"default edge"},"ggi":{"color":"#000000","groupName":"Interaction","dashes":[3,2]}}}'-->
-<!--              config='{"identifier":"entrez","title":"Breast cancer example network","nodeShadow":true,"edgeShadow":false,"autofillEdges":true,"interactionProteinProtein":"STRING","licensedDatasets":true,"selfReferences":false,"nodeGroups":{"patient":{"type":"patient","color":"#000000","font":{"color":"#000000"},"groupName":"Patient","shape":"image","image":"https://static.thenounproject.com/png/22780-200.png"},"condition":{"type":"condition","color":"#000000","font":{"color":"#000000"},"groupName":"Condition","shape":"text"},"important":{"type":"gene","color":"#ff881f","font":{"color":"#000000"},"groupName":"Important Gene","shape":"star"},"gene":{"type":"gene","color":"#ff084e","font":{"color":"#000000"},"groupName":"Gene","shape":"diamond"},"foundDrug":{"type":"drug","color":"#F12590","font":{"color":"#000000"},"groupName":"Drug","shape":"diamond"}}}'-->
-<!--              network='{"nodes":[{"id":"7040","group":"gene","label":"7040"},{"id":"7132","group":"gene","label":"7132"},{"id":"51164","group":"gene","label":"51164"},{"id":"6338","group":"gene","label":"6338"},{"id":"6337","group":"gene","label":"6337"},{"id":"6340","group":"gene","label":"6340"},{"id":"2212","group":"gene","label":"2212"},{"id":"2022","group":"gene","label":"2022"},{"id":"6804","group":"gene","label":"6804"},{"id":"1080","group":"gene","label":"1080"},{"id":"22802","group":"gene","label":"22802"}],"edges":[{"from":"BRCA1","to":"BRCA2","group":"ggi"},{"from":"ATM","to":"BARD1","group":"ggi"},{"from":"BRCA1","to":"CHEK2","group":"ggi"},{"from":"RAD51C","to":"RAD51D","group":"ggi"},{"from":"STK11","to":"TP53","group":"ggi"},{"from":"TP53","to":"PALB2","group":"ggi"},{"from":"TP53","to":"RAD51D","group":"ggi"},{"from":"TP53","to":"NF1","group":"ggi"},{"from":"TP53","to":"BRCA1","group":"ggi"},{"from":"TP53","to":"BRCA2","group":"ggi"},{"from":"PTEN","to":"BRCA1","group":"ggi"},{"from":"PTEN","to":"BRCA2","group":"ggi"},{"from":"TP53","to":"PTEN","group":"ggi"},{"from":"ATM","to":"PTEN","group":"ggi"},{"from":"CDH1","to":"RAD51D","group":"ggi"},{"from":"CDH1","to":"PALB2","group":"ggi"},{"from":"NBN","to":"BRIP1","group":"ggi"},{"from":"BRIP1","to":"PTEN","group":"ggi"},{"from":"patient-1","to":"BRCA1","group":"genotype"},{"from":"patient-1","to":"TP53","group":"genotype"},{"from":"patient-1","to":"BRCA2","group":"genotype"},{"from":"patient-1","to":"PTEN","group":"genotype"},{"from":"patient-2","to":"TP53","group":"genotype"},{"from":"patient-2","to":"NF1","group":"genotype"},{"from":"patient-2","to":"BARD1","group":"genotype"},{"from":"patient-3","to":"TP53","group":"genotype"},{"from":"patient-3","to":"PTEN","group":"genotype"},{"from":"patient-3","to":"NBN","group":"genotype"},{"from":"patient-1","to":"subtype-1","group":"has-condition"},{"from":"patient-2","to":"subtype-1","group":"has-condition"},{"from":"patient-3","to":"subtype-2","group":"has-condition"}]}'>-->
-<!--</drugst-one>-->
+  <!--  <drugst-one id="netexp1"-->
+  <!--              pluginId="2"-->
+  <!--              groups='{"nodeGroups":{"patient":{"type":"patient","color":"#000000","font":{"color":"#000000"},"groupName":"Patient","shape":"image","image":"https://static.thenounproject.com/png/22780-200.png"},"condition":{"type":"condition","color":"#000000","font":{"color":"#000000"},"groupName":"Condition","shape":"text"},"important":{"type":"gene","color":"#ff881f","font":{"color":"#000000"},"groupName":"Important Gene","shape":"star"},"gene":{"type":"gene","color":"#ff084e","font":{"color":"#000000"},"groupName":"Gene","shape":"diamond"},"foundDrug":{"type":"drug","color":"#F12590","font":{"color":"#000000"},"groupName":"Drug","shape":"diamond"}},"edgeGroups":{"genotype":{"color":"#000000","groupName":"Relevant Gene"},"has-condition":{"color":"#000000","groupName":"Has Condition","dashes":[2,2]},"default":{"color":"#000000","groupName":"default edge"},"ggi":{"color":"#000000","groupName":"Interaction","dashes":[3,2]}}}'-->
+  <!--              config='{"identifier":"entrez","title":"Breast cancer example network","nodeShadow":true,"edgeShadow":false,"autofillEdges":true,"interactionProteinProtein":"STRING","licensedDatasets":true,"selfReferences":false,"nodeGroups":{"patient":{"type":"patient","color":"#000000","font":{"color":"#000000"},"groupName":"Patient","shape":"image","image":"https://static.thenounproject.com/png/22780-200.png"},"condition":{"type":"condition","color":"#000000","font":{"color":"#000000"},"groupName":"Condition","shape":"text"},"important":{"type":"gene","color":"#ff881f","font":{"color":"#000000"},"groupName":"Important Gene","shape":"star"},"gene":{"type":"gene","color":"#ff084e","font":{"color":"#000000"},"groupName":"Gene","shape":"diamond"},"foundDrug":{"type":"drug","color":"#F12590","font":{"color":"#000000"},"groupName":"Drug","shape":"diamond"}}}'-->
+  <!--              network='{"nodes":[{"id":"7040","group":"gene","label":"7040"},{"id":"7132","group":"gene","label":"7132"},{"id":"51164","group":"gene","label":"51164"},{"id":"6338","group":"gene","label":"6338"},{"id":"6337","group":"gene","label":"6337"},{"id":"6340","group":"gene","label":"6340"},{"id":"2212","group":"gene","label":"2212"},{"id":"2022","group":"gene","label":"2022"},{"id":"6804","group":"gene","label":"6804"},{"id":"1080","group":"gene","label":"1080"},{"id":"22802","group":"gene","label":"22802"}],"edges":[{"from":"BRCA1","to":"BRCA2","group":"ggi"},{"from":"ATM","to":"BARD1","group":"ggi"},{"from":"BRCA1","to":"CHEK2","group":"ggi"},{"from":"RAD51C","to":"RAD51D","group":"ggi"},{"from":"STK11","to":"TP53","group":"ggi"},{"from":"TP53","to":"PALB2","group":"ggi"},{"from":"TP53","to":"RAD51D","group":"ggi"},{"from":"TP53","to":"NF1","group":"ggi"},{"from":"TP53","to":"BRCA1","group":"ggi"},{"from":"TP53","to":"BRCA2","group":"ggi"},{"from":"PTEN","to":"BRCA1","group":"ggi"},{"from":"PTEN","to":"BRCA2","group":"ggi"},{"from":"TP53","to":"PTEN","group":"ggi"},{"from":"ATM","to":"PTEN","group":"ggi"},{"from":"CDH1","to":"RAD51D","group":"ggi"},{"from":"CDH1","to":"PALB2","group":"ggi"},{"from":"NBN","to":"BRIP1","group":"ggi"},{"from":"BRIP1","to":"PTEN","group":"ggi"},{"from":"patient-1","to":"BRCA1","group":"genotype"},{"from":"patient-1","to":"TP53","group":"genotype"},{"from":"patient-1","to":"BRCA2","group":"genotype"},{"from":"patient-1","to":"PTEN","group":"genotype"},{"from":"patient-2","to":"TP53","group":"genotype"},{"from":"patient-2","to":"NF1","group":"genotype"},{"from":"patient-2","to":"BARD1","group":"genotype"},{"from":"patient-3","to":"TP53","group":"genotype"},{"from":"patient-3","to":"PTEN","group":"genotype"},{"from":"patient-3","to":"NBN","group":"genotype"},{"from":"patient-1","to":"subtype-1","group":"has-condition"},{"from":"patient-2","to":"subtype-1","group":"has-condition"},{"from":"patient-3","to":"subtype-2","group":"has-condition"}]}'>-->
+  <!--</drugst-one>-->
 
 
-<!--ENSEMBL test-->
-<!--  <drugst-one id="netexp1"-->
-<!--              pluginId="2"-->
-<!--              groups='{"nodeGroups":{"node":{"type":"Gene","color":"#0000FF","font":{"color":"#ffffff"},"groupName":"Node","shape":"ellipse"}, "gene":{"type":"Gene","color":"#CD5C5C","font":{"color":"#000000"},"groupName":"Gene","shape":"ellipse"}}}'-->
-<!--              config='{"showSimpleAnalysis": true, "selfReferences": false, "licensedDatasets": false,"physicsOn":false,"identifier":"ensg","title":"Breast cancer example network","nodeShadow":true,"edgeShadow":false,"autofillEdges":true,"showLegend":true}'-->
-<!--              network='{"nodes":[{"id":"ENSG00000049768", "group": "gene", "label":"ENSG00000049768"},{"id":"ENSG00000185379","group":"gene","label":"ENSG00000185379"},{"id":"ENSG00000108384","group":"gene","label":"ENSG00000108384"},{"id":"ENSG00000138376","group":"gene","label":"ENSG00000138376"},{"id":"ENSG00000284792","group":"gene","label":"ENSG00000284792"},{"id":"ENSG00000171862","group":"gene","label":"ENSG00000171862"},{"id":"ENSG00000141510","group":"gene","label":"ENSG00000141510"}],"edges":[]}'-->
-<!--   >-->
-<!--</drugst-one>-->
+  <!--ENSEMBL test-->
+  <!--  <drugst-one id="netexp1"-->
+  <!--              pluginId="2"-->
+  <!--              groups='{"nodeGroups":{"node":{"type":"Gene","color":"#0000FF","font":{"color":"#ffffff"},"groupName":"Node","shape":"ellipse"}, "gene":{"type":"Gene","color":"#CD5C5C","font":{"color":"#000000"},"groupName":"Gene","shape":"ellipse"}}}'-->
+  <!--              config='{"showSimpleAnalysis": true, "selfReferences": false, "licensedDatasets": false,"physicsOn":false,"identifier":"ensg","title":"Breast cancer example network","nodeShadow":true,"edgeShadow":false,"autofillEdges":true,"showLegend":true}'-->
+  <!--              network='{"nodes":[{"id":"ENSG00000049768", "group": "gene", "label":"ENSG00000049768"},{"id":"ENSG00000185379","group":"gene","label":"ENSG00000185379"},{"id":"ENSG00000108384","group":"gene","label":"ENSG00000108384"},{"id":"ENSG00000138376","group":"gene","label":"ENSG00000138376"},{"id":"ENSG00000284792","group":"gene","label":"ENSG00000284792"},{"id":"ENSG00000171862","group":"gene","label":"ENSG00000171862"},{"id":"ENSG00000141510","group":"gene","label":"ENSG00000141510"}],"edges":[]}'-->
+  <!--   >-->
+  <!--</drugst-one>-->
 </div>
 <br>
 <br>
@@ -155,8 +170,11 @@
     netexp.setAttribute('config', config);
   }
 
-  function initTaskEventListener(){
-    document.getElementsByTagName("drugst-one")[0].addEventListener("taskEvent",(event)=>{console.log(event.detail)})
+  function initTaskEventListener() {
+    let color1 = '#ff1818'
+    document.getElementsByTagName("drugst-one")[0].addEventListener("taskEvent", (event) => {
+      console.log(event.detail)
+    })
   }
 
 
@@ -171,37 +189,35 @@
           group: "genes"
         }
       ],
-      edges: [
-
-      ]
+      edges: []
     }));
   }
 
   function changeColor(hexacode) {
     console.log(hexacode)
     const elements_background_color = document.getElementsByClassName('is-primary');
-    for(var i = 0; i < elements_background_color.length; i++){
+    for (var i = 0; i < elements_background_color.length; i++) {
       elements_background_color[i].setAttribute('style', `background-color: ${hexacode} !important; color: white !important; border-color: ${hexacode} !important`);
     }
     const elements_text = document.getElementsByClassName('text-primary');
-    for(var i = 0; i < elements_text.length; i++){
+    for (var i = 0; i < elements_text.length; i++) {
       elements_text[i].setAttribute('style', `color: ${hexacode} !important`);
     }
   }
 
-  function loadTaskID(token){
-    console.log("Trying to load "+token)
+  function loadTaskID(token) {
+    console.log("Trying to load " + token)
     const netexp = document.getElementById('netexp1');
     netexp.setAttribute('task-id', token);
   }
 
-  function changeLicenced(licenced){
-    setAttribute('licensedDatasets',licenced)
+  function changeLicenced(licenced) {
+    setAttribute('licensedDatasets', licenced)
   }
 
-  function applyDataset(){
+  function applyDataset() {
     let ppi = document.getElementById('ppi-dataset')
-    setAttribute('interactionProteinProtein',ppi.options[ppi.selectedIndex].value)
+    setAttribute('interactionProteinProtein', ppi.options[ppi.selectedIndex].value)
     let drpi = document.getElementById('drpi-dataset')
     setAttribute('interactionDrugProtein', drpi.options[drpi.selectedIndex].value)
     let drdi = document.getElementById('drdi-dataset')
@@ -210,13 +226,13 @@
     setAttribute('associatedProteinDisorder', pdis.options[pdis.selectedIndex].value)
   }
 
-  function setAttribute(name, value){
+  function setAttribute(name, value) {
     // console.log(event)
-    console.log("Attribute "+name+" -> "+value)
+    console.log("Attribute " + name + " -> " + value)
     const netexp = document.getElementById('netexp1');
     config = JSON.parse(netexp.getAttribute('config'))
     console.log(config)
-    config[name]=value
+    config[name] = value
     changeConfigStr(JSON.stringify(config))
   }
 

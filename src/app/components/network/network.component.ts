@@ -399,6 +399,7 @@ export class NetworkComponent implements OnInit {
         const pos = this.networkInternal.getPositions([node.id]);
         node.x = pos[node.id].x;
         node.y = pos[node.id].y;
+
         Object.assign(
           node,
           NetworkSettings.getNodeStyle(
@@ -417,7 +418,7 @@ export class NetworkComponent implements OnInit {
 
     } else {
       this.selectedTissue = tissue;
-      const minExp = 0.3;
+      const minExp = 0;
       // filter out non-proteins, e.g. drugs
       const proteinNodes = [];
       this.nodeData.nodes.forEach(element => {
@@ -500,7 +501,7 @@ export class NetworkComponent implements OnInit {
   }
 
   public getGradient(nodeId: string) {
-    return (Object.keys(this.gradientMap).length) && (this.gradientMap[nodeId]) ? this.gradientMap[nodeId] : 1.0;
+    return (Object.keys(this.gradientMap).length && this.gradientMap[nodeId] != null)  ? this.gradientMap[nodeId] : 1.0;
   }
 
   /**
@@ -540,7 +541,7 @@ export class NetworkComponent implements OnInit {
           this.getGradient(node.id),
           this.nodeRenderer
         )
-      )
+      ),
       updatedNodes.push(node);
     }
     this.nodeData.nodes.update(updatedNodes);
