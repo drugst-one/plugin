@@ -72,11 +72,11 @@
       *ngIf="getExpressionScore() != null"
       [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
     >
-      <b><span>Expression:</span></b>
+      <b><span>Median tissue expression (TPM):</span></b>
       <span class="is-capitalized"> {{ getExpressionScore() | number }}</span>
       <span
         class="icon has-text-info"
-        pTooltip="Tissue expression data is provided by the GTEx project. Unit is transcript per million."
+        pTooltip="Median expression data is provided by the GTEx project. Unit is TPM (transcript per million)."
         [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
         tooltipPosition="left"
       >

@@ -47,6 +47,13 @@ export class NetexControllerService {
     return this.http.post('https://api.digest-validation.net/set', payload).toPromise();
   }
 
+  public maxTissueExpression(tissue: Tissue): Promise<any> {
+    const params = new HttpParams()
+      .set('tissue', tissue.drugstoneId);
+    return this.http.get(environment.backend + 'tissue_max_expression/', {params}).toPromise();
+  }
+
+
   public tissueExpressionGenes(tissue: Tissue, nodes: Node[]): Observable<any> {
     /**
      * Returns the expression in the given tissue for given nodes and cancerNodes

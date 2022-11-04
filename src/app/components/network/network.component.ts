@@ -426,7 +426,7 @@ export class NetworkComponent implements OnInit {
           proteinNodes.push(element);
         }
       });
-      this.netex.tissueExpressionGenes(this.selectedTissue, proteinNodes).subscribe((response) => {
+      this.netex.tissueExpressionGenes(this.selectedTissue, proteinNodes).subscribe(async (response) => {
           this.expressionMap = response;
           const updatedNodes = [];
           this.nodeRenderer = pieChartContextRenderer;
@@ -443,7 +443,13 @@ export class NetworkComponent implements OnInit {
               });
             }
           });
-          const maxExpr = Math.max(...Object.values(this.expressionMap));
+          let maxExpr = 1_000_000;
+          await this.netex.maxTissueExpression(this.selectedTissue).then(response => {
+            maxExpr = response.max;
+          }).catch(err => {
+            console.error(err);
+            maxExpr = Math.max(...Object.values(this.expressionMap));
+          });
           const exprMap = {};
           for (const [drugstoneId, expressionlvl] of Object.entries(this.expressionMap)) {
             networkIdMapping[drugstoneId].forEach(networkId => {
@@ -501,7 +507,7 @@ export class NetworkComponent implements OnInit {
   }
 
   public getGradient(nodeId: string) {
-    return (Object.keys(this.gradientMap).length && this.gradientMap[nodeId] != null)  ? this.gradientMap[nodeId] : 1.0;
+    return (Object.keys(this.gradientMap).length && this.gradientMap[nodeId] != null) ? this.gradientMap[nodeId] : 1.0;
   }
 
   /**
@@ -542,7 +548,7 @@ export class NetworkComponent implements OnInit {
           this.nodeRenderer
         )
       ),
-      updatedNodes.push(node);
+        updatedNodes.push(node);
     }
     this.nodeData.nodes.update(updatedNodes);
     this.loadingScreen.stateUpdate(false);
