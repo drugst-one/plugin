@@ -3,6 +3,7 @@ import {AnalysisService} from '../../services/analysis/analysis.service';
 import {getWrapperFromNode, Node, Tissue, NodeAttributeMap} from '../../interfaces';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
+import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
 
 @Component({
   selector: 'app-add-expressed-proteins',
@@ -29,7 +30,7 @@ export class AddExpressedProteinsComponent implements OnChanges {
   public addedCount: number | null = null;
   public loading = false;
 
-  constructor(private http: HttpClient, private analysis: AnalysisService) {
+  constructor(private http: HttpClient, private analysis: AnalysisService, private netex: NetexControllerService) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -38,7 +39,7 @@ export class AddExpressedProteinsComponent implements OnChanges {
 
   public async addProteins() {
     this.loading = true;
-    const result = await this.http.post<any>(`${environment.backend}query_tissue_proteins/`,
+    const result = await this.http.post<any>(`${this.netex.getBackend()}query_tissue_proteins/`,
       {tissueId: this.selectedTissue.drugstoneId, threshold: this.threshold}).toPromise();
     const items = [];
     for (const detail of result) {

@@ -282,7 +282,7 @@ export class AnalysisService {
     };
 
 
-    const resp = await this.http.post<any>(`${environment.backend}task/`, {
+    const resp = await this.http.post<any>(`${this.netex.getBackend()}task/`, {
       algorithm: algorithm,
       target: target,
       parameters: parameters,
@@ -307,7 +307,7 @@ export class AnalysisService {
       });
       return '';
     }
-    const resp = await this.http.post<any>(`${environment.backend}task/`, {
+    const resp = await this.http.post<any>(`${this.netex.getBackend()}task/`, {
       algorithm,
       target,
       parameters,

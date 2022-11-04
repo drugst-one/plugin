@@ -10,7 +10,6 @@ export class PrivacyBannerComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(localStorage.getItem(this.privacyBannerCookieKey) )
     if (localStorage.getItem(this.privacyBannerCookieKey) === 'true') {
       this.disable();
     };

@@ -357,7 +357,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   private async getTask(token: string): Promise<any> {
-    return await this.http.get(`${environment.backend}task/?token=${token}`).toPromise();
+    return await this.http.get(`${this.netex.getBackend()}task/?token=${token}`).toPromise();
   }
 
   close() {
@@ -410,7 +410,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   public downloadLink(view: string): string {
-    return `${environment.backend}task_result/?token=${this.token}&view=${view}&fmt=csv`;
+    return `${this.netex.getBackend()}task_result/?token=${this.token}&view=${view}&fmt=csv`;
   }
 
   /**
