@@ -72,7 +72,7 @@
       *ngIf="getExpressionScore() != null"
       [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
     >
-      <b><span>Median tissue expression (TPM):</span></b>
+      <b><span>Median expression in {{"'"+networkHandler.activeNetwork.selectedTissue.name+"'"}} (TPM):</span></b>
       <span class="is-capitalized"> {{ getExpressionScore() | number }}</span>
       <span
         class="icon has-text-info"
