@@ -1,0 +1,11 @@
+@import "src/stylesheets/variables";
+
+#privacy-banner{
+    position: absolute;
+    bottom: 0;
+    z-index: $privacy-banner-z;
+    width: 100%;
+    &.disabled {
+        display: none;
+    }
+}
