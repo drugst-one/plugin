@@ -53,10 +53,11 @@ export class NetexControllerService {
      */
       // slice prefix of netex id away for direct lookup in db, if node not mapped to db, replace by undefined
     const genesBackendIds = nodes.flatMap((node: Node) => node.drugstoneId ? node.drugstoneId : []).map((id: string | undefined) => id ? id.slice(1) : undefined);
-    const params = new HttpParams()
-      .set('tissue', tissue.drugstoneId)
-      .set('proteins', JSON.stringify(genesBackendIds));
-    return this.http.get(`${environment.backend}tissue_expression/`, {params});
+    const payload = {
+      tissue: tissue.drugstoneId,
+      proteins: JSON.stringify(genesBackendIds)
+    }
+    return this.http.post(`${environment.backend}tissue_expression/`, payload);
   }
 
   public adjacentDisorders(nodes: Node[], nodeType: string, dataset: string, licenced: boolean): Observable<any> {
