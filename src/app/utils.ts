@@ -1,7 +1,7 @@
 // From https://stackoverflow.com/a/27709336/3850564
 
-import {ɵisListLikeIterable} from "@angular/core";
-import {Node} from "./interfaces";
+import {ɵisListLikeIterable} from '@angular/core';
+import {Node} from './interfaces';
 
 export function getGradientColor(startColor: string, endColor: string, percent: number) {
   // strip the leading # if it's there
@@ -52,7 +52,7 @@ export function getGradientColor(startColor: string, endColor: string, percent: 
 export function removeUnderscoreFromKeys(obj) {
   const result = {};
   Object.keys(obj).forEach(x => {
-    const y = x.replace("_", "");
+    const y = x.replace('_', '');
     result[y] = obj[x];
   });
   return result;
@@ -64,7 +64,7 @@ function trim(str) {
 }
 
 export function rgbaToHex(rgba) {
-  const inParts = rgba.substring(rgba.indexOf("(")).split(","),
+  const inParts = rgba.substring(rgba.indexOf('(')).split(','),
     r = parseInt(trim(inParts[0].substring(1)), 10),
     g = parseInt(trim(inParts[1]), 10),
     b = parseInt(trim(inParts[2]), 10),
@@ -77,11 +77,11 @@ export function rgbaToHex(rgba) {
   ];
 
   // Pad single-digit output values
-  outParts.forEach(function (part, i) {
+  outParts.forEach(function(part, i) {
     if (part.length === 1) {
       outParts[i] = '0' + part;
     }
-  })
+  });
 
   return ('#' + outParts.join(''));
 }
@@ -89,20 +89,20 @@ export function rgbaToHex(rgba) {
 // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
 function componentToHex(c) {
   const hex = c.toString(16);
-  return hex.length == 1 ? "0" + hex : hex;
+  return hex.length == 1 ? '0' + hex : hex;
 }
 
 export function rgbToHex(rgb) {
-  const inParts = rgb.substring(rgb.indexOf("(")).split(","),
+  const inParts = rgb.substring(rgb.indexOf('(')).split(','),
     r = parseInt(trim(inParts[0].substring(1)), 10),
     g = parseInt(trim(inParts[1]), 10),
     b = parseInt(trim(inParts[2]), 10);
-  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+  return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
 // https://stackoverflow.com/questions/1573053/javascript-function-to-convert-color-names-to-hex-codes/47355187#47355187
 export function standardizeColor(str) {
-  var ctx = document.createElement("canvas").getContext("2d");
+  var ctx = document.createElement('canvas').getContext('2d');
   ctx.fillStyle = str;
   return ctx.fillStyle.toString();
 }
@@ -127,14 +127,25 @@ export function removeDuplicateObjectsFromList(nodes: Node[], attribute: string)
  */
 export function downLoadFile(data: any, type: string, fmt: string) {
   let blob = new Blob([data], {type: type});
-  var a = document.createElement("a");
+  var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = `drugstone_network_${new Date().getTime()}.${fmt}`;
   a.click();
 }
 
+export function RGBAtoRGBwithoutA(rgbaString) {
+  const rgbaStringSplit = rgbaString.slice(5, -1).split(',');
+  const RGBA = {
+    red: rgbaStringSplit[0],
+    green: rgbaStringSplit[1],
+    blue: rgbaStringSplit[2],
+    alpha: rgbaStringSplit[3]
+  };
+  return `rgb(${RGBA.red},${RGBA.green},${RGBA.blue})`;
+}
+
 export function RGBAtoRGB(rgbaString) {
-  const rgbaStringSplit = rgbaString.slice(5, -1).split(",");
+  const rgbaStringSplit = rgbaString.slice(5, -1).split(',');
   const RGBA = {
     red: rgbaStringSplit[0],
     green: rgbaStringSplit[1],
@@ -152,19 +163,24 @@ export function RGBAtoRGB(rgbaString) {
 }
 
 export function pieChartContextRenderer({ctx, x, y, state: {selected, hover}, style, label}) {
-  ctx.drawPieLabel = function (style, x, y, label) {
-    ctx.font = "normal 12px sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = "black";
+  ctx.drawPieLabel = function(style, x, y, label) {
+    ctx.font = 'normal 12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'black';
     ctx.fillText(label, x, y + style.size + 12);
-  }
+  };
 
-  ctx.drawPie = function (style, x, y) {
+  ctx.drawPie = function(style, x, y, state: { selected, hover }) {
+    const selection = RGBAtoRGBwithoutA(style.borderColor) !== RGBAtoRGBwithoutA(style.color);
     const total = 1;
     // draw shadow
+    const selectedColor = style.borderColor;
+    if (selected) {
+      style.borderColor = style.color;
+    }
     if (style.shadow) {
-      ctx.save()
+      ctx.save();
       ctx.shadowColor = style.shadowColor;
       ctx.shadowOffsetX = style.shadowX;
       ctx.shadowOffsetY = style.shadowY;
@@ -172,21 +188,21 @@ export function pieChartContextRenderer({ctx, x, y, state: {selected, hover}, st
     }
     // draw white background circle
     ctx.beginPath();
-    ctx.fillStyle = "white"
+    ctx.fillStyle = 'white';
     // or fill like background of graph panel
     // ctx.fillStyle= window.getComputedStyle(document.documentElement).getPropertyValue('--drgstn-panel');
-    ctx.arc(x, y, style.size, 0, 2 * Math.PI,false);
+    ctx.arc(x, y, style.size - 1, 0, 2 * Math.PI, false);
     ctx.fill();
     ctx.stroke();
 
     // prepare pi-chart
     ctx.fillStyle = style.color ? style.color : 'rgba(255, 0, 0, 1)';
     // set alpha value to 1
-    ctx.fillStyle = RGBAtoRGB(ctx.fillStyle)
+    ctx.fillStyle = RGBAtoRGB(ctx.fillStyle);
     ctx.beginPath();
     ctx.moveTo(x, y);
     const len = style.opacity / total * 2 * Math.PI;
-    ctx.arc(x, y, style.size, 0, 0 + len, false);
+    ctx.arc(x, y, style.size - 1, 0, len, false);
     ctx.lineTo(x, y);
     ctx.fill();
     if (style.shadow) {
@@ -194,18 +210,39 @@ export function pieChartContextRenderer({ctx, x, y, state: {selected, hover}, st
       ctx.restore();
     }
     ctx.strokeStyle = style.borderColor ? style.borderColor : 'black';
+    if (selection) {
+      ctx.strokeStyle = selectedColor ? selectedColor : 'balck';
+    }
     ctx.lineWidth = selected ? 3 : 2;
     if (style.opacity !== total) {
       // avoid the inner line when circle is complete
       ctx.stroke();
     }
 
+    ctx.strokeStyle = RGBAtoRGBwithoutA(ctx.strokeStyle);
     // draw the surrounding border circle
     ctx.beginPath();
-    ctx.arc(x, y, style.size, 0, 2 * Math.PI);
-    ctx.strokeStyle = style.borderColor ? style.borderColor : 'black';
+    ctx.arc(x, y, style.size - (selected ? 0 : 1), 0, 2 * Math.PI);
+    // ctx.strokeStyle = style.borderColor ? style.borderColor : 'black';
+    // // set alpha value to 1
+    // ctx.strokeStyle = RGBAtoRGBwithoutA(ctx.strokeStyle);
     ctx.stroke();
-  }
+    if (selection) {
+      ctx.strokeStyle = selectedColor ? selectedColor : 'black';
+    } else {
+      ctx.strokeStyle = style.color ? style.color : 'black';
+    }
+    if (selected || selection) {
+      ctx.beginPath();
+      ctx.strokeStyle = style.color ? style.color : 'black';
+      ctx.strokeStyle = RGBAtoRGBwithoutA(ctx.strokeStyle);
+      ctx.arc(x, y, style.size - 2, 0, 2 * Math.PI);
+      // ctx.strokeStyle = style.borderColor ? style.borderColor : 'black';
+      // // set alpha value to 1
+      // ctx.strokeStyle = RGBAtoRGBwithoutA(ctx.strokeStyle);
+      ctx.stroke();
+    }
+  };
 
   return {
     // bellow arrows

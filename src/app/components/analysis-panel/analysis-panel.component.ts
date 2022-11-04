@@ -204,6 +204,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               if (!this.drugstoneConfig.config.physicsOn) {
                 this.networkHandler.activeNetwork.updatePhysicsEnabled(false);
               }
+              this.networkHandler.updateAdjacentNodes();
             });
             this.tableDrugs = nodes.filter(e => e.drugstoneId && e.drugstoneType === 'drug');
             this.tableDrugs.forEach((r) => {

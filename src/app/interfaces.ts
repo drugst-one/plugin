@@ -19,6 +19,7 @@ export interface Node {
   interactions?: Node[];
   x?: number;
   y?: number;
+  state?: {hover: boolean, selected: boolean};
   borderWidth: number;
   borderWidthSelected: number;
   opacity?: number;

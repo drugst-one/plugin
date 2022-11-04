@@ -102,8 +102,7 @@ export class NetworkSettings {
     // certain attributes like shape can remain undefined
     // use lodash merge to not lose deep attributes, e.g. "font.size"
     // @ts-ignore
-    if (node._group)
-    {
+    if (node._group) {
       // @ts-ignore
       node.group = node._group;
     }
@@ -169,7 +168,6 @@ export class NetworkSettings {
       node.opacity = undefined;
       delete node.ctxRenderer;
     }
-
     return node;
   }
 }

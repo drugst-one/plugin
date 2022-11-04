@@ -21,7 +21,7 @@ import {NetworkSettings} from 'src/app/network-settings';
 import {pieChartContextRenderer} from 'src/app/utils';
 import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
 import {LegendService} from 'src/app/services/legend-service/legend-service.service';
-import { LoadingScreenService } from 'src/app/services/loading-screen/loading-screen.service';
+import {LoadingScreenService} from 'src/app/services/loading-screen/loading-screen.service';
 
 
 @Component({
@@ -81,7 +81,7 @@ export class NetworkComponent implements OnInit {
 
   public nodeRenderer = null;
 
-  public loading = false
+  public loading = false;
 
   constructor(
     public configService: DrugstoneConfigService,
@@ -91,8 +91,8 @@ export class NetworkComponent implements OnInit {
     public drugstoneConfig: DrugstoneConfigService,
     public netex: NetexControllerService,
     public omnipath: OmnipathControllerService,
-    public loadingScreen: LoadingScreenService)
-    {}
+    public loadingScreen: LoadingScreenService) {
+  }
 
   ngOnInit(): void {
     this.networkHandler.networks[this.networkType] = this;
@@ -116,15 +116,16 @@ export class NetworkComponent implements OnInit {
 
   updateQueryItems() {
     this.queryItems = [];
-    if (this.currentViewNodes)
+    if (this.currentViewNodes) {
       this.currentViewNodes.forEach((protein) => {
         this.queryItems.push(getWrapperFromNode(protein));
       });
+    }
   }
 
   public saveAddNodes(nodeList: Node[]) {
     const existing = this.nodeData.nodes.get().map(n => n.id);
-    const toAdd = nodeList.filter(n => existing.indexOf(n.id) === -1)
+    const toAdd = nodeList.filter(n => existing.indexOf(n.id) === -1);
     this.nodeData.nodes.add(toAdd);
   }
 
@@ -132,31 +133,33 @@ export class NetworkComponent implements OnInit {
     this.loadingScreen.stateUpdate(true);
     this.adjacentDisordersProtein = bool;
     if (this.adjacentDisordersProtein) {
-      this.legendService.add_to_context('adjacentDisorders')
+      this.legendService.add_to_context('adjacentDisorders');
       this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'proteins', this.drugstoneConfig.config.associatedProteinDisorder, this.drugstoneConfig.config.licensedDatasets).subscribe(response => {
-        const proteinMap = this.getProteinMap()
-        const addedEdge = {}
+        const proteinMap = this.getProteinMap();
+        const addedEdge = {};
         for (const interaction of response.edges) {
-          const edge = mapCustomEdge({from: interaction.protein, to: interaction.disorder}, this.drugstoneConfig.config)
+          const edge = mapCustomEdge({from: interaction.protein, to: interaction.disorder}, this.drugstoneConfig.config);
           if (proteinMap[edge.from]) {
             proteinMap[edge.from].forEach(from => {
-              if (addedEdge[from] && addedEdge[from].indexOf(edge.to) !== -1)
-                return
-              const e = JSON.parse(JSON.stringify(edge))
-              e.from = from
-              e.to = edge.to
+              if (addedEdge[from] && addedEdge[from].indexOf(edge.to) !== -1) {
+                return;
+              }
+              const e = JSON.parse(JSON.stringify(edge));
+              e.from = from;
+              e.to = edge.to;
               this.adjacentProteinDisorderEdgesList.push(e);
-              if (!addedEdge[from])
-                addedEdge[from] = [edge.to]
-              else
-                addedEdge[from].push(edge.to)
-            })
+              if (!addedEdge[from]) {
+                addedEdge[from] = [edge.to];
+              } else {
+                addedEdge[from].push(edge.to);
+              }
+            });
           }
         }
         for (const disorder of response.disorders) {
           disorder.group = 'defaultDisorder';
           disorder.id = disorder.drugstoneId;
-          this.adjacentProteinDisorderList.push(mapCustomNode(disorder, this.drugstoneConfig.currentConfig()))
+          this.adjacentProteinDisorderList.push(mapCustomNode(disorder, this.drugstoneConfig.currentConfig()));
         }
         this.saveAddNodes(this.adjacentProteinDisorderList);
         this.nodeData.edges.add(this.adjacentProteinDisorderEdgesList);
@@ -197,8 +200,9 @@ export class NetworkComponent implements OnInit {
         this.loadingScreen.stateUpdate(false);
       });
     } else {
-      if (!this.adjacentDisordersProtein)
+      if (!this.adjacentDisordersProtein) {
         this.legendService.remove_from_context('adjacentDisorders');
+      }
       this.saveRemoveDisorders(this.adjacentDrugDisorderList);
       this.nodeData.edges.remove(this.adjacentDrugDisorderEdgesList);
       this.adjacentDrugDisorderList = [];
@@ -209,68 +213,73 @@ export class NetworkComponent implements OnInit {
   }
 
   public getProteinMap() {
-    const proteinMap = {}
+    const proteinMap = {};
     this.nodeData.nodes.get().forEach(n => {
       if (n.drugstoneType === 'protein') {
         n.drugstoneId.forEach(id => {
           if (typeof id === 'string') {
-            if (proteinMap[id])
-              proteinMap[id].push(n.id)
-            else
+            if (proteinMap[id]) {
+              proteinMap[id].push(n.id);
+            } else {
               proteinMap[id] = [n.id];
+            }
           } else {
             n.id.forEach(single_id => {
-              if (proteinMap[single_id])
-                proteinMap[single_id].push(n.id)
-              else
+              if (proteinMap[single_id]) {
+                proteinMap[single_id].push(n.id);
+              } else {
                 proteinMap[single_id] = [n.id];
-            })
+              }
+            });
           }
         });
       }
     });
-    return proteinMap
+    return proteinMap;
   }
 
   public updateAdjacentDrugs(bool: boolean) {
     this.loadingScreen.stateUpdate(true);
     this.adjacentDrugs = bool;
     if (this.adjacentDrugs) {
-      this.legendService.add_to_context("adjacentDrugs")
-      const addedEdge = {}
-      const proteinMap = this.getProteinMap()
+      this.legendService.add_to_context('adjacentDrugs');
+      const addedEdge = {};
+      const proteinMap = this.getProteinMap();
       this.netex.adjacentDrugs(this.drugstoneConfig.config.interactionDrugProtein, this.drugstoneConfig.config.licensedDatasets, this.nodeData.nodes.get()).subscribe(response => {
         const existingDrugIDs = this.nodeData.nodes.get().filter(n => n.drugstoneId && n.drugstoneType === 'drug').map(n => n.drugstoneId);
         for (const interaction of response.pdis) {
-          const edge = mapCustomEdge({from: interaction.protein, to: interaction.drug}, this.drugstoneConfig.currentConfig())
+          const edge = mapCustomEdge({from: interaction.protein, to: interaction.drug}, this.drugstoneConfig.currentConfig());
 
           if (proteinMap[edge.from]) {
             proteinMap[edge.from].forEach(from => {
-              if (addedEdge[from] && addedEdge[from].indexOf(edge.to) !== -1)
-                return
-              const e = JSON.parse(JSON.stringify(edge))
-              e.from = from
-              e.to = edge.to
+              if (addedEdge[from] && addedEdge[from].indexOf(edge.to) !== -1) {
+                return;
+              }
+              const e = JSON.parse(JSON.stringify(edge));
+              e.from = from;
+              e.to = edge.to;
               this.adjacentDrugEdgesList.push(e);
-              if (!addedEdge[from])
-                addedEdge[from] = [edge.to]
-              else
-                addedEdge[from].push(edge.to)
-            })
+              if (!addedEdge[from]) {
+                addedEdge[from] = [edge.to];
+              } else {
+                addedEdge[from].push(edge.to);
+              }
+            });
           }
         }
         for (const drug of response.drugs) {
           drug.group = 'foundDrug';
           drug.id = getDrugNodeId(drug);
-          if (existingDrugIDs.indexOf(drug.drugstoneId) === -1) {
-            this.adjacentDrugList.push(mapCustomNode(drug, this.drugstoneConfig.currentConfig()))
+          if (!existingDrugIDs.includes(drug.drugstoneId)) {
+            existingDrugIDs.push(drug.drugstoneId);
+            this.adjacentDrugList.push(mapCustomNode(drug, this.drugstoneConfig.currentConfig()));
           }
         }
         this.nodeData.nodes.add(this.adjacentDrugList);
         this.nodeData.edges.add(this.adjacentDrugEdgesList);
         this.updateQueryItems();
         this.loadingScreen.stateUpdate(false);
-      })
+      });
     } else {
       // remove adjacent drugs, make sure that also drug associated disorders are removed
       if (this.adjacentDisordersDrug) {
@@ -290,13 +299,13 @@ export class NetworkComponent implements OnInit {
   }
 
   public saveRemoveDisorders(nodeList: Node[]) {
-    const other = this.adjacentDrugDisorderList === nodeList ? this.adjacentProteinDisorderList : this.adjacentDrugDisorderList
-    if (other == null)
+    const other = this.adjacentDrugDisorderList === nodeList ? this.adjacentProteinDisorderList : this.adjacentDrugDisorderList;
+    if (other == null) {
       this.nodeData.nodes.remove(nodeList);
-    else {
+    } else {
       const otherIds = other.map(d => d.id);
-      const rest = nodeList.filter(d => otherIds.indexOf(d.id) === -1)
-      this.nodeData.nodes.remove(rest)
+      const rest = nodeList.filter(d => otherIds.indexOf(d.id) === -1);
+      this.nodeData.nodes.remove(rest);
     }
   }
 
@@ -367,7 +376,7 @@ export class NetworkComponent implements OnInit {
       this.nodeRenderer = null;
       const updatedNodes = [];
       // for (const item of this.proteins) {
-      const proteins = this.nodeData.nodes.get().filter(n => n.drugstoneId && n.drugstoneType === 'protein')
+      const proteins = this.nodeData.nodes.get().filter(n => n.drugstoneId && n.drugstoneType === 'protein');
       for (const node of proteins) {
         const pos = this.networkInternal.getPositions([node.id]);
         node.x = pos[node.id].x;
@@ -390,6 +399,7 @@ export class NetworkComponent implements OnInit {
         const pos = this.networkInternal.getPositions([node.id]);
         node.x = pos[node.id].x;
         node.y = pos[node.id].y;
+
         Object.assign(
           node,
           NetworkSettings.getNodeStyle(
@@ -408,7 +418,7 @@ export class NetworkComponent implements OnInit {
 
     } else {
       this.selectedTissue = tissue;
-      const minExp = 0.3;
+      const minExp = 0;
       // filter out non-proteins, e.g. drugs
       const proteinNodes = [];
       this.nodeData.nodes.forEach(element => {
@@ -416,36 +426,44 @@ export class NetworkComponent implements OnInit {
           proteinNodes.push(element);
         }
       });
-      this.netex.tissueExpressionGenes(this.selectedTissue, proteinNodes).subscribe((response) => {
+      this.netex.tissueExpressionGenes(this.selectedTissue, proteinNodes).subscribe(async (response) => {
           this.expressionMap = response;
           const updatedNodes = [];
           this.nodeRenderer = pieChartContextRenderer;
           // mapping from netex IDs to network IDs, TODO check if this step is necessary
-          const networkIdMapping = {}
+          const networkIdMapping = {};
           this.nodeData.nodes.get().forEach(element => {
             if (element.drugstoneType === 'protein') {
               element.drugstoneId.forEach(id => {
-                if (networkIdMapping[id])
+                if (networkIdMapping[id]) {
                   networkIdMapping[id].push(element.id);
-                else
-                  networkIdMapping[id] = [element.id]
+                } else {
+                  networkIdMapping[id] = [element.id];
+                }
               });
             }
           });
-          const maxExpr = Math.max(...Object.values(this.expressionMap));
-          const exprMap = {}
+          let maxExpr = 1_000_000;
+          await this.netex.maxTissueExpression(this.selectedTissue).then(response => {
+            maxExpr = response.max;
+          }).catch(err => {
+            console.error(err);
+            maxExpr = Math.max(...Object.values(this.expressionMap));
+          });
+          const exprMap = {};
           for (const [drugstoneId, expressionlvl] of Object.entries(this.expressionMap)) {
             networkIdMapping[drugstoneId].forEach(networkId => {
-              if (!exprMap[networkId])
-                exprMap[networkId] = [expressionlvl]
-              else
-                exprMap[networkId].push(expressionlvl)
-            })
+              if (!exprMap[networkId]) {
+                exprMap[networkId] = [expressionlvl];
+              } else {
+                exprMap[networkId].push(expressionlvl);
+              }
+            });
           }
-          this.expressionMap = {}
+          this.expressionMap = {};
           Object.keys(exprMap).forEach(networkId => {
             const expressionlvl = exprMap[networkId] ? exprMap[networkId].reduce((a, b) => a + b) / exprMap[networkId].length : null;
-            this.expressionMap[networkId] = expressionlvl
+            this.expressionMap[networkId] = expressionlvl;
             const node = this.nodeData.nodes.get(networkId);
             if (node === null) {
               return;
@@ -468,25 +486,28 @@ export class NetworkComponent implements OnInit {
             node.shape = 'custom';
             node.ctxRenderer = pieChartContextRenderer;
             updatedNodes.push(node);
-          })
+          });
           this.nodeData.nodes.update(updatedNodes);
           this.loadingScreen.stateUpdate(false);
         }
-      )
+      );
     }
     this.currentViewSelectedTissue = this.selectedTissue;
   }
 
   public hasDrugsLoaded(): boolean {
-    if (this.nodeData && this.nodeData.nodes)
-      for (const node of this.nodeData.nodes.get())
-        if (node.drugstoneType && node.drugstoneId === 'drug')
+    if (this.nodeData && this.nodeData.nodes) {
+      for (const node of this.nodeData.nodes.get()) {
+        if (node.drugstoneType && node.drugstoneId === 'drug') {
           return true;
+        }
+      }
+    }
     return false;
   }
 
   public getGradient(nodeId: string) {
-    return (Object.keys(this.gradientMap).length) && (this.gradientMap[nodeId]) ? this.gradientMap[nodeId] : 1.0;
+    return (Object.keys(this.gradientMap).length && this.gradientMap[nodeId] != null) ? this.gradientMap[nodeId] : 1.0;
   }
 
   /**
@@ -497,10 +518,11 @@ export class NetworkComponent implements OnInit {
     this.loadingScreen.stateUpdate(true);
     this.highlightSeeds = bool;
     const updatedNodes = [];
-    if (this.highlightSeeds)
-      this.legendService.add_to_context('seeds')
-    else
-      this.legendService.remove_from_context('seeds')
+    if (this.highlightSeeds) {
+      this.legendService.add_to_context('seeds');
+    } else {
+      this.legendService.remove_from_context('seeds');
+    }
     for (const node of this.nodeData.nodes.get().filter(n => n.drugstoneType === 'protein')) {
       if (node.drugstoneId === undefined) {
         // nodes that are not mapped to backend remain untouched
@@ -510,7 +532,7 @@ export class NetworkComponent implements OnInit {
       if (!node) {
         continue;
       }
-      console.log(node)
+      console.log(node);
       const pos = this.networkHandler.activeNetwork.networkInternal.getPositions([node.id]);
       node.x = pos[node.id].x;
       node.y = pos[node.id].y;
@@ -525,8 +547,8 @@ export class NetworkComponent implements OnInit {
           this.getGradient(node.id),
           this.nodeRenderer
         )
-      )
-      updatedNodes.push(node);
+      ),
+        updatedNodes.push(node);
     }
     this.nodeData.nodes.update(updatedNodes);
     this.loadingScreen.stateUpdate(false);
