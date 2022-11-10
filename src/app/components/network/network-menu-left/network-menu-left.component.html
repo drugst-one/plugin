@@ -9,7 +9,7 @@
   <a
     (click)="networkHandler.activeNetwork.toggleNetworkSidebar()"
     class="button is-small is-primary network-toolbar-toggle"
-    [ngClass]="{ rotated: !networkHandler.activeNetwork.networkSidebarOpen }"
+    [ngClass]="{ 'rotated': !networkHandler.activeNetwork.networkSidebarOpen }"
   >
     <app-fa-solid-icon
       icon="angle-left"

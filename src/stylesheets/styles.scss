@@ -6,6 +6,9 @@
 @import "variables";
 
 #appWindow {
+
+  @import "./styles-no-prefix.scss";
+
   font-family: var(--drgstn-font-family) !important;
   height: var(--drgstn-height, 500px) !important;
   display: block !important;
