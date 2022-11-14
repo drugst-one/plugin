@@ -53,7 +53,6 @@ export class NetexControllerService {
     return this.http.get(environment.backend + 'tissue_max_expression/', {params}).toPromise();
   }
 
-
   public tissueExpressionGenes(tissue: Tissue, nodes: Node[]): Observable<any> {
     /**
      * Returns the expression in the given tissue for given nodes and cancerNodes
