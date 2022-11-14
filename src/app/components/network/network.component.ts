@@ -532,7 +532,6 @@ export class NetworkComponent implements OnInit {
       if (!node) {
         continue;
       }
-      console.log(node);
       const pos = this.networkHandler.activeNetwork.networkInternal.getPositions([node.id]);
       node.x = pos[node.id].x;
       node.y = pos[node.id].y;

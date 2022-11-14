@@ -61,8 +61,8 @@ export class AnalysisService {
   private selections = new Map<string, Map<string, Wrapper>>();
 
   public tokens: string[] = [];
-  private tokensCookieKey = `netex-tokens-${window.location.host}`;
-  private tokensFinishedCookieKey = `netex-finishedTokens-${window.location.host}`;
+  private tokensCookieKey = `drugstone-tokens-${window.location.host}`;
+  private tokensFinishedCookieKey = `drugstone-finishedTokens-${window.location.host}`;
   public finishedTokens: string[] = [];
   public tasks: Task[] = [];
 
@@ -282,7 +282,7 @@ export class AnalysisService {
     };
 
 
-    const resp = await this.http.post<any>(`${environment.backend}task/`, {
+    const resp = await this.http.post<any>(`${this.netex.getBackend()}task/`, {
       algorithm: algorithm,
       target: target,
       parameters: parameters,
@@ -307,14 +307,14 @@ export class AnalysisService {
       });
       return '';
     }
-    const resp = await this.http.post<any>(`${environment.backend}task/`, {
+    const resp = await this.http.post<any>(`${this.netex.getBackend()}task/`, {
       algorithm,
       target,
       parameters,
     }).toPromise();
 
     this.tokens.push(resp.token);
-    localStorage.setItem(`netex-tokens-${window.location.host}`, JSON.stringify(this.tokens));
+    localStorage.setItem(`drugstone-tokens-${window.location.host}`, JSON.stringify(this.tokens));
     this.startWatching();
 
     this.toast.setNewToast({

@@ -40,6 +40,7 @@ export type InteractionDatabase = 'omnipath';
 
 export interface IConfig {
   title: string;
+  backendUrl: string;
   legendUrl: string;
   legendClass: string;
   legendPos: 'left' | 'right';
@@ -135,6 +136,7 @@ connectorNodeGroup.groupName = 'Connector Nodes';
  */
 export const defaultConfig: IConfig = {
   title: 'Drugst.One',
+  backendUrl: '',
   legendUrl: '',
   legendClass: 'legend',
   legendPos: 'left',

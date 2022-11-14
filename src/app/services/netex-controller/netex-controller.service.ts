@@ -4,27 +4,35 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Tissue, Node, EdgeType, QuickAlgorithmType, AlgorithmType} from 'src/app/interfaces';
 import {InteractionDrugProteinDB, InteractionProteinProteinDB} from 'src/app/config';
+import { DrugstoneConfigService } from '../drugstone-config/drugstone-config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NetexControllerService {
 
-  constructor(private http: HttpClient) {
+
+  constructor(private http: HttpClient, private drugstoneConfig: DrugstoneConfigService) {
+  }
+
+  public getBackend() {
+    return this.drugstoneConfig.config.backendUrl || environment.backend;
   }
 
   public async getTasks(tokens): Promise<any> {
+    console.log(this.drugstoneConfig.config.backendUrl)
+    console.log(this.getBackend())
     /**
      * returns promise of tasks status
      */
-    return this.http.post<any>(`${environment.backend}tasks/`, {tokens: JSON.stringify(tokens)}).toPromise();
+    return this.http.post<any>(`${this.getBackend()}tasks/`, {tokens: JSON.stringify(tokens)}).toPromise();
   }
 
   public getTaskResult(token) {
     /**
      * returns promise of task result of COMPLETED task
      */
-    return this.http.get<any>(`${environment.backend}task_result/?token=${token}`).toPromise();
+    return this.http.get<any>(`${this.getBackend()}task_result/?token=${token}`).toPromise();
   }
 
   public async mapNodes(nodes, identifier): Promise<any> {
@@ -33,14 +41,14 @@ export class NetexControllerService {
      * Returns list of mapped nodes if node was found, otherwise original node to not lose information
      */
     const payload = {nodes: nodes, identifier: identifier};
-    return this.http.post(`${environment.backend}map_nodes/`, payload).toPromise();
+    return this.http.post(`${this.getBackend()}map_nodes/`, payload).toPromise();
   }
 
   public tissues(): Observable<any> {
     /**
      * Lists all available tissues with id and name
      */
-    return this.http.get<Tissue[]>(`${environment.backend}tissues/`);
+    return this.http.get<Tissue[]>(`${this.getBackend()}tissues/`);
   }
 
   public digest_request(payload): Promise<any> {
@@ -50,7 +58,7 @@ export class NetexControllerService {
   public maxTissueExpression(tissue: Tissue): Promise<any> {
     const params = new HttpParams()
       .set('tissue', tissue.drugstoneId);
-    return this.http.get(environment.backend + 'tissue_max_expression/', {params}).toPromise();
+    return this.http.get(this.getBackend() + 'tissue_max_expression/', {params}).toPromise();
   }
 
   public tissueExpressionGenes(tissue: Tissue, nodes: Node[]): Observable<any> {
@@ -63,7 +71,7 @@ export class NetexControllerService {
       tissue: tissue.drugstoneId,
       proteins: JSON.stringify(genesBackendIds)
     }
-    return this.http.post(`${environment.backend}tissue_expression/`, payload);
+    return this.http.post(`${this.getBackend()}tissue_expression/`, payload);
   }
 
   public adjacentDisorders(nodes: Node[], nodeType: string, dataset: string, licenced: boolean): Observable<any> {
@@ -73,7 +81,7 @@ export class NetexControllerService {
     } else if (nodeType === 'drugs') {
       params['drugs'] = nodes.map((node: Node) => node.drugId && node.drugstoneType === 'drug' ? node.drugstoneId.slice(2) : undefined).filter(id => id != null);
     }
-    return this.http.post<any>(`${environment.backend}adjacent_disorders/`, params);
+    return this.http.post<any>(`${this.getBackend()}adjacent_disorders/`, params);
   }
 
   public adjacentDrugs(pdiDataset: InteractionDrugProteinDB, licenced: boolean, nodes: Node[]): Observable<any> {
@@ -87,7 +95,7 @@ export class NetexControllerService {
       proteins: genesBackendIds,
       licenced: licenced
     };
-    return this.http.post<any>(`${environment.backend}adjacent_drugs/`, params);
+    return this.http.post<any>(`${this.getBackend()}adjacent_drugs/`, params);
   }
 
   public graphExport(graph_data: { edges: EdgeType[], nodes: Node[] }) {
@@ -95,7 +103,7 @@ export class NetexControllerService {
      * Sends complete graph data to backend where it is written to graphml or json File.
      * The file is returned as download for the user.
      */
-    return this.http.post(`${environment.backend}graph_export/`, graph_data, {responseType: 'text'});
+    return this.http.post(`${this.getBackend()}graph_export/`, graph_data, {responseType: 'text'});
   }
 
   public async fetchEdges(nodes: Node[], dataset: InteractionProteinProteinDB, licenced: boolean): Promise<any> {
@@ -104,7 +112,7 @@ export class NetexControllerService {
      * Returns list of mapped nodes if node was found, otherwise original node to not lose information
      */
     const payload = {nodes: nodes, dataset: dataset, licenced: licenced};
-    return this.http.post(`${environment.backend}fetch_edges/`, payload).toPromise();
+    return this.http.post(`${this.getBackend()}fetch_edges/`, payload).toPromise();
   }
 
 
@@ -112,6 +120,6 @@ export class NetexControllerService {
     /**
      * returns promise of task status
      */
-    return this.http.get(`${environment.backend}get_license`).toPromise();
+    return this.http.get(`${this.getBackend()}get_license`).toPromise();
   }
 }

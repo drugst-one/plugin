@@ -44,6 +44,7 @@ import { GroupSelectionComponent } from './pages/explorer-page/group-selection/g
 import { FaSolidIconComponent } from './components/fa-solid-icon/fa-solid-icon.component';
 import { FaIconsComponent } from './pages/explorer-page/fa-icons/fa-icons.component';
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
+import { PrivacyBannerComponent } from './components/privacy-banner/privacy-banner.component';
 
 
 @NgModule({
@@ -78,6 +79,7 @@ import { LoadingScreenComponent } from './components/loading-screen/loading-scre
     FaSolidIconComponent,
     FaIconsComponent,
     LoadingScreenComponent,
+    PrivacyBannerComponent,
   ],
   imports: [
     BrowserModule,

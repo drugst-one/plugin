@@ -348,7 +348,7 @@ class ParserCSS:
                 if file.endswith(".scss") or file.endswith(".css") or file.endswith(".sass"):
                     path = os.path.join(root, file)
                     # skip ng select classes
-                    if '@ng-select' in path:
+                    if '@ng-select' in path or '-no-prefix.scss' in path:
                         continue
                     print('parsing', path)
                     scss = self.parseCSS(path)
