@@ -89,10 +89,18 @@ export function rgbaToHex(rgba) {
 // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
 function componentToHex(c) {
   const hex = c.toString(16);
-  return hex.length == 1 ? '0' + hex : hex;
+  return hex.length === 1 ? '0' + hex : hex;
 }
 
 export function rgbToHex(rgb) {
+  const inParts = rgb.substring(rgb.indexOf('(')).split(','),
+    r = parseInt(trim(inParts[0].substring(1)), 10),
+    g = parseInt(trim(inParts[1]), 10),
+    b = parseInt(trim(inParts[2]), 10);
+  return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+export function rgbaWithoutAToHex(rgb) {
   const inParts = rgb.substring(rgb.indexOf('(')).split(','),
     r = parseInt(trim(inParts[0].substring(1)), 10),
     g = parseInt(trim(inParts[1]), 10),
@@ -144,41 +152,79 @@ export function RGBAtoRGBwithoutA(rgbaString) {
   return `rgb(${RGBA.red},${RGBA.green},${RGBA.blue})`;
 }
 
-export function RGBAtoRGB(rgbaString) {
-  const rgbaStringSplit = rgbaString.slice(5, -1).split(',');
-  const RGBA = {
-    red: rgbaStringSplit[0],
-    green: rgbaStringSplit[1],
-    blue: rgbaStringSplit[2],
-    alpha: rgbaStringSplit[3]
-  };
-  // assume white background
-  const bg = {red: 255, green: 255, blue: 255};
-  const RGB = {red: undefined, green: undefined, blue: undefined};
-  const alpha = 1 - RGBA.alpha;
-  RGB.red = Math.round((RGBA.alpha * (RGBA.red / 255) + (alpha * (bg.red / 255))) * 255);
-  RGB.green = Math.round((RGBA.alpha * (RGBA.green / 255) + (alpha * (bg.green / 255))) * 255);
-  RGB.blue = Math.round((RGBA.alpha * (RGBA.blue / 255) + (alpha * (bg.blue / 255))) * 255);
-  return `rgb(${RGB.red},${RGB.green},${RGB.blue})`;
+function hexToRGBA(hex, alpha) {
+  let r;
+  let g;
+  let b;
+  if (hex.length < 5) {
+    r = parseInt(hex.slice(1, 2) + hex.slice(1, 2), 16);
+    g = parseInt(hex.slice(2, 3) + hex.slice(2, 3), 16);
+    b = parseInt(hex.slice(3, 4) + hex.slice(3, 4), 16);
+  } else {
+    r = parseInt(hex.slice(1, 3), 16);
+    g = parseInt(hex.slice(3, 5), 16);
+    b = parseInt(hex.slice(5, 7), 16);
+  }
+  if (alpha) {
+    return 'rgba(' + (isNaN(r) ? 0 : r) + ', ' + (isNaN(g) ? 0 : g) + ', ' + (isNaN(b) ? 0 : b) + ', ' + alpha + ')';
+  } else {
+    return 'rgb(' + (isNaN(r) ? 0 : r) + ', ' + isNaN(g) ? 0 : g + ', ' + isNaN(b) ? 0 : b + ')';
+  }
 }
+
+// https://gist.github.com/JordanDelcros/518396da1c13f75ee057?permalink_comment_id=2075095#gistcomment-2075095
+export function blendColors(args: any) {
+  let base = [0, 0, 0, 0];
+  let mix;
+  for (let added of args) {
+    added = RGBAtoArray(added);
+    if (typeof added[3] === 'undefined') {
+      added[3] = 1;
+    }
+    // check if both alpha channels exist.
+    if (base[3] && added[3]) {
+      mix = [0, 0, 0, 0];
+      // alpha
+      mix[3] = 1 - (1 - added[3]) * (1 - base[3]);
+      // red
+      mix[0] = Math.round((added[0] * added[3] / mix[3]) + (base[0] * base[3] * (1 - added[3]) / mix[3]));
+      // green
+      mix[1] = Math.round((added[1] * added[3] / mix[3]) + (base[1] * base[3] * (1 - added[3]) / mix[3]));
+      // blue
+      mix[2] = Math.round((added[2] * added[3] / mix[3]) + (base[2] * base[3] * (1 - added[3]) / mix[3]));
+
+    } else if (added) {
+      mix = added;
+    } else {
+      mix = base;
+    }
+    base = mix;
+  }
+
+  return 'rgba(' + mix[0] + ', ' + mix[1] + ', ' + mix[2] + ', ' + mix[3] + ')';
+}
+
+export function RGBAtoArray(rgbaString) {
+  const rgbaStringSplit = rgbaString.slice(5, -1).split(',');
+  return [
+    rgbaStringSplit[0],
+    rgbaStringSplit[1],
+    rgbaStringSplit[2],
+    rgbaStringSplit[3]
+  ];
+}
+
 
 export function pieChartContextRenderer({ctx, x, y, state: {selected, hover}, style, label}) {
   ctx.drawPieLabel = function(style, x, y, label) {
     ctx.font = 'normal 12px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = window.getComputedStyle(document.documentElement).getPropertyValue('--drgstn-text-primary');
     ctx.fillText(label, x, y + style.size + 12);
   };
 
-  ctx.drawPie = function(style, x, y, state: { selected, hover }) {
-    const selection = RGBAtoRGBwithoutA(style.borderColor) !== RGBAtoRGBwithoutA(style.color);
-    const total = 1;
-    // draw shadow
-    const selectedColor = style.borderColor;
-    if (selected) {
-      style.borderColor = style.color;
-    }
+  function startShadow() {
     if (style.shadow) {
       ctx.save();
       ctx.shadowColor = style.shadowColor;
@@ -186,60 +232,67 @@ export function pieChartContextRenderer({ctx, x, y, state: {selected, hover}, st
       ctx.shadowOffsetY = style.shadowY;
       ctx.shadowBlur = 10;
     }
-    // draw white background circle
-    ctx.beginPath();
-    ctx.fillStyle = 'white';
-    // or fill like background of graph panel
-    // ctx.fillStyle= window.getComputedStyle(document.documentElement).getPropertyValue('--drgstn-panel');
-    ctx.arc(x, y, style.size - 1, 0, 2 * Math.PI, false);
-    ctx.fill();
-    ctx.stroke();
+  }
 
-    // prepare pi-chart
-    ctx.fillStyle = style.color ? style.color : 'rgba(255, 0, 0, 1)';
-    // set alpha value to 1
-    ctx.fillStyle = RGBAtoRGB(ctx.fillStyle);
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    const len = style.opacity / total * 2 * Math.PI;
-    ctx.arc(x, y, style.size - 1, 0, len, false);
-    ctx.lineTo(x, y);
-    ctx.fill();
+  function endShadow() {
     if (style.shadow) {
       // removing shadow application of future fill or stroke calls
       ctx.restore();
     }
-    ctx.strokeStyle = style.borderColor ? style.borderColor : 'black';
+  }
+
+  ctx.drawPie = function(style, x, y, state: { selected, hover }) {
+    const selection = RGBAtoRGBwithoutA(style.borderColor) !== RGBAtoRGBwithoutA(style.color);
+    const bgOpacity = 0.15;
+    const fgOpacity = 0.5;
+    const lineOpacity = 0.6;
+    const fullCircle = 2 * Math.PI;
+    const fallbackColor = '#FF0000';
+    const colorOrFallback = style.color ? style.color : fallbackColor;
+    let outerBorderColor = style.borderColor;
     if (selection) {
-      ctx.strokeStyle = selectedColor ? selectedColor : 'balck';
+      outerBorderColor = style.borderColor ? rgbaWithoutAToHex(style.borderColor) : fallbackColor;
     }
+    if (selected) {
+      style.borderColor = style.color;
+    }
+
+    ctx.beginPath();
+    ctx.arc(x, y, style.size - 1, 0, 2 * Math.PI, false);
+    // fill like background of graph panel
+    ctx.fillStyle = RGBAtoRGBwithoutA(blendColors([hexToRGBA(window.getComputedStyle(document.documentElement).getPropertyValue('--drgstn-panel'), 1), hexToRGBA(colorOrFallback, bgOpacity)]));
+    startShadow();
+    ctx.fill();
+    endShadow();
+    ctx.stroke();
+
+    // prepare pi-chart
+    ctx.fillStyle = hexToRGBA(colorOrFallback, fgOpacity);
+
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.arc(x, y, style.size - 1, 0, style.opacity * fullCircle, false);
+    ctx.fill();
+    ctx.lineTo(x, y);
+
     ctx.lineWidth = selected ? 3 : 2;
-    if (style.opacity !== total) {
+    if (style.opacity < 1) {
       // avoid the inner line when circle is complete
+      ctx.strokeStyle = hexToRGBA(outerBorderColor, lineOpacity);
       ctx.stroke();
     }
 
-    ctx.strokeStyle = RGBAtoRGBwithoutA(ctx.strokeStyle);
-    // draw the surrounding border circle
+    // draw outer circle
+    ctx.strokeStyle = outerBorderColor;
     ctx.beginPath();
-    ctx.arc(x, y, style.size - (selected ? 0 : 1), 0, 2 * Math.PI);
-    // ctx.strokeStyle = style.borderColor ? style.borderColor : 'black';
-    // // set alpha value to 1
-    // ctx.strokeStyle = RGBAtoRGBwithoutA(ctx.strokeStyle);
+    ctx.arc(x, y, style.size - (selected ? 0 : 1), 0, fullCircle);
     ctx.stroke();
-    if (selection) {
-      ctx.strokeStyle = selectedColor ? selectedColor : 'black';
-    } else {
-      ctx.strokeStyle = style.color ? style.color : 'black';
-    }
+
+    // draw inner circle (double circle if selected)
     if (selected || selection) {
       ctx.beginPath();
-      ctx.strokeStyle = style.color ? style.color : 'black';
-      ctx.strokeStyle = RGBAtoRGBwithoutA(ctx.strokeStyle);
-      ctx.arc(x, y, style.size - 2, 0, 2 * Math.PI);
-      // ctx.strokeStyle = style.borderColor ? style.borderColor : 'black';
-      // // set alpha value to 1
-      // ctx.strokeStyle = RGBAtoRGBwithoutA(ctx.strokeStyle);
+      ctx.strokeStyle = hexToRGBA(colorOrFallback, lineOpacity);
+      ctx.arc(x, y, style.size - 2, 0, fullCircle);
       ctx.stroke();
     }
   };
