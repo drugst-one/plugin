@@ -89,7 +89,7 @@
         </ul>
       </div>
       <div
-        class="tab-content meta"
+        class="tab-content meta parameter-tab"
         *ngIf="task && task.info.done"
         [class.is-visible]="tab === 'meta'"
       >
@@ -114,7 +114,7 @@
           </div>
           <div class="columns m-1">
             <div class="column">
-              <table class="table is-narrow">
+              <table class="table parameter-table">
                 <tbody>
                 <tr
                   *ngIf="
@@ -248,7 +248,7 @@
                 Algorithm:
                 {{ algorithmNames["multisteiner"] }}
               </h4>
-              <table class="table is-narrow">
+              <table class="table parameter-table">
                 <tbody>
                 <tr>
                   <td>Number of Trees</td>
@@ -279,7 +279,7 @@
                 Algorithm:
                 {{ algorithmNames["closeness"] }}
               </h4>
-              <table class="table is-narrow">
+              <table class="table parameter-table">
                 <tbody>
                   <tr>
                     <td>Include indirect drugs</td>

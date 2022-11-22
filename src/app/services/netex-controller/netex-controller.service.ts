@@ -20,8 +20,6 @@ export class NetexControllerService {
   }
 
   public async getTasks(tokens): Promise<any> {
-    console.log(this.drugstoneConfig.config.backendUrl)
-    console.log(this.getBackend())
     /**
      * returns promise of tasks status
      */

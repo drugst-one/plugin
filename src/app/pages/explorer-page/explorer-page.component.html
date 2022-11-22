@@ -460,7 +460,7 @@
             class="seed-selection"
             [ngClass]="{ 'text-normal': 'drugstoneConfig.smallStyle' }"
           >
-            <div class="card-content overflow">
+            <div class="card-content">
               <table
                 class="table selection-table"
                 *ngIf="analysis.getCount() > 0"
@@ -478,7 +478,7 @@
                   <td>Actions</td>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody class="overflow">
                 <tr *ngFor="let p of analysis.getSelection()">
                   <td>
                     <p class="is-capitalized">{{ p.data.label }}</p>
@@ -502,10 +502,11 @@
                   >
                     <p>{{ p.data.uniprotAc }}</p>
                   </td>
-                  <td>
+                  <td style="text-align: center">
                     <button
                       (click)="analysis.removeItems([p])"
                       class="button is-small is-danger is-outlined has-tooltip"
+                      [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
                       tooltipPosition="top"
                       pTooltip="Remove from selection."
                     >

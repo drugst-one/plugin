@@ -28,6 +28,10 @@
   height: $analysis-tab-header-height;
 }
 
+.parameter-table, .parameter-tab {
+  width: 100% !important;
+}
+
 .tab-content {
   visibility: hidden;
   position: absolute;

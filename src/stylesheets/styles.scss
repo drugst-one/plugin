@@ -137,8 +137,13 @@
   }
 
   div.card-content.overflow {
-    overflow: auto;
+    overflow-y: auto;
     max-height: 350px;
+  }
+
+  tbody.overflow {
+    overflow-y: auto;
+    max-height: $sidebar-selection-table-height;
   }
 
   div.drugstone.network {

@@ -234,6 +234,19 @@ export function pieChartContextRenderer({ctx, x, y, state: {selected, hover}, st
     }
   }
 
+  function colorToHex(color) {
+    if (color.startsWith('#')) {
+      return color;
+    }
+    if (color.startsWith('rgba')) {
+      return rgbToHex(color);
+    }
+    if (color.startsWith('rgb')) {
+      return rgbToHex(color);
+    }
+    return null;
+  }
+
   function endShadow() {
     if (style.shadow) {
       // removing shadow application of future fill or stroke calls
@@ -248,7 +261,7 @@ export function pieChartContextRenderer({ctx, x, y, state: {selected, hover}, st
     const lineOpacity = 0.6;
     const fullCircle = 2 * Math.PI;
     const fallbackColor = '#FF0000';
-    const colorOrFallback = style.color ? style.color : fallbackColor;
+    const colorOrFallback = style.color ? colorToHex(style.color) : fallbackColor;
     let outerBorderColor = style.borderColor;
     if (selection) {
       outerBorderColor = style.borderColor ? rgbaWithoutAToHex(style.borderColor) : fallbackColor;
@@ -266,7 +279,7 @@ export function pieChartContextRenderer({ctx, x, y, state: {selected, hover}, st
     endShadow();
     ctx.stroke();
 
-    // prepare pi-chart
+    // draw pi-chart
     ctx.fillStyle = hexToRGBA(colorOrFallback, fgOpacity);
 
     ctx.beginPath();

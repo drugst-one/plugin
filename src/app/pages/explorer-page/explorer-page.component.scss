@@ -10,6 +10,7 @@
 .quick-find {
   .notification {
     padding: 1.25rem 1rem 1.25rem 1rem !important;
+
     .digit {
       color: rgba(255, 255, 255, 0.5);
       font-size: 32px;
@@ -23,6 +24,7 @@
       margin: auto 0;
       font-weight: bold;
     }
+
     .digit-small {
       color: rgba(255, 255, 255, 0.5);
       font-size: 24px;
@@ -37,15 +39,18 @@
       font-weight: bold;
     }
   }
+
   .notification.small {
     padding: 0.5rem 1rem !important;
   }
+
   .divisor-rapid {
     margin-top: -10px;
     margin-bottom: 10px;
     text-align: center;
   }
 }
+
 .card-content.quick-find.small {
   padding: 0.5rem !important;
 }
@@ -93,6 +98,7 @@
 
 .card-footer {
   font-size: 12px;
+
   a {
     padding: 3px;
   }
@@ -104,6 +110,29 @@
 
 .selection-table {
   width: 100%;
+  display: block;
+
+  td {
+    vertical-align: middle !important;
+  }
+
+  thead, tbody {
+    width: 100%;
+    display: block !important;
+  }
+
+  thead, tbody tr {
+    width: 100%;
+    display: table !important;
+    table-layout: fixed;
+  }
+  app-fa-solid-icon{
+    margin-right: -6px !important;
+  }
+  p {
+    margin-bottom: 0 !important;
+  }
+
 }
 
 .task-list-container {
@@ -111,8 +140,8 @@
 }
 
 .uniprot p {
-    max-width: 50px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  max-width: 50px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
