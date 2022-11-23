@@ -66,7 +66,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
     this._groups = groups;
     if (this.id !== null) {
-      this.activateConfig();
+      this.activateConfig(true);
     }
   }
 
@@ -80,7 +80,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     } catch {
       console.log('ERROR: Failed parsing input network');
     }
-    this.activateConfig();
+    this.activateConfig(true);
   }
 
   @Output()
@@ -188,7 +188,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public activateConfig() {
+  public activateConfig(updateNetworkFlag=false) {
 
     let configObj = typeof this._config === 'string' ? this._config.length === 0 ? {} : JSON5.parse(this._config) : this._config;
     const groupsObj = typeof this._groups === 'string' ? this._groups.length === 0 ? {} : JSON5.parse(this._groups) : this._groups;
@@ -201,7 +201,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     // update Drugst.One according to the settings
     // check if config updates affect network
-    let updateNetworkFlag = false;
     for (const key of Object.keys(configObj)) {
       if (key === 'nodeGroups') {
         this.setConfigNodeGroup(key, configObj[key]);
@@ -232,6 +231,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.networkHandler.updateAdjacentNodes();
       });
     }
+
   }
 
   analysisWindowChanged($event: [any[], [Node[], Tissue], NodeInteraction[]]) {
@@ -255,7 +255,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
    */
   public async createNetwork() {
     this.analysis.resetSelection();
-
     this.networkHandler.activeNetwork.selectedWrapper = null;
     // getNetwork synchronizes the input network with the database
     await this.getNetwork();
@@ -308,7 +307,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (!this.drugstoneConfig.selfReferences) {
       edges = edges.filter(el => el.from !== el.to);
     }
-
     this.nodeData.nodes = new vis.DataSet(nodes);
     this.nodeData.edges = new vis.DataSet(edges);
     const container = this.networkHandler.activeNetwork.networkEl.nativeElement;
@@ -473,9 +471,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
    */
   public setConfigNodeGroup(key: string, nodeGroups: { [key: string]: NodeGroup } | {}) {
     // make sure that return-groups (seeds, drugs, found nodes) are set
-    const defaultNodeGroups = JSON.parse(JSON.stringify(defaultConfig.nodeGroups));
+    // const defaultNodeGroups = JSON.parse(JSON.stringify(defaultConfig.nodeGroups));
     // user merge function to do deep merge
-    nodeGroups = merge(defaultNodeGroups, nodeGroups);
+    // nodeGroups = merge(defaultNodeGroups, nodeGroups);
 
     // make sure all keys are set
     Object.entries(nodeGroups).forEach(([key, group]) => {
@@ -535,8 +533,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
    */
   public setConfigEdgeGroup(key: string, edgeGroups: { [key: string]: EdgeGroup }) {
     // make sure that default-groups are set
-    const defaultNodeGroups = JSON.parse(JSON.stringify(defaultConfig.edgeGroups));
-    edgeGroups = merge(defaultNodeGroups, edgeGroups);
+    // const defaultNodeGroups = JSON.parse(JSON.stringify(defaultConfig.edgeGroups));
+    // edgeGroups = merge(defaultNodeGroups, edgeGroups);
 
     // // do not allow '_' in node Group names since it causes problems with backend
     // edgeGroups = removeUnderscoreFromKeys(edgeGroups)
