@@ -471,9 +471,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
    */
   public setConfigNodeGroup(key: string, nodeGroups: { [key: string]: NodeGroup } | {}) {
     // make sure that return-groups (seeds, drugs, found nodes) are set
-    // const defaultNodeGroups = JSON.parse(JSON.stringify(defaultConfig.nodeGroups));
+    const defaultNodeGroups = JSON.parse(JSON.stringify(defaultConfig.nodeGroups));
     // user merge function to do deep merge
-    // nodeGroups = merge(defaultNodeGroups, nodeGroups);
+    nodeGroups = merge(defaultNodeGroups, nodeGroups);
+
 
     // make sure all keys are set
     Object.entries(nodeGroups).forEach(([key, group]) => {
@@ -533,8 +534,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
    */
   public setConfigEdgeGroup(key: string, edgeGroups: { [key: string]: EdgeGroup }) {
     // make sure that default-groups are set
-    // const defaultNodeGroups = JSON.parse(JSON.stringify(defaultConfig.edgeGroups));
-    // edgeGroups = merge(defaultNodeGroups, edgeGroups);
+    const defaultNodeGroups = JSON.parse(JSON.stringify(defaultConfig.edgeGroups));
+    edgeGroups = merge(defaultNodeGroups, edgeGroups);
 
     // // do not allow '_' in node Group names since it causes problems with backend
     // edgeGroups = removeUnderscoreFromKeys(edgeGroups)
