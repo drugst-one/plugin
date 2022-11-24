@@ -210,6 +210,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.networkHandler.activeNetwork.getInteractions(configObj[key]);
       }
     }
+    this.networkHandler.networkSidebarOpen = this.drugstoneConfig.config.expandNetworkMenu;
     // trigger updates on config e.g. in legend
     if (this.drugstoneConfig.analysisConfig) {
       this.drugstoneConfig.analysisConfig = {...this.drugstoneConfig.analysisConfig};

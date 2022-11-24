@@ -1,7 +1,7 @@
 <div
   class="network-footer-toolbar drgstn-box-shadow"
   [ngClass]="
-    networkHandler.activeNetwork.networkSidebarOpen ? 'opened' : 'closed'
+    networkHandler.networkSidebarOpen ? 'opened' : 'closed'
   "
   [class.no-header]="networkHandler.activeNetwork.networkType === 'analysis'"
   [class.small-sidebar]="drugstoneConfig.smallStyle"
@@ -9,7 +9,7 @@
   <a
     (click)="networkHandler.activeNetwork.toggleNetworkSidebar()"
     class="button is-small is-primary network-toolbar-toggle"
-    [ngClass]="{ 'rotated': networkHandler.activeNetwork.networkSidebarOpen }"
+    [ngClass]="{ 'rotated': networkHandler.networkSidebarOpen }"
   >
     <app-fa-solid-icon
       icon="angle-left"
@@ -85,7 +85,7 @@
           class="dropdown network-footer-toolbar-element"
           [class.is-active]="networkHandler.activeNetwork.expressionExpanded"
           [ngClass]="{
-            'inner-dropdown': !networkHandler.activeNetwork.networkSidebarOpen
+            'inner-dropdown': !networkHandler.networkSidebarOpen
           }"
         >
           <div class="dropdown-trigger">

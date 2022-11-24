@@ -64,7 +64,7 @@ export class NetworkComponent implements OnInit {
   public selectedTissue: Tissue | null = null;
 
   // change this to true to have sidebar open per default
-  public networkSidebarOpen = false;
+  // public networkSidebarOpen = false;
 
   public queryItems: Wrapper[] = [];
 
@@ -84,7 +84,6 @@ export class NetworkComponent implements OnInit {
   public loading = false;
 
   constructor(
-    public configService: DrugstoneConfigService,
     public legendService: LegendService,
     public networkHandler: NetworkHandlerService,
     public analysis: AnalysisService,
@@ -96,7 +95,6 @@ export class NetworkComponent implements OnInit {
 
   ngOnInit(): void {
     this.networkHandler.networks[this.networkType] = this;
-    this.networkSidebarOpen = this.configService.config.expandNetworkMenu || false;
   }
 
   setLoading(bool: boolean): void {
@@ -363,7 +361,7 @@ export class NetworkComponent implements OnInit {
   }
 
   toggleNetworkSidebar() {
-    this.networkSidebarOpen = !this.networkSidebarOpen;
+    this.networkHandler.networkSidebarOpen = !this.networkHandler.networkSidebarOpen;
   }
 
   public selectTissue(tissue: Tissue | null) {

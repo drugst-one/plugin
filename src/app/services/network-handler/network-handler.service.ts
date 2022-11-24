@@ -18,9 +18,9 @@ export class NetworkHandlerService {
   }
 
   private change = new Subject<any>();
-
+  public networkSidebarOpen = this.drugstoneConfig.config.expandNetworkMenu || false;
   public networks: { NetworkType: NetworkComponent } | {} = {};
-  public activeNetwork: NetworkComponent = new NetworkComponent(this.drugstoneConfig, this.legendService, this.networkHandler, this.analysis, this.drugstoneConfig, this.netex, this.omnipath, this.loadingScreen);
+  public activeNetwork: NetworkComponent = new NetworkComponent(this.legendService, this.networkHandler, this.analysis, this.drugstoneConfig, this.netex, this.omnipath, this.loadingScreen);
 
   public setActiveNetwork(network: NetworkType) {
     this.triggerChange();
