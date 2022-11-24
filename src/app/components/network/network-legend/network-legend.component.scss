@@ -39,7 +39,7 @@ div.legend {
       // no border line on top of first element
       border-top: none;
     }
-  }  
+  }
   img {
     max-width: 20vw;
     // margin-bottom: 1rem;
@@ -97,8 +97,9 @@ div.legend {
         border-radius: 50%;
         width: $legend-circle-size;
         height: $legend-circle-size;
-        display: inline-block;
-        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-content: center;
         line-height: $legend-circle-line-height;
       }
       .triangle {

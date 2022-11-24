@@ -62,7 +62,7 @@ Export As Graphml Button<br>
 <input type="checkbox" onclick=changeLicenced(this.checked)> Use licenced datasets<br>
 <div>
   <i>Protein-Protein Interactions</i>
-  <select name="Protein-Protein Interactions" onchange="applyDataset()" id="ppi-dataset">
+  <select name="Protein-Protein Interactions" onchange="applyDataset('ppi-dataset')" id="ppi-dataset">
     <option value="NeDRex">NeDRex</option>
     <option value="STRING">STRING</option>
     <option value="biogrid">BioGRID</option>
@@ -73,7 +73,7 @@ Export As Graphml Button<br>
 </div>
 <div>
   <i>Drug-Protein Targets</i>
-  <select name="Drug-Protein Targets" onchange="applyDataset()" id="drpi-dataset">
+  <select name="Drug-Protein Targets" onchange="applyDataset('drpi-dataset')" id="drpi-dataset">
     <option value="NeDRex">NeDRex</option>
     <option value="DrugBank">DrugBank</option>
     <option value="Drug Central">Drug Central</option>
@@ -84,7 +84,7 @@ Export As Graphml Button<br>
 
 <div>
   <i>Drug-Disorder Indications</i>
-  <select name="Drug-Disorder Indications" onchange="applyDataset()" id="drdi-dataset">
+  <select name="Drug-Disorder Indications" onchange="applyDataset('drdi-dataset')" id="drdi-dataset">
     <option value="NeDRex">NeDRex</option>
     <option value="CTD">CTD</option>
     <option value="Drug Central">Drug Central</option>
@@ -93,7 +93,7 @@ Export As Graphml Button<br>
 </div>
 <div>
   <i>Protein-Disorder Associations</i>
-  <select name="Protein-Disorder Associations" onchange="applyDataset()" id="pdis-dataset">
+  <select name="Protein-Disorder Associations" onchange="applyDataset('pdis-dataset')" id="pdis-dataset">
     <option value="NeDRex">NeDRex</option>
     <option value="DisGeNET">DisGeNET</option>
     <option value="omim">OMIM</option>
@@ -110,18 +110,18 @@ Export As Graphml Button<br>
 
 <div style="max-width: 80vw; width: 1276px; height: 500px">
 
-<!--  <drugst-one id="tatata"-->
-<!--              groups='{"edgeGroups":{"default":{"color":"#000000","groupName":"default edge"}}, "nodeGroups" : { "selectedNode": { "borderWidth": 3,"borderWidthSelected": 4,"color": { "border": "#C80BFD","highlight": {"border": "#C80BFD"}},"font": { "color": "#0000000","size": 14 }},"Protein":{"shape":"circle","groupName":"Protein","type":"Protein","color":"#C99AFFFF","font":{"color":"#FFFFFF"}}}}'-->
-<!--              config='{"identifier":"symbol","title":"ROBUST output network", "taskDrugName": "Drug Search", "showLegendNodes": true, "showLegendEdges": true, "showSidebar": "left", "showOverview": true, "legendPos": "left", "legendClass": "legend", "showQuery": true, "showItemSelector": true,"showSimpleAnalysis": false,"showAdvAnalysis": true,"showSelection": true,"showTasks": true,"showNetworkMenu": "right","showLegend": true,"showNetworkMenuButtonExpression": true, "showNetworkMenuButtonScreenshot": true,"showNetworkMenuButtonExportGraphml": true,"showNetworkMenuButtonAdjacentDrugs": true,"showNetworkMenuButtonCenter": true,"showConnectGenes": false,"networkMenuButtonAdjacentDrugsLabel": "Drugs","showNetworkMenuButtonAdjacentDisordersProteins": true,"networkMenuButtonAdjacentDisordersProteinsLabel": "Disorders (protein)","showNetworkMenuButtonAdjacentDisordersDrugs": true,"networkMenuButtonAdjacentDisordersDrugsLabel": "Disorders (drug)","showNetworkMenuButtonAnimation": true,"networkMenuButtonAnimationLabel": "Animation", "autofillEdges": true, "physicsOn": false,"useNedrexLicenced": true,"selfReferences": false, "interactionDrugProtein": "NeDRex", "indicationDrugDisorder": "NeDRex","nodeShadow": true,"edgeShadow": false, "algorithms": {"drug": ["trustrank", "closeness", "degree", "proximity"], "drug-target": ["trustrank", "multisteiner", "keypathwayminer", "degree", "closeness", "betweenness"]}, "associatedProteinDisorder": "NeDRex", "expandNetworkMenu": true}'-->
-<!--              network='{"nodes": [{"id":"PSEN1","group":"Protein","label":"PSEN1"},{"id":"PSEN2","group":"Protein","label":"PSEN2"},{"id":"APP","group":"Protein","label":"APP"},{"id":"APOE","group":"Protein","label":"APOE"},{"id":"RNF32","group":"Protein","label":"RNF32"},{"id":"STX5","group":"Protein","label":"STX5"},{"id":"TRAF3IP1","group":"Protein","label":"TRAF3IP1"},{"id":"PHB1","group":"Protein","label":"PHB1"},{"id":"MAPT","group":"Protein","label":"MAPT"},{"id":"ESR1","group":"Protein","label":"ESR1"},{"id":"IRF3","group":"Protein","label":"IRF3"},{"id":"DYNC1H1","group":"Protein","label":"DYNC1H1"},{"id":"CUL3","group":"Protein","label":"CUL3"},{"id":"HMGB1","group":"Protein","label":"HMGB1"},{"id":"DNAJC7","group":"Protein","label":"DNAJC7"},{"id":"NEFM","group":"Protein","label":"NEFM"},{"id":"DISC1","group":"Protein","label":"DISC1"},{"id":"PPP5C","group":"Protein","label":"PPP5C"},{"id":"CTNNB1","group":"Protein","label":"CTNNB1"},{"id":"KRAS","group":"Protein","label":"KRAS"}]}'-->
-<!--  ></drugst-one>-->
-
   <drugst-one id="netexp1"
-                pluginId="2"
-                groups='{"nodeGroups":{}}'
-                config='{"identifier":"entrez","title":"Breast cancer example network","nodeShadow":true,"edgeShadow":false,"autofillEdges":true,"interactionProteinProtein":"STRING","licensedDatasets":true,"selfReferences":false}'
-                network='{"nodes":[{"id":"7040","label":"7040"}]}'>
-  </drugst-one>
+              groups='{"edgeGroups":{"default":{"color":"#000000","groupName":"default edge"}}, "nodeGroups" : { "selectedNode": { "borderWidth": 3,"borderWidthSelected": 4,"color": { "border": "#C80BFD","highlight": {"border": "#C80BFD"}},"font": { "color": "#0000000","size": 14 }},"Protein":{"shape":"circle","groupName":"Protein","type":"Protein","color":"#C99AFFFF","font":{"color":"#FFFFFF"}}}}'
+              config='{"activateNetworkMenuButtonAdjacentDisorders": true, "activateNetworkMenuButtonAdjacentDrugs": true, "identifier":"symbol","title":"ROBUST output network", "taskDrugName": "Drug Search", "showLegendNodes": true, "showLegendEdges": true, "showSidebar": "left", "showOverview": true, "legendPos": "left", "legendClass": "legend", "showQuery": true, "showItemSelector": true,"showSimpleAnalysis": false,"showAdvAnalysis": true,"showSelection": true,"showTasks": true,"showNetworkMenu": "right","showLegend": true,"showNetworkMenuButtonExpression": true, "showNetworkMenuButtonScreenshot": true,"showNetworkMenuButtonExportGraphml": true,"showNetworkMenuButtonAdjacentDrugs": true,"showNetworkMenuButtonCenter": true,"showConnectGenes": false,"networkMenuButtonAdjacentDrugsLabel": "Drugs","showNetworkMenuButtonAdjacentDisordersProteins": true,"networkMenuButtonAdjacentDisordersProteinsLabel": "Disorders (protein)","showNetworkMenuButtonAdjacentDisordersDrugs": true,"networkMenuButtonAdjacentDisordersDrugsLabel": "Disorders (drug)","showNetworkMenuButtonAnimation": true,"networkMenuButtonAnimationLabel": "Animation", "autofillEdges": true, "physicsOn": true,"useNedrexLicenced": true,"selfReferences": false, "interactionDrugProtein": "NeDRex", "indicationDrugDisorder": "NeDRex","nodeShadow": true,"edgeShadow": false, "algorithms": {"drug": ["trustrank", "closeness", "degree", "proximity"], "drug-target": ["trustrank", "multisteiner", "keypathwayminer", "degree", "closeness", "betweenness"]}, "associatedProteinDisorder": "NeDRex", "expandNetworkMenu": true}'
+              network='{"nodes": [{"id":"PSEN1","group":"Protein","label":"PSEN1"},{"id":"PSEN2","group":"Protein","label":"PSEN2"},{"id":"APP","group":"Protein","label":"APP"},{"id":"APOE","group":"Protein","label":"APOE"},{"id":"RNF32","group":"Protein","label":"RNF32"},{"id":"STX5","group":"Protein","label":"STX5"},{"id":"TRAF3IP1","group":"Protein","label":"TRAF3IP1"},{"id":"PHB1","group":"Protein","label":"PHB1"},{"id":"MAPT","group":"Protein","label":"MAPT"},{"id":"ESR1","group":"Protein","label":"ESR1"},{"id":"IRF3","group":"Protein","label":"IRF3"},{"id":"DYNC1H1","group":"Protein","label":"DYNC1H1"},{"id":"CUL3","group":"Protein","label":"CUL3"},{"id":"HMGB1","group":"Protein","label":"HMGB1"},{"id":"DNAJC7","group":"Protein","label":"DNAJC7"},{"id":"NEFM","group":"Protein","label":"NEFM"},{"id":"DISC1","group":"Protein","label":"DISC1"},{"id":"PPP5C","group":"Protein","label":"PPP5C"},{"id":"CTNNB1","group":"Protein","label":"CTNNB1"},{"id":"KRAS","group":"Protein","label":"KRAS"}]}'
+  ></drugst-one>
+
+  <!--  <drugst-one id="netexp1"-->
+  <!--                pluginId="2"-->
+  <!--                groups='{"nodeGroups":{}}'-->
+  <!--                config='{"identifier":"entrez","title":"Breast cancer example network","nodeShadow":true,"edgeShadow":false,"autofillEdges":true,"interactionProteinProtein":"STRING","selfReferences":false}'-->
+  <!--                network='{"nodes":[{"id":"7040","label":"7040"}]}'>-->
+  <!--  </drugst-one>-->
 
 
   <!--ENSEMBL test-->
@@ -165,7 +165,6 @@ Export As Graphml Button<br>
   }
 
   function changeConfigStr(config) {
-    console.log(config);
     const netexp = document.getElementById('netexp1');
     netexp.setAttribute('config', config);
   }
@@ -215,15 +214,23 @@ Export As Graphml Button<br>
     setAttribute('licensedDatasets', licenced)
   }
 
-  function applyDataset() {
-    let ppi = document.getElementById('ppi-dataset')
-    setAttribute('interactionProteinProtein', ppi.options[ppi.selectedIndex].value)
-    let drpi = document.getElementById('drpi-dataset')
-    setAttribute('interactionDrugProtein', drpi.options[drpi.selectedIndex].value)
-    let drdi = document.getElementById('drdi-dataset')
-    setAttribute('indicationDrugDisorder', drdi.options[drdi.selectedIndex].value)
-    let pdis = document.getElementById('pdis-dataset')
-    setAttribute('associatedProteinDisorder', pdis.options[pdis.selectedIndex].value)
+  function applyDataset(id) {
+    if (!id || id === 'ppi-dataset') {
+      let ppi = document.getElementById('ppi-dataset')
+      setAttribute('interactionProteinProtein', ppi.options[ppi.selectedIndex].value)
+    }
+    if (!id || id === 'drpi-dataset') {
+      let drpi = document.getElementById('drpi-dataset')
+      setAttribute('interactionDrugProtein', drpi.options[drpi.selectedIndex].value)
+    }
+    if (!id || id === 'drdi-dataset') {
+      let drdi = document.getElementById('drdi-dataset')
+      setAttribute('indicationDrugDisorder', drdi.options[drdi.selectedIndex].value)
+    }
+    if (!id || id === 'pdis-dataset') {
+      let pdis = document.getElementById('pdis-dataset')
+      setAttribute('associatedProteinDisorder', pdis.options[pdis.selectedIndex].value)
+    }
   }
 
   function setAttribute(name, value) {
@@ -231,7 +238,6 @@ Export As Graphml Button<br>
     console.log("Attribute " + name + " -> " + value)
     const netexp = document.getElementById('netexp1');
     config = JSON.parse(netexp.getAttribute('config'))
-    console.log(config)
     config[name] = value
     changeConfigStr(JSON.stringify(config))
   }

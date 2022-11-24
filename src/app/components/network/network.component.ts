@@ -133,6 +133,8 @@ export class NetworkComponent implements OnInit {
     this.loadingScreen.stateUpdate(true);
     this.adjacentDisordersProtein = bool;
     if (this.adjacentDisordersProtein) {
+      this.adjacentProteinDisorderList = [];
+      this.adjacentProteinDisorderEdgesList = [];
       this.legendService.add_to_context('adjacentDisorders');
       this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'proteins', this.drugstoneConfig.config.associatedProteinDisorder, this.drugstoneConfig.config.licensedDatasets).subscribe(response => {
         const proteinMap = this.getProteinMap();
@@ -172,8 +174,6 @@ export class NetworkComponent implements OnInit {
       }
       this.saveRemoveDisorders(this.adjacentProteinDisorderList);
       this.nodeData.edges.remove(this.adjacentProteinDisorderEdgesList);
-      this.adjacentProteinDisorderList = [];
-      this.adjacentProteinDisorderEdgesList = [];
       this.updateQueryItems();
       this.loadingScreen.stateUpdate(false);
     }
@@ -183,6 +183,8 @@ export class NetworkComponent implements OnInit {
     this.loadingScreen.stateUpdate(true);
     this.adjacentDisordersDrug = bool;
     if (this.adjacentDisordersDrug) {
+      this.adjacentDrugDisorderList = [];
+      this.adjacentDrugDisorderEdgesList = [];
       this.legendService.add_to_context('adjacentDisorders');
       this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'drugs', this.drugstoneConfig.config.indicationDrugDisorder, this.drugstoneConfig.config.licensedDatasets).subscribe(response => {
         for (const interaction of response.edges) {
@@ -205,8 +207,6 @@ export class NetworkComponent implements OnInit {
       }
       this.saveRemoveDisorders(this.adjacentDrugDisorderList);
       this.nodeData.edges.remove(this.adjacentDrugDisorderEdgesList);
-      this.adjacentDrugDisorderList = [];
-      this.adjacentDrugDisorderEdgesList = [];
       this.updateQueryItems();
       this.loadingScreen.stateUpdate(false);
     }
@@ -242,6 +242,8 @@ export class NetworkComponent implements OnInit {
     this.loadingScreen.stateUpdate(true);
     this.adjacentDrugs = bool;
     if (this.adjacentDrugs) {
+      this.adjacentDrugList = [];
+      this.adjacentDrugEdgesList = [];
       this.legendService.add_to_context('adjacentDrugs');
       const addedEdge = {};
       const proteinMap = this.getProteinMap();

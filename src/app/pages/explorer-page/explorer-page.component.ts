@@ -127,7 +127,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   constructor(
-    public omnipath: OmnipathControllerService,
+    // public omnipath: OmnipathControllerService,
     public analysis: AnalysisService,
     public drugstoneConfig: DrugstoneConfigService,
     public netex: NetexControllerService,
@@ -188,8 +188,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public activateConfig(updateNetworkFlag=false) {
-
+  public activateConfig(updateNetworkFlag = false) {
     let configObj = typeof this._config === 'string' ? this._config.length === 0 ? {} : JSON5.parse(this._config) : this._config;
     const groupsObj = typeof this._groups === 'string' ? this._groups.length === 0 ? {} : JSON5.parse(this._groups) : this._groups;
     configObj = merge(configObj, groupsObj);
@@ -198,7 +197,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     } else {
       this.drugstoneConfig.config = merge(this.drugstoneConfig.config, configObj);
     }
-
     // update Drugst.One according to the settings
     // check if config updates affect network
     for (const key of Object.keys(configObj)) {
@@ -224,11 +222,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         // a network exists, save node positions
         this.networkHandler.activeNetwork.networkPositions = this.networkHandler.activeNetwork.networkInternal.getPositions();
       }
-      this.createNetwork().then(() => {
+      this.createNetwork().then(async () => {
         if (this.drugstoneConfig.config.physicsOn) {
           this.networkHandler.activeNetwork.updatePhysicsEnabled(true);
         }
-        this.networkHandler.updateAdjacentNodes();
+        this.networkHandler.updateAdjacentNodes().catch(console.error);
       });
     }
 
@@ -253,126 +251,129 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   /**
    * Creates the explorer network. Analysis component has distinct function.
    */
-  public async createNetwork() {
-    this.analysis.resetSelection();
-    this.networkHandler.activeNetwork.selectedWrapper = null;
-    // getNetwork synchronizes the input network with the database
-    await this.getNetwork();
-    this.proteinData = new ProteinNetwork(this.networkHandler.activeNetwork.inputNetwork.nodes, this.networkHandler.activeNetwork.inputNetwork.edges);
-    if (this.networkHandler.activeNetwork.networkPositions) {
-      this.proteinData.updateNodePositions(this.networkHandler.activeNetwork.networkPositions);
-    }
-    let {nodes, edges} = this.proteinData.mapDataToNetworkInput(this.drugstoneConfig.currentConfig());
-    if (this.drugstoneConfig.config.autofillEdges && nodes.length) {
-      let node_map = {};
-      nodes.filter(n => n.drugstoneType === 'protein').forEach(node => {
-        if (typeof node.drugstoneId === 'string') {
-          if (node_map[node.drugstoneId]) {
-            node_map[node.drugstoneId].push(node.id);
-          } else {
-            node_map[node.drugstoneId] = [node.id];
-          }
-        } else {
-          node.drugstoneId.forEach(n => {
-            if (node_map[n]) {
-              node_map[n].push(node.id);
+  public createNetwork(): Promise<any> {
+    return new Promise<any>(async (resolve, reject) => {
+      this.analysis.resetSelection();
+      this.networkHandler.activeNetwork.selectedWrapper = null;
+      // getNetwork synchronizes the input network with the database
+      await this.getNetwork();
+      this.proteinData = new ProteinNetwork(this.networkHandler.activeNetwork.inputNetwork.nodes, this.networkHandler.activeNetwork.inputNetwork.edges);
+      if (this.networkHandler.activeNetwork.networkPositions) {
+        this.proteinData.updateNodePositions(this.networkHandler.activeNetwork.networkPositions);
+      }
+      let {nodes, edges} = this.proteinData.mapDataToNetworkInput(this.drugstoneConfig.currentConfig());
+      if (this.drugstoneConfig.config.autofillEdges && nodes.length) {
+        let node_map = {};
+        nodes.filter(n => n.drugstoneType === 'protein').forEach(node => {
+          if (typeof node.drugstoneId === 'string') {
+            if (node_map[node.drugstoneId]) {
+              node_map[node.drugstoneId].push(node.id);
             } else {
-              node_map[n] = [node.id];
+              node_map[node.drugstoneId] = [node.id];
             }
-          });
+          } else {
+            node.drugstoneId.forEach(n => {
+              if (node_map[n]) {
+                node_map[n].push(node.id);
+              } else {
+                node_map[n] = [node.id];
+              }
+            });
+          }
+        });
+        const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.config.interactionProteinProtein, this.drugstoneConfig.config.licensedDatasets);
+        edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.currentConfig(), node_map)).flatMap(e => e));
+      }
+
+      const edge_map = {};
+
+      edges = edges.filter(edge => {
+        if (edge_map[edge.to] && edge_map[edge.to].indexOf(edge.from) !== -1) {
+          return false;
+        }
+        if (edge_map[edge.from] && edge_map[edge.from].indexOf(edge.to) !== -1) {
+          return false;
+        }
+        if (!edge_map[edge.from]) {
+          edge_map[edge.from] = [edge.to];
+        } else {
+          edge_map[edge.from].push(edge.to);
+        }
+        return true;
+      });
+
+      // @ts-ignore
+      if (!this.drugstoneConfig.selfReferences) {
+        edges = edges.filter(el => el.from !== el.to);
+      }
+      this.nodeData.nodes = new vis.DataSet(nodes);
+      this.nodeData.edges = new vis.DataSet(edges);
+      const container = this.networkHandler.activeNetwork.networkEl.nativeElement;
+
+      const options = NetworkSettings.getOptions('main', this.drugstoneConfig.currentConfig());
+
+      this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
+
+      this.networkHandler.activeNetwork.networkInternal.on('stabilizationIterationsDone', () => {
+        if (!this.drugstoneConfig.config.physicsOn) {
+          this.networkHandler.activeNetwork.updatePhysicsEnabled(false);
         }
       });
-      const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.config.interactionProteinProtein, this.drugstoneConfig.config.licensedDatasets);
-      edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.currentConfig(), node_map)).flatMap(e => e));
-    }
 
-    const edge_map = {};
+      // if (!this.drugstoneConfig.config.showSidebar) {
+      //   // skip network options for selecting nodes when there are no options to use it
+      //   return;
+      // }
 
-    edges = edges.filter(edge => {
-      if (edge_map[edge.to] && edge_map[edge.to].indexOf(edge.from) !== -1) {
-        return false;
-      }
-      if (edge_map[edge.from] && edge_map[edge.from].indexOf(edge.to) !== -1) {
-        return false;
-      }
-      if (!edge_map[edge.from]) {
-        edge_map[edge.from] = [edge.to];
-      } else {
-        edge_map[edge.from].push(edge.to);
-      }
-      return true;
-    });
-
-    // @ts-ignore
-    if (!this.drugstoneConfig.selfReferences) {
-      edges = edges.filter(el => el.from !== el.to);
-    }
-    this.nodeData.nodes = new vis.DataSet(nodes);
-    this.nodeData.edges = new vis.DataSet(edges);
-    const container = this.networkHandler.activeNetwork.networkEl.nativeElement;
-
-    const options = NetworkSettings.getOptions('main', this.drugstoneConfig.currentConfig());
-
-    this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
-
-    this.networkHandler.activeNetwork.networkInternal.on('stabilizationIterationsDone', () => {
-      if (!this.drugstoneConfig.config.physicsOn) {
-        this.networkHandler.activeNetwork.updatePhysicsEnabled(false);
-      }
-    });
-
-    if (!this.drugstoneConfig.config.showSidebar) {
-      // skip network options for selecting nodes when there are no options to use it
-      return;
-    }
-
-    this.networkHandler.activeNetwork.networkInternal.on('doubleClick', (properties) => {
-      const nodeIds: Array<string> = properties.nodes;
-      if (nodeIds != null && nodeIds.length > 0) {
-        const nodeId = nodeIds[0];
-        const node = this.nodeData.nodes.get(nodeId);
-        if (node.drugstoneId === undefined || node.drugstoneType !== 'protein') {
-          this.analysis.unmappedNodeToast();
-          // skip if node is not a protein mapped to backend
-          return;
+      this.networkHandler.activeNetwork.networkInternal.on('doubleClick', (properties) => {
+        const nodeIds: Array<string> = properties.nodes;
+        if (nodeIds != null && nodeIds.length > 0) {
+          const nodeId = nodeIds[0];
+          const node = this.nodeData.nodes.get(nodeId);
+          if (node.drugstoneId === undefined || node.drugstoneType !== 'protein') {
+            this.analysis.unmappedNodeToast();
+            // skip if node is not a protein mapped to backend
+            return;
+          }
+          const wrapper = getWrapperFromNode(node);
+          if (this.analysis.inSelection(node)) {
+            this.analysis.removeItems([wrapper]);
+          } else {
+            this.analysis.addItems([wrapper]);
+          }
         }
-        const wrapper = getWrapperFromNode(node);
-        if (this.analysis.inSelection(node)) {
-          this.analysis.removeItems([wrapper]);
+      });
+      this.networkHandler.activeNetwork.networkInternal.on('click', (properties) => {
+        const nodeIds: Array<string> = properties.nodes;
+        if (nodeIds != null && nodeIds.length > 0) {
+          const nodeId = nodeIds[0];
+          const node = this.nodeData.nodes.get(nodeId);
+          const wrapper = getWrapperFromNode(node);
+          this.openSummary(wrapper, false);
         } else {
-          this.analysis.addItems([wrapper]);
+          this.closeSummary();
         }
-      }
-    });
-    this.networkHandler.activeNetwork.networkInternal.on('click', (properties) => {
-      const nodeIds: Array<string> = properties.nodes;
-      if (nodeIds != null && nodeIds.length > 0) {
-        const nodeId = nodeIds[0];
-        const node = this.nodeData.nodes.get(nodeId);
-        const wrapper = getWrapperFromNode(node);
-        this.openSummary(wrapper, false);
-      } else {
+      });
+      this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {
         this.closeSummary();
+      });
+
+      if (this.networkHandler.activeNetwork.selectedWrapper) {
+        this.zoomToNode(this.networkHandler.activeNetwork.selectedWrapper.id);
       }
+
+      this.networkHandler.activeNetwork.currentViewNodes = this.nodeData.nodes;
+      this.networkHandler.activeNetwork.currentViewEdges = this.nodeData.edges;
+
+      this.networkHandler.activeNetwork.queryItems = [];
+      this.networkHandler.activeNetwork.updateQueryItems();
+      this.networkHandler.activeNetwork.currentViewProteins = this.networkHandler.activeNetwork.inputNetwork.nodes;
+      // this.fillQueryItems(this.currentViewNodes);
+      if (this.networkHandler.activeNetwork.selectedWrapper) {
+        this.networkHandler.activeNetwork.networkInternal.selectNodes([this.networkHandler.activeNetwork.selectedWrapper.id]);
+      }
+      resolve(true);
     });
-    this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {
-      this.closeSummary();
-    });
-
-    if (this.networkHandler.activeNetwork.selectedWrapper) {
-      this.zoomToNode(this.networkHandler.activeNetwork.selectedWrapper.id);
-    }
-
-    this.networkHandler.activeNetwork.currentViewNodes = this.nodeData.nodes;
-    this.networkHandler.activeNetwork.currentViewEdges = this.nodeData.edges;
-
-    this.networkHandler.activeNetwork.queryItems = [];
-    this.networkHandler.activeNetwork.updateQueryItems();
-    this.networkHandler.activeNetwork.currentViewProteins = this.networkHandler.activeNetwork.inputNetwork.nodes;
-    // this.fillQueryItems(this.currentViewNodes);
-    if (this.networkHandler.activeNetwork.selectedWrapper) {
-      this.networkHandler.activeNetwork.networkInternal.selectNodes([this.networkHandler.activeNetwork.selectedWrapper.id]);
-    }
   }
 
   public zoomToNode(id: string) {

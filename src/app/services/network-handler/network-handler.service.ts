@@ -35,18 +35,21 @@ export class NetworkHandlerService {
     return this.change.asObservable();
   }
 
-  async updateAdjacentNodes() {
-    if (this.drugstoneConfig.config.activateNetworkMenuButtonAdjacentDrugs) {
-      this.activeNetwork.adjacentDrugs = true;
-      await this.activeNetwork.updateAdjacentDrugs(true);
-    }
-    if (this.drugstoneConfig.config.activateNetworkMenuButtonAdjacentDisorders) {
-      this.activeNetwork.adjacentDisordersProtein = true;
-      await this.activeNetwork.updateAdjacentProteinDisorders(true);
-    }
-    if (this.drugstoneConfig.config.activateNetworkMenuButtonAdjacentDisordersDrugs) {
-      this.activeNetwork.adjacentDisordersDrug = true;
-      await this.activeNetwork.updateAdjacentDrugDisorders(true);
-    }
+  async updateAdjacentNodes(): Promise<any> {
+    return new Promise<any>(async (resolve, reject) => {
+      if (this.drugstoneConfig.config.activateNetworkMenuButtonAdjacentDrugs) {
+        this.activeNetwork.adjacentDrugs = true;
+        await this.activeNetwork.updateAdjacentDrugs(true);
+      }
+      if (this.drugstoneConfig.config.activateNetworkMenuButtonAdjacentDisorders) {
+        this.activeNetwork.adjacentDisordersProtein = true;
+        await this.activeNetwork.updateAdjacentProteinDisorders(true);
+      }
+      if (this.drugstoneConfig.config.activateNetworkMenuButtonAdjacentDisordersDrugs) {
+        this.activeNetwork.adjacentDisordersDrug = true;
+        await this.activeNetwork.updateAdjacentDrugDisorders(true);
+      }
+      resolve(true);
+    });
   }
 }
