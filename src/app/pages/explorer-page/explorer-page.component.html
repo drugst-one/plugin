@@ -231,8 +231,7 @@
           </header>
           <div *ngIf="collapseAnalysis">
             <div class="card-content">
-              <div class="field"
-                   *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('drug-target-search')">
+              <div class="field" *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('drug-target-search')">
                 <div
                   class="control"
                   pTooltip="Find drug targets for the selected proteins."

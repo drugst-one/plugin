@@ -18,7 +18,7 @@
 //   --drgstn-height:600px;
 //   --drgstn-font-family:Helvetica Neue, sans-serif;
 // }
-   
+
 #appWindow {
   background-color: var(--drgstn-background) !important;
 
@@ -246,6 +246,7 @@
   .button:hover,
   .button {
     border-color: var(--drgstn-border) !important;
+    font-family: var(--drgstn-font-family) !important;
   }
 
   a {
