@@ -15,7 +15,7 @@ export class ParserWarningComponent implements OnInit {
   }
 
   getClosedState() {
-    return this.drugstoneConfig.groupIssue || !(this.drugstoneConfig.parsingIssueGroups || this.drugstoneConfig.parsingIssueConfig || this.drugstoneConfig.parsingIssueNetwork);
+    return this.drugstoneConfig.gettingNetworkIssue || this.drugstoneConfig.groupIssue || !(this.drugstoneConfig.parsingIssueGroups || this.drugstoneConfig.parsingIssueConfig || this.drugstoneConfig.parsingIssueNetwork);
   }
 
   getConfigs() {

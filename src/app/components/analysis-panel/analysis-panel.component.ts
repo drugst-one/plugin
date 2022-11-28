@@ -431,6 +431,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
     this.proteins = [];
     this.effects = [];
+    console.log(result.network)
     const network = result.network;
     network.nodes = [...new Set<string>(network.nodes)];
 

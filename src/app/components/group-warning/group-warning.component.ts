@@ -16,7 +16,7 @@ export class GroupWarningComponent implements OnInit {
   }
 
   getClosedState() {
-    return !this.drugstoneConfig.groupIssue;
+    return this.drugstoneConfig.gettingNetworkIssue || !this.drugstoneConfig.groupIssue;
   }
 
   getGroupString() {
