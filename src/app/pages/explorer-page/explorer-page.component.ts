@@ -72,7 +72,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   @Input()
   public set network(network: string | undefined) {
+    this.drugstoneConfig.gettingNetworkIssue = false;
     if (network == null) {
+      this.drugstoneConfig.gettingNetworkIssue = true;
+      console.error('Failed parsing input network! Reason: Network JSON is empty');
       return;
     }
     try {
@@ -135,6 +138,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     public drugstoneConfig: DrugstoneConfigService,
     public netex: NetexControllerService,
     public networkHandler: NetworkHandlerService) {
+
     this.showDetails = false;
     this.analysis.subscribeList(async (items, selected) => {
       // return if analysis panel is open or no nodes are loaded

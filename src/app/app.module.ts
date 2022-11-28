@@ -47,6 +47,7 @@ import { LoadingScreenComponent } from './components/loading-screen/loading-scre
 import { PrivacyBannerComponent } from './components/privacy-banner/privacy-banner.component';
 import { ParserWarningComponent } from './components/parser-warning/parser-warning.component';
 import { GroupWarningComponent } from './components/group-warning/group-warning.component';
+import { NetworkWarningComponent } from './components/network-warning/network-warning.component';
 
 
 @NgModule({
@@ -84,6 +85,7 @@ import { GroupWarningComponent } from './components/group-warning/group-warning.
     PrivacyBannerComponent,
     ParserWarningComponent,
     GroupWarningComponent,
+    NetworkWarningComponent,
   ],
   imports: [
     BrowserModule,

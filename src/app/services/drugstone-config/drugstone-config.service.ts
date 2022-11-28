@@ -11,6 +11,7 @@ export class DrugstoneConfigService {
   public parsingIssueConfig = false;
   public parsingIssueNetwork = false;
   public parsingIssueGroups = false;
+  public gettingNetworkIssue = true;
   public groupIssue = false;
   public groupIssueList = [];
   public smallStyle = false;
