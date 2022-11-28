@@ -77,8 +77,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
     try {
       this.networkJSON = JSON.stringify(typeof network === 'string' ? JSON5.parse(network) : network);
-    } catch {
-      console.log('ERROR: Failed parsing input network');
+    } catch (e) {
+      this.drugstoneConfig.parsingIssueNetwork = true;
+      console.error('Failed parsing input network');
+      console.error(e);
     }
     this.activateConfig(true);
   }
@@ -114,6 +116,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public showAnalysisDialog = false;
   public showThresholdDialog = false;
   public analysisDialogTarget: 'drug' | 'drug-target';
+
 
   public showCustomProteinsDialog = false;
 
@@ -189,8 +192,34 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public activateConfig(updateNetworkFlag = false) {
-    let configObj = typeof this._config === 'string' ? this._config.length === 0 ? {} : JSON5.parse(this._config) : this._config;
-    const groupsObj = typeof this._groups === 'string' ? this._groups.length === 0 ? {} : JSON5.parse(this._groups) : this._groups;
+    let configObj = {};
+    let groupsObj = {};
+    try {
+      if (typeof this._config === 'string') {
+        if (this._config.length > 0) {
+          configObj = JSON5.parse(this._config);
+        }
+      } else {
+        configObj = this._config;
+      }
+    } catch (e) {
+      this.drugstoneConfig.parsingIssueConfig = true;
+      console.error('Error when parsing user defined config JSON. Please check your JSON string for syntax errors.');
+      console.error(e);
+    }
+    try {
+      if (typeof this._groups === 'string') {
+        if (this._groups.length > 0) {
+          groupsObj = JSON5.parse(this._groups);
+        }
+      } else {
+        groupsObj = this._groups;
+      }
+    } catch (e) {
+      this.drugstoneConfig.parsingIssueGroups = true;
+      console.error('Error when parsing user defined groups JSON. Please check your JSON string for syntax errors.');
+      console.error(e);
+    }
     configObj = merge(configObj, groupsObj);
     if (this.drugstoneConfig.analysisConfig) {
       this.drugstoneConfig.set_analysisConfig(merge(this.drugstoneConfig.analysisConfig, configObj));
@@ -227,7 +256,13 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         if (this.drugstoneConfig.config.physicsOn) {
           this.networkHandler.activeNetwork.updatePhysicsEnabled(true);
         }
-        this.networkHandler.updateAdjacentNodes().catch(console.error);
+        this.networkHandler.updateAdjacentNodes().catch(e => {
+          console.log('also error');
+          console.error(e);
+        });
+      }).catch(e => {
+        console.log('Error');
+        console.error(e);
       });
     }
 
@@ -254,6 +289,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
    */
   public createNetwork(): Promise<any> {
     return new Promise<any>(async (resolve, reject) => {
+
       this.analysis.resetSelection();
       this.networkHandler.activeNetwork.selectedWrapper = null;
       // getNetwork synchronizes the input network with the database
@@ -262,7 +298,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (this.networkHandler.activeNetwork.networkPositions) {
         this.proteinData.updateNodePositions(this.networkHandler.activeNetwork.networkPositions);
       }
-      let {nodes, edges} = this.proteinData.mapDataToNetworkInput(this.drugstoneConfig.currentConfig());
+      let {nodes, edges} = this.proteinData.mapDataToNetworkInput(this.drugstoneConfig.currentConfig(), this.drugstoneConfig);
       if (this.drugstoneConfig.config.autofillEdges && nodes.length) {
         let node_map = {};
         nodes.filter(n => n.drugstoneType === 'protein').forEach(node => {
@@ -307,11 +343,14 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (!this.drugstoneConfig.selfReferences) {
         edges = edges.filter(el => el.from !== el.to);
       }
+
       this.nodeData.nodes = new vis.DataSet(nodes);
       this.nodeData.edges = new vis.DataSet(edges);
+
       const container = this.networkHandler.activeNetwork.networkEl.nativeElement;
 
       const options = NetworkSettings.getOptions('main', this.drugstoneConfig.currentConfig());
+
 
       this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
 
@@ -320,6 +359,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           this.networkHandler.activeNetwork.updatePhysicsEnabled(false);
         }
       });
+
 
       // if (!this.drugstoneConfig.config.showSidebar) {
       //   // skip network options for selecting nodes when there are no options to use it
@@ -373,6 +413,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (this.networkHandler.activeNetwork.selectedWrapper) {
         this.networkHandler.activeNetwork.networkInternal.selectNodes([this.networkHandler.activeNetwork.selectedWrapper.id]);
       }
+
       resolve(true);
     });
   }
@@ -534,7 +575,14 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
    * @param key
    * @param values
    */
-  public setConfigEdgeGroup(key: string, edgeGroups: { [key: string]: EdgeGroup }) {
+  public setConfigEdgeGroup(key: string, edgeGroups: {
+                              [key
+                                :
+                                string
+                                ]:
+                                EdgeGroup;
+                            }
+  ) {
     // make sure that default-groups are set
     const defaultNodeGroups = JSON.parse(JSON.stringify(defaultConfig.edgeGroups));
     edgeGroups = merge(defaultNodeGroups, edgeGroups);
@@ -555,7 +603,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.drugstoneConfig.currentConfig()[key] = edgeGroups;
   }
 
-  gProfilerLink(): string {
+  gProfilerLink()
+    :
+    string {
     // nodes in selection have drugstoneId
     const queryString = this.analysis.getSelection()
       .filter(wrapper => wrapper.data.drugstoneType === 'protein')
@@ -599,10 +649,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.openExternal(url);
   }
 
-  //TODO change to access through network service
-  @ViewChild('analysisPanel') analysisPanel;
+//TODO change to access through network service
+  @ViewChild('analysisPanel')
+  analysisPanel;
 
-  getNodes(): any {
+  getNodes():
+    any {
     if (this.selectedAnalysisToken && this.analysisPanel) {
       return this.analysisPanel.getResultNodes();
     }
@@ -617,7 +669,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
 
-  emitTaskEvent(eventObject: object) {
+  emitTaskEvent(eventObject: object
+  ) {
     this.taskEvent.emit(eventObject);
   }
 

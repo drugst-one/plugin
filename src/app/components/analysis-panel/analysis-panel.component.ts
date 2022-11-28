@@ -473,7 +473,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     }
     const uniqEdges = [];
     for (const edge of network.edges) {
-      const e = mapCustomEdge(edge, this.drugstoneConfig.currentConfig());
+      const e = mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig);
       e.from = e.from[0] === 'p' && nodeIdMap[e.from] ? nodeIdMap[e.from] : e.from;
       e.to = e.to[0] === 'p' && nodeIdMap[e.to] ? nodeIdMap[e.to] : e.to;
       const hash = e.from + '_' + e.to;
