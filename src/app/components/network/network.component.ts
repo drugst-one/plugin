@@ -138,7 +138,10 @@ export class NetworkComponent implements OnInit {
         const proteinMap = this.getProteinMap();
         const addedEdge = {};
         for (const interaction of response.edges) {
-          const edge = mapCustomEdge({from: interaction.protein, to: interaction.disorder}, this.drugstoneConfig.config);
+          const edge = mapCustomEdge({
+            from: interaction.protein,
+            to: interaction.disorder
+          }, this.drugstoneConfig.config, this.drugstoneConfig);
           if (proteinMap[edge.from]) {
             proteinMap[edge.from].forEach(from => {
               if (addedEdge[from] && addedEdge[from].indexOf(edge.to) !== -1) {
@@ -159,7 +162,7 @@ export class NetworkComponent implements OnInit {
         for (const disorder of response.disorders) {
           disorder.group = 'defaultDisorder';
           disorder.id = disorder.drugstoneId;
-          this.adjacentProteinDisorderList.push(mapCustomNode(disorder, this.drugstoneConfig.currentConfig()));
+          this.adjacentProteinDisorderList.push(mapCustomNode(disorder, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
         }
         this.saveAddNodes(this.adjacentProteinDisorderList);
         this.nodeData.edges.add(this.adjacentProteinDisorderEdgesList);
@@ -187,12 +190,12 @@ export class NetworkComponent implements OnInit {
       this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'drugs', this.drugstoneConfig.config.indicationDrugDisorder, this.drugstoneConfig.config.licensedDatasets).subscribe(response => {
         for (const interaction of response.edges) {
           const edge = {from: interaction.drug, to: interaction.disorder};
-          this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.currentConfig()));
+          this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
         }
         for (const disorder of response.disorders) {
           disorder.group = 'defaultDisorder';
           disorder.id = disorder.drugstoneId;
-          this.adjacentDrugDisorderList.push(mapCustomNode(disorder, this.drugstoneConfig.currentConfig()));
+          this.adjacentDrugDisorderList.push(mapCustomNode(disorder, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
         }
         this.saveAddNodes(this.adjacentDrugDisorderList);
         this.nodeData.edges.add(this.adjacentDrugDisorderEdgesList);
@@ -248,7 +251,10 @@ export class NetworkComponent implements OnInit {
       this.netex.adjacentDrugs(this.drugstoneConfig.config.interactionDrugProtein, this.drugstoneConfig.config.licensedDatasets, this.nodeData.nodes.get()).subscribe(response => {
         const existingDrugIDs = this.nodeData.nodes.get().filter(n => n.drugstoneId && n.drugstoneType === 'drug').map(n => n.drugstoneId);
         for (const interaction of response.pdis) {
-          const edge = mapCustomEdge({from: interaction.protein, to: interaction.drug}, this.drugstoneConfig.currentConfig());
+          const edge = mapCustomEdge({
+            from: interaction.protein,
+            to: interaction.drug
+          }, this.drugstoneConfig.currentConfig(), this.drugstoneConfig);
 
           if (proteinMap[edge.from]) {
             proteinMap[edge.from].forEach(from => {
@@ -272,7 +278,7 @@ export class NetworkComponent implements OnInit {
           drug.id = getDrugNodeId(drug);
           if (!existingDrugIDs.includes(drug.drugstoneId)) {
             existingDrugIDs.push(drug.drugstoneId);
-            this.adjacentDrugList.push(mapCustomNode(drug, this.drugstoneConfig.currentConfig()));
+            this.adjacentDrugList.push(mapCustomNode(drug, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
           }
         }
         this.nodeData.nodes.add(this.adjacentDrugList);

@@ -45,6 +45,9 @@ import { FaSolidIconComponent } from './components/fa-solid-icon/fa-solid-icon.c
 import { FaIconsComponent } from './pages/explorer-page/fa-icons/fa-icons.component';
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
 import { PrivacyBannerComponent } from './components/privacy-banner/privacy-banner.component';
+import { ParserWarningComponent } from './components/parser-warning/parser-warning.component';
+import { GroupWarningComponent } from './components/group-warning/group-warning.component';
+import { NetworkWarningComponent } from './components/network-warning/network-warning.component';
 
 
 @NgModule({
@@ -80,6 +83,9 @@ import { PrivacyBannerComponent } from './components/privacy-banner/privacy-bann
     FaIconsComponent,
     LoadingScreenComponent,
     PrivacyBannerComponent,
+    ParserWarningComponent,
+    GroupWarningComponent,
+    NetworkWarningComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,7 @@
 import {defaultConfig, IConfig} from './config';
 import {NodeInteraction, Node, getProteinNodeId, NetexInteraction} from './interfaces';
 import * as merge from 'lodash/fp/merge';
+import {DrugstoneConfigService} from './services/drugstone-config/drugstone-config.service';
 
 export function getDatasetFilename(dataset: Array<[string, string]>): string {
   return `network-${JSON.stringify(dataset).replace(/[\[\]\",]/g, '')}.json`;
@@ -43,16 +44,16 @@ export class ProteinNetwork {
     });
   }
 
-  public mapDataToNetworkInput(config: IConfig): { nodes: Node[], edges: any[]; } {
+  public mapDataToNetworkInput(config: IConfig, drugstoneConfig: DrugstoneConfigService): { nodes: Node[], edges: any[]; } {
     const nodes = [];
     const edges = [];
 
     for (const protein of this.proteins) {
-      nodes.push(mapCustomNode(protein, config));
+      nodes.push(mapCustomNode(protein, config, drugstoneConfig));
     }
 
     for (const edge of this.edges) {
-      edges.push(mapCustomEdge(edge, config));
+      edges.push(mapCustomEdge(edge, config, drugstoneConfig));
     }
 
     return {
@@ -69,9 +70,10 @@ export class ProteinNetwork {
  *
  * @param customNode
  * @param config
+ * @param drugstoneConfig
  * @returns
  */
-export function mapCustomNode(customNode: any, config: IConfig): Node {
+export function mapCustomNode(customNode: any, config: IConfig, drugstoneConfig: DrugstoneConfigService): Node {
   let node;
   if (customNode.group === undefined) {
     // fallback to default node
@@ -79,13 +81,21 @@ export function mapCustomNode(customNode: any, config: IConfig): Node {
     node.group = 'default';
   } else {
     if (config.nodeGroups[customNode.group] === undefined) {
-      throw `Node with id ${customNode.id} has undefined node group ${customNode.group}.`
+      drugstoneConfig.groupIssue = true;
+      if (!drugstoneConfig.groupIssueList.includes(customNode.group)) {
+        drugstoneConfig.groupIssueList.push(customNode.group);
+      }
+      node = JSON.parse(JSON.stringify(config.nodeGroups.default));
+      node.group = 'default';
+      console.error(`Node with id ${customNode.id} has undefined node group ${customNode.group}.`);
+    } else
+      // copy
+    {
+      node = JSON.parse(JSON.stringify(config.nodeGroups[customNode.group]));
     }
-    // copy
-    node = JSON.parse(JSON.stringify(config.nodeGroups[customNode.group]));
   }
   // update the node with custom node properties, including values fetched from backend
-  node = merge(node, customNode)
+  node = merge(node, customNode);
   // label is only used for network visualization
   node.label = customNode.label ? customNode.label : customNode.id;
   return node;
@@ -97,19 +107,27 @@ export function mapCustomNode(customNode: any, config: IConfig): Node {
  *
  * @param customEdge
  * @param config
+ * @param drugstoneConfig
  * @returns
  */
-export function mapCustomEdge(customEdge: NodeInteraction, config: IConfig): any {
+export function mapCustomEdge(customEdge: NodeInteraction, config: IConfig, drugstoneConfig: DrugstoneConfigService): any {
   let edge;
   if (customEdge.group === undefined) {
     // fallback to default node
     edge = JSON.parse(JSON.stringify(config.edgeGroups.default));
   } else {
     if (config.edgeGroups[customEdge.group] === undefined) {
+      drugstoneConfig.groupIssue = true;
+      if (!drugstoneConfig.groupIssueList.includes(customEdge.group)) {
+        drugstoneConfig.groupIssueList.push(customEdge.group);
+      }
+      edge = JSON.parse(JSON.stringify(config.edgeGroups.default));
       console.error(`Edge "from ${customEdge.from}" - "to ${customEdge.to}" has undefined edge group ${customEdge.group}.`);
+    } else
+      // copy
+    {
+      edge = JSON.parse(JSON.stringify(config.edgeGroups[customEdge.group]));
     }
-    // copy
-    edge = JSON.parse(JSON.stringify(config.edgeGroups[customEdge.group]));
   }
   edge = {
     ...edge,
@@ -126,16 +144,16 @@ export function mapCustomEdge(customEdge: NodeInteraction, config: IConfig): any
  * @returns
  */
 export function mapNetexEdge(customEdge: NetexInteraction, config: IConfig, node_map: object): any {
-  const edges = []
+  const edges = [];
   node_map[customEdge['proteinA']].forEach(from => {
     node_map[customEdge['proteinB']].forEach(to => {
       const edge = JSON.parse(JSON.stringify(config.edgeGroups.default));
       edge['from'] = from;
       edge['to'] = to;
       edge['dataset'] = customEdge['dataset'];
-      edges.push(edge)
-    })
-  })
+      edges.push(edge);
+    });
+  });
 
   return edges;
 }

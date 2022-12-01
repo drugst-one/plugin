@@ -26,7 +26,8 @@ Analysis<br>
 Screenshot button<br>
 <input type="checkbox" onclick=changeConfigStr('{"showNetworkMenuButtonExportGraphml":'+this.checked+'}') checked/> Show
 Export As Graphml Button<br>
-<input type="checkbox" onclick=changeConfigStr('{"expandNetworkMenu":'+this.checked+'}') checked/> Expand network menu<br>
+<input type="checkbox" onclick=changeConfigStr('{"expandNetworkMenu":'+this.checked+'}') checked/> Expand network
+menu<br>
 
 
 <input id="new_color" type="text"/>
@@ -112,7 +113,7 @@ Export As Graphml Button<br>
 <div style="max-width: 80vw; width: 1276px; height: 500px">
 
   <drugst-one id="netexp1"
-              groups='{"edgeGroups":{"default":{"color":"#000000","groupName":"default edge"}}, "nodeGroups" : { "selectedNode": { "borderWidth": 3,"borderWidthSelected": 4,"color": { "border": "#C80BFD","highlight": {"border": "#C80BFD"}},"font": { "color": "#0000000","size": 14 }},"Protein":{"shape":"circle","groupName":"Protein","type":"Protein","color":"#C99AFFFF","font":{"color":"#FFFFFF"}}}}'
+              groups='{"nodeGroups" : { "selectedNode": { "borderWidth": 3,"borderWidthSelected": 4,"color": { "border": "#C80BFD","highlight": {"border": "#C80BFD"}},"font": { "color": "#0000000","size": 14 }},"Protein":{"shape":"circle","groupName":"Protein","type":"Protein","color":"#C99AFFFF","font":{"color":"#FFFFFF"}}}}'
               config='{"showAdvAnalysisContent":["enrichment-gprofiler","enrichment-digest"], "activateNetworkMenuButtonAdjacentDisorders": true, "activateNetworkMenuButtonAdjacentDrugs": true, "identifier":"symbol","title":"ROBUST output network", "taskDrugName": "Drug Search", "showLegendNodes": true, "showLegendEdges": true, "showSidebar": "left", "showOverview": true, "legendPos": "left", "legendClass": "legend", "showQuery": true, "showItemSelector": true,"showSimpleAnalysis": false,"showAdvAnalysis": true,"showSelection": true,"showTasks": true,"showNetworkMenu": "right","showLegend": true,"showNetworkMenuButtonExpression": true, "showNetworkMenuButtonScreenshot": true,"showNetworkMenuButtonExportGraphml": true,"showNetworkMenuButtonAdjacentDrugs": true,"showNetworkMenuButtonCenter": true,"showConnectGenes": false,"networkMenuButtonAdjacentDrugsLabel": "Drugs","showNetworkMenuButtonAdjacentDisordersProteins": true,"networkMenuButtonAdjacentDisordersProteinsLabel": "Disorders (protein)","showNetworkMenuButtonAdjacentDisordersDrugs": true,"networkMenuButtonAdjacentDisordersDrugsLabel": "Disorders (drug)","showNetworkMenuButtonAnimation": true,"networkMenuButtonAnimationLabel": "Animation", "autofillEdges": true, "physicsOn": true,"useNedrexLicenced": true,"selfReferences": false, "interactionDrugProtein": "NeDRex", "indicationDrugDisorder": "NeDRex","nodeShadow": true,"edgeShadow": false, "algorithms": {"drug": ["trustrank", "closeness", "degree", "proximity"], "drug-target": ["trustrank", "multisteiner", "keypathwayminer", "degree", "closeness", "betweenness"]}, "associatedProteinDisorder": "NeDRex", "expandNetworkMenu": true}'
               network='{"nodes": [{"id":"PSEN1","group":"Protein","label":"PSEN1"},{"id":"PSEN2","group":"Protein","label":"PSEN2"},{"id":"APP","group":"Protein","label":"APP"},{"id":"APOE","group":"Protein","label":"APOE"},{"id":"RNF32","group":"Protein","label":"RNF32"},{"id":"STX5","group":"Protein","label":"STX5"},{"id":"TRAF3IP1","group":"Protein","label":"TRAF3IP1"},{"id":"PHB1","group":"Protein","label":"PHB1"},{"id":"MAPT","group":"Protein","label":"MAPT"},{"id":"ESR1","group":"Protein","label":"ESR1"},{"id":"IRF3","group":"Protein","label":"IRF3"},{"id":"DYNC1H1","group":"Protein","label":"DYNC1H1"},{"id":"CUL3","group":"Protein","label":"CUL3"},{"id":"HMGB1","group":"Protein","label":"HMGB1"},{"id":"DNAJC7","group":"Protein","label":"DNAJC7"},{"id":"NEFM","group":"Protein","label":"NEFM"},{"id":"DISC1","group":"Protein","label":"DISC1"},{"id":"PPP5C","group":"Protein","label":"PPP5C"},{"id":"CTNNB1","group":"Protein","label":"CTNNB1"},{"id":"KRAS","group":"Protein","label":"KRAS"}]}'
   ></drugst-one>
@@ -249,7 +250,7 @@ Export As Graphml Button<br>
 </html>
 <style>
   :root {
-    --drgstn-font-family:Oxygen;
+    /*--drgstn-font-family:Oxygen;*/
     /*--drgstn-panel: #000;*/
     /*--drgstn-text-primary: #fff;*/
   }
