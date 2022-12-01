@@ -35,21 +35,30 @@ export class NetworkHandlerService {
     return this.change.asObservable();
   }
 
-  async updateAdjacentNodes(): Promise<any> {
+
+  async updateAdjacentNodes(layout: boolean): Promise<any> {
     return new Promise<any>(async (resolve, reject) => {
+      let updated = false;
       if (this.drugstoneConfig.config.activateNetworkMenuButtonAdjacentDrugs) {
         this.activeNetwork.adjacentDrugs = true;
-        await this.activeNetwork.updateAdjacentDrugs(true);
+        updated = true;
+        await this.activeNetwork.updateAdjacentDrugs(true, false);
       }
       if (this.drugstoneConfig.config.activateNetworkMenuButtonAdjacentDisorders) {
         this.activeNetwork.adjacentDisordersProtein = true;
-        await this.activeNetwork.updateAdjacentProteinDisorders(true);
+        updated = true;
+        await this.activeNetwork.updateAdjacentProteinDisorders(true, false);
       }
       if (this.drugstoneConfig.config.activateNetworkMenuButtonAdjacentDisordersDrugs) {
         this.activeNetwork.adjacentDisordersDrug = true;
-        await this.activeNetwork.updateAdjacentDrugDisorders(true);
+        updated = true;
+        await this.activeNetwork.updateAdjacentDrugDisorders(true, false);
       }
-      resolve(true);
+      resolve(updated);
+    }).then((updated) => {
+      if (layout) {
+        return this.activeNetwork.stabilize();
+      }
     });
   }
 }

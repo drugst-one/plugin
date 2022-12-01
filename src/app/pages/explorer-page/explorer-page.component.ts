@@ -260,12 +260,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         if (this.drugstoneConfig.config.physicsOn) {
           this.networkHandler.activeNetwork.updatePhysicsEnabled(true);
         }
-        this.networkHandler.updateAdjacentNodes().catch(e => {
-          console.log('also error');
+        this.networkHandler.updateAdjacentNodes(!this.networkHandler.activeNetwork.isBig()).then((updated) => {
+        }).catch(e => {
           console.error(e);
         });
       }).catch(e => {
-        console.log('Error');
         console.error(e);
       });
     }
@@ -358,7 +357,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
       this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
 
-      this.networkHandler.activeNetwork.networkInternal.on('stabilizationIterationsDone', () => {
+      this.networkHandler.activeNetwork.networkInternal.once('stabilizationIterationsDone', () => {
         if (!this.drugstoneConfig.config.physicsOn) {
           this.networkHandler.activeNetwork.updatePhysicsEnabled(false);
         }

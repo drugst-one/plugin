@@ -72,17 +72,17 @@ export class NetexControllerService {
     return this.http.post(`${this.getBackend()}tissue_expression/`, payload);
   }
 
-  public adjacentDisorders(nodes: Node[], nodeType: string, dataset: string, licenced: boolean): Observable<any> {
+  public adjacentDisorders(nodes: Node[], nodeType: string, dataset: string, licenced: boolean): Promise<any> {
     const params = {dataset: dataset, licenced: licenced};
     if (nodeType === 'proteins') {
       params['proteins'] = nodes.filter((node: Node) => node.drugstoneId && node.drugstoneType === 'protein').flatMap((node: Node) => node.drugstoneId).map(id => id.slice(1));
     } else if (nodeType === 'drugs') {
       params['drugs'] = nodes.map((node: Node) => node.drugId && node.drugstoneType === 'drug' ? node.drugstoneId.slice(2) : undefined).filter(id => id != null);
     }
-    return this.http.post<any>(`${this.getBackend()}adjacent_disorders/`, params);
+    return this.http.post<any>(`${this.getBackend()}adjacent_disorders/`, params).toPromise();
   }
 
-  public adjacentDrugs(pdiDataset: InteractionDrugProteinDB, licenced: boolean, nodes: Node[]): Observable<any> {
+  public adjacentDrugs(pdiDataset: InteractionDrugProteinDB, licenced: boolean, nodes: Node[]): Promise<any> {
     /**
      * Returns the expression in the given tissue for given nodes and cancerNodes
      */
@@ -93,7 +93,7 @@ export class NetexControllerService {
       proteins: genesBackendIds,
       licenced: licenced
     };
-    return this.http.post<any>(`${this.getBackend()}adjacent_drugs/`, params);
+    return this.http.post<any>(`${this.getBackend()}adjacent_drugs/`, params).toPromise();
   }
 
   public graphExport(graph_data: { edges: EdgeType[], nodes: Node[] }) {

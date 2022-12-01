@@ -177,7 +177,7 @@
           tooltip="Display adjacent drugs."
           [value]="networkHandler.activeNetwork.adjacentDrugs"
           (valueChange)="
-            networkHandler.activeNetwork.updateAdjacentDrugs($event)
+            networkHandler.activeNetwork.updateAdjacentDrugs($event, true)
           "
         ></app-toggle-inplace>
       </div>
@@ -196,7 +196,7 @@
           tooltip="Show disorders adjacent to all currently displayed proteins/genes."
           [value]="networkHandler.activeNetwork.adjacentDisordersProtein"
           (valueChange)="
-            networkHandler.activeNetwork.updateAdjacentProteinDisorders($event)
+            networkHandler.activeNetwork.updateAdjacentProteinDisorders($event, true)
           "
           icon="head-side-mask"
         ></app-toggle-inplace>
@@ -216,7 +216,7 @@
           [value]="networkHandler.activeNetwork.adjacentDisordersDrug"
           [disabled]="!networkHandler.activeNetwork.hasDrugsLoaded()"
           (valueChange)="
-            networkHandler.activeNetwork.updateAdjacentDrugDisorders($event)
+            networkHandler.activeNetwork.updateAdjacentDrugDisorders($event, true)
           "
           icon="biohazard"
         ></app-toggle-inplace>

@@ -99,6 +99,10 @@ export class NetworkComponent implements OnInit {
     this.networkHandler.networks[this.networkType] = this;
   }
 
+  isBig(): boolean {
+    return this.nodeData.nodes.length > 100 || this.nodeData.edges.length > 100;
+  }
+
   setLoading(bool: boolean): void {
     this.loading = bool;
   }
@@ -129,90 +133,128 @@ export class NetworkComponent implements OnInit {
     this.nodeData.nodes.add(toAdd);
   }
 
-  public updateAdjacentProteinDisorders(bool: boolean) {
-    this.loadingScreen.stateUpdate(true);
-    this.adjacentDisordersProtein = bool;
-    if (this.adjacentDisordersProtein) {
-      this.adjacentProteinDisorderList = [];
-      this.adjacentProteinDisorderEdgesList = [];
-      this.legendService.add_to_context('adjacentDisorders');
-      this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'proteins', this.drugstoneConfig.config.associatedProteinDisorder, this.drugstoneConfig.config.licensedDatasets).subscribe(response => {
-        const proteinMap = this.getProteinMap();
-        const addedEdge = {};
-        for (const interaction of response.edges) {
-          const edge = mapCustomEdge({
-            from: interaction.protein,
-            to: interaction.disorder
-          }, this.drugstoneConfig.config, this.drugstoneConfig);
-          if (proteinMap[edge.from]) {
-            proteinMap[edge.from].forEach(from => {
-              if (addedEdge[from] && addedEdge[from].indexOf(edge.to) !== -1) {
-                return;
-              }
-              const e = JSON.parse(JSON.stringify(edge));
-              e.from = from;
-              e.to = edge.to;
-              this.adjacentProteinDisorderEdgesList.push(e);
-              if (!addedEdge[from]) {
-                addedEdge[from] = [edge.to];
-              } else {
-                addedEdge[from].push(edge.to);
-              }
-            });
+  public async updateAdjacentProteinDisorders(bool: boolean, stabl: boolean) {
+    return new Promise<boolean>((resolve, reject) => {
+      this.loadingScreen.stateUpdate(true);
+      this.adjacentDisordersProtein = bool;
+      if (this.adjacentDisordersProtein) {
+        this.adjacentProteinDisorderList = [];
+        this.adjacentProteinDisorderEdgesList = [];
+        this.legendService.add_to_context('adjacentDisorders');
+        this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'proteins', this.drugstoneConfig.config.associatedProteinDisorder, this.drugstoneConfig.config.licensedDatasets).then(response => {
+          const proteinMap = this.getProteinMap();
+          const addedEdge = {};
+          for (const interaction of response.edges) {
+            const edge = mapCustomEdge({
+              from: interaction.protein,
+              to: interaction.disorder
+            }, this.drugstoneConfig.config, this.drugstoneConfig);
+            if (proteinMap[edge.from]) {
+              proteinMap[edge.from].forEach(from => {
+                if (addedEdge[from] && addedEdge[from].indexOf(edge.to) !== -1) {
+                  return;
+                }
+                const e = JSON.parse(JSON.stringify(edge));
+                e.from = from;
+                e.to = edge.to;
+                this.adjacentProteinDisorderEdgesList.push(e);
+                if (!addedEdge[from]) {
+                  addedEdge[from] = [edge.to];
+                } else {
+                  addedEdge[from].push(edge.to);
+                }
+              });
+            }
           }
+          for (const disorder of response.disorders) {
+            disorder.group = 'defaultDisorder';
+            disorder.id = disorder.drugstoneId;
+            this.adjacentProteinDisorderList.push(mapCustomNode(disorder, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+          }
+          this.saveAddNodes(this.adjacentProteinDisorderList);
+          this.nodeData.edges.add(this.adjacentProteinDisorderEdgesList);
+          this.updateQueryItems();
+        }).then(() => {
+          if (stabl) {
+            this.stabilize().then(() => {
+              this.loadingScreen.stateUpdate(false);
+              resolve(true);
+            });
+          } else {
+            this.loadingScreen.stateUpdate(false);
+            resolve(true);
+          }
+        });
+      } else {
+        if (!this.adjacentDisordersDrug) {
+          this.legendService.remove_from_context('adjacentDisorders');
         }
-        for (const disorder of response.disorders) {
-          disorder.group = 'defaultDisorder';
-          disorder.id = disorder.drugstoneId;
-          this.adjacentProteinDisorderList.push(mapCustomNode(disorder, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
-        }
-        this.saveAddNodes(this.adjacentProteinDisorderList);
-        this.nodeData.edges.add(this.adjacentProteinDisorderEdgesList);
+        this.saveRemoveDisorders(this.adjacentProteinDisorderList);
+        this.nodeData.edges.remove(this.adjacentProteinDisorderEdgesList);
         this.updateQueryItems();
-        this.loadingScreen.stateUpdate(false);
-      });
-    } else {
-      if (!this.adjacentDisordersDrug) {
-        this.legendService.remove_from_context('adjacentDisorders');
+        if (stabl) {
+          this.stabilize().then(() => {
+            this.loadingScreen.stateUpdate(false);
+            resolve(true);
+          });
+        } else {
+          this.loadingScreen.stateUpdate(false);
+          resolve(true);
+        }
       }
-      this.saveRemoveDisorders(this.adjacentProteinDisorderList);
-      this.nodeData.edges.remove(this.adjacentProteinDisorderEdgesList);
-      this.updateQueryItems();
-      this.loadingScreen.stateUpdate(false);
-    }
+    });
   }
 
-  public updateAdjacentDrugDisorders(bool: boolean) {
-    this.loadingScreen.stateUpdate(true);
-    this.adjacentDisordersDrug = bool;
-    if (this.adjacentDisordersDrug) {
-      this.adjacentDrugDisorderList = [];
-      this.adjacentDrugDisorderEdgesList = [];
-      this.legendService.add_to_context('adjacentDisorders');
-      this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'drugs', this.drugstoneConfig.config.indicationDrugDisorder, this.drugstoneConfig.config.licensedDatasets).subscribe(response => {
-        for (const interaction of response.edges) {
-          const edge = {from: interaction.drug, to: interaction.disorder};
-          this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+  public async updateAdjacentDrugDisorders(bool: boolean, stabl: boolean): Promise<any> {
+    return new Promise<boolean>((resolve, reject) => {
+      this.loadingScreen.stateUpdate(true);
+      this.adjacentDisordersDrug = bool;
+      if (this.adjacentDisordersDrug) {
+        this.adjacentDrugDisorderList = [];
+        this.adjacentDrugDisorderEdgesList = [];
+        this.legendService.add_to_context('adjacentDisorders');
+        this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'drugs', this.drugstoneConfig.config.indicationDrugDisorder, this.drugstoneConfig.config.licensedDatasets).then(response => {
+          for (const interaction of response.edges) {
+            const edge = {from: interaction.drug, to: interaction.disorder};
+            this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+          }
+          for (const disorder of response.disorders) {
+            disorder.group = 'defaultDisorder';
+            disorder.id = disorder.drugstoneId;
+            this.adjacentDrugDisorderList.push(mapCustomNode(disorder, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+          }
+          this.saveAddNodes(this.adjacentDrugDisorderList);
+          this.nodeData.edges.add(this.adjacentDrugDisorderEdgesList);
+          this.updateQueryItems();
+        }).then(() => {
+          if (stabl) {
+            this.stabilize().then(() => {
+              this.loadingScreen.stateUpdate(false);
+              resolve(true);
+            });
+          } else {
+            this.loadingScreen.stateUpdate(false);
+            resolve(true);
+          }
+        });
+      } else {
+        if (!this.adjacentDisordersProtein) {
+          this.legendService.remove_from_context('adjacentDisorders');
         }
-        for (const disorder of response.disorders) {
-          disorder.group = 'defaultDisorder';
-          disorder.id = disorder.drugstoneId;
-          this.adjacentDrugDisorderList.push(mapCustomNode(disorder, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
-        }
-        this.saveAddNodes(this.adjacentDrugDisorderList);
-        this.nodeData.edges.add(this.adjacentDrugDisorderEdgesList);
+        this.saveRemoveDisorders(this.adjacentDrugDisorderList);
+        this.nodeData.edges.remove(this.adjacentDrugDisorderEdgesList);
         this.updateQueryItems();
-        this.loadingScreen.stateUpdate(false);
-      });
-    } else {
-      if (!this.adjacentDisordersProtein) {
-        this.legendService.remove_from_context('adjacentDisorders');
+        if (stabl) {
+          this.stabilize().then(() => {
+            this.loadingScreen.stateUpdate(false);
+            resolve(true);
+          });
+        } else {
+          this.loadingScreen.stateUpdate(false);
+          resolve(true);
+        }
       }
-      this.saveRemoveDisorders(this.adjacentDrugDisorderList);
-      this.nodeData.edges.remove(this.adjacentDrugDisorderEdgesList);
-      this.updateQueryItems();
-      this.loadingScreen.stateUpdate(false);
-    }
+    });
   }
 
   public getProteinMap() {
@@ -241,69 +283,101 @@ export class NetworkComponent implements OnInit {
     return proteinMap;
   }
 
-  public updateAdjacentDrugs(bool: boolean) {
-    this.loadingScreen.stateUpdate(true);
-    this.adjacentDrugs = bool;
-    if (this.adjacentDrugs) {
-      this.adjacentDrugList = [];
-      this.adjacentDrugEdgesList = [];
-      this.legendService.add_to_context('adjacentDrugs');
-      const addedEdge = {};
-      const proteinMap = this.getProteinMap();
-      this.netex.adjacentDrugs(this.drugstoneConfig.config.interactionDrugProtein, this.drugstoneConfig.config.licensedDatasets, this.nodeData.nodes.get()).subscribe(response => {
-        const existingDrugIDs = this.nodeData.nodes.get().filter(n => n.drugstoneId && n.drugstoneType === 'drug').map(n => n.drugstoneId);
-        for (const interaction of response.pdis) {
-          const edge = mapCustomEdge({
-            from: interaction.protein,
-            to: interaction.drug
-          }, this.drugstoneConfig.currentConfig(), this.drugstoneConfig);
-
-          if (proteinMap[edge.from]) {
-            proteinMap[edge.from].forEach(from => {
-              if (addedEdge[from] && addedEdge[from].indexOf(edge.to) !== -1) {
-                return;
-              }
-              const e = JSON.parse(JSON.stringify(edge));
-              e.from = from;
-              e.to = edge.to;
-              this.adjacentDrugEdgesList.push(e);
-              if (!addedEdge[from]) {
-                addedEdge[from] = [edge.to];
-              } else {
-                addedEdge[from].push(edge.to);
-              }
-            });
-          }
-        }
-        for (const drug of response.drugs) {
-          drug.group = 'foundDrug';
-          drug.id = getDrugNodeId(drug);
-          if (!existingDrugIDs.includes(drug.drugstoneId)) {
-            existingDrugIDs.push(drug.drugstoneId);
-            this.adjacentDrugList.push(mapCustomNode(drug, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
-          }
-        }
-        this.nodeData.nodes.add(this.adjacentDrugList);
-        this.nodeData.edges.add(this.adjacentDrugEdgesList);
-        this.updateQueryItems();
+  public stabilize(): Promise<any> {
+    return new Promise<boolean>((resolve, reject) => {
+      this.networkInternal.once('stabilizationIterationsDone', () => {
+        this.updatePhysicsEnabled(this.drugstoneConfig.config.physicsOn);
+        this.networkInternal.fit();
         this.loadingScreen.stateUpdate(false);
+        resolve(true);
       });
-    } else {
-      // remove adjacent drugs, make sure that also drug associated disorders are removed
-      if (this.adjacentDisordersDrug) {
-        this.updateAdjacentDrugDisorders(false);
-      }
-      this.legendService.remove_from_context('adjacentDrugs');
-      // if (!this.adjacentDisordersProtein)
-      //   this.legendService.remove_from_context('adjacentDisorders')
-      this.nodeData.nodes.remove(this.adjacentDrugList);
-      this.nodeData.edges.remove(this.adjacentDrugEdgesList);
-      this.adjacentDrugList = [];
-      this.adjacentDrugEdgesList = [];
+      this.loadingScreen.stateUpdate(true);
+      this.networkInternal.stabilize(1000);
+    });
+  }
 
-      this.updateQueryItems();
-      this.loadingScreen.stateUpdate(false);
-    }
+  public updateAdjacentDrugs(bool: boolean, stabl: boolean): Promise<any> {
+    return new Promise<boolean>(async (resolve, reject) => {
+      this.loadingScreen.stateUpdate(true);
+      this.adjacentDrugs = bool;
+      if (this.adjacentDrugs) {
+        this.adjacentDrugList = [];
+        this.adjacentDrugEdgesList = [];
+        this.legendService.add_to_context('adjacentDrugs');
+        const addedEdge = {};
+        const proteinMap = this.getProteinMap();
+        this.netex.adjacentDrugs(this.drugstoneConfig.config.interactionDrugProtein, this.drugstoneConfig.config.licensedDatasets, this.nodeData.nodes.get()).then(response => {
+          const existingDrugIDs = this.nodeData.nodes.get().filter(n => n.drugstoneId && n.drugstoneType === 'drug').map(n => n.drugstoneId);
+          for (const interaction of response.pdis) {
+            const edge = mapCustomEdge({
+              from: interaction.protein,
+              to: interaction.drug
+            }, this.drugstoneConfig.currentConfig(), this.drugstoneConfig);
+
+            if (proteinMap[edge.from]) {
+              proteinMap[edge.from].forEach(from => {
+                if (addedEdge[from] && addedEdge[from].indexOf(edge.to) !== -1) {
+                  return;
+                }
+                const e = JSON.parse(JSON.stringify(edge));
+                e.from = from;
+                e.to = edge.to;
+                this.adjacentDrugEdgesList.push(e);
+                if (!addedEdge[from]) {
+                  addedEdge[from] = [edge.to];
+                } else {
+                  addedEdge[from].push(edge.to);
+                }
+              });
+            }
+          }
+          for (const drug of response.drugs) {
+            drug.group = 'foundDrug';
+            drug.id = getDrugNodeId(drug);
+            if (!existingDrugIDs.includes(drug.drugstoneId)) {
+              existingDrugIDs.push(drug.drugstoneId);
+              this.adjacentDrugList.push(mapCustomNode(drug, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+            }
+          }
+          this.nodeData.nodes.add(this.adjacentDrugList);
+          this.nodeData.edges.add(this.adjacentDrugEdgesList);
+          this.updateQueryItems();
+        }).then(() => {
+          if (stabl) {
+            this.stabilize().then(() => {
+              this.loadingScreen.stateUpdate(false);
+              resolve(true);
+            });
+          } else {
+            this.loadingScreen.stateUpdate(false);
+            resolve(true);
+          }
+        });
+      } else {
+        // remove adjacent drugs, make sure that also drug associated disorders are removed
+        if (this.adjacentDisordersDrug) {
+          await this.updateAdjacentDrugDisorders(false, true);
+        }
+        this.legendService.remove_from_context('adjacentDrugs');
+        // if (!this.adjacentDisordersProtein)
+        //   this.legendService.remove_from_context('adjacentDisorders')
+        this.nodeData.nodes.remove(this.adjacentDrugList);
+        this.nodeData.edges.remove(this.adjacentDrugEdgesList);
+        this.adjacentDrugList = [];
+        this.adjacentDrugEdgesList = [];
+
+        this.updateQueryItems();
+        if (stabl) {
+          this.stabilize().then(() => {
+            this.loadingScreen.stateUpdate(false);
+            resolve(true);
+          });
+        } else {
+          this.loadingScreen.stateUpdate(false);
+          resolve(true);
+        }
+      }
+    });
   }
 
   public saveRemoveDisorders(nodeList: Node[]) {
@@ -337,10 +411,10 @@ export class NetworkComponent implements OnInit {
   }
 
   public updatePhysicsEnabled(bool: boolean) {
-    this.drugstoneConfig.config.physicsOn = bool;
+    // this.drugstoneConfig.config.physicsOn = bool;
     this.networkInternal.setOptions({
       physics: {
-        enabled: this.drugstoneConfig.config.physicsOn,
+        enabled: bool,
         stabilization: {
           enabled: false,
         },
