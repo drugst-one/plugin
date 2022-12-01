@@ -581,7 +581,7 @@
       <!-- Start network block -->
       <div class="drugstone network column" id="main-column">
         <!-- analysis panel with analysis network -->
-        <div class="analysis-view" *ngIf="selectedAnalysisToken">
+        <div *ngIf="selectedAnalysisToken">
           <app-analysis-panel
             [(token)]="selectedAnalysisToken"
             (showDetailsChange)="
