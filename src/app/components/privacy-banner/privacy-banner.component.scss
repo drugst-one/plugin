@@ -1,13 +1,19 @@
 @import "src/stylesheets/variables";
 
-#privacy-banner{
-    position: absolute;
-    bottom: 0;
-    z-index: $privacy-banner-z;
-    width: 100%;
-    padding-left: 0;
-    padding-right: 0;
-    &.disabled {
-        display: none;
-    }
+#privacy-banner {
+  position: absolute;
+  bottom: 0;
+  z-index: $privacy-banner-z;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+
+  &.disabled {
+    display: none;
+  }
+}
+
+.link-style {
+  cursor: pointer;
+  text-decoration: underline;
 }

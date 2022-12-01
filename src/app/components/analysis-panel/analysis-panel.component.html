@@ -52,6 +52,23 @@
               ></app-fa-solid-icon>
             </button>
           </p>
+          <div class="control dropdown" ngbDropdown>
+                  <button ngbDropdownToggle
+                          class="button is-rounded is-small is-outlined highlight-primary"
+                          type="button" (click)="showMenu = !showMenu"
+                          [class]="{'dropdown-toggle-enabled': showMenu}" (focusout)="hideMenu()">
+                            <app-fa-solid-icon icon="bars" classString="only-item-in-button"></app-fa-solid-icon>
+                </button>
+              <ul ngbDropdownMenu class="dropdown-content dropdown-list"
+                  [style]="{'display':showMenu ? 'inline-block':'none'}">
+                  <li ngbDropdownItem pTooltip="Display end-user license agreement (EULA)." tooltipPosition="left"
+                      [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+                      (click)="showEULA()"><a>Show EULA</a></li>
+                  <li ngbDropdownItem pTooltip="Opens Drugst.One website" tooltipPosition="left"
+                      [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"><a target="_blank"
+                                                                                           href="https://drugst.one/home">About Drugst.One</a></li>
+              </ul>
+          </div>
           <p class="control">
             <button
               class="button is-rounded is-small is-outlined highlight-danger has-text-danger"
@@ -171,62 +188,62 @@
                       task.info.parameters.includeIndirectDrugs !== undefined &&
                       task.info.target === 'drug'
                     "
-                  >
-                    <td>Include indirect drugs</td>
-                    <td>
-                      <app-fa-solid-icon
-                        *ngIf="task.info.parameters.includeIndirectDrugs"
-                        icon="check"
-                        title="indirect drugs included"
-                        classString="has-text-success"
-                      ></app-fa-solid-icon>
-                      <app-fa-solid-icon
-                        *ngIf="!task.info.parameters.includeIndirectDrugs"
-                        icon="times"
-                        classString="has-text-danger"
-                        title="indirect drugs excluded"
-                      ></app-fa-solid-icon>
-                    </td>
-                  </tr>
-                  <tr
-                    *ngIf="
+                >
+                  <td>Include indirect drugs</td>
+                  <td>
+                    <app-fa-solid-icon
+                      *ngIf="task.info.parameters.includeIndirectDrugs"
+                      icon="check"
+                      title="indirect drugs included"
+                      classString="has-text-success"
+                    ></app-fa-solid-icon>
+                    <app-fa-solid-icon
+                      *ngIf="!task.info.parameters.includeIndirectDrugs"
+                      icon="times"
+                      classString="has-text-danger"
+                      title="indirect drugs excluded"
+                    ></app-fa-solid-icon>
+                  </td>
+                </tr>
+                <tr
+                  *ngIf="
                       task.info.parameters.includeNonApprovedDrugs !==
                         undefined && task.info.target === 'drug'
                     "
-                  >
-                    <td>Include non-approved drugs</td>
-                    <td>
-                      <app-fa-solid-icon
-                        *ngIf="task.info.parameters.includeNonApprovedDrugs"
-                        icon="check"
-                        title="non-approved drugs included"
-                        classString="has-text-success"
-                      ></app-fa-solid-icon>
-                      <app-fa-solid-icon
-                        *ngIf="!task.info.parameters.includeNonApprovedDrugs"
-                        icon="times"
-                        classString="has-text-danger"
-                        title="non-approved drugs excluded"
-                      ></app-fa-solid-icon>
-                    </td>
-                  </tr>
-                  <tr *ngIf="task.info.parameters.customEdges !== undefined">
-                    <td>Include all displayed edges</td>
-                    <td>
-                      <app-fa-solid-icon
-                        *ngIf="task.info.parameters.customEdges"
-                        icon="check"
-                        title="custom edges drugs included"
-                        classString="has-text-success"
-                      ></app-fa-solid-icon>
-                      <app-fa-solid-icon
-                        *ngIf="!task.info.parameters.customEdges"
-                        icon="times"
-                        classString="has-text-danger"
-                        title="custom edges drugs excluded"
-                      ></app-fa-solid-icon>
-                    </td>
-                  </tr>
+                >
+                  <td>Include non-approved drugs</td>
+                  <td>
+                    <app-fa-solid-icon
+                      *ngIf="task.info.parameters.includeNonApprovedDrugs"
+                      icon="check"
+                      title="non-approved drugs included"
+                      classString="has-text-success"
+                    ></app-fa-solid-icon>
+                    <app-fa-solid-icon
+                      *ngIf="!task.info.parameters.includeNonApprovedDrugs"
+                      icon="times"
+                      classString="has-text-danger"
+                      title="non-approved drugs excluded"
+                    ></app-fa-solid-icon>
+                  </td>
+                </tr>
+                <tr *ngIf="task.info.parameters.customEdges !== undefined">
+                  <td>Include all displayed edges</td>
+                  <td>
+                    <app-fa-solid-icon
+                      *ngIf="task.info.parameters.customEdges"
+                      icon="check"
+                      title="custom edges drugs included"
+                      classString="has-text-success"
+                    ></app-fa-solid-icon>
+                    <app-fa-solid-icon
+                      *ngIf="!task.info.parameters.customEdges"
+                      icon="times"
+                      classString="has-text-danger"
+                      title="custom edges drugs excluded"
+                    ></app-fa-solid-icon>
+                  </td>
+                </tr>
                 </tbody>
               </table>
             </div>
@@ -281,34 +298,34 @@
               </h4>
               <table class="table parameter-table">
                 <tbody>
-                  <tr>
-                    <td>Include indirect drugs</td>
-                    <td>
-                      <app-fa-solid-icon
-                        icon="times"
-                        classString="has-text-danger"
-                        title="indirect drugs excluded"
-                      ></app-fa-solid-icon>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Include non-approved drugs</td>
-                    <td>
-                      <app-fa-solid-icon
-                        icon="check"
-                        title="non-approved drugs included"
-                        classString="has-text-success"
-                      ></app-fa-solid-icon>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Hub Penality</td>
-                    <td>1</td>
-                  </tr>
-                  <tr>
-                    <td>Result Size</td>
-                    <td>10</td>
-                  </tr>
+                <tr>
+                  <td>Include indirect drugs</td>
+                  <td>
+                    <app-fa-solid-icon
+                      icon="times"
+                      classString="has-text-danger"
+                      title="indirect drugs excluded"
+                    ></app-fa-solid-icon>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Include non-approved drugs</td>
+                  <td>
+                    <app-fa-solid-icon
+                      icon="check"
+                      title="non-approved drugs included"
+                      classString="has-text-success"
+                    ></app-fa-solid-icon>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Hub Penality</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>Result Size</td>
+                  <td>10</td>
+                </tr>
                 </tbody>
               </table>
             </div>

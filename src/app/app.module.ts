@@ -48,6 +48,7 @@ import { PrivacyBannerComponent } from './components/privacy-banner/privacy-bann
 import { ParserWarningComponent } from './components/parser-warning/parser-warning.component';
 import { GroupWarningComponent } from './components/group-warning/group-warning.component';
 import { NetworkWarningComponent } from './components/network-warning/network-warning.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -90,6 +91,7 @@ import { NetworkWarningComponent } from './components/network-warning/network-wa
   imports: [
     BrowserModule,
     NgSelectModule,
+    NgbModule,
     FormsModule,
     CommonModule,
     HttpClientModule,

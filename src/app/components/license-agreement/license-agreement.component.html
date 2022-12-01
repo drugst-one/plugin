@@ -1,6 +1,6 @@
 <div
   class="modal absolute"
-  [class.is-active]="show && drugstoneConfig.currentConfig().licensedDatasets && license"
+  [class.is-active]="license && drugstoneConfig.showLicense"
 >
   <div class="modal-background"></div>
   <div class="modal-card">
@@ -24,11 +24,11 @@
       <button
         (click)="close()"
         class="button is-rounded has-tooltip is-success"
-        pTooltip="Agree and close."
+        pTooltip="Close."
         [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
         tooltipPosition="top"
       >
-        I agree
+        Close
       </button>
     </footer>
   </div>

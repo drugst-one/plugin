@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {DrugstoneConfigService} from '../../services/drugstone-config/drugstone-config.service';
 
 @Component({
   selector: 'app-privacy-banner',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PrivacyBannerComponent implements OnInit {
 
-  constructor() { }
+  constructor(public drugstoneConfig: DrugstoneConfigService) { }
 
   ngOnInit(): void {
     if (localStorage.getItem(this.privacyBannerCookieKey) === 'true') {
@@ -16,7 +17,7 @@ export class PrivacyBannerComponent implements OnInit {
   }
 
   public disabled = false;
-  private privacyBannerCookieKey = `drugstone-privacypolicy-${window.location.host}`;
+  private privacyBannerCookieKey = `drugstone-legal-${window.location.host}`;
 
   public close() {
     this.saveCookie();

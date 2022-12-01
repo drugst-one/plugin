@@ -9,32 +9,18 @@ import { NetexControllerService } from 'src/app/services/netex-controller/netex-
 })
 export class LicenseAgreementComponent implements OnInit {
 
-  @Input() show = true;
-
-  public license: string = '';
-  private licenseStorageKey = `drugstone-license-${window.location.host}`;
+  public license = '';
 
   constructor(public drugstoneConfig: DrugstoneConfigService, public netex: NetexControllerService) { }
 
-  public getAgreed() {
-    return sessionStorage.getItem(this.licenseStorageKey) === 'true';
-  }
-
-  public setAgreed() {
-    sessionStorage.setItem(this.licenseStorageKey, "true");
-  }
 
   async ngOnInit(): Promise<void> {
-    if (this.getAgreed()) {
-      return
-    }
     const response = await this.netex.getLicense();
     this.license = this.format_license_string(response.license);
   }
 
   public close() {
-    this.show = false;
-    this.setAgreed();
+    this.drugstoneConfig.showLicense = false;
   }
 
   private format_license_string(license) {

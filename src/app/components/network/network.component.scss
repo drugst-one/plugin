@@ -5,11 +5,40 @@
   // does not disappear in empty border
   padding: 0 !important;
   height: calc(100% - #{$network-header-height});
+
   &.analysis {
     height: calc(100% - 0.5rem);
   }
 }
 
-.dropdown-menu{
-    z-index: $network-tissue-options-z !important;
+.dropdown-menu {
+  z-index: $network-tissue-options-z !important;
+}
+
+.dropdown-toggle-enabled {
+  background-color: var(--drgstn-primary) !important;
+  app-fa-solid-icon {
+    color: var(--drgstn-text-secondary)
+  }
+}
+
+ul.dropdown-list {
+  right: 0;
+  left: auto !important;
+  background-color: var(--drgstn-background);
+  min-width: $menu-width !important;
+  z-index: calc($loading-overlay-z + 1);
+  width: auto;
+  li {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    a {
+      color: var(--drgstn-text-primary) !important;
+    }
+  }
+}
+
+div.control.dropdown {
+  margin-bottom: 0.4rem;
 }
