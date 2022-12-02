@@ -5,16 +5,16 @@
   <title>Network Expander</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script type="text/javascript" src="http://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/standalone/umd/vis-network.min.js"></script>
   <!--  <link rel="stylesheet" type="text/css" href="./stylesheets/default-theme.css">-->
 
 </head>
 <body>
 
 <input type="checkbox" onclick=changeConfigStr('{"showOverview":'+this.checked+'}') checked/> Show overview<br>
-<input type="checkbox" onclick=changeConfigStr('{"showQuery":'+this.checked+'}')/> Show query<br>
+<input type="checkbox" onclick=changeConfigStr('{"showQuery":'+this.checked+'}')> Show query<br>
 <input type="checkbox" onclick=changeConfigStr('{"showItemSelector":'+this.checked+'}') checked/> Show ItemSelector<br>
-<input type="checkbox" onclick=changeConfigStr('{"showConnectGenes":'+this.checked+'}')/> Show Connect Genes<br>
+<input type="checkbox" onclick=changeConfigStr('{"showConnectGenes":'+this.checked+'}')> Show Connect Genes<br>
 <input type="checkbox" onclick=changeConfigStr('{"showSimpleAnalysis":'+this.checked+'}') checked/> Show Simple Analysis<br>
 <input type="checkbox" onclick=changeConfigStr('{"showAdvAnalysis":'+this.checked+'}') checked/> Show Advanced
 Analysis<br>
