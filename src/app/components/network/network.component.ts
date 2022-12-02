@@ -85,6 +85,8 @@ export class NetworkComponent implements OnInit {
 
   public loading = false;
 
+  public nodeGroupsWithExpression: Set<string> = new Set();
+
   constructor(
     public legendService: LegendService,
     public networkHandler: NetworkHandlerService,
@@ -448,6 +450,7 @@ export class NetworkComponent implements OnInit {
 
   public selectTissue(tissue: Tissue | null) {
     this.loadingScreen.stateUpdate(true);
+    this.nodeGroupsWithExpression = new Set();
     this.expressionExpanded = false;
     if (!tissue) {
       // delete expression values
@@ -516,6 +519,7 @@ export class NetworkComponent implements OnInit {
           const networkIdMapping = {};
           this.nodeData.nodes.get().forEach(element => {
             if (element.drugstoneType === 'protein') {
+              this.nodeGroupsWithExpression.add(element.group);
               element.drugstoneId.forEach(id => {
                 if (networkIdMapping[id]) {
                   networkIdMapping[id].push(element.id);

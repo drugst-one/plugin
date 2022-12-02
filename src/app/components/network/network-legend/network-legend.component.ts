@@ -3,6 +3,7 @@ import { LegendContext } from 'src/app/interfaces';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import {IConfig} from '../../../config';
 import {LegendService} from "src/app/services/legend-service/legend-service.service";
+import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
 
 @Component({
   selector: 'app-network-legend',
@@ -46,7 +47,7 @@ export class NetworkLegendComponent implements OnInit {
     return Object.keys(this.config.edgeGroups).some(key => this.checkEdgeGroupContext(key));
   }
 
-  constructor(public drugstoneConfig: DrugstoneConfigService, public legendService: LegendService) { }
+  constructor(public drugstoneConfig: DrugstoneConfigService, public legendService: LegendService, public networkHandler: NetworkHandlerService) { }
 
   ngOnInit(): void {
   }
