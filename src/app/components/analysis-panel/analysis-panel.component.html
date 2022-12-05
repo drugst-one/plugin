@@ -1,5 +1,8 @@
 <div *ngIf="token">
-  <div class="card analysis analysis-view" [ngClass]="{ fullscreen: fullscreen }">
+  <div
+    class="card analysis analysis-view"
+    [ngClass]="{ fullscreen: fullscreen }"
+  >
     <header class="card-header">
       <p class="card-header-title">
         <app-fa-solid-icon icon="flask"></app-fa-solid-icon>
@@ -53,21 +56,48 @@
             </button>
           </p>
           <div class="control dropdown" ngbDropdown>
-                  <button ngbDropdownToggle
-                          class="button is-rounded is-small is-outlined highlight-primary"
-                          type="button" (click)="showMenu = !showMenu"
-                          [class]="{'dropdown-toggle-enabled': showMenu}" (focusout)="hideMenu()">
-                            <app-fa-solid-icon icon="bars" classString="only-item-in-button"></app-fa-solid-icon>
-                </button>
-              <ul ngbDropdownMenu class="dropdown-content dropdown-list"
-                  [style]="{'display':showMenu ? 'inline-block':'none'}">
-                  <li ngbDropdownItem pTooltip="Display end-user license agreement (EULA)." tooltipPosition="left"
-                      [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
-                      (click)="showEULA()"><a>Show EULA</a></li>
-                  <li ngbDropdownItem pTooltip="Opens Drugst.One website" tooltipPosition="left"
-                      [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"><a target="_blank"
-                                                                                           href="https://drugst.one/home">About Drugst.One</a></li>
-              </ul>
+            <button
+              ngbDropdownToggle
+              class="button is-rounded is-small is-outlined highlight-primary"
+              type="button"
+              (click)="showMenu = !showMenu"
+              [class]="{ 'dropdown-toggle-enabled': showMenu }"
+              (focusout)="hideMenu()"
+            >
+              <app-fa-solid-icon
+                icon="bars"
+                classString="only-item-in-button"
+              ></app-fa-solid-icon>
+            </button>
+            <ul
+              ngbDropdownMenu
+              class="dropdown-content dropdown-list"
+              [style]="{ display: showMenu ? 'inline-block' : 'none' }"
+            >
+              <li
+                ngbDropdownItem
+                pTooltip="Display end-user license agreement (EULA)."
+                tooltipPosition="left"
+                [tooltipStyleClass]="
+                  'drgstn drgstn-tooltip drgstn-tooltip-left'
+                "
+                (click)="showEULA()"
+              >
+                <a>Show EULA</a>
+              </li>
+              <li
+                ngbDropdownItem
+                pTooltip="Opens Drugst.One website"
+                tooltipPosition="left"
+                [tooltipStyleClass]="
+                  'drgstn drgstn-tooltip drgstn-tooltip-left'
+                "
+              >
+                <a target="_blank" href="https://drugst.one/home"
+                  >About Drugst.One</a
+                >
+              </li>
+            </ul>
           </div>
           <p class="control">
             <button
@@ -110,33 +140,30 @@
         *ngIf="task && task.info.done"
         [class.is-visible]="tab === 'meta'"
       >
-        <div *ngIf="task">
-          <div class="columns m-1">
-            <div class="column content">
-              <h4 class="is-4 has-text-weight-bold">
-                <app-fa-solid-icon
-                  icon="wrench"
-                  title="Algorithm"
-                ></app-fa-solid-icon>
-                {{
+        <div class="columns m-1">
+          <div class="column content">
+            <h4 class="is-4 has-text-weight-bold">
+              <app-fa-solid-icon
+                icon="wrench"
+                title="Algorithm"
+              ></app-fa-solid-icon>
+              {{
                 ["quick", "super", "connect", "connectSelected"].indexOf(
                   task.info.algorithm
                 ) === -1
                   ? "Algorithm:"
                   : "Method:"
-                }}
-                {{ algorithmNames[task.info.algorithm] }}
-              </h4>
-            </div>
+              }}
+              {{ algorithmNames[task.info.algorithm] }}
+            </h4>
           </div>
-          <div class="columns m-1">
-            <div class="column">
-              <table class="table parameter-table">
-                <tbody>
+        </div>
+        <div class="columns m-1">
+          <div class="column">
+            <table class="table parameter-table">
+              <tbody>
                 <tr
-                  *ngIf="
-                      result && result.geneInteractionDataset !== undefined
-                    "
+                  *ngIf="result && result.geneInteractionDataset !== undefined"
                 >
                   <td>Protein-Protein Interaction Dataset</td>
                   <td>
@@ -145,9 +172,7 @@
                   </td>
                 </tr>
                 <tr
-                  *ngIf="
-                      result && result.drugInteractionDataset !== undefined
-                    "
+                  *ngIf="result && result.drugInteractionDataset !== undefined"
                 >
                   <td>Protein-Drug Interaction Dataset</td>
                   <td>
@@ -185,9 +210,9 @@
                 </tr>
                 <tr
                   *ngIf="
-                      task.info.parameters.includeIndirectDrugs !== undefined &&
-                      task.info.target === 'drug'
-                    "
+                    task.info.parameters.includeIndirectDrugs !== undefined &&
+                    task.info.target === 'drug'
+                  "
                 >
                   <td>Include indirect drugs</td>
                   <td>
@@ -207,9 +232,9 @@
                 </tr>
                 <tr
                   *ngIf="
-                      task.info.parameters.includeNonApprovedDrugs !==
-                        undefined && task.info.target === 'drug'
-                    "
+                    task.info.parameters.includeNonApprovedDrugs !==
+                      undefined && task.info.target === 'drug'
+                  "
                 >
                   <td>Include non-approved drugs</td>
                   <td>
@@ -244,29 +269,29 @@
                     ></app-fa-solid-icon>
                   </td>
                 </tr>
-                </tbody>
-              </table>
-            </div>
+              </tbody>
+            </table>
           </div>
-          <div
-            class="columns m-1"
-            *ngIf="
-              ['quick', 'super', 'connect', 'connectSelected'].indexOf(
-                task.info.algorithm
-              ) > -1
-            "
-          >
-            <div class="column">
-              <h4 class="is-4 has-text-weight-bold">
-                <app-fa-solid-icon
-                  icon="wrench"
-                  title="algorithm"
-                ></app-fa-solid-icon>
-                Algorithm:
-                {{ algorithmNames["multisteiner"] }}
-              </h4>
-              <table class="table parameter-table">
-                <tbody>
+        </div>
+        <div
+          class="columns m-1"
+          *ngIf="
+            ['quick', 'super', 'connect', 'connectSelected'].indexOf(
+              task.info.algorithm
+            ) > -1
+          "
+        >
+          <div class="column">
+            <h4 class="is-4 has-text-weight-bold">
+              <app-fa-solid-icon
+                icon="wrench"
+                title="algorithm"
+              ></app-fa-solid-icon>
+              Algorithm:
+              {{ algorithmNames["multisteiner"] }}
+            </h4>
+            <table class="table parameter-table">
+              <tbody>
                 <tr>
                   <td>Number of Trees</td>
                   <td>1</td>
@@ -279,25 +304,25 @@
                   <td>Hub Penality</td>
                   <td>1</td>
                 </tr>
-                </tbody>
-              </table>
-            </div>
+              </tbody>
+            </table>
           </div>
-          <div
-            class="columns m-1"
-            *ngIf="['quick', 'super'].indexOf(task.info.algorithm) > -1"
-          >
-            <div class="column">
-              <h4 class="is-4 has-text-weight-bold">
-                <app-fa-solid-icon
-                  icon="wrench"
-                  title="algorithm"
-                ></app-fa-solid-icon>
-                Algorithm:
-                {{ algorithmNames["closeness"] }}
-              </h4>
-              <table class="table parameter-table">
-                <tbody>
+        </div>
+        <div
+          class="columns m-1"
+          *ngIf="['quick', 'super'].indexOf(task.info.algorithm) > -1"
+        >
+          <div class="column">
+            <h4 class="is-4 has-text-weight-bold">
+              <app-fa-solid-icon
+                icon="wrench"
+                title="algorithm"
+              ></app-fa-solid-icon>
+              Algorithm:
+              {{ algorithmNames["closeness"] }}
+            </h4>
+            <table class="table parameter-table">
+              <tbody>
                 <tr>
                   <td>Include indirect drugs</td>
                   <td>
@@ -326,9 +351,8 @@
                   <td>Result Size</td>
                   <td>10</td>
                 </tr>
-                </tbody>
-              </table>
-            </div>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
