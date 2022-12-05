@@ -24,9 +24,12 @@
     }}"
     target="_blank"
   >
-    {{ wrapper.data.symbol }}</a
+    {{ wrapper.data.symbol }} </a
   >
 </p>
+
+
+
 <p
   *ngIf="wrapper.data.uniprotAc"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
