@@ -112,8 +112,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   public loading = false;
 
-  public showMenu = false;
-
   constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService, public loadingScreen: LoadingScreenService) {
   }
 
@@ -546,12 +544,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   public showEULA() {
     this.drugstoneConfig.showLicense = true;
-  }
-
-  public hideMenu() {
-    setTimeout(() => {
-      this.showMenu = false;
-    }, 100);
   }
 
 }

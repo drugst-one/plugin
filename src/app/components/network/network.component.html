@@ -33,22 +33,28 @@
               ></app-fa-solid-icon>
             </button>
           </p>
-        <div class="control dropdown" ngbDropdown>
-                  <button ngbDropdownToggle
-                          class="button is-rounded is-small is-outlined highlight-primary" (click)="showMenu = !showMenu"
-                          [class]="{'dropdown-toggle-enabled': showMenu}" (focusout)="hideMenu()">
-                            <app-fa-solid-icon icon="bars" classString="only-item-in-button"></app-fa-solid-icon>
-                </button>
-              <ul ngbDropdownMenu class="dropdown-content dropdown-list dropdown-menu"
-                  [style]="{'display':showMenu ? 'inline-block':'none'}">
-                  <li ngbDropdownItem class="dropdown-item" pTooltip="Display end-user license agreement (EULA)." tooltipPosition="left"
-                      [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
-                      (click)="showEULA()"><a>Show EULA</a></li>
-                  <li ngbDropdownItem class="dropdown-item" pTooltip="Opens Drugst.One website" tooltipPosition="left"
-                      [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"><a target="_blank"
-                                                                                           href="https://drugst.one/home">About Drugst.One</a></li>
-              </ul>
+        <div class="control dropdown is-hoverable">
+          <div class="dropdown-trigger">
+                    <button
+                            aria-haspopup="true"
+                            attr.aria-controls="controls-menu-button"
+                            class="button is-rounded is-small is-outlined highlight-primary">
+                              <app-fa-solid-icon icon="bars" classString="only-item-in-button"></app-fa-solid-icon>
+                  </button>
+            <div class="dropdown-menu dropdown-list " id="controls-menu-button" role="menu">
+                <div class="dropdown-content inner-dropdown">
+                    <a class="dropdown-item" pTooltip="Display end-user license agreement (EULA)."
+                       tooltipPosition="left"
+                       [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                       [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+                       (click)="showEULA()">Show EULA</a>
+                    <a class="dropdown-item" pTooltip="Opens Drugst.One website" [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }" tooltipPosition="left"
+                       [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'" target="_blank"
+                       href="https://drugst.one/home">About Drugst.One</a>
+                </div>
+            </div>
           </div>
+        </div>
       </div>
     </span>
   </header>
