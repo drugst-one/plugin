@@ -70,8 +70,6 @@ export class NetworkComponent implements OnInit {
 
   public queryItems: Wrapper[] = [];
 
-  public showMenu: boolean = false;
-
   public networkPositions: any;
 
   public highlightSeeds = false;
@@ -654,11 +652,5 @@ export class NetworkComponent implements OnInit {
 
   public showEULA() {
     this.drugstoneConfig.showLicense = true;
-  }
-
-  public hideMenu() {
-    setTimeout(() => {
-      this.showMenu = false;
-    }, 100);
   }
 }

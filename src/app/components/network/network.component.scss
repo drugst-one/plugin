@@ -11,34 +11,34 @@
   }
 }
 
-.dropdown-menu {
-  z-index: $network-tissue-options-z !important;
-}
-
-.dropdown-toggle-enabled {
-  background-color: var(--drgstn-primary) !important;
-  app-fa-solid-icon {
-    color: var(--drgstn-text-secondary)
-  }
-}
-
-ul.dropdown-list {
+div.dropdown-list {
   right: 0;
   left: auto !important;
   background-color: var(--drgstn-background);
   min-width: $menu-width !important;
-  z-index: calc($loading-overlay-z + 1);
   width: auto;
-  li {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    a {
-      color: var(--drgstn-text-primary) !important;
-    }
-  }
 }
 
 div.control.dropdown {
   margin-bottom: 0.4rem;
+}
+
+.dropdown-menu {
+  z-index: $menu-z-index !important;
+}
+
+.inner-dropdown.dropdown-menu {
+  margin-left: calc(150px - 15px);
+  width: 150px;
+  margin-top: -45px;
+
+  .dropdown-content {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+
+    .dropdown-item {
+      padding: .375rem !important;
+    }
+  }
+
 }
