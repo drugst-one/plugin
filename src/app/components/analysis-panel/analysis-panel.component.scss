@@ -30,6 +30,8 @@
 
 .parameter-table, .parameter-tab {
   width: 100% !important;
+  overflow-y: scroll;
+  height: 100%;
 }
 
 .tab-content {
