@@ -15,17 +15,15 @@ import {
   Tissue,
   Wrapper
 } from '../../interfaces';
-import {ProteinNetwork, mapNetexEdge} from '../../main-network';
-import {AnalysisService} from '../../services/analysis/analysis.service';
-import {OmnipathControllerService} from '../../services/omnipath-controller/omnipath-controller.service';
-import {NetworkSettings} from '../../network-settings';
-import {defaultConfig, EdgeGroup, NodeGroup} from '../../config';
-import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
-import {removeDuplicateObjectsFromList} from '../../utils';
+import { ProteinNetwork, mapNetexEdge } from '../../main-network';
+import { AnalysisService } from '../../services/analysis/analysis.service';
+import { NetworkSettings } from '../../network-settings';
+import { defaultConfig, EdgeGroup, NodeGroup } from '../../config';
+import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
 import * as merge from 'lodash/fp/merge';
 import * as JSON5 from 'json5';
-import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
-import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
+import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
+import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
 
 
 declare var vis: any;
@@ -100,21 +98,20 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public showDetails = false;
 
   public collapseAnalysis = true;
-  public collapseDetails = true;
   public collapseTask = true;
   public collapseSelection = true;
   public collapseBaitFilter = true;
   public collapseQuery = true;
   public collapseData = true;
-  public collapseOverview = true;
 
   public proteinData: ProteinNetwork;
+  public edgeAttributes: Map<string, NodeInteraction>;
 
   // public proteins: Node[];
   // public edges: NodeInteraction[];
 
   // this will store the vis Dataset
-  public nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
+  public nodeData: { nodes: any, edges: any } = { nodes: null, edges: null };
 
   public showAnalysisDialog = false;
   public showThresholdDialog = false;
@@ -246,9 +243,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.networkHandler.networkSidebarOpen = this.drugstoneConfig.config.expandNetworkMenu;
     // trigger updates on config e.g. in legend
     if (this.drugstoneConfig.analysisConfig) {
-      this.drugstoneConfig.analysisConfig = {...this.drugstoneConfig.analysisConfig};
+      this.drugstoneConfig.analysisConfig = { ...this.drugstoneConfig.analysisConfig };
     } else {
-      this.drugstoneConfig.config = {...this.drugstoneConfig.config};
+      this.drugstoneConfig.config = { ...this.drugstoneConfig.config };
     }
     if (updateNetworkFlag && typeof this.networkJSON !== 'undefined') {
       // update network if network config has changed and networkJSON exists
@@ -301,7 +298,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (this.networkHandler.activeNetwork.networkPositions) {
         this.proteinData.updateNodePositions(this.networkHandler.activeNetwork.networkPositions);
       }
-      let {nodes, edges} = this.proteinData.mapDataToNetworkInput(this.drugstoneConfig.currentConfig(), this.drugstoneConfig);
+      let { nodes, edges } = this.proteinData.mapDataToNetworkInput(this.drugstoneConfig.currentConfig(), this.drugstoneConfig);
       if (this.drugstoneConfig.config.autofillEdges && nodes.length) {
         let node_map = {};
         nodes.filter(n => n.drugstoneType === 'protein').forEach(node => {
@@ -376,7 +373,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           const node = this.nodeData.nodes.get(nodeId);
           if (node.drugstoneId === undefined || node.drugstoneType !== 'protein') {
             this.analysis.unmappedNodeToast();
-            // skip if node is not a protein mapped to backend
+            // skip if node is not a protein mapped to backend  
             return;
           }
           const wrapper = getWrapperFromNode(node);
@@ -387,17 +384,26 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           }
         }
       });
+
       this.networkHandler.activeNetwork.networkInternal.on('click', (properties) => {
-        const nodeIds: Array<string> = properties.nodes;
-        if (nodeIds != null && nodeIds.length > 0) {
-          const nodeId = nodeIds[0];
-          const node = this.nodeData.nodes.get(nodeId);
-          const wrapper = getWrapperFromNode(node);
-          this.openSummary(wrapper, false);
+        if (properties.nodes.length === 0 && properties.edges.length === 1) {
+          // clicked on one edge
+          const edgeId = properties.edges[0];
+          this.networkHandler.activeNetwork.openEdgeSummary(edgeId);
         } else {
-          this.closeSummary();
+          // clicked not on one edge
+          const nodeIds: Array<string> = properties.nodes;
+          if (nodeIds != null && nodeIds.length > 0) {
+            const nodeId = nodeIds[0];
+            const node = this.nodeData.nodes.get(nodeId);
+            const wrapper = getWrapperFromNode(node);
+            this.openNodeSummary(wrapper, false);
+          } else {
+            this.closeSummary();
+          }
         }
       });
+
       this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {
         this.closeSummary();
       });
@@ -434,7 +440,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         node.id = this.removeEnsemblVersion(node.id);
       });
       if (network.edges != null)
-        // @ts-ignore
+      // @ts-ignore
       {
         network.edges.forEach(edge => {
           edge.from = this.removeEnsemblVersion(edge.from);
@@ -482,7 +488,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.drugstoneConfig.smallStyle = this.windowWidth < 1250;
   }
 
-  public async openSummary(item: Wrapper, zoom: boolean) {
+  public async openNodeSummary(item: Wrapper, zoom: boolean) {
+    // close edge summary if open
+    this.networkHandler.activeNetwork.activeEdge = null;
     this.networkHandler.activeNetwork.selectedWrapper = item;
     // add expression information if loaded
     if (this.networkHandler.activeNetwork.expressionMap && this.networkHandler.activeNetwork.selectedWrapper.id in this.networkHandler.activeNetwork.expressionMap) {
@@ -496,6 +504,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public async closeSummary() {
     this.networkHandler.activeNetwork.selectedWrapper = null;
+    this.networkHandler.activeNetwork.activeEdge = null;
     this.showDetails = false;
   }
 
@@ -505,7 +514,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public queryAction(item: any) {
     if (item) {
-      this.openSummary(item, true);
+      this.openNodeSummary(item, true);
     }
   }
 
@@ -579,12 +588,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
    * @param values
    */
   public setConfigEdgeGroup(key: string, edgeGroups: {
-                              [key
-                                :
-                                string
-                                ]:
-                                EdgeGroup;
-                            }
+    [key
+      :
+      string
+    ]:
+    EdgeGroup;
+  }
   ) {
     // make sure that default-groups are set
     const defaultNodeGroups = JSON.parse(JSON.stringify(defaultConfig.edgeGroups));
@@ -652,7 +661,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.openExternal(url);
   }
 
-//TODO change to access through network service
+  //TODO change to access through network service
   @ViewChild('analysisPanel')
   analysisPanel;
 

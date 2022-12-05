@@ -1,0 +1,24 @@
+<p
+  *ngFor="let attribute of edgeAttributes"
+  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+>
+  <b
+    ><span class="is-capitalized">{{ attribute[0] }}:</span></b
+  >
+  <span class="is-capitalized" *ngIf="nodeKeys.includes(attribute[0])">
+    {{ attribute[1].label }}
+    <app-fa-solid-icon
+      icon="search"
+      (click)="zoomTo(attribute[1].id)"
+      class="is-clickable"
+      classString="icon-height-normal"
+    ></app-fa-solid-icon
+  ></span>
+
+  <span class="is-capitalized" *ngIf="!nodeKeys.includes(attribute[0])">
+    {{ attribute[1] }}
+  </span>
+</p>
+
+
+

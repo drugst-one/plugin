@@ -1,0 +1,80 @@
+<div class="card bar-large mt-0">
+  <header
+    class="card-header"
+    [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
+  >
+    <p class="card-header-title">
+      <ng-container
+        *ngIf="
+          !networkHandler.activeNetwork.selectedWrapper &&
+          !networkHandler.activeNetwork.activeEdge
+        "
+      >
+        <app-fa-solid-icon icon="info"></app-fa-solid-icon>
+        <span> No item selected </span>
+      </ng-container>
+
+      <span
+        *ngIf="networkHandler.activeNetwork.selectedWrapper"
+        class="is-capitalized"
+      >
+        {{
+          drugstoneConfig.currentConfig().nodeGroups[
+            networkHandler.activeNetwork.selectedWrapper.data[
+              networkHandler.activeNetwork.selectedWrapper.data.group ===
+              "selectedNode"
+                ? "_group"
+                : "group"
+            ]
+          ].groupName
+        }}
+      </span>
+
+      <span
+        *ngIf="networkHandler.activeNetwork.activeEdge"
+        class="is-capitalized"
+      >
+        {{ networkHandler.activeNetwork.activeEdge.groupName }}
+      </span>
+    </p>
+    <a
+      (click)="collapseDetails = !collapseDetails"
+      data-action="collapse"
+      class="card-header-icon is-hidden-fullscreen"
+      aria-label="more options"
+    >
+      <app-fa-solid-icon
+        *ngIf="collapseDetails"
+        icon="angle-down"
+      ></app-fa-solid-icon>
+      <app-fa-solid-icon
+        *ngIf="!collapseDetails"
+        icon="angle-left"
+      ></app-fa-solid-icon>
+    </a>
+  </header>
+  <div *ngIf="collapseDetails">
+    <div class="card-content">
+      <app-info-tile
+        *ngIf="networkHandler.activeNetwork.selectedWrapper"
+        [expressions]="networkHandler.activeNetwork.expressionMap"
+        [wrapper]="networkHandler.activeNetwork.selectedWrapper"
+      ></app-info-tile>
+
+      <app-info-tile-edge
+        *ngIf="networkHandler.activeNetwork.activeEdge"
+        [edge]="networkHandler.activeNetwork.activeEdge"
+      ></app-info-tile-edge>
+
+      <p
+        *ngIf="
+          !networkHandler.activeNetwork.selectedWrapper &&
+          !networkHandler.activeNetwork.activeEdge
+        "
+        [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+      >
+        Please select a node for further information.
+      </p>
+    </div>
+  </div>
+</div>

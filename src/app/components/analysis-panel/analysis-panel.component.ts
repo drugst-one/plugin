@@ -10,9 +10,9 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
-import {algorithmNames, AnalysisService} from '../../services/analysis/analysis.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { algorithmNames, AnalysisService } from '../../services/analysis/analysis.service';
 import {
   Drug,
   EdgeType,
@@ -28,15 +28,15 @@ import {
   NodeInteraction,
 } from '../../interfaces';
 import domtoimage from 'dom-to-image';
-import {NetworkSettings} from '../../network-settings';
-import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
-import {defaultConfig, IConfig} from 'src/app/config';
-import {mapCustomEdge, mapCustomNode} from 'src/app/main-network';
-import {downLoadFile, pieChartContextRenderer, removeDuplicateObjectsFromList} from 'src/app/utils';
-import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
-import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
-import {LegendService} from 'src/app/services/legend-service/legend-service.service';
-import {LoadingScreenService} from 'src/app/services/loading-screen/loading-screen.service';
+import { NetworkSettings } from '../../network-settings';
+import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
+import { defaultConfig, IConfig } from 'src/app/config';
+import { mapCustomEdge, mapCustomNode } from 'src/app/main-network';
+import { downLoadFile, pieChartContextRenderer, removeDuplicateObjectsFromList } from 'src/app/utils';
+import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
+import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
+import { LegendService } from 'src/app/services/legend-service/legend-service.service';
+import { LoadingScreenService } from 'src/app/services/loading-screen/loading-screen.service';
 
 declare var vis: any;
 
@@ -57,7 +57,7 @@ interface Seeded {
 })
 export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit {
 
-  @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
+  @ViewChild('networkWithLegend', { static: false }) networkWithLegendEl: ElementRef;
   @Input() token: string | null = null;
 
 
@@ -71,7 +71,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public fullscreen = false;
 
   public network: any;
-  public nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
+  public nodeData: { nodes: any, edges: any } = { nodes: null, edges: null };
   // private drugNodes: any[] = [];
   // private drugEdges: any[] = [];
   public tab: 'meta' | 'network' | 'table' = 'table';
@@ -179,7 +179,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           this.networkHandler.activeNetwork.seedMap = nodeAttributes.isSeed || {};
 
           // Reset
-          this.nodeData = {nodes: null, edges: null};
+          this.nodeData = { nodes: null, edges: null };
           this.networkHandler.activeNetwork.networkEl.nativeElement.innerHTML = '';
           this.networkHandler.activeNetwork.networkInternal = null;
           // Create
@@ -190,7 +190,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               const nodes = nw.nodes;
               const edges = nw.edges;
 
-              this.networkHandler.activeNetwork.inputNetwork = {nodes: nodes, edges: edges};
+              this.networkHandler.activeNetwork.inputNetwork = { nodes: nodes, edges: edges };
               this.nodeData.nodes = new vis.DataSet(nodes);
               this.nodeData.edges = new vis.DataSet(edges);
               const container = this.networkHandler.activeNetwork.networkEl.nativeElement;
@@ -239,7 +239,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               if (this.tableHasScores) {
                 this.toggleNormalization(true);
               }
-              this.networkHandler.activeNetwork.networkInternal.setData({nodes: undefined, edge: undefined});
+              this.networkHandler.activeNetwork.networkInternal.setData({ nodes: undefined, edge: undefined });
               setTimeout(() => {
                 this.networkHandler.activeNetwork.networkInternal.setData(this.nodeData);
               }, 1000);
@@ -269,11 +269,18 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               });
 
               this.networkHandler.activeNetwork.networkInternal.on('click', (properties) => {
-                const selectedNodes = this.nodeData.nodes.get(properties.nodes);
-                if (selectedNodes.length > 0) {
-                  this.showDetailsChange.emit(getWrapperFromNode(selectedNodes[0]));
+                if (properties.nodes.length === 0 && properties.edges.length === 1) {
+                  // clicked on one edge
+                  const edgeId = properties.edges[0];
+                  this.networkHandler.activeNetwork.openEdgeSummary(edgeId);
                 } else {
-                  this.showDetailsChange.emit(null);
+                  this.networkHandler.activeNetwork.activeEdge = null;
+                  const selectedNodes = this.nodeData.nodes.get(properties.nodes);
+                  if (selectedNodes.length > 0) {
+                    this.showDetailsChange.emit(getWrapperFromNode(selectedNodes[0]));
+                  } else {
+                    this.showDetailsChange.emit(null);
+                  }
                 }
               });
 
