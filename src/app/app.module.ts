@@ -49,6 +49,9 @@ import { ParserWarningComponent } from './components/parser-warning/parser-warni
 import { GroupWarningComponent } from './components/group-warning/group-warning.component';
 import { NetworkWarningComponent } from './components/network-warning/network-warning.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { SummaryNodeComponent } from './pages/explorer-page/summary-node/summary-node/summary-node.component';
+import { NetworkOverviewComponent } from './pages/explorer-page/network-overview/network-overview/network-overview.component';
+import { InfoTileEdgeComponent } from './components/info-tile-edge/info-tile-edge/info-tile-edge.component';
 
 
 @NgModule({
@@ -87,6 +90,9 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     ParserWarningComponent,
     GroupWarningComponent,
     NetworkWarningComponent,
+    SummaryNodeComponent,
+    NetworkOverviewComponent,
+    InfoTileEdgeComponent,
   ],
   imports: [
     BrowserModule,

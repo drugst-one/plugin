@@ -1,6 +1,6 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import domtoimage from 'dom-to-image';
-import {IConfig, InteractionDatabase} from 'src/app/config';
+import {InteractionDatabase} from 'src/app/config';
 import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 import {OmnipathControllerService} from 'src/app/services/omnipath-controller/omnipath-controller.service';
@@ -41,6 +41,8 @@ export class NetworkComponent implements OnInit {
   public inputNetwork: NetworkData = {nodes: [], edges: []};
 
   public selectedWrapper: Wrapper | null = null;
+
+  public activeEdge: NodeInteraction;
 
   public adjacentDrugs = false;
 
@@ -422,9 +424,15 @@ export class NetworkComponent implements OnInit {
     });
   }
 
+  public openEdgeSummary(edgeId: string) {
+    this.selectedWrapper = undefined;
+    const edgeMap = this.nodeData.edges.get({returnType:'Object'});
+    this.activeEdge = edgeMap[edgeId];
+  }
+
   public zoomToNode(id: string) {
     // get network object, depending on whether analysis is open or not
-    this.nodeData.nodes.getIds();
+    // this.nodeData.nodes.getIds();
     const coords = this.networkInternal.getPositions(id)[id];
     if (!coords) {
       return;
@@ -442,7 +450,7 @@ export class NetworkComponent implements OnInit {
     });
   }
 
-  toggleNetworkSidebar() {
+  public toggleNetworkSidebar() {
     this.networkHandler.networkSidebarOpen = !this.networkHandler.networkSidebarOpen;
   }
 

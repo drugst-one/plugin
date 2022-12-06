@@ -38,121 +38,12 @@
         class="drugstone sidebar column"
         *ngIf="drugstoneConfig.config.showSidebar"
       >
-        <div
-          *ngIf="drugstoneConfig.config.showItemSelector"
-          class="card bar-large mt-0"
-        >
-          <header
-            class="card-header"
-            [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
-          >
-            <p class="card-header-title">
-              <ng-container
-                *ngIf="!networkHandler.activeNetwork.selectedWrapper"
-              >
-                <app-fa-solid-icon icon="info"></app-fa-solid-icon>
-                <span> No item selected </span>
-              </ng-container>
-              <ng-container
-                *ngIf="networkHandler.activeNetwork.selectedWrapper"
-              >
-                <span>
-                  {{ drugstoneConfig.currentConfig().nodeGroups[networkHandler.activeNetwork.selectedWrapper.data[networkHandler.activeNetwork.selectedWrapper.data.group === 'selectedNode' ? '_group':'group']].groupName}}
-                </span>
-              </ng-container>
-            </p>
-            <a
-              (click)="collapseDetails = !collapseDetails"
-              data-action="collapse"
-              class="card-header-icon is-hidden-fullscreen"
-              aria-label="more options"
-            >
-              <app-fa-solid-icon
-                *ngIf="collapseDetails"
-                icon="angle-down"
-              ></app-fa-solid-icon>
-              <app-fa-solid-icon
-                *ngIf="!collapseDetails"
-                icon="angle-left"
-              ></app-fa-solid-icon>
-            </a>
-          </header>
-          <div *ngIf="collapseDetails">
-            <div class="card-content">
-              <app-info-tile
-                [expressions]="networkHandler.activeNetwork.expressionMap"
-                [wrapper]="networkHandler.activeNetwork.selectedWrapper"
-              ></app-info-tile>
-            </div>
-          </div>
-        </div>
 
-        <div
-          *ngIf="drugstoneConfig.config.showOverview"
-          class="card bar-large"
-          [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
-        >
-          <header class="card-header">
-            <p class="card-header-title">
-              <app-fa-solid-icon icon="info"></app-fa-solid-icon>
-              Network Overview
-            </p>
-            <a
-              (click)="collapseOverview = !collapseOverview"
-              data-action="collapse"
-              class="card-header-icon is-hidden-fullscreen"
-              aria-label="more options"
-            >
-              <app-fa-solid-icon
-                *ngIf="collapseOverview"
-                icon="angle-down"
-              ></app-fa-solid-icon>
-              <app-fa-solid-icon
-                *ngIf="!collapseOverview"
-                icon="angle-left"
-              ></app-fa-solid-icon>
-            </a>
-          </header>
-          <div *ngIf="collapseOverview">
-            <div class="card-content">
-              <nav class="level" *ngIf="proteinData">
-                <!-- TO DO  : CHANGE THIS LATER
-                <div class="level-item has-text-centered">
-                  <div>
-                    <p class="heading">Viral<br>Proteins</p>
-                    <p class="title"> {{ proteinData.effects.length }}</p>
-                  </div>
-                </div>
-                -->
+        <app-summary-node *ngIf="drugstoneConfig.config.showItemSelector"></app-summary-node>
 
-                <div class="level-item has-text-centered">
-                  <div>
-                    <p class="heading">Nodes</p>
-                    <p class="title">
-                      {{
-                      networkHandler.activeNetwork.currentViewNodes != null
-                        ? networkHandler.activeNetwork.currentViewNodes.length
-                        : 0
-                      }}
-                    </p>
-                  </div>
-                </div>
-                <div class="level-item has-text-centered">
-                  <div>
-                    <p class="heading">Edges</p>
-                    <p class="title">
-                      {{
-                      networkHandler.activeNetwork.currentViewEdges != null
-                        ? networkHandler.activeNetwork.currentViewEdges.length
-                        : 0
-                      }}
-                    </p>
-                  </div>
-                </div>
-              </nav>
-            </div>
-          </div>
-        </div>
+        <app-network-overview *ngIf="drugstoneConfig.config.showOverview"></app-network-overview>
+
+        
 
         <div
           *ngIf="drugstoneConfig.config.showQuery"

@@ -1,0 +1,56 @@
+<div
+  class="card bar-large"
+  [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
+>
+  <header class="card-header">
+    <p class="card-header-title">
+      <app-fa-solid-icon icon="info"></app-fa-solid-icon>
+      Network Overview
+    </p>
+    <a
+      (click)="collapseOverview = !collapseOverview"
+      data-action="collapse"
+      class="card-header-icon is-hidden-fullscreen"
+      aria-label="more options"
+    >
+      <app-fa-solid-icon
+        *ngIf="collapseOverview"
+        icon="angle-down"
+      ></app-fa-solid-icon>
+      <app-fa-solid-icon
+        *ngIf="!collapseOverview"
+        icon="angle-left"
+      ></app-fa-solid-icon>
+    </a>
+  </header>
+  <div *ngIf="collapseOverview">
+    <div class="card-content">
+      <nav class="level" >
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">Nodes</p>
+            <p class="title">
+              {{
+                networkHandler.activeNetwork.currentViewNodes != null
+                  ? networkHandler.activeNetwork.currentViewNodes.length
+                  : 0
+              }}
+            </p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">Edges</p>
+            <p class="title">
+              {{
+                networkHandler.activeNetwork.currentViewEdges != null
+                  ? networkHandler.activeNetwork.currentViewEdges.length
+                  : 0
+              }}
+            </p>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>

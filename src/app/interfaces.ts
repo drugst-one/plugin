@@ -64,9 +64,12 @@ export interface NodeInteraction {
   from: string;
   to: string;
   group?: string;
+  groupName?: string;
   label?: string;
   title?: string;
   shadow?: boolean;
+  // custom attributes by user
+  // [key: string]: string | number | boolean;
 }
 
 export interface NetworkEdge {

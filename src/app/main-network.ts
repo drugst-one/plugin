@@ -143,7 +143,7 @@ export function mapCustomEdge(customEdge: NodeInteraction, config: IConfig, drug
  * @param config
  * @returns
  */
-export function mapDrugstoneEdge(customEdge: NetexInteraction, config: IConfig, node_map: object): any {
+export function mapNetexEdge(customEdge: NetexInteraction, config: IConfig, node_map: object): any {
   const edges = [];
   node_map[customEdge['proteinA']].forEach(from => {
     node_map[customEdge['proteinB']].forEach(to => {
