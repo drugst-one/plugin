@@ -15,7 +15,7 @@ import {
   Tissue,
   Wrapper
 } from '../../interfaces';
-import {ProteinNetwork, mapNetexEdge} from '../../main-network';
+import {ProteinNetwork, mapDrugstoneEdge} from '../../main-network';
 import {AnalysisService} from '../../services/analysis/analysis.service';
 import {OmnipathControllerService} from '../../services/omnipath-controller/omnipath-controller.service';
 import {NetworkSettings} from '../../network-settings';
@@ -321,8 +321,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
             });
           }
         });
-        const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.config.interactionProteinProtein, this.drugstoneConfig.config.licensedDatasets);
-        edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.currentConfig(), node_map)).flatMap(e => e));
+        const drugstoneEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.config.interactionProteinProtein, this.drugstoneConfig.config.licensedDatasets);
+        edges.push(...drugstoneEdges.map(drugstoneEdge => mapDrugstoneEdge(drugstoneEdge, this.drugstoneConfig.currentConfig(), node_map)).flatMap(e => e));
       }
 
       const edge_map = {};
