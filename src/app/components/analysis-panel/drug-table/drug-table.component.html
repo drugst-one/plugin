@@ -18,14 +18,14 @@
         Approved
         <p-sortIcon [field]="'status'"></p-sortIcon>
       </th>
-      <th [pSortableColumn]="'inTrial'">
+      <!-- <th [pSortableColumn]="'inTrial'">
         In Trial
         <p-sortIcon [field]="'inTrial'"></p-sortIcon>
       </th>
       <th [pSortableColumn]="'inLiterature'">
         In Literature
         <p-sortIcon [field]="'inLiterature'"></p-sortIcon>
-      </th>
+      </th> -->
       <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
         Score
         <span
@@ -66,9 +66,10 @@
             classString="icon has-text-danger"
             icon="times"
           ></app-fa-solid-icon>
+          Unapproved
         </span>
       </td>
-      <td>
+      <!-- <td>
         <span *ngIf="e.inTrial">
           <app-fa-solid-icon
             classString="icon text-primary"
@@ -97,7 +98,7 @@
             icon="times"
           ></app-fa-solid-icon>
         </span>
-      </td>
+      </td> -->
       <td *ngIf="tableHasScores">{{ e.score.toString() | number }}</td>
     </tr>
   </ng-template>
