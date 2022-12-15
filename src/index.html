@@ -112,11 +112,11 @@ menu<br>
 
 <div style="max-width: 80vw; width: 1276px; height: 500px">
 
-  <drugst-one id="netexp1"
-              config="{'activateNetworkMenuButtonAdjacentDisorders':false,'activateNetworkMenuButtonAdjacentDrugs':false, 'activateNetworkMenuButtonAdjacentDisordersDrugs': false, 'licensedDatasets':true}"
-              groups='{"nodeGroups":{"important":{"type":"gene","color":"#ff881f","font":{"color":"#000000"},"groupName":"Important Gene","shape":"star"},"gene":{"type":"gene","color":"#4da300","font":{"color":"#f0f0f0"},"groupName":"Gene","shape":"circle"},"foundDrug":{"type":"drug","color":"#F12590","font":{"color":"#000000"},"groupName":"Drug","shape":"diamond"}},"edgeGroups":{"default":{"color":"#000000","groupName":"default edge"}}}'
-              network='{"nodes":[{"id":"CFTr","group":"important","label":"CFTR"},{"id":"TGFB1","group":"gene","label":"TGFB1"},{"id":"TNFRSF1A","group":"gene","label":"TNFRSF1A"},{"id":"FCGR2A","group":"gene","label":"FCGR2A"},{"id":"ENG","group":"gene","label":"ENG"},{"id":"DCTN4","group":"gene","label":"DCTN4"},{"id":"CLCA4","group":"gene","label":"CLCA4"},{"id":"STX1A","group":"gene","label":"STX1A"},{"id":"SCNN1G","group":"gene","label":"SCNN1G"},{"id":"SCNN1A","group":"gene","label":"SCNN1A"},{"id":"SCNN1B","group":"gene","label":"SCNN1B"}],"edges":[{"from":"DCTN4","to":"CFTR", "weight": "5"},{"from":"STX1A","to":"SCNN1B","group":"default"},{"from":"SCNN1A","to":"SCNN1G","group":"default"},{"from":"SCNN1B","to":"SCNN1G","group":"default"}]}'>
-    ></drugst-one>
+<!--  <drugst-one id="netexp1"-->
+<!--              config="{'activateNetworkMenuButtonAdjacentDisorders':false,'activateNetworkMenuButtonAdjacentDrugs':false, 'activateNetworkMenuButtonAdjacentDisordersDrugs': false, 'licensedDatasets':true}"-->
+<!--              groups='{"nodeGroups":{"important":{"type":"gene","color":"#ff881f","font":{"color":"#000000"},"groupName":"Important Gene","shape":"star"},"gene":{"type":"gene","color":"#4da300","font":{"color":"#f0f0f0"},"groupName":"Gene","shape":"circle"},"foundDrug":{"type":"drug","color":"#F12590","font":{"color":"#000000"},"groupName":"Drug","shape":"diamond"}},"edgeGroups":{"default":{"color":"#000000","groupName":"default edge"}}}'-->
+<!--              network='{"nodes":[{"id":"CFTr","group":"important","label":"CFTR"},{"id":"TGFB1","group":"gene","label":"TGFB1"},{"id":"TNFRSF1A","group":"gene","label":"TNFRSF1A"},{"id":"FCGR2A","group":"gene","label":"FCGR2A"},{"id":"ENG","group":"gene","label":"ENG"},{"id":"DCTN4","group":"gene","label":"DCTN4"},{"id":"CLCA4","group":"gene","label":"CLCA4"},{"id":"STX1A","group":"gene","label":"STX1A"},{"id":"SCNN1G","group":"gene","label":"SCNN1G"},{"id":"SCNN1A","group":"gene","label":"SCNN1A"},{"id":"SCNN1B","group":"gene","label":"SCNN1B"}],"edges":[{"from":"DCTN4","to":"CFTR", "weight": "5"},{"from":"STX1A","to":"SCNN1B","group":"default"},{"from":"SCNN1A","to":"SCNN1G","group":"default"},{"from":"SCNN1B","to":"SCNN1G","group":"default"}]}'>-->
+<!--    ></drugst-one>-->
 
   <!--  <drugst-one id="netexp1"-->
   <!--                pluginId="2"-->
@@ -127,13 +127,13 @@ menu<br>
 
 
   <!--ENSEMBL test-->
-  <!--  <drugst-one id="netexp1"-->
-  <!--              pluginId="2"-->
-  <!--              groups='{"nodeGroups":{"node":{"type":"Gene","color":"#0000FF","font":{"color":"#ffffff"},"groupName":"Node","shape":"ellipse"}, "gene":{"type":"Gene","color":"#CD5C5C","font":{"color":"#000000"},"groupName":"Gene","shape":"ellipse"}}}'-->
-  <!--              config='{"showSimpleAnalysis": true, "selfReferences": false, "licensedDatasets": false,"physicsOn":false,"identifier":"ensg","title":"Breast cancer example network","nodeShadow":true,"edgeShadow":false,"autofillEdges":true,"showLegend":true}'-->
-  <!--              network='{"nodes":[{"id":"ENSG00000049768", "group": "gene", "label":"ENSG00000049768"},{"id":"ENSG00000185379","group":"gene","label":"ENSG00000185379"},{"id":"ENSG00000108384","group":"gene","label":"ENSG00000108384"},{"id":"ENSG00000138376","group":"gene","label":"ENSG00000138376"},{"id":"ENSG00000284792","group":"gene","label":"ENSG00000284792"},{"id":"ENSG00000171862","group":"gene","label":"ENSG00000171862"},{"id":"ENSG00000141510","group":"gene","label":"ENSG00000141510"}],"edges":[]}'-->
-  <!--   >-->
-  <!--</drugst-one>-->
+    <drugst-one id="netexp1"
+                pluginId="2"
+                groups='{"nodeGroups":{"node":{"type":"Gene","color":"#0000FF","font":{"color":"#ffffff"},"groupName":"Node","shape":"ellipse"}, "gene":{"type":"Gene","color":"#CD5C5C","font":{"color":"#000000"},"groupName":"Gene","shape":"ellipse"}}}'
+                config='{"showSimpleAnalysis": true, "selfReferences": false, "licensedDatasets": false,"physicsOn":false,"identifier":"ensembl","title":"Breast cancer example network","nodeShadow":true,"edgeShadow":false,"autofillEdges":true,"showLegend":true}'
+                network='{"nodes":[{"id":"ENSG00000049768", "group": "gene", "label":"ENSG00000049768"},{"id":"ENSG00000185379","group":"gene","label":"ENSG00000185379"},{"id":"ENSG00000108384","group":"gene","label":"ENSG00000108384"},{"id":"ENSG00000138376","group":"gene","label":"ENSG00000138376"},{"id":"ENSG00000284792","group":"gene","label":"ENSG00000284792"},{"id":"ENSG00000171862","group":"gene","label":"ENSG00000171862"},{"id":"ENSG00000141510","group":"gene","label":"ENSG00000141510"}],"edges":[]}'
+     >
+  </drugst-one>
 </div>
 <br>
 <br>
