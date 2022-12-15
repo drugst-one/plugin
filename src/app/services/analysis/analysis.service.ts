@@ -279,8 +279,8 @@ export class AnalysisService {
       num_trees: 5,
       tolerance: 10,
       custom_edges: this.drugstoneConfig.currentConfig().customEdges.default,
+      licenced: this.drugstoneConfig.config.licensedDatasets
     };
-
 
     const resp = await this.http.post<any>(`${this.netex.getBackend()}task/`, {
       algorithm: algorithm,

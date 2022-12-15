@@ -11,13 +11,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { algorithmNames, AnalysisService } from '../../services/analysis/analysis.service';
 import {
   Drug,
-  EdgeType,
   NodeAttributeMap,
-  getDrugNodeId,
   getProteinNodeId,
   getWrapperFromNode,
   LegendContext,
@@ -27,12 +24,9 @@ import {
   Wrapper,
   NodeInteraction,
 } from '../../interfaces';
-import domtoimage from 'dom-to-image';
 import { NetworkSettings } from '../../network-settings';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
-import { defaultConfig, IConfig } from 'src/app/config';
-import { mapCustomEdge, mapCustomNode } from 'src/app/main-network';
-import { downLoadFile, pieChartContextRenderer, removeDuplicateObjectsFromList } from 'src/app/utils';
+import { mapCustomEdge } from 'src/app/main-network';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
 import { LegendService } from 'src/app/services/legend-service/legend-service.service';
