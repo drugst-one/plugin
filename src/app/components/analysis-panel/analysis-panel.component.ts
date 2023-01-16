@@ -178,10 +178,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           await this.createNetwork(this.result).then(nw => {
             return new Promise<any>((resolve, reject) => {
 
-
               const nodes = nw.nodes;
               const edges = nw.edges;
-
               this.networkHandler.activeNetwork.inputNetwork = {nodes: nodes, edges: edges};
               this.nodeData.nodes = new vis.DataSet(nodes);
               this.nodeData.edges = new vis.DataSet(edges);
@@ -200,6 +198,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               }
               this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
 
+              if (isBig) {
+                resolve(nodes);
+              }
               this.networkHandler.activeNetwork.networkInternal.once('stabilizationIterationsDone', async () => {
                 if (!this.drugstoneConfig.config.physicsOn || this.networkHandler.activeNetwork.isBig()) {
                   this.networkHandler.activeNetwork.updatePhysicsEnabled(false);
@@ -444,7 +445,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.effects = [];
     const network = result.network;
     network.nodes = [...new Set<string>(network.nodes)];
-
     const details = attributes.details || {};
     const nodeIdMap = {};
     // @ts-ignore
