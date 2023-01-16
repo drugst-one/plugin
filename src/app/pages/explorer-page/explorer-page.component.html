@@ -43,7 +43,7 @@
 
         <app-network-overview *ngIf="drugstoneConfig.config.showOverview"></app-network-overview>
 
-        
+
 
         <div
           *ngIf="drugstoneConfig.config.showQuery"
@@ -391,9 +391,9 @@
                   <td
                     *ngIf="drugstoneConfig.currentConfig().identifier !== 'uniprot'"
                     class="uniprot"
-                    title="{{ p.data.uniprotAc }}"
+                    title="{{ p.data.uniprot }}"
                   >
-                    <p>{{ p.data.uniprotAc }}</p>
+                    <p>{{ p.data.uniprot }}</p>
                   </td>
                   <td style="text-align: center">
                     <button

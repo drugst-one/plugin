@@ -3,7 +3,7 @@
   selectionMode="multiple"
   [value]="tableProteins"
   [selection]="tableSelectedProteins"
-  dataKey="uniprotAc"
+  dataKey="uniprot"
   (selectionChange)="tableProteinSelection($event)"
   styleClass="table is-hoverable is-narrow drgstn"
 >
@@ -16,9 +16,9 @@
         Symbol
         <p-sortIcon [field]="'symbol'"></p-sortIcon>
       </th>
-      <th *ngIf="identifier === 'uniprot'" [pSortableColumn]="'uniprotAc'">
+      <th *ngIf="identifier === 'uniprot'" [pSortableColumn]="'uniprot'">
         UniProt Code
-        <p-sortIcon [field]="'uniprotAc'"></p-sortIcon>
+        <p-sortIcon [field]="'uniprot'"></p-sortIcon>
       </th>
       <th *ngIf="identifier === 'entrez'" [pSortableColumn]="'entrez'">
         Entrez
@@ -68,10 +68,10 @@
       </td>
       <td *ngIf="identifier === 'uniprot'">
         <a
-          *ngFor="let uniprot of e.uniprotAc; index as i"
+          *ngFor="let uniprot of e.uniprot; index as i"
           href="https://www.uniprot.org/uniprot/{{ uniprot }}"
           target="_blank"
-          >{{ uniprot + (i == e.uniprotAc.length - 1 ? "" : ", ") }}</a
+          >{{ uniprot + (i == e.uniprot.length - 1 ? "" : ", ") }}</a
         >
       </td>
       <td *ngIf="identifier === 'entrez'">

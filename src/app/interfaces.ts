@@ -7,7 +7,7 @@ export interface Node {
   drugstoneId?: Array<string> | string;
   drugstoneType: NodeType;
   drugId?: string;
-  uniprotAc?: Array<string>;
+  uniprot?: Array<string>;
   ensg?: Array<string>;
   entrez?: Array<string>;
   group?: string;
@@ -207,7 +207,7 @@ export interface Wrapper {
     _group?: string;
     groupName?: string;
     proteinName?: Array<string>;
-    uniprotAc?: Array<string>;
+    uniprot?: Array<string>;
     expressionLevel?: number;
     gradient?: number;
     x?: number;

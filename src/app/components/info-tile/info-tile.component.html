@@ -31,16 +31,16 @@
 
 
 <p
-  *ngIf="wrapper.data.uniprotAc"
+  *ngIf="wrapper.data.uniprot"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
 >
   <b><span>Uniprot:</span></b>
   <a
-    *ngFor="let uniprotAc of wrapper.data.uniprotAc"
-    href="https://www.uniprot.org/uniprot/{{ uniprotAc }}"
+    *ngFor="let uniprot of wrapper.data.uniprot"
+    href="https://www.uniprot.org/uniprot/{{ uniprot }}"
     target="_blank"
   >
-    <span class="is-capitalized"> {{ uniprotAc }}</span>
+    <span class="is-capitalized"> {{ uniprot }}</span>
   </a>
 </p>
 <p

@@ -51,14 +51,14 @@ export class QueryTileComponent implements OnInit {
     if (data.proteinName === undefined) {
       data.proteinName = []
     }
-    if (data.uniprotAc === undefined) {
-      data.uniprotAc = []
+    if (data.uniprot === undefined) {
+      data.uniprot = []
     }
     if (data.drugId === undefined) {
       data.drugId = ''
     }
     const query = term.toLowerCase();
-    return this.entryInList(data.symbol, query) || this.entryInList(data.uniprotAc, query) ||
+    return this.entryInList(data.symbol, query) || this.entryInList(data.uniprot, query) ||
       data.label.toLowerCase().indexOf(term) > -1 || this.entryInList(data.ensg, query) || data.id.toLowerCase().indexOf(term) > -1
       || this.entryInList(data.proteinName, query) || data.type.toLowerCase().indexOf(term) > -1 ||
       data.groupName.toLowerCase().indexOf(term) > -1 || data.drugId.toLowerCase().indexOf(term) > -1;
