@@ -105,6 +105,18 @@ export class NetworkComponent implements OnInit {
     return this.nodeData.nodes.length > 100 || this.nodeData.edges.length > 100;
   }
 
+  getResetInputNetwork(): NetworkData {
+    const nodes = [...this.inputNetwork.nodes];
+    nodes.forEach(n => {
+      if (n._group) {
+        n.group = n._group;
+        delete n._group;
+      }
+    });
+    return {edges: this.inputNetwork.edges, nodes};
+  }
+
+
   setLoading(bool: boolean): void {
     this.loading = bool;
   }
@@ -395,9 +407,9 @@ export class NetworkComponent implements OnInit {
 
   public toImage() {
     this.downloadDom(this.networkWithLegendEl.nativeElement).catch(error => {
-      console.error('Falling back to network only screenshot. Some components seem to be inaccessable, most likely the legend is a custom image with CORS access problems on the host server side.');
+      console.error('Falling back to network only screenshot. Some components seem to be inaccessible, most likely the legend is a custom image with CORS access problems on the host server side.');
       this.downloadDom(this.networkEl.nativeElement).catch(e => {
-        console.error('Some network content seems to be inaccessable for saving as a screenshot. This can happen due to custom images used as nodes. Please ensure correct CORS accessability on the images host server.');
+        console.error('Some network content seems to be inaccessible for saving as a screenshot. This can happen due to custom images used as nodes. Please ensure correct CORS accessability on the images host server.');
         console.error(e);
       });
     });
@@ -426,7 +438,7 @@ export class NetworkComponent implements OnInit {
 
   public openEdgeSummary(edgeId: string) {
     this.selectedWrapper = undefined;
-    const edgeMap = this.nodeData.edges.get({returnType:'Object'});
+    const edgeMap = this.nodeData.edges.get({returnType: 'Object'});
     this.activeEdge = edgeMap[edgeId];
   }
 

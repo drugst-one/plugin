@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {
   AnalysisService, BETWEENNESS_CENTRALITY, CLOSENESS_CENTRALITY,
   DEGREE_CENTRALITY,
@@ -6,9 +6,9 @@ import {
   MULTISTEINER, NETWORK_PROXIMITY,
   TRUSTRANK
 } from '../../services/analysis/analysis.service';
-import { Algorithm, AlgorithmType, QuickAlgorithmType } from 'src/app/interfaces';
-import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
-import {NetworkHandlerService} from "../../services/network-handler/network-handler.service";
+import {Algorithm, AlgorithmType, QuickAlgorithmType} from 'src/app/interfaces';
+import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
+import {NetworkHandlerService} from '../../services/network-handler/network-handler.service';
 
 @Component({
   selector: 'app-launch-analysis',
@@ -91,7 +91,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       this.algorithms = [TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, NETWORK_PROXIMITY];
     } else {
       // return because this.target === undefined
-      return
+      return;
     }
     this.algorithms = this.algorithms.filter(algorithm => this.drugstoneConfig.config.algorithms[this.target].includes(algorithm.slug));
     // sanity check to fallback algorithm, trustrank works on all targets
@@ -111,11 +111,18 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     // all nodes in selection have drugstoneId, hence exist in the backend
     const seeds = this.analysis.getSelection().map((item) => item.id);
     const seedsFiltered = seeds.filter(el => el != null);
+    this.analysis.resetSelection();
     const parameters: any = {
       seeds: seedsFiltered,
       config: this.drugstoneConfig.currentConfig(),
-      input_network: this.networkHandler.activeNetwork.inputNetwork
+      input_network: this.networkHandler.activeNetwork.getResetInputNetwork()
     };
+    parameters.input_network.nodes.forEach(node => {
+      if (node._group) {
+        // @ts-ignore
+        node.group = node._group;
+      }
+    });
     parameters.ppi_dataset = this.drugstoneConfig.config.interactionProteinProtein;
     parameters.pdi_dataset = this.drugstoneConfig.config.interactionDrugProtein;
     parameters.licenced = this.drugstoneConfig.config.licensedDatasets;
@@ -124,7 +131,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     // drop interactions in nodes beforehand to no cause cyclic error, information is contained in edges
     // @ts-ignore
     this.networkHandler.activeNetwork.inputNetwork.nodes.forEach(node => {
-      delete node.interactions
+      delete node.interactions;
     });
 
     if (this.algorithm === 'trustrank') {
@@ -180,7 +187,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.custom_edges = this.multisteinerCustomEdges;
     }
     const token = await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
-    const object = { taskId: token, algorithm: this.algorithm, target: this.target, params: parameters };
+    const object = {taskId: token, algorithm: this.algorithm, target: this.target, params: parameters};
     this.taskEvent.emit(object);
   }
 

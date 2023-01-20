@@ -268,11 +268,12 @@ export class AnalysisService {
         }
       });
     }
+    this.resetSelection();
     const target = ['connect', 'connectSelected'].includes(algorithm) ? 'drug-target' : 'drug';
     const parameters: any = {
       seeds: seeds,
       config: this.drugstoneConfig.currentConfig(),
-      input_network: this.networkHandler.activeNetwork.inputNetwork,
+      input_network: this.networkHandler.activeNetwork.getResetInputNetwork(),
       ppi_dataset: this.drugstoneConfig.currentConfig().interactionProteinProtein,
       pdi_dataset: this.drugstoneConfig.currentConfig().interactionDrugProtein,
       target: target,
