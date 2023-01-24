@@ -15,15 +15,15 @@ import {
   Tissue,
   Wrapper
 } from '../../interfaces';
-import { ProteinNetwork, mapNetexEdge } from '../../main-network';
-import { AnalysisService } from '../../services/analysis/analysis.service';
-import { NetworkSettings } from '../../network-settings';
-import { defaultConfig, EdgeGroup, NodeGroup } from '../../config';
-import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
+import {ProteinNetwork, mapNetexEdge} from '../../main-network';
+import {AnalysisService} from '../../services/analysis/analysis.service';
+import {NetworkSettings} from '../../network-settings';
+import {defaultConfig, EdgeGroup, NodeGroup} from '../../config';
+import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 import * as merge from 'lodash/fp/merge';
 import * as JSON5 from 'json5';
-import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
-import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
+import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
+import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
 
 
 declare var vis: any;
@@ -77,7 +77,13 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       return;
     }
     try {
-      this.networkJSON = JSON.stringify(typeof network === 'string' ? JSON5.parse(network) : network);
+      const nw = typeof network === 'string' ? JSON5.parse(network) : network;
+      if (!nw.nodes || nw.nodes.length === 0) {
+        this.drugstoneConfig.gettingNetworkEmpty = true;
+        console.log('No nodes specified in network config.');
+        return;
+      }
+      this.networkJSON = JSON.stringify(nw);
     } catch (e) {
       this.drugstoneConfig.parsingIssueNetwork = true;
       console.error('Failed parsing input network');
@@ -111,7 +117,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   // public edges: NodeInteraction[];
 
   // this will store the vis Dataset
-  public nodeData: { nodes: any, edges: any } = { nodes: null, edges: null };
+  public nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
 
   public showAnalysisDialog = false;
   public showThresholdDialog = false;
@@ -243,9 +249,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.networkHandler.networkSidebarOpen = this.drugstoneConfig.config.expandNetworkMenu;
     // trigger updates on config e.g. in legend
     if (this.drugstoneConfig.analysisConfig) {
-      this.drugstoneConfig.analysisConfig = { ...this.drugstoneConfig.analysisConfig };
+      this.drugstoneConfig.analysisConfig = {...this.drugstoneConfig.analysisConfig};
     } else {
-      this.drugstoneConfig.config = { ...this.drugstoneConfig.config };
+      this.drugstoneConfig.config = {...this.drugstoneConfig.config};
     }
     if (updateNetworkFlag && typeof this.networkJSON !== 'undefined') {
       // update network if network config has changed and networkJSON exists
@@ -298,7 +304,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (this.networkHandler.activeNetwork.networkPositions) {
         this.proteinData.updateNodePositions(this.networkHandler.activeNetwork.networkPositions);
       }
-      let { nodes, edges } = this.proteinData.mapDataToNetworkInput(this.drugstoneConfig.currentConfig(), this.drugstoneConfig);
+      let {nodes, edges} = this.proteinData.mapDataToNetworkInput(this.drugstoneConfig.currentConfig(), this.drugstoneConfig);
       if (this.drugstoneConfig.config.autofillEdges && nodes.length) {
         let node_map = {};
         nodes.filter(n => n.drugstoneType === 'protein').forEach(node => {
@@ -440,7 +446,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         node.id = this.removeEnsemblVersion(node.id);
       });
       if (network.edges != null)
-      // @ts-ignore
+        // @ts-ignore
       {
         network.edges.forEach(edge => {
           edge.from = this.removeEnsemblVersion(edge.from);
@@ -588,12 +594,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
    * @param values
    */
   public setConfigEdgeGroup(key: string, edgeGroups: {
-    [key
-      :
-      string
-    ]:
-    EdgeGroup;
-  }
+                              [key
+                                :
+                                string
+                                ]:
+                                EdgeGroup;
+                            }
   ) {
     // make sure that default-groups are set
     const defaultNodeGroups = JSON.parse(JSON.stringify(defaultConfig.edgeGroups));

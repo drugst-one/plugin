@@ -52,6 +52,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { SummaryNodeComponent } from './pages/explorer-page/summary-node/summary-node/summary-node.component';
 import { NetworkOverviewComponent } from './pages/explorer-page/network-overview/network-overview/network-overview.component';
 import { InfoTileEdgeComponent } from './components/info-tile-edge/info-tile-edge/info-tile-edge.component';
+import { NetworkEmptyWarningComponent } from './components/network-empty-warning/network-empty-warning.component';
 
 
 @NgModule({
@@ -93,6 +94,7 @@ import { InfoTileEdgeComponent } from './components/info-tile-edge/info-tile-edg
     SummaryNodeComponent,
     NetworkOverviewComponent,
     InfoTileEdgeComponent,
+    NetworkEmptyWarningComponent,
   ],
   imports: [
     BrowserModule,
