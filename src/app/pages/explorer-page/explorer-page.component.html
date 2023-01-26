@@ -267,6 +267,53 @@
                   </a>
                 </div>
               </div>
+              <div class="field" *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('search-ndex')">
+                <div class="control">
+                  <a
+                    *ngIf="analysis.getCount() > 0"
+                    (click)="openNDEx()"
+                    target="_blank"
+                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                    class="button is-primary is-fullwidth is-rounded has-tooltip"
+                    pTooltip="Use NDEx Integrated Query to find similar, curated pathways (external)."
+                    [tooltipStyleClass]="
+                      'drgstn drgstn-tooltip drgstn-tooltip-top'
+                    "
+                    tooltipPosition="top"
+                  >
+                    <app-fa-solid-icon
+                      classString="first-item-in-button"
+                      icon="external-link-alt"
+                    ></app-fa-solid-icon>
+                    <span
+                      [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                    >
+                      NDex Integrated Query
+                    </span>
+                  </a>
+                  <a
+                    *ngIf="analysis.getCount() === 0"
+                    disabled
+                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                    class="button is-primary is-fullwidth is-rounded has-tooltip"
+                    pTooltip="Use NDEx Integrated Query to find similar, curated pathways (external)."
+                    [tooltipStyleClass]="
+                      'drgstn drgstn-tooltip drgstn-tooltip-top'
+                    "
+                    tooltipPosition="top"
+                  >
+                    <app-fa-solid-icon
+                      icon="external-link-alt"
+                      classString="first-item-in-button"
+                    ></app-fa-solid-icon>
+                    <span
+                      [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                    >
+                      NDEx Integrated Query
+                    </span>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -32,7 +32,7 @@ export type InteractionDrugProteinDB = 'NeDRex' | 'DrugBank' | 'DrugCentral' | '
 export type InteractionProteinProteinDB = 'NeDRex' | 'BioGRID' | 'IID' | 'IntAct' | 'STRING' | 'APID';
 export type IndicationDrugDisorderDB = 'NeDRex' | 'CTD' | 'DrugCentral' | 'DrugBank';
 export type AssociatedProteinDisorderDB = 'NeDRex' | 'DisGeNET' | 'OMIM';
-export type AdvAnalysisContentTypes = 'drug-target-search' | 'drug-search' | 'enrichment-gprofiler' | 'enrichment-digest';
+export type AdvAnalysisContentTypes = 'drug-target-search' | 'drug-search' | 'enrichment-gprofiler' | 'enrichment-digest' | 'search-ndex';
 
 
 // TODO: should this be external or integrated in the backend?
@@ -150,7 +150,7 @@ export const defaultConfig: IConfig = {
   showItemSelector: true,
   showSimpleAnalysis: true,
   showAdvAnalysis: true,
-  showAdvAnalysisContent: ['drug-search', 'drug-target-search', 'enrichment-gprofiler', 'enrichment-digest'],
+  showAdvAnalysisContent: ['drug-search', 'drug-target-search', 'enrichment-gprofiler', 'enrichment-digest', 'search-ndex'],
   showSelection: true,
   showTasks: true,
   showNetworkMenu: 'right',

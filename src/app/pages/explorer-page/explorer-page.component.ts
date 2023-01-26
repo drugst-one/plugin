@@ -593,14 +593,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
    * @param key
    * @param values
    */
-  public setConfigEdgeGroup(key: string, edgeGroups: {
-                              [key
-                                :
-                                string
-                                ]:
-                                EdgeGroup;
-                            }
-  ) {
+  public setConfigEdgeGroup(key: string, edgeGroups: { [key: string]: EdgeGroup; }) {
     // make sure that default-groups are set
     const defaultNodeGroups = JSON.parse(JSON.stringify(defaultConfig.edgeGroups));
     edgeGroups = merge(defaultNodeGroups, edgeGroups);
@@ -621,9 +614,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.drugstoneConfig.currentConfig()[key] = edgeGroups;
   }
 
-  gProfilerLink()
-    :
-    string {
+  gProfilerLink(): string {
     // nodes in selection have drugstoneId
     const queryString = this.analysis.getSelection()
       .filter(wrapper => wrapper.data.drugstoneType === 'protein')
@@ -665,6 +656,13 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     let resp = await this.netex.digest_request(params).catch(err => console.error(err));
     let url = 'https://digest-validation.net/result?id=' + resp.task;
     this.openExternal(url);
+  }
+
+  async openNDEx() {
+    const proteins = this.analysis.getSelection()
+      .filter(wrapper => wrapper.data.drugstoneType === 'protein')
+      .flatMap(wrapper => wrapper.data.symbol).filter(n => n != null);
+    this.openExternal('https://ndexbio.org/iquery/?genes=' + proteins.join('%20'));
   }
 
   //TODO change to access through network service

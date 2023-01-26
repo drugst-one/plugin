@@ -231,10 +231,16 @@ export class AnalysisService {
     return this.selectedItems.has(wrapper.id);
   }
 
+
   getSelection(): Wrapper[] {
     const out = Array.from(this.selectedItems.values());
     return out != null ? out : [];
   }
+
+  // getSelectionAsWrapper(): Wrapper[] {
+  //   const out = Array.from(this.selectedItems.values());
+  //   return out != null ? out.map(n => getWrapperFromNode(n)) : [];
+  // }
 
   getCount(): number {
     return this.selectedItems.size;
