@@ -71,6 +71,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   @Input()
   public set network(network: string | undefined) {
     this.drugstoneConfig.gettingNetworkIssue = false;
+    this.drugstoneConfig.gettingNetworkEmpty = false;
+    this.drugstoneConfig.parsingIssueNetwork = false;
     if (network == null) {
       this.drugstoneConfig.gettingNetworkIssue = true;
       console.error('Failed parsing input network! Reason: Network JSON is empty');
