@@ -136,13 +136,6 @@
     <span class="is-capitalized"> MONDO:{{ wrapper.data.disorderId }}</span>
   </a>
 </p>
-<p *ngIf="showLinks()"
-   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
-  <b><span>Links:</span></b>
-  <span *ngFor="let target of linkoutMap | keyvalue " >
-    <a *ngIf="showLinkout(target.key)" [href]="getLinkoutURL(target.key)" target="_blank"> {{target.value}}</a>
-  </span>
-</p>
 <p
   *ngIf="
     drugstoneConfig.currentConfig().nodeGroups[
@@ -170,6 +163,13 @@
     }}</span
   >
 
+</p>
+<p *ngIf="showLinks()"
+   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
+  <b><span>Links:</span></b>
+  <span *ngFor="let target of linkoutMap | keyvalue " >
+    <a *ngIf="showLinkout(target.key)" [href]="getLinkoutURL(target.key)" target="_blank"> {{target.value}}</a>
+  </span>
 </p>
 
 <app-toggle
