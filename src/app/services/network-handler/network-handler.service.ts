@@ -49,7 +49,7 @@ export class NetworkHandlerService {
         updated = true;
         await this.activeNetwork.updateAdjacentProteinDisorders(true, false);
       }
-      if (this.drugstoneConfig.config.activateNetworkMenuButtonAdjacentDisordersDrugs) {
+      if (this.drugstoneConfig.config.activateNetworkMenuButtonAdjacentDisorderDrugs) {
         this.activeNetwork.adjacentDisordersDrug = true;
         updated = true;
         await this.activeNetwork.updateAdjacentDrugDisorders(true, false);

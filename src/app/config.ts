@@ -68,7 +68,7 @@ export interface IConfig {
   showNetworkMenuButtonAdjacentDisordersProteins: boolean;
   activateNetworkMenuButtonAdjacentDisorders: boolean;
   networkMenuButtonAdjacentDisordersProteinsLabel: string;
-  activateNetworkMenuButtonAdjacentDisordersDrugs: boolean;
+  activateNetworkMenuButtonAdjacentDisorderDrugs: boolean;
   showNetworkMenuButtonAdjacentDisordersDrugs: boolean;
   networkMenuButtonAdjacentDisordersDrugsLabel: string;
   showNetworkMenuButtonAnimation: boolean;
@@ -165,7 +165,7 @@ export const defaultConfig: IConfig = {
   showNetworkMenuButtonAnimation: true,
   activateNetworkMenuButtonAdjacentDisorders: false,
   showNetworkMenuButtonAdjacentDisordersProteins: true,
-  activateNetworkMenuButtonAdjacentDisordersDrugs: false,
+  activateNetworkMenuButtonAdjacentDisorderDrugs: false,
   showNetworkMenuButtonAdjacentDisordersDrugs: true,
   showConnectGenes: true,
   networkMenuButtonAdjacentDrugsLabel: 'Drugs',
