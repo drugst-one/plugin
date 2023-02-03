@@ -180,6 +180,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.nodeData.nodes.update(updatedNodes);
       }
     });
+
   }
 
   @HostListener('window:resize', ['$event'])
@@ -231,9 +232,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
     configObj = merge(configObj, groupsObj);
     if (this.drugstoneConfig.analysisConfig) {
-      this.drugstoneConfig.set_analysisConfig(merge(this.drugstoneConfig.analysisConfig, configObj));
+      this.drugstoneConfig.set_analysisConfig({...this.drugstoneConfig.analysisConfig, configObj});
+      // this.drugstoneConfig.set_analysisConfig(merge(this.drugstoneConfig.analysisConfig, configObj));
     } else {
-      this.drugstoneConfig.config = merge(this.drugstoneConfig.config, configObj);
+      this.drugstoneConfig.config = {...this.drugstoneConfig.config, ...configObj};
     }
     // update Drugst.One according to the settings
     // check if config updates affect network
