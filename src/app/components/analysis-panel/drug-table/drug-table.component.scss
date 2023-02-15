@@ -34,3 +34,12 @@
   height: 1.5rem;
   width: 1.5rem;
 }
+
+th.rank-column {
+  width: 75px;
+}
+
+td.rank-column {
+  text-align: right !important;
+  padding-right: 35px !important;
+}

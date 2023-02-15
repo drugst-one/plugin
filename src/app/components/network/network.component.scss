@@ -27,18 +27,27 @@ div.control.dropdown {
   z-index: $menu-z-index !important;
 }
 
-.inner-dropdown.dropdown-menu {
-  margin-left: calc(150px - 15px);
-  width: 150px;
-  margin-top: -45px;
+.inner-dropdown {
+  padding-bottom: 0 !important;
 
-  .dropdown-content {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+  .dropdown-menu {
+    margin-left: calc(150px - 15px);
+    width: 150px;
+    margin-top: -45px;
 
-    .dropdown-item {
-      padding: .375rem !important;
+    .dropdown-content {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+
+      .dropdown-item {
+        padding: .375rem !important;
+      }
     }
   }
-
 }
+
+.version-text {
+  font-size: .6rem !important;
+  padding-bottom: 0 !important;
+}
+

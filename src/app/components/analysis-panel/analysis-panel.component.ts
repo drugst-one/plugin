@@ -31,12 +31,14 @@ import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugston
 import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
 import {LegendService} from 'src/app/services/legend-service/legend-service.service';
 import {LoadingScreenService} from 'src/app/services/loading-screen/loading-screen.service';
+import {version} from '../../../version';
 
 declare var vis: any;
 
 interface Scored {
   score: number;  // Normalized or unnormalized (whichever user selects, will be displayed in the table)
   rawScore: number;  // Unnormalized (kept to restore unnormalized value)
+  rank: number;
 }
 
 interface Seeded {
@@ -63,6 +65,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public result: any = null;
 
   public fullscreen = false;
+
+  public algorithmDefault = undefined;
 
   public network: any;
   public nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
@@ -102,11 +106,17 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public tableDrugScoreTooltip = '';
   public tableProteinScoreTooltip = '';
 
+  public versionString = undefined;
+
   public expressionMap: NodeAttributeMap;
 
   public loading = false;
 
   constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService, public loadingScreen: LoadingScreenService) {
+    try {
+      this.versionString = version;
+    }catch (e){
+    }
   }
 
   async ngOnInit() {
@@ -118,6 +128,20 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   async ngOnChanges(changes: SimpleChanges) {
     await this.refresh();
+  }
+
+  private rankTable(table: Array<Drug & Scored> | Array<Node & Scored & Seeded>) {
+    let lastRank = 1;
+    for (let idx = 0; idx < table.length; idx++) {
+      if (idx === 0) {
+        table[idx].rank = lastRank;
+        continue;
+      }
+      if (table[idx].score !== table[idx - 1].score) {
+        lastRank += 1;
+      }
+      table[idx].rank = lastRank;
+    }
   }
 
   private async refresh() {
@@ -157,6 +181,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       }
 
       if (this.task && this.task.info.done) {
+
         this.loading = true;
         this.netex.getTaskResult(this.token).then(async result => {
           this.drugstoneConfig.set_analysisConfig(result.parameters.config);
@@ -215,6 +240,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               this.tableDrugs.forEach((r) => {
                 r.rawScore = r.score;
               });
+              // @ts-ignore
+              this.tableDrugs.sort((a, b) => b.score - a.score);
+              this.rankTable(this.tableDrugs);
               this.tableProteins = nodes.filter(e => e.drugstoneId && e.drugstoneType === 'protein');
               this.tableSelectedProteins = [];
               this.tableProteins.forEach((r) => {
@@ -225,7 +253,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
                   this.tableSelectedProteins.push(r);
                 }
               });
-
+              this.tableProteins.sort((a, b) => b.score - a.score);
+              this.rankTable(this.tableProteins);
 
               this.tableHasScores = ['trustrank', 'closeness', 'degree', 'betweenness', 'quick', 'super']
                 .indexOf(this.task.info.algorithm) !== -1;
@@ -350,7 +379,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
                 }
               });
               this.emitVisibleItems(true);
-            });
+            }).then(() => {
+              if (!['quick', 'super', 'connect', 'connectSelected'].includes(this.task.info.algorithm)) {
+                return;
+              }
+              this.netex.getAlgorithmDefaults(this.task.info.algorithm).then(response => {
+                this.algorithmDefault = response
+              });
+            }).catch(console.error);
           });
           this.loadingScreen.stateUpdate(false);
         });

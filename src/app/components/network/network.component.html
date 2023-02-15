@@ -51,6 +51,7 @@
                     <a class="dropdown-item" pTooltip="Opens Drugst.One website" [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }" tooltipPosition="left"
                        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'" target="_blank"
                        href="https://drugst.one/home">About Drugst.One</a>
+                  <b *ngIf="versionString" class="version-text dropdown-item">{{versionString}}</b>
                 </div>
             </div>
           </div>

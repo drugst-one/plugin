@@ -16,4 +16,15 @@ export class DrugTableComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  formatNumber(input): string {
+    if (!input) {
+      return 'NA';
+    }
+    const n = Number(input);
+    if (n > 0.01) {
+      return n.toPrecision(3);
+    }
+    return n.toExponential(3).toString();
+  }
+
 }

@@ -74,6 +74,7 @@
                        [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }" tooltipPosition="left"
                        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'" target="_blank"
                        href="https://drugst.one/home">About Drugst.One</a>
+                   <b *ngIf="versionString" class="version-text dropdown-item">{{versionString}}</b>
                 </div>
             </div>
           </div>
@@ -127,11 +128,11 @@
                 title="Algorithm"
               ></app-fa-solid-icon>
               {{
-                ["quick", "super", "connect", "connectSelected"].indexOf(
-                  task.info.algorithm
-                ) === -1
-                  ? "Algorithm:"
-                  : "Method:"
+              ["quick", "super", "connect", "connectSelected"].indexOf(
+                task.info.algorithm
+              ) === -1
+                ? "Algorithm:"
+                : "Method:"
               }}
               {{ algorithmNames[task.info.algorithm] }}
             </h4>
@@ -139,26 +140,52 @@
         </div>
         <div class="columns m-1">
           <div class="column">
-            <table class="table parameter-table">
+            <table class="table parameter-table" *ngIf="['quick', 'super', 'connect', 'connectSelected'].includes(task.info.algorithm)">
               <tbody>
-                <tr
-                  *ngIf="result && result.geneInteractionDataset !== undefined"
-                >
-                  <td>Protein-Protein Interaction Dataset</td>
-                  <td>
-                    {{ result.geneInteractionDataset.name }} (Version
-                    {{ result.geneInteractionDataset.version }})
-                  </td>
-                </tr>
-                <tr
-                  *ngIf="result && result.drugInteractionDataset !== undefined"
-                >
-                  <td>Protein-Drug Interaction Dataset</td>
-                  <td>
-                    {{ result.drugInteractionDataset.name }} (Version
-                    {{ result.drugInteractionDataset.version }})
-                  </td>
-                </tr>
+              <tr
+                *ngIf="result && result.geneInteractionDataset !== undefined"
+              >
+                <td>Protein-Protein Interaction Dataset</td>
+                <td>
+                  {{ result.geneInteractionDataset.name }}{{ result.geneInteractionDataset.licenced ? " (licensed)" : ""}}
+                  [Version
+                  {{ result.geneInteractionDataset.version }}]
+                </td>
+              </tr>
+              <tr
+                *ngIf="result && result.drugInteractionDataset !== undefined"
+              >
+                <td>Protein-Drug Interaction Dataset</td>
+                <td>
+                  {{ result.drugInteractionDataset.name }}{{ result.drugInteractionDataset.licenced ? " (licensed)" : ""}}
+                  [Version
+                  {{ result.drugInteractionDataset.version }}]
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <table class="table parameter-table" *ngIf="!['quick', 'super', 'connect', 'connectSelected'].includes(task.info.algorithm)">
+              <tbody>
+              <tr
+                *ngIf="result && result.geneInteractionDataset !== undefined"
+              >
+                <td>Protein-Protein Interaction Dataset</td>
+                <td>
+                  {{ result.geneInteractionDataset.name }}{{ result.geneInteractionDataset.licenced ? " (licensed)" : ""}}
+                  [Version
+                  {{ result.geneInteractionDataset.version }}]
+                </td>
+              </tr>
+              <tr
+                *ngIf="result && result.drugInteractionDataset !== undefined"
+              >
+                <td>Protein-Drug Interaction Dataset</td>
+                <td>
+                  {{ result.drugInteractionDataset.name }}{{ result.drugInteractionDataset.licenced ? " (licensed)" : ""}}
+                  [Version
+                  {{ result.drugInteractionDataset.version }}]
+                </td>
+              </tr>
                 <tr *ngIf="task.info.parameters.resultSize !== undefined">
                   <td>Result Size</td>
                   <td>{{ task.info.parameters.resultSize }}</td>
@@ -255,9 +282,9 @@
         <div
           class="columns m-1"
           *ngIf="
-            ['quick', 'super', 'connect', 'connectSelected'].indexOf(
+            ['quick', 'super', 'connect', 'connectSelected'].includes(
               task.info.algorithm
-            ) > -1
+            ) && algorithmDefault != null
           "
         >
           <div class="column">
@@ -267,29 +294,29 @@
                 title="algorithm"
               ></app-fa-solid-icon>
               Algorithm:
-              {{ algorithmNames["multisteiner"] }}
+              {{ algorithmNames[algorithmDefault['protein']['algorithm']] }}
             </h4>
             <table class="table parameter-table">
               <tbody>
-                <tr>
-                  <td>Number of Trees</td>
-                  <td>1</td>
-                </tr>
-                <tr>
-                  <td>Tolerance</td>
-                  <td>0</td>
-                </tr>
-                <tr>
-                  <td>Hub Penality</td>
-                  <td>1</td>
-                </tr>
+              <tr>
+                <td>Number of Trees</td>
+                <td>{{algorithmDefault['protein']['numTrees']}}</td>
+              </tr>
+              <tr>
+                <td>Tolerance</td>
+                <td>{{algorithmDefault['protein']['tolerance']}}</td>
+              </tr>
+              <tr>
+                <td>Hub Penality</td>
+                <td>{{algorithmDefault['protein']['hubPenalty']}}</td>
+              </tr>
               </tbody>
             </table>
           </div>
         </div>
         <div
           class="columns m-1"
-          *ngIf="['quick', 'super'].indexOf(task.info.algorithm) > -1"
+          *ngIf="['quick', 'super'].includes(task.info.algorithm) && algorithmDefault != null"
         >
           <div class="column">
             <h4 class="is-4 has-text-weight-bold">
@@ -298,38 +325,48 @@
                 title="algorithm"
               ></app-fa-solid-icon>
               Algorithm:
-              {{ algorithmNames["closeness"] }}
+              {{ algorithmNames[algorithmDefault['drug']['algorithm']]}}
             </h4>
             <table class="table parameter-table">
               <tbody>
-                <tr>
-                  <td>Include indirect drugs</td>
-                  <td>
-                    <app-fa-solid-icon
-                      icon="times"
-                      classString="has-text-danger"
-                      title="indirect drugs excluded"
-                    ></app-fa-solid-icon>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Include non-approved drugs</td>
-                  <td>
-                    <app-fa-solid-icon
-                      icon="check"
-                      title="non-approved drugs included"
-                      classString="has-text-success"
-                    ></app-fa-solid-icon>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Hub Penality</td>
-                  <td>1</td>
-                </tr>
-                <tr>
-                  <td>Result Size</td>
-                  <td>10</td>
-                </tr>
+              <tr>
+                <td>Include indirect drugs</td>
+                <td>
+                  <app-fa-solid-icon *ngIf="!algorithmDefault['drug']['include_indirect_drugs']"
+                                     icon="times"
+                                     classString="has-text-danger"
+                                     title="indirect drugs excluded"
+                  ></app-fa-solid-icon>
+                  <app-fa-solid-icon *ngIf="algorithmDefault['drug']['include_indirect_drugs']"
+                                     icon="check"
+                                     title="indirect drugs included"
+                                     classString="has-text-success"
+                  ></app-fa-solid-icon>
+                </td>
+              </tr>
+              <tr>
+                <td>Include non-approved drugs</td>
+                <td>
+                  <app-fa-solid-icon *ngIf="!algorithmDefault['drug']['include_non_approved_drugs']"
+                                     icon="times"
+                                     classString="has-text-danger"
+                                     title="non-approved drugs excluded"
+                  ></app-fa-solid-icon>
+                  <app-fa-solid-icon *ngIf="algorithmDefault['drug']['include_non_approved_drugs']"
+                                     icon="check"
+                                     title="non-approved drugs included"
+                                     classString="has-text-success"
+                  ></app-fa-solid-icon>
+                </td>
+              </tr>
+              <tr>
+                <td>Hub Penality</td>
+                <td>{{algorithmDefault['drug']['hubPenalty']}}</td>
+              </tr>
+              <tr>
+                <td>Result Size</td>
+                <td>{{algorithmDefault['drug']['resultSize']}}</td>
+              </tr>
               </tbody>
             </table>
           </div>

@@ -22,8 +22,7 @@ import {pieChartContextRenderer} from 'src/app/utils';
 import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
 import {LegendService} from 'src/app/services/legend-service/legend-service.service';
 import {LoadingScreenService} from 'src/app/services/loading-screen/loading-screen.service';
-
-
+import {version} from '../../../version';
 @Component({
   selector: 'app-network',
   templateUrl: './network.component.html',
@@ -85,6 +84,8 @@ export class NetworkComponent implements OnInit {
 
   public loading = false;
 
+  public versionString = undefined;
+
   public nodeGroupsWithExpression: Set<string> = new Set();
 
   constructor(
@@ -92,9 +93,14 @@ export class NetworkComponent implements OnInit {
     public networkHandler: NetworkHandlerService,
     public analysis: AnalysisService,
     public drugstoneConfig: DrugstoneConfigService,
+
     public netex: NetexControllerService,
     public omnipath: OmnipathControllerService,
     public loadingScreen: LoadingScreenService) {
+    try {
+      this.versionString = version;
+    }catch (e){
+    }
   }
 
   ngOnInit(): void {

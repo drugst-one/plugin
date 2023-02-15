@@ -4,7 +4,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Tissue, Node, EdgeType, QuickAlgorithmType, AlgorithmType} from 'src/app/interfaces';
 import {InteractionDrugProteinDB, InteractionProteinProteinDB} from 'src/app/config';
-import { DrugstoneConfigService } from '../drugstone-config/drugstone-config.service';
+import {DrugstoneConfigService} from '../drugstone-config/drugstone-config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -49,6 +49,10 @@ export class NetexControllerService {
     return this.http.get<Tissue[]>(`${this.getBackend()}tissues/`);
   }
 
+  public getAlgorithmDefaults(algorithm): Promise<any> {
+    return this.http.get(this.getBackend() + 'get_default_params?algorithm=' + algorithm).toPromise();
+  }
+
   public digest_request(payload): Promise<any> {
     return this.http.post('https://api.digest-validation.net/set', payload).toPromise();
   }
@@ -68,7 +72,7 @@ export class NetexControllerService {
     const payload = {
       tissue: tissue.drugstoneId,
       proteins: JSON.stringify(genesBackendIds)
-    }
+    };
     return this.http.post(`${this.getBackend()}tissue_expression/`, payload);
   }
 

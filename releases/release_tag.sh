@@ -18,9 +18,13 @@ MESSAGE=$2
 
 echo "Committing all changes"
 git commit -am "$MESSAGE"
+echo "Updating version.ts"
+echo "export const version = 'v$1';"
+
 echo "Tagging Version..."
 npm version "$1" -m "$MESSAGE"
 git push
+
 echo "Releasing Version..."
 git push origin "$VERSION"
 

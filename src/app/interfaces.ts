@@ -234,6 +234,7 @@ export interface Drug {
   trialLinks: string[];
   drugstoneId: string;
   group: string;
+
 }
 
 export interface Dataset {

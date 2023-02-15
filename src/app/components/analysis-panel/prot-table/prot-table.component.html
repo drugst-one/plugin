@@ -12,6 +12,10 @@
       <th class="checkbox-col">
         <p-tableHeaderCheckbox class="drgstn"></p-tableHeaderCheckbox>
       </th>
+      <th *ngIf="tableHasScores" [pSortableColumn]="'rank'" class="rank-column">
+        Rank
+        <p-sortIcon [field]="'rank'"></p-sortIcon>
+      </th>
       <th *ngIf="identifier === 'symbol'" [pSortableColumn]="'symbol'">
         Symbol
         <p-sortIcon [field]="'symbol'"></p-sortIcon>
@@ -58,6 +62,7 @@
       <td>
         <p-tableCheckbox [value]="e" class="drgstn"></p-tableCheckbox>
       </td>
+      <td *ngIf="tableHasScores" class="rank-column">{{ e.rank}}</td>
       <td *ngIf="identifier === 'symbol'">
         <a
           *ngFor="let symbol of e.symbol; index as i"
@@ -91,7 +96,7 @@
         >
       </td>
       <td>{{ e.proteinName }}</td>
-      <td *ngIf="tableHasScores">{{ e.score.toString() | number }}</td>
+      <td *ngIf="tableHasScores">{{ formatNumber(e.score)}}</td>
       <td>
         <span *ngIf="e.isSeed">
           <app-fa-solid-icon

@@ -5,8 +5,11 @@
 >
   <div class="legend-background" *ngIf="!config.legendUrl.length"></div>
   <!-- default legend in html -->
+
   <table *ngIf="!config.legendUrl.length" class="legend-table">
     <ng-container *ngIf="config.showLegendNodes">
+        <td colspan="2" *ngIf="networkHandler.activeNetwork.nodeGroupsWithExpression.size >0"><i>Pie charts represent tissue normalized
+          median TPM, provided by GTEx</i></td>
       <ng-container *ngFor="let nodeGroup of config.nodeGroups | keyvalue">
         <tr
           class="list-item"
@@ -21,7 +24,7 @@
               >
               </span>
             </th>
-            <td class="group-name">&nbsp;{{ nodeGroup.value.groupName }} (exprs)</td>
+            <td class="group-name">&nbsp;{{ nodeGroup.value.groupName }} (TPM)</td>
           </ng-container>
 
           <!-- normal legend without expression -->
@@ -29,7 +32,7 @@
             <ng-container *ngIf="nodeGroup.value.image">
               <!-- group icon given, use icon in legend -->
               <th>
-                <img [src]="nodeGroup.value.image" class="legend-icon" />
+                <img [src]="nodeGroup.value.image" class="legend-icon"/>
               </th>
               <td class="group-name">&nbsp;{{ nodeGroup.value.groupName }}</td>
             </ng-container>
@@ -110,7 +113,7 @@
         </tr>
       </ng-container>
     </ng-container>
-    
+
     <ng-container *ngIf="config.showLegendEdges && !_emptyEdgeConfig">
       <tr
         *ngFor="let edgeGroup of config.edgeGroups | keyvalue"

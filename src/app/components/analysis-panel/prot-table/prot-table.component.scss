@@ -37,7 +37,16 @@
 
 td {
   padding: 0.2rem 1rem 0.2rem 1rem !important;
-  vertical-align:middle !important;
+  vertical-align: middle !important;
+}
+
+th.rank-column {
+    width: 75px;
+  }
+
+td.rank-column {
+  text-align: right !important;
+  padding-right: 35px !important;
 }
 
 
