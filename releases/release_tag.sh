@@ -19,7 +19,7 @@ MESSAGE=$2
 echo "Committing all changes"
 git commit -am "$MESSAGE"
 echo "Updating version.ts"
-echo "export const version = 'v$1';"
+echo "export const version = 'v$1';" > ../src/version.ts
 
 echo "Tagging Version..."
 npm version "$1" -m "$MESSAGE"
