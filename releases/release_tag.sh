@@ -16,10 +16,10 @@ fi
 VERSION=v$1
 MESSAGE=$2
 
-echo "Committing all changes"
-git commit -am "$MESSAGE"
 echo "Updating version.ts"
 echo "export const version = 'v$1';" > ../src/version.ts
+echo "Committing all changes"
+git commit -am "$MESSAGE"
 
 echo "Tagging Version..."
 npm version "$1" -m "$MESSAGE"
