@@ -22,14 +22,14 @@ class ParserHTML:
     PARSEDFILENEDING = '.parsed'
     NGCLASSINDIVIDUALPATTERN = '[class.'
     TOOLTIPCLASSPATTERN = '[tooltipStyleClass]="'
-    
+
     def __init__(self):
         pass
-    
+
     def prefixNgIndivClassStrings(self, line, classStart):
         line = line[:classStart] + self.PREFIX + line[classStart:]
-        return line 
-    
+        return line
+
     def prefixNgClassStrings(self, line, classStart):
         start = False
         classIndices = []
@@ -52,12 +52,12 @@ class ParserHTML:
             elif c == '?':
                 # if we see a ?, the following : does not implicate a string comparison but a case separation
                 seenQuestionmark = True
-            
+
         for i, start in enumerate(classIndices):
             start += i * len(self.PREFIX)
             line = line[:start] + self.PREFIX + line[start:]
         return line
-    
+
     def findClassStrings(self, line, classStart):
         classIndices = []
         start = classStart
@@ -79,11 +79,11 @@ class ParserHTML:
             else:
                 lastWasCurl = False
                 lastWasClosingCurl = False
-                
+
             if c == '"':
                 return classIndices, i
         return classIndices, len(line)
-    
+
     def updateClassStrings(self, line, classIndices, classStart, classEnd, iTagOpen):
         renamedClassList = []
         for start, end in classIndices:
@@ -94,11 +94,11 @@ class ParserHTML:
             renamedClass = self.prefixClass(classString)
             renamedClassList.append(renamedClass)
         return self.updateClasses(line, renamedClassList, classStart, classEnd)
-        
+
 
     def prefixClass(self, classString):
         return self.PREFIX + classString
-    
+
     def prefixtooltipStrings(self, line, tooltipClassStart):
         subline = line[tooltipClassStart:]
         start = subline.find("'")+1
@@ -133,8 +133,8 @@ class ParserHTML:
                         content += line.strip() + ' '
                     else:
                         # new line
-                        content += line + '\n'   
-                    
+                        content += line + '\n'
+
             iTagOpen = False
             for line in content.split('\n'):
                 line = line.strip()
@@ -156,23 +156,23 @@ class ParserHTML:
                 if ngClassStart > -1:
                     ngClassStart += len(self.NGCLASSSEARCHPATTERN)
                     line = self.prefixNgClassStrings(line, ngClassStart)
-                    
+
                 ngClassIndivStart = line.find(self.NGCLASSINDIVIDUALPATTERN)
                 if ngClassIndivStart > -1:
                     ngClassIndivStart += len(self.NGCLASSINDIVIDUALPATTERN)
                     # exclude .fa classes
                     if not line[ngClassIndivStart:].startswith('fa-'):
                         line = self.prefixNgIndivClassStrings(line, ngClassIndivStart)
-                        
+
                 tooltipClassStart = line.find(self.TOOLTIPCLASSPATTERN)
                 if tooltipClassStart > -1:
                     tooltipClassStart += len(self.TOOLTIPCLASSPATTERN)
                     line = self.prefixtooltipStrings(line, tooltipClassStart)
-                    
+
                 if self.IDSEARCHPATTERN in line:
                     line = line.replace(self.IDSEARCHPATTERN, self.IDSEARCHPATTERN + self.PREFIX)
                 newLines.append(line)
-                
+
                 if '</i' in line:
                     iTagOpen = False
         return '\n'.join(newLines)
@@ -191,7 +191,7 @@ class ParserHTML:
                     if ('fa-icons' in file):
                         continue
                     path = os.path.join(root, file)
-                    print('parsing', path)
+                    # print('parsing', path)
                     html = self.parseHtml(path)
                     self.write(path, html)
 
@@ -199,9 +199,9 @@ class ParserJS:
     PREFIX = 'drugstone-plugin-'
     PARSEDFILENEDING = '.parsed'
     DIR = 'src/'
-    
+
     ELEMENTBYIDSTRING = 'document.getElementById('
-    
+
     def findId(self, line):
         start = line.find(self.ELEMENTBYIDSTRING) + len(self.ELEMENTBYIDSTRING)+1
         return start
@@ -210,7 +210,7 @@ class ParserJS:
         start = self.findId(line)
         line = line[:start] + self.PREFIX + line[start:]
         return line
-    
+
     def parseJS(self, path):
         newLines = []
         with open(path) as f:
@@ -219,7 +219,7 @@ class ParserJS:
                     line = self.replaceElementById(line)
                 newLines.append(line)
         return '\n'.join(newLines)
-    
+
     def write(self, path, html):
         writePath = path + self.PARSEDFILENEDING
         with open(writePath, "w") as f:
@@ -232,7 +232,7 @@ class ParserJS:
             for file in files:
                 if file.endswith(".component.ts"):
                     path = os.path.join(root, file)
-                    print('parsing', path)
+                    # print('parsing', path)
                     html = self.parseJS(path)
                     self.write(path, html)
 
@@ -241,7 +241,7 @@ class ParserCSS:
     PREFIXID = '#drugstone-plugin-'
     PARSEDFILENEDING = '.parsed'
     DIR = 'src/'
-    
+
     def __init__(self):
         pass
 
@@ -258,7 +258,7 @@ class ParserCSS:
             if c == '.' or c == ' ' or c == '{' or c ==',':
                 return i
         return len(line)
-    
+
     def findPotentialIdEnding(self, line, start):
         # can be id or hexacode color
         start += 1
@@ -272,7 +272,7 @@ class ParserCSS:
         classListStringList = [x for x in classListStringList if len(x)]
         classListStringList = [self.PREFIXCLASS + x if not (x.startswith('ng-') or x.startswith('p-') or x.startswith('pi-') or x.startswith('drugstone-plugin-') or x.startswith('fa-')) else '.' + x for x in classListStringList]
         return '.'.join(classListStringList)
-    
+
     def prefixId(self, classListString):
         return classListString.replace('#', self.PREFIXID)
 
@@ -289,7 +289,7 @@ class ParserCSS:
                 if not len(line):
                     # skip empty lines as empty lines in the beginning of .sass files cause errors
                     continue
-                
+
                 if line.startswith('@import') or line.startswith('@forward') or line.startswith('@error') or line.startswith('@mixin') or line.startswith('@content') or line.startswith('src'):
                     line = leadingWhiteSaces*' ' + line
                     newLines.append(line)
@@ -306,7 +306,7 @@ class ParserCSS:
                         if self.charIsNumber(line[i+1]):
                             i += 1
                             continue
-                        
+
                         classListEnd = self.findClassEnding(line, i)
                         classListString = line[i:classListEnd]
                         renamedClasses = self.prefixClasses(classListString)
@@ -322,7 +322,7 @@ class ParserCSS:
                         if end > -1 and re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', line[i:end]):
                             i = end
                             continue
-                        
+
                         classListEnd = self.findClassEnding(line, i)
                         classListString = line[i:classListEnd]
                         renamedClasses = self.prefixId(classListString)
@@ -334,7 +334,7 @@ class ParserCSS:
                 newLines.append(line)
         return '\n'.join(newLines)
 
-    
+
     def write(self, path, html):
         writePath = path + self.PARSEDFILENEDING
         with open(writePath, "w") as f:
@@ -350,33 +350,33 @@ class ParserCSS:
                     # skip ng select classes
                     if '@ng-select' in path or '-no-prefix.scss' in path:
                         continue
-                    print('parsing', path)
+                    # print('parsing', path)
                     scss = self.parseCSS(path)
                     self.write(path, scss)
 
-    
+
 class BuildManager:
-    
+
     def __init__(self, buildPath):
         self.buildPath = buildPath
-        
+
     def buildDevDir(self):
         shutil.copytree('src', os.path.join(self.buildPath, 'src'))
         shutil.copytree('node_modules', os.path.join(self.buildPath, 'node_modules'))
-        
+
     def parseApp(self):
         ParserHTML().parseDirectory('src/app/')
         ParserCSS().parseDirectory('src/')
         ParserCSS().parseDirectory('node_modules/')
         ParserJS().parseDirectory('src/app/')
-        
+
     def cleanup(self):
         shutil.rmtree('src')
         shutil.copytree(os.path.join(self.buildPath, 'src'), 'src')
         shutil.rmtree('node_modules')
         shutil.rmtree(self.buildPath)
         subprocess.run(['npm',  'i'])
-        
+
 
 ORIGDIR = 'original'
 
@@ -395,18 +395,18 @@ def cleanup():
     buildManager = BuildManager(ORIGDIR)
     buildManager.cleanup()
     print('Cleanup done!')
-    
-    
-    
+
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument("-s", "--stage", help = "Stage of building. Either 'parse' or 'cleanup'.")
 
-    
+
 if __name__ == '__main__':
     args = parser.parse_args()
     if not args.stage:
         raise Exception('Value for --stage is missing.')
-       
+
     if args.stage == 'parse':
         try:
             parse()
@@ -417,9 +417,8 @@ if __name__ == '__main__':
                 parse()
             except:
                 cleanup()
-            
+
     elif args.stage == 'cleanup':
         cleanup()
     else:
         raise Exception(f'ERROR: Unknown argument for --stage: {args.stage}. Should be "parse" or "stage."')
-       
