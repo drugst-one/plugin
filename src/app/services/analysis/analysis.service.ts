@@ -155,25 +155,39 @@ export class AnalysisService {
 
   public addGroupToSelection(group: NodeGroup) {
     const wrappers: Wrapper[] = [];
+    const unmappedNodes = [];
     this.networkHandler.activeNetwork.currentViewNodes.forEach((node) => {
       if (node.group !== group.groupID || node.drugstoneType !== 'protein') {
-        // only consider nodes of group and proteins
-        return;
-      }
-      wrappers.push(getWrapperFromNode(node));
-    });
-    this.addItems(wrappers);
-  }
-
-  public addAllToSelection() {
-    const wrappers: Wrapper[] = [];
-    this.networkHandler.activeNetwork.currentViewNodes.forEach((node) => {
-      if (node.drugstoneType !== 'protein') {
+        if (node.drugstoneType !== 'drug' && node.drugstoneType !== 'disorder' && node.drugstoneId === undefined) {
+          unmappedNodes.push(node.label);
+        }
         // only consider proteins
         return;
       }
       wrappers.push(getWrapperFromNode(node));
     });
+    this.addItems(wrappers);
+    if (unmappedNodes.length > 0) {
+      this.unmappedNodesToast(unmappedNodes);
+    }
+  }
+
+  public addAllToSelection() {
+    const wrappers: Wrapper[] = [];
+    const unmappedNodes = [];
+    this.networkHandler.activeNetwork.currentViewNodes.forEach((node) => {
+      if (node.drugstoneType !== 'protein') {
+        if (node.drugstoneType !== 'drug' && node.drugstoneType !== 'disorder' && node.drugstoneId === undefined) {
+          unmappedNodes.push(node.label);
+        }
+        // only consider proteins
+        return;
+      }
+      wrappers.push(getWrapperFromNode(node));
+    });
+    if (unmappedNodes.length > 0) {
+      this.unmappedNodesToast(unmappedNodes);
+    }
     this.addItems(wrappers);
   }
 
@@ -201,8 +215,12 @@ export class AnalysisService {
 
   public invertSelection(nodes) {
     const newSelection = [];
+    const unmappedNodes = [];
     nodes.forEach((node: Node) => {
       if (node.drugstoneType !== 'protein') {
+        if (node.drugstoneType !== 'drug' && node.drugstoneType !== 'disorder' && node.drugstoneId === undefined) {
+          unmappedNodes.push(node.label);
+        }
         // only consider proteins
         return;
       }
@@ -216,6 +234,9 @@ export class AnalysisService {
       this.selectedItems.set(wrapper.id, wrapper);
     }
     this.selectListSubject.next({items: newSelection, selected: true});
+    if (unmappedNodes.length > 0) {
+      this.unmappedNodesToast(unmappedNodes);
+    }
   }
 
   resetSelection() {
@@ -268,11 +289,17 @@ export class AnalysisService {
       seeds = this.getSelection().map((item: Wrapper) => item.id);
     } else {
       // get all node ids
+      const unmappedNodes = [];
       this.networkHandler.activeNetwork.currentViewProteins.forEach((item: Node) => {
         if (item.drugstoneType === 'protein') {
           seeds.push(item.id);
+        } else if (item.drugstoneType !== 'drug' && item.drugstoneType !== 'disorder' && item.drugstoneId === undefined) {
+          unmappedNodes.push(item.label);
         }
       });
+      if (unmappedNodes.length) {
+        this.unmappedNodesToast(unmappedNodes);
+      }
     }
     this.resetSelection();
     const target = ['connect', 'connectSelected'].includes(algorithm) ? 'drug-target' : 'drug';
@@ -356,6 +383,13 @@ export class AnalysisService {
   unmappedNodeToast() {
     this.toast.setNewToast({
       message: 'This node cannot be selected because either it could not be mapped correctly or it is not of type gene or protein.',
+      type: 'warning',
+    });
+  }
+
+  unmappedNodesToast(l) {
+    this.toast.setNewToast({
+      message: 'The following node(s) cannot be selected because either they could not be mapped correctly: ' + l.join(', '),
       type: 'warning',
     });
   }

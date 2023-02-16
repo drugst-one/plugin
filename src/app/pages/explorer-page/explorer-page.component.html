@@ -129,7 +129,7 @@
               <div class="field" *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('drug-target-search')">
                 <div
                   class="control"
-                  pTooltip="Find drug targets for the selected proteins."
+                  [pTooltip]="analysis.getCount() === 0 ? 'Select proteins by double clicking, to identify drug targets for them.' : 'Find drug targets for the selected proteins.'"
                   [tooltipStyleClass]="
                     'drgstn drgstn-tooltip drgstn-tooltip-top'
                   "
@@ -152,7 +152,7 @@
               <div class="field" *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('drug-search')">
                 <div
                   class="control"
-                  pTooltip="Find drugs for the selected proteins."
+                  [pTooltip]="analysis.getCount() === 0 ? 'Select proteins by double clicking, to identify drugs for them.' : 'Find drugs for the selected proteins.'"
                   [tooltipStyleClass]="
                     'drgstn drgstn-tooltip drgstn-tooltip-top'
                   "
@@ -202,7 +202,7 @@
                     disabled
                     [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                     class="button is-primary is-fullwidth is-rounded has-tooltip"
-                    pTooltip="Use enrichment analysis via g:Profiler (external)."
+                    pTooltip="Select proteins by double clicking, to run enrichment analysis via g:Profiler (external)."
                     [tooltipStyleClass]="
                       'drgstn drgstn-tooltip drgstn-tooltip-top'
                     "
@@ -249,7 +249,7 @@
                     disabled
                     [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                     class="button is-primary is-fullwidth is-rounded has-tooltip"
-                    pTooltip="Use enrichment analysis via DIGEST (external)."
+                    pTooltip="Select proteins by double clicking, to run enrichment analysis via DIGEST (external)."
                     [tooltipStyleClass]="
                       'drgstn drgstn-tooltip drgstn-tooltip-top'
                     "
@@ -296,7 +296,7 @@
                     disabled
                     [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                     class="button is-primary is-fullwidth is-rounded has-tooltip"
-                    pTooltip="Use NDEx Integrated Query to find similar, curated pathways (external)."
+                    pTooltip="Select proteins by double clicking, to find similar, curated pathways via NDEx Integrated Query to (external)."
                     [tooltipStyleClass]="
                       'drgstn drgstn-tooltip drgstn-tooltip-top'
                     "
