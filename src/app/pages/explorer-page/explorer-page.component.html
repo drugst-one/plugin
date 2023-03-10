@@ -410,13 +410,13 @@
                 <tr>
                   <td>Label</td>
                   <td>Group</td>
-                  <td *ngIf="drugstoneConfig.currentConfig().identifier !== 'symbol'">
-                    Symbol
-                  </td>
-                  <td *ngIf="drugstoneConfig.currentConfig().identifier !== 'uniprot'">
-                    Uniprot
-                  </td>
-                  <td>Actions</td>
+<!--                  <td *ngIf="drugstoneConfig.currentConfig().identifier !== 'symbol'">-->
+<!--                    Symbol-->
+<!--                  </td>-->
+<!--                  <td *ngIf="drugstoneConfig.currentConfig().identifier !== 'uniprot'">-->
+<!--                    Uniprot-->
+<!--                  </td>-->
+                  <td style="text-align: center">Actions</td>
                 </tr>
                 </thead>
                 <tbody class="overflow">
@@ -433,16 +433,16 @@
                       }}
                     </p>
                   </td>
-                  <td *ngIf="drugstoneConfig.currentConfig().identifier !== 'symbol'">
-                    <p>{{ p.data.symbol }}</p>
-                  </td>
-                  <td
-                    *ngIf="drugstoneConfig.currentConfig().identifier !== 'uniprot'"
-                    class="uniprot"
-                    title="{{ p.data.uniprot }}"
-                  >
-                    <p>{{ p.data.uniprot }}</p>
-                  </td>
+<!--                  <td *ngIf="drugstoneConfig.currentConfig().identifier !== 'symbol'">-->
+<!--                    <p>{{ p.data.symbol }}</p>-->
+<!--                  </td>-->
+<!--                  <td-->
+<!--                    *ngIf="drugstoneConfig.currentConfig().identifier !== 'uniprot'"-->
+<!--                    class="uniprot"-->
+<!--                    title="{{ p.data.uniprot }}"-->
+<!--                  >-->
+<!--                    <p>{{ p.data.uniprot }}</p>-->
+<!--                  </td>-->
                   <td style="text-align: center">
                     <button
                       (click)="analysis.removeItems([p])"
