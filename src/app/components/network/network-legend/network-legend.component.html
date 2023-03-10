@@ -8,7 +8,7 @@
 
   <table *ngIf="!config.legendUrl.length" class="legend-table">
     <ng-container *ngIf="config.showLegendNodes">
-        <td colspan="2" *ngIf="networkHandler.activeNetwork.nodeGroupsWithExpression.size >0"><i>Pie charts represent tissue normalized
+        <td colspan="2" *ngIf="networkHandler.activeNetwork.nodeGroupsWithExpression.size >0"><i>Pie charts represent tissue-normalized
           median TPM, provided by GTEx</i></td>
       <ng-container *ngFor="let nodeGroup of config.nodeGroups | keyvalue">
         <tr
