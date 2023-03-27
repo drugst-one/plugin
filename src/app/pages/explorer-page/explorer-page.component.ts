@@ -364,7 +364,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
       this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
 
-      this.networkHandler.activeNetwork.networkInternal.once('stabilizationIterationsDone', () => {
+      this.networkHandler.activeNetwork.networkInternal.on('stabilizationIterationsDone', () => {
         if (!this.drugstoneConfig.config.physicsOn) {
           this.networkHandler.activeNetwork.updatePhysicsEnabled(false);
         }
