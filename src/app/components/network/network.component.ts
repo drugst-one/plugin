@@ -305,7 +305,7 @@ export class NetworkComponent implements OnInit {
 
   public stabilize(): Promise<any> {
     return new Promise<boolean>((resolve, reject) => {
-      this.networkInternal.on('stabilizationIterationsDone', () => {
+      this.networkInternal.once('stabilizationIterationsDone', () => {
         this.updatePhysicsEnabled(this.drugstoneConfig.config.physicsOn);
         this.networkInternal.fit();
         this.loadingScreen.stateUpdate(false);
