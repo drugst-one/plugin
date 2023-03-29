@@ -309,10 +309,8 @@ export class NetworkComponent implements OnInit {
         this.updatePhysicsEnabled(this.drugstoneConfig.config.physicsOn);
         this.networkInternal.fit();
         this.loadingScreen.stateUpdate(false);
-        console.log('Stabilization end: ' + Date.now());
         resolve(true);
       });
-      console.log('Stabilization start: ' + Date.now());
       this.loadingScreen.stateUpdate(true);
       this.networkInternal.stabilize(1000);
     });

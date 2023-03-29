@@ -54,7 +54,7 @@ div.legend {
   }
   tr.list-item {
     line-height: calc(#{$legend-row-height} / 2);
-    border-top: var(--drgstn-text-primary) 1px solid;
+    // border-top: var(--drgstn-text-primary) 1px solid;
     th {
       height: $legend-row-height;
       width: $legend-row-height;
