@@ -1,8 +1,8 @@
-import {getGradientColor} from './utils';
+import { getGradientColor } from './utils';
 import {
   Node,
 } from './interfaces';
-import {IConfig, defaultConfig} from './config';
+import { IConfig, defaultConfig } from './config';
 import * as merge from 'lodash/fp/merge';
 
 export class NetworkSettings {
@@ -105,16 +105,20 @@ export class NetworkSettings {
     if (node._group) {
       // @ts-ignore
       node.group = node._group;
+    } else {
+      // @ts-ignore
+      node._group = node.group;
     }
+
     // @ts-ignore
     if (node._shadow) { // @ts-ignore
       node.shadow = node._shadow;
     } else {
       if (config.nodeGroups[node.group].shadow) {
-        node.shadow = {enabled: config.nodeGroups[node.group].shadow};
+        node.shadow = { enabled: config.nodeGroups[node.group].shadow };
         node.shadow.color = 'rgba(0,0,0,0.5)';
       } else {
-        node.shadow = {color: 'rgba(0,0,0,0.5)'};
+        node.shadow = { color: 'rgba(0,0,0,0.5)' };
       }
     }
     if (isSeed) {
@@ -126,15 +130,21 @@ export class NetworkSettings {
     // selection on purpose after seed style, so seed style will be combined with selection style
     if (isSelected) {
       // @ts-ignore
-      node._group = node.group;
-      // apply selected node style to node
-      node.group = 'selectedNode';
+      // node._group = node.group;
+      // apply selected node style to node by merging with node style with the selected node style
+      node = { ...node, ...config.nodeGroups[node.group] }
+      node = merge(node, config.nodeGroups.selectedNode);
+
       if (config.nodeGroups[node.group].shadow) {
-        node.shadow = {enabled: config.nodeGroups[node.group].shadow};
+        node.shadow = { enabled: config.nodeGroups[node.group].shadow };
         node.shadow.color = '#000000';
       } else {
-        node.shadow = {color: '#000000'};
+        node.shadow = { color: '#000000' };
       }
+    } else {
+      // remove hard configured attributes from node
+      Object.keys(config.nodeGroups.selectedNode).forEach(e => delete node[e]);
+      Object.keys(config.nodeGroups[node.group]).forEach(e => delete node[e]);
     }
 
     // show image if image url is given. If seed nodes are highlighted, ignore image property
@@ -146,7 +156,7 @@ export class NetworkSettings {
     if (renderer !== null) {
       // @ts-ignore
       node.shape = 'custom';
-      node.color = {opacity: gradient};
+      node.color = { opacity: gradient };
       node.opacity = gradient;
       if (isSeed) {
         // apply seed node style to node
@@ -158,10 +168,10 @@ export class NetworkSettings {
       // @ts-ignore
       node._shadow = node.shadow;
       if (config.nodeGroups[node.group].shadow) {
-        node.shadow = {enabled: config.nodeGroups[node.group].shadow};
+        node.shadow = { enabled: config.nodeGroups[node.group].shadow };
         node.shadow.color = 'rgba(0,0,0,0.5)';
       } else {
-        node.shadow = {color: 'rgba(0,0,0,0.5)'};
+        node.shadow = { color: 'rgba(0,0,0,0.5)' };
       }
       node.ctxRenderer = renderer;
     } else {
