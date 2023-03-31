@@ -459,13 +459,19 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   public downloadNodes(view: string) {
-    const data = [];
+    let data = [];
     const nodes = this.nodeData.nodes.get();
     nodes.forEach((node) => {
       if (node.drugstoneType === view) {
         data.push(node);
       }
     })
+
+    if ('score' in data[0]) {
+      console.log('sorting')
+      data = data.sort((a, b) => b['score'] - a['score']);
+    }
+
     const columns = ['label', 'symbol', 'uniprot', 'ensg', 'entrez', 'proteinName', 'isSeed', 'score', 'rank', 'status'];
     downloadCSV(data, columns, `drugstone_${view}`);
   }
