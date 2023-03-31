@@ -22,6 +22,7 @@ speed-measure-plugin*.json
 *.launch
 .settings/
 *.sublime-workspace
+.vscode/
 
 # IDE - VSCode
 .vscode/*
@@ -48,6 +49,7 @@ Thumbs.db
 .idea
 drugsTone-build
 package-lock.json
+netex/
 
 .ipynb_checkpoints/
 *.ipynb

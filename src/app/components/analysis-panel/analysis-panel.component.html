@@ -397,8 +397,8 @@
             </div>
             <div class="column">
               <div class="field has-addons is-pulled-right m-1">
-                <a
-                  [href]="downloadLink('drugs')"
+                <button
+                  (click)="downloadNodes('drug')"
                   class="button is-primary control is-outlined is-rounded is-pulled-right is-small"
                 >
                   <app-fa-solid-icon
@@ -406,7 +406,7 @@
                     title="download resulting drugs"
                   ></app-fa-solid-icon>
                   <span>Download</span>
-                </a>
+                </button>
               </div>
 
               <div
@@ -482,8 +482,8 @@
 
             <div class="column">
               <div class="field has-addons is-pulled-right m-1 control">
-                <a
-                  [href]="downloadLink('proteins')"
+                <button
+                  (click)="downloadNodes('protein')"
                   class="button is-primary is-rounded is-outlined is-pulled-right is-small"
                 >
                   <app-fa-solid-icon
@@ -491,7 +491,7 @@
                     title="download resulting proteins"
                   ></app-fa-solid-icon>
                   <span>Download</span>
-                </a>
+                </button>
               </div>
               <div
                 class="field has-addons is-pulled-right m-1"

@@ -1,7 +1,7 @@
 // From https://stackoverflow.com/a/27709336/3850564
-
 import {ɵisListLikeIterable} from '@angular/core';
 import {Node} from './interfaces';
+
 
 export function getGradientColor(startColor: string, endColor: string, percent: number) {
   // strip the leading # if it's there
@@ -133,11 +133,11 @@ export function removeDuplicateObjectsFromList(nodes: Node[], attribute: string)
  * @param data - Array Buffer data
  * @param type - type of the document.
  */
-export function downLoadFile(data: any, type: string, fmt: string) {
+export function downLoadFile(data: any, type: string, fmt: string, label: string = 'drugstone_network') {
   let blob = new Blob([data], {type: type});
   var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `drugstone_network_${new Date().getTime()}.${fmt}`;
+  a.download = `${label}_${new Date().getTime()}.${fmt}`;
   a.click();
 }
 
@@ -326,3 +326,37 @@ export function pieChartContextRenderer({ctx, x, y, state: {selected, hover}, st
   };
 }
 
+export const downloadCSV = function(array: any[], columns: string[], label: string = 'drugstone_csv') {
+  // test which columns occur in array elements, function should not fail if columns do not occur
+  const headerColumns = [];
+  columns.forEach((col) => {
+    if (col in array[0]) {
+      headerColumns.push(col);
+    }
+  })
+
+  // headerColumns has all attributes from 'columns' that appear in the elements of 'array'
+  let output = headerColumns.join(",") + "\n";
+  // fetch data from array, consider only attributes in headerColumns
+  array.forEach(el => {
+    const row = [];
+    headerColumns.forEach(col => {
+      let value = el[col];
+      if (value instanceof Array) {
+        value = value.join('|');
+      }
+      if (!(typeof value == 'string' || value instanceof String)) {
+        value = String(value);
+      }
+      if (value.includes(',')) {
+        value = `"${value}"`;
+      }
+      row.push(value);
+    })
+    output += row.join(',');
+    output += "\n";
+  });
+  const fmt = 'csv';
+  downLoadFile(output, `application/${fmt}`, fmt, label);
+
+}

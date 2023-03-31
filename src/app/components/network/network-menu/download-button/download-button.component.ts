@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
-import { downLoadFile } from 'src/app/utils';
+import { downLoadFile, downloadCSV } from 'src/app/utils';
 import {NetworkHandlerService} from "../../../../services/network-handler/network-handler.service";
 
 @Component({
@@ -21,6 +21,7 @@ export class DownloadButtonComponent implements OnInit {
 
   public downloadLink(fmt) {
     const data = {nodes: this.nodeData.nodes.get(), edges: this.nodeData.edges.get(), fmt: fmt};
+    
     this.netex.graphExport(data).subscribe(response => {
       return downLoadFile(response, `application/${fmt}`, fmt);
     });

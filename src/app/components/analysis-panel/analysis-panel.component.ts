@@ -32,6 +32,7 @@ import {NetworkHandlerService} from 'src/app/services/network-handler/network-ha
 import {LegendService} from 'src/app/services/legend-service/legend-service.service';
 import {LoadingScreenService} from 'src/app/services/loading-screen/loading-screen.service';
 import {version} from '../../../version';
+import {downloadCSV} from 'src/app/utils'
 
 declare var vis: any;
 
@@ -457,8 +458,16 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     }
   }
 
-  public downloadLink(view: string): string {
-    return `${this.netex.getBackend()}task_result/?token=${this.token}&view=${view}&fmt=csv`;
+  public downloadNodes(view: string) {
+    const data = [];
+    const nodes = this.nodeData.nodes.get();
+    nodes.forEach((node) => {
+      if (node.drugstoneType === view) {
+        data.push(node);
+      }
+    })
+    const columns = ['label', 'symbol', 'uniprot', 'ensg', 'entrez', 'proteinName', 'isSeed', 'score', 'rank', 'status'];
+    downloadCSV(data, columns, `drugstone_${view}`);
   }
 
   /**
