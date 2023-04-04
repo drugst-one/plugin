@@ -223,7 +223,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
                 this.drugstoneConfig.config.physicsOn = !isBig;
               }
               this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
-
               if (isBig) {
                 resolve(nodes);
               }
@@ -320,6 +319,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
                     if (!node) {
                       continue;
                     }
+
                     const pos = this.networkHandler.activeNetwork.networkInternal.getPositions([item.id]);
                     node.x = pos[item.id].x;
                     node.y = pos[item.id].y;
@@ -468,7 +468,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     })
 
     if ('score' in data[0]) {
-      console.log('sorting')
       data = data.sort((a, b) => b['score'] - a['score']);
     }
 

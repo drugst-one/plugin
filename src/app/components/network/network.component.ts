@@ -642,7 +642,7 @@ export class NetworkComponent implements OnInit {
       if (!node) {
         continue;
       }
-      const pos = this.networkHandler.activeNetwork.networkInternal.getPositions([node.id]);
+      const pos = this.networkInternal.getPositions([node.id]);
       node.x = pos[node.id].x;
       node.y = pos[node.id].y;
       const isSeed = this.highlightSeeds ? this.seedMap[node.id] : false;

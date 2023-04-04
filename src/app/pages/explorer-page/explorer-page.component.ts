@@ -202,6 +202,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public activateConfig(updateNetworkFlag = false) {
+    // remove analysis panel when loading config
+    this.selectedAnalysisToken = null;
+
     let configObj = {};
     let groupsObj = {};
     try {
@@ -375,7 +378,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       //   // skip network options for selecting nodes when there are no options to use it
       //   return;
       // }
-
       this.networkHandler.activeNetwork.networkInternal.on('doubleClick', (properties) => {
         const nodeIds: Array<string> = properties.nodes;
         if (nodeIds != null && nodeIds.length > 0) {
