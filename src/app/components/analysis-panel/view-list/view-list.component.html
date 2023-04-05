@@ -1,0 +1,75 @@
+<div class="content">
+  <div
+    class="list is-hoverable"
+    [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+  >
+    <a
+      *ngFor="let task of analysis.selectionTokens"
+      class="list-item box small-box"
+      [class.is-active]="task === token"
+    >
+<!--      <div *ngIf="!task">-->
+<!--        <div class="columns mb-0">-->
+<!--          <div class="column">-->
+<!--            <app-fa-solid-icon-->
+<!--              classString="is-pulled-right has-text-warning"-->
+<!--              icon="pause"-->
+<!--            ></app-fa-solid-icon>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="columns mb-0">-->
+<!--          <div class="column pt-0 pb-0">-->
+<!--            <a-->
+<!--              (click)="analysis.removeSelection(task)"-->
+<!--              class="has-text-danger is-pulled-right"-->
+<!--            >-->
+<!--              <app-fa-solid-icon icon="trash"></app-fa-solid-icon>-->
+<!--            </a>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+      <div
+        *ngIf="task"
+        (click)="open(task)"
+        pTooltip="Show selection view"
+        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+        tooltipPosition="top"
+      >
+        <div class="columns mb-0">
+          <div class="column is-8">
+<!--            <span class="is-capitalized"-->
+<!--            ><app-fa-solid-icon-->
+<!--              icon="crosshairs"-->
+<!--              *ngIf="task.info.target === 'drug-target'"-->
+<!--            ></app-fa-solid-icon>-->
+<!--              <app-fa-solid-icon-->
+<!--                icon="capsules"-->
+<!--                *ngIf="task.info.target === 'drug'"-->
+<!--              ></app-fa-solid-icon>-->
+<!--              {{ algorithmNames[task.info.algorithm] }}</span-->
+<!--            >-->
+          </div>
+          <div class="column">
+            <app-fa-solid-icon
+              classString="is-pulled-right has-text-success"
+              icon="check"
+            ></app-fa-solid-icon>
+          </div>
+        </div>
+        <div class="columns mb-0">
+<!--          <div class="column is-8 pt-0 pb-0">-->
+<!--            <small>Created {{ task.info.finishedAt | date: "short" }}</small>-->
+<!--          </div>-->
+          <div class="column pt-0 pb-0">
+            <a
+              (click)="analysis.removeTask(task)"
+              class="has-text-danger is-pulled-right"
+            >
+              <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
+            </a>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>

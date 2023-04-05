@@ -107,6 +107,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public collapseAnalysis = true;
   public collapseTask = true;
+  public collapseViews = true;
   public collapseSelection = true;
   public collapseBaitFilter = true;
   public collapseQuery = true;
@@ -127,8 +128,41 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
 
   public showCustomProteinsDialog = false;
+  public selectedAnalysisTokenType: 'task' | 'view' | null = null;
+  // public selectedAnalysisToken: string | null = null;
+  public selectedToken: string | null = null;
 
-  public selectedAnalysisToken: string | null = null;
+  public set selectedViewToken(token: string | null) {
+    if (token == null || token.length === 0) {
+      this.selectedToken = null;
+    } else {
+      this.selectedToken = token;
+      this.selectedAnalysisTokenType = 'view';
+    }
+  }
+
+  public set selectedAnalysisToken(token: string | null) {
+    if (token == null || token.length === 0) {
+      this.selectedToken = null;
+    } else {
+      this.selectedToken = token;
+      this.selectedAnalysisTokenType = 'task';
+    }
+  }
+
+  public get selectedAnalysisToken() {
+    if (this.selectedAnalysisTokenType === 'view') {
+      return null;
+    }
+    return this.selectedToken;
+  }
+
+  public get selectedViewToken() {
+    if (this.selectedAnalysisTokenType === 'task') {
+      return null;
+    }
+    return this.selectedToken;
+  }
 
   @Input() set taskId(token: string | null) {
     if (token == null || token.length === 0) {

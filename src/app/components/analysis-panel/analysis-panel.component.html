@@ -122,7 +122,7 @@
       </div>
       <div
         class="tab-content meta parameter-tab"
-        *ngIf="task && task.info.done"
+        *ngIf="task && task.info &&  task.info.done"
         [class.is-visible]="tab === 'meta'"
       >
         <div class="columns m-1">
@@ -385,7 +385,7 @@
       </div>
       <div
         class="content tab-content scrollable table-tab"
-        *ngIf="task && task.info.done"
+        *ngIf="task && task.info && task.info.done"
         [class.is-visible]="tab === 'table'"
       >
         <div *ngIf="task.info.target === 'drug'">

@@ -54,6 +54,7 @@ import { NetworkOverviewComponent } from './pages/explorer-page/network-overview
 import { InfoTileEdgeComponent } from './components/info-tile-edge/info-tile-edge/info-tile-edge.component';
 import { NetworkEmptyWarningComponent } from './components/network-empty-warning/network-empty-warning.component';
 import { BugReportComponent } from './components/bug-report/bug-report.component';
+import { ViewListComponent } from './components/analysis-panel/view-list/view-list.component';
 
 
 @NgModule({
@@ -97,6 +98,7 @@ import { BugReportComponent } from './components/bug-report/bug-report.component
     InfoTileEdgeComponent,
     NetworkEmptyWarningComponent,
     BugReportComponent,
+    ViewListComponent,
   ],
   imports: [
     BrowserModule,
