@@ -53,6 +53,7 @@ import { SummaryNodeComponent } from './pages/explorer-page/summary-node/summary
 import { NetworkOverviewComponent } from './pages/explorer-page/network-overview/network-overview/network-overview.component';
 import { InfoTileEdgeComponent } from './components/info-tile-edge/info-tile-edge/info-tile-edge.component';
 import { NetworkEmptyWarningComponent } from './components/network-empty-warning/network-empty-warning.component';
+import { BugReportComponent } from './components/bug-report/bug-report.component';
 
 
 @NgModule({
@@ -95,6 +96,7 @@ import { NetworkEmptyWarningComponent } from './components/network-empty-warning
     NetworkOverviewComponent,
     InfoTileEdgeComponent,
     NetworkEmptyWarningComponent,
+    BugReportComponent,
   ],
   imports: [
     BrowserModule,

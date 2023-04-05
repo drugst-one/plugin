@@ -671,4 +671,8 @@ export class NetworkComponent implements OnInit {
   public showEULA() {
     this.drugstoneConfig.showLicense = true;
   }
+
+  public openBugreport() {
+    this.drugstoneConfig.showBugreport = true;
+  }
 }

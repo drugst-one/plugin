@@ -18,6 +18,7 @@ export class DrugstoneConfigService {
   public smallStyle = false;
 
   public showLicense = false;
+  public showBugreport = false;
 
   constructor() {
   }

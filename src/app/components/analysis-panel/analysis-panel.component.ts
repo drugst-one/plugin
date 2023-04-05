@@ -583,4 +583,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.drugstoneConfig.showLicense = true;
   }
 
+  public openBugreport() {
+    this.drugstoneConfig.showBugreport = true;
+  }
+
 }

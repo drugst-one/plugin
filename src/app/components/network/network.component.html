@@ -48,6 +48,11 @@
                        [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
                        (click)="showEULA()">Show EULA</a>
+                  <a class="dropdown-item" pTooltip="Open window to submit a bug report"
+                       tooltipPosition="left"
+                       [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                       [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+                       (click)="openBugreport()">Report bug</a>
                     <a class="dropdown-item" pTooltip="Opens Drugst.One website" [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }" tooltipPosition="left"
                        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'" target="_blank"
                        href="https://drugst.one/home">About Drugst.One</a>

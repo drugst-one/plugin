@@ -100,6 +100,7 @@ export class NetexControllerService {
     return this.http.post<any>(`${this.getBackend()}adjacent_drugs/`, params).toPromise();
   }
 
+
   public graphExport(graph_data: { edges: EdgeType[], nodes: Node[] }) {
     /**
      * Sends complete graph data to backend where it is written to graphml or json File.
@@ -115,6 +116,13 @@ export class NetexControllerService {
      */
     const payload = {nodes: nodes, dataset: dataset, licenced: licenced};
     return this.http.post(`${this.getBackend()}fetch_edges/`, payload).toPromise();
+  }
+
+  public sendBugreport(payload): Promise<any> {
+    /**
+     * Sends a bugreport to the backend
+     */
+    return this.http.post(`${this.getBackend()}send_bugreport/`, payload).toPromise();
   }
 
 
