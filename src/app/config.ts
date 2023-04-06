@@ -54,6 +54,7 @@ export interface IConfig {
   showAdvAnalysis: boolean;
   showAdvAnalysisContent: Array<AdvAnalysisContentTypes>;
   showTasks: boolean;
+  showViews: boolean;
   showSelection: boolean;
   showNetworkMenu: false | 'left' | 'right';
   expandNetworkMenu: boolean;
@@ -153,6 +154,7 @@ export const defaultConfig: IConfig = {
   showAdvAnalysisContent: ['drug-search', 'drug-target-search', 'enrichment-gprofiler', 'enrichment-digest', 'search-ndex'],
   showSelection: true,
   showTasks: true,
+  showViews: true,
   showNetworkMenu: 'right',
   showLegend: true,
   expandNetworkMenu: true,
