@@ -132,4 +132,9 @@ export class NetexControllerService {
      */
     return this.http.get(`${this.getBackend()}get_license`).toPromise();
   }
+
+  public async getViewInfos(tokens) {
+    return await this.http.post(`${this.getBackend()}view_infos`, {tokens}).toPromise();
+  }
+
 }

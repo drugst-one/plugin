@@ -13,7 +13,7 @@
         <div class="field has-addons">
           <p class="control" *ngIf="!fullscreen">
             <button
-              (click)="analysis.removeTask(token); close()"
+              (click)="analysis.removeAnalysis(token, tokenType); close()"
               class="button is-rounded is-small is-outlined highlight-danger has-text-danger"
               aria-label="delete"
               pTooltip="Delete analysis"
@@ -109,13 +109,13 @@
     >
       <div class="tabs is-centered tabs-header">
         <ul>
-          <li [class.is-active]="tab === 'table'">
+          <li [class.is-active]="tab === 'table'" *ngIf="tokenType!=='view'">
             <a (click)="tab = 'table'">Table</a>
           </li>
           <li [class.is-active]="tab === 'network'">
             <a (click)="tab = 'network'">Network</a>
           </li>
-          <li [class.is-active]="tab === 'meta'">
+          <li [class.is-active]="tab === 'meta'" *ngIf="tokenType!=='view'">
             <a (click)="tab = 'meta'">Parameters</a>
           </li>
         </ul>
@@ -145,7 +145,8 @@
         </div>
         <div class="columns m-1">
           <div class="column">
-            <table class="table parameter-table" *ngIf="['quick', 'super', 'connect', 'connectSelected'].includes(task.info.algorithm)">
+            <table class="table parameter-table"
+                   *ngIf="['quick', 'super', 'connect', 'connectSelected'].includes(task.info.algorithm)">
               <tbody>
               <tr
                 *ngIf="result && result.geneInteractionDataset !== undefined"
@@ -169,7 +170,8 @@
               </tr>
               </tbody>
             </table>
-            <table class="table parameter-table" *ngIf="!['quick', 'super', 'connect', 'connectSelected'].includes(task.info.algorithm)">
+            <table class="table parameter-table"
+                   *ngIf="!['quick', 'super', 'connect', 'connectSelected'].includes(task.info.algorithm)">
               <tbody>
               <tr
                 *ngIf="result && result.geneInteractionDataset !== undefined"
@@ -191,95 +193,95 @@
                   {{ result.drugInteractionDataset.version }}]
                 </td>
               </tr>
-                <tr *ngIf="task.info.parameters.resultSize !== undefined">
-                  <td>Result Size</td>
-                  <td>{{ task.info.parameters.resultSize }}</td>
-                </tr>
-                <tr *ngIf="task.info.parameters.k !== undefined">
-                  <td>K</td>
-                  <td>{{ task.info.parameters.k }}</td>
-                </tr>
-                <tr *ngIf="task.info.parameters.numTrees !== undefined">
-                  <td>Number of trees</td>
-                  <td>{{ task.info.parameters.numTrees }}</td>
-                </tr>
-                <tr *ngIf="task.info.parameters.tolerance !== undefined">
-                  <td>Tolerance</td>
-                  <td>{{ task.info.parameters.tolerance }}</td>
-                </tr>
-                <tr *ngIf="task.info.parameters.dampingFactor !== undefined">
-                  <td>Damping Factor</td>
-                  <td>{{ task.info.parameters.dampingFactor }}</td>
-                </tr>
-                <tr *ngIf="task.info.parameters.maxDeg !== undefined">
-                  <td>Maximum Degree</td>
-                  <td>{{ task.info.parameters.maxDeg }}</td>
-                </tr>
-                <tr *ngIf="task.info.parameters.hubPenalty !== undefined">
-                  <td>Hub Penality</td>
-                  <td>{{ task.info.parameters.hubPenalty }}</td>
-                </tr>
-                <tr
-                  *ngIf="
+              <tr *ngIf="task.info.parameters.resultSize !== undefined">
+                <td>Result Size</td>
+                <td>{{ task.info.parameters.resultSize }}</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.k !== undefined">
+                <td>K</td>
+                <td>{{ task.info.parameters.k }}</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.numTrees !== undefined">
+                <td>Number of trees</td>
+                <td>{{ task.info.parameters.numTrees }}</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.tolerance !== undefined">
+                <td>Tolerance</td>
+                <td>{{ task.info.parameters.tolerance }}</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.dampingFactor !== undefined">
+                <td>Damping Factor</td>
+                <td>{{ task.info.parameters.dampingFactor }}</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.maxDeg !== undefined">
+                <td>Maximum Degree</td>
+                <td>{{ task.info.parameters.maxDeg }}</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.hubPenalty !== undefined">
+                <td>Hub Penality</td>
+                <td>{{ task.info.parameters.hubPenalty }}</td>
+              </tr>
+              <tr
+                *ngIf="
                     task.info.parameters.includeIndirectDrugs !== undefined &&
                     task.info.target === 'drug'
                   "
-                >
-                  <td>Include indirect drugs</td>
-                  <td>
-                    <app-fa-solid-icon
-                      *ngIf="task.info.parameters.includeIndirectDrugs"
-                      icon="check"
-                      title="indirect drugs included"
-                      classString="has-text-success"
-                    ></app-fa-solid-icon>
-                    <app-fa-solid-icon
-                      *ngIf="!task.info.parameters.includeIndirectDrugs"
-                      icon="times"
-                      classString="has-text-danger"
-                      title="indirect drugs excluded"
-                    ></app-fa-solid-icon>
-                  </td>
-                </tr>
-                <tr
-                  *ngIf="
+              >
+                <td>Include indirect drugs</td>
+                <td>
+                  <app-fa-solid-icon
+                    *ngIf="task.info.parameters.includeIndirectDrugs"
+                    icon="check"
+                    title="indirect drugs included"
+                    classString="has-text-success"
+                  ></app-fa-solid-icon>
+                  <app-fa-solid-icon
+                    *ngIf="!task.info.parameters.includeIndirectDrugs"
+                    icon="times"
+                    classString="has-text-danger"
+                    title="indirect drugs excluded"
+                  ></app-fa-solid-icon>
+                </td>
+              </tr>
+              <tr
+                *ngIf="
                     task.info.parameters.includeNonApprovedDrugs !==
                       undefined && task.info.target === 'drug'
                   "
-                >
-                  <td>Include non-approved drugs</td>
-                  <td>
-                    <app-fa-solid-icon
-                      *ngIf="task.info.parameters.includeNonApprovedDrugs"
-                      icon="check"
-                      title="non-approved drugs included"
-                      classString="has-text-success"
-                    ></app-fa-solid-icon>
-                    <app-fa-solid-icon
-                      *ngIf="!task.info.parameters.includeNonApprovedDrugs"
-                      icon="times"
-                      classString="has-text-danger"
-                      title="non-approved drugs excluded"
-                    ></app-fa-solid-icon>
-                  </td>
-                </tr>
-                <tr *ngIf="task.info.parameters.customEdges !== undefined">
-                  <td>Include all displayed edges</td>
-                  <td>
-                    <app-fa-solid-icon
-                      *ngIf="task.info.parameters.customEdges"
-                      icon="check"
-                      title="custom edges drugs included"
-                      classString="has-text-success"
-                    ></app-fa-solid-icon>
-                    <app-fa-solid-icon
-                      *ngIf="!task.info.parameters.customEdges"
-                      icon="times"
-                      classString="has-text-danger"
-                      title="custom edges drugs excluded"
-                    ></app-fa-solid-icon>
-                  </td>
-                </tr>
+              >
+                <td>Include non-approved drugs</td>
+                <td>
+                  <app-fa-solid-icon
+                    *ngIf="task.info.parameters.includeNonApprovedDrugs"
+                    icon="check"
+                    title="non-approved drugs included"
+                    classString="has-text-success"
+                  ></app-fa-solid-icon>
+                  <app-fa-solid-icon
+                    *ngIf="!task.info.parameters.includeNonApprovedDrugs"
+                    icon="times"
+                    classString="has-text-danger"
+                    title="non-approved drugs excluded"
+                  ></app-fa-solid-icon>
+                </td>
+              </tr>
+              <tr *ngIf="task.info.parameters.customEdges !== undefined">
+                <td>Include all displayed edges</td>
+                <td>
+                  <app-fa-solid-icon
+                    *ngIf="task.info.parameters.customEdges"
+                    icon="check"
+                    title="custom edges drugs included"
+                    classString="has-text-success"
+                  ></app-fa-solid-icon>
+                  <app-fa-solid-icon
+                    *ngIf="!task.info.parameters.customEdges"
+                    icon="times"
+                    classString="has-text-danger"
+                    title="custom edges drugs excluded"
+                  ></app-fa-solid-icon>
+                </td>
+              </tr>
               </tbody>
             </table>
           </div>

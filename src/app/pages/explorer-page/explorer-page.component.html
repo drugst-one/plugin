@@ -422,7 +422,16 @@
                 pTooltip="Add all proteins to the selection."
               >
                 <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
-                <span> Add all </span>
+                <span>Add all</span>
+              </a>
+              <a
+                (click)="analysis.addFirstNeighbors()"
+                class="card-footer-item text-primary"
+                tooltipPosition="top"
+                pTooltip="Add first neighbor proteins of selection to selection."
+              >
+                <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
+                <span>Add First neighbors</span>
               </a>
             </footer>
             <footer class="card-footer">
@@ -456,6 +465,18 @@
               </a>
               <a
                 *ngIf="analysis.getSelection().length"
+                (click)="analysis.viewFromSelection()"
+                class="card-footer-item text-primary"
+                tooltipPosition="top"
+                pTooltip="Create view from the selection."
+              >
+                <app-fa-solid-icon icon="check"></app-fa-solid-icon>
+                <span> Save selection </span>
+              </a>
+            </footer>
+            <footer class="card-footer">
+              <a
+                *ngIf="analysis.getSelection().length"
                 (click)="analysis.resetSelection()"
                 class="card-footer-item has-text-danger"
                 tooltipPosition="top"
@@ -464,16 +485,7 @@
                 <app-fa-solid-icon icon="broom"></app-fa-solid-icon>
                 <span> Reset </span>
               </a>
-              <a
-                *ngIf="analysis.getSelection().length"
-                (click)="analysis.viewFromSelection()"
-                class="card-footer-item has-text-danger"
-                tooltipPosition="top"
-                pTooltip="Create view from the selection."
-              >
-                <app-fa-solid-icon icon="check"></app-fa-solid-icon>
-                <span> Save selection </span>
-              </a>
+
             </footer>
 
             <!-- </div> -->
@@ -487,7 +499,7 @@
           >
             <p class="card-header-title">
               <app-fa-solid-icon icon="tasks"></app-fa-solid-icon>
-              Views ({{ analysis.selectionTokens != null ? analysis.selectionTokens.length : 0 }})
+              Views ({{ analysis.viewTokens != null ? analysis.viewTokens.length : 0 }})
             </p>
             <a
               (click)="collapseViews = !collapseViews"
@@ -508,13 +520,13 @@
           <div *ngIf="collapseViews">
             <div
               class="card-content overflow task-list-container"
-              *ngIf="analysis.selectionTokens && analysis.selectionTokens.length > 0"
+              *ngIf="analysis.viewTokens && analysis.viewTokens.length > 0"
             >
               <app-view-list [(token)]="selectedViewToken"></app-view-list>
             </div>
             <footer class="card-footer">
               <a
-                *ngIf="analysis.selectionTokens && analysis.selectionTokens.length > 0"
+                *ngIf="analysis.viewTokens && analysis.viewTokens.length > 0"
                 (click)="
                   analysis.removeAllSelections(); selectedViewToken = null
                 "

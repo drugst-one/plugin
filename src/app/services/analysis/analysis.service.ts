@@ -61,7 +61,8 @@ export class AnalysisService {
   private selections = new Map<string, Map<string, Wrapper>>();
 
   public tokens: string[] = [];
-  public selectionTokens: string[] = [];
+  public viewTokens: string[] = [];
+  public viewInfos = [];
   private tokensCookieKey = `drugstone-tokens-${window.location.host}`;
   private selectionsCookieKey = `drugstone-selections-${window.location.host}`;
   private tokensFinishedCookieKey = `drugstone-finishedTokens-${window.location.host}`;
@@ -90,8 +91,8 @@ export class AnalysisService {
       this.tokens = JSON.parse(tokens);
     }
     if (selections) {
-      this.selectionTokens = JSON.parse(selections);
-      console.log(this.selectionTokens);
+      this.viewTokens = JSON.parse(selections);
+      this.setViewInfos();
     }
     if (finishedTokens) {
       this.finishedTokens = JSON.parse(finishedTokens);
@@ -103,6 +104,21 @@ export class AnalysisService {
     });
   }
 
+  setViewInfos(): void {
+    this.netex.getViewInfos(this.viewTokens).then(res => {
+      // @ts-ignore
+      this.viewInfos = res.reverse();
+    });
+  }
+
+  removeAnalysis(token, type) {
+    if (type !== 'view') {
+      this.removeTask(token);
+    } else {
+      this.removeView(token);
+    }
+  }
+
   removeTask(token) {
     this.tokens = this.tokens.filter((item) => item !== token);
     this.finishedTokens = this.finishedTokens.filter((item) => item !== token);
@@ -110,9 +126,10 @@ export class AnalysisService {
     localStorage.setItem(this.tokensCookieKey, JSON.stringify(this.tokens));
   }
 
-  removeSelection(token) {
-    this.selectionTokens = this.selectionTokens.filter((item) => item !== token);
-    localStorage.setItem(this.selectionsCookieKey, JSON.stringify(this.selectionTokens));
+  removeView(token) {
+    this.viewTokens = this.viewTokens.filter((item) => item !== token);
+    localStorage.setItem(this.selectionsCookieKey, JSON.stringify(this.viewTokens));
+    this.setViewInfos();
   }
 
   removeAllTasks() {
@@ -123,7 +140,8 @@ export class AnalysisService {
   }
 
   removeAllSelections() {
-    this.selectionTokens = [];
+    this.viewTokens = [];
+    this.viewInfos = [];
     localStorage.removeItem(this.selectionsCookieKey);
   }
 
@@ -193,6 +211,33 @@ export class AnalysisService {
     if (unmappedNodes.length > 0) {
       this.unmappedNodesToast(unmappedNodes);
     }
+  }
+
+
+  // Adds first neighbors of selected nodes to selection
+  public addFirstNeighbors() {
+    const wrappers: Wrapper[] = [];
+    const mappedNodes = {};
+    this.networkHandler.activeNetwork.currentViewNodes.forEach((node) => {
+      if (node.drugstoneType === 'protein' && node.drugstoneId) {
+        mappedNodes[node.label] = node;
+      }
+    });
+    const selectedNodes = new Set(this.selectedItems.keys());
+    const firstNeighborNodes: Set<string> = new Set();
+    this.networkHandler.activeNetwork.currentViewEdges.forEach(edge => {
+      if (selectedNodes.has(edge.from)) {
+        firstNeighborNodes.add(edge.to);
+      }
+      if (selectedNodes.has(edge.to)) {
+        firstNeighborNodes.add(edge.from);
+      }
+    });
+
+    firstNeighborNodes.forEach(n => {
+      wrappers.push(getWrapperFromNode(mappedNodes[n]));
+    });
+    this.addItems(wrappers);
   }
 
   public addAllToSelection() {
@@ -281,10 +326,9 @@ export class AnalysisService {
     };
     const resp = await this.http.post<any>(`${this.netex.getBackend()}save_selection`, payload).toPromise();
     // @ts-ignore
-    console.log(resp.token);
-    // @ts-ignore
-    this.selectionTokens.push(resp.token);
-    localStorage.setItem(this.selectionsCookieKey, JSON.stringify(this.selectionTokens));
+    this.viewTokens.push(resp.token);
+    this.setViewInfos();
+    localStorage.setItem(this.selectionsCookieKey, JSON.stringify(this.viewTokens));
 
     this.toast.setNewToast({
       message: 'Analysis task started. This may take a while. ' +
