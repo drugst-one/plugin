@@ -240,6 +240,42 @@ export class AnalysisService {
     this.addItems(wrappers);
   }
 
+
+  public rectangleSelect(){
+    this.networkHandler.activeNetwork.rectangleSelect(true);
+  }
+
+  // Identifies connected components of all selected nodes and adds all nodes of the components to the selection
+  public addConnectedComponents() {
+    const wrappers: Wrapper[] = [];
+    const mappedNodes = {};
+    this.networkHandler.activeNetwork.currentViewNodes.forEach((node) => {
+      if (node.drugstoneType === 'protein' && node.drugstoneId) {
+        mappedNodes[node.label] = node;
+      }
+    });
+    const selectedNodes = new Set(this.selectedItems.keys());
+    let previousSize = 0;
+    while (previousSize !== selectedNodes.size) {
+      previousSize = selectedNodes.size;
+      this.networkHandler.activeNetwork.currentViewEdges.forEach(edge => {
+        if (selectedNodes.has(edge.from)) {
+          selectedNodes.add(edge.to);
+        }
+        if (selectedNodes.has(edge.to)) {
+          selectedNodes.add(edge.from);
+        }
+      });
+    }
+
+    selectedNodes.forEach(n => {
+      if (!this.selectedItems.has(n)){
+        wrappers.push(getWrapperFromNode(mappedNodes[n]));
+      }
+    });
+    this.addItems(wrappers);
+  }
+
   public addAllToSelection() {
     const wrappers: Wrapper[] = [];
     const unmappedNodes = [];

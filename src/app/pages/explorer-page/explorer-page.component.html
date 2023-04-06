@@ -428,11 +428,31 @@
                 (click)="analysis.addFirstNeighbors()"
                 class="card-footer-item text-primary"
                 tooltipPosition="top"
-                pTooltip="Add first neighbor proteins of selection to selection."
+                pTooltip="Add first neighbor proteins of selection."
               >
                 <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
                 <span>Add First neighbors</span>
               </a>
+            </footer>
+            <footer class="card-footer">
+              <a
+                (click)="analysis.addConnectedComponents()"
+                class="card-footer-item text-primary"
+                tooltipPosition="top"
+                pTooltip="Add full connected components of all nodes in selection."
+              >
+                <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
+                <span>Add Connected Components</span>
+              </a>
+<!--              <a-->
+<!--                (click)="analysis.rectangleSelect()"-->
+<!--                class="card-footer-item text-primary"-->
+<!--                tooltipPosition="top"-->
+<!--                pTooltip="Use rectangle select mode to select genes."-->
+<!--              >-->
+<!--                <app-fa-solid-icon icon="plus"></app-fa-solid-icon>-->
+<!--                <span>Select mode</span>-->
+<!--              </a>-->
             </footer>
             <footer class="card-footer">
               <a
