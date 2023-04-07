@@ -20,6 +20,12 @@
     max-height: 150px !important;
   }
 
+  .is-selected{
+    border-width: 3px !important;
+    border-color: var(--drgstn-primary) !important;
+  }
+
+
   .drgstn-box-shadow {
     box-shadow: 0 0.125em 0.25em hsla(0, 0%, 4%, 0.1);
   }
