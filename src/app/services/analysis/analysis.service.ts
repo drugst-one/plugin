@@ -224,7 +224,7 @@ export class AnalysisService {
       }
     });
     const selectedNodes = new Set(this.selectedItems.keys());
-    const firstNeighborNodes: Set<string> = new Set();
+    const firstNeighborNodes: Set<string> = new Set(selectedNodes);
     this.networkHandler.activeNetwork.currentViewEdges.forEach(edge => {
       if (selectedNodes.has(edge.from)) {
         firstNeighborNodes.add(edge.to);
@@ -235,13 +235,15 @@ export class AnalysisService {
     });
 
     firstNeighborNodes.forEach(n => {
-      wrappers.push(getWrapperFromNode(mappedNodes[n]));
+      if (mappedNodes[n]) {
+        wrappers.push(getWrapperFromNode(mappedNodes[n]));
+      }
     });
     this.addItems(wrappers);
   }
 
 
-  public rectangleSelect(){
+  public rectangleSelect() {
     this.networkHandler.activeNetwork.rectangleSelect(true);
   }
 
@@ -269,8 +271,10 @@ export class AnalysisService {
     }
 
     selectedNodes.forEach(n => {
-      if (!this.selectedItems.has(n)){
-        wrappers.push(getWrapperFromNode(mappedNodes[n]));
+      if (!this.selectedItems.has(n)) {
+        if (mappedNodes[n]) {
+          wrappers.push(getWrapperFromNode(mappedNodes[n]));
+        }
       }
     });
     this.addItems(wrappers);
