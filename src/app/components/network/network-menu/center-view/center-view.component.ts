@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
 
@@ -9,13 +9,21 @@ import { NetworkHandlerService } from 'src/app/services/network-handler/network-
 })
 export class CenterViewComponent implements OnInit {
 
+
+
   constructor(public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService) { }
+
+  @Output() resetEmitter: EventEmitter<boolean> = new EventEmitter();
 
   ngOnInit(): void {
   }
 
   public fitNetwork() {
     this.networkHandler.activeNetwork.networkInternal.fit();
+  }
+
+  public fullReset() {
+    this.resetEmitter.emit(true);
   }
 
 }

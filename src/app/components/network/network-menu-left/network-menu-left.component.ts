@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
 
@@ -11,7 +11,13 @@ export class NetworkMenuLeftComponent implements OnInit {
 
   constructor(public drugstoneConfig: DrugstoneConfigService, public networkHandler: NetworkHandlerService) { }
 
+  @Output() resetEmitter: EventEmitter<boolean> = new EventEmitter();
+
   ngOnInit(): void {
+  }
+
+  public reset() {
+    this.resetEmitter.emit(true);
   }
 
 }

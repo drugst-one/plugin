@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
 
@@ -18,4 +18,9 @@ export class CenterViewInverseComponent implements OnInit {
     this.networkHandler.activeNetwork.networkInternal.fit();
   }
 
+  @Output() resetEmitter: EventEmitter<boolean> = new EventEmitter();
+
+  public fullReset() {
+    this.resetEmitter.emit(true);
+  }
 }

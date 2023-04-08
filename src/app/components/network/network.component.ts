@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import domtoimage from 'dom-to-image';
 import {InteractionDatabase} from 'src/app/config';
 import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
@@ -113,6 +113,12 @@ export class NetworkComponent implements OnInit {
     return this.nodeData.nodes.length > 100 || this.nodeData.edges.length > 100;
   }
 
+  @Output() resetEmitter: EventEmitter<boolean> = new EventEmitter();
+
+  public reset() {
+    this.resetEmitter.emit(true);
+  }
+
   rectangleSelect(select: boolean) {
 
     this.selectMode = select;
@@ -133,6 +139,7 @@ export class NetworkComponent implements OnInit {
   }
 
   public rect = undefined;
+
 
 
   selectNodesFromHighlight() {
@@ -157,7 +164,6 @@ export class NetworkComponent implements OnInit {
       }
     }
     this.net.selectNodes(nodesIdInDrawing);
-    console.log(selection);
   }
 
   getStartToEnd(start, theLen) {
@@ -174,7 +180,6 @@ export class NetworkComponent implements OnInit {
       this.canvas = this.net.canvas.frame.canvas;
       this.canvas.oncontextmenu = () => false;
       this.ctx = this.canvas.getContext('2d');
-      console.log(this.ctx)
       this.canvas.addEventListener('mousemove', this.dragMouseMove.bind(this));
       this.canvas.addEventListener('mousedown', this.dragMouseDown.bind(this));
       this.canvas.addEventListener('mouseup', this.dragMouseUp.bind(this));

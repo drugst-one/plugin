@@ -32,7 +32,7 @@ import {NetworkHandlerService} from 'src/app/services/network-handler/network-ha
 import {LegendService} from 'src/app/services/legend-service/legend-service.service';
 import {LoadingScreenService} from 'src/app/services/loading-screen/loading-screen.service';
 import {version} from '../../../version';
-import {downloadCSV} from 'src/app/utils'
+import {downloadCSV} from 'src/app/utils';
 
 declare var vis: any;
 
@@ -130,6 +130,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   async ngOnChanges(changes: SimpleChanges) {
     await this.refresh();
+  }
+
+  @Output() resetEmitter: EventEmitter<boolean> = new EventEmitter();
+
+  public reset() {
+    this.resetEmitter.emit(true);
+    this.close();
   }
 
   private rankTable(table: Array<Drug & Scored> | Array<Node & Scored & Seeded>) {
@@ -689,7 +696,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       if (node.drugstoneType === view) {
         data.push(node);
       }
-    })
+    });
 
     if ('score' in data[0]) {
       data = data.sort((a, b) => b['score'] - a['score']);

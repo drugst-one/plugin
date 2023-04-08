@@ -617,7 +617,7 @@
       <div class="drugstone network column" id="main-column">
         <!-- analysis panel with analysis network -->
         <div *ngIf="selectedToken">
-          <app-analysis-panel
+          <app-analysis-panel (resetEmitter)="reset()"
             [(token)]="selectedToken"
             [(tokenType)]="selectedAnalysisTokenType"
             (showDetailsChange)="
@@ -627,7 +627,7 @@
           ></app-analysis-panel>
         </div>
         <!-- explorer network -->
-        <app-network networkType="explorer" [nodeData]="nodeData"></app-network>
+        <app-network (resetEmitter)="reset()" networkType="explorer" [nodeData]="nodeData"></app-network>
       </div>
       <!-- End  network block -->
 

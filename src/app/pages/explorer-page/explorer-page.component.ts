@@ -46,6 +46,13 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   @Input()
   public id: undefined | string;
 
+
+  public reset() {
+    this.config = this.config
+    this.network = this.network
+    this.groups = this.groups
+  }
+
   @Input()
   public set config(config: string | undefined) {
     if (config == null) {
@@ -56,6 +63,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.activateConfig();
     }
   }
+
 
   @Input()
   public set groups(groups: string | undefined) {

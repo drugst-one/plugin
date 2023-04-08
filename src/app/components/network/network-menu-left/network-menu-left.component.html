@@ -38,7 +38,7 @@
         *ngIf="drugstoneConfig.config.showNetworkMenuButtonScreenshot"
       >
         <div class="network-footer-toolbar-element">
-          <app-center-view-inverse></app-center-view-inverse>
+          <app-center-view-inverse (resetEmitter)="reset()"></app-center-view-inverse>
         </div>
       </div>
       <div
