@@ -56,3 +56,5 @@ netex/
 
 # temp dir for css prefixing
 original/*
+
+.prettierrc
