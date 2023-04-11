@@ -48,9 +48,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
 
   public reset() {
-    this.config = this.config
-    this.network = this.network
-    this.groups = this.groups
+    this.config = this.config;
+    this.network = this.network;
+    this.groups = this.groups;
   }
 
   @Input()
@@ -458,6 +458,13 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         }
       });
 
+      this.networkHandler.activeNetwork.networkInternal.on('dragEnd', (properties) => {
+        let genes = this.networkHandler.activeNetwork.networkInternal.getSelectedNodes();
+        if (genes.length > 0) {
+          console.log(genes);
+        }
+      });
+
       this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {
         this.closeSummary();
       });
@@ -542,7 +549,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.drugstoneConfig.smallStyle = this.windowWidth < 1250;
   }
 
-  public initNetworkListeners(resolve){
+  public initNetworkListeners(resolve) {
     this.networkHandler.activeNetwork.networkInternal.on('doubleClick', (properties) => {
       const nodeIds: Array<string> = properties.nodes;
       if (nodeIds != null && nodeIds.length > 0) {

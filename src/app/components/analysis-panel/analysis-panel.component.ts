@@ -251,7 +251,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {
           this.showDetailsChange.emit(null);
         });
-
         this.networkHandler.activeNetwork.networkInternal.on('doubleClick', (properties) => {
           const nodeIds: Array<string> = properties.nodes;
           if (nodeIds.length > 0) {
