@@ -248,6 +248,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           });
         });
       }).then(() => {
+        this.networkHandler.activeNetwork.networkInternal.on('dragEnd', (properties) => {
+          const node_ids = this.networkHandler.activeNetwork.networkInternal.getSelectedNodes();
+          if (node_ids.length === 0) {
+            return;
+          }
+          this.analysis.addNodesByIdsToSelection(node_ids);
+          this.networkHandler.activeNetwork.networkInternal.unselectAll();
+        });
         this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {
           this.showDetailsChange.emit(null);
         });
@@ -484,7 +492,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             setTimeout(() => {
               this.networkHandler.activeNetwork.networkInternal.setData(this.nodeData);
             }, 1000);
-
+            this.networkHandler.activeNetwork.networkInternal.on('dragEnd', (properties) => {
+              const node_ids = this.networkHandler.activeNetwork.networkInternal.getSelectedNodes();
+              if (node_ids.length === 0) {
+                return;
+              }
+              this.analysis.addNodesByIdsToSelection(node_ids);
+              this.networkHandler.activeNetwork.networkInternal.unselectAll();
+            });
             this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {
               this.showDetailsChange.emit(null);
             });

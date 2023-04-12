@@ -213,6 +213,25 @@ export class AnalysisService {
     }
   }
 
+  public addNodesByIdsToSelection(ids: string[]) {
+    const wrappers: Wrapper[] = [];
+    const unmappedNodes = [];
+    this.networkHandler.activeNetwork.currentViewNodes.forEach((node) => {
+      if (ids.indexOf(node.id) > -1) {
+        if (node.drugstoneType !== 'drug' && node.drugstoneType !== 'disorder' && node.drugstoneId === undefined) {
+          unmappedNodes.push(node.label);
+        } else {
+          // only consider proteins
+          wrappers.push(getWrapperFromNode(node));
+        }
+      }
+    });
+    this.addItems(wrappers);
+    if (unmappedNodes.length > 0) {
+      this.unmappedNodesToast(unmappedNodes);
+    }
+  }
+
 
   // Adds first neighbors of selected nodes to selection
   public addFirstNeighbors() {
