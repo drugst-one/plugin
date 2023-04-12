@@ -76,19 +76,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   // private drugEdges: any[] = [];
   public tab: 'meta' | 'network' | 'table' = 'network';
 
-  // public adjacentDrugs = false;
-  // public adjacentDrugList: Node[] = [];
-  // public adjacentDrugEdgesList: Node[] = [];
-  //
-  // public adjacentDisordersProtein = false;
-  // public adjacentDisordersDrug = false;
-  //
-  // public adjacentProteinDisorderList: Node[] = [];
-  // public adjacentProteinDisorderEdgesList: Node[] = [];
-  //
-  // public adjacentDrugDisorderList: Node[] = [];
-  // public adjacentDrugDisorderEdgesList: Node[] = [];
-
   private proteins: any;
   public effects: any;
 
@@ -630,8 +617,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   private async refresh() {
     if (this.token) {
       if (this.tokenType === 'view') {
+        this.networkHandler.showSeedsButton = false;
         await this.refreshView();
       } else {
+        this.networkHandler.showSeedsButton = true;
         await this.refreshTask();
       }
     }

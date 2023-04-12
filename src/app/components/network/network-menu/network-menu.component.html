@@ -20,7 +20,7 @@
     <div class="rows">
       <div
         class="row is-full m-1"
-        *ngIf="networkHandler.activeNetwork.networkType === 'analysis'"
+        *ngIf="networkHandler.activeNetwork.networkType === 'analysis' && networkHandler.showSeedsButton"
       >
         <app-toggle-inplace
           class="network-footer-toolbar-element"
