@@ -76,6 +76,10 @@ export class AnalysisService {
 
   private tissues: Tissue[] = [];
 
+  private viewTokenCallback: (task: (string | null)) => void;
+
+  private taskTokenCallback: (task: (string | null)) => void;
+
   constructor(
     public toast: ToastService,
     private http: HttpClient,
@@ -102,6 +106,14 @@ export class AnalysisService {
     this.netex.tissues().subscribe((tissues) => {
       this.tissues = tissues;
     });
+  }
+
+  setViewTokenCallback(f): void {
+    this.viewTokenCallback = f;
+  }
+
+  setTaskTokenCallback(f): void {
+    this.taskTokenCallback = f;
   }
 
   setViewInfos(): void {
@@ -364,9 +376,11 @@ export class AnalysisService {
     localStorage.setItem(this.selectionsCookieKey, JSON.stringify(this.viewTokens));
 
     this.toast.setNewToast({
-      message: 'Analysis task started. This may take a while. ' +
-        `Once the computation finished you can view the results in the task list to the ${this.drugstoneConfig.config.showSidebar}.`,
-      type: 'success'
+      message: 'New network view based of the selection has been created. Load the new view by clicking here or on the entry in the \'Views\' list to the ' + this.drugstoneConfig.config.showSidebar,
+      type: 'success',
+      callback: () => {
+        this.viewTokenCallback(resp.token);
+      }
     });
     // @ts-ignore
     return resp.token;
@@ -494,9 +508,14 @@ export class AnalysisService {
   showToast(task: Task, status: 'DONE' | 'FAILED') {
     let toastMessage;
     let toastType;
+    let onClick = () => {
+    };
     if (status === 'DONE') {
-      toastMessage = 'Computation finished successfully. Click the task in the task list to view the results.';
+      toastMessage = 'Computation finished successfully. Click here or the task in the task list to view the results.';
       toastType = 'success';
+      onClick = () => {
+        this.taskTokenCallback(task.token);
+      };
     } else if (status === 'FAILED') {
       toastMessage = 'Computation failed.';
       toastType = 'danger';
@@ -505,6 +524,7 @@ export class AnalysisService {
     this.toast.setNewToast({
       message: toastMessage,
       type: toastType,
+      callback: onClick
     });
   }
 

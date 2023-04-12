@@ -30,5 +30,9 @@ export class ToastComponent implements OnInit {
   public close(id: number) {
     this.toast.deleteToast(id);
   }
-  
+
+  public click(id: number) {
+    this.toast.toastClicked(id);
+  }
+
 }

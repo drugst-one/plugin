@@ -172,6 +172,20 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     return this.selectedToken;
   }
 
+  public setViewToken(token: string | null) {
+    this.selectedViewToken = token;
+  }
+
+  public setTaskToken(token: string | null) {
+    this.selectedAnalysisToken = token;
+  }
+
+
+
+  public bind(f: (token: (string | null)) => void) {
+    return f.bind(this);
+  }
+
   @Input() set taskId(token: string | null) {
     if (token == null || token.length === 0) {
       this.selectedAnalysisToken = null;
@@ -232,6 +246,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.setWindowWidth(document.getElementById('appWindow').getBoundingClientRect().width);
+    this.analysis.setViewTokenCallback(this.setViewToken.bind(this));
+    this.analysis.setTaskTokenCallback(this.setTaskToken.bind(this));
   }
 
   async ngAfterViewInit() {
