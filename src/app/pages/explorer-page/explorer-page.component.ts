@@ -559,67 +559,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.drugstoneConfig.smallStyle = this.windowWidth < 1250;
   }
 
-  // public initNetworkListeners(resolve) {
-  //   this.networkHandler.activeNetwork.networkInternal.on('doubleClick', (properties) => {
-  //     const nodeIds: Array<string> = properties.nodes;
-  //     if (nodeIds != null && nodeIds.length > 0) {
-  //       const nodeId = nodeIds[0];
-  //       const node = this.nodeData.nodes.get(nodeId);
-  //       if (node.drugstoneId === undefined || node.drugstoneType !== 'protein') {
-  //         this.analysis.unmappedNodeToast();
-  //         // skip if node is not a protein mapped to backend
-  //         return;
-  //       }
-  //       const wrapper = getWrapperFromNode(node);
-  //       if (this.analysis.inSelection(node)) {
-  //         this.analysis.removeItems([wrapper]);
-  //       } else {
-  //         this.analysis.addItems([wrapper]);
-  //       }
-  //     }
-  //   });
-  //
-  //   this.networkHandler.activeNetwork.networkInternal.on('click', (properties) => {
-  //     if (properties.nodes.length === 0 && properties.edges.length === 1) {
-  //       // clicked on one edge
-  //       const edgeId = properties.edges[0];
-  //       this.networkHandler.activeNetwork.openEdgeSummary(edgeId);
-  //     } else {
-  //       // clicked not on one edge
-  //       const nodeIds: Array<string> = properties.nodes;
-  //       if (nodeIds != null && nodeIds.length > 0) {
-  //         const nodeId = nodeIds[0];
-  //         const node = this.nodeData.nodes.get(nodeId);
-  //         const wrapper = getWrapperFromNode(node);
-  //         this.openNodeSummary(wrapper, false);
-  //       } else {
-  //         this.closeSummary();
-  //       }
-  //     }
-  //   });
-  //
-  //   this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {
-  //     this.closeSummary();
-  //   });
-  //
-  //   if (this.networkHandler.activeNetwork.selectedWrapper) {
-  //     this.zoomToNode(this.networkHandler.activeNetwork.selectedWrapper.id);
-  //   }
-  //
-  //   this.networkHandler.activeNetwork.currentViewNodes = this.nodeData.nodes;
-  //   this.networkHandler.activeNetwork.currentViewEdges = this.nodeData.edges;
-  //
-  //   this.networkHandler.activeNetwork.queryItems = [];
-  //   this.networkHandler.activeNetwork.updateQueryItems();
-  //   this.networkHandler.activeNetwork.currentViewProteins = this.networkHandler.activeNetwork.inputNetwork.nodes;
-  //   // this.fillQueryItems(this.currentViewNodes);
-  //   if (this.networkHandler.activeNetwork.selectedWrapper) {
-  //     this.networkHandler.activeNetwork.networkInternal.selectNodes([this.networkHandler.activeNetwork.selectedWrapper.id]);
-  //   }
-  //
-  //   resolve(true);
-  // }
-
   public async openNodeSummary(item: Wrapper, zoom: boolean) {
     // close edge summary if open
     this.networkHandler.activeNetwork.activeEdge = null;

@@ -1,37 +1,42 @@
-<div class="control dropdown is-hoverable">
+<div class="dropdown is-hoverable">
   <div class="dropdown-trigger">
     <button
       aria-haspopup="true"
       attr.aria-controls="controls-menu-button"
-      class="button is-rounded is-small is-outlined highlight-primary">
+      class="button is-rounded is-outlined highlight-primary"
+      [ngClass]="{
+              'is-small': drugstoneConfig.smallStyle
+            }"
+    >
     <span
       [ngClass]="{
-      'text-normal': drugstoneConfig.smallStyle
+      'text-small': drugstoneConfig.smallStyle
     }"
     >
     Reset
   </span>
       <app-fa-solid-icon icon="sync-alt" classString="is-small last-item-in-button"></app-fa-solid-icon>
     </button>
-    <div class="dropdown-menu dropdown-list " id="controls-menu-button" role="menu">
-      <div class="dropdown-content inner-dropdown">
-        <a class="dropdown-item has-tooltip" pTooltip="Reset the network zoom and position."
-           (click)="fitNetwork()"
-           [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-right'"
-           tooltipPosition="right"
-           [ngClass]="{
-    'is-small': drugstoneConfig.smallStyle
+  </div>
+  <div class="dropdown-menu dropdown-list" id="controls-menu-button" role="menu"
+       [ngClass]="{'inner-dropdown': !networkHandler.networkSidebarOpen, 'small-border': drugstoneConfig.smallStyle}">
+    <div class="dropdown-content">
+      <a class="dropdown-item has-tooltip" pTooltip="Reset the network zoom and position."
+         (click)="fitNetwork()"
+         [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-right'"
+         tooltipPosition="right"
+         [ngClass]="{
+    'text-small': drugstoneConfig.smallStyle
   }">Reset View
-        </a>
-        <a class="dropdown-item has-tooltip" pTooltip="Reset everything to the initial state."
-           (click)="fullReset()"
-           [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-right'"
-           tooltipPosition="right"
-           [ngClass]="{
-    'is-small': drugstoneConfig.smallStyle
+      </a>
+      <a class="dropdown-item has-tooltip" pTooltip="Reset everything to the initial state."
+         (click)="fullReset()"
+         [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-right'"
+         tooltipPosition="right"
+         [ngClass]="{
+    'text-small': drugstoneConfig.smallStyle
   }">Full Reset
-        </a>
-      </div>
+      </a>
     </div>
   </div>
 </div>

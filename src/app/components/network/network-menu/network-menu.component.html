@@ -141,6 +141,7 @@
                   [class.is-active]="
                     !networkHandler.activeNetwork.selectedTissue
                   "
+                  [ngClass]="{'text-small': drugstoneConfig.smallStyle}"
                   class="dropdown-item"
                 >
                   None
@@ -155,6 +156,7 @@
                     tissue.drugstoneId ===
                       networkHandler.activeNetwork.selectedTissue.drugstoneId
                   "
+                  [ngClass]="{'text-small': drugstoneConfig.smallStyle}"
                   class="dropdown-item"
                 >
                   {{ tissue.name }}

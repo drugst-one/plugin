@@ -261,11 +261,6 @@ export class AnalysisService {
     this.addItems(wrappers);
   }
 
-
-  public rectangleSelect() {
-    this.networkHandler.activeNetwork.rectangleSelect(true);
-  }
-
   // Identifies connected components of all selected nodes and adds all nodes of the components to the selection
   public addConnectedComponents() {
     const wrappers: Wrapper[] = [];
@@ -318,27 +313,6 @@ export class AnalysisService {
     this.addItems(wrappers);
   }
 
-  // public addSeeds(nodes) {
-  //   const addedWrappers: Wrapper[] = [];
-  //   nodes.forEach((node) => {
-  //     if (node.isSeed === true && !this.inSelection(node)) {
-  //       addedWrappers.push(node);
-  //       this.selectedItems.set(node.id, node);
-  //     }
-  //   });
-  //   this.selectListSubject.next({items: addedWrappers, selected: true});
-  // }
-
-  // public removeSeeds(nodes) {
-  //   const removedWrappers: Wrapper[] = [];
-  //   nodes.forEach((node) => {
-  //     if (node.isSeed === true && this.inSelection(node)) {
-  //       removedWrappers.push(node);
-  //       this.selectedItems.delete(node.id);
-  //     }
-  //   });
-  //   this.selectListSubject.next({items: removedWrappers, selected: false});
-  // }
 
   public invertSelection(nodes) {
     const newSelection = [];
