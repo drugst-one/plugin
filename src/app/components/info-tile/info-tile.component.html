@@ -1,3 +1,4 @@
+
 <p
   *ngIf="!wrapper.data.drugstoneId && wrapper.data.label"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
@@ -24,10 +25,9 @@
     }}"
     target="_blank"
   >
-    {{ wrapper.data.symbol }} </a
-  >
+    {{ wrapper.data.symbol }}
+  </a>
 </p>
-
 
 <p
   *ngIf="wrapper.data.uniprot"
@@ -73,11 +73,11 @@
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
 >
   <b
-  ><span
-  >Median expression in
-    {{ "'" + networkHandler.activeNetwork.selectedTissue.name + "'" }}
-    (TPM):</span
-  ></b
+    ><span
+      >Median expression in
+      {{ "'" + networkHandler.activeNetwork.selectedTissue.name + "'" }}
+      (TPM):</span
+    ></b
   >
   <span class="is-capitalized"> {{ getExpressionScore() | number }}</span>
   <span
@@ -103,10 +103,10 @@
   <b><span>ICD10:</span></b>
   <span class="is-capitalized">
     {{
-    wrapper.data.icd10.length === 0 ||
-    (wrapper.data.icd10.length === 1 && wrapper.data.icd10[0].length === 0)
-      ? "-"
-      : wrapper.data.icd10
+      wrapper.data.icd10.length === 0 ||
+      (wrapper.data.icd10.length === 1 && wrapper.data.icd10[0].length === 0)
+        ? "-"
+        : wrapper.data.icd10
     }}</span
   >
 </p>
@@ -152,24 +152,38 @@
   <b><span>Group:</span></b>
   <span class="is-capitalized">
     {{
-    drugstoneConfig.currentConfig().nodeGroups[
-      networkHandler.activeNetwork.selectedWrapper.data[
-        networkHandler.activeNetwork.selectedWrapper.data.group ===
-        "selectedNode"
-          ? "_group"
-          : "group"
+      drugstoneConfig.currentConfig().nodeGroups[
+        networkHandler.activeNetwork.selectedWrapper.data[
+          networkHandler.activeNetwork.selectedWrapper.data.group ===
+          "selectedNode"
+            ? "_group"
+            : "group"
         ]
       ].groupName
     }}</span
   >
-
 </p>
-<p *ngIf="showLinks()"
-   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
+<p
+  *ngIf="showLinks()"
+  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+>
   <b><span>Links:</span></b>
-  <span *ngFor="let target of linkoutMap | keyvalue " >
-    <a *ngIf="showLinkout(target.key)" [href]="getLinkoutURL(target.key)" target="_blank"> {{target.value}}</a>
+  <span *ngFor="let target of linkoutMap | keyvalue">
+    <a
+      *ngIf="showLinkout(target.key)"
+      [href]="getLinkoutURL(target.key)"
+      target="_blank"
+    >
+      <img class="link-icon" src="assets/{{ target.value }}.png" alt="go to {{ target.value }}" title="go to {{ target.value }}"/></a
+    >
   </span>
+  &nbsp;
+  <a
+    class="is-capitalized"
+    href="https://clinicaltrials.gov/ct2/results?term={{ wrapper.data.symbol }}"
+    target="_blank"
+    ><img class="link-icon" src="assets/clinicaltrials.png" alt="search in clinicaltrials.gov" title="search in clinicaltrials.gov"/>
+  </a>
 </p>
 
 <app-toggle
