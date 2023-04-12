@@ -123,6 +123,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   public reset() {
     this.resetEmitter.emit(true);
+    this.networkHandler.activeNetwork.selectedTissue = null;
+    this.networkHandler.activeNetwork.expressionExpanded = false;
     this.close();
   }
 

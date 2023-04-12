@@ -48,6 +48,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
 
   public reset() {
+    this.networkHandler.activeNetwork.selectTissue(null);
     this.config = this.config;
     this.network = this.network;
     this.groups = this.groups;
@@ -179,7 +180,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public setTaskToken(token: string | null) {
     this.selectedAnalysisToken = token;
   }
-
 
 
   public bind(f: (token: (string | null)) => void) {
