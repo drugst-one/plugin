@@ -116,8 +116,6 @@ export class NetworkComponent implements OnInit {
   @Output() resetEmitter: EventEmitter<boolean> = new EventEmitter();
 
   public reset() {
-    this.nodeGroupsWithExpression = new Set();
-    this.nodeRenderer = null;
     this.resetEmitter.emit(true);
   }
 
@@ -132,7 +130,7 @@ export class NetworkComponent implements OnInit {
     return {edges: this.inputNetwork.edges, nodes};
   }
 
-  resetInputNetwork(){
+  resetInputNetwork() {
     const nodes = this.inputNetwork.nodes;
     nodes.forEach(n => {
       if (n._group) {

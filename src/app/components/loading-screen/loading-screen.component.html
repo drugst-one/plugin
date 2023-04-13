@@ -3,5 +3,22 @@
     <div class="loading-screen-inner-text pulse">
       Loading...
     </div>
+    <button (click)="cancel()"
+            class="button is-primary is-rounded has-tooltip"
+            pTooltip="Cancel the loading screen in case it takes too long or gets stuck."
+            [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-bottom'"
+            tooltipPosition="bottom"
+            [ngClass]="{
+              'is-small': drugstoneConfig.smallStyle
+            }"
+    >
+      <app-fa-solid-icon icon="times"></app-fa-solid-icon>
+      <span
+        [ngClass]="{
+                'text-normal': drugstoneConfig.smallStyle
+              }"
+      >Cancel</span
+      >
+    </button>
   </div>
 </div>

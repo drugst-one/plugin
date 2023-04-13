@@ -122,10 +122,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   @Output() resetEmitter: EventEmitter<boolean> = new EventEmitter();
 
   public reset() {
-    this.resetEmitter.emit(true);
     this.networkHandler.activeNetwork.selectedTissue = null;
-    this.networkHandler.activeNetwork.expressionExpanded = false;
     this.close();
+    this.resetEmitter.emit(true);
   }
 
   private rankTable(table: Array<Drug & Scored> | Array<Node & Scored & Seeded>) {
@@ -400,6 +399,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
       this.loading = true;
       this.netex.getTaskResult(this.token).then(async result => {
+        if (this.networkHandler.activeNetwork.networkType !== 'analysis') {
+          return;
+        }
         this.drugstoneConfig.set_analysisConfig(result.parameters.config);
         this.result = result;
         if (this.result.parameters.target === 'drug') {
@@ -408,23 +410,25 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           this.legendService.add_to_context('drugTarget');
         }
         const nodeAttributes = this.result.nodeAttributes || {};
-
-        this.networkHandler.activeNetwork.seedMap = nodeAttributes.isSeed || {};
+        const analysisNetwork = this.networkHandler.networks['analysis'];
+        analysisNetwork.seedMap = nodeAttributes.isSeed || {};
 
         // Reset
         this.nodeData = {nodes: null, edges: null};
-        this.networkHandler.activeNetwork.networkEl.nativeElement.innerHTML = '';
-        this.networkHandler.activeNetwork.networkInternal = null;
+        analysisNetwork.networkEl.nativeElement.innerHTML = '';
+        analysisNetwork.networkInternal = null;
         // Create
         await this.createNetwork(this.result).then(nw => {
           return new Promise<any>((resolve, reject) => {
-
+            if (this.networkHandler.activeNetwork.networkType !== 'analysis') {
+              return;
+            }
             const nodes = nw.nodes;
             const edges = nw.edges;
-            this.networkHandler.activeNetwork.inputNetwork = {nodes: nodes, edges: edges};
+            analysisNetwork.inputNetwork = {nodes: nodes, edges: edges};
             this.nodeData.nodes = new vis.DataSet(nodes);
             this.nodeData.edges = new vis.DataSet(edges);
-            const container = this.networkHandler.activeNetwork.networkEl.nativeElement;
+            const container = analysisNetwork.networkEl.nativeElement;
             const isBig = nodes.length > 100 || edges.length > 100;
             const options = NetworkSettings.getOptions(isBig ? 'analysis-big' : 'analysis', this.drugstoneConfig.currentConfig());
             // @ts-ignore
@@ -437,16 +441,16 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             if (this.drugstoneConfig.config.physicsOn) {
               this.drugstoneConfig.config.physicsOn = !isBig;
             }
-            this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
+            analysisNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
 
             if (isBig) {
               resolve(nodes);
             }
-            this.networkHandler.activeNetwork.networkInternal.once('stabilizationIterationsDone', async () => {
-              if (!this.drugstoneConfig.config.physicsOn || this.networkHandler.activeNetwork.isBig()) {
-                this.networkHandler.activeNetwork.updatePhysicsEnabled(false);
+            analysisNetwork.networkInternal.once('stabilizationIterationsDone', async () => {
+              if (!this.drugstoneConfig.config.physicsOn || analysisNetwork.isBig()) {
+                analysisNetwork.updatePhysicsEnabled(false);
               }
-              this.networkHandler.updateAdjacentNodes(this.networkHandler.activeNetwork.isBig()).then(() => {
+              this.networkHandler.updateAdjacentNodes(analysisNetwork.isBig()).then(() => {
                 resolve(nodes);
               });
             });
@@ -463,7 +467,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             this.tableSelectedProteins = [];
             this.tableProteins.forEach((r) => {
               r.rawScore = r.score;
-              r.isSeed = this.networkHandler.activeNetwork.seedMap[r.id];
+              r.isSeed = analysisNetwork.seedMap[r.id];
               const wrapper = getWrapperFromNode(r);
               if (this.analysis.inSelection(wrapper)) {
                 this.tableSelectedProteins.push(r);
@@ -477,23 +481,23 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             if (this.tableHasScores) {
               this.toggleNormalization(true);
             }
-            this.networkHandler.activeNetwork.networkInternal.setData({nodes: undefined, edge: undefined});
+            analysisNetwork.networkInternal.setData({nodes: undefined, edge: undefined});
             setTimeout(() => {
-              this.networkHandler.activeNetwork.networkInternal.setData(this.nodeData);
+              analysisNetwork.networkInternal.setData(this.nodeData);
             }, 1000);
-            this.networkHandler.activeNetwork.networkInternal.on('dragEnd', (properties) => {
-              const node_ids = this.networkHandler.activeNetwork.networkInternal.getSelectedNodes();
+            analysisNetwork.networkInternal.on('dragEnd', (properties) => {
+              const node_ids = analysisNetwork.networkInternal.getSelectedNodes();
               if (node_ids.length === 0) {
                 return;
               }
               this.analysis.addNodesByIdsToSelection(node_ids);
-              this.networkHandler.activeNetwork.networkInternal.unselectAll();
+              analysisNetwork.networkInternal.unselectAll();
             });
-            this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {
+            analysisNetwork.networkInternal.on('deselectNode', (properties) => {
               this.showDetailsChange.emit(null);
             });
 
-            this.networkHandler.activeNetwork.networkInternal.on('doubleClick', (properties) => {
+            analysisNetwork.networkInternal.on('doubleClick', (properties) => {
               const nodeIds: Array<string> = properties.nodes;
               if (nodeIds.length > 0) {
                 const nodeId = nodeIds[0];
@@ -513,13 +517,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               }
             });
 
-            this.networkHandler.activeNetwork.networkInternal.on('click', (properties) => {
+            analysisNetwork.networkInternal.on('click', (properties) => {
               if (properties.nodes.length === 0 && properties.edges.length === 1) {
                 // clicked on one edge
                 const edgeId = properties.edges[0];
-                this.networkHandler.activeNetwork.openEdgeSummary(edgeId);
+                analysisNetwork.openEdgeSummary(edgeId);
               } else {
-                this.networkHandler.activeNetwork.activeEdge = null;
+                analysisNetwork.activeEdge = null;
                 const selectedNodes = this.nodeData.nodes.get(properties.nodes);
                 if (selectedNodes.length > 0) {
                   this.showDetailsChange.emit(getWrapperFromNode(selectedNodes[0]));
@@ -542,17 +546,17 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
                   if (!node) {
                     continue;
                   }
-                  const pos = this.networkHandler.activeNetwork.networkInternal.getPositions([item.id]);
+                  const pos = analysisNetwork.networkInternal.getPositions([item.id]);
                   node.x = pos[item.id].x;
                   node.y = pos[item.id].y;
-                  const isSeed = this.networkHandler.activeNetwork.highlightSeeds ? this.networkHandler.activeNetwork.seedMap[node.id] : false;
+                  const isSeed = analysisNetwork.highlightSeeds ? analysisNetwork.seedMap[node.id] : false;
                   const nodeStyled = NetworkSettings.getNodeStyle(
                     node,
                     this.drugstoneConfig.currentConfig(),
                     isSeed,
                     selected,
-                    this.networkHandler.activeNetwork.getGradient(item.id),
-                    this.networkHandler.activeNetwork.nodeRenderer
+                    analysisNetwork.getGradient(item.id),
+                    analysisNetwork.nodeRenderer
                   );
                   updatedNodes.push(nodeStyled);
                 }
@@ -575,7 +579,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
                 // else: selected is null
                 const updatedNodes = [];
                 this.nodeData.nodes.forEach((node) => {
-                  const isSeed = this.networkHandler.activeNetwork.highlightSeeds ? this.networkHandler.activeNetwork.seedMap[node.id] : false;
+                  const isSeed = analysisNetwork.highlightSeeds ? analysisNetwork.seedMap[node.id] : false;
                   if (!isSeed) {
                     return;
                   }
@@ -584,8 +588,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
                     this.drugstoneConfig.currentConfig(),
                     isSeed,
                     selected,
-                    this.networkHandler.activeNetwork.getGradient(node.id),
-                    this.networkHandler.activeNetwork.nodeRenderer
+                    analysisNetwork.getGradient(node.id),
+                    analysisNetwork.nodeRenderer
                   );
                   updatedNodes.push(nodeStyled);
                 });
@@ -646,12 +650,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   close() {
-    this.networkHandler.activeNetwork.gradientMap = {};
+    const analysisNetwork = this.networkHandler.networks['analysis'];
+    analysisNetwork.gradientMap = {};
     this.drugstoneConfig.remove_analysisConfig();
     this.expressionExpanded = false;
     this.expressionMap = undefined;
-    this.networkHandler.activeNetwork.seedMap = {};
-    this.networkHandler.activeNetwork.highlightSeeds = false;
+    analysisNetwork.seedMap = {};
+    analysisNetwork.highlightSeeds = false;
     this.analysis.switchSelection('main');
     this.token = null;
     this.tokenChange.emit(this.token);

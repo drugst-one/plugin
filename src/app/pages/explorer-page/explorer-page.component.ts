@@ -24,6 +24,8 @@ import * as merge from 'lodash/fp/merge';
 import * as JSON5 from 'json5';
 import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
 import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
+import {LegendService} from '../../services/legend-service/legend-service.service';
+import {ToastService} from '../../services/toast/toast.service';
 
 
 declare var vis: any;
@@ -46,12 +48,24 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   @Input()
   public id: undefined | string;
 
+  @ViewChild('analysis') analysisElement;
 
   public reset() {
-    this.networkHandler.activeNetwork.selectTissue(null);
-    this.config = this.config;
+    // const analysisNetwork = this.networkHandler.networks['analysis'];
+    const explorerNetwork = this.networkHandler.networks['explorer'];
+    if (this.analysisElement) {
+      this.analysisElement.close();
+    }
+    this.selectedToken = null;
+    explorerNetwork.selectTissue(null);
+    explorerNetwork.adjacentDrugs = false;
+    explorerNetwork.adjacentDisordersProtein = false;
+    explorerNetwork.adjacentDisordersDrug = false;
+    explorerNetwork.nodeRenderer = null;
+    explorerNetwork.nodeGroupsWithExpression = new Set();
+    explorerNetwork.updatePhysicsEnabled(false);
+    this.legendService.reset();
     this.network = this.network;
-    this.groups = this.groups;
   }
 
   @Input()
@@ -198,7 +212,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     public analysis: AnalysisService,
     public drugstoneConfig: DrugstoneConfigService,
     public netex: NetexControllerService,
-    public networkHandler: NetworkHandlerService) {
+    public networkHandler: NetworkHandlerService,
+    public legendService: LegendService,
+    public toast: ToastService,
+  ) {
 
     this.showDetails = false;
     this.analysis.subscribeList(async (items, selected) => {
@@ -414,6 +431,20 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (!this.drugstoneConfig.selfReferences) {
         edges = edges.filter(el => el.from !== el.to);
       }
+
+      const duplicateNodeIds = [];
+      const uniqueNodeIds = [];
+      const uniqueNodes = [];
+      nodes.forEach(node => {
+        if (uniqueNodeIds.includes(node.id)) {
+          duplicateNodeIds.push(node.id);
+        } else {
+          uniqueNodeIds.push(node.id);
+          uniqueNodes.push(node);
+        }
+      });
+      this.toast.setNewToast({message: 'Duplicate node ids removed: ' + duplicateNodeIds.join(', '), type: 'warning'});
+      nodes = uniqueNodes;
 
       this.nodeData.nodes = new vis.DataSet(nodes);
       this.nodeData.edges = new vis.DataSet(edges);
