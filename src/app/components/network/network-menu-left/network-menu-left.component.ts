@@ -19,5 +19,4 @@ export class NetworkMenuLeftComponent implements OnInit {
   public reset() {
     this.resetEmitter.emit(true);
   }
-
 }

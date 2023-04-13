@@ -95,6 +95,7 @@
     right: -12px;
     padding: calc(.75em - 1px) !important;
     height: 1em !important;
+
     .dropdown-menu {
       z-index: $network-tissue-options-z;
 
@@ -118,7 +119,7 @@
 
 .inner-dropdown {
   .dropdown-menu {
-    margin-left: calc(150px - 24px);
+    margin-left: 125px;
     width: 250px;
     margin-top: -45px;
 
@@ -131,4 +132,9 @@
       }
     }
   }
+  .dropdown-menu.small-border {
+    margin-left: 90px;
+  }
 }
+
+

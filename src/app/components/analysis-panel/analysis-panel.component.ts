@@ -76,19 +76,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   // private drugEdges: any[] = [];
   public tab: 'meta' | 'network' | 'table' = 'network';
 
-  // public adjacentDrugs = false;
-  // public adjacentDrugList: Node[] = [];
-  // public adjacentDrugEdgesList: Node[] = [];
-  //
-  // public adjacentDisordersProtein = false;
-  // public adjacentDisordersDrug = false;
-  //
-  // public adjacentProteinDisorderList: Node[] = [];
-  // public adjacentProteinDisorderEdgesList: Node[] = [];
-  //
-  // public adjacentDrugDisorderList: Node[] = [];
-  // public adjacentDrugDisorderEdgesList: Node[] = [];
-
   private proteins: any;
   public effects: any;
 
@@ -136,6 +123,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   public reset() {
     this.resetEmitter.emit(true);
+    this.networkHandler.activeNetwork.selectedTissue = null;
+    this.networkHandler.activeNetwork.expressionExpanded = false;
     this.close();
   }
 
@@ -248,10 +237,17 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           });
         });
       }).then(() => {
+        this.networkHandler.activeNetwork.networkInternal.on('dragEnd', (properties) => {
+          const node_ids = this.networkHandler.activeNetwork.networkInternal.getSelectedNodes();
+          if (node_ids.length === 0) {
+            return;
+          }
+          this.analysis.addNodesByIdsToSelection(node_ids);
+          this.networkHandler.activeNetwork.networkInternal.unselectAll();
+        });
         this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {
           this.showDetailsChange.emit(null);
         });
-
         this.networkHandler.activeNetwork.networkInternal.on('doubleClick', (properties) => {
           const nodeIds: Array<string> = properties.nodes;
           if (nodeIds.length > 0) {
@@ -485,7 +481,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             setTimeout(() => {
               this.networkHandler.activeNetwork.networkInternal.setData(this.nodeData);
             }, 1000);
-
+            this.networkHandler.activeNetwork.networkInternal.on('dragEnd', (properties) => {
+              const node_ids = this.networkHandler.activeNetwork.networkInternal.getSelectedNodes();
+              if (node_ids.length === 0) {
+                return;
+              }
+              this.analysis.addNodesByIdsToSelection(node_ids);
+              this.networkHandler.activeNetwork.networkInternal.unselectAll();
+            });
             this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {
               this.showDetailsChange.emit(null);
             });
@@ -616,8 +619,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   private async refresh() {
     if (this.token) {
       if (this.tokenType === 'view') {
+        this.networkHandler.showSeedsButton = false;
         await this.refreshView();
       } else {
+        this.networkHandler.showSeedsButton = true;
         await this.refreshTask();
       }
     }

@@ -12,6 +12,8 @@
 }
 
 div.dropdown-list {
+  padding: 0 !important;
+  border-radius: 5px !important;
   right: 0;
   left: auto !important;
   background-color: var(--drgstn-background);

@@ -36,6 +36,12 @@ export class ToastService {
     }
   }
 
+  public toastClicked(id: number) {
+    if (this.liveToasts.hasOwnProperty(id)) {
+      this.liveToasts[id].callback();
+    }
+  }
+
   get getToasts$ () {
     return this.getToasts.asObservable();
   }

@@ -9,7 +9,7 @@
         'is-small': drugstoneConfig.smallStyle
       }"
     >
-      <span [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+      <span [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
         >Download</span
       >
       <app-fa-solid-icon icon="download"  classString="is-small last-item-in-button"></app-fa-solid-icon>
@@ -20,8 +20,8 @@
     id="{{ 'controls-' + buttonId }}"
     role="menu"
     [ngClass]="{
-      'inner-dropdown': !networkHandler.networkSidebarOpen
-    }"
+      'inner-dropdown': !networkHandler.networkSidebarOpen, 'small-border': drugstoneConfig.smallStyle}
+    "
   >
     <div class="dropdown-content">
       <a

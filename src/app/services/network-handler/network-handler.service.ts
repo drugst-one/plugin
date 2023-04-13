@@ -22,6 +22,9 @@ export class NetworkHandlerService {
   public networks: { NetworkType: NetworkComponent } | {} = {};
   public activeNetwork: NetworkComponent = new NetworkComponent(this.legendService, this.networkHandler, this.analysis, this.drugstoneConfig, this.netex, this.omnipath, this.loadingScreen);
 
+  public showSeedsButton = true;
+
+
   public setActiveNetwork(network: NetworkType) {
     this.triggerChange();
     this.activeNetwork = this.networks[network];

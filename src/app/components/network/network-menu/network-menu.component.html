@@ -20,7 +20,7 @@
     <div class="rows">
       <div
         class="row is-full m-1"
-        *ngIf="networkHandler.activeNetwork.networkType === 'analysis'"
+        *ngIf="networkHandler.activeNetwork.networkType === 'analysis' && networkHandler.showSeedsButton"
       >
         <app-toggle-inplace
           class="network-footer-toolbar-element"
@@ -141,6 +141,7 @@
                   [class.is-active]="
                     !networkHandler.activeNetwork.selectedTissue
                   "
+                  [ngClass]="{'text-small': drugstoneConfig.smallStyle}"
                   class="dropdown-item"
                 >
                   None
@@ -155,6 +156,7 @@
                     tissue.drugstoneId ===
                       networkHandler.activeNetwork.selectedTissue.drugstoneId
                   "
+                  [ngClass]="{'text-small': drugstoneConfig.smallStyle}"
                   class="dropdown-item"
                 >
                   {{ tissue.name }}

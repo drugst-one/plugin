@@ -1,55 +1,42 @@
-<!--<button-->
-<!--  (click)="fitNetwork()"-->
-<!--  class="button is-primary is-rounded has-tooltip"-->
-<!--  pTooltip="Reset the network zoom and position."-->
-<!--  [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-right'"-->
-<!--  tooltipPosition="right"-->
-<!--  [ngClass]="{-->
-<!--    'is-small': drugstoneConfig.smallStyle-->
-<!--  }"-->
-<!--&gt;-->
-<!--  <span-->
-<!--    [ngClass]="{-->
-<!--      'text-normal': drugstoneConfig.smallStyle-->
-<!--    }"-->
-<!--  >-->
-<!--    Reset View-->
-<!--  </span>-->
-<!--  <app-fa-solid-icon icon="sync-alt" classString="is-small last-item-in-button"></app-fa-solid-icon>-->
-<div class="control dropdown is-hoverable">
+<div class="dropdown is-hoverable">
   <div class="dropdown-trigger">
     <button
       aria-haspopup="true"
       attr.aria-controls="controls-menu-button"
-      class="button is-rounded is-small is-outlined highlight-primary">
-    <span
+      class="button is-rounded is-outlined highlight-primary"
       [ngClass]="{
-      'text-normal': drugstoneConfig.smallStyle
-    }"
+              'is-small': drugstoneConfig.smallStyle
+            }"
     >
+      <app-fa-solid-icon icon="sync-alt" classString="is-small"></app-fa-solid-icon>
+      <span
+        [ngClass]="{
+      'text-small': drugstoneConfig.smallStyle
+    }"
+      >
     Reset
   </span>
-      <app-fa-solid-icon icon="sync-alt" classString="is-small last-item-in-button"></app-fa-solid-icon>
     </button>
-    <div class="dropdown-menu dropdown-list " id="controls-menu-button" role="menu">
-      <div class="dropdown-content inner-dropdown">
-        <a class="dropdown-item has-tooltip" pTooltip="Reset the network zoom and position."
-           (click)="fitNetwork()"
-           [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
-           tooltipPosition="left"
-           [ngClass]="{
-    'is-small': drugstoneConfig.smallStyle
+  </div>
+  <div class="dropdown-menu dropdown-list " id="controls-menu-button" role="menu"
+       [ngClass]="{'inner-dropdown':!networkHandler.networkSidebarOpen}">
+    <div class="dropdown-content">
+      <a class="dropdown-item has-tooltip" pTooltip="Reset the network zoom and position."
+         (click)="fitNetwork()"
+         [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+         tooltipPosition="left"
+         [ngClass]="{
+    'text-small': drugstoneConfig.smallStyle
   }">Reset View
-        </a>
-        <a class="dropdown-item has-tooltip" pTooltip="Reset everything to the initial state."
-           (click)="fullReset()"
-           [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
-           tooltipPosition="left"
-           [ngClass]="{
-    'is-small': drugstoneConfig.smallStyle
+      </a>
+      <a class="dropdown-item has-tooltip" pTooltip="Reset everything to the initial state."
+         (click)="fullReset()"
+         [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+         tooltipPosition="left"
+         [ngClass]="{
+    'text-small': drugstoneConfig.smallStyle
   }">Full Reset
-        </a>
-      </div>
+      </a>
     </div>
     <!--</button>-->
   </div>

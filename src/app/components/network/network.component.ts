@@ -116,143 +116,10 @@ export class NetworkComponent implements OnInit {
   @Output() resetEmitter: EventEmitter<boolean> = new EventEmitter();
 
   public reset() {
+    this.nodeGroupsWithExpression = new Set();
+    this.nodeRenderer = null;
     this.resetEmitter.emit(true);
   }
-
-  rectangleSelect(select: boolean) {
-
-    this.selectMode = select;
-    const options = this.getOptions();
-    if (!options.interaction) {
-      options.interaction = {};
-    }
-    if (select) {
-      options.interaction.zoomView = false;
-      options.interaction.dragView = false;
-      this.initDragSelect();
-    } else {
-      options.interaction.zoomView = true;
-      options.interaction.dragView = true;
-      this.removeDragSelect();
-    }
-    this.updateOptions(options);
-  }
-
-  public rect = undefined;
-
-
-
-  selectNodesFromHighlight() {
-    // const fromX;
-    // const toX;
-    // const fromY;
-    // const toY;
-    const nodesIdInDrawing = [];
-    const xRange = this.getStartToEnd(this.rect.startX, this.rect.w);
-    const yRange = this.getStartToEnd(this.rect.startY, this.rect.h);
-
-    // @ts-ignore
-    const allNodes = this.nodeData.nodes.get();
-    const selection = [];
-    for (let i = 0; i < allNodes.length; i++) {
-      const curNode = allNodes[i];
-      const nodePosition = this.net.getPositions([curNode.id]);
-      const nodeXY = this.net.canvasToDOM({x: nodePosition[curNode.id].x, y: nodePosition[curNode.id].y});
-      if (xRange.start <= nodeXY.x && nodeXY.x <= xRange.end && yRange.start <= nodeXY.y && nodeXY.y <= yRange.end) {
-        nodesIdInDrawing.push(curNode.id);
-        selection.push({id: curNode.id, label: curNode.label});
-      }
-    }
-    this.net.selectNodes(nodesIdInDrawing);
-  }
-
-  getStartToEnd(start, theLen) {
-    return theLen > 0 ? {start: start, end: start + theLen} : {start: start + theLen, end: start};
-  }
-
-  private ctx: CanvasRenderingContext2D;
-  private canvas: HTMLCanvasElement;
-  private net: any;
-
-  initDragSelect() {
-    if (this.net === undefined) {
-      this.net = this.networkInternal;
-      this.canvas = this.net.canvas.frame.canvas;
-      this.canvas.oncontextmenu = () => false;
-      this.ctx = this.canvas.getContext('2d');
-      this.canvas.addEventListener('mousemove', this.dragMouseMove.bind(this));
-      this.canvas.addEventListener('mousedown', this.dragMouseDown.bind(this));
-      this.canvas.addEventListener('mouseup', this.dragMouseUp.bind(this));
-    }
-  }
-
-
-  removeDragSelect() {
-    this.net = undefined;
-    if (this.canvas) {
-      this.canvas.removeEventListener('mousemove', this.dragMouseMove.bind(this));
-      this.canvas.removeEventListener('mousedown', this.dragMouseDown.bind(this));
-      this.canvas.removeEventListener('mouseup', this.dragMouseUp.bind(this));
-    }
-  }
-
-  private drag = false;
-  public offsetLeft = 0;
-  public offsetTop = 0;
-
-  dragMouseMove(e) {
-    if (this.drag) {
-      this.restoreDrawingSurface();
-      this.rect.w = (e.pageX - this.offsetLeft) - this.rect.startX;
-      this.rect.h = (e.pageY - this.offsetTop) - this.rect.startY;
-
-      this.ctx.setLineDash([5]);
-      this.ctx.strokeStyle = 'rgb(0, 102, 0)';
-      this.ctx.strokeRect(this.rect.startX, this.rect.startY, this.rect.w, this.rect.h);
-      this.ctx.setLineDash([]);
-      this.ctx.fillStyle = 'rgba(0, 255, 0, 0.2)';
-      this.ctx.fillRect(this.rect.startX, this.rect.startY, this.rect.w, this.rect.h);
-
-    }
-  }
-
-  private canvasCursor = 'default';
-
-  dragMouseDown(e) {
-    if (e.button === 0) {
-      this.offsetLeft = e.target.getBoundingClientRect().left;
-      this.offsetTop = e.target.getBoundingClientRect().top;
-      this.saveDrawingSurface();
-      this.rect = {};
-      this.rect.startX = e.pageX - this.offsetLeft;
-      this.rect.startY = e.pageY - this.offsetTop;
-      this.drag = true;
-      this.canvasCursor = 'crosshair';
-    }
-  }
-
-
-  dragMouseUp(e) {
-    if (e.button === 0) {
-      this.restoreDrawingSurface();
-      this.drag = false;
-
-      this.canvasCursor = 'default';
-      this.selectNodesFromHighlight();
-    }
-  }
-
-  private drawingSurfaceImageData: ImageData;
-
-  saveDrawingSurface() {
-    this.drawingSurfaceImageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-  }
-
-
-  restoreDrawingSurface() {
-    this.ctx.putImageData(this.drawingSurfaceImageData, 0, 0);
-  }
-
 
   getResetInputNetwork(): NetworkData {
     const nodes = [...this.inputNetwork.nodes];
@@ -265,6 +132,15 @@ export class NetworkComponent implements OnInit {
     return {edges: this.inputNetwork.edges, nodes};
   }
 
+  resetInputNetwork(){
+    const nodes = this.inputNetwork.nodes;
+    nodes.forEach(n => {
+      if (n._group) {
+        n.group = n._group;
+        delete n._group;
+      }
+    });
+  }
 
   setLoading(bool: boolean): void {
     this.loading = bool;

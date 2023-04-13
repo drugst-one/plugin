@@ -76,6 +76,10 @@ export class AnalysisService {
 
   private tissues: Tissue[] = [];
 
+  private viewTokenCallback: (task: (string | null)) => void;
+
+  private taskTokenCallback: (task: (string | null)) => void;
+
   constructor(
     public toast: ToastService,
     private http: HttpClient,
@@ -102,6 +106,14 @@ export class AnalysisService {
     this.netex.tissues().subscribe((tissues) => {
       this.tissues = tissues;
     });
+  }
+
+  setViewTokenCallback(f): void {
+    this.viewTokenCallback = f;
+  }
+
+  setTaskTokenCallback(f): void {
+    this.taskTokenCallback = f;
   }
 
   setViewInfos(): void {
@@ -213,6 +225,25 @@ export class AnalysisService {
     }
   }
 
+  public addNodesByIdsToSelection(ids: string[]) {
+    const wrappers: Wrapper[] = [];
+    const unmappedNodes = [];
+    this.networkHandler.activeNetwork.currentViewNodes.forEach((node) => {
+      if (ids.indexOf(node.id) > -1) {
+        if (node.drugstoneType !== 'drug' && node.drugstoneType !== 'disorder' && node.drugstoneId === undefined) {
+          unmappedNodes.push(node.label);
+        } else {
+          // only consider proteins
+          wrappers.push(getWrapperFromNode(node));
+        }
+      }
+    });
+    this.addItems(wrappers);
+    if (unmappedNodes.length > 0) {
+      this.unmappedNodesToast(unmappedNodes);
+    }
+  }
+
 
   // Adds first neighbors of selected nodes to selection
   public addFirstNeighbors() {
@@ -240,11 +271,6 @@ export class AnalysisService {
       }
     });
     this.addItems(wrappers);
-  }
-
-
-  public rectangleSelect() {
-    this.networkHandler.activeNetwork.rectangleSelect(true);
   }
 
   // Identifies connected components of all selected nodes and adds all nodes of the components to the selection
@@ -299,27 +325,6 @@ export class AnalysisService {
     this.addItems(wrappers);
   }
 
-  // public addSeeds(nodes) {
-  //   const addedWrappers: Wrapper[] = [];
-  //   nodes.forEach((node) => {
-  //     if (node.isSeed === true && !this.inSelection(node)) {
-  //       addedWrappers.push(node);
-  //       this.selectedItems.set(node.id, node);
-  //     }
-  //   });
-  //   this.selectListSubject.next({items: addedWrappers, selected: true});
-  // }
-
-  // public removeSeeds(nodes) {
-  //   const removedWrappers: Wrapper[] = [];
-  //   nodes.forEach((node) => {
-  //     if (node.isSeed === true && this.inSelection(node)) {
-  //       removedWrappers.push(node);
-  //       this.selectedItems.delete(node.id);
-  //     }
-  //   });
-  //   this.selectListSubject.next({items: removedWrappers, selected: false});
-  // }
 
   public invertSelection(nodes) {
     const newSelection = [];
@@ -371,9 +376,11 @@ export class AnalysisService {
     localStorage.setItem(this.selectionsCookieKey, JSON.stringify(this.viewTokens));
 
     this.toast.setNewToast({
-      message: 'Analysis task started. This may take a while. ' +
-        `Once the computation finished you can view the results in the task list to the ${this.drugstoneConfig.config.showSidebar}.`,
-      type: 'success'
+      message: 'New network view based of the selection has been created. Load the new view by clicking here or on the entry in the \'Views\' list to the ' + this.drugstoneConfig.config.showSidebar,
+      type: 'success',
+      callback: () => {
+        this.viewTokenCallback(resp.token);
+      }
     });
     // @ts-ignore
     return resp.token;
@@ -501,9 +508,14 @@ export class AnalysisService {
   showToast(task: Task, status: 'DONE' | 'FAILED') {
     let toastMessage;
     let toastType;
+    let onClick = () => {
+    };
     if (status === 'DONE') {
-      toastMessage = 'Computation finished successfully. Click the task in the task list to view the results.';
+      toastMessage = 'Computation finished successfully. Click here or the task in the task list to view the results.';
       toastType = 'success';
+      onClick = () => {
+        this.taskTokenCallback(task.token);
+      };
     } else if (status === 'FAILED') {
       toastMessage = 'Computation failed.';
       toastType = 'danger';
@@ -512,6 +524,7 @@ export class AnalysisService {
     this.toast.setNewToast({
       message: toastMessage,
       type: toastType,
+      callback: onClick
     });
   }
 

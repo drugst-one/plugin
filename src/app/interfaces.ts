@@ -266,7 +266,8 @@ export interface Algorithm {
 
 export interface Toast {
   message: string;
-  type: 'success' | 'info' | 'warning' | 'danger'
+  type: 'success' | 'info' | 'warning' | 'danger';
+  callback?: () => void;
 }
 
 export interface LiveToasts {
