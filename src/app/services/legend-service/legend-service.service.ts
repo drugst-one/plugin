@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {LegendContext} from "../../interfaces";
+import {LegendContext} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +33,10 @@ export class LegendService {
     }
   }
 
+  public reset() {
+    this.context = [];
+  }
+
   public get_nodes_to_delete() {
     const out = [].concat(this.default_delete);
     for (const node of this.default_delete) {
@@ -49,7 +53,6 @@ export class LegendService {
     }
     return out;
   }
-
 
 
 }

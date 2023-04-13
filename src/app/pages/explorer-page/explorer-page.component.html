@@ -2,7 +2,7 @@
 
   <div class="is-hidden-mobile fullheight" id="appContainer">
     <app-fa-icons></app-fa-icons>
-    <app-loading-screen></app-loading-screen>
+    <app-loading-screen (reset)="reset()"></app-loading-screen>
     <app-network-warning></app-network-warning>
     <app-network-empty-warning></app-network-empty-warning>
     <app-group-warning></app-group-warning>
@@ -608,7 +608,7 @@
       <div class="drugstone network column" id="main-column">
         <!-- analysis panel with analysis network -->
         <div *ngIf="selectedToken">
-          <app-analysis-panel (resetEmitter)="reset()"
+          <app-analysis-panel #analysis (resetEmitter)="reset()"
             [(token)]="selectedToken"
             [(tokenType)]="selectedAnalysisTokenType"
             (showDetailsChange)="
