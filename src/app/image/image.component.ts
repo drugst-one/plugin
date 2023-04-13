@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { version } from '../../version';
 
 @Component({
   selector: 'app-image',
@@ -10,12 +11,10 @@ export class ImageComponent implements OnInit {
   constructor() { }
 
   public _source: string;
-  public format: string;
+  public version: string;
 
   @Input() set _src(src: string) {
     this._source = src;
-    // get file ending behind last '.' as format
-    this.format = this._source.split('.').slice(-1)[0];
   }
 
   @Input() _alt: string;
@@ -23,6 +22,7 @@ export class ImageComponent implements OnInit {
   @Input() _class: string;
 
   ngOnInit(): void {
+    this.version = version;
   }
 
 }
