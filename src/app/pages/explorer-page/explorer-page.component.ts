@@ -25,6 +25,7 @@ import * as JSON5 from 'json5';
 import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
 import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
 import {LegendService} from '../../services/legend-service/legend-service.service';
+import {ToastService} from '../../services/toast/toast.service';
 
 
 declare var vis: any;
@@ -47,7 +48,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   @Input()
   public id: undefined | string;
 
-  @ViewChild('analysis') analysisElement
+  @ViewChild('analysis') analysisElement;
 
   public reset() {
     // const analysisNetwork = this.networkHandler.networks['analysis'];
@@ -212,7 +213,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     public drugstoneConfig: DrugstoneConfigService,
     public netex: NetexControllerService,
     public networkHandler: NetworkHandlerService,
-    public legendService: LegendService) {
+    public legendService: LegendService,
+    public toast: ToastService,
+  ) {
 
     this.showDetails = false;
     this.analysis.subscribeList(async (items, selected) => {
@@ -428,6 +431,20 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       if (!this.drugstoneConfig.selfReferences) {
         edges = edges.filter(el => el.from !== el.to);
       }
+
+      const duplicateNodeIds = [];
+      const uniqueNodeIds = [];
+      const uniqueNodes = [];
+      nodes.forEach(node => {
+        if (uniqueNodeIds.includes(node.id)) {
+          duplicateNodeIds.push(node.id);
+        } else {
+          uniqueNodeIds.push(node.id);
+          uniqueNodes.push(node);
+        }
+      });
+      this.toast.setNewToast({message: 'Duplicate node ids removed: ' + duplicateNodeIds.join(', '), type: 'warning'});
+      nodes = uniqueNodes;
 
       this.nodeData.nodes = new vis.DataSet(nodes);
       this.nodeData.edges = new vis.DataSet(edges);
