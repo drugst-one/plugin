@@ -1,4 +1,3 @@
-
 <p
   *ngIf="!wrapper.data.drugstoneId && wrapper.data.label"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
@@ -174,15 +173,26 @@
       [href]="getLinkoutURL(target.key)"
       target="_blank"
     >
-      <img class="link-icon" src="assets/{{ target.value }}.png" alt="{{ target.value }}" title="{{ target.value }}"/></a
-    >
+      <app-image
+        _class="link-icon"
+        _src="assets/{{ target.value }}.png"
+        _alt="{{ target.value }}"
+        _title="{{ target.value }}"
+      ></app-image>
+    </a>
   </span>
   &nbsp;
   <a
     class="is-capitalized"
     href="https://clinicaltrials.gov/ct2/results?term={{ wrapper.data.symbol }}"
     target="_blank"
-    ><img class="link-icon" src="assets/clinicaltrials.png" alt="ClinicalTrials.gov" title="ClinicalTrials.gov"/>
+  >
+    <app-image
+      _class="link-icon"
+      _src="assets/clinicaltrials.png"
+      _alt="ClinicalTrials.gov"
+      _title="ClinicalTrials.gov"
+    ></app-image>
   </a>
 </p>
 

@@ -55,6 +55,7 @@ import { InfoTileEdgeComponent } from './components/info-tile-edge/info-tile-edg
 import { NetworkEmptyWarningComponent } from './components/network-empty-warning/network-empty-warning.component';
 import { BugReportComponent } from './components/bug-report/bug-report.component';
 import { ViewListComponent } from './components/analysis-panel/view-list/view-list.component';
+import { ImageComponent } from './image/image.component';
 
 
 @NgModule({
@@ -99,6 +100,7 @@ import { ViewListComponent } from './components/analysis-panel/view-list/view-li
     NetworkEmptyWarningComponent,
     BugReportComponent,
     ViewListComponent,
+    ImageComponent,
   ],
   imports: [
     BrowserModule,
