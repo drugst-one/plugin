@@ -443,9 +443,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           uniqueNodes.push(node);
         }
       });
-      this.toast.setNewToast({message: 'Duplicate node ids removed: ' + duplicateNodeIds.join(', '), type: 'warning'});
-      nodes = uniqueNodes;
-
+      if (duplicateNodeIds.length > 0) {
+        this.toast.setNewToast({message: 'Duplicate node ids removed: ' + duplicateNodeIds.join(', '), type: 'warning'});
+        nodes = uniqueNodes;
+      }
       this.nodeData.nodes = new vis.DataSet(nodes);
       this.nodeData.edges = new vis.DataSet(edges);
 
