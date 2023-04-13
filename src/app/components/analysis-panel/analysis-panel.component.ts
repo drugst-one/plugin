@@ -699,7 +699,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     }
   }
 
-  public downloadNodes(view: string) {
+  public downloadNodesAsCSV(view: string) {
     let data = [];
     const nodes = this.nodeData.nodes.get();
     nodes.forEach((node) => {

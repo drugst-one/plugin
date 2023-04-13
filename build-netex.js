@@ -11,6 +11,6 @@ const concat = require('concat');
   await fs.ensureDir('drugsTone-build');
   await concat(files, 'drugsTone-build/drugstone.js');
   await fs.copy('./dist/netex/styles.css', 'drugsTone-build/styles.css');
-  // await fs.copy('./dist/netex/assets/', 'drugsTone-build/assets/');
+  await fs.copy('./dist/netex/assets/', 'drugsTone-build/assets/');
 })();
 
