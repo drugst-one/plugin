@@ -23,7 +23,7 @@ export const algorithmNames = {
   trustrank: 'TrustRank',
   keypathwayminer: 'KeyPathwayMiner',
   multisteiner: 'Multi-Steiner',
-  closeness: 'Closeness Centrality',
+  closeness: 'Harmonic Centrality',
   degree: 'Degree Centrality',
   proximity: 'Network Proximity',
   betweenness: 'Betweenness Centrality',
