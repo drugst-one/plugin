@@ -127,6 +127,127 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.resetEmitter.emit(true);
   }
 
+  private setNetworkListeners(){
+    this.networkHandler.activeNetwork.networkInternal.on('dragEnd', (properties) => {
+      const node_ids = this.networkHandler.activeNetwork.networkInternal.getSelectedNodes();
+      if (node_ids.length === 0 || !this.networkHandler.shiftDown) {
+        return;
+      }
+      this.analysis.addNodesByIdsToSelection(node_ids);
+      this.networkHandler.activeNetwork.networkInternal.unselectAll();
+    });
+    this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {
+      this.showDetailsChange.emit(null);
+    });
+    this.networkHandler.activeNetwork.networkInternal.on('doubleClick', (properties) => {
+      const nodeIds: Array<string> = properties.nodes;
+      if (nodeIds.length > 0) {
+        const nodeId = nodeIds[0];
+        const node = this.nodeData.nodes.get(nodeId);
+        if (node.drugstoneId === undefined || node.nodeType === 'drug' || node.drugstoneType !== 'protein') {
+          this.analysis.unmappedNodeToast();
+          return;
+        }
+        const wrapper = getWrapperFromNode(node);
+        if (this.analysis.inSelection(wrapper)) {
+          this.analysis.removeItems([wrapper]);
+          this.analysis.getCount();
+        } else {
+          this.analysis.addItems([wrapper]);
+          this.analysis.getCount();
+        }
+      }
+    });
+
+    this.networkHandler.activeNetwork.networkInternal.on('click', (properties) => {
+      if (properties.nodes.length === 0 && properties.edges.length === 1) {
+        // clicked on one edge
+        const edgeId = properties.edges[0];
+        this.networkHandler.activeNetwork.openEdgeSummary(edgeId);
+      } else {
+        this.networkHandler.activeNetwork.activeEdge = null;
+        const selectedNodes = this.nodeData.nodes.get(properties.nodes);
+        if (selectedNodes.length > 0) {
+          this.showDetailsChange.emit(getWrapperFromNode(selectedNodes[0]));
+        } else {
+          this.showDetailsChange.emit(null);
+        }
+      }
+    });
+    this.analysis.subscribeList((items, selected) => {
+      // return if analysis panel is closed or no nodes are loaded
+      if (!this.token) {
+        return;
+      }
+
+      if (selected !== null) {
+        const updatedNodes: Node[] = [];
+        for (const item of items) {
+          const node = this.nodeData.nodes.get(item.id);
+          if (!node) {
+            continue;
+          }
+          const pos = this.networkHandler.activeNetwork.networkInternal.getPositions([item.id]);
+          node.x = pos[item.id].x;
+          node.y = pos[item.id].y;
+          const isSeed = this.networkHandler.activeNetwork.highlightSeeds ? this.networkHandler.activeNetwork.seedMap[node.id] : false;
+          const nodeStyled = NetworkSettings.getNodeStyle(
+            node,
+            this.drugstoneConfig.currentConfig(),
+            isSeed,
+            selected,
+            this.networkHandler.activeNetwork.getGradient(item.id),
+            this.networkHandler.activeNetwork.nodeRenderer
+          );
+          updatedNodes.push(nodeStyled);
+        }
+        this.nodeData.nodes.update(updatedNodes);
+
+        const proteinSelection = this.tableSelectedProteins;
+        for (const item of items) {
+          // TODO: Refactor!
+          const found = proteinSelection.findIndex((i) => getProteinNodeId(i) === item.id);
+          const tableItem = this.tableProteins.find((i) => getProteinNodeId(i) === item.id);
+          if (selected && found === -1 && tableItem) {
+            proteinSelection.push(tableItem);
+          }
+          if (!selected && found !== -1 && tableItem) {
+            proteinSelection.splice(found, 1);
+          }
+        }
+        this.tableSelectedProteins = [...proteinSelection];
+      } else {
+        // else: selected is null
+        const updatedNodes = [];
+        this.nodeData.nodes.forEach((node) => {
+          const isSeed = this.networkHandler.activeNetwork.highlightSeeds ? this.networkHandler.activeNetwork.seedMap[node.id] : false;
+          if (!isSeed) {
+            return;
+          }
+          const nodeStyled = NetworkSettings.getNodeStyle(
+            node,
+            this.drugstoneConfig.currentConfig(),
+            isSeed,
+            selected,
+            this.networkHandler.activeNetwork.getGradient(node.id),
+            this.networkHandler.activeNetwork.nodeRenderer
+          );
+          updatedNodes.push(nodeStyled);
+        });
+        this.nodeData.nodes.update(updatedNodes);
+
+        const proteinSelection = [];
+        for (const item of items) {
+          const tableItem = this.tableProteins.find((i) => getProteinNodeId(i) === item.id);
+          if (tableItem) {
+            proteinSelection.push(tableItem);
+          }
+        }
+        this.tableSelectedProteins = [...proteinSelection];
+      }
+    });
+  }
+
   private rankTable(table: Array<Drug & Scored> | Array<Node & Scored & Seeded>) {
     let lastRank = 1;
     for (let idx = 0; idx < table.length; idx++) {
@@ -236,124 +357,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           });
         });
       }).then(() => {
-        this.networkHandler.activeNetwork.networkInternal.on('dragEnd', (properties) => {
-          const node_ids = this.networkHandler.activeNetwork.networkInternal.getSelectedNodes();
-          if (node_ids.length === 0|| !this.networkHandler.shiftDown) {
-            return;
-          }
-          this.analysis.addNodesByIdsToSelection(node_ids);
-          this.networkHandler.activeNetwork.networkInternal.unselectAll();
-        });
-        this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {
-          this.showDetailsChange.emit(null);
-        });
-        this.networkHandler.activeNetwork.networkInternal.on('doubleClick', (properties) => {
-          const nodeIds: Array<string> = properties.nodes;
-          if (nodeIds.length > 0) {
-            const nodeId = nodeIds[0];
-            const node = this.nodeData.nodes.get(nodeId);
-            if (node.drugstoneId === undefined || node.nodeType === 'drug' || node.drugstoneType !== 'protein') {
-              this.analysis.unmappedNodeToast();
-              return;
-            }
-            const wrapper = getWrapperFromNode(node);
-            if (this.analysis.inSelection(wrapper)) {
-              this.analysis.removeItems([wrapper]);
-              this.analysis.getCount();
-            } else {
-              this.analysis.addItems([wrapper]);
-              this.analysis.getCount();
-            }
-          }
-        });
-
-        this.networkHandler.activeNetwork.networkInternal.on('click', (properties) => {
-          if (properties.nodes.length === 0 && properties.edges.length === 1) {
-            // clicked on one edge
-            const edgeId = properties.edges[0];
-            this.networkHandler.activeNetwork.openEdgeSummary(edgeId);
-          } else {
-            this.networkHandler.activeNetwork.activeEdge = null;
-            const selectedNodes = this.nodeData.nodes.get(properties.nodes);
-            if (selectedNodes.length > 0) {
-              this.showDetailsChange.emit(getWrapperFromNode(selectedNodes[0]));
-            } else {
-              this.showDetailsChange.emit(null);
-            }
-          }
-        });
-        this.analysis.subscribeList((items, selected) => {
-          // return if analysis panel is closed or no nodes are loaded
-          if (!this.token) {
-            return;
-          }
-
-          if (selected !== null) {
-            const updatedNodes: Node[] = [];
-            for (const item of items) {
-              const node = this.nodeData.nodes.get(item.id);
-              if (!node) {
-                continue;
-              }
-              const pos = this.networkHandler.activeNetwork.networkInternal.getPositions([item.id]);
-              node.x = pos[item.id].x;
-              node.y = pos[item.id].y;
-              const isSeed = this.networkHandler.activeNetwork.highlightSeeds ? this.networkHandler.activeNetwork.seedMap[node.id] : false;
-              const nodeStyled = NetworkSettings.getNodeStyle(
-                node,
-                this.drugstoneConfig.currentConfig(),
-                isSeed,
-                selected,
-                this.networkHandler.activeNetwork.getGradient(item.id),
-                this.networkHandler.activeNetwork.nodeRenderer
-              );
-              updatedNodes.push(nodeStyled);
-            }
-            this.nodeData.nodes.update(updatedNodes);
-
-            const proteinSelection = this.tableSelectedProteins;
-            for (const item of items) {
-              // TODO: Refactor!
-              const found = proteinSelection.findIndex((i) => getProteinNodeId(i) === item.id);
-              const tableItem = this.tableProteins.find((i) => getProteinNodeId(i) === item.id);
-              if (selected && found === -1 && tableItem) {
-                proteinSelection.push(tableItem);
-              }
-              if (!selected && found !== -1 && tableItem) {
-                proteinSelection.splice(found, 1);
-              }
-            }
-            this.tableSelectedProteins = [...proteinSelection];
-          } else {
-            // else: selected is null
-            const updatedNodes = [];
-            this.nodeData.nodes.forEach((node) => {
-              const isSeed = this.networkHandler.activeNetwork.highlightSeeds ? this.networkHandler.activeNetwork.seedMap[node.id] : false;
-              if (!isSeed) {
-                return;
-              }
-              const nodeStyled = NetworkSettings.getNodeStyle(
-                node,
-                this.drugstoneConfig.currentConfig(),
-                isSeed,
-                selected,
-                this.networkHandler.activeNetwork.getGradient(node.id),
-                this.networkHandler.activeNetwork.nodeRenderer
-              );
-              updatedNodes.push(nodeStyled);
-            });
-            this.nodeData.nodes.update(updatedNodes);
-
-            const proteinSelection = [];
-            for (const item of items) {
-              const tableItem = this.tableProteins.find((i) => getProteinNodeId(i) === item.id);
-              if (tableItem) {
-                proteinSelection.push(tableItem);
-              }
-            }
-            this.tableSelectedProteins = [...proteinSelection];
-          }
-        });
+        this.setNetworkListeners();
         this.emitVisibleItems(true);
       });
     });
@@ -403,6 +407,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           return;
         }
         this.drugstoneConfig.set_analysisConfig(result.parameters.config);
+        this.analysis.switchSelection(this.token);
         this.result = result;
         if (this.result.parameters.target === 'drug') {
           this.legendService.add_to_context('drug');
@@ -485,126 +490,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             setTimeout(() => {
               analysisNetwork.networkInternal.setData(this.nodeData);
             }, 1000);
-            analysisNetwork.networkInternal.on('dragEnd', (properties) => {
-              const node_ids = analysisNetwork.networkInternal.getSelectedNodes();
-              if (node_ids.length === 0|| !this.networkHandler.shiftDown) {
-                return;
-              }
-              this.analysis.addNodesByIdsToSelection(node_ids);
-              analysisNetwork.networkInternal.unselectAll();
-            });
-            analysisNetwork.networkInternal.on('deselectNode', (properties) => {
-              this.showDetailsChange.emit(null);
-            });
-
-            analysisNetwork.networkInternal.on('doubleClick', (properties) => {
-              const nodeIds: Array<string> = properties.nodes;
-              if (nodeIds.length > 0) {
-                const nodeId = nodeIds[0];
-                const node = this.nodeData.nodes.get(nodeId);
-                if (node.drugstoneId === undefined || node.nodeType === 'drug' || node.drugstoneType !== 'protein') {
-                  this.analysis.unmappedNodeToast();
-                  return;
-                }
-                const wrapper = getWrapperFromNode(node);
-                if (this.analysis.inSelection(wrapper)) {
-                  this.analysis.removeItems([wrapper]);
-                  this.analysis.getCount();
-                } else {
-                  this.analysis.addItems([wrapper]);
-                  this.analysis.getCount();
-                }
-              }
-            });
-
-            analysisNetwork.networkInternal.on('click', (properties) => {
-              if (properties.nodes.length === 0 && properties.edges.length === 1) {
-                // clicked on one edge
-                const edgeId = properties.edges[0];
-                analysisNetwork.openEdgeSummary(edgeId);
-              } else {
-                analysisNetwork.activeEdge = null;
-                const selectedNodes = this.nodeData.nodes.get(properties.nodes);
-                if (selectedNodes.length > 0) {
-                  this.showDetailsChange.emit(getWrapperFromNode(selectedNodes[0]));
-                } else {
-                  this.showDetailsChange.emit(null);
-                }
-              }
-            });
-
-            this.analysis.subscribeList((items, selected) => {
-              // return if analysis panel is closed or no nodes are loaded
-              if (!this.token) {
-                return;
-              }
-
-              if (selected !== null) {
-                const updatedNodes: Node[] = [];
-                for (const item of items) {
-                  const node = this.nodeData.nodes.get(item.id);
-                  if (!node) {
-                    continue;
-                  }
-                  const pos = analysisNetwork.networkInternal.getPositions([item.id]);
-                  node.x = pos[item.id].x;
-                  node.y = pos[item.id].y;
-                  const isSeed = analysisNetwork.highlightSeeds ? analysisNetwork.seedMap[node.id] : false;
-                  const nodeStyled = NetworkSettings.getNodeStyle(
-                    node,
-                    this.drugstoneConfig.currentConfig(),
-                    isSeed,
-                    selected,
-                    analysisNetwork.getGradient(item.id),
-                    analysisNetwork.nodeRenderer
-                  );
-                  updatedNodes.push(nodeStyled);
-                }
-                this.nodeData.nodes.update(updatedNodes);
-
-                const proteinSelection = this.tableSelectedProteins;
-                for (const item of items) {
-                  // TODO: Refactor!
-                  const found = proteinSelection.findIndex((i) => getProteinNodeId(i) === item.id);
-                  const tableItem = this.tableProteins.find((i) => getProteinNodeId(i) === item.id);
-                  if (selected && found === -1 && tableItem) {
-                    proteinSelection.push(tableItem);
-                  }
-                  if (!selected && found !== -1 && tableItem) {
-                    proteinSelection.splice(found, 1);
-                  }
-                }
-                this.tableSelectedProteins = [...proteinSelection];
-              } else {
-                // else: selected is null
-                const updatedNodes = [];
-                this.nodeData.nodes.forEach((node) => {
-                  const isSeed = analysisNetwork.highlightSeeds ? analysisNetwork.seedMap[node.id] : false;
-                  if (!isSeed) {
-                    return;
-                  }
-                  const nodeStyled = NetworkSettings.getNodeStyle(
-                    node,
-                    this.drugstoneConfig.currentConfig(),
-                    isSeed,
-                    selected,
-                    analysisNetwork.getGradient(node.id),
-                    analysisNetwork.nodeRenderer
-                  );
-                  updatedNodes.push(nodeStyled);
-                });
-                this.nodeData.nodes.update(updatedNodes);
-
-                const proteinSelection = [];
-                for (const item of items) {
-                  const tableItem = this.tableProteins.find((i) => getProteinNodeId(i) === item.id);
-                  if (tableItem) {
-                    proteinSelection.push(tableItem);
-                  }
-                }
-                this.tableSelectedProteins = [...proteinSelection];
-              }
-            });
+            this.setNetworkListeners();
             this.emitVisibleItems(true);
           }).then(() => {
             if (!['quick', 'super', 'connect', 'connectSelected'].includes(this.task.info.algorithm)) {
@@ -658,6 +544,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     analysisNetwork.seedMap = {};
     analysisNetwork.highlightSeeds = false;
     this.analysis.switchSelection('main');
+    // this.analysis.resetSelection();
     this.token = null;
     this.tokenChange.emit(this.token);
     this.legendService.remove_from_context('drug');

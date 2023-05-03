@@ -12,7 +12,7 @@ import { NetworkHandlerService } from 'src/app/services/network-handler/network-
 export class InfoTileEdgeComponent implements OnInit {
 
   constructor(
-    public drugstoneConfig: DrugstoneConfigService, 
+    public drugstoneConfig: DrugstoneConfigService,
     private networkHandler: NetworkHandlerService,
     public analysis: AnalysisService
     ) { }
@@ -55,14 +55,4 @@ export class InfoTileEdgeComponent implements OnInit {
   public zoomTo(nodeId) {
     this.networkHandler.activeNetwork.zoomToNode(nodeId);
   }
-
-  // public selectionButtonToggle($event) {
-  //   console.log(this.fromWrapper, this.toWrapper)
-  //   if ($event) {
-  //     this.analysis.addItems([this.toWrapper, this.fromWrapper])
-  //   } else {
-  //     this.analysis.removeItems([this.toWrapper, this.fromWrapper])
-  //   }
-  // }
-
 }

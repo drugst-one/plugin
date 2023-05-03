@@ -220,7 +220,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.showDetails = false;
     this.analysis.subscribeList(async (items, selected) => {
       // return if analysis panel is open or no nodes are loaded
-      if (this.selectedAnalysisToken || !this.nodeData.nodes) {
+      if (this.selectedAnalysisToken || this.selectedViewToken || !this.nodeData.nodes) {
         return;
       }
       if (selected !== null) {
@@ -409,7 +409,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.config.interactionProteinProtein, this.drugstoneConfig.config.licensedDatasets);
         edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.currentConfig(), node_map)).flatMap(e => e));
       }
-
       const edge_map = {};
 
       edges = edges.filter(edge => {
@@ -464,10 +463,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       });
 
 
-      // if (!this.drugstoneConfig.config.showSidebar) {
-      //   // skip network options for selecting nodes when there are no options to use it
-      //   return;
-      // }
       this.networkHandler.activeNetwork.networkInternal.on('doubleClick', (properties) => {
         const nodeIds: Array<string> = properties.nodes;
         if (nodeIds != null && nodeIds.length > 0) {
@@ -506,15 +501,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         }
       });
 
-      // this.networkHandler.activeNetwork.networkInternal.on('dragEnd', (properties) => {
-      //   let node_ids = this.networkHandler.activeNetwork.networkInternal.getSelectedNodes();
-      //   if (node_ids.length === 0) {
-      //     return;
-      //   }
-      //   this.analysis.addNodesByIdsToSelection(node_ids);
-      //   this.networkHandler.activeNetwork.networkInternal.unselectAll();
-      // });
-
       //  check if shift key is pressed
       window.addEventListener('keydown', (event) => {
         if (event.key === 'Shift') {
@@ -530,7 +516,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
       this.networkHandler.activeNetwork.networkInternal.on('dragEnd', (properties) => {
         let node_ids = this.networkHandler.activeNetwork.networkInternal.getSelectedNodes();
-        if (node_ids.length === 0 || !this.networkHandler.shiftDown) {
+        if (node_ids.length === 0 || !this.networkHandler.shiftDown || this.networkHandler.activeNetwork.networkType === 'analysis') {
           return;
         }
         this.analysis.addNodesByIdsToSelection(node_ids);
