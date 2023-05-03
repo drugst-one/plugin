@@ -1,40 +1,40 @@
 <p
-  *ngIf="!wrapper.data.drugstoneId && wrapper.data.label"
+  *ngIf="!_wrapper.data.drugstoneId && _wrapper.data.label"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
 >
   <b><span>Label:</span></b>
-  <span class="is-capitalized"> {{ wrapper.data.label }}</span>
+  <span class="is-capitalized"> {{ _wrapper.data.label }}</span>
 </p>
 <p
-  *ngIf="wrapper.data.proteinName"
+  *ngIf="_wrapper.data.proteinName"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
 >
   <b><span>Name:</span></b>
-  <span class="is-capitalized"> {{ wrapper.data.proteinName }}</span>
+  <span class="is-capitalized"> {{ _wrapper.data.proteinName }}</span>
 </p>
 <p
-  *ngIf="wrapper.data.symbol"
+  *ngIf="_wrapper.data.symbol"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
 >
   <b><span>Symbol:</span></b>
   <a
     class="is-capitalized"
     href="https://www.genecards.org/cgi-bin/carddisp.pl?gene={{
-      wrapper.data.symbol
+      _wrapper.data.symbol
     }}"
     target="_blank"
   >
-    {{ wrapper.data.symbol }}
+    {{ _wrapper.data.symbol }}
   </a>
 </p>
 
 <p
-  *ngIf="wrapper.data.uniprot"
+  *ngIf="_wrapper.data.uniprot"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
 >
   <b><span>Uniprot:</span></b>
   <a
-    *ngFor="let uniprot of wrapper.data.uniprot"
+    *ngFor="let uniprot of _wrapper.data.uniprot"
     href="https://www.uniprot.org/uniprot/{{ uniprot }}"
     target="_blank"
   >
@@ -42,12 +42,12 @@
   </a>
 </p>
 <p
-  *ngIf="wrapper.data.ensg"
+  *ngIf="_wrapper.data.ensg"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
 >
   <b><span>Ensembl:</span></b>
   <a
-    *ngFor="let ensg of wrapper.data.ensg"
+    *ngFor="let ensg of _wrapper.data.ensg"
     href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={{ ensg }}"
     target="_blank"
   >
@@ -55,12 +55,12 @@
   </a>
 </p>
 <p
-  *ngIf="wrapper.data.entrez"
+  *ngIf="_wrapper.data.entrez"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
 >
   <b><span>Entrez:</span></b>
   <a
-    *ngFor="let entrez of wrapper.data.entrez"
+    *ngFor="let entrez of _wrapper.data.entrez"
     href="https://www.ncbi.nlm.nih.gov/gene/{{ entrez }}"
     target="_blank"
   >
@@ -89,50 +89,50 @@
   </span>
 </p>
 <p
-  *ngIf="wrapper.data.drugId || wrapper.data.disorderId"
+  *ngIf="_wrapper.data.drugId || _wrapper.data.disorderId"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
 >
   <b><span>Name:</span></b>
-  <span class="is-capitalized"> {{ wrapper.data.label }}</span>
+  <span class="is-capitalized"> {{ _wrapper.data.label }}</span>
 </p>
 <p
-  *ngIf="wrapper.data.icd10"
+  *ngIf="_wrapper.data.icd10"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
 >
   <b><span>ICD10:</span></b>
   <span class="is-capitalized">
     {{
-      wrapper.data.icd10.length === 0 ||
-      (wrapper.data.icd10.length === 1 && wrapper.data.icd10[0].length === 0)
+      _wrapper.data.icd10.length === 0 ||
+      (_wrapper.data.icd10.length === 1 && _wrapper.data.icd10[0].length === 0)
         ? "-"
-        : wrapper.data.icd10
+        : _wrapper.data.icd10
     }}</span
   >
 </p>
 <p
-  *ngIf="wrapper.data.drugId"
+  *ngIf="_wrapper.data.drugId"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
 >
   <b><span>DrugBank:</span></b>
   <a
-    href="https://go.drugbank.com/drugs/{{ wrapper.data.drugId }}"
+    href="https://go.drugbank.com/drugs/{{ _wrapper.data.drugId }}"
     target="_blank"
   >
-    <span class="is-capitalized"> {{ wrapper.data.drugId }}</span>
+    <span class="is-capitalized"> {{ _wrapper.data.drugId }}</span>
   </a>
 </p>
 <p
-  *ngIf="wrapper.data.disorderId"
+  *ngIf="_wrapper.data.disorderId"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
 >
   <b><span>Mondo:</span></b>
   <a
     href="https://www.ebi.ac.uk/ols/ontologies/mondo/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FMONDO_{{
-      writeZeros(7 - ('' + wrapper.data.disorderId).length)
-    }}{{ wrapper.data.disorderId }}"
+      writeZeros(7 - ('' + _wrapper.data.disorderId).length)
+    }}{{ _wrapper.data.disorderId }}"
     target="_blank"
   >
-    <span class="is-capitalized"> MONDO:{{ wrapper.data.disorderId }}</span>
+    <span class="is-capitalized"> MONDO:{{ _wrapper.data.disorderId }}</span>
   </a>
 </p>
 <p
@@ -163,7 +163,7 @@
   >
 </p>
 <p
-  *ngIf="showLinks()"
+  *ngIf="_showLinks"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
 >
   <b><span>Links:</span></b>
@@ -172,6 +172,7 @@
       *ngIf="showLinkout(target.key)"
       [href]="getLinkoutURL(target.key)"
       target="_blank"
+      class="link-icon-margin"
     >
       <app-image
         _class="link-icon"
@@ -181,10 +182,9 @@
       ></app-image>
     </a>
   </span>
-  &nbsp;
   <a
-    class="is-capitalized"
-    href="https://clinicaltrials.gov/ct2/results?term={{ wrapper.data.symbol }}"
+    class="link-icon-margin"
+    href="https://clinicaltrials.gov/ct2/results?term={{ _wrapper.data.symbol }}"
     target="_blank"
   >
     <app-image
@@ -197,10 +197,10 @@
 </p>
 
 <app-toggle
-  *ngIf="wrapper.data.drugstoneId && wrapper.data.drugstoneType === 'protein'"
-  [value]="analysis.inSelection(wrapper)"
+  *ngIf="_wrapper.data.drugstoneId && _wrapper.data.drugstoneType === 'protein'"
+  [value]="analysis.inSelection(_wrapper)"
   (valueChange)="
-    $event ? analysis.addItems([wrapper]) : analysis.removeItems([wrapper])
+    $event ? analysis.addItems([_wrapper]) : analysis.removeItems([_wrapper])
   "
   textOn="Selected"
   textOff="Off"
