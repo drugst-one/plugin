@@ -238,7 +238,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       }).then(() => {
         this.networkHandler.activeNetwork.networkInternal.on('dragEnd', (properties) => {
           const node_ids = this.networkHandler.activeNetwork.networkInternal.getSelectedNodes();
-          if (node_ids.length === 0) {
+          if (node_ids.length === 0|| !this.networkHandler.shiftDown) {
             return;
           }
           this.analysis.addNodesByIdsToSelection(node_ids);
@@ -487,7 +487,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             }, 1000);
             analysisNetwork.networkInternal.on('dragEnd', (properties) => {
               const node_ids = analysisNetwork.networkInternal.getSelectedNodes();
-              if (node_ids.length === 0) {
+              if (node_ids.length === 0|| !this.networkHandler.shiftDown) {
                 return;
               }
               this.analysis.addNodesByIdsToSelection(node_ids);

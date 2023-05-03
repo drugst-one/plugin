@@ -1,7 +1,7 @@
 import {Type, Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
 import {NetworkComponent} from 'src/app/components/network/network.component';
-import {NetworkType} from 'src/app/interfaces';
+import {getWrapperFromNode, NetworkType} from 'src/app/interfaces';
 import {AnalysisService} from '../analysis/analysis.service';
 import {DrugstoneConfigService} from '../drugstone-config/drugstone-config.service';
 import {NetexControllerService} from '../netex-controller/netex-controller.service';
@@ -21,6 +21,9 @@ export class NetworkHandlerService {
   public networkSidebarOpen = this.drugstoneConfig.config.expandNetworkMenu || false;
   public networks: { NetworkType: NetworkComponent } | {} = {};
   public activeNetwork: NetworkComponent = new NetworkComponent(this.legendService, this.networkHandler, this.analysis, this.drugstoneConfig, this.netex, this.omnipath, this.loadingScreen);
+
+
+  public shiftDown = false;
 
   public showSeedsButton = true;
 
@@ -64,4 +67,5 @@ export class NetworkHandlerService {
       }
     });
   }
+
 }

@@ -506,17 +506,31 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         }
       });
 
-      this.networkHandler.activeNetwork.networkInternal.on('dragEnd', (properties) => {
-        let node_ids = this.networkHandler.activeNetwork.networkInternal.getSelectedNodes();
-        if (node_ids.length === 0) {
-          return;
+      // this.networkHandler.activeNetwork.networkInternal.on('dragEnd', (properties) => {
+      //   let node_ids = this.networkHandler.activeNetwork.networkInternal.getSelectedNodes();
+      //   if (node_ids.length === 0) {
+      //     return;
+      //   }
+      //   this.analysis.addNodesByIdsToSelection(node_ids);
+      //   this.networkHandler.activeNetwork.networkInternal.unselectAll();
+      // });
+
+      //  check if shift key is pressed
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'Shift') {
+          this.networkHandler.shiftDown = true;
         }
-        this.analysis.addNodesByIdsToSelection(node_ids);
-        this.networkHandler.activeNetwork.networkInternal.unselectAll();
       });
+
+      window.addEventListener('keyup', (event) => {
+        if (event.key === 'Shift') {
+          this.networkHandler.shiftDown = false;
+        }
+      });
+
       this.networkHandler.activeNetwork.networkInternal.on('dragEnd', (properties) => {
         let node_ids = this.networkHandler.activeNetwork.networkInternal.getSelectedNodes();
-        if (node_ids.length === 0) {
+        if (node_ids.length === 0 || !this.networkHandler.shiftDown) {
           return;
         }
         this.analysis.addNodesByIdsToSelection(node_ids);
