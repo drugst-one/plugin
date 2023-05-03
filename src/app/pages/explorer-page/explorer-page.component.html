@@ -530,7 +530,7 @@
           </header>
           <div *ngIf="collapseViews">
             <div
-              class="card-content overflow task-list-container"
+              class="overflow task-list-container"
               *ngIf="analysis.viewTokens && analysis.viewTokens.length > 0"
             >
               <app-view-list [(token)]="selectedViewToken"></app-view-list>
@@ -579,7 +579,7 @@
           </header>
           <div *ngIf="collapseTask">
             <div
-              class="card-content overflow task-list-container"
+              class="overflow task-list-container"
               *ngIf="analysis.tasks && analysis.tasks.length > 0"
             >
               <app-task-list [(token)]="selectedAnalysisToken"></app-task-list>

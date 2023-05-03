@@ -105,12 +105,11 @@
       </div>
       <div
         *ngIf="task.info.done"
-        (click)="open(task.token)"
-        pTooltip="Show analysis results"
-        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
-        tooltipPosition="top"
       >
-        <div class="columns mb-0">
+        <div class="columns mb-0" (click)="open(task.token)"
+             pTooltip="Show analysis results"
+             [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+             tooltipPosition="top">
           <div class="column is-8">
             <span class="is-capitalized"
               ><app-fa-solid-icon
@@ -139,6 +138,9 @@
             <a
               (click)="analysis.removeTask(task.token)"
               class="has-text-danger is-pulled-right"
+              pTooltip="Delete task"
+              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+              tooltipPosition="top"
             >
               <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
             </a>

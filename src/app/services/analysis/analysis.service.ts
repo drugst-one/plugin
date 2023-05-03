@@ -132,6 +132,7 @@ export class AnalysisService {
   }
 
   removeTask(token) {
+    console.log(token)
     this.tokens = this.tokens.filter((item) => item !== token);
     this.finishedTokens = this.finishedTokens.filter((item) => item !== token);
     this.tasks = this.tasks.filter((item) => item.token !== (token));

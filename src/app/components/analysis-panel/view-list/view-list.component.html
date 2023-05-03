@@ -10,12 +10,10 @@
     >
       <div
         *ngIf="task"
-        (click)="open(task.token)"
-        pTooltip="Show selection view"
-        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
-        tooltipPosition="top"
       >
-        <div class="columns mb-0">
+        <div class="columns mb-0" (click)="open(task.token)" pTooltip="Show selection view"
+             [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+             tooltipPosition="top">
           <div class="column is-8">
             <span class="is-capitalized"
             ><app-fa-solid-icon
@@ -24,8 +22,6 @@
               Manual selection</span
             >
           </div>
-          <div class="column">
-          </div>
         </div>
         <div class="columns mb-0">
           <div class="column is-8 pt-0 pb-0">
@@ -33,8 +29,11 @@
           </div>
           <div class="column pt-0 pb-0">
             <a
-              (click)="analysis.removeTask(task)"
+              (click)="analysis.removeView(task.token)"
               class="has-text-danger is-pulled-right"
+              pTooltip="Delete view"
+              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+              tooltipPosition="top"
             >
               <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
             </a>
