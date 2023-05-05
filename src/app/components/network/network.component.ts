@@ -23,6 +23,7 @@ import {NetworkHandlerService} from 'src/app/services/network-handler/network-ha
 import {LegendService} from 'src/app/services/legend-service/legend-service.service';
 import {LoadingScreenService} from 'src/app/services/loading-screen/loading-screen.service';
 import {version} from '../../../version';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-network',
@@ -60,6 +61,12 @@ export class NetworkComponent implements OnInit {
 
   public adjacentDrugs = false;
 
+  public selectedDrugTargetType = new Subject<string | null>();
+  public selectedDrugTargetTypeLast: string | null = null;
+  public selectedDrugTargetType$ = this.selectedDrugTargetType.asObservable();
+  public drugTargetTypes: string[] = [];
+  public drugTargetTypesWithoutAdj: string[] = [];
+
   public adjacentDisordersProtein = false;
   public adjacentDisordersDrug = false;
   public adjacentDrugList: Node[] = [];
@@ -77,7 +84,9 @@ export class NetworkComponent implements OnInit {
   public currentViewEdges: NodeInteraction[];
 
   public expressionExpanded = false;
+  public drugTargetSelectionExpanded = false;
   public selectedTissue: Tissue | null = null;
+
 
   // change this to true to have sidebar open per default
   // public networkSidebarOpen = false;
@@ -128,6 +137,37 @@ export class NetworkComponent implements OnInit {
       }
     });
     return {edges: this.inputNetwork.edges, nodes};
+  }
+
+  public getDrugTargetTypes() {
+    return this.drugTargetTypes;
+  }
+
+  public subscribeSelection(callback) {
+    this.selectedDrugTargetType$.subscribe(() => {
+      callback();
+    });
+  }
+
+  public setDrugTargetTypes(drugTargetTypes: string[], adj = false) {
+    if (adj) {
+      this.drugTargetTypesWithoutAdj = [...drugTargetTypes];
+      drugTargetTypes.filter(type => !this.drugTargetTypes.includes(type)).forEach((type) => {
+        this.drugTargetTypes.push(type);
+      });
+    } else {
+      this.drugTargetTypes = drugTargetTypes;
+    }
+  }
+
+  // TODO create method to get selected drug target type as string instead of subject or observable
+  public setSelectedDrugTargetType(value: string | null) {
+    this.selectedDrugTargetTypeLast = value;
+    this.selectedDrugTargetType.next(value);
+  }
+
+  public getSelectedDrugTargetType() {
+    return this.selectedDrugTargetTypeLast;
   }
 
   resetInputNetwork() {
@@ -333,6 +373,38 @@ export class NetworkComponent implements OnInit {
     });
   }
 
+  public updateAdjacentDrugSelection(event, stabil: boolean) {
+    this.networkHandler.activeNetwork.drugTargetSelectionExpanded = false;
+    if (event === this.getSelectedDrugTargetType()) {
+      return;
+    }
+    this.setSelectedDrugTargetType(event);
+    if (this.networkHandler.activeNetwork.showsAdjacentDrugs()) {
+      this.updateAdjacentDrugs(false, false).then(() => {
+        // if (this.networkHandler.activeNetwork.hasDrugsLoaded()) {
+        //   this.updateFoundDrugs(stabil).then(() => {
+        this.updateAdjacentDrugs(true, stabil);
+        // });
+        // } else {
+        //   this.updateAdjacentDrugs(true, stabil);
+        // }
+      });
+    }
+    // else {
+    //   this.updateFoundDrugs(stabil);
+    // }
+  }
+
+  public showsAdjacentDrugs(): boolean {
+    return this.adjacentDrugs;
+  }
+
+  public updateFoundDrugs(stabl: boolean): Promise<any> {
+    return new Promise<boolean>(async (resolve, reject) => {
+
+    });
+  }
+
   public updateAdjacentDrugs(bool: boolean, stabl: boolean): Promise<any> {
     return new Promise<boolean>(async (resolve, reject) => {
       this.loadingScreen.stateUpdate(true);
@@ -345,12 +417,21 @@ export class NetworkComponent implements OnInit {
         const proteinMap = this.getProteinMap();
         this.netex.adjacentDrugs(this.drugstoneConfig.config.interactionDrugProtein, this.drugstoneConfig.config.licensedDatasets, this.nodeData.nodes.get()).then(response => {
           const existingDrugIDs = this.nodeData.nodes.get().filter(n => n.drugstoneId && n.drugstoneType === 'drug').map(n => n.drugstoneId);
+          const availableDrugTargetTypes = new Set<string>();
           for (const interaction of response.pdis) {
+            if (interaction.actions) {
+              for (const action of interaction.actions) {
+                availableDrugTargetTypes.add(action);
+              }
+            }
+            if (this.networkHandler.activeNetwork.getSelectedDrugTargetType() && interaction.actions && !interaction.actions.includes(this.networkHandler.activeNetwork.getSelectedDrugTargetType())) {
+              continue;
+            }
+            const label = interaction.actions && interaction.actions.length > 0 ? interaction.actions.join(',') : undefined;
             const edge = mapCustomEdge({
               from: interaction.protein,
               to: interaction.drug
             }, this.drugstoneConfig.currentConfig(), this.drugstoneConfig);
-
             if (proteinMap[edge.from]) {
               proteinMap[edge.from].forEach(from => {
                 if (addedEdge[from] && addedEdge[from].indexOf(edge.to) !== -1) {
@@ -359,6 +440,9 @@ export class NetworkComponent implements OnInit {
                 const e = JSON.parse(JSON.stringify(edge));
                 e.from = from;
                 e.to = edge.to;
+                if (label) {
+                  e.label = label;
+                }
                 this.adjacentDrugEdgesList.push(e);
                 if (!addedEdge[from]) {
                   addedEdge[from] = [edge.to];
@@ -367,11 +451,16 @@ export class NetworkComponent implements OnInit {
                 }
               });
             }
+            this.networkHandler.activeNetwork.setDrugTargetTypes(Array.from(availableDrugTargetTypes), true);
           }
+          const addedDrugs = new Set<string>();
+          Object.values(addedEdge).forEach(targets => { // @ts-ignore
+            targets.forEach(t => addedDrugs.add(t));
+          });
           for (const drug of response.drugs) {
             drug.group = 'foundDrug';
             drug.id = getDrugNodeId(drug);
-            if (!existingDrugIDs.includes(drug.drugstoneId)) {
+            if (!existingDrugIDs.includes(drug.drugstoneId) && addedDrugs.has(drug.drugstoneId)) {
               existingDrugIDs.push(drug.drugstoneId);
               this.adjacentDrugList.push(mapCustomNode(drug, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
             }
@@ -633,7 +722,7 @@ export class NetworkComponent implements OnInit {
   public hasDrugsLoaded(): boolean {
     if (this.nodeData && this.nodeData.nodes) {
       for (const node of this.nodeData.nodes.get()) {
-        if (node.drugstoneType && node.drugstoneId === 'drug') {
+        if (node.drugstoneType && node.drugstoneType === 'drug') {
           return true;
         }
       }

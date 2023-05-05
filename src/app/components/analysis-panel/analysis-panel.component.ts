@@ -33,6 +33,7 @@ import {LegendService} from 'src/app/services/legend-service/legend-service.serv
 import {LoadingScreenService} from 'src/app/services/loading-screen/loading-screen.service';
 import {version} from '../../../version';
 import {downloadCSV} from 'src/app/utils';
+import {Observable} from 'rxjs';
 
 declare var vis: any;
 
@@ -101,6 +102,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   public loading = false;
 
+
   constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService, public loadingScreen: LoadingScreenService) {
     try {
       this.versionString = version;
@@ -113,6 +115,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   ngAfterViewInit() {
     this.networkHandler.setActiveNetwork('analysis');
+    this.networkHandler.activeNetwork.subscribeSelection(() => {
+        this.refresh();
+      }
+    );
   }
 
   async ngOnChanges(changes: SimpleChanges) {
@@ -127,7 +133,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.resetEmitter.emit(true);
   }
 
-  private setNetworkListeners(){
+  private setNetworkListeners() {
     this.networkHandler.activeNetwork.networkInternal.on('dragEnd', (properties) => {
       const node_ids = this.networkHandler.activeNetwork.networkInternal.getSelectedNodes();
       if (node_ids.length === 0 || !this.networkHandler.shiftDown) {
@@ -460,7 +466,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               });
             });
           }).then(nodes => {
-
             this.tableDrugs = nodes.filter(e => e.drugstoneId && e.drugstoneType === 'drug');
             this.tableDrugs.forEach((r) => {
               r.rawScore = r.score;
@@ -493,6 +498,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             this.setNetworkListeners();
             this.emitVisibleItems(true);
           }).then(() => {
+            this.loadingScreen.stateUpdate(false);
             if (!['quick', 'super', 'connect', 'connectSelected'].includes(this.task.info.algorithm)) {
               return;
             }
@@ -501,7 +507,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             });
           }).catch(console.error);
         });
-        this.loadingScreen.stateUpdate(false);
       });
     }
   }
@@ -614,7 +619,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
     // add drugGroup and foundNodesGroup for added nodes
     // these groups can be overwritten by the user
-    const nodes = [];
+    let nodes = [];
     let edges = [];
 
     const attributes = result.nodeAttributes || {};
@@ -648,6 +653,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           // node is drug, was found during analysis
           nodeDetails.type = 'Drug';
           nodeDetails.group = 'foundDrug';
+
         } else {
           // node is custom input from user, could not be mapped to backend protein
           nodeDetails.group = nodeDetails.group ? nodeDetails.group : 'default';
@@ -661,10 +667,30 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       }
     }
     const uniqEdges = [];
+    const skippedDrugIds = new Set<string>();
+    const drugEdgeTypes = new Set<string>();
     for (const edge of network.edges) {
       const e = mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig);
+      const isDrugEdge = e.to[0] === 'd' && e.to[1] === 'r';
       e.from = e.from[0] === 'p' && nodeIdMap[e.from] ? nodeIdMap[e.from] : e.from;
       e.to = e.to[0] === 'p' && nodeIdMap[e.to] ? nodeIdMap[e.to] : e.to;
+      if (isDrugEdge) {
+        skippedDrugIds.add(e.to);
+        if (edge.actions) {
+          edge.actions.forEach(a => drugEdgeTypes.add(a));
+        }
+        if (edge.actions && this.networkHandler.activeNetwork.getSelectedDrugTargetType() && !edge.actions.includes(this.networkHandler.activeNetwork.getSelectedDrugTargetType())) {
+          continue;
+        }
+        const label = edge.actions && edge.actions.length > 0 ? edge.actions.join(',') : undefined;
+        skippedDrugIds.delete(e.to);
+        if (label) {
+          e.label = label;
+        }
+      }
+
+      this.networkHandler.activeNetwork.setDrugTargetTypes(Array.from(drugEdgeTypes));
+
       const hash = e.from + '_' + e.to;
       if (uniqEdges.indexOf(hash) === -1) {
         uniqEdges.push(hash);
@@ -675,6 +701,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     if (!this.drugstoneConfig.currentConfig().selfReferences) {
       edges = edges.filter(el => el.from !== el.to);
     }
+    nodes = nodes.filter(n => !(n.drugstoneId && skippedDrugIds.has(n.drugstoneId)));
+    // if (this.networkHandler.activeNetwork.selectedDrugTargetType) {
+    // }
     return {
       nodes,
       edges,
