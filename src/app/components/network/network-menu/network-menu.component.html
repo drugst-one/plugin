@@ -61,7 +61,7 @@
               [ngClass]="{
                 'text-normal': drugstoneConfig.smallStyle
               }"
-              >Screenshot</span
+            >Screenshot</span
             >
           </button>
         </div>
@@ -112,14 +112,14 @@
                 [ngClass]="{
                   'text-small': drugstoneConfig.smallStyle
                 }"
-                >Tissue</span
+              >Tissue</span
               >
               <span
                 *ngIf="networkHandler.activeNetwork.selectedTissue"
                 [ngClass]="{
                   'text-small': drugstoneConfig.smallStyle
                 }"
-                >{{ networkHandler.activeNetwork.selectedTissue.name }}</span
+              >{{ networkHandler.activeNetwork.selectedTissue.name }}</span
               >
               <app-fa-solid-icon
                 icon="angle-down"
@@ -182,7 +182,93 @@
             networkHandler.activeNetwork.updateAdjacentDrugs($event, true)
           "
         ></app-toggle-inplace>
+<!--        <div class="row is-full m-1" *ngIf="networkHandler.activeNetwork.showsAdjacentDrugs() || networkHandler.activeNetwork.hasDrugsLoaded()">-->
+<!--          <div-->
+<!--            class="dropdown network-footer-toolbar-element"-->
+<!--            [class.is-active]="networkHandler.activeNetwork.drugTargetSelectionExpanded"-->
+<!--            [ngClass]="{-->
+<!--            'inner-dropdown': !networkHandler.networkSidebarOpen-->
+<!--          }"-->
+<!--          >-->
+<!--            <div class="dropdown-trigger">-->
+<!--              <button-->
+<!--                (click)="-->
+<!--                networkHandler.activeNetwork.drugTargetSelectionExpanded =-->
+<!--                  !networkHandler.activeNetwork.drugTargetSelectionExpanded-->
+<!--              "-->
+<!--                class="button is-rounded"-->
+<!--                [disabled]="networkHandler.activeNetwork.getDrugTargetTypes().length === 0"-->
+<!--                [class.is-primary]="networkHandler.activeNetwork.getSelectedDrugTargetType()"-->
+<!--                aria-haspopup="true"-->
+<!--                aria-controls="dropdown-menu"-->
+<!--                pTooltip="Filter drug-target edges by drug action annotation."-->
+<!--                [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"-->
+<!--                tooltipPosition="left"-->
+<!--                [ngClass]="{-->
+<!--                'is-small': drugstoneConfig.smallStyle-->
+<!--              }"-->
+<!--              >-->
+<!--                <app-fa-solid-icon icon="crosshairs"></app-fa-solid-icon>-->
+
+<!--                <span-->
+<!--                  *ngIf="!networkHandler.activeNetwork.getSelectedDrugTargetType()"-->
+<!--                  [ngClass]="{-->
+<!--                  'text-small': drugstoneConfig.smallStyle-->
+<!--                }"-->
+<!--                >Actions</span-->
+<!--                >-->
+<!--                <span-->
+<!--                  *ngIf="networkHandler.activeNetwork.getSelectedDrugTargetType()"-->
+<!--                  [ngClass]="{-->
+<!--                  'text-small': drugstoneConfig.smallStyle-->
+<!--                }"-->
+<!--                >{{ networkHandler.activeNetwork.getSelectedDrugTargetType() }}</span-->
+<!--                >-->
+<!--                <app-fa-solid-icon-->
+<!--                  icon="angle-down"-->
+<!--                  classString="is-small last-item-in-button"-->
+<!--                  *ngIf="networkHandler.activeNetwork.drugTargetSelectionExpanded"-->
+<!--                ></app-fa-solid-icon>-->
+<!--                <app-fa-solid-icon-->
+<!--                  icon="angle-left"-->
+<!--                  classString="is-small last-item-in-button"-->
+<!--                  *ngIf="!networkHandler.activeNetwork.drugTargetSelectionExpanded"-->
+<!--                ></app-fa-solid-icon>-->
+<!--              </button>-->
+<!--            </div>-->
+<!--            <div class="dropdown-menu" id="drug-dropdown-menu" role="menu">-->
+<!--              <div class="dropdown-content tissue-dropdown">-->
+<!--                <div class="scroll-area">-->
+<!--                  <a-->
+<!--                    (click)="networkHandler.activeNetwork.updateAdjacentDrugSelection(null,true)"-->
+<!--                    [class.is-active]="-->
+<!--                    !networkHandler.activeNetwork.getSelectedDrugTargetType()-->
+<!--                  "-->
+<!--                    [ngClass]="{'text-small': drugstoneConfig.smallStyle}"-->
+<!--                    class="dropdown-item"-->
+<!--                  >-->
+<!--                    None-->
+<!--                  </a>-->
+<!--                  <a-->
+<!--                    *ngFor="-->
+<!--                    let drugTargetType of networkHandler.activeNetwork.getDrugTargetTypes()-->
+<!--                  "-->
+<!--                    (click)="networkHandler.activeNetwork.updateAdjacentDrugSelection(drugTargetType, true)"-->
+<!--                    [class.is-active]="-->
+<!--                    networkHandler.activeNetwork.getSelectedDrugTargetType() && networkHandler.activeNetwork.getSelectedDrugTargetType() === drugTargetType-->
+<!--                  "-->
+<!--                    [ngClass]="{'text-small': drugstoneConfig.smallStyle}"-->
+<!--                    class="dropdown-item"-->
+<!--                  >-->
+<!--                    {{ drugTargetType }}-->
+<!--                  </a>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
+
       <div
         class="row is-full m-1"
         *ngIf="
