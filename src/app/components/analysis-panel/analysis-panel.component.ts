@@ -14,7 +14,6 @@ import { HttpClient } from '@angular/common/http';
 import { algorithmNames, AnalysisService } from '../../services/analysis/analysis.service';
 import {
   Drug,
-  NodeAttributeMap,
   getProteinNodeId,
   getWrapperFromNode,
   LegendContext,
@@ -32,8 +31,7 @@ import { NetworkHandlerService } from 'src/app/services/network-handler/network-
 import { LegendService } from 'src/app/services/legend-service/legend-service.service';
 import { LoadingScreenService } from 'src/app/services/loading-screen/loading-screen.service';
 import { version } from '../../../version';
-import { downloadCSV } from 'src/app/utils';
-import { Observable } from 'rxjs';
+import { downloadCSV, downloadNodeAttributes } from 'src/app/utils';
 
 declare var vis: any;
 
@@ -97,8 +95,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public tableProteinScoreTooltip = '';
 
   public versionString = undefined;
-
-  public expressionMap: NodeAttributeMap;
 
   public loading = false;
 
@@ -545,7 +541,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     analysisNetwork.gradientMap = {};
     this.drugstoneConfig.remove_analysisConfig();
     this.expressionExpanded = false;
-    this.expressionMap = undefined;
     analysisNetwork.seedMap = {};
     analysisNetwork.highlightSeeds = false;
     this.analysis.switchSelection('main');
@@ -603,9 +598,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     if ('score' in data[0]) {
       data = data.sort((a, b) => b['score'] - a['score']);
     }
-
-    const columns = ['label', 'symbol', 'uniprot', 'ensg', 'entrez', 'proteinName', 'isSeed', 'score', 'rank', 'status'];
-    downloadCSV(data, columns, `drugstone_${view}`);
+    
+    downloadCSV(data, downloadNodeAttributes, `drugstone_${view}`);
   }
 
   /**
@@ -704,7 +698,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     nodes = nodes.filter(n => !(n.drugstoneId && skippedDrugIds.has(n.drugstoneId)));
     // if (this.networkHandler.activeNetwork.selectedDrugTargetType) {
     // }
-    
+
     this.legendService.networkHasConnector = nodes.filter(node => node.group === 'connectorNode').length > 0;
 
     return {
