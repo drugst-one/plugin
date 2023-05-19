@@ -2568,7 +2568,6 @@ p-togglebutton.ng-dirty.ng-invalid > .p-togglebutton.p-button {
   box-shadow: none;
 }
 .fc .fc-toolbar .fc-button .fc-icon-chevron-left {
-  font-family: "PrimeIcons" !important;
   text-indent: 0;
   font-size: 1rem;
 }
@@ -2576,7 +2575,6 @@ p-togglebutton.ng-dirty.ng-invalid > .p-togglebutton.p-button {
   content: "";
 }
 .fc .fc-toolbar .fc-button .fc-icon-chevron-right {
-  font-family: "PrimeIcons" !important;
   text-indent: 0;
   font-size: 1rem;
 }
