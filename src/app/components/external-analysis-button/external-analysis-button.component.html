@@ -1,0 +1,47 @@
+<div class="field" *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || !hidden">
+  <div class="control">
+    <a
+      *ngIf="enabled"
+      (click)="callback()"
+      target="_blank"
+      [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+      class="button is-primary is-fullwidth is-rounded has-tooltip"
+      [pTooltip]="tooltipEnabled"
+      [tooltipStyleClass]="
+                      'drgstn drgstn-tooltip drgstn-tooltip-top'
+                    "
+      tooltipPosition="top"
+    >
+      <app-fa-solid-icon
+        classString="first-item-in-button"
+        icon="external-link-alt"
+      ></app-fa-solid-icon>
+      <span
+        [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+      >
+                      {{label}}
+                    </span>
+    </a>
+    <a
+      *ngIf="!enabled"
+      disabled
+      [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+      class="button is-primary is-fullwidth is-rounded has-tooltip"
+      [pTooltip]="tooltipDisabled"
+      [tooltipStyleClass]="
+                      'drgstn drgstn-tooltip drgstn-tooltip-top'
+                    "
+      tooltipPosition="top"
+    >
+      <app-fa-solid-icon
+        icon="external-link-alt"
+        classString="first-item-in-button"
+      ></app-fa-solid-icon>
+      <span
+        [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+      >
+                     {{label}}
+                    </span>
+    </a>
+  </div>
+</div>

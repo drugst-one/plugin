@@ -749,6 +749,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       'background=';
   }
 
+  openGProfiler(): void {
+    this.openExternal(this.gProfilerLink());
+  }
+
   openExternal(url) {
     window.open(url, '_blank').focus();
   }

@@ -174,147 +174,11 @@
                   </button>
                 </div>
               </div>
-              <div class="field" *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('enrichment-gprofiler')">
-                <div class="control">
-                  <a
-                    *ngIf="analysis.getCount() > 0"
-                    (click)="openExternal(gProfilerLink())"
-                    target="_blank"
-                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
-                    class="button is-primary is-fullwidth is-rounded has-tooltip"
-                    pTooltip="Use enrichment analysis via g:Profiler (external)."
-                    [tooltipStyleClass]="
-                      'drgstn drgstn-tooltip drgstn-tooltip-top'
-                    "
-                    tooltipPosition="top"
-                  >
-                    <app-fa-solid-icon
-                      classString="first-item-in-button"
-                      icon="external-link-alt"
-                    ></app-fa-solid-icon>
-                    <span
-                      [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
-                    >
-                      g:Profiler Enrichment Analysis
-                    </span>
-                  </a>
-                  <a
-                    *ngIf="analysis.getCount() === 0"
-                    disabled
-                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
-                    class="button is-primary is-fullwidth is-rounded has-tooltip"
-                    pTooltip="Select proteins by double clicking, to run enrichment analysis via g:Profiler (external)."
-                    [tooltipStyleClass]="
-                      'drgstn drgstn-tooltip drgstn-tooltip-top'
-                    "
-                    tooltipPosition="top"
-                  >
-                    <app-fa-solid-icon
-                      icon="external-link-alt"
-                      classString="first-item-in-button"
-                    ></app-fa-solid-icon>
-                    <span
-                      [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
-                    >
-                      g:Profiler Enrichment Analysis
-                    </span>
-                  </a>
-                </div>
-              </div>
-              <div class="field" *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('enrichment-digest')">
-                <div class="control">
-                  <a
-                    *ngIf="analysis.getCount() > 0"
-                    (click)="openDigest()"
-                    target="_blank"
-                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
-                    class="button is-primary is-fullwidth is-rounded has-tooltip"
-                    pTooltip="Use enrichment analysis via DIGEST (external)."
-                    [tooltipStyleClass]="
-                      'drgstn drgstn-tooltip drgstn-tooltip-top'
-                    "
-                    tooltipPosition="top"
-                  >
-                    <app-fa-solid-icon
-                      classString="first-item-in-button"
-                      icon="external-link-alt"
-                    ></app-fa-solid-icon>
-                    <span
-                      [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
-                    >
-                      DIGEST Enrichment Analysis
-                    </span>
-                  </a>
-                  <a
-                    *ngIf="analysis.getCount() === 0"
-                    disabled
-                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
-                    class="button is-primary is-fullwidth is-rounded has-tooltip"
-                    pTooltip="Select proteins by double clicking, to run enrichment analysis via DIGEST (external)."
-                    [tooltipStyleClass]="
-                      'drgstn drgstn-tooltip drgstn-tooltip-top'
-                    "
-                    tooltipPosition="top"
-                  >
-                    <app-fa-solid-icon
-                      icon="external-link-alt"
-                      classString="first-item-in-button"
-                    ></app-fa-solid-icon>
-                    <span
-                      [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
-                    >
-                      DIGEST Enrichment Analysis
-                    </span>
-                  </a>
-                </div>
-              </div>
-              <div class="field" *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('search-ndex')">
-                <div class="control">
-                  <a
-                    *ngIf="analysis.getCount() > 0"
-                    (click)="openNDEx()"
-                    target="_blank"
-                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
-                    class="button is-primary is-fullwidth is-rounded has-tooltip"
-                    pTooltip="Use NDEx Integrated Query to find similar, curated pathways (external)."
-                    [tooltipStyleClass]="
-                      'drgstn drgstn-tooltip drgstn-tooltip-top'
-                    "
-                    tooltipPosition="top"
-                  >
-                    <app-fa-solid-icon
-                      classString="first-item-in-button"
-                      icon="external-link-alt"
-                    ></app-fa-solid-icon>
-                    <span
-                      [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
-                    >
-                      NDex Integrated Query
-                    </span>
-                  </a>
-                  <a
-                    *ngIf="analysis.getCount() === 0"
-                    disabled
-                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
-                    class="button is-primary is-fullwidth is-rounded has-tooltip"
-                    pTooltip="Select proteins by double clicking, to find similar, curated pathways via NDEx Integrated Query to (external)."
-                    [tooltipStyleClass]="
-                      'drgstn drgstn-tooltip drgstn-tooltip-top'
-                    "
-                    tooltipPosition="top"
-                  >
-                    <app-fa-solid-icon
-                      icon="external-link-alt"
-                      classString="first-item-in-button"
-                    ></app-fa-solid-icon>
-                    <span
-                      [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
-                    >
-                      NDEx Integrated Query
-                    </span>
-                  </a>
-                </div>
-              </div>
+              <app-external-analysis-button [enabled]="analysis.getCount() > 0" label="g:Profiler enrichment analysis" tooltipDisabled="Select proteins by double clicking, to run enrichment analysis via g:Profiler (external)." tooltipEnabled="Use enrichment analysis via g:Profiler (external)." [callback]="openGProfiler.bind(this)" [hidden]="!drugstoneConfig.config.showAdvAnalysisContent.includes('enrichment-gprofiler')"></app-external-analysis-button>
+
+              <app-external-analysis-button [enabled]="analysis.getCount() > 0" label="DIGEST enrichment analysis" tooltipDisabled="Select proteins by double clicking, to run enrichment analysis via DIGEST (external)." tooltipEnabled="Use enrichment analysis via DIGEST (external)." [callback]="openDigest.bind(this)" [hidden]="!drugstoneConfig.config.showAdvAnalysisContent.includes('enrichment-digest')"></app-external-analysis-button>
+
+              <app-external-analysis-button [enabled]="analysis.getCount() > 0" label="NDEx Integrated Query" tooltipDisabled="Select proteins by double clicking, to find similar, curated pathways via NDEx Integrated Query to (external)." tooltipEnabled="Use NDEx Integrated Query to find similar, curated pathways (external)." [callback]="openNDEx.bind(this)" [hidden]="!drugstoneConfig.config.showAdvAnalysisContent.includes('search-ndex')"></app-external-analysis-button>
             </div>
           </div>
         </div>
@@ -431,7 +295,7 @@
                 pTooltip="Add first neighbor proteins of selection."
               >
                 <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
-                <span>Add First neighbors</span>
+                <span>Add first neighbors</span>
               </a>
             </footer>
             <footer class="card-footer">
@@ -442,7 +306,7 @@
                 pTooltip="Add full connected components of all nodes in selection."
               >
                 <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
-                <span>Add Connected Components</span>
+                <span>Add connected components</span>
               </a>
             </footer>
             <footer class="card-footer">

@@ -76,6 +76,33 @@
                 }
               ]
             },
+            "development_server": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev_server.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "16kb"
+                }
+              ]
+            },
             "production": {
               "optimization": true,
               "outputHashing": "all",
@@ -106,8 +133,8 @@
             "dev": {
               "browserTarget": "netex:build:development"
             },
-            "old": {
-              "browserTarget": "netex:build:old"
+            "dev_server": {
+              "browserTarget": "netex:build:development_server"
             },
             "production": {
               "browserTarget": "netex:build:production"

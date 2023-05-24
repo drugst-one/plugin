@@ -57,6 +57,7 @@ import { BugReportComponent } from './components/bug-report/bug-report.component
 import { ViewListComponent } from './components/analysis-panel/view-list/view-list.component';
 import { ImageComponent } from './image/image.component';
 import { ImageFallbackDirective } from './directives/image-fallback/image-fallback.directive';
+import { ExternalAnalysisButtonComponent } from './components/external-analysis-button/external-analysis-button.component';
 
 
 @NgModule({
@@ -103,6 +104,7 @@ import { ImageFallbackDirective } from './directives/image-fallback/image-fallba
     ViewListComponent,
     ImageComponent,
     ImageFallbackDirective,
+    ExternalAnalysisButtonComponent,
   ],
   imports: [
     BrowserModule,

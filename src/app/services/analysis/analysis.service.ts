@@ -28,9 +28,9 @@ export const algorithmNames = {
   proximity: 'Network Proximity',
   betweenness: 'Betweenness Centrality',
   quick: 'Simple',
-  super: 'Quick-Start',
-  connect: 'Connect All',
-  connectSelected: 'Connect Selected'
+  super: 'Quick-start',
+  connect: 'Connect all',
+  connectSelected: 'Connect selected'
 };
 
 export interface Algorithm {
