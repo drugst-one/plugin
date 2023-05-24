@@ -1,5 +1,6 @@
 import {AlgorithmTarget, AlgorithmType, QuickAlgorithmType} from './interfaces';
 
+
 // https://visjs.github.io/vis-network/docs/network/nodes.html
 export interface NodeGroup {
   groupName?: string;

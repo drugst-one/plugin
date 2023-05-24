@@ -11,6 +11,7 @@ export class LegendService {
 
   private default_delete = ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder', 'connectorNode'];
   private context = [];
+  public networkHasConnector = false;
 
   private contextNodeGroupsToDelete = {
     adjacentDrugs: ['foundNode', 'seedNode', 'default', 'defaultDisorder', 'connectorNode'],
@@ -41,6 +42,12 @@ export class LegendService {
     const out = [].concat(this.default_delete);
     for (const node of this.default_delete) {
       let keep = false;
+      
+      // delete connectorNodes if network does not contain any 
+      if (node === 'connectorNode' && !this.networkHasConnector) {
+        break;
+      }
+
       for (const c of this.context) {
         if (this.contextNodeGroupsToDelete[c].indexOf(node) === -1) {
           keep = true;
