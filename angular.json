@@ -24,7 +24,9 @@
               }
             },
             "allowedCommonJsDependencies": [
-              "lodash"
+              "lodash",
+              "json5",
+              "dom-to-image"
             ],
             "outputPath": "dist/netex",
             "index": "src/index.html",

@@ -1,6 +1,6 @@
 // From https://stackoverflow.com/a/27709336/3850564
-import { ɵisListLikeIterable } from "@angular/core";
-import { NetworkEdge, Node } from "./interfaces";
+import {ɵisListLikeIterable} from '@angular/core';
+import {NetworkEdge, Node} from './interfaces';
 
 export function getGradientColor(
   startColor: string,
@@ -8,16 +8,16 @@ export function getGradientColor(
   percent: number
 ) {
   // strip the leading # if it's there
-  startColor = startColor.replace(/^\s*#|\s*$/g, "");
-  endColor = endColor.replace(/^\s*#|\s*$/g, "");
+  startColor = startColor.replace(/^\s*#|\s*$/g, '');
+  endColor = endColor.replace(/^\s*#|\s*$/g, '');
 
   // convert 3 char codes --> 6, e.g. `E0F` --> `EE00FF`
   if (startColor.length === 3) {
-    startColor = startColor.replace(/(.)/g, "$1$1");
+    startColor = startColor.replace(/(.)/g, '$1$1');
   }
 
   if (endColor.length === 3) {
-    endColor = endColor.replace(/(.)/g, "$1$1");
+    endColor = endColor.replace(/(.)/g, '$1$1');
   }
 
   // get colors
@@ -35,33 +35,33 @@ export function getGradientColor(
   const diffBlue = endBlue - startBlue;
 
   let diffRedStr = `${
-    (diffRed * percent + startRed).toString(16).split(".")[0]
+    (diffRed * percent + startRed).toString(16).split('.')[0]
   }`;
   let diffGreenStr = `${
-    (diffGreen * percent + startGreen).toString(16).split(".")[0]
+    (diffGreen * percent + startGreen).toString(16).split('.')[0]
   }`;
   let diffBlueStr = `${
-    (diffBlue * percent + startBlue).toString(16).split(".")[0]
+    (diffBlue * percent + startBlue).toString(16).split('.')[0]
   }`;
 
   // ensure 2 digits by color
   if (diffRedStr.length === 1) {
-    diffRedStr = "0" + diffRedStr;
+    diffRedStr = '0' + diffRedStr;
   }
   if (diffGreenStr.length === 1) {
-    diffGreenStr = "0" + diffGreenStr;
+    diffGreenStr = '0' + diffGreenStr;
   }
   if (diffBlueStr.length === 1) {
-    diffBlueStr = "0" + diffBlueStr;
+    diffBlueStr = '0' + diffBlueStr;
   }
 
-  return "#" + diffRedStr + diffGreenStr + diffBlueStr;
+  return '#' + diffRedStr + diffGreenStr + diffBlueStr;
 }
 
 export function removeUnderscoreFromKeys(obj) {
   const result = {};
   Object.keys(obj).forEach((x) => {
-    const y = x.replace("_", "");
+    const y = x.replace('_', '');
     result[y] = obj[x];
   });
   return result;
@@ -69,11 +69,11 @@ export function removeUnderscoreFromKeys(obj) {
 
 // https://gist.github.com/whitlockjc/9363016
 function trim(str) {
-  return str.replace(/^\s+|\s+$/gm, "");
+  return str.replace(/^\s+|\s+$/gm, '');
 }
 
 export function rgbaToHex(rgba) {
-  const inParts = rgba.substring(rgba.indexOf("(")).split(","),
+  const inParts = rgba.substring(rgba.indexOf('(')).split(','),
     r = parseInt(trim(inParts[0].substring(1)), 10),
     g = parseInt(trim(inParts[1]), 10),
     b = parseInt(trim(inParts[2]), 10),
@@ -92,40 +92,40 @@ export function rgbaToHex(rgba) {
   ];
 
   // Pad single-digit output values
-  outParts.forEach(function (part, i) {
+  outParts.forEach(function(part, i) {
     if (part.length === 1) {
-      outParts[i] = "0" + part;
+      outParts[i] = '0' + part;
     }
   });
 
-  return "#" + outParts.join("");
+  return '#' + outParts.join('');
 }
 
 // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
 function componentToHex(c) {
   const hex = c.toString(16);
-  return hex.length === 1 ? "0" + hex : hex;
+  return hex.length === 1 ? '0' + hex : hex;
 }
 
 export function rgbToHex(rgb) {
-  const inParts = rgb.substring(rgb.indexOf("(")).split(","),
+  const inParts = rgb.substring(rgb.indexOf('(')).split(','),
     r = parseInt(trim(inParts[0].substring(1)), 10),
     g = parseInt(trim(inParts[1]), 10),
     b = parseInt(trim(inParts[2]), 10);
-  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+  return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
 export function rgbaWithoutAToHex(rgb) {
-  const inParts = rgb.substring(rgb.indexOf("(")).split(","),
+  const inParts = rgb.substring(rgb.indexOf('(')).split(','),
     r = parseInt(trim(inParts[0].substring(1)), 10),
     g = parseInt(trim(inParts[1]), 10),
     b = parseInt(trim(inParts[2]), 10);
-  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+  return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
 // https://stackoverflow.com/questions/1573053/javascript-function-to-convert-color-names-to-hex-codes/47355187#47355187
 export function standardizeColor(str) {
-  var ctx = document.createElement("canvas").getContext("2d");
+  var ctx = document.createElement('canvas').getContext('2d');
   ctx.fillStyle = str;
   return ctx.fillStyle.toString();
 }
@@ -155,17 +155,17 @@ export function downLoadFile(
   data: any,
   type: string,
   fmt: string,
-  label: string = "drugstone_network"
+  label: string = 'drugstone_network'
 ) {
-  let blob = new Blob([data], { type: type });
-  var a = document.createElement("a");
+  let blob = new Blob([data], {type: type});
+  var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = `${label}_${new Date().getTime()}.${fmt}`;
   a.click();
 }
 
 export function RGBAtoRGBwithoutA(rgbaString) {
-  const rgbaStringSplit = rgbaString.slice(5, -1).split(",");
+  const rgbaStringSplit = rgbaString.slice(5, -1).split(',');
   const RGBA = {
     red: rgbaStringSplit[0],
     green: rgbaStringSplit[1],
@@ -179,33 +179,37 @@ function hexToRGBA(hex, alpha) {
   let r;
   let g;
   let b;
-  if (hex.length < 5) {
-    r = parseInt(hex.slice(1, 2) + hex.slice(1, 2), 16);
-    g = parseInt(hex.slice(2, 3) + hex.slice(2, 3), 16);
-    b = parseInt(hex.slice(3, 4) + hex.slice(3, 4), 16);
+  if (hex.startsWith('rgba')) {
+    return hex;
+  }
+  let h = hex.trim()
+  if (h.length < 5) {
+    r = parseInt(h.slice(1, 2) + h.slice(1, 2), 16);
+    g = parseInt(h.slice(2, 3) + h.slice(2, 3), 16);
+    b = parseInt(h.slice(3, 4) + h.slice(3, 4), 16);
   } else {
-    r = parseInt(hex.slice(1, 3), 16);
-    g = parseInt(hex.slice(3, 5), 16);
-    b = parseInt(hex.slice(5, 7), 16);
+    r = parseInt(h.slice(1, 3), 16);
+    g = parseInt(h.slice(3, 5), 16);
+    b = parseInt(h.slice(5, 7), 16);
   }
   if (alpha) {
     return (
-      "rgba(" +
+      'rgba(' +
       (isNaN(r) ? 0 : r) +
-      ", " +
+      ', ' +
       (isNaN(g) ? 0 : g) +
-      ", " +
+      ', ' +
       (isNaN(b) ? 0 : b) +
-      ", " +
+      ', ' +
       alpha +
-      ")"
+      ')'
     );
   } else {
-    return "rgb(" + (isNaN(r) ? 0 : r) + ", " + isNaN(g)
+    return 'rgb(' + (isNaN(r) ? 0 : r) + ', ' + isNaN(g)
       ? 0
-      : g + ", " + isNaN(b)
-      ? 0
-      : b + ")";
+      : g + ', ' + isNaN(b)
+        ? 0
+        : b + ')';
   }
 }
 
@@ -215,7 +219,7 @@ export function blendColors(args: any) {
   let mix;
   for (let added of args) {
     added = RGBAtoArray(added);
-    if (typeof added[3] === "undefined") {
+    if (typeof added[3] === 'undefined') {
       added[3] = 1;
     }
     // check if both alpha channels exist.
@@ -226,17 +230,17 @@ export function blendColors(args: any) {
       // red
       mix[0] = Math.round(
         (added[0] * added[3]) / mix[3] +
-          (base[0] * base[3] * (1 - added[3])) / mix[3]
+        (base[0] * base[3] * (1 - added[3])) / mix[3]
       );
       // green
       mix[1] = Math.round(
         (added[1] * added[3]) / mix[3] +
-          (base[1] * base[3] * (1 - added[3])) / mix[3]
+        (base[1] * base[3] * (1 - added[3])) / mix[3]
       );
       // blue
       mix[2] = Math.round(
         (added[2] * added[3]) / mix[3] +
-          (base[2] * base[3] * (1 - added[3])) / mix[3]
+        (base[2] * base[3] * (1 - added[3])) / mix[3]
       );
     } else if (added) {
       mix = added;
@@ -246,11 +250,11 @@ export function blendColors(args: any) {
     base = mix;
   }
 
-  return "rgba(" + mix[0] + ", " + mix[1] + ", " + mix[2] + ", " + mix[3] + ")";
+  return 'rgba(' + mix[0] + ', ' + mix[1] + ', ' + mix[2] + ', ' + mix[3] + ')';
 }
 
 export function RGBAtoArray(rgbaString) {
-  const rgbaStringSplit = rgbaString.slice(5, -1).split(",");
+  const rgbaStringSplit = rgbaString.slice(5, -1).split(',');
   return [
     rgbaStringSplit[0],
     rgbaStringSplit[1],
@@ -260,20 +264,20 @@ export function RGBAtoArray(rgbaString) {
 }
 
 export function pieChartContextRenderer({
-  ctx,
-  x,
-  y,
-  state: { selected, hover },
-  style,
-  label,
-}) {
-  ctx.drawPieLabel = function (style, x, y, label) {
-    ctx.font = "normal 12px sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+                                          ctx,
+                                          x,
+                                          y,
+                                          state: {selected, hover},
+                                          style,
+                                          label,
+                                        }) {
+  ctx.drawPieLabel = function(style, x, y, label) {
+    ctx.font = 'normal 12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
     ctx.fillStyle = window
       .getComputedStyle(document.documentElement)
-      .getPropertyValue("--drgstn-text-primary");
+      .getPropertyValue('--drgstn-text-primary');
     ctx.fillText(label, x, y + style.size + 12);
   };
 
@@ -288,13 +292,13 @@ export function pieChartContextRenderer({
   }
 
   function colorToHex(color) {
-    if (color.startsWith("#")) {
+    if (color.startsWith('#')) {
       return color;
     }
-    if (color.startsWith("rgba")) {
+    if (color.startsWith('rgba')) {
       return rgbToHex(color);
     }
-    if (color.startsWith("rgb")) {
+    if (color.startsWith('rgb')) {
       return rgbToHex(color);
     }
     return null;
@@ -307,14 +311,14 @@ export function pieChartContextRenderer({
     }
   }
 
-  ctx.drawPie = function (style, x, y, state: { selected; hover }) {
+  ctx.drawPie = function(style, x, y, state: { selected; hover }) {
     const selection =
       RGBAtoRGBwithoutA(style.borderColor) !== RGBAtoRGBwithoutA(style.color);
     const bgOpacity = 0.15;
     const fgOpacity = 0.5;
     const lineOpacity = 0.6;
     const fullCircle = 2 * Math.PI;
-    const fallbackColor = "#FF0000";
+    const fallbackColor = '#FF0000';
     const colorOrFallback = style.color
       ? colorToHex(style.color)
       : fallbackColor;
@@ -336,7 +340,7 @@ export function pieChartContextRenderer({
         hexToRGBA(
           window
             .getComputedStyle(document.documentElement)
-            .getPropertyValue("--drgstn-panel"),
+            .getPropertyValue('--drgstn-panel'),
           1
         ),
         hexToRGBA(colorOrFallback, bgOpacity),
@@ -396,20 +400,20 @@ export function pieChartContextRenderer({
 
 export const downloadEdgeAttributes = ['from', 'to', 'groupName'];
 export const downloadNodeAttributes = [
-  "label",
-  "symbol",
-  "uniprot",
-  "ensg",
-  "entrez",
-  "proteinName",
-  "isSeed",
-  "score",
-  "rank",
-  "status",
-  "groupName"
+  'label',
+  'symbol',
+  'uniprot',
+  'ensg',
+  'entrez',
+  'proteinName',
+  'isSeed',
+  'score',
+  'rank',
+  'status',
+  'groupName'
 ];
 
-const _formatNetworkData = function (
+const _formatNetworkData = function(
   nodes: any[],
   edges: string[],
   nodeAttrs: string[],
@@ -440,35 +444,35 @@ const _formatNetworkData = function (
     edgeData[iEdge] = item;
     iEdge++;
   });
-  return { nodes: nodeData, edges: edgeData };
+  return {nodes: nodeData, edges: edgeData};
 };
 
-export const downloadJSON = function (
+export const downloadJSON = function(
   nodes: Node[],
   edges: any[],
   nodeAttrs: string[],
   edgeAttrs: string[],
-  label: string = "drugstone"
+  label: string = 'drugstone'
 ) {
   const dataFormatted = _formatNetworkData(nodes, edges, nodeAttrs, edgeAttrs);
   const output = JSON.stringify(dataFormatted);
-  const fmt = "json";
+  const fmt = 'json';
   downLoadFile(output, `application/${fmt}`, fmt, label);
 };
 
-export const downloadGraphml = function (
+export const downloadGraphml = function(
   nodes: any[],
   edges: any[],
   nodeAttrs: string[],
   edgeAttrs: string[],
-  label: string = "drugstone"
+  label: string = 'drugstone'
 ) {
   const dataFormatted = _formatNetworkData(nodes, edges, nodeAttrs, edgeAttrs);
 
   const graphml = [
     '<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"> ',
   ];
-  for (let i = edgeAttrs.length + nodeAttrs.length - 1; i >= nodeAttrs.length ; i--) {
+  for (let i = edgeAttrs.length + nodeAttrs.length - 1; i >= nodeAttrs.length; i--) {
     graphml.push(`<key id="d${i}" for="edge" attr.name="${edgeAttrs[i]}" attr.type="string" />`);
   }
   for (let i = nodeAttrs.length - 1; i >= 0; i--) {
@@ -478,13 +482,13 @@ export const downloadGraphml = function (
 
   nodes.forEach(node => {
     graphml.push(`<node id="${node.id}">`);
-    for (let i=0; i< nodeAttrs.length; i++) {
+    for (let i = 0; i < nodeAttrs.length; i++) {
       if (node.hasOwnProperty(nodeAttrs[i])) {
-        graphml.push(`<data key="d${i}">${node[nodeAttrs[i]]}</data>`)
+        graphml.push(`<data key="d${i}">${node[nodeAttrs[i]]}</data>`);
       }
     }
     graphml.push(`</node>`);
-  })
+  });
 
   edges.forEach(edge => {
     graphml.push(`<edge source="${edge.from}" target="${edge.to}">`);
@@ -494,20 +498,20 @@ export const downloadGraphml = function (
       }
     }
     graphml.push(`</edge>`);
-  })
+  });
 
-  graphml.push("</graph>");
-  graphml.push("</graphml>");
+  graphml.push('</graph>');
+  graphml.push('</graphml>');
 
   const output = graphml.join('');
-  const fmt = "graphml";
+  const fmt = 'graphml';
   downLoadFile(output, `application/${fmt}`, fmt, label);
 };
 
-export const downloadCSV = function (
+export const downloadCSV = function(
   array: any[],
   columns: string[],
-  label: string = "drugstone"
+  label: string = 'drugstone'
 ) {
   // test which columns occur in array elements, function should not fail if columns do not occur
   const headerColumns = [];
@@ -518,26 +522,26 @@ export const downloadCSV = function (
   });
 
   // headerColumns has all attributes from 'columns' that appear in the elements of 'array'
-  let output = headerColumns.join(",") + "\n";
+  let output = headerColumns.join(',') + '\n';
   // fetch data from array, consider only attributes in headerColumns
   array.forEach((el) => {
     const row = [];
     headerColumns.forEach((col) => {
       let value = el[col];
       if (value instanceof Array) {
-        value = value.join("|");
+        value = value.join('|');
       }
-      if (!(typeof value == "string" || value instanceof String)) {
+      if (!(typeof value == 'string' || value instanceof String)) {
         value = String(value);
       }
-      if (value.includes(",")) {
+      if (value.includes(',')) {
         value = `"${value}"`;
       }
       row.push(value);
     });
-    output += row.join(",");
-    output += "\n";
+    output += row.join(',');
+    output += '\n';
   });
-  const fmt = "csv";
+  const fmt = 'csv';
   downLoadFile(output, `application/${fmt}`, fmt, label);
 };

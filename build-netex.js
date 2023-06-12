@@ -4,7 +4,7 @@ const concat = require('concat');
   const files = [
     './dist/netex/runtime.js',
     './dist/netex/polyfills.js',
-    './scripts/vis-network-9-1-2.min.js',
+    './scripts/vis-network-9.1.6.min.js',
     // './dist/netex/scripts.js',
     './dist/netex/main.js'
   ];
