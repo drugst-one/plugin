@@ -2,11 +2,11 @@ const fs = require('fs-extra');
 const concat = require('concat');
 (async function build() {
   const files = [
-    './dist/netex/runtime-es5.js',
-    './dist/netex/polyfills-es5.js',
+    './dist/netex/runtime.js',
+    './dist/netex/polyfills.js',
     './scripts/vis-network-9-1-2.min.js',
     // './dist/netex/scripts.js',
-    './dist/netex/main-es5.js'
+    './dist/netex/main.js'
   ];
   await fs.ensureDir('drugsTone-build');
   await concat(files, 'drugsTone-build/drugstone.js');
