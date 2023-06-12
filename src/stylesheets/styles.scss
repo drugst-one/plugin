@@ -4,6 +4,7 @@
 @import "primeng";
 @import "bulma";
 @import "variables";
+@import "@ng-select/ng-select/themes/default.theme.css";
 
 #appWindow {
 
@@ -14,7 +15,6 @@
   display: block !important;
   all: initial;
   position: relative;
-  @import "~@ng-select/ng-select/themes/default.theme";
 
   .ng-dropdown-panel .ng-dropdown-panel-items {
     max-height: 150px !important;

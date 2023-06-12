@@ -79,7 +79,7 @@
     "ts-node": "~10.0.0",
     "tslint": "~6.1.0",
     "typescript": "~4.6.4",
-    "webpack": "5.4.0"
+    "webpack": "5.76.3"
   },
   "overrides": {
     "glob-parent": "5.1.2",
