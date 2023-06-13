@@ -1,6 +1,8 @@
 # Drugst.One App
 
-Drugst.One is a plug-and-play solution to make your biomedical (web-)tool drug repurposing ready. With just three lines of code the plugin can be integrated into your website within a few minues of work. Learn more at [drugst.one](https://drugst.one).
+Drugst.One is a plug-and-play solution to make your biomedical (web-)tool drug repurposing ready. With just three lines of code the plugin can be integrated into your website within a few minues of work. Drugst.One is a community driven project that aims to reduce development time and effort for scientists in the biomedical/bioinformatics fields, so that they can focus on the most important part of their work: research! Drugst.One is used by > 20 tools already, is highly configurable, light weight and focuses on drug repurposing. Learn more at [drugst.one](https://drugst.one). 
+
+<img src="https://drugst.one/assets/Drugstone_preprint_figure1.png" alt="missing image">
 
 ## How to use Drugst.One
 
