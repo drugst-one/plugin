@@ -1,41 +1,43 @@
 # Drugst.One App
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.3.
+Drugst.One is a plug-and-play solution to make your biomedical (web-)tool drug repurposing ready. With just three lines of code the plugin can be integrated into your website within a few minues of work. Learn more at [drugst.one](https://drugst.one).
 
-## Development server
+## Local development
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `npm run start:dev` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+
+## Development for dev-backend 
+
+Run `npm run start:dev_server` for a dev server using the backend-dev server on https://drugstone-dev-api.zbh.uni-hamburg.de/. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+
+
+## Development for prod-backend 
+
+Run `npm run start:prod` for a dev server using the backend-dev server on https://api.drugst.one/. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+
 
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
+## Techonlogies
+
+This project was uses Angular 14.
+
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Run `npm run build:drugstone` to build the project or `npm run build:drugstone-dev` to build for the dev-backend. The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
+## Build testing
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Open the `src/index_local_static.html` file in any browser to load and test the built application.
 
 
-## Create exportable js and css
-
-`npm run build:netex`
-
-## Create and release js and css
+## For main devs only! Create and release js and css
 
 `cd releases && ./release_tag.sh $VERSION $MESSAGE`
 e.g.
-`cd releases && ./release_tag.sh 0.9.4 "This release features new layouting"`
+`cd releases && ./release_tag.sh 1.0.0-rc1 "This release features new layouting"`
 
 ## Delete release from repository
 `cd releases && ./delete_tag.sh $VERSION`
