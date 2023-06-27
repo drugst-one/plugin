@@ -598,7 +598,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     if ('score' in data[0]) {
       data = data.sort((a, b) => b['score'] - a['score']);
     }
-    
+
     downloadCSV(data, downloadNodeAttributes, `drugstone_${view}`);
   }
 

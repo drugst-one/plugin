@@ -229,10 +229,13 @@ export class AnalysisService {
   public addNodesByIdsToSelection(ids: string[]) {
     const wrappers: Wrapper[] = [];
     const unmappedNodes = [];
+    const unselectableNodes = [];
     this.networkHandler.activeNetwork.currentViewNodes.forEach((node) => {
       if (ids.indexOf(node.id) > -1) {
-        if (node.drugstoneType !== 'drug' && node.drugstoneType !== 'disorder' && node.drugstoneId === undefined) {
+        if (node.drugstoneId === undefined) {
           unmappedNodes.push(node.label);
+        }else if(node.drugstoneType === 'drug' || node.drugstoneType === 'disorder'){
+          unselectableNodes.push(node.label);
         } else {
           // only consider proteins
           wrappers.push(getWrapperFromNode(node));
@@ -242,6 +245,9 @@ export class AnalysisService {
     this.addItems(wrappers);
     if (unmappedNodes.length > 0) {
       this.unmappedNodesToast(unmappedNodes);
+    }
+    if(unselectableNodes.length > 0){
+      this.unselectableNodesToast(unselectableNodes);
     }
   }
 
@@ -538,7 +544,14 @@ export class AnalysisService {
 
   unmappedNodesToast(l) {
     this.toast.setNewToast({
-      message: 'The following node(s) cannot be selected because either they could not be mapped correctly: ' + l.join(', '),
+      message: 'The following node(s) cannot be selected because they could not be mapped correctly: ' + l.join(', '),
+      type: 'warning',
+    });
+  }
+
+  unselectableNodesToast(l) {
+    this.toast.setNewToast({
+      message: 'The following node(s) cannot be selected because they are not of type portein or gene: ' + l.join(', '),
       type: 'warning',
     });
   }
