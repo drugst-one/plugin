@@ -277,9 +277,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
       // Reset
       this.nodeData = { nodes: null, edges: null };
-      // this.networkHandler.activeNetwork.networkEl.nativeElement.innerHTML = '';
-      // this.networkHandler.activeNetwork.networkInternal = null;
-      // Create+
+      // Create
       return new Promise<any>(async (resolve, reject) => {
         const nodes = view.network.nodes;
         let edges = view.network.edges;
@@ -545,7 +543,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     analysisNetwork.highlightSeeds = false;
     this.analysis.switchSelection('main');
     this.analysis.clearSelectionsExcept('main')
-    // this.analysis.resetSelection();
     this.token = null;
     this.tokenChange.emit(this.token);
     this.legendService.remove_from_context('drug');
