@@ -245,6 +245,8 @@
   .button.is-hovered,
   .button:hover,
   .button {
+    background-color: var(--drgstn-panel-secondary) !important;
+    color: var(--drgstn-text-primary) !important;
     border-color: var(--drgstn-border) !important;
     font-family: var(--drgstn-font-family) !important;
   }

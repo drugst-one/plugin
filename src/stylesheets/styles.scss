@@ -301,10 +301,10 @@
     background-color: var(--drgstn-success);
   }
   &.drugstone-plugin-warning {
-    color: var(--drgstn-text-primary);
     background-color: var(--drgstn-warning);
+    color: black;
     .icon {
-      color: var(--drgstn-text-primary) !important;
+      color: black !important;
     }
   }
   &.drugstone-plugin-info {
