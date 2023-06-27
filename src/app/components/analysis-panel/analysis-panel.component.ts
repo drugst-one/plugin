@@ -544,6 +544,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     analysisNetwork.seedMap = {};
     analysisNetwork.highlightSeeds = false;
     this.analysis.switchSelection('main');
+    this.analysis.clearSelectionsExcept('main')
     // this.analysis.resetSelection();
     this.token = null;
     this.tokenChange.emit(this.token);

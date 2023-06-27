@@ -1,7 +1,6 @@
 import {Wrapper, Task, getWrapperFromNode, Node, Dataset, Tissue} from '../../interfaces';
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
 import {Injectable} from '@angular/core';
 import {NetexControllerService} from '../netex-controller/netex-controller.service';
 import {DrugstoneConfigService} from '../drugstone-config/drugstone-config.service';
@@ -132,7 +131,6 @@ export class AnalysisService {
   }
 
   removeTask(token) {
-    console.log(token)
     this.tokens = this.tokens.filter((item) => item !== token);
     this.finishedTokens = this.finishedTokens.filter((item) => item !== token);
     this.tasks = this.tasks.filter((item) => item.token !== (token));
@@ -172,6 +170,15 @@ export class AnalysisService {
 
   public getTissues(): Tissue[] {
     return this.tissues;
+  }
+
+  public clearSelectionsExcept(id) {
+    let keys = this.selections.keys()
+    for (const key of keys) {
+      if (key !== id) {
+        this.selections.delete(key);
+      }
+    }
   }
 
   public switchSelection(id: string) {
@@ -234,7 +241,7 @@ export class AnalysisService {
       if (ids.indexOf(node.id) > -1) {
         if (node.drugstoneId === undefined) {
           unmappedNodes.push(node.label);
-        }else if(node.drugstoneType === 'drug' || node.drugstoneType === 'disorder'){
+        } else if (node.drugstoneType === 'drug' || node.drugstoneType === 'disorder') {
           unselectableNodes.push(node.label);
         } else {
           // only consider proteins
@@ -246,7 +253,7 @@ export class AnalysisService {
     if (unmappedNodes.length > 0) {
       this.unmappedNodesToast(unmappedNodes);
     }
-    if(unselectableNodes.length > 0){
+    if (unselectableNodes.length > 0) {
       this.unselectableNodesToast(unselectableNodes);
     }
   }
@@ -393,10 +400,6 @@ export class AnalysisService {
     return resp.token;
   }
 
-  idInSelection(nodeId: string): boolean {
-    return this.selectedItems.has(nodeId);
-  }
-
   inSelection(wrapper: Wrapper): boolean {
     return this.selectedItems.has(wrapper.id);
   }
@@ -406,11 +409,6 @@ export class AnalysisService {
     const out = Array.from(this.selectedItems.values());
     return out != null ? out : [];
   }
-
-  // getSelectionAsWrapper(): Wrapper[] {
-  //   const out = Array.from(this.selectedItems.values());
-  //   return out != null ? out.map(n => getWrapperFromNode(n)) : [];
-  // }
 
   getCount(): number {
     return this.selectedItems.size;

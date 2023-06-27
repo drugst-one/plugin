@@ -537,7 +537,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.networkHandler.activeNetwork.queryItems = [];
       this.networkHandler.activeNetwork.updateQueryItems();
       this.networkHandler.activeNetwork.currentViewProteins = this.networkHandler.activeNetwork.inputNetwork.nodes;
-      // this.fillQueryItems(this.currentViewNodes);
       if (this.networkHandler.activeNetwork.selectedWrapper) {
         this.networkHandler.activeNetwork.networkInternal.selectNodes([this.networkHandler.activeNetwork.selectedWrapper.id]);
       }
