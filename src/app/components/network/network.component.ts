@@ -525,6 +525,7 @@ export class NetworkComponent implements OnInit {
       // @ts-ignore
       this.downloadDom(this.networkEl.nativeElement).catch(e => {
         console.error('Some network content seems to be inaccessible for saving as a screenshot. This can happen due to custom images used as nodes. Please ensure correct CORS accessability on the images host server.');
+        this.loadingScreen.stateUpdate(false)
         console.error(e);
       });
     });
@@ -558,15 +559,23 @@ export class NetworkComponent implements OnInit {
     canvasContainer.style.height = originalCanvas.height;
     canvasContainer.style.width = originalCanvas.width;
     canvasContainer.style.position = "relative";
-    let legend = document.body.getElementsByClassName("legend")[0].cloneNode(true);
+    let legendElement;
+    legendElement = document.body.getElementsByClassName("drugstone-plugin-legend")[0];
+    if (!legendElement)
+      legendElement = document.body.getElementsByClassName("legend")[0];
     // @ts-ignore
+    let legend = legendElement.cloneNode(true);
+    legend.style['max-width'] = '11rem'
+    legend.style.width = "auto";
     legend.style.position = "absolute";
-    // @ts-ignore
     legend.style.bottom = "0px";
-    // @ts-ignore
     legend.style.zoom = ((legend.classList.contains("legend-small") ? 0.75 : 1) * ratio).toString();
-    // @ts-ignore
-    legend.style['transform-origin'] = "bottom left";
+    let right = this.drugstoneConfig.config.legendPos === 'right'
+    if (right) {
+      //TODO fix legend position
+    } else {
+      legend.style['transform-origin'] = "bottom left";
+    }
     // @ts-ignore
     canvasContainer.appendChild(legend)
 

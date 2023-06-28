@@ -127,6 +127,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.networkHandler.activeNetwork.selectedTissue = null;
     this.close();
     this.resetEmitter.emit(true);
+    this.loadingScreen.stateUpdate(false)
   }
 
   private setNetworkListeners() {
