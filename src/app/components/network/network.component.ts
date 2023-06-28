@@ -1,5 +1,5 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import domtoimage from 'dom-to-image';
+import domtoimage from 'dom-to-image-cross-origin';
 import {InteractionDatabase} from 'src/app/config';
 import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
@@ -39,7 +39,8 @@ export class NetworkComponent implements OnInit {
     public drugstoneConfig: DrugstoneConfigService,
     public netex: NetexControllerService,
     public omnipath: OmnipathControllerService,
-    public loadingScreen: LoadingScreenService) {
+    public loadingScreen: LoadingScreenService,
+  ) {
     try {
       this.versionString = version;
     } catch (e) {
@@ -518,8 +519,10 @@ export class NetworkComponent implements OnInit {
   }
 
   public toImage() {
+    // @ts-ignore
     this.downloadDom(this.networkWithLegendEl.nativeElement).catch(error => {
       console.error('Falling back to network only screenshot. Some components seem to be inaccessible, most likely the legend is a custom image with CORS access problems on the host server side.');
+      // @ts-ignore
       this.downloadDom(this.networkEl.nativeElement).catch(e => {
         console.error('Some network content seems to be inaccessible for saving as a screenshot. This can happen due to custom images used as nodes. Please ensure correct CORS accessability on the images host server.');
         console.error(e);
@@ -527,12 +530,82 @@ export class NetworkComponent implements OnInit {
     });
   }
 
-  public downloadDom(dom: object) {
-    return domtoimage.toPng(dom, {bgcolor: '#ffffff'}).then((generatedImage) => {
-      const a = document.createElement('a');
-      a.href = generatedImage;
-      a.download = `Network.png`;
-      a.click();
+  public async downloadDom(originalElement: object) {
+    this.loadingScreen.stateUpdate(true)
+    // @ts-ignore
+    let originalCanvas = originalElement.querySelector('canvas');
+
+    let position = this.networkInternal.getViewPosition();
+    let scale = this.networkInternal.getScale()
+
+    let ratio = 8;
+
+    let originalHeight = originalCanvas.clientHeight;
+    let originalWidth = originalCanvas.clientWidth;
+    originalCanvas.width = originalWidth * ratio;
+    originalCanvas.height = originalHeight * ratio;
+    originalCanvas.style.width = "calc( 100% * " + ratio + ")";
+    originalCanvas.style.height = "calc( 100% * " + ratio + ")";
+
+    let newCanvas = document.createElement('canvas');
+    let canvasContainer = document.createElement('div');
+    newCanvas.width = originalCanvas.width;
+    newCanvas.height = originalCanvas.height;
+    newCanvas.style.width = originalCanvas.style.width;
+    newCanvas.style.height = originalCanvas.style.height;
+    let newCtx = newCanvas.getContext('2d');
+    canvasContainer.appendChild(newCanvas)
+    canvasContainer.style.height = originalCanvas.height;
+    canvasContainer.style.width = originalCanvas.width;
+    canvasContainer.style.position = "relative";
+    let legend = document.body.getElementsByClassName("legend")[0].cloneNode(true);
+    // @ts-ignore
+    legend.style.position = "absolute";
+    // @ts-ignore
+    legend.style.bottom = "0px";
+    // @ts-ignore
+    legend.style.zoom = ((legend.classList.contains("legend-small") ? 0.75 : 1) * ratio).toString();
+    // @ts-ignore
+    legend.style['transform-origin'] = "bottom left";
+    // @ts-ignore
+    canvasContainer.appendChild(legend)
+
+    this.networkInternal.once("afterDrawing", () => {
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          createImageBitmap(originalCanvas).then(imgBitmap => {
+            newCtx.drawImage(imgBitmap, 0, 0);
+            document.body.appendChild(canvasContainer);
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                return domtoimage.toPng(canvasContainer).then((generatedImage) => {
+                  const a = document.createElement('a');
+                  a.href = generatedImage;
+                  a.download = `Network.png`;
+                  a.click();
+                }).catch(e => {
+                  console.error(e);
+                  this.analysis.screenshotError()
+                }).finally(() => {
+                  document.body.removeChild(canvasContainer);
+                  originalCanvas.width = originalWidth;
+                  originalCanvas.height = originalHeight;
+                  originalCanvas.style.width = "100%";
+                  originalCanvas.style.height = "100%";
+                  this.networkInternal.moveTo({position, scale: scale, animation: false});
+                  this.loadingScreen.stateUpdate(false)
+                });
+              }, 500);
+            });
+          });
+        }, 1500);
+      });
+    });
+    // @ts-ignore
+    this.networkInternal.moveTo({
+      position,
+      scale: ratio * scale,
+      animation: false
     });
   }
 

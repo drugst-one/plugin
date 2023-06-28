@@ -547,6 +547,12 @@ export class AnalysisService {
     });
   }
 
+  screenshotError() {
+    this.toast.setNewToast({
+      message: 'Screenshot could not be saved, because the network contains images that are loaded loaded from another website.',
+      type: 'danger'
+    });
+  }
   unselectableNodesToast(l) {
     this.toast.setNewToast({
       message: 'The following node(s) cannot be selected because they are not of type portein or gene: ' + l.join(', '),
