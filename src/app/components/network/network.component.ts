@@ -604,10 +604,10 @@ export class NetworkComponent implements OnInit {
                   this.networkInternal.moveTo({position, scale: scale, animation: false});
                   this.loadingScreen.stateUpdate(false)
                 });
-              }, 500);
+              }, 1000);
             });
           });
-        }, 1500);
+        }, 2500);
       });
     });
     // @ts-ignore
