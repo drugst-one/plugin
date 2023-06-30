@@ -453,7 +453,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
       const options = NetworkSettings.getOptions('main', this.drugstoneConfig.currentConfig());
 
-
       this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
 
       this.networkHandler.activeNetwork.networkInternal.once('stabilizationIterationsDone', () => {

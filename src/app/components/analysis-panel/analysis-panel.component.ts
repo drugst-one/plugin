@@ -10,8 +10,8 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { algorithmNames, AnalysisService } from '../../services/analysis/analysis.service';
+import {HttpClient} from '@angular/common/http';
+import {algorithmNames, AnalysisService} from '../../services/analysis/analysis.service';
 import {
   Drug,
   getProteinNodeId,
@@ -23,15 +23,15 @@ import {
   Wrapper,
   NodeInteraction,
 } from '../../interfaces';
-import { NetworkSettings } from '../../network-settings';
-import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
-import { mapCustomEdge, mapNetexEdge, ProteinNetwork } from 'src/app/main-network';
-import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
-import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
-import { LegendService } from 'src/app/services/legend-service/legend-service.service';
-import { LoadingScreenService } from 'src/app/services/loading-screen/loading-screen.service';
-import { version } from '../../../version';
-import { downloadCSV, downloadNodeAttributes } from 'src/app/utils';
+import {NetworkSettings} from '../../network-settings';
+import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
+import {mapCustomEdge, mapNetexEdge, ProteinNetwork} from 'src/app/main-network';
+import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
+import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
+import {LegendService} from 'src/app/services/legend-service/legend-service.service';
+import {LoadingScreenService} from 'src/app/services/loading-screen/loading-screen.service';
+import {version} from '../../../version';
+import {downloadCSV, downloadNodeAttributes} from 'src/app/utils';
 
 declare var vis: any;
 
@@ -53,7 +53,7 @@ interface Seeded {
 })
 export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit {
 
-  @ViewChild('networkWithLegend', { static: false }) networkWithLegendEl: ElementRef;
+  @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
   @Input() token: string | null = null;
   @Input() tokenType: string | null = null;
 
@@ -70,7 +70,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public algorithmDefault = undefined;
 
   public network: any;
-  public nodeData: { nodes: any, edges: any } = { nodes: null, edges: null };
+  public nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
   // private drugNodes: any[] = [];
   // private drugEdges: any[] = [];
   public tab: 'meta' | 'network' | 'table' = 'network';
@@ -112,8 +112,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   ngAfterViewInit() {
     this.networkHandler.setActiveNetwork('analysis');
     this.networkHandler.activeNetwork.subscribeSelection(() => {
-      this.refresh();
-    }
+        this.refresh();
+      }
     );
   }
 
@@ -274,10 +274,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       this.drugstoneConfig.set_analysisConfig(view.config);
       this.analysis.switchSelection(this.token);
       this.loadingScreen.stateUpdate(false);
-
-
       // Reset
-      this.nodeData = { nodes: null, edges: null };
+      this.nodeData = {nodes: null, edges: null};
       // Create
       return new Promise<any>(async (resolve, reject) => {
         const nodes = view.network.nodes;
@@ -328,14 +326,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           edges = edges.filter(el => el.from !== el.to);
         }
 
-        this.networkHandler.activeNetwork.inputNetwork = { nodes: nodes, edges: edges };
+        this.networkHandler.activeNetwork.inputNetwork = {nodes: nodes, edges: edges};
         this.nodeData.nodes = new vis.DataSet(nodes);
         this.nodeData.edges = new vis.DataSet(edges);
         const container = this.networkHandler.activeNetwork.networkEl.nativeElement;
         const isBig = nodes.length > 100 || edges.length > 100;
         const options = NetworkSettings.getOptions(isBig ? 'analysis-big' : 'analysis', this.drugstoneConfig.currentConfig());
-        // @ts-ignore
-        options.groups = this.drugstoneConfig.currentConfig().nodeGroups;
         // @ts-ignore
         for (const g of Object.values(options.groups)) {
           // @ts-ignore
@@ -344,6 +340,16 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         if (this.drugstoneConfig.config.physicsOn) {
           this.drugstoneConfig.config.physicsOn = !isBig;
         }
+        let edgeGroupConfig = this.drugstoneConfig.currentConfig().nodeGroups
+        this.nodeData.edges.forEach((edge) => {
+          if (!edge.group)
+            edge.group = 'default';
+          let config = edgeGroupConfig[edge.group]
+          if(config)
+            Object.entries(config).forEach(([key, value]) => {
+              edge[key] = value
+            })
+        });
         this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
 
         if (isBig) {
@@ -420,7 +426,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         analysisNetwork.seedMap = nodeAttributes.isSeed || {};
 
         // Reset
-        this.nodeData = { nodes: null, edges: null };
+        this.nodeData = {nodes: null, edges: null};
         analysisNetwork.networkEl.nativeElement.innerHTML = '';
         analysisNetwork.networkInternal = null;
         // Create
@@ -431,7 +437,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             }
             const nodes = nw.nodes;
             const edges = nw.edges;
-            analysisNetwork.inputNetwork = { nodes: nodes, edges: edges };
+            analysisNetwork.inputNetwork = {nodes: nodes, edges: edges};
             this.nodeData.nodes = new vis.DataSet(nodes);
             this.nodeData.edges = new vis.DataSet(edges);
             const container = analysisNetwork.networkEl.nativeElement;
@@ -486,7 +492,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             if (this.tableHasScores) {
               this.toggleNormalization(true);
             }
-            analysisNetwork.networkInternal.setData({ nodes: undefined, edge: undefined });
+            analysisNetwork.networkInternal.setData({nodes: undefined, edge: undefined});
             setTimeout(() => {
               analysisNetwork.networkInternal.setData(this.nodeData);
             }, 1000);
