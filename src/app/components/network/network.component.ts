@@ -24,6 +24,7 @@ import {LegendService} from 'src/app/services/legend-service/legend-service.serv
 import {LoadingScreenService} from 'src/app/services/loading-screen/loading-screen.service';
 import {version} from '../../../version';
 import {Subject} from 'rxjs';
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-network',
@@ -45,6 +46,8 @@ export class NetworkComponent implements OnInit {
       this.versionString = version;
     } catch (e) {
     }
+    if(version)
+      this.readLatestVersion()
   }
 
   @Input() public networkType: NetworkType;
@@ -110,6 +113,7 @@ export class NetworkComponent implements OnInit {
   public loading = false;
 
   public versionString = undefined;
+  public latestVersionString = undefined;
 
   public nodeGroupsWithExpression: Set<string> = new Set();
 
@@ -128,6 +132,10 @@ export class NetworkComponent implements OnInit {
   public reset() {
     this.resetEmitter.emit(true);
   }
+  async readLatestVersion() {
+    this.latestVersionString = await this.netex.getLatestVersion(this.versionString)
+  }
+
 
   getResetInputNetwork(): NetworkData {
     const nodes = [...this.inputNetwork.nodes];
@@ -871,4 +879,6 @@ export class NetworkComponent implements OnInit {
   public openBugreport() {
     this.drugstoneConfig.showBugreport = true;
   }
+
+  protected readonly undefined = undefined;
 }

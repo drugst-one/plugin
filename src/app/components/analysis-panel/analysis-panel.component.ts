@@ -95,6 +95,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public tableProteinScoreTooltip = '';
 
   public versionString = undefined;
+  public latestVersionString = undefined
 
   public loading = false;
 
@@ -104,9 +105,15 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       this.versionString = version;
     } catch (e) {
     }
+    if (this.versionString)
+      this.readLatestVersion();
   }
 
   async ngOnInit() {
+  }
+
+  async readLatestVersion() {
+    this.latestVersionString = await this.netex.getLatestVersion(this.versionString)
   }
 
   ngAfterViewInit() {
@@ -345,7 +352,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           if (!edge.group)
             edge.group = 'default';
           let config = edgeGroupConfig[edge.group]
-          if(config)
+          if (config)
             Object.entries(config).forEach(([key, value]) => {
               edge[key] = value
             })
@@ -759,5 +766,4 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public openBugreport() {
     this.drugstoneConfig.showBugreport = true;
   }
-
 }
