@@ -256,6 +256,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   }
 
+
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.setWindowWidth(document.getElementById('appWindow').getBoundingClientRect().width);
@@ -452,7 +453,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       const container = this.networkHandler.activeNetwork.networkEl.nativeElement;
 
       const options = NetworkSettings.getOptions('main', this.drugstoneConfig.currentConfig());
-
 
       this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
 

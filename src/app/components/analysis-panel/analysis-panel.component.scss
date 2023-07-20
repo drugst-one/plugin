@@ -1,5 +1,13 @@
 @import "src/stylesheets/variables";
 
+#update-available-icon{
+  color: var(--drgstn-warning)
+}
+
+#update-icon{
+  color: var(--drgstn-success)
+}
+
 .analysis {
   position: absolute !important;
   height: 100% !important;

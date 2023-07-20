@@ -19,6 +19,18 @@ export class NetexControllerService {
     return this.drugstoneConfig.config.backendUrl || environment.backend;
   }
 
+  public getLatestVersion(currentVersion:string): Promise<string> {
+    return this.http.get('https://api.github.com/repos/drugst-one/plugin/tags').toPromise().then(response => {
+      // @ts-ignore
+      for (let i = 0; i < response.length; i++) {
+        let version = response[i]['name']
+        if (!version.includes('-rc') || currentVersion.includes('-rc')) {
+          return version
+        }
+      }
+    })
+  }
+
   public async getTasks(tokens): Promise<any> {
     /**
      * returns promise of tasks status

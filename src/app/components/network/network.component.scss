@@ -1,5 +1,14 @@
 @import "src/stylesheets/variables";
 
+#ex-update-available-icon{
+  color: var(--drgstn-warning)
+}
+
+#ex-update-icon{
+  color: var(--drgstn-success)
+}
+
+
 .network-view-settings {
   // remove margin from tab header when network is displayed, so that network
   // does not disappear in empty border
