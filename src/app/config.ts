@@ -93,6 +93,7 @@ export interface IConfig {
   identifier?: Identifier;
   nodeShadow?: boolean;
   edgeShadow?: boolean;
+  customLinks?: {};
   algorithms: { [key in AlgorithmTarget]: Array<AlgorithmType | QuickAlgorithmType> };
 }
 
@@ -187,6 +188,7 @@ export const defaultConfig: IConfig = {
   nodeShadow: true,
   edgeShadow: true,
   licensedDatasets: false,
+  customLinks: {}, // { test: 'test link', test2: 'test2 link' }
   algorithms: {
     drug: ['trustrank', 'closeness', 'degree', 'proximity'],
     'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness']

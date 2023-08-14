@@ -37,6 +37,15 @@ export class InfoTileComponent implements OnInit {
     return this.expressions[this._wrapper.id];
   }
 
+  public getCustomLink(customLinkKey) { 
+    const nodeCustomLinkKey = `${customLinkKey}Link`;
+    if (nodeCustomLinkKey in this._wrapper.data) {
+      return this._wrapper.data[nodeCustomLinkKey]
+    } else {
+      return false
+    }
+  }
+
   public beautify(url: string): string {
     if (url.startsWith("https://")) {
       url = url.substr("https://".length);
