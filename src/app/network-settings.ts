@@ -30,6 +30,7 @@ export class NetworkSettings {
   // Network Layout
   private static analysisLayout = {
     improvedLayout: true,
+    randomSeed: 123
   };
   private static analysisEdges = {
     smooth: false,
@@ -50,10 +51,11 @@ export class NetworkSettings {
 
   private static mainLayout = {
     improvedLayout: false,
+    randomSeed: 123
   };
   private static mainEdges = {
     smooth: false,
-    length: 250
+    length: 250,
   };
   private static mainPhysics = {
     enabled: true,
@@ -67,21 +69,21 @@ export class NetworkSettings {
       return {
         layout: this.mainLayout,
         edges: this.mainEdges,
-        physics: physicsOn || this.mainPhysics,
+        physics: physicsOn ? this.mainPhysics : false,
         groups,
       };
     } else if (network === 'analysis') {
       return {
         layout: this.analysisLayout,
         edges: this.analysisEdges,
-        physics: physicsOn || this.analysisPhysics,
+        physics: physicsOn ? this.analysisPhysics: false,
         groups,
       };
     } else if (network === 'analysis-big') {
       return {
         layout: this.analysisLayout,
         edges: this.analysisEdges,
-        physics: physicsOn || this.analysisBigPhysics,
+        physics: physicsOn ? this.analysisBigPhysics: false,
         groups,
       };
     }

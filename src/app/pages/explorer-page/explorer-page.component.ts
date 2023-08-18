@@ -343,10 +343,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.networkHandler.activeNetwork.networkPositions = this.networkHandler.activeNetwork.networkInternal.getPositions();
       }
       this.createNetwork().then(async () => {
-        if (this.drugstoneConfig.config.physicsOn) {
+        if (this.drugstoneConfig.currentConfig().physicsOn) {
           this.networkHandler.activeNetwork.updatePhysicsEnabled(true);
         }
-        this.networkHandler.updateAdjacentNodes(!this.networkHandler.activeNetwork.isBig()).then((updated) => {
+          this.networkHandler.updateAdjacentNodes((!this.networkHandler.activeNetwork.isBig() && this.drugstoneConfig.config.physicsInital)).then((updated) => {
         }).catch(e => {
           console.error(e);
         });
@@ -354,7 +354,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         console.error(e);
       });
     }
-
   }
 
   analysisWindowChanged($event: [any[], [Node[], Tissue], NodeInteraction[]]) {
@@ -447,13 +446,13 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.toast.setNewToast({message: 'Duplicate node ids removed: ' + duplicateNodeIds.join(', '), type: 'warning'});
         nodes = uniqueNodes;
       }
+
       this.nodeData.nodes = new vis.DataSet(nodes);
       this.nodeData.edges = new vis.DataSet(edges);
 
       const container = this.networkHandler.activeNetwork.networkEl.nativeElement;
 
       const options = NetworkSettings.getOptions('main', this.drugstoneConfig.currentConfig());
-
       this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
 
       this.networkHandler.activeNetwork.networkInternal.once('stabilizationIterationsDone', () => {
@@ -461,8 +460,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           this.networkHandler.activeNetwork.updatePhysicsEnabled(false);
         }
       });
-
-
+      
       this.networkHandler.activeNetwork.networkInternal.on('doubleClick', (properties) => {
         const nodeIds: Array<string> = properties.nodes;
         if (nodeIds != null && nodeIds.length > 0) {

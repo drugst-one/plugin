@@ -235,7 +235,7 @@
           class="network-footer-toolbar-element"
           text="{{ drugstoneConfig.config.networkMenuButtonAnimationLabel }}"
           tooltip="Toggle the network animation."
-          [value]="drugstoneConfig.config.physicsOn"
+          [value]="drugstoneConfig.currentConfig().physicsOn"
           (valueChange)="
             networkHandler.activeNetwork.updatePhysicsEnabled($event)
           "

@@ -89,6 +89,7 @@ export interface IConfig {
   autofillEdges: boolean;
   interactions?: InteractionDatabase;
   physicsOn?: boolean;
+  physicsInital?: boolean;
   licensedDatasets?: boolean;
   identifier?: Identifier;
   nodeShadow?: boolean;
@@ -185,6 +186,7 @@ export const defaultConfig: IConfig = {
   associatedProteinDisorder: 'NeDRex',
   autofillEdges: true,
   physicsOn: false,
+  physicsInital: false,
   nodeShadow: true,
   edgeShadow: true,
   licensedDatasets: false,
