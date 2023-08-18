@@ -186,7 +186,7 @@ export const defaultConfig: IConfig = {
   associatedProteinDisorder: 'NeDRex',
   autofillEdges: true,
   physicsOn: false,
-  physicsInital: false,
+  physicsInital: true,
   nodeShadow: true,
   edgeShadow: true,
   licensedDatasets: false,
