@@ -64,8 +64,8 @@ Some frameworks need additional configuration to allow or recognize the `<drugst
 
 | OS           | Version            | Chrome         | Firefox        | Safari         | Edge           | Opera          |
 |--------------|--------------------|----------------|----------------|----------------|----------------|----------------|
-| Windows      | TODO             | TODO             | TODO             | TODO             | TODO             | TODO             |
-| MacOS        | Version 14.1                | 119.0.6045.159             | 119.0              | 119.0.2151.72             | n/a             | TODO             |
+| Windows      | TODO               | TODO           | TODO           | TODO           | TODO           | TODO           |
+| MacOS        | Version 14.1       | 119.0.6045.159 | 119.0          | 119.0.2151.72  | n/a            | TODO           |
 | Linux        | Mint 21.2 Cinnamon | 117.0.5938.132 | 119.0.1        | n/a            | n/a            | 105.0.4970.16  |
 
 
