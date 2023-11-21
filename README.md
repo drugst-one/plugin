@@ -48,7 +48,7 @@ Styles of the component can be controlled by overriding the following CSS variab
 
 Configuration and style might be created using the [Drugst.One playground](https://drugst.one/playground), a web interface that generates copy-pastable code.
 
-## Compatability
+## Framework Compatability
 
 We tested and provide example implementation code explicitly for the following web frameworks:
 
@@ -59,6 +59,15 @@ We tested and provide example implementation code explicitly for the following w
 - R-Shiny: [code](https://github.com/drugst-one/integration-examples/tree/main/shiny); [documentation](https://drugst.one/doc#rshiny_setup)
 
 Some frameworks need additional configuration to allow or recognize the `<drugst-one>` component and tag but we ultimately any JavaScript-based framework is supported.
+
+## Browser/OS Compatibiility
+
+| OS / Browser | Chrome | Firefox | Safari | Edge | Opera |
+|--------------|--------|---------|--------|------|-------|
+| Windows      | NA     | NA      | NA     | NA   | NA    |
+| MacOS        | NA     | NA      | NA     | NA   | NA    |
+| Linux        | NA     | NA      | NA     | NA   | NA    |
+
 
 ## Cite
 
