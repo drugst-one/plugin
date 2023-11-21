@@ -65,7 +65,7 @@ Some frameworks need additional configuration to allow or recognize the `<drugst
 | OS           | Version            | Chrome         | Firefox        | Safari         | Edge           | Opera          |
 |--------------|--------------------|----------------|----------------|----------------|----------------|----------------|
 | Windows      | 10/11?             | NA             | NA             | NA             | NA             | NA             |
-| MacOS        | n/a                | NA             | NA             | NA             | NA             | NA             |
+| MacOS        | Version 14.1                | 119.0.6045.159             | 119.0              | 119.0.2151.72             | NA             | NA             |
 | Linux        | Mint 21.2 Cinnamon | 117.0.5938.132 | 119.0.1        | NA             | NA             | NA             |
 
 
