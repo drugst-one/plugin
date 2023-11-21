@@ -62,11 +62,11 @@ Some frameworks need additional configuration to allow or recognize the `<drugst
 
 ## Browser/OS Compatibiility
 
-| OS / Browser | Chrome | Firefox | Safari | Edge | Opera |
-|--------------|--------|---------|--------|------|-------|
-| Windows      | NA     | NA      | NA     | NA   | NA    |
-| MacOS        | NA     | NA      | NA     | NA   | NA    |
-| Linux        | NA     | NA      | NA     | NA   | NA    |
+| OS           | Version | Chrome | Firefox | Safari | Edge | Opera |
+|--------------|---------|--------|---------|--------|------|-------|
+| Windows      | NA      | NA     | NA      | NA     | NA   | NA    |
+| MacOS        | NA      | NA     | NA      | NA     | NA   | NA    |
+| Linux        | NA      | NA     | NA      | NA     | NA   | NA    |
 
 
 ## Cite
