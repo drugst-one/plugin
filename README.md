@@ -64,10 +64,11 @@ Some frameworks need additional configuration to allow or recognize the `<drugst
 
 | OS           | Version            | Chrome         | Firefox        | Safari         | Edge           | Opera          |
 |--------------|--------------------|----------------|----------------|----------------|----------------|----------------|
-| Windows      | TODO               | TODO           | TODO           | TODO           | TODO           | TODO           |
-| MacOS        | Version 14.1       | 119.0.6045.159 | 119.0.1        | n/a            | 119.0.2151.72  | 88.0.4412.74   |
-| Linux        | Mint 21.2 Cinnamon | 117.0.5938.132 | 119.0.1        | n/a            | n/a            | 105.0.4970.16  |
+| Windows      | 11                 | 119.0.6045.160*| 120.0*         | n/a            | 119.0.2151.72  | 119.0.6045.159*|
+| MacOS        | Version 14.1       | 119.0.6045.159 | 119.0.1*       | n/a            | 119.0.2151.72  | 88.0.4412.74   |
+| Linux        | Mint 21.2 Cinnamon | 117.0.5938.132 | 119.0.1*       | n/a            | n/a            | 105.0.4970.16  |
 
+*These browser and OS combinations have issues with rendering high-resolution screenshots properly
 
 ## Cite
 
