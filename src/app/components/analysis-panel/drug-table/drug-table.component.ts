@@ -26,5 +26,4 @@ export class DrugTableComponent implements OnInit {
     }
     return n.toExponential(3).toString();
   }
-
 }

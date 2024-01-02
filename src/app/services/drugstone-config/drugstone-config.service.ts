@@ -16,7 +16,6 @@ export class DrugstoneConfigService {
   public groupIssue = false;
   public groupIssueList = [];
   public smallStyle = false;
-
   public showLicense = false;
   public showBugreport = false;
 

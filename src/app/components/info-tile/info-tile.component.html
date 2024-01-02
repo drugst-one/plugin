@@ -196,6 +196,24 @@
   </a>
 </p>
 
+<div
+  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+>
+  <div *ngFor="let link_data of drugstoneConfig.currentConfig().customLinks | keyvalue">
+    <a
+      *ngIf="getCustomLink(link_data.key)"
+      [href]="getCustomLink(link_data.key)"
+      target="_blank"
+      class="link-icon-margin"
+    >
+      <button
+        class="button is-rounded is-small is-primary mb-1">
+        {{ link_data.value }}
+      </button>
+    </a>
+  </div>
+</div>
+
 <app-toggle
   *ngIf="_wrapper.data.drugstoneId && _wrapper.data.drugstoneType === 'protein'"
   [value]="analysis.inSelection(_wrapper)"

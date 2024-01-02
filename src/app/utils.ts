@@ -401,6 +401,7 @@ export function pieChartContextRenderer({
 export const downloadEdgeAttributes = ['from', 'to', 'groupName'];
 export const downloadNodeAttributes = [
   'label',
+  'drugId', // DrugBank ID
   'symbol',
   'uniprot',
   'ensg',

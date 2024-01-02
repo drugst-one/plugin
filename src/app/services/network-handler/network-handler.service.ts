@@ -41,7 +41,6 @@ export class NetworkHandlerService {
     return this.change.asObservable();
   }
 
-
   async updateAdjacentNodes(layout: boolean): Promise<any> {
     return new Promise<any>(async (resolve, reject) => {
       let updated = false;

@@ -89,10 +89,12 @@ export interface IConfig {
   autofillEdges: boolean;
   interactions?: InteractionDatabase;
   physicsOn?: boolean;
+  physicsInital?: boolean;
   licensedDatasets?: boolean;
   identifier?: Identifier;
   nodeShadow?: boolean;
   edgeShadow?: boolean;
+  customLinks?: {};
   algorithms: { [key in AlgorithmTarget]: Array<AlgorithmType | QuickAlgorithmType> };
 }
 
@@ -184,9 +186,11 @@ export const defaultConfig: IConfig = {
   associatedProteinDisorder: 'NeDRex',
   autofillEdges: true,
   physicsOn: false,
+  physicsInital: true,
   nodeShadow: true,
   edgeShadow: true,
   licensedDatasets: false,
+  customLinks: {}, // { test: 'test link', test2: 'test2 link' }
   algorithms: {
     drug: ['trustrank', 'closeness', 'degree', 'proximity'],
     'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness']

@@ -1,7 +1,7 @@
 <i class="icon {{ classString }}" title="{{ title }}">
-  <svg class="icon-height-normal">
-    <use
-      [attr.xlink:href]="'#' + icon"
+  <svg class="icon-height-normal" width="1em" height="1em">  <!-- height and width here will be overwritten, but Safari requires these attributes to be set to something else than "auto" to load the svg -->
+  <use
+  [attr.xlink:href]="'#' + icon"
     ></use>
   </svg>
 </i>
