@@ -31,7 +31,7 @@ import {NetworkHandlerService} from 'src/app/services/network-handler/network-ha
 import {LegendService} from 'src/app/services/legend-service/legend-service.service';
 import {LoadingScreenService} from 'src/app/services/loading-screen/loading-screen.service';
 import {version} from '../../../version';
-import {downloadCSV, downloadNodeAttributes} from 'src/app/utils';
+import {downloadResultCSV, downloadNodeAttributes} from 'src/app/utils';
 
 declare var vis: any;
 
@@ -611,7 +611,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       data = data.sort((a, b) => b['score'] - a['score']);
     }
 
-    downloadCSV(data, downloadNodeAttributes, `drugstone_${view}`);
+    downloadResultCSV(data, downloadNodeAttributes, `drugstone_${view}`);
   }
 
   /**

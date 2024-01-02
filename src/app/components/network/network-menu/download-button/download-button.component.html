@@ -37,6 +37,12 @@
         [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
         >.json</a
       >
+      <a
+        (click)="download('csv')"
+        class="dropdown-item"
+        [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+      >.csv</a
+      >
       <!-- <hr class="dropdown-divider" /> -->
       <!-- <a
         (click)="download('csv')"

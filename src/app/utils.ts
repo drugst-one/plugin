@@ -92,7 +92,7 @@ export function rgbaToHex(rgba) {
   ];
 
   // Pad single-digit output values
-  outParts.forEach(function(part, i) {
+  outParts.forEach(function (part, i) {
     if (part.length === 1) {
       outParts[i] = '0' + part;
     }
@@ -271,7 +271,7 @@ export function pieChartContextRenderer({
                                           style,
                                           label,
                                         }) {
-  ctx.drawPieLabel = function(style, x, y, label) {
+  ctx.drawPieLabel = function (style, x, y, label) {
     ctx.font = 'normal 12px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -311,7 +311,7 @@ export function pieChartContextRenderer({
     }
   }
 
-  ctx.drawPie = function(style, x, y, state: { selected; hover }) {
+  ctx.drawPie = function (style, x, y, state: { selected; hover }) {
     const selection =
       RGBAtoRGBwithoutA(style.borderColor) !== RGBAtoRGBwithoutA(style.color);
     const bgOpacity = 0.15;
@@ -413,7 +413,7 @@ export const downloadNodeAttributes = [
   'groupName'
 ];
 
-const _formatNetworkData = function(
+const _formatNetworkData = function (
   nodes: any[],
   edges: string[],
   nodeAttrs: string[],
@@ -447,7 +447,7 @@ const _formatNetworkData = function(
   return {nodes: nodeData, edges: edgeData};
 };
 
-export const downloadJSON = function(
+export const downloadJSON = function (
   nodes: Node[],
   edges: any[],
   nodeAttrs: string[],
@@ -460,14 +460,15 @@ export const downloadJSON = function(
   downLoadFile(output, `application/${fmt}`, fmt, label);
 };
 
-export const downloadGraphml = function(
+
+export const downloadGraphml = function (
   nodes: any[],
   edges: any[],
   nodeAttrs: string[],
   edgeAttrs: string[],
   label: string = 'drugstone'
 ) {
-  const dataFormatted = _formatNetworkData(nodes, edges, nodeAttrs, edgeAttrs);
+  // const dataFormatted = _formatNetworkData(nodes, edges, nodeAttrs, edgeAttrs);
 
   const graphml = [
     '<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"> ',
@@ -508,7 +509,52 @@ export const downloadGraphml = function(
   downLoadFile(output, `application/${fmt}`, fmt, label);
 };
 
-export const downloadCSV = function(
+export const downloadCSV = function (
+  nodes: any[],
+  edges: any[],
+  nodeAttrs: string[],
+  edgeAttrs: string[],
+  label: string = 'drugstone'
+) {
+  const dataFormatted = _formatNetworkData(nodes, edges, nodeAttrs, edgeAttrs);
+  const array = [];
+  const idx_map = {};
+  const value_map = {};
+  const nr_of_nodes = Object.keys(dataFormatted.nodes).length;
+  Object.keys(dataFormatted.nodes).forEach((key) => {
+    idx_map[key] = dataFormatted.nodes[key].label;
+    value_map[dataFormatted.nodes[key].label] = key;
+    let line = []
+    // @ts-ignore
+    for (let i = 0; i < nr_of_nodes; i++) {
+      line.push(0)
+    }
+    array.push(line)
+  });
+  Object.values(dataFormatted.edges).forEach( value => {
+    let id1 = value_map[value['from']]
+    let id2 = value_map[value['to']]
+    array[id1][id2] = 1
+    array[id2][id1] = 1;
+  })
+
+  const header = Object.keys(value_map)
+  header.unshift('')
+  array.unshift(header)
+  let rows = []
+  for (let i = 1; i < array.length; i++) {
+    array[i].unshift(header[i])
+  }
+  array.forEach( row => {
+    rows.push(row.join(','))
+  })
+
+  const output = rows.join('\n');
+  const fmt = 'csv';
+  downLoadFile(output, `application/${fmt}`, fmt, label);
+}
+
+export const downloadResultCSV = function (
   array: any[],
   columns: string[],
   label: string = 'drugstone'

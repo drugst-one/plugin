@@ -5,7 +5,7 @@ import {
   downloadNodeAttributes,
   downloadEdgeAttributes,
   downloadJSON,
-  downloadGraphml,
+  downloadGraphml, downloadResultCSV, downloadCSV,
 } from "src/app/utils";
 import { NetworkHandlerService } from "../../../../services/network-handler/network-handler.service";
 
@@ -57,6 +57,13 @@ export class DownloadButtonComponent implements OnInit {
       );
     } else if (fmt === 'graphml') {
       downloadGraphml(
+        nodes,
+        edges,
+        downloadNodeAttributes,
+        downloadEdgeAttributes
+      )
+    } else if(fmt === 'csv'){
+      downloadCSV(
         nodes,
         edges,
         downloadNodeAttributes,
