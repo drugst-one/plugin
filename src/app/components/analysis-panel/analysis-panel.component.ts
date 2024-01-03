@@ -138,6 +138,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   private setNetworkListeners() {
+    console.log("initializing listeners")
     this.networkHandler.activeNetwork.networkInternal.on('dragEnd', (properties) => {
       const node_ids = this.networkHandler.activeNetwork.networkInternal.getSelectedNodes();
       if (node_ids.length === 0 || !this.networkHandler.shiftDown) {
@@ -273,12 +274,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   private async refreshView() {
+    console.log("refreshing view")
     this.loading = true;
     this.loadingScreen.stateUpdate(true);
     this.getView(this.token).then(async view => {
       this.task = view;
       this.result = view;
       this.drugstoneConfig.set_analysisConfig(view.config);
+      console.log(view.config)
       this.analysis.switchSelection(this.token);
       this.loadingScreen.stateUpdate(false);
       // Reset
@@ -287,10 +290,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       return new Promise<any>(async (resolve, reject) => {
         const nodes = view.network.nodes;
         let edges = view.network.edges;
+        console.log(nodes)
+        console.log(edges)
 
         if (this.drugstoneConfig.config.autofillEdges && nodes.length) {
           const node_map = {};
           nodes.filter(n => n.drugstoneType === 'protein').forEach(node => {
+            console.log(node)
             if (typeof node.drugstoneId === 'string') {
               if (node_map[node.drugstoneId]) {
                 node_map[node.drugstoneId].push(node.id);
@@ -332,7 +338,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         if (!this.drugstoneConfig.selfReferences) {
           edges = edges.filter(el => el.from !== el.to);
         }
-
+        console.log(JSON.parse(JSON.stringify(edges)))
         this.networkHandler.activeNetwork.inputNetwork = {nodes: nodes, edges: edges};
         this.nodeData.nodes = new vis.DataSet(nodes);
         this.nodeData.edges = new vis.DataSet(edges);
@@ -347,19 +353,20 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         if (this.drugstoneConfig.config.physicsOn) {
           this.drugstoneConfig.config.physicsOn = !isBig;
         }
-        let edgeGroupConfig = this.drugstoneConfig.currentConfig().nodeGroups
+        let edgeGroupConfig = this.drugstoneConfig.currentConfig().edgeGroups
         this.nodeData.edges.forEach((edge) => {
           if (!edge.group)
             edge.group = 'default';
-          let config = edgeGroupConfig[edge.group]
-          if (config)
-            Object.entries(config).forEach(([key, value]) => {
+          let cfg = edgeGroupConfig[edge.group]
+          if (cfg)
+            Object.entries(cfg).forEach(([key, value]) => {
               edge[key] = value
             })
         });
         this.networkHandler.activeNetwork.networkInternal = new vis.Network(container, this.nodeData, options);
 
         if (isBig) {
+          console.log("resolving")
           resolve(nodes);
         }
         this.networkHandler.activeNetwork.networkInternal.once('stabilizationIterationsDone', async () => {
@@ -367,10 +374,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             this.networkHandler.activeNetwork.updatePhysicsEnabled(false);
           }
           this.networkHandler.updateAdjacentNodes(this.networkHandler.activeNetwork.isBig()).then(() => {
+            console.log("resolving")
             resolve(nodes);
           });
         });
       }).then(() => {
+        console.log("resolved")
         this.setNetworkListeners();
         this.emitVisibleItems(true);
       });
@@ -521,6 +530,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   private async refresh() {
     if (this.token) {
+      console.log(this.token)
       if (this.tokenType === 'view') {
         this.networkHandler.showSeedsButton = false;
         await this.refreshView();
