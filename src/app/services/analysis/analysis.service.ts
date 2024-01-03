@@ -339,7 +339,6 @@ export class AnalysisService {
     this.addItems(wrappers);
   }
 
-
   public invertSelection(nodes) {
     const newSelection = [];
     const unmappedNodes = [];
