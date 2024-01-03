@@ -386,7 +386,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     });
   }
 
-
   private async refreshTask() {
     this.loadingScreen.stateUpdate(true);
     this.task = await this.getTask(this.token);
@@ -474,7 +473,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             if (isBig) {
               resolve(nodes);
             }
+            // TODO: trigger stabilization manually.... why does this not happen automatically?
+            analysisNetwork.networkInternal.stabilize();
             analysisNetwork.networkInternal.once('stabilizationIterationsDone', async () => {
+
               if (!this.drugstoneConfig.config.physicsOn || analysisNetwork.isBig()) {
                 analysisNetwork.updatePhysicsEnabled(false);
               }
@@ -482,6 +484,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
                 resolve(nodes);
               });
             });
+
           }).then(nodes => {
             this.tableDrugs = nodes.filter(e => e.drugstoneId && e.drugstoneType === 'drug');
             this.tableDrugs.forEach((r) => {
@@ -508,13 +511,15 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             if (this.tableHasScores) {
               this.toggleNormalization(true);
             }
-            analysisNetwork.networkInternal.setData({nodes: undefined, edge: undefined});
-            setTimeout(() => {
-              analysisNetwork.networkInternal.setData(this.nodeData);
-            }, 1000);
+            // TODO: is this necessary?
+            // analysisNetwork.networkInternal.setData({nodes: undefined, edge: undefined});
+            // setTimeout(() => {
+            //   analysisNetwork.networkInternal.setData(this.nodeData);
+            // }, 1000);
             this.setNetworkListeners();
             this.emitVisibleItems(true);
           }).then(() => {
+
             this.loadingScreen.stateUpdate(false);
             if (!['quick', 'super', 'connect', 'connectSelected'].includes(this.task.info.algorithm)) {
               return;

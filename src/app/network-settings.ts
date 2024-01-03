@@ -37,9 +37,7 @@ export class NetworkSettings {
   };
   private static analysisPhysics = {
     enabled: true,
-    stabilization: {
-      enabled: true,
-    },
+    stabilization: true,
     repulsion: {
       centralGravity: 0,
     },
