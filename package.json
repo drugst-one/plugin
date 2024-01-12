@@ -11,6 +11,7 @@
     "lint": "ng lint && htmlhint",
     "e2e": "ng e2e",
     "build-prod": "ng build --configuration=production --output-hashing=none",
+    "build-stable": "ng build --configuration=stable --output-hashing=none",
     "build-dev": "ng build --configuration=development --output-hashing=none",
     "package-es5": "cd dist/netex && cat runtime-es5.js polyfills-es5.js main-es5.js > bundle-es5.js",
     "package-es2015": "cd dist/netex && cat runtime-es2015.js polyfills-es2015.js main-es2015.js > bundle-es2015.js",
@@ -18,6 +19,7 @@
     "prefix": "python3 prefixCSS.py --stage parse",
     "prefix:cleanup": "python3 prefixCSS.py --stage cleanup",
     "build:netex": "npm run prefix && npm run build-prod netex && node build-netex.js",
+    "build:netex-stable": "npm run prefix && npm run build-stable netex && node build-netex.js",
     "build:netex-dev": "npm run prefix && npm run build-dev netex && node build-netex.js",
     "build:drugstone": "npm run prefix && npm run build-prod netex && node build-netex.js && npm run prefix:cleanup",
     "build:drugstone-dev": "npm run prefix && npm run build-dev netex && node build-netex.js && npm run prefix:cleanup"
