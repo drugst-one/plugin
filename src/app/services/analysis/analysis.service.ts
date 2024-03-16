@@ -31,7 +31,7 @@ export const algorithmNames = {
   super: 'Quick-start',
   connect: 'Connect all',
   connectSelected: 'Connect selected',
-  pathway_enrichment: 'Pathway Enrichment',
+  'pathway-enrichment': 'Pathway Enrichment',
 };
 
 export interface Algorithm {
@@ -46,7 +46,7 @@ export const NETWORK_PROXIMITY: Algorithm = {slug: 'proximity', name: algorithmN
 export const BETWEENNESS_CENTRALITY: Algorithm = {slug: 'betweenness', name: algorithmNames.betweenness};
 export const KEYPATHWAYMINER: Algorithm = {slug: 'keypathwayminer', name: algorithmNames.keypathwayminer};
 export const MULTISTEINER: Algorithm = {slug: 'multisteiner', name: algorithmNames.multisteiner};
-export const PATHWAYENRICHMENT: Algorithm = {slug: 'pathway-enrichment', name: algorithmNames.pathway_enrichment};
+export const PATHWAYENRICHMENT: Algorithm = {slug: 'pathway-enrichment', name: algorithmNames['pathway-enrichment']};
 
 
 export const MAX_TASKS = 3;

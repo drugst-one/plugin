@@ -20,6 +20,10 @@
                 icon="capsules"
                 *ngIf="task.info.target === 'drug'"
               ></app-fa-solid-icon>
+              <app-fa-solid-icon
+                icon="dna"
+                *ngIf="task.info.target === 'gene'"
+              ></app-fa-solid-icon>
               {{ algorithmNames[task.info.algorithm] }}</span
             >
           </div>
@@ -74,6 +78,10 @@
                 icon="capsules"
                 *ngIf="task.info.target === 'drug'"
               ></app-fa-solid-icon>
+              <app-fa-solid-icon
+                icon="dna"
+                *ngIf="task.info.target === 'gene'"
+              ></app-fa-solid-icon>
               {{ algorithmNames[task.info.algorithm] }}</span
             >
           </div>
@@ -120,6 +128,10 @@
                 icon="capsules"
                 *ngIf="task.info.target === 'drug'"
               ></app-fa-solid-icon>
+              <app-fa-solid-icon
+                icon="dna"
+                *ngIf="task.info.target === 'gene'"
+              ></app-fa-solid-icon>
               {{ algorithmNames[task.info.algorithm] }}</span
             >
           </div>
@@ -158,6 +170,10 @@
               <app-fa-solid-icon
                 icon="capsules"
                 *ngIf="task.info.target === 'drug'"
+              ></app-fa-solid-icon>
+              <app-fa-solid-icon
+                icon="dna"
+                *ngIf="task.info.target === 'gene'"
               ></app-fa-solid-icon>
               {{ algorithmNames[task.info.algorithm] }}</span
             >

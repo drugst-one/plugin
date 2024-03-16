@@ -189,7 +189,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       if (!this.token) {
         return;
       }
-
+      
       if (selected !== null) {
         const updatedNodes: Node[] = [];
         for (const item of items) {
@@ -276,7 +276,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.loading = true;
     this.loadingScreen.stateUpdate(true);
     this.getView(this.token).then(async view => {
-      this.task = view;
+            this.task = view;
       this.result = view;
       this.drugstoneConfig.set_analysisConfig(view.config);
       this.analysis.switchSelection(this.token);
@@ -412,6 +412,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       this.tableProteinScoreTooltip =
         'Empirical z-score of mean minimum distance between the drug’s targets and the seeds. ' +
         'The lower the score, the more relevant the drug.';
+    } else if (this.task.info.algorithm === 'pathway-enrichment') {
+      console.log('Pathway enrichment');
     }
 
     if (this.task && this.task.info && this.task.info.done) {
@@ -421,6 +423,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         if (this.networkHandler.activeNetwork.networkType !== 'analysis') {
           return;
         }
+        console.log("result: ",result);
         this.drugstoneConfig.set_analysisConfig(result.parameters.config);
         this.analysis.switchSelection(this.token);
         this.result = result;
@@ -551,7 +554,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   private async getTask(token: string): Promise<any> {
-    return await this.http.get(`${this.netex.getBackend()}task/?token=${token}`).toPromise();
+        return await this.http.get(`${this.netex.getBackend()}task/?token=${token}`).toPromise();
   }
 
   close() {
