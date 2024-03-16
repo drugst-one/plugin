@@ -15,6 +15,7 @@ export type AlgorithmType =
   | 'closeness'
   | 'degree'
   | 'proximity'
+  | 'pathway-enrichment'
   | 'betweenness';
 export type QuickAlgorithmType = 'quick' | 'super' | 'connect' | 'connectSelected';
 
@@ -29,7 +30,8 @@ export const algorithmNames = {
   quick: 'Simple',
   super: 'Quick-start',
   connect: 'Connect all',
-  connectSelected: 'Connect selected'
+  connectSelected: 'Connect selected',
+  pathway_enrichment: 'Pathway Enrichment',
 };
 
 export interface Algorithm {
@@ -44,6 +46,8 @@ export const NETWORK_PROXIMITY: Algorithm = {slug: 'proximity', name: algorithmN
 export const BETWEENNESS_CENTRALITY: Algorithm = {slug: 'betweenness', name: algorithmNames.betweenness};
 export const KEYPATHWAYMINER: Algorithm = {slug: 'keypathwayminer', name: algorithmNames.keypathwayminer};
 export const MULTISTEINER: Algorithm = {slug: 'multisteiner', name: algorithmNames.multisteiner};
+export const PATHWAYENRICHMENT: Algorithm = {slug: 'pathway-enrichment', name: algorithmNames.pathway_enrichment};
+
 
 export const MAX_TASKS = 3;
 
@@ -479,7 +483,7 @@ export class AnalysisService {
     return {taskId: resp.token, algorithm: algorithm, target: target, params: parameters};
   }
 
-  async startAnalysis(algorithm, target: 'drug' | 'drug-target', parameters) {
+  async startAnalysis(algorithm, target: 'drug' | 'drug-target' | 'gene', parameters) {
     if (!this.canLaunchTask()) {
       this.toast.setNewToast({
         message: `You can only run ${MAX_TASKS} tasks at once. Please wait for one of them to finish or delete it from the task list.`,

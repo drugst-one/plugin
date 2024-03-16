@@ -33,7 +33,7 @@ export type InteractionDrugProteinDB = 'NeDRex' | 'DrugBank' | 'DrugCentral' | '
 export type InteractionProteinProteinDB = 'NeDRex' | 'BioGRID' | 'IID' | 'IntAct' | 'STRING' | 'APID';
 export type IndicationDrugDisorderDB = 'NeDRex' | 'CTD' | 'DrugCentral' | 'DrugBank';
 export type AssociatedProteinDisorderDB = 'NeDRex' | 'DisGeNET' | 'OMIM';
-export type AdvAnalysisContentTypes = 'drug-target-search' | 'drug-search' | 'enrichment-gprofiler' | 'enrichment-digest' | 'search-ndex';
+export type AdvAnalysisContentTypes = 'drug-target-search' | 'drug-search' | 'gene-analysis' | 'enrichment-gprofiler' | 'enrichment-digest' | 'search-ndex';
 
 
 // TODO: should this be external or integrated in the backend?
@@ -47,6 +47,7 @@ export interface IConfig {
   legendPos: 'left' | 'right';
   taskTargetName: string;
   taskDrugName: string;
+  taskGeneAnalysis: string;
   showSidebar: false | 'left' | 'right';
   showOverview: boolean;
   showQuery: boolean;
@@ -146,6 +147,7 @@ export const defaultConfig: IConfig = {
   legendPos: 'left',
   taskTargetName: 'Drug target search',
   taskDrugName: 'Drug search',
+  taskGeneAnalysis: 'Gene analysis',
   showSidebar: 'left',
   showLegendNodes: true,
   showLegendEdges: true,
@@ -154,7 +156,7 @@ export const defaultConfig: IConfig = {
   showItemSelector: true,
   showSimpleAnalysis: true,
   showAdvAnalysis: true,
-  showAdvAnalysisContent: ['drug-search', 'drug-target-search', 'enrichment-gprofiler', 'enrichment-digest', 'search-ndex'],
+  showAdvAnalysisContent: ['drug-search', 'drug-target-search', 'gene-analysis','enrichment-gprofiler', 'enrichment-digest', 'search-ndex'],
   showSelection: true,
   showTasks: true,
   showViews: true,
@@ -193,7 +195,8 @@ export const defaultConfig: IConfig = {
   customLinks: {}, // { test: 'test link', test2: 'test2 link' }
   algorithms: {
     drug: ['trustrank', 'closeness', 'degree', 'proximity'],
-    'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness']
+    'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness'],
+    gene: ['pathway-enrichment']
   },
   nodeGroups: {
     // all NodeGroups but the default group must be set, if not provided by the user, they will be taken from here

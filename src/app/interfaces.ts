@@ -78,7 +78,7 @@ export interface NetworkEdge {
   label: string;
 }
 
-export type AlgorithmTarget = 'drug' | 'drug-target'
+export type AlgorithmTarget = 'drug' | 'drug-target' | 'gene'
 
 export interface Task {
   token: string;
@@ -256,7 +256,8 @@ export type AlgorithmType =
   | 'closeness'
   | 'degree'
   | 'proximity'
-  | 'betweenness';
+  | 'betweenness'
+  | 'pathway-enrichment';
 export type QuickAlgorithmType = 'quick' | 'super' | 'connect' | 'connectSelected';
 
 export interface Algorithm {

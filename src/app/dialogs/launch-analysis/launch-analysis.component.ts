@@ -4,6 +4,7 @@ import {
   DEGREE_CENTRALITY,
   KEYPATHWAYMINER, MAX_TASKS,
   MULTISTEINER, NETWORK_PROXIMITY,
+  PATHWAYENRICHMENT,
   TRUSTRANK
 } from '../../services/analysis/analysis.service';
 import {Algorithm, AlgorithmType, QuickAlgorithmType} from 'src/app/interfaces';
@@ -23,7 +24,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   @Input()
   public show = false;
   @Input()
-  public target: 'drug' | 'drug-target';
+  public target: 'drug' | 'drug-target' | 'gene';
   @Output()
   public showChange = new EventEmitter<boolean>();
   @Output()
@@ -32,6 +33,9 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public algorithm: AlgorithmType | QuickAlgorithmType;
 
   public algorithms: Array<Algorithm> = [];
+
+  // Pathway enrichment parameters
+  public minNodesPerPathway = 2;
 
   // Trustrank Parameters
   public trustrankIncludeIndirectDrugs = false;
@@ -89,7 +93,10 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, BETWEENNESS_CENTRALITY];
     } else if (this.target === 'drug') {
       this.algorithms = [TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, NETWORK_PROXIMITY];
-    } else {
+    } else if (this.target === 'gene') {
+      this.algorithms = [PATHWAYENRICHMENT];
+    } 
+    else {
       // return because this.target === undefined
       return;
     }
@@ -111,7 +118,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     // all nodes in selection have drugstoneId, hence exist in the backend
     const seeds = this.analysis.getSelection().map((item) => item.id);
     const seedsFiltered = seeds.filter(el => el != null);
-    this.analysis.resetSelection();
+        this.analysis.resetSelection();
     const parameters: any = {
       seeds: seedsFiltered,
       config: this.drugstoneConfig.currentConfig(),
@@ -126,7 +133,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     parameters.ppi_dataset = this.drugstoneConfig.config.interactionProteinProtein;
     parameters.pdi_dataset = this.drugstoneConfig.config.interactionDrugProtein;
     parameters.licenced = this.drugstoneConfig.config.licensedDatasets;
-    parameters.target = this.target === 'drug' ? 'drug' : 'drug-target';
+    parameters.target = this.target === 'drug' ? 'drug' : (this.target === 'gene' ? 'gene' : 'drug-target');
     // pass network data to reconstruct network in analysis result to connect non-proteins to results
     // drop interactions in nodes beforehand to no cause cyclic error, information is contained in edges
     // @ts-ignore
@@ -185,9 +192,12 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       }
       parameters.hub_penalty = this.multisteinerHubPenalty;
       parameters.custom_edges = this.multisteinerCustomEdges;
+    } else if (this.algorithm === 'pathway-enrichment') {
+      parameters.min_nodes_per_pathway = this.minNodesPerPathway;
     }
     const token = await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
     const object = {taskId: token, algorithm: this.algorithm, target: this.target, params: parameters};
+    console.log(token);
     this.taskEvent.emit(object);
   }
 

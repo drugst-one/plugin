@@ -147,7 +147,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public showAnalysisDialog = false;
   public showThresholdDialog = false;
-  public analysisDialogTarget: 'drug' | 'drug-target';
+  public analysisDialogTarget: 'drug' | 'drug-target' | 'gene';
 
 
   public showCustomProteinsDialog = false;
@@ -311,7 +311,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
     configObj = merge(configObj, groupsObj);
     if (this.drugstoneConfig.analysisConfig) {
-      this.drugstoneConfig.set_analysisConfig({...this.drugstoneConfig.analysisConfig, configObj});
+            this.drugstoneConfig.set_analysisConfig({...this.drugstoneConfig.analysisConfig, configObj});
       // this.drugstoneConfig.set_analysisConfig(merge(this.drugstoneConfig.analysisConfig, configObj));
     } else {
       this.drugstoneConfig.config = {...this.drugstoneConfig.config, ...configObj};
