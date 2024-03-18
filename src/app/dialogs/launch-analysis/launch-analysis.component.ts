@@ -35,7 +35,13 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public algorithms: Array<Algorithm> = [];
 
   // Pathway enrichment parameters
-  public minNodesPerPathway = 2;
+  public alpha = 0.05;
+  pathways = [
+    { label: 'Reactome', selected: true },
+    { label: 'KEGG', selected: true },
+    { label: 'Wiki Pathways', selected: true }
+  ];
+
 
   // Trustrank Parameters
   public trustrankIncludeIndirectDrugs = false;
@@ -113,6 +119,11 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     this.show = false;
     this.showChange.emit(this.show);
   }
+
+  public isAnySelected(): boolean {
+    return this.pathways.some(option => option.selected);
+  }
+
 
   public async startTask() {
     // all nodes in selection have drugstoneId, hence exist in the backend
@@ -193,7 +204,10 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.hub_penalty = this.multisteinerHubPenalty;
       parameters.custom_edges = this.multisteinerCustomEdges;
     } else if (this.algorithm === 'pathway-enrichment') {
-      parameters.min_nodes_per_pathway = this.minNodesPerPathway;
+      parameters.alpha = this.alpha;
+      parameters.kegg = this.pathways.find(pathway => pathway.label === 'KEGG').selected;
+      parameters.reactome = this.pathways.find(pathway => pathway.label === 'Reactome').selected;
+      parameters.wiki = this.pathways.find(pathway => pathway.label === 'Wiki Pathways').selected;
     }
     const token = await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
     const object = {taskId: token, algorithm: this.algorithm, target: this.target, params: parameters};
