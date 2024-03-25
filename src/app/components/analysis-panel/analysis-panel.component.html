@@ -9,6 +9,11 @@
         Analysis Results
       </p>
 
+      <select *ngIf="genesets.length>0">
+        <option *ngFor="let set of genesets" [value]="set">{{ set }}</option>
+      </select>
+
+
       <span class="mr-1 is-pulled-right columns is-flex is-vcentered">
         <div class="field has-addons">
           <p class="control" *ngIf="!fullscreen">

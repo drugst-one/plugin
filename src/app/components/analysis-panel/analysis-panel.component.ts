@@ -99,6 +99,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   public loading = false;
 
+  public genesets = [];
+  public geneSet = null;
+  public pathway = null;
+
 
   constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService, public loadingScreen: LoadingScreenService) {
     try {
@@ -424,12 +428,20 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           return;
         }
         console.log("result: ",result);
+        if (result["algorithm"] === "pathway_enrichment"){
+          this.genesets = Object.keys(result["network"]);
+          this.geneSet = this.genesets[0];
+          this.pathway = Object.keys(result["network"][this.geneSet])[0] || null;
+        }
         this.drugstoneConfig.set_analysisConfig(result.parameters.config);
         this.analysis.switchSelection(this.token);
         this.result = result;
         if (this.result.parameters.target === 'drug') {
           this.legendService.add_to_context('drug');
-        } else {
+        } else if (this.result.parameters.target === 'gene'){
+          console.log("gene target, adjust legend service");
+        }
+        else {
           this.legendService.add_to_context('drugTarget');
         }
         const nodeAttributes = this.result.nodeAttributes || {};
@@ -441,7 +453,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         analysisNetwork.networkEl.nativeElement.innerHTML = '';
         analysisNetwork.networkInternal = null;
         // Create
-        await this.createNetwork(this.result).then(nw => {
+        await this.createNetwork(this.result, this.geneSet, this.pathway).then(nw => {
           return new Promise<any>((resolve, reject) => {
             if (this.networkHandler.activeNetwork.networkType !== 'analysis') {
               return;
@@ -470,6 +482,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               resolve(nodes);
             }
             analysisNetwork.networkInternal.stabilize();
+            console.log("network stabilized", this.networkHandler.activeNetwork)
             analysisNetwork.networkInternal.once('stabilizationIterationsDone', async () => {
 
               if (!this.drugstoneConfig.config.physicsOn || analysisNetwork.isBig()) {
@@ -629,8 +642,23 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
    * @param result
    * @returns
    */
-  public async createNetwork(result: any): Promise<{ edges: any[]; nodes: any[]; }> {
-    const identifier = this.drugstoneConfig.currentConfig().identifier;
+  public async createNetwork(result: any, geneset: string = null, pathway: string = null): Promise<{ edges: any[]; nodes: any[]; }> {
+    if(result.algorithm === "pathway_enrichment"){
+      if (geneset === null || pathway === null) {
+        return {
+            nodes: [],
+            edges: []
+          }
+      }
+
+      const edges_mapped = result.network[geneset][pathway].edges.map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+      return{
+        nodes: result.network[geneset][pathway].nodes,
+        edges: edges_mapped
+      }
+      
+    } else {
+      const identifier = this.drugstoneConfig.currentConfig().identifier;
 
     // add drugGroup and foundNodesGroup for added nodes
     // these groups can be overwritten by the user
@@ -726,6 +754,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       nodes,
       edges,
     };
+    }
+  
   }
 
   getResultNodes() {
