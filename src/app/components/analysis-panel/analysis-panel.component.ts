@@ -102,6 +102,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public genesets = [];
   public geneSet = null;
   public pathway = null;
+  public pathways = [];
 
 
   constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService, public loadingScreen: LoadingScreenService) {
@@ -276,6 +277,19 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     }
   }
 
+  public changeGeneSet(geneSet:any) {
+    this.geneSet = geneSet;
+    this.pathway = Object.keys(this.result.network[geneSet])[0];
+    this.pathways = Object.keys(this.result.network[geneSet]);
+    this.choosePathway(this.pathway);
+
+  }
+
+  public choosePathway(pathway:any) {
+    this.pathway = pathway;
+    this.refreshTask();
+  }
+
   private async refreshView() {
     this.loading = true;
     this.loadingScreen.stateUpdate(true);
@@ -416,8 +430,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       this.tableProteinScoreTooltip =
         'Empirical z-score of mean minimum distance between the drug’s targets and the seeds. ' +
         'The lower the score, the more relevant the drug.';
-    } else if (this.task.info.algorithm === 'pathway-enrichment') {
-      console.log('Pathway enrichment');
     }
 
     if (this.task && this.task.info && this.task.info.done) {
@@ -428,10 +440,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           return;
         }
         console.log("result: ",result);
-        if (result["algorithm"] === "pathway_enrichment"){
+        if (result["algorithm"] === "pathway_enrichment" && this.genesets.length === 0){
           this.genesets = Object.keys(result["network"]);
           this.geneSet = this.genesets[0];
           this.pathway = Object.keys(result["network"][this.geneSet])[0] || null;
+          this.pathways = Object.keys(result["network"][this.geneSet]) || [];
         }
         this.drugstoneConfig.set_analysisConfig(result.parameters.config);
         this.analysis.switchSelection(this.token);

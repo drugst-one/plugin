@@ -9,11 +9,6 @@
         Analysis Results
       </p>
 
-      <select *ngIf="genesets.length>0">
-        <option *ngFor="let set of genesets" [value]="set">{{ set }}</option>
-      </select>
-
-
       <span class="mr-1 is-pulled-right columns is-flex is-vcentered">
         <div class="field has-addons">
           <p class="control" *ngIf="!fullscreen">
@@ -114,6 +109,15 @@
         </div>
       </span>
     </header>
+      <div>
+        <select *ngIf="genesets.length>0" (change)="changeGeneSet($event.target.value)">
+          <option *ngFor="let set of genesets" [value]="set">{{ set }}</option>
+        </select>
+        <select *ngIf="pathways.length>0" (change)="choosePathway($event.target.value)">
+          <option *ngFor="let pathway of pathways" [value]="pathway">{{ pathway }}</option>
+        </select>
+
+      </div>
     <div
       class="card-content tab-header-small"
       [class.network-view-settings]="tab === 'network'"
@@ -231,6 +235,22 @@
               <tr *ngIf="task.info.parameters.hubPenalty !== undefined">
                 <td>Hub Penality</td>
                 <td>{{ task.info.parameters.hubPenalty }}</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.alpha !== undefined">
+                <td>Adjusted p-value cutoff</td>
+                <td>{{ task.info.parameters.alpha }}</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.kegg === true">
+                <td>Geneset</td>
+                <td>KEGG</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.reactome === true">
+                <td>Geneset</td>
+                <td>Reactome</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.wiki === true">
+                <td>Geneset</td>
+                <td>WikiPathway</td>
               </tr>
               <tr
                 *ngIf="
@@ -486,6 +506,40 @@
             <!-- drug table or placeholder if no drugs found END -->
           </div>
         </div>
+        <div *ngIf="task.info.algorithm === 'pathway-enrichment'">
+              <div class="column">
+              <h4 class="is-4">
+                <app-fa-solid-icon
+                  icon="dna"
+                  title="protein table"
+                ></app-fa-solid-icon>
+                <span>Pathway enrichment</span>
+              </h4>
+            </div>
+            <div class="column">
+
+        <table *ngIf="['pathway-enrichment'].includes(task.info.algorithm) && result && result.tableView" class="table parameter-table">
+              <thead>
+              <tr>
+                <th>Geneset</th>
+                <th>Pathway</th>
+                <th>Overlap</th>
+                <th>Adjusted p-value</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of result.tableView">
+                <td>{{ item.geneset }}</td>
+                <td>{{ item.pathway }}</td>
+                <td>{{ item.overlap }}</td>
+                <td>{{ item.adjPvalue }}</td>
+              </tr>
+              </tbody>
+            </table>
+            </div>
+            <!-- column normalization for drugs button START -->
+          </div>
+
         <div *ngIf="tableProteins.length > 0" class="table-header">
           <div class="columns m-1">
             <div class="column">
