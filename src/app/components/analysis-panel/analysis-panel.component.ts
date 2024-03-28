@@ -495,7 +495,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               resolve(nodes);
             }
             analysisNetwork.networkInternal.stabilize();
-            console.log("network stabilized", this.networkHandler.activeNetwork)
             analysisNetwork.networkInternal.once('stabilizationIterationsDone', async () => {
 
               if (!this.drugstoneConfig.config.physicsOn || analysisNetwork.isBig()) {
