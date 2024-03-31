@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {LegendContext} from '../../interfaces';
+import { Injectable } from '@angular/core';
+import { LegendContext } from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -9,11 +9,12 @@ export class LegendService {
   constructor() {
   }
 
-  private default_delete = ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder', 'connectorNode'];
+  private default_delete = ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'onlyPathway', 'connectorNode'];
   private context = [];
   public networkHasConnector = false;
 
   private contextNodeGroupsToDelete = {
+    pathway: ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder', 'connectorNode'],
     adjacentDrugs: ['foundNode', 'seedNode', 'default', 'defaultDisorder', 'connectorNode'],
     adjacentDisorders: ['foundDrug', 'foundNode', 'seedNode', 'default', 'connectorNode'],
     drugTarget: ['foundDrug', 'seedNode', 'default', 'defaultDisorder'],
@@ -42,7 +43,7 @@ export class LegendService {
     const out = [].concat(this.default_delete);
     for (const node of this.default_delete) {
       let keep = false;
-      
+
       // delete connectorNodes if network does not contain any 
       if (node === 'connectorNode' && !this.networkHasConnector) {
         break;

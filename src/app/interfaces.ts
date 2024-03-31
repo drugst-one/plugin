@@ -19,11 +19,11 @@ export interface Node {
   interactions?: Node[];
   x?: number;
   y?: number;
-  state?: {hover: boolean, selected: boolean};
+  state?: { hover: boolean, selected: boolean };
   borderWidth: number;
   borderWidthSelected: number;
   opacity?: number;
-  shadow?:any;
+  shadow?: any;
   font: {
     color: string;
     size: number;
@@ -49,7 +49,7 @@ export type NodeType = 'protein' | 'drug' | 'disorder' | 'other'
 
 export type NetworkType = 'explorer' | 'analysis'
 
-export type LegendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget' | 'seeds' | 'adjacentDisorders';
+export type LegendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget' | 'seeds' | 'adjacentDisorders' | 'pathway';
 
 /// drugstoneId to expressionlvl
 export type NodeAttributeMap = { string: number } | {};
