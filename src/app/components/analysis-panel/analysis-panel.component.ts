@@ -278,16 +278,32 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   public changeGeneSet(geneSet:any) {
+    console.log("change gene set", geneSet)
     this.geneSet = geneSet;
-    this.pathway = Object.keys(this.result.network[geneSet])[0];
-    this.pathways = Object.keys(this.result.network[geneSet]);
+    this.pathways = this.result.geneSetPathways[geneSet];
+    this.pathway = this.pathways[0];
     this.choosePathway(this.pathway);
-
   }
 
   public choosePathway(pathway:any) {
     this.pathway = pathway;
-    this.refreshTask();
+    this.loading = true;
+    this.loadingScreen.stateUpdate(true);
+    this.parse_pathway(this.token, this.geneSet, this.pathway).then(result => {
+      this.refreshTask();
+    });
+  }
+
+  public choose_pathway_in_table(geneset: string, pathway: string) {
+    this.tab = "network";
+    this.geneSet = geneset;
+    this.pathways = this.result.geneSetPathways[geneset];
+    this.pathway = pathway;
+    this.loading = true;
+    this.loadingScreen.stateUpdate(true);
+    this.parse_pathway(this.token, this.geneSet, this.pathway).then(result => {
+      this.refreshTask();
+    });
   }
 
   private async refreshView() {
@@ -439,16 +455,16 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         if (this.networkHandler.activeNetwork.networkType !== 'analysis') {
           return;
         }
-        console.log("result: ",result);
-        if (result["algorithm"] === "pathway_enrichment" && this.genesets.length === 0){
-          this.genesets = Object.keys(result["network"]);
-          this.geneSet = this.genesets[0];
-          this.pathway = Object.keys(result["network"][this.geneSet])[0] || null;
-          this.pathways = Object.keys(result["network"][this.geneSet]) || [];
+        if (result["algorithm"] === "pathway_enrichment"){
+          this.genesets = result["geneSets"];
+          this.geneSet = result["geneset"];
+          this.pathway = result["pathway"];
+          this.pathways = result["geneSetPathways"][this.geneSet];
         }
         this.drugstoneConfig.set_analysisConfig(result.parameters.config);
         this.analysis.switchSelection(this.token);
         this.result = result;
+        console.log(result)
         if (this.result.parameters.target === 'drug') {
           this.legendService.add_to_context('drug');
         } else if (this.result.parameters.target === 'gene'){
@@ -466,7 +482,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         analysisNetwork.networkEl.nativeElement.innerHTML = '';
         analysisNetwork.networkInternal = null;
         // Create
-        await this.createNetwork(this.result, this.geneSet, this.pathway).then(nw => {
+        await this.createNetwork(this.result).then(nw => {
           return new Promise<any>((resolve, reject) => {
             if (this.networkHandler.activeNetwork.networkType !== 'analysis') {
               return;
@@ -578,6 +594,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     return await this.http.get(`${this.netex.getBackend()}view/?token=${token}`).toPromise();
   }
 
+  private async parse_pathway(token: string, geneset: string, pathway:string): Promise<any> {
+    return await this.http.put(`${this.netex.getBackend()}calculate_result_for_pathway/?token=${encodeURIComponent(token)}&geneset=${encodeURIComponent(geneset)}&pathway=${encodeURIComponent(pathway)}`, {}).toPromise();
+  }
+
   private async getTask(token: string): Promise<any> {
         return await this.http.get(`${this.netex.getBackend()}task/?token=${token}`).toPromise();
   }
@@ -654,18 +674,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
    * @param result
    * @returns
    */
-  public async createNetwork(result: any, geneset: string = null, pathway: string = null): Promise<{ edges: any[]; nodes: any[]; }> {
+  public async createNetwork(result: any): Promise<{ edges: any[]; nodes: any[]; }> {
     if(result.algorithm === "pathway_enrichment"){
-      if (geneset === null || pathway === null) {
-        return {
-            nodes: [],
-            edges: []
-          }
-      }
-
-      const edges_mapped = result.network[geneset][pathway].edges.map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+      const edges_mapped = result.network.edges.map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
       return{
-        nodes: result.network[geneset][pathway].nodes,
+        nodes: result.network.nodes,
         edges: edges_mapped
       }
       

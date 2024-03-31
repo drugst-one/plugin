@@ -10,6 +10,8 @@
       </p>
 
       <span class="mr-1 is-pulled-right columns is-flex is-vcentered">
+        <p style="margin-right:10px" *ngIf="geneSet && pathway"> {{geneSet}} - {{pathway}}</p>
+
         <div class="field has-addons">
           <p class="control" *ngIf="!fullscreen">
             <button
@@ -109,6 +111,7 @@
         </div>
       </span>
     </header>
+    <!-- 
       <div>
         <select *ngIf="genesets.length>0" (change)="changeGeneSet($event.target.value)">
           <option *ngFor="let set of genesets" [value]="set">{{ set }}</option>
@@ -116,8 +119,8 @@
         <select *ngIf="pathways.length>0" (change)="choosePathway($event.target.value)">
           <option *ngFor="let pathway of pathways" [value]="pathway">{{ pathway }}</option>
         </select>
-
       </div>
+       -->
     <div
       class="card-content tab-header-small"
       [class.network-view-settings]="tab === 'network'"
@@ -521,6 +524,7 @@
         <table *ngIf="['pathway-enrichment'].includes(task.info.algorithm) && result && result.tableView" class="table parameter-table">
               <thead>
               <tr>
+                <th> </th>
                 <th>Geneset</th>
                 <th>Pathway</th>
                 <th>Overlap</th>
@@ -530,6 +534,19 @@
               </thead>
               <tbody>
               <tr *ngFor="let item of result.tableView">
+                <td><button class="button is-primary is-rounded has-tooltip"
+                    style="background-color: white !important;"
+                    pTooltip="Visualize pathway {{item.geneset}}: {{item.pathway}} in network."
+                    [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+                    
+                    [ngClass]="{
+                      'is-small': drugstoneConfig.smallStyle
+                    }" 
+                    (click)="choose_pathway_in_table(item.geneset, item.pathway)"> 
+                  <app-fa-solid-icon
+                  icon="play"
+                  style="color: #696969 !important;"
+                ></app-fa-solid-icon></button></td>
                 <td>{{ item.geneset }}</td>
                 <td>{{ item.pathway }}</td>
                 <td>{{ item.overlap }}</td>
