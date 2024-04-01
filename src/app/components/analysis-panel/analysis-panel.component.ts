@@ -413,6 +413,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     });
   }
 
+  public async chooseNetwork() {
+    this.tab = 'network'
+    this.refreshTask();
+  }
+
   private async refreshTask() {
     this.loadingScreen.stateUpdate(true);
     this.task = await this.getTask(this.token);
@@ -615,6 +620,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.tokenChange.emit(this.token);
     this.legendService.remove_from_context('drug');
     this.legendService.remove_from_context('drugTarget');
+    this.legendService.remove_from_context('pathway');
     this.emitVisibleItems(false);
   }
 

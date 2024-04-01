@@ -131,7 +131,7 @@
             <a (click)="tab = 'table'">Table</a>
           </li>
           <li [class.is-active]="tab === 'network'">
-            <a (click)="tab = 'network'">Network</a>
+            <a (click)="chooseNetwork();">Network</a>
           </li>
           <li [class.is-active]="tab === 'meta'" *ngIf="tokenType!=='view'">
             <a (click)="tab = 'meta'">Parameters</a>
