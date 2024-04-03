@@ -58,6 +58,7 @@ import { ViewListComponent } from './components/analysis-panel/view-list/view-li
 import { ImageComponent } from './image/image.component';
 import { ImageFallbackDirective } from './directives/image-fallback/image-fallback.directive';
 import { ExternalAnalysisButtonComponent } from './components/external-analysis-button/external-analysis-button.component';
+import { MatSortModule } from '@angular/material/sort';
 
 
 @NgModule({
@@ -117,6 +118,7 @@ import { ExternalAnalysisButtonComponent } from './components/external-analysis-
     TableModule,
     MatTooltipModule,
     TooltipModule,
+    MatSortModule,
   ],
   providers: [AnalysisService],
 })

@@ -32,6 +32,7 @@ import { LegendService } from 'src/app/services/legend-service/legend-service.se
 import { LoadingScreenService } from 'src/app/services/loading-screen/loading-screen.service';
 import { version } from '../../../version';
 import { downloadResultCSV, downloadNodeAttributes } from 'src/app/utils';
+import { Sort } from '@angular/material/sort';
 
 declare var vis: any;
 
@@ -103,6 +104,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public geneSet = null;
   public pathway = null;
   public pathways = [];
+  public sortedData = [];
 
 
   constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService, public loadingScreen: LoadingScreenService) {
@@ -115,6 +117,38 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   async ngOnInit() {
+    this.analysis.getVariableObservable().subscribe((value) => {
+      this.refreshTask();
+    });
+  }
+
+  sortData(sort: Sort) {
+    const data = this.result.tableView.slice();
+
+    if (!sort.active || sort.direction === '') {
+      this.sortedData = data;
+      return;
+    }
+
+    this.sortedData = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      const activeColumn = sort.active;
+      if (activeColumn === 'geneset' || activeColumn === 'pathway' || activeColumn == 'odds_ratio' || activeColumn == 'p_value') {
+        return this.compare_string_number(a[activeColumn], b[activeColumn], isAsc);
+      } else if (activeColumn === "overlap") {
+        return this.compare_overlap(a[activeColumn], b[activeColumn], isAsc);
+      }
+    });
+  }
+
+  private compare_string_number(a: number | string, b: number | string, isAsc: boolean){
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
+
+  private compare_overlap(a: string, b: string, isAsc: boolean) {
+    const a1 = Number(a.split("/")[0])
+    const b1 = Number(b.split("/")[0])
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 
   async readLatestVersion() {
@@ -278,7 +312,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   public changeGeneSet(geneSet: any) {
-    console.log("change gene set", geneSet)
     this.geneSet = geneSet;
     this.pathways = this.result.geneSetPathways[geneSet];
     this.pathway = this.pathways[0];
@@ -295,10 +328,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   public choose_pathway_in_table(geneset: string, pathway: string) {
-    this.tab = "network";
     this.geneSet = geneset;
     this.pathways = this.result.geneSetPathways[geneset];
     this.pathway = pathway;
+    this.tab = "network";
     this.loading = true;
     this.loadingScreen.stateUpdate(true);
     this.parse_pathway(this.token, this.geneSet, this.pathway).then(result => {
@@ -451,6 +484,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       this.tableProteinScoreTooltip =
         'Empirical z-score of mean minimum distance between the drug’s targets and the seeds. ' +
         'The lower the score, the more relevant the drug.';
+    } else if (this.task.info.algorithm === 'pathway-enrichment') {
+      this.analysis.inPathwayAnalysis = true;
     }
 
     if (this.task && this.task.info && this.task.info.done) {
@@ -470,6 +505,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         this.analysis.switchSelection(this.token);
         this.result = result;
         console.log(result)
+        if (this.task.info.algorithm === 'pathway-enrichment') {
+          this.sortedData = result.tableView.slice();
+        }
         if (this.result.parameters.target === 'drug') {
           this.legendService.add_to_context('drug');
         } else if (this.result.parameters.target === 'gene') {
@@ -487,7 +525,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         analysisNetwork.networkEl.nativeElement.innerHTML = '';
         analysisNetwork.networkInternal = null;
         // Create
-        await this.createNetwork(this.result).then(nw => {
+        await this.createNetwork(this.result, this.analysis.nodesToAdd).then(nw => {
           return new Promise<any>((resolve, reject) => {
             if (this.networkHandler.activeNetwork.networkType !== 'analysis') {
               return;
@@ -616,6 +654,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     analysisNetwork.highlightSeeds = false;
     this.analysis.switchSelection('main');
     this.analysis.clearSelectionsExcept('main')
+    this.analysis.inPathwayAnalysis = false;
+    this.analysis.nodesToAdd = [];
     this.token = null;
     this.tokenChange.emit(this.token);
     this.legendService.remove_from_context('drug');
@@ -680,11 +720,24 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
    * @param result
    * @returns
    */
-  public async createNetwork(result: any): Promise<{ edges: any[]; nodes: any[]; }> {
+  public async createNetwork(result: any, nodesToAdd: Node[] = []): Promise<{ edges: any[]; nodes: any[]; }> {
     if (result.algorithm === "pathway_enrichment") {
       const edges_mapped = result.network.edges.map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+      let nodes_list: any[] = result.network.nodes;
+      if (nodesToAdd.length > 0) {
+        nodesToAdd.forEach(node => {
+          if (!nodes_list.find(n => n.id === node.id)){
+            if (!node.groupName) {
+              node.groupName = this.drugstoneConfig.currentConfig().nodeGroups[node.group]["groupName"]
+              node.type = "protein"
+            }
+            nodes_list.push(node);
+          }
+        })
+      }
+      const nodes: any = nodes_list;
       return {
-        nodes: result.network.nodes,
+        nodes: nodes,
         edges: edges_mapped
       }
 

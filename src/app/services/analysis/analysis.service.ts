@@ -1,4 +1,4 @@
-import {Wrapper, Task, getWrapperFromNode, Node, Dataset, Tissue} from '../../interfaces';
+import {Wrapper, Task, getWrapperFromNode, getNodeFromWrapper,Node, Dataset, Tissue} from '../../interfaces';
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
@@ -71,6 +71,11 @@ export class AnalysisService {
   private tokensFinishedCookieKey = `drugstone-finishedTokens-${window.location.host}`;
   public finishedTokens: string[] = [];
   public tasks: Task[] = [];
+
+  public inPathwayAnalysis = false;
+  public nodesToAdd: Node[] = [];
+  
+  private nodesToAddNotifier = new Subject<boolean>();
 
   private intervalId: any;
   private canLaunchNewTask = true;
@@ -322,6 +327,19 @@ export class AnalysisService {
       }
     });
     this.addItems(wrappers);
+  }
+
+  public addSelectedToNetwork() {
+    const nodesToAdd: Node[] = [];
+    this.selectedItems.forEach((wrapper) => {
+      nodesToAdd.push(getNodeFromWrapper(wrapper));
+    })
+    this.nodesToAdd = nodesToAdd;
+    this.nodesToAddNotifier.next(true);
+  }
+
+  getVariableObservable() {
+    return this.nodesToAddNotifier.asObservable();
   }
 
   public addAllToSelection() {

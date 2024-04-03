@@ -521,19 +521,19 @@
             </div>
             <div class="column">
 
-        <table *ngIf="['pathway-enrichment'].includes(task.info.algorithm) && result && result.tableView" class="table parameter-table">
+        <table *ngIf="['pathway-enrichment'].includes(task.info.algorithm) && result && result.tableView" class="table parameter-table" (matSortChange)="sortData($event)" matSort>
               <thead>
               <tr>
                 <th> </th>
-                <th>Geneset</th>
-                <th>Pathway</th>
-                <th>Overlap</th>
-                <th>Adjusted p-value</th>
-                <th>Odds ratio</th>
+                <th mat-sort-header="geneset">Geneset</th>
+                <th mat-sort-header="pathway">Pathway</th>
+                <th mat-sort-header="overlap">Overlap</th>
+                <th mat-sort-header="p_value">Adjusted p-value</th>
+                <th mat-sort-header="odds_ratio">Odds ratio</th>
               </tr>
               </thead>
               <tbody>
-              <tr *ngFor="let item of result.tableView">
+              <tr *ngFor="let item of sortedData">
                 <td><button class="button is-primary is-rounded has-tooltip"
                     style="background-color: white !important;"
                     pTooltip="Visualize pathway {{item.geneset}}: {{item.pathway}} in network."

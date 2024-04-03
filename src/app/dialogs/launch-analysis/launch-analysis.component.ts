@@ -211,7 +211,6 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     }
     const token = await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
     const object = {taskId: token, algorithm: this.algorithm, target: this.target, params: parameters};
-    console.log(token);
     this.taskEvent.emit(object);
   }
 

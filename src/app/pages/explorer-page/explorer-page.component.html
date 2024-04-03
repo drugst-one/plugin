@@ -333,6 +333,15 @@
                 <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
                 <span>Add connected components</span>
               </a>
+               <a *ngIf="analysis.inPathwayAnalysis"
+                (click)="analysis.addSelectedToNetwork()"
+                class="card-footer-item text-primary"
+                tooltipPosition="top"
+                pTooltip="Add selected nodes to network."
+              >
+                <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
+                <span>Add selected nodes to network</span>
+              </a>
             </footer>
             <footer class="card-footer">
               <a

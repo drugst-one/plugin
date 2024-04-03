@@ -187,6 +187,36 @@ export function getWrapperFromNode(node: Node): Wrapper {
   };
 }
 
+export function getNodeFromWrapper(wrapper: Wrapper): Node {
+  const node = {
+    label: wrapper.data.label,
+    symbol: wrapper.data.symbol,
+    id: wrapper.data.id,
+    type: wrapper.data.type,
+    drugstoneId: wrapper.data.drugstoneId,
+    drugstoneType: wrapper.data.drugstoneType,
+    drugId: wrapper.data.drugId,
+    uniprot: wrapper.data.uniprot,
+    ensg: wrapper.data.ensg,
+    entrez: wrapper.data.entrez,
+    group: wrapper.data._group,
+    groupName: wrapper.data.groupName,
+    proteinName: wrapper.data.proteinName,
+    color: wrapper.data.color,
+    shape: wrapper.data.shape,
+    interactions: wrapper.data.interactions,
+    x: wrapper.data.x,
+    y: wrapper.data.y,
+    borderWidth: wrapper.data["borderWidth"],
+    borderWidthSelected: wrapper.data["borderWidthSelected"],
+    opacity: wrapper.data["opacity"],
+    shadow: wrapper.data["shadow"],
+    font: wrapper.data["font"],
+  }
+
+  return node
+}
+
 export type EdgeType = 'protein-protein' | 'protein-drug';
 
 export interface Wrapper {
