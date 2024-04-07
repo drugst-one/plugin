@@ -45,6 +45,11 @@ export class NetexControllerService {
     return this.http.get<any>(`${this.getBackend()}task_result/?token=${token}`).toPromise();
   }
 
+  public async addEdges(network, result): Promise<any> {
+    const jsonString = JSON.stringify(result);
+    return this.http.post<any>(`${this.getBackend()}add_edges/`, { network: network, result: jsonString }).toPromise();
+  }
+
   public async mapNodes(nodes, identifier): Promise<any> {
     /**
      * Tries to map every node to a node object in out database

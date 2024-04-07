@@ -722,7 +722,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
    */
   public async createNetwork(result: any, nodesToAdd: Node[] = []): Promise<{ edges: any[]; nodes: any[]; }> {
     if (result.algorithm === "pathway_enrichment") {
-      const edges_mapped = result.network.edges.map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+      let edges_mapped = result.network.edges.map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
       let nodes_list: any[] = result.network.nodes;
       if (nodesToAdd.length > 0) {
         nodesToAdd.forEach(node => {
@@ -734,6 +734,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             nodes_list.push(node);
           }
         })
+        const edges = await this.netex.addEdges({ nodes: nodes_list, edges: edges_mapped }, result);
+        edges_mapped = edges.map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
       }
       const nodes: any = nodes_list;
       return {
