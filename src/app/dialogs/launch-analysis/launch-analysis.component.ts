@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {
   AnalysisService, BETWEENNESS_CENTRALITY, CLOSENESS_CENTRALITY,
   DEGREE_CENTRALITY,
-  KEYPATHWAYMINER, MAX_TASKS,
+  KEYPATHWAYMINER, LOUVAINCLUSTERING, MAX_TASKS,
   MULTISTEINER, NETWORK_PROXIMITY,
   PATHWAYENRICHMENT,
   TRUSTRANK
@@ -100,7 +100,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     } else if (this.target === 'drug') {
       this.algorithms = [TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, NETWORK_PROXIMITY];
     } else if (this.target === 'gene') {
-      this.algorithms = [PATHWAYENRICHMENT];
+      this.algorithms = [PATHWAYENRICHMENT, LOUVAINCLUSTERING];
     } 
     else {
       // return because this.target === undefined

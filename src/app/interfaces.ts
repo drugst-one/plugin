@@ -49,7 +49,7 @@ export type NodeType = 'protein' | 'drug' | 'disorder' | 'other'
 
 export type NetworkType = 'explorer' | 'analysis'
 
-export type LegendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget' | 'seeds' | 'adjacentDisorders' | 'pathway';
+export type LegendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget' | 'seeds' | 'adjacentDisorders' | 'pathway' | 'louvain';
 
 /// drugstoneId to expressionlvl
 export type NodeAttributeMap = { string: number } | {};
@@ -287,7 +287,8 @@ export type AlgorithmType =
   | 'degree'
   | 'proximity'
   | 'betweenness'
-  | 'pathway-enrichment';
+  | 'pathway-enrichment'
+  | 'louvain-clustering';
 export type QuickAlgorithmType = 'quick' | 'super' | 'connect' | 'connectSelected';
 
 export interface Algorithm {

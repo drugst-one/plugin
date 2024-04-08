@@ -42,6 +42,25 @@
         </div>
         <div class="column">
 
+            <div *ngIf="algorithm === 'louvain-clustering'">
+            <div class="box">
+              <article class="media">
+                <div class="media-left">
+                  <app-fa-solid-icon icon="info"></app-fa-solid-icon>
+                </div>
+                <div class="media-content">
+                  <div class="content">
+                    <h6 class="is-6">About Louvain Clustering</h6>
+                    <p>
+                      Louvain Clustering is a community detection algorithm that is performed on undirected networks.
+                      It is recommended to select all nodes of the graph.
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+
           <div *ngIf="algorithm === 'pathway-enrichment'">
             <div class="box">
               <article class="media">

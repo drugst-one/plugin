@@ -14,7 +14,8 @@ export class LegendService {
   public networkHasConnector = false;
 
   private contextNodeGroupsToDelete = {
-    pathway: ['foundNode', 'foundDrug', 'seedNode','defaultDisorder', 'default', 'defaultDisorder', 'connectorNode'],
+    pathway: ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder', 'connectorNode'],
+    louvain: ['foundNode','foundDrug', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'onlyPathway', 'connectorNode'],
     adjacentDrugs: ['foundNode', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'onlyPathway', 'connectorNode'],
     adjacentDisorders: ['foundDrug', 'foundNode', 'seedNode', 'default', 'overlap', 'onlyNetwork', 'onlyPathway', 'connectorNode'],
     drugTarget: ['foundDrug', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'onlyPathway'],

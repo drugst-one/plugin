@@ -492,6 +492,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
       this.loading = true;
       this.netex.getTaskResult(this.token).then(async result => {
+        console.log(result)
+
         if (this.networkHandler.activeNetwork.networkType !== 'analysis') {
           return;
         }
@@ -508,15 +510,20 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           }
         }
         this.analysis.switchSelection(this.token);
+        this.legendService.reset();
         this.result = result;
-        console.log(result)
         if (this.task.info.algorithm === 'pathway-enrichment') {
           this.sortedData = result.tableView.slice();
         }
         if (this.result.parameters.target === 'drug') {
           this.legendService.add_to_context('drug');
         } else if (this.result.parameters.target === 'gene') {
-          this.legendService.add_to_context('pathway');
+          if (this.result.algorithm === 'pathway_enrichment') {
+            this.legendService.add_to_context('pathway');
+          }
+          else if (this.result.parameters.algorithm === 'louvain-clustering') {
+            this.legendService.add_to_context('louvain');
+          }
         }
         else {
           this.legendService.add_to_context('drugTarget');
@@ -748,7 +755,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         edges: edges_mapped
       }
 
-    } else {
+    } else if (result.algorithm === "louvain_clustering"){
+      result.network["edges"] = result.network["edges"].map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+      return result.network;
+    }
+     else {
       const identifier = this.drugstoneConfig.currentConfig().identifier;
 
       // add drugGroup and foundNodesGroup for added nodes
