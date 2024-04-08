@@ -495,13 +495,18 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         if (this.networkHandler.activeNetwork.networkType !== 'analysis') {
           return;
         }
+        this.drugstoneConfig.set_analysisConfig(result.parameters.config);
         if (result["algorithm"] === "pathway_enrichment") {
           this.genesets = result["geneSets"];
           this.geneSet = result["geneset"];
           this.pathway = result["pathway"];
           this.pathways = result["geneSetPathways"][this.geneSet];
+          if (!this.drugstoneConfig.config["nodeGroups"]["overlap"] || !this.drugstoneConfig.config["nodeGroups"]["onlyNetwork"] || !this.drugstoneConfig.config["nodeGroups"]["onlyPathway"]) {
+            this.drugstoneConfig.config["nodeGroups"]["overlap"] = this.drugstoneConfig.currentConfig().nodeGroups["overlap"];
+            this.drugstoneConfig.config["nodeGroups"]["onlyNetwork"] = this.drugstoneConfig.currentConfig().nodeGroups["onlyNetwork"];
+            this.drugstoneConfig.config["nodeGroups"]["onlyPathway"] = this.drugstoneConfig.currentConfig().nodeGroups["onlyPathway"];
+          }
         }
-        this.drugstoneConfig.set_analysisConfig(result.parameters.config);
         this.analysis.switchSelection(this.token);
         this.result = result;
         console.log(result)
