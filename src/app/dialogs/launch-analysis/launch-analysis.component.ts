@@ -61,6 +61,8 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public proximityMaxDeg = 0;
   public proximityHubPenalty = 0.0;
   public proximityResultSize = 20;
+  public proximityNumRandomSeedSets = 32;
+  public proximityNumDrugTargetSets = 32;
   public proximityCustomEdges = this.drugstoneConfig.config.customEdges.default;
 
   // Betweenness Parameters
@@ -168,6 +170,8 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.hub_penalty = this.proximityHubPenalty;
       parameters.result_size = this.proximityResultSize;
       parameters.custom_edges = this.proximityCustomEdges;
+      parameters.num_random_seed_sets = this.proximityNumRandomSeedSets;
+      parameters.num_random_drug_target_sets = this.proximityNumDrugTargetSets;
     } else if (this.algorithm === 'betweenness') {
       if (this.betweennessMaxDeg && this.betweennessMaxDeg > 0) {
         parameters.max_deg = this.betweennessMaxDeg;

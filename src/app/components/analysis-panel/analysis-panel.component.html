@@ -288,6 +288,14 @@
                   ></app-fa-solid-icon>
                 </td>
               </tr>
+              <tr *ngIf="task.info.parameters.numRandomSeedSets !== undefined">
+                <td>Number Random Seed Sets</td>
+                <td>{{task.info.parameters.numRandomSeedSets}}</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.numRandomDrugTargetSets !== undefined">
+                <td>Number Random Drug Target Sets</td>
+                <td>{{task.info.parameters.numRandomDrugTargetSets}}</td>
+              </tr>
               </tbody>
             </table>
           </div>

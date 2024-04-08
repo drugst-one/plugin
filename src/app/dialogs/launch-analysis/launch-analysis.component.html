@@ -412,6 +412,34 @@
             </div>
 
             <div class="field">
+              <label class="label" for="proximity-ss">Number Random Seed Sets</label>
+              <div class="control">
+                <input
+                  [(ngModel)]="proximityNumRandomSeedSets"
+                  id="proximity-ss"
+                  class="input"
+                  type="number"
+                  placeholder="Number of random seet sets"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="proximity-dts">Number Random Drug Target Sets</label>
+              <div class="control">
+                <input
+                  [(ngModel)]="proximityNumDrugTargetSets"
+                  id="proximity-dts"
+                  class="input"
+                  type="number"
+                  placeholder="Number of random drug target sets"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="field">
               <label class="label">Non-approved drugs</label>
               <app-toggle
                 textOn="Include"
