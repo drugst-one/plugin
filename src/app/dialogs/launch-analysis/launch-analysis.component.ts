@@ -42,6 +42,9 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     { label: 'Wiki Pathways', selected: true }
   ];
 
+  // Louvain Clustering parameters
+  public ignore_isolated: boolean = true;
+
 
   // Trustrank Parameters
   public trustrankIncludeIndirectDrugs = false;
@@ -208,6 +211,8 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.kegg = this.pathways.find(pathway => pathway.label === 'KEGG').selected;
       parameters.reactome = this.pathways.find(pathway => pathway.label === 'Reactome').selected;
       parameters.wiki = this.pathways.find(pathway => pathway.label === 'Wiki Pathways').selected;
+    } else if (this.algorithm === 'louvain-clustering'){
+      parameters.ignore_isolated = this.ignore_isolated
     }
     const token = await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
     const object = {taskId: token, algorithm: this.algorithm, target: this.target, params: parameters};

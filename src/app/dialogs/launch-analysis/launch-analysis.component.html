@@ -59,6 +59,15 @@
                 </div>
               </article>
             </div>
+             <div class="field">
+              <label class="label" for="pathway-enrichment-alpha">Ignore isolated nodes in Clustering</label>
+              <div class="control">
+              <label>
+                  <input type="checkbox" [(ngModel)]="ignore_isolated">
+                  ignore isolated nodes
+                 </label>
+              </div>
+             </div>
           </div>
 
           <div *ngIf="algorithm === 'pathway-enrichment'">
