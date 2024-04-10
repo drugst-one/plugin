@@ -740,6 +740,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         nodesToAdd.forEach(node => {
           if (!nodes_list.find(n => n.id === node.id)){
             if (!node.groupName) {
+              node.group = "addedNode"
               node.groupName = this.drugstoneConfig.currentConfig().nodeGroups[node.group]["groupName"]
               node.type = "protein"
             }
