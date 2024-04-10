@@ -255,6 +255,10 @@
                 <td>Geneset</td>
                 <td>WikiPathway</td>
               </tr>
+               <tr *ngIf="task.info.parameters.ignoreIsolated !== undefined">
+                <td>ignore isolated nodes</td>
+                <td>{{task.info.parameters.ignoreIsolated}}</td>
+              </tr>
               <tr
                 *ngIf="
                     task.info.parameters.includeIndirectDrugs !== undefined &&
@@ -557,6 +561,38 @@
             </table>
             </div>
             <!-- column normalization for drugs button START -->
+          </div>
+
+
+          <div *ngIf="task.info.algorithm === 'louvain-clustering'">
+              <div class="column">
+              <h4 class="is-4">
+                <app-fa-solid-icon
+                  icon="dna"
+                  title="protein table"
+                ></app-fa-solid-icon>
+                <span>Louvain Clustering</span>
+              </h4>
+            </div>
+            <div class="column">
+
+        <table *ngIf="['louvain-clustering'].includes(task.info.algorithm) && result && result.tableView" class="table parameter-table">
+              <thead>
+              <tr>
+                <th>Cluster</th>
+                <th>Number of elements</th>
+                <th>Number of elements - percentage</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of result.tableView">
+                <td>Cluster {{ item.clusterId }}</td>
+                <td>{{ item.count }}</td>
+                <td>{{ item.percentage }}%</td>
+              </tr>
+              </tbody>
+            </table>
+            </div>
           </div>
 
         <div *ngIf="tableProteins.length > 0" class="table-header">
