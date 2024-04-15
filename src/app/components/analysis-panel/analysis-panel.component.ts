@@ -503,10 +503,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           this.geneSet = result["geneset"];
           this.pathway = result["pathway"];
           this.pathways = result["geneSetPathways"][this.geneSet];
-          if (!this.drugstoneConfig.config["nodeGroups"]["overlap"] || !this.drugstoneConfig.config["nodeGroups"]["onlyNetwork"] || !this.drugstoneConfig.config["nodeGroups"]["onlyPathway"]) {
+          if (!this.drugstoneConfig.config["nodeGroups"]["overlap"] || !this.drugstoneConfig.config["nodeGroups"]["onlyNetwork"] || !this.drugstoneConfig.config["nodeGroups"]["onlyPathway"] || !this.drugstoneConfig.config["nodeGroups"]["addedNode"]) {
             this.drugstoneConfig.config["nodeGroups"]["overlap"] = this.drugstoneConfig.currentConfig().nodeGroups["overlap"];
             this.drugstoneConfig.config["nodeGroups"]["onlyNetwork"] = this.drugstoneConfig.currentConfig().nodeGroups["onlyNetwork"];
             this.drugstoneConfig.config["nodeGroups"]["onlyPathway"] = this.drugstoneConfig.currentConfig().nodeGroups["onlyPathway"];
+            this.drugstoneConfig.config["nodeGroups"]["addedNode"] = this.drugstoneConfig.currentConfig().nodeGroups["addedNode"];
           }
         }
         this.analysis.switchSelection(this.token);

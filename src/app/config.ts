@@ -279,6 +279,36 @@ export const defaultConfig: IConfig = {
       groupID: 'only_network'
     },
 
+    addedNode: {
+      groupName: 'added node',
+      color: {
+        border: '#FFB6C1',
+        background: '#FFB6C1',
+        highlight: {
+          border: '#FFB6C1',
+          background: '#FFB6C1'
+        }
+      },
+      shape: 'circle',
+      type: 'gene',
+      font: {
+        color: '#000000',
+        size: 14,
+        face: 'arial',
+        stroke_width: 0,
+        stroke_color: '#ffffff',
+        align: 'center',
+        bold: false,
+        ital: false,
+        boldital: false,
+        mono: false
+      },
+      borderWidth: 1,
+      borderWidthSelected: 2,
+      shadow: true,
+      groupID: 'added_node'
+    },
+
     onlyPathway: {
       groupName: 'only in pathway',
       color: {
