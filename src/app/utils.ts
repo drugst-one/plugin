@@ -411,7 +411,8 @@ export const downloadNodeAttributes = [
   'score',
   'rank',
   'status',
-  'groupName'
+  'groupName',
+  'cluster'
 ];
 
 const _formatNetworkData = function (

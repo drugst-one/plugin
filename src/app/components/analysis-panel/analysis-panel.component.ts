@@ -84,6 +84,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public tableSelectedProteins: Array<Node & Scored & Seeded> = [];
   public tableNormalize = false;
   public tableHasScores = false;
+  public partition = false;
 
   public LegendContext: LegendContext = 'drugTarget';
 
@@ -555,12 +556,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           if (this.result.algorithm === 'pathway_enrichment') {
             this.legendService.add_to_context('pathway');
           }
-          else if (this.result.parameters.algorithm === 'louvain-clustering') {
-            this.legendService.add_to_context('louvain');
-          }
         }
         else {
           this.legendService.add_to_context('drugTarget');
+          if (this.result.parameters.algorithm === 'louvain-clustering') {
+            this.legendService.add_to_context('louvain');
+            this.partition = true;
+          }
         }
         const nodeAttributes = this.result.nodeAttributes || {};
         const analysisNetwork = this.networkHandler.networks['analysis'];
