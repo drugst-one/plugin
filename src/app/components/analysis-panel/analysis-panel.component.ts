@@ -126,7 +126,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   sortData(sort: Sort) {
     const data = this.sortedData.slice();
-    console.log(data)
 
     if (!sort.active || sort.direction === '') {
       this.sortedData = data;
@@ -337,7 +336,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         maxOverlap = rightValue;
       }
     }
-    console.log(maxOverlap)
     return maxOverlap;
   }
 
