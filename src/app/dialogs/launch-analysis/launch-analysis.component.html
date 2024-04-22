@@ -12,7 +12,7 @@
       </p>
       <p class="modal-card-title" *ngIf="target === 'gene'">
         <app-fa-solid-icon icon="capsules"></app-fa-solid-icon>
-        Gene Analysis
+        Pathway enrichment
       </p>
       <button (click)="close()" class="delete" aria-label="close"></button>
     </header>
@@ -41,34 +41,6 @@
           </div>
         </div>
         <div class="column">
-
-            <div *ngIf="algorithm === 'louvain-clustering'">
-            <div class="box">
-              <article class="media">
-                <div class="media-left">
-                  <app-fa-solid-icon icon="info"></app-fa-solid-icon>
-                </div>
-                <div class="media-content">
-                  <div class="content">
-                    <h6 class="is-6">About Louvain Clustering</h6>
-                    <p>
-                      Louvain Clustering is a community detection algorithm that is performed on undirected networks.
-                      It is recommended to select all nodes of the graph.
-                    </p>
-                  </div>
-                </div>
-              </article>
-            </div>
-             <div class="field">
-              <label class="label" for="pathway-enrichment-alpha">Ignore isolated nodes in Clustering</label>
-              <div class="control">
-              <label>
-                  <input type="checkbox" [(ngModel)]="ignore_isolated">
-                  ignore isolated nodes
-                 </label>
-              </div>
-             </div>
-          </div>
 
           <div *ngIf="algorithm === 'pathway-enrichment'">
             <div class="box">
@@ -585,6 +557,34 @@
             </div>
           </div>
 
+          <div *ngIf="algorithm === 'louvain-clustering'">
+            <div class="box">
+              <article class="media">
+                <div class="media-left">
+                  <app-fa-solid-icon icon="info"></app-fa-solid-icon>
+                </div>
+                <div class="media-content">
+                  <div class="content">
+                    <h6 class="is-6">About Louvain Clustering</h6>
+                    <p>
+                      Louvain Clustering is a community detection algorithm that is performed on undirected networks.
+                      It is recommended to select all nodes of the graph.
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="field">
+              <label class="label" for="pathway-enrichment-alpha">Ignore isolated nodes in Clustering</label>
+              <div class="control">
+                <label>
+                  <input type="checkbox" [(ngModel)]="ignore_isolated">
+                  ignore isolated nodes
+                </label>
+              </div>
+            </div>
+          </div>
+
           <div *ngIf="algorithm === 'betweenness'">
             <div class="box">
               <article class="media">
@@ -871,7 +871,8 @@
       <button mat-icon-button
         [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
         tooltipPosition="top"
-        pTooltip="Choose at least one geneset!"  *ngIf="!isAnySelected()" aria-label="Example icon button with a vertical three dot icon">
+        pTooltip="Choose at least one geneset!"  
+        *ngIf="!isAnySelected()">
         <app-fa-solid-icon icon="exclamation-triangle"></app-fa-solid-icon>
       </button>   
   </footer>

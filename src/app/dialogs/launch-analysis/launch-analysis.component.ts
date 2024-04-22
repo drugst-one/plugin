@@ -101,11 +101,11 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.target === 'drug-target') {
-      this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, BETWEENNESS_CENTRALITY];
+      this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, BETWEENNESS_CENTRALITY, LOUVAINCLUSTERING];
     } else if (this.target === 'drug') {
       this.algorithms = [TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, NETWORK_PROXIMITY];
     } else if (this.target === 'gene') {
-      this.algorithms = [PATHWAYENRICHMENT, LOUVAINCLUSTERING];
+      this.algorithms = [PATHWAYENRICHMENT];
     } 
     else {
       // return because this.target === undefined
