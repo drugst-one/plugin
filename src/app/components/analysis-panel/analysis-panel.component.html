@@ -111,16 +111,6 @@
         </div>
       </span>
     </header>
-    <!-- 
-      <div>
-        <select *ngIf="genesets.length>0" (change)="changeGeneSet($event.target.value)">
-          <option *ngFor="let set of genesets" [value]="set">{{ set }}</option>
-        </select>
-        <select *ngIf="pathways.length>0" (change)="choosePathway($event.target.value)">
-          <option *ngFor="let pathway of pathways" [value]="pathway">{{ pathway }}</option>
-        </select>
-      </div>
-       -->
     <div
       class="card-content tab-header-small"
       [class.network-view-settings]="tab === 'network'"
@@ -522,15 +512,23 @@
           </div>
         </div>
         <div *ngIf="task.info.algorithm === 'pathway-enrichment'">
-              <div class="column">
+            <div class="column">
               <h4 class="is-4">
                 <app-fa-solid-icon
                   icon="dna"
                   title="protein table"
                 ></app-fa-solid-icon>
                 <span>Pathway enrichment</span>
+                  <div class="field has-addons is-pulled-right m-1 control">
+                    <button (click)="downloadPathwayEnrichmentAsCSV()"
+                      class="button is-primary is-rounded is-outlined is-pulled-right is-small">
+                      <app-fa-solid-icon icon="download" title="download resulting proteins"></app-fa-solid-icon>
+                      <span>Download</span>
+                    </button>
+                  </div>
               </h4>
             </div>
+
            <div style="display: flex; justify-content: flex-start; padding: 12px;">
             <span style="padding-right: 12px;">Maximum number of nodes: </span>
             <mat-slider color="primary" *ngIf="maxSliderValue" thumbLabel discrete (ngModelChange)="onSliderValueChanged($event)"

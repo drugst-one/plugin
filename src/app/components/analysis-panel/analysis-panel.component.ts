@@ -762,6 +762,15 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     downloadResultCSV(data, downloadNodeAttributes, `drugstone_${view}`);
   }
 
+  public downloadPathwayEnrichmentAsCSV(){
+    if (this.result["tableView"].length > 0){
+      const tableView = this.result["tableView"];
+      const columns = Object.keys(this.result["tableView"][0])
+      console.log(tableView, columns)
+      downloadResultCSV(tableView, columns, `drugstone_pathwayEnrichment`);
+    }
+  }
+
   /**
    * Maps analysis result returned from database to valid Vis.js network input
    *
