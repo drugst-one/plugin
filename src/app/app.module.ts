@@ -61,8 +61,9 @@ import { ExternalAnalysisButtonComponent } from './components/external-analysis-
 import { MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-
-
+import { MatSliderModule } from '@angular/material/slider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -124,7 +125,10 @@ import { MatButtonModule } from '@angular/material/button';
     TooltipModule,
     MatSortModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSliderModule,
+    MatFormFieldModule,
+    ReactiveFormsModule
   ],
   providers: [AnalysisService],
 })

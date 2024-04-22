@@ -105,6 +105,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public pathway = null;
   public pathways = [];
   public sortedData = [];
+  public maxSliderValue: number;
+  public sliderValue: number;
 
 
   constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService, public loadingScreen: LoadingScreenService) {
@@ -123,7 +125,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   sortData(sort: Sort) {
-    const data = this.result.tableView.slice();
+    const data = this.sortedData.slice();
+    console.log(data)
 
     if (!sort.active || sort.direction === '') {
       this.sortedData = data;
@@ -165,6 +168,18 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   async ngOnChanges(changes: SimpleChanges) {
     await this.refresh();
+  }
+
+  public onSliderValueChanged(event: any) {
+    if (this.result) {
+      this.sliderValue = event
+      this.sortedData = this.result["tableView"].filter(entry => {
+        const parts = entry.overlap.split('/');
+        const rightValue = parseInt(parts[1], 10);
+
+        return !isNaN(rightValue) && rightValue < this.sliderValue;
+      });
+    }
   }
 
   @Output() resetEmitter: EventEmitter<boolean> = new EventEmitter();
@@ -309,6 +324,21 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       }
       table[idx].rank = lastRank;
     }
+  }
+
+  private findMaxOverlap(entries: any[]): number {
+    let maxOverlap = 0;
+
+    for (const entry of entries) {
+      const overlapValue = entry.overlap.split('/')[1];
+      const rightValue = parseInt(overlapValue, 10);
+
+      if (!isNaN(rightValue) && rightValue > maxOverlap) {
+        maxOverlap = rightValue;
+      }
+    }
+    console.log(maxOverlap)
+    return maxOverlap;
   }
 
   public changeGeneSet(geneSet: any) {
@@ -503,6 +533,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           this.geneSet = result["geneset"];
           this.pathway = result["pathway"];
           this.pathways = result["geneSetPathways"][this.geneSet];
+          if (!this.maxSliderValue){
+            this.maxSliderValue = this.findMaxOverlap(result["tableView"]);
+            this.sliderValue = this.maxSliderValue;
+          }
           if (!this.drugstoneConfig.config["nodeGroups"]["overlap"] || !this.drugstoneConfig.config["nodeGroups"]["onlyNetwork"] || !this.drugstoneConfig.config["nodeGroups"]["onlyPathway"] || !this.drugstoneConfig.config["nodeGroups"]["addedNode"]) {
             this.drugstoneConfig.config["nodeGroups"]["overlap"] = this.drugstoneConfig.currentConfig().nodeGroups["overlap"];
             this.drugstoneConfig.config["nodeGroups"]["onlyNetwork"] = this.drugstoneConfig.currentConfig().nodeGroups["onlyNetwork"];
@@ -515,6 +549,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         this.result = result;
         if (this.task.info.algorithm === 'pathway-enrichment') {
           this.sortedData = result.tableView.slice();
+          this.onSliderValueChanged(this.sliderValue);
         }
         if (this.result.parameters.target === 'drug') {
           this.legendService.add_to_context('drug');

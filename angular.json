@@ -39,7 +39,8 @@
             ],
             "styles": [
               "src/stylesheets/theme-styles.scss",
-              "src/stylesheets/styles.scss"
+              "src/stylesheets/styles.scss",
+              "node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
             ],
             "scripts": [],
             "crossOrigin": "use-credentials",

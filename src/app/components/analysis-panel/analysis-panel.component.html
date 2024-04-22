@@ -531,8 +531,12 @@
                 <span>Pathway enrichment</span>
               </h4>
             </div>
+           <div style="display: flex; justify-content: flex-start; padding: 12px;">
+            <span style="padding-right: 12px;">Maximum number of nodes: </span>
+            <mat-slider color="primary" *ngIf="maxSliderValue" thumbLabel discrete (ngModelChange)="onSliderValueChanged($event)"
+              [max]="maxSliderValue" [(ngModel)]="sliderValue"></mat-slider>
+           </div>
             <div class="column">
-
         <table *ngIf="['pathway-enrichment'].includes(task.info.algorithm) && result && result.tableView" class="table parameter-table" (matSortChange)="sortData($event)" matSort>
               <thead>
               <tr>
