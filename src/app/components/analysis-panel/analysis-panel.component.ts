@@ -796,13 +796,16 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         edges_mapped = edges.map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
       }
       const nodes: any = nodes_list;
-      return {
+      const network = {
         nodes: nodes,
         edges: edges_mapped
       }
+      this.analysis.currentNetwork = network;
+      return network
 
     } else if (result.algorithm === "louvain_clustering"){
       result.network["edges"] = result.network["edges"].map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+      this.analysis.currentNetwork = result.network;
       return result.network;
     }
      else {
@@ -898,10 +901,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
       this.legendService.networkHasConnector = nodes.filter(node => node.group === 'connectorNode').length > 0;
 
-      return {
+      const network_result = {
         nodes,
         edges,
       };
+      this.analysis.currentNetwork = network_result;
+      return network_result
     }
 
   }

@@ -75,6 +75,8 @@ export class AnalysisService {
   public finishedTokens: string[] = [];
   public tasks: Task[] = [];
 
+  public currentNetwork:any;
+
   public inPathwayAnalysis = false;
   public nodesToAdd: Node[] = [];
   
