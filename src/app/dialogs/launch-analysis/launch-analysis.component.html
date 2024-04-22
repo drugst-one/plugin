@@ -868,6 +868,12 @@
       >
         Close
       </button>
-    </footer>
+      <button mat-icon-button
+        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+        tooltipPosition="top"
+        pTooltip="Choose at least one geneset!"  *ngIf="!isAnySelected()" aria-label="Example icon button with a vertical three dot icon">
+        <app-fa-solid-icon icon="exclamation-triangle"></app-fa-solid-icon>
+      </button>   
+  </footer>
   </div>
 </div>

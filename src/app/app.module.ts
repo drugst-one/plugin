@@ -59,6 +59,10 @@ import { ImageComponent } from './image/image.component';
 import { ImageFallbackDirective } from './directives/image-fallback/image-fallback.directive';
 import { ExternalAnalysisButtonComponent } from './components/external-analysis-button/external-analysis-button.component';
 import { MatSortModule } from '@angular/material/sort';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+
+
 
 
 @NgModule({
@@ -119,6 +123,8 @@ import { MatSortModule } from '@angular/material/sort';
     MatTooltipModule,
     TooltipModule,
     MatSortModule,
+    MatIconModule,
+    MatButtonModule
   ],
   providers: [AnalysisService],
 })
