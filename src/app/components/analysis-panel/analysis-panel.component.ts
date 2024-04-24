@@ -177,7 +177,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         const parts = entry.overlap.split('/');
         const rightValue = parseInt(parts[1], 10);
 
-        return !isNaN(rightValue) && rightValue < this.sliderValue;
+        return !isNaN(rightValue) && rightValue <= this.sliderValue;
       });
     }
   }
