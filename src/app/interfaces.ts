@@ -250,6 +250,7 @@ export interface Wrapper {
     inLiterature?: boolean;
     trialLinks?: string[];
     detailShowLabel?: boolean;
+    cellularComponent?: Array<string>
   };
   expression?: number;
 }
