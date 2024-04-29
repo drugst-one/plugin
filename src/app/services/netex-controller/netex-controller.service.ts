@@ -59,6 +59,15 @@ export class NetexControllerService {
     return this.http.post(`${this.getBackend()}map_nodes/`, payload).toPromise();
   }
 
+  public async applyLayout(nodes): Promise<any> {
+    /**
+     * Applies layout to nodes
+     * Returns list of nodes with adjusted positions
+     */
+    const payload = { nodes: nodes };
+    return this.http.post(`${this.getBackend()}apply_layout/`, payload).toPromise();
+  }
+
   public tissues(): Observable<any> {
     /**
      * Lists all available tissues with id and name

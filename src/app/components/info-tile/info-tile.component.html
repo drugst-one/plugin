@@ -68,7 +68,7 @@
   </a>
 </p>
 
-<p *ngIf="_wrapper.data.cellularComponent.length > 0" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
+<p *ngIf="_wrapper.data.cellularComponent && _wrapper.data.cellularComponent.length > 0" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
   <b><span>Cellular component:</span></b>
   <a *ngFor="let cc of _wrapper.data.cellularComponent" href="https://www.ebi.ac.uk/QuickGO/term/GO:{{cc.split(':')[0]}}">
     <span class="is-capitalized"> {{ cc.split(':')[1] }}</span>

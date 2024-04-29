@@ -75,7 +75,9 @@ export interface IConfig {
   showNetworkMenuButtonAdjacentDisordersDrugs: boolean;
   networkMenuButtonAdjacentDisordersDrugsLabel: string;
   showNetworkMenuButtonAnimation: boolean;
+  showNetworkMenuButtonLayout: boolean;
   networkMenuButtonAnimationLabel: string;
+  networkMenuButtonLayoutLabel: string;
   showLegend: boolean;
   showLegendNodes: boolean;
   showLegendEdges: boolean;
@@ -91,6 +93,7 @@ export interface IConfig {
   autofillEdges: boolean;
   interactions?: InteractionDatabase;
   physicsOn?: boolean;
+  layoutOn?: boolean;
   physicsInital?: boolean;
   licensedDatasets?: boolean;
   identifier?: Identifier;
@@ -171,6 +174,7 @@ export const defaultConfig: IConfig = {
   activateNetworkMenuButtonAdjacentDrugs: false,
   showNetworkMenuButtonCenter: true,
   showNetworkMenuButtonAnimation: true,
+  showNetworkMenuButtonLayout: true,
   activateNetworkMenuButtonAdjacentDisorders: false,
   showNetworkMenuButtonAdjacentDisordersProteins: true,
   activateNetworkMenuButtonAdjacentDisorderDrugs: false,
@@ -180,6 +184,7 @@ export const defaultConfig: IConfig = {
   networkMenuButtonAdjacentDisordersProteinsLabel: 'Disorders (protein)',
   networkMenuButtonAdjacentDisordersDrugsLabel: 'Disorders (drug)',
   networkMenuButtonAnimationLabel: 'Animation',
+  networkMenuButtonLayoutLabel: "Layout",
   identifier: 'symbol',
   selfReferences: false,
   customEdges: { default: true, selectable: true },
@@ -189,6 +194,7 @@ export const defaultConfig: IConfig = {
   associatedProteinDisorder: 'NeDRex',
   autofillEdges: true,
   physicsOn: false,
+  layoutOn: false,
   physicsInital: true,
   nodeShadow: true,
   edgeShadow: true,

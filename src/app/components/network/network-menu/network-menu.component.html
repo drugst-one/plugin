@@ -324,6 +324,13 @@
           icon="bullseye"
         ></app-toggle-inplace>
       </div>
+      <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonAnimation" class="row is-full m-1">
+        <app-toggle-inplace class="network-footer-toolbar-element"
+          text="{{ drugstoneConfig.config.networkMenuButtonLayoutLabel }}" tooltip="Create layout based on cellular component."
+          [value]="drugstoneConfig.config.layoutOn" (valueChange)="
+                  networkHandler.activeNetwork.updateLayoutEnabled($event)
+                " icon="list"></app-toggle-inplace>
+      </div>
     </div>
   </div>
 </div>

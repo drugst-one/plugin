@@ -340,21 +340,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     return maxOverlap;
   }
 
-  public changeGeneSet(geneSet: any) {
-    this.geneSet = geneSet;
-    this.pathways = this.result.geneSetPathways[geneSet];
-    this.pathway = this.pathways[0];
-    this.choosePathway(this.pathway);
-  }
-
-  public choosePathway(pathway: any) {
-    this.pathway = pathway;
-    this.loading = true;
-    this.loadingScreen.stateUpdate(true);
-    this.parse_pathway(this.token, this.geneSet, this.pathway).then(result => {
-      this.refreshTask();
-    });
-  }
 
   public choose_pathway_in_table(geneset: string, pathway: string) {
     this.geneSet = geneset;
@@ -602,6 +587,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               resolve(nodes);
             }
             analysisNetwork.networkInternal.stabilize();
+            this.networkHandler.activeNetwork.updateLayoutEnabled(false);
             analysisNetwork.networkInternal.once('stabilizationIterationsDone', async () => {
 
               if (!this.drugstoneConfig.config.physicsOn || analysisNetwork.isBig()) {
