@@ -74,6 +74,12 @@
     <span class="is-capitalized"> {{ cc.split(':')[1] }}</span>
   </a>
 </p>
+<p *ngIf="_wrapper.data.layer" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
+  <b><span>Layer:</span></b>
+  <span class="is-capitalized">
+    {{ _wrapper.data.layer }}
+  </span>
+</p>
 
 <p
   *ngIf="getExpressionScore() != null"

@@ -251,6 +251,7 @@ export interface Wrapper {
     trialLinks?: string[];
     detailShowLabel?: boolean;
     cellularComponent?: Array<string>
+    layer?: string;
   };
   expression?: number;
 }

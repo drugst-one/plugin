@@ -17,8 +17,12 @@ export class InfoTileComponent implements OnInit {
   @Input() set wrapper(wrapperObject: Wrapper) {
     this._wrapper = wrapperObject;
     this.checkIfShowLinks();
+    this.getLayer();
+    this._wrapper.data.layer = this.layer;
   }
   @Input() public expressions: any;
+
+  public layer;
 
   public linkoutMap = { iid: "IID" };
 
@@ -43,6 +47,33 @@ export class InfoTileComponent implements OnInit {
       return this._wrapper.data[nodeCustomLinkKey]
     } else {
       return false
+    }
+  }
+
+  public getLayer(){
+    const layer_mapping: { [key: string]: string } = {
+      'GO:0005737': "Cytoplasm",
+      'GO:0005634': "Nucleus",
+      'GO:0005576': "Extracellular",
+      'GO:0009986': "Cell surface",
+      'GO:0005886': "Plasma membrane"
+    };
+
+    if (this._wrapper.data.cellularComponent.length > 0){
+      let layers: Set<string> = new Set();
+      const cc = this._wrapper.data.cellularComponent
+      cc.forEach((c) => {
+        const splitted = c.split(":")
+        const layer = "GO:" + splitted[3]
+        layers.add(layer)
+      });
+      if (layers.size > 1){
+        this.layer = "Multiple"
+      } else {
+        this.layer = layer_mapping[Array.from(layers)[0]]
+      }
+    } else {
+      this.layer = "Unknown"
     }
   }
 
