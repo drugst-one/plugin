@@ -68,12 +68,17 @@
   </a>
 </p>
 
-<p *ngIf="_wrapper.data.cellularComponent && _wrapper.data.cellularComponent.length > 0" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
-  <b><span>Cellular component:</span></b>
-  <a *ngFor="let cc of _wrapper.data.cellularComponent" href="https://www.ebi.ac.uk/QuickGO/term/GO:{{cc.split(':')[0]}}">
-    <span class="is-capitalized"> {{ cc.split(':')[1] }}</span>
-  </a>
+<p *ngIf="_wrapper.data.cellularComponent && _wrapper.data.cellularComponent.length > 0"
+  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
+  <b><span>Cellular component: </span></b>
+  <ng-container *ngFor="let cc of _wrapper.data.cellularComponent; let last = last">
+    <a href="https://www.ebi.ac.uk/QuickGO/term/GO:{{cc.split(':')[0]}}">
+      <span class="is-capitalized">{{ cc.split(':')[1] }}</span>
+    </a>
+    <span *ngIf="!last"> | </span> <!-- Trennzeichen für alle Elemente außer dem letzten -->
+  </ng-container>
 </p>
+
 <p *ngIf="_wrapper.data.layer" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
   <b><span>Layer:</span></b>
   <span class="is-capitalized">
