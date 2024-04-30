@@ -638,15 +638,78 @@ export class NetworkComponent implements OnInit {
     });
   }
 
+  getMaxXCoordinate(nodes: any[]): number {
+    let maxX = nodes.length > 0 ? nodes[0]["x"] : 0;
+    nodes.forEach(node => {
+      if (node["x"] > maxX) {
+        maxX = node["x"];
+      }
+    });
+    return maxX;
+  }
+
+  getMinXCoordinate(nodes: any[]): number {
+    let minX = nodes.length > 0 ? nodes[0]["x"] : 0;
+    nodes.forEach(node => {
+      if (node["x"] < minX) {
+        minX = node["x"];
+      }
+    });
+    return minX;
+  }
+
+
+  drawLabelOnCanvas(canvasElement: HTMLCanvasElement, maxX: number, y: number, label: string) {
+    const context = canvasElement.getContext('2d');
+    const text = label;
+    const x = maxX - 250;
+    context.font = "bold 24px verdana, sans-serif ";
+    context.fillStyle = "black";
+    this.networkHandler.activeNetwork.networkInternal.on("beforeDrawing", function (ctx) {
+      context.fillText(text, x, y);
+    });
+  }
+
+  getYpositions(nodes: any[]): any {
+    let yPositions = {};
+    nodes.forEach(node => {
+      if (!(node["layer"] in yPositions)) {
+        yPositions[node["layer"]] = node["y"];
+      }
+    });
+    return yPositions;
+  }
+
   public updateLayoutEnabled(bool: boolean) {
     this.drugstoneConfig.config.layoutOn = bool;
+    let minX;
+    let yPositions;
+    let ys: number[] = [];
     if (bool){
+      //let maxX;
       this.netex.applyLayout(this.nodeData.nodes.get(), "True").then(response => {
         this.nodeData.nodes.update(response);
+        //maxX = this.getMaxXCoordinate(response);
+        minX = this.getMinXCoordinate(response);
+        yPositions = this.getYpositions(response);
+        let originalCanvas = this.networkEl.nativeElement.querySelector('canvas');
+        ys = [];
+        Object.keys(yPositions).forEach(key => {
+          ys.push(yPositions[key]);
+          this.drawLabelOnCanvas(originalCanvas, minX, yPositions[key], key);
+        });
       });
     } else if (this.nodeData.nodes){
       this.netex.applyLayout(this.nodeData.nodes.get(), "False").then(response => {
         this.nodeData.nodes.update(response);
+        if(minX){
+          let maxNumber: number = Math.max(...ys);
+          let originalCanvas = this.networkEl.nativeElement.querySelector('canvas');
+          const context = originalCanvas.getContext('2d');
+          this.networkHandler.activeNetwork.networkInternal.on("beforeDrawing", function (ctx) {
+            context.clearRect(minX, maxNumber, originalCanvas.width, originalCanvas.height);
+          });
+        }
       });
     }
   }
