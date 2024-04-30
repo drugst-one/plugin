@@ -59,12 +59,12 @@ export class NetexControllerService {
     return this.http.post(`${this.getBackend()}map_nodes/`, payload).toPromise();
   }
 
-  public async applyLayout(nodes): Promise<any> {
+  public async applyLayout(nodes, hierachical_layout): Promise<any> {
     /**
      * Applies layout to nodes
      * Returns list of nodes with adjusted positions
      */
-    const payload = { nodes: nodes };
+    const payload = { nodes: nodes, hierachical_layout: hierachical_layout };
     return this.http.post(`${this.getBackend()}apply_layout/`, payload).toPromise();
   }
 

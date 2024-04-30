@@ -641,11 +641,13 @@ export class NetworkComponent implements OnInit {
   public updateLayoutEnabled(bool: boolean) {
     this.drugstoneConfig.config.layoutOn = bool;
     if (bool){
-      this.netex.applyLayout(this.nodeData.nodes.get()).then(response => {
+      this.netex.applyLayout(this.nodeData.nodes.get(), "True").then(response => {
         this.nodeData.nodes.update(response);
       });
     } else {
-    
+      this.netex.applyLayout(this.nodeData.nodes.get(), "False").then(response => {
+        this.nodeData.nodes.update(response);
+      });
     }
   }
 
