@@ -33,12 +33,14 @@ export class NetworkLegendComponent implements OnInit {
 
 
   public get_nodes_to_keep() {
-    if (this.analysis.currentNetwork) {
+    if (this.analysis.currentNetwork && this.analysis.analysisActive) {
       const uniqueGroups = new Set<string>();
       this.analysis.currentNetwork.nodes.forEach(node => {
         uniqueGroups.add(node.group);
       });
       return Array.from(uniqueGroups);
+    } else {
+      return false;
     }
   }
 

@@ -59,6 +59,8 @@ export const MAX_TASKS = 3;
 })
 export class AnalysisService {
 
+  public analysisActive = false;
+
   private selection = 'main';
 
   private selectedItems = new Map<string, Wrapper>();

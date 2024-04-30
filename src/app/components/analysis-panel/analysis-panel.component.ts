@@ -467,6 +467,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   private async refreshTask() {
     this.loadingScreen.stateUpdate(true);
+    this.analysis.analysisActive = true;
     this.task = await this.getTask(this.token);
     this.analysis.switchSelection(this.token);
 
@@ -680,6 +681,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   close() {
+    this.analysis.analysisActive = false;
     const analysisNetwork = this.networkHandler.networks['analysis'];
     analysisNetwork.gradientMap = {};
     this.drugstoneConfig.remove_analysisConfig();
