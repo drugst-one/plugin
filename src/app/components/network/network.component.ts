@@ -644,7 +644,7 @@ export class NetworkComponent implements OnInit {
       this.netex.applyLayout(this.nodeData.nodes.get(), "True").then(response => {
         this.nodeData.nodes.update(response);
       });
-    } else {
+    } else if (this.nodeData.nodes){
       this.netex.applyLayout(this.nodeData.nodes.get(), "False").then(response => {
         this.nodeData.nodes.update(response);
       });
