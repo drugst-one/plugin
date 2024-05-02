@@ -64,6 +64,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     explorerNetwork.nodeRenderer = null;
     explorerNetwork.nodeGroupsWithExpression = new Set();
     explorerNetwork.updatePhysicsEnabled(false);
+    explorerNetwork.updateLayoutEnabled(false);
     this.legendService.reset();
     this.network = this.network;
   }
@@ -372,6 +373,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     // this.fillQueryItems(this.currentViewNodes);
   }
 
+  public resetNetwork(network: string) {
+    this.network = network;
+  }
+
   /**
    * Creates the explorer network. Analysis component has distinct function.
    */
@@ -383,6 +388,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       // getNetwork synchronizes the input network with the database
       await this.getNetwork();
       this.proteinData = new ProteinNetwork(this.networkHandler.activeNetwork.inputNetwork.nodes, this.networkHandler.activeNetwork.inputNetwork.edges);
+      console.log("ProteinData", this.proteinData);
       if (this.networkHandler.activeNetwork.networkPositions) {
         this.proteinData.updateNodePositions(this.networkHandler.activeNetwork.networkPositions);
       }

@@ -119,6 +119,8 @@ export class NetworkComponent implements OnInit {
 
   private selectMode = false;
 
+  @Output() createNetwork: EventEmitter<string> = new EventEmitter<string>();
+
   ngOnInit(): void {
     this.networkHandler.networks[this.networkType] = this;
   }
@@ -638,16 +640,6 @@ export class NetworkComponent implements OnInit {
     });
   }
 
-  getMaxXCoordinate(nodes: any[]): number {
-    let maxX = nodes.length > 0 ? nodes[0]["x"] : 0;
-    nodes.forEach(node => {
-      if (node["x"] > maxX) {
-        maxX = node["x"];
-      }
-    });
-    return maxX;
-  }
-
   getMinXCoordinate(nodes: any[]): number {
     let minX = nodes.length > 0 ? nodes[0]["x"] : 0;
     nodes.forEach(node => {
@@ -663,7 +655,7 @@ export class NetworkComponent implements OnInit {
     const context = canvasElement.getContext('2d');
     const text = label;
     const x = maxX - 250;
-    context.font = "bold 24px verdana, sans-serif ";
+    context.font = "bold 27px verdana, sans-serif ";
     context.fillStyle = "black";
     this.networkHandler.activeNetwork.networkInternal.on("beforeDrawing", function (ctx) {
       context.fillText(text, x, y);
@@ -680,16 +672,23 @@ export class NetworkComponent implements OnInit {
     return yPositions;
   }
 
-  public updateLayoutEnabled(bool: boolean) {
+  private removeXYFromNodes(nodes: any[]): any[] {
+    return nodes.map(node => {
+      const { x, y, ...rest } = node;
+      return rest;
+    });
+  }
+
+  public updateLayoutEnabled(bool: boolean, fromButton: boolean = false) {
     this.drugstoneConfig.config.layoutOn = bool;
     let minX;
     let yPositions;
     let ys: number[] = [];
+    this.loadingScreen.stateUpdate(true);
+
     if (bool){
-      //let maxX;
       this.netex.applyLayout(this.nodeData.nodes.get(), "True").then(response => {
         this.nodeData.nodes.update(response);
-        //maxX = this.getMaxXCoordinate(response);
         minX = this.getMinXCoordinate(response);
         yPositions = this.getYpositions(response);
         let originalCanvas = this.networkEl.nativeElement.querySelector('canvas');
@@ -700,18 +699,15 @@ export class NetworkComponent implements OnInit {
         });
       });
     } else if (this.nodeData.nodes){
-      this.netex.applyLayout(this.nodeData.nodes.get(), "False").then(response => {
-        this.nodeData.nodes.update(response);
-        if(minX){
-          let maxNumber: number = Math.max(...ys);
-          let originalCanvas = this.networkEl.nativeElement.querySelector('canvas');
-          const context = originalCanvas.getContext('2d');
-          this.networkHandler.activeNetwork.networkInternal.on("beforeDrawing", function (ctx) {
-            context.clearRect(minX, maxNumber, originalCanvas.width, originalCanvas.height);
-          });
-        }
-      });
+      const nodes = this.removeXYFromNodes(this.nodeData.nodes.get());
+      this.nodeData.nodes.update(nodes);
+      this.inputNetwork = { nodes: nodes, edges: this.nodeData.edges.get() };
+      if (fromButton) {
+        const network = {nodes: nodes, edges: this.nodeData.edges.get()};
+        this.createNetwork.emit(JSON.stringify(network));
+      }
     }
+    this.loadingScreen.stateUpdate(false);
   }
 
   public getOptions() {

@@ -418,7 +418,7 @@
 
       <div class="tab-content" [class.is-visible]="tab === 'network'">
         <!-- network start -->
-        <app-network (resetEmitter)="reset()" networkType="analysis" [nodeData]="nodeData"></app-network>
+        <app-network (createNetwork)="resetNetwork()" (resetEmitter)="reset()" networkType="analysis" [nodeData]="nodeData"></app-network>
         <!-- network end -->
       </div>
       <div

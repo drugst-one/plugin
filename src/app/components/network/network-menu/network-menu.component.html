@@ -328,7 +328,7 @@
         <app-toggle-inplace class="network-footer-toolbar-element"
           text="{{ drugstoneConfig.config.networkMenuButtonLayoutLabel }}" tooltip="Create layout based on cellular component."
           [value]="drugstoneConfig.config.layoutOn" (valueChange)="
-                  networkHandler.activeNetwork.updateLayoutEnabled($event)
+                  networkHandler.activeNetwork.updateLayoutEnabled($event, true)
                 " icon="list"></app-toggle-inplace>
       </div>
     </div>

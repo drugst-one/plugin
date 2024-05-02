@@ -516,7 +516,7 @@
           ></app-analysis-panel>
         </div>
         <!-- explorer network -->
-        <app-network (resetEmitter)="reset()" networkType="explorer" [nodeData]="nodeData"></app-network>
+        <app-network (createNetwork)="resetNetwork($event)" (resetEmitter)="reset()" networkType="explorer" [nodeData]="nodeData"></app-network>
       </div>
       <!-- End  network block -->
 
