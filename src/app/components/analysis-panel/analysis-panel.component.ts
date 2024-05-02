@@ -701,6 +701,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.legendService.remove_from_context('drug');
     this.legendService.remove_from_context('drugTarget');
     this.legendService.remove_from_context('pathway');
+    this.legendService.remove_from_context('louvain');
     this.emitVisibleItems(false);
   }
 

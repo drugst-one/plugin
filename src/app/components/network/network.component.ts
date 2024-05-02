@@ -654,8 +654,8 @@ export class NetworkComponent implements OnInit {
   drawLabelOnCanvas(canvasElement: HTMLCanvasElement, maxX: number, y: number, label: string) {
     const context = canvasElement.getContext('2d');
     const text = label;
-    const x = maxX - 250;
-    context.font = "bold 27px verdana, sans-serif ";
+    const x = maxX - 350;
+    context.font = "bold 40px verdana, sans-serif ";
     context.fillStyle = "black";
     this.networkHandler.activeNetwork.networkInternal.on("beforeDrawing", function (ctx) {
       context.fillText(text, x, y);
