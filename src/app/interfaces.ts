@@ -212,6 +212,8 @@ export function getNodeFromWrapper(wrapper: Wrapper): Node {
     opacity: wrapper.data["opacity"],
     shadow: wrapper.data["shadow"],
     font: wrapper.data["font"],
+    cellularComponent: wrapper.data["cellularComponent"],
+    layer: wrapper.data["layer"]
   }
 
   return node
