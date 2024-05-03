@@ -65,6 +65,8 @@ export class NetworkComponent implements OnInit {
 
   public adjacentDrugs = false;
 
+  public ignorePosition = false;
+
   public selectedDrugTargetType = new Subject<string | null>();
   public selectedDrugTargetTypeLast: string | null = null;
   public selectedDrugTargetType$ = this.selectedDrugTargetType.asObservable();
@@ -673,10 +675,7 @@ export class NetworkComponent implements OnInit {
   }
 
   private removeXYFromNodes(nodes: any[]): any[] {
-    return nodes.map(node => {
-      const { x, y, ...rest } = node;
-      return rest;
-    });
+    return nodes.map(({ id, group }) => ({ id, group }));
   }
 
   public updateLayoutEnabled(bool: boolean, fromButton: boolean = false) {
@@ -687,6 +686,7 @@ export class NetworkComponent implements OnInit {
     this.loadingScreen.stateUpdate(true);
 
     if (bool){
+      this.ignorePosition = false;
       this.netex.applyLayout(this.nodeData.nodes.get(), "True").then(response => {
         this.nodeData.nodes.update(response);
         minX = this.getMinXCoordinate(response);
@@ -701,8 +701,8 @@ export class NetworkComponent implements OnInit {
     } else if (this.nodeData.nodes){
       const nodes = this.removeXYFromNodes(this.nodeData.nodes.get());
       this.nodeData.nodes.update(nodes);
-      this.inputNetwork = { nodes: nodes, edges: this.nodeData.edges.get() };
       if (fromButton) {
+        this.ignorePosition = true;
         const network = {nodes: nodes, edges: this.nodeData.edges.get()};
         this.createNetwork.emit(JSON.stringify(network));
       }

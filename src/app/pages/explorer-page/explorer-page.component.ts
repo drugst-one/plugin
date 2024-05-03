@@ -339,7 +339,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
     if (updateNetworkFlag && typeof this.networkJSON !== 'undefined') {
       // update network if network config has changed and networkJSON exists
-      if (this.networkHandler.activeNetwork.networkInternal !== null) {
+      if (this.networkHandler.activeNetwork.networkInternal !== null && !this.networkHandler.activeNetwork.ignorePosition) {
         // a network exists, save node positions
         this.networkHandler.activeNetwork.networkPositions = this.networkHandler.activeNetwork.networkInternal.getPositions();
       }
@@ -388,7 +388,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       // getNetwork synchronizes the input network with the database
       await this.getNetwork();
       this.proteinData = new ProteinNetwork(this.networkHandler.activeNetwork.inputNetwork.nodes, this.networkHandler.activeNetwork.inputNetwork.edges);
-      console.log("ProteinData", this.proteinData);
       if (this.networkHandler.activeNetwork.networkPositions) {
         this.proteinData.updateNodePositions(this.networkHandler.activeNetwork.networkPositions);
       }

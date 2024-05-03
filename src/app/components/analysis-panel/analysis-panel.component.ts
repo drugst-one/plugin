@@ -143,7 +143,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   public resetNetwork() {
-    this.refreshTask();
+    if(this.tokenType === 'view'){
+      this.refreshView();
+    } else if (this.tokenType === 'task'){
+      this.refreshTask();
+    }
   }
 
   private compare_string_number(a: number | string, b: number | string, isAsc: boolean){
