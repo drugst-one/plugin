@@ -553,7 +553,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         }
         else {
           this.legendService.add_to_context('drugTarget');
-          if (this.result.parameters.algorithm === 'louvain-clustering') {
+          if (this.result.parameters.algorithm === 'louvain-clustering' || this.result.parameters.algorithm === 'leiden-clustering') {
             this.legendService.add_to_context('louvain');
             this.partition = true;
           }
@@ -803,7 +803,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       this.analysis.currentNetwork = network;
       return network
 
-    } else if (result.algorithm === "louvain_clustering"){
+    } else if (result.algorithm === "louvain_clustering" || result.algorithm === "leiden_clustering") {
       result.network["edges"] = result.network["edges"].map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
       this.analysis.currentNetwork = result.network;
       return result.network;

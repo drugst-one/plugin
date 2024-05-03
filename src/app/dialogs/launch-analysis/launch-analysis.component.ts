@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {
   AnalysisService, BETWEENNESS_CENTRALITY, CLOSENESS_CENTRALITY,
   DEGREE_CENTRALITY,
-  KEYPATHWAYMINER, LOUVAINCLUSTERING, MAX_TASKS,
+  KEYPATHWAYMINER, LEIDENCLUSTERING, LOUVAINCLUSTERING, MAX_TASKS,
   MULTISTEINER, NETWORK_PROXIMITY,
   PATHWAYENRICHMENT,
   TRUSTRANK
@@ -101,7 +101,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.target === 'drug-target') {
-      this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, BETWEENNESS_CENTRALITY, LOUVAINCLUSTERING];
+      this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, BETWEENNESS_CENTRALITY, LOUVAINCLUSTERING, LEIDENCLUSTERING];
     } else if (this.target === 'drug') {
       this.algorithms = [TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, NETWORK_PROXIMITY];
     } else if (this.target === 'gene') {
@@ -216,6 +216,8 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.reactome = this.pathways.find(pathway => pathway.label === 'Reactome').selected;
       parameters.wiki = this.pathways.find(pathway => pathway.label === 'Wiki Pathways').selected;
     } else if (this.algorithm === 'louvain-clustering'){
+      parameters.ignore_isolated = this.ignore_isolated
+    } else if (this.algorithm === 'leiden-clustering') {
       parameters.ignore_isolated = this.ignore_isolated
     }
     const token = await this.analysis.startAnalysis(this.algorithm, this.target, parameters);

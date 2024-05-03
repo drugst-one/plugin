@@ -575,19 +575,20 @@
           </div>
 
 
-          <div *ngIf="task.info.algorithm === 'louvain-clustering'">
+          <div *ngIf="task.info.algorithm === 'louvain-clustering' || task.info.algorithm === 'leiden-clustering'">
               <div class="column">
               <h4 class="is-4">
                 <app-fa-solid-icon
                   icon="dna"
                   title="protein table"
                 ></app-fa-solid-icon>
-                <span>Louvain Clustering</span>
+                <span *ngIf="task.info.algorithm === 'louvain-clustering'">Louvain Clustering</span>
+                <span *ngIf="task.info.algorithm === 'leiden-clustering'">Leiden Clustering</span>
               </h4>
             </div>
             <div class="column">
 
-        <table *ngIf="['louvain-clustering'].includes(task.info.algorithm) && result && result.tableView" class="table parameter-table">
+        <table *ngIf="(['louvain-clustering'].includes(task.info.algorithm) || ['leiden-clustering'].includes(task.info.algorithm)) && result && result.tableView" class="table parameter-table">
               <thead>
               <tr>
                 <th>Cluster</th>

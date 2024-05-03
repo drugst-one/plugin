@@ -292,6 +292,7 @@ export type AlgorithmType =
   | 'proximity'
   | 'betweenness'
   | 'pathway-enrichment'
+  | 'leiden-clustering'
   | 'louvain-clustering';
 export type QuickAlgorithmType = 'quick' | 'super' | 'connect' | 'connectSelected';
 

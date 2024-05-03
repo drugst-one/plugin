@@ -585,6 +585,34 @@
             </div>
           </div>
 
+          <div *ngIf="algorithm === 'leiden-clustering'">
+            <div class="box">
+              <article class="media">
+                <div class="media-left">
+                  <app-fa-solid-icon icon="info"></app-fa-solid-icon>
+                </div>
+                <div class="media-content">
+                  <div class="content">
+                    <h6 class="is-6">About Leiden Clustering</h6>
+                    <p>
+                      Leiden Clustering is a community detection algorithm that is performed on undirected networks.
+                      It is recommended to select all nodes of the graph.
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="field">
+              <label class="label" for="pathway-enrichment-alpha">Ignore isolated nodes in Clustering</label>
+              <div class="control">
+                <label>
+                  <input type="checkbox" [(ngModel)]="ignore_isolated">
+                  ignore isolated nodes
+                </label>
+              </div>
+            </div>
+          </div>
+
           <div *ngIf="algorithm === 'betweenness'">
             <div class="box">
               <article class="media">
