@@ -101,10 +101,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   public loading = false;
 
-  public genesets = [];
   public geneSet = null;
   public pathway = null;
-  public pathways = [];
   public sortedData = [];
   public maxSliderValue: number;
   public sliderValue: number;
@@ -347,7 +345,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   public choose_pathway_in_table(geneset: string, pathway: string) {
     this.geneSet = geneset;
-    this.pathways = this.result.geneSetPathways[geneset];
     this.pathway = pathway;
     this.tab = "network";
     this.loading = true;
@@ -512,16 +509,19 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       this.loading = true;
       this.netex.getTaskResult(this.token).then(async result => {
         console.log(result)
+        if (!("network" in result)) {
+          this.tab = 'table';
+        }
 
         if (this.networkHandler.activeNetwork.networkType !== 'analysis') {
           return;
         }
         this.drugstoneConfig.set_analysisConfig(result.parameters.config);
         if (result["algorithm"] === "pathway_enrichment") {
-          this.genesets = result["geneSets"];
-          this.geneSet = result["geneset"];
-          this.pathway = result["pathway"];
-          this.pathways = result["geneSetPathways"][this.geneSet];
+          if("geneset" in result){
+            this.geneSet = result["geneset"];
+            this.pathway = result["pathway"];
+          }
           if (!this.maxSliderValue){
             this.maxSliderValue = this.findMaxOverlap(result["tableView"]);
             this.sliderValue = this.maxSliderValue;
@@ -772,6 +772,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
    */
   public async createNetwork(result: any, nodesToAdd: Node[] = []): Promise<{ edges: any[]; nodes: any[]; }> {
     if (result.algorithm === "pathway_enrichment") {
+      if (!("network" in result)) {
+        return { edges: [], nodes: [] };
+      }
       let edges_mapped = result.network.edges.map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
       let nodes_list: any[] = result.network.nodes;
       if (nodesToAdd.length > 0) {

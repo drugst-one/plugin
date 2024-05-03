@@ -39,9 +39,12 @@ export class NetworkLegendComponent implements OnInit {
         uniqueGroups.add(node.group);
       });
       return Array.from(uniqueGroups);
-    } else {
-      return false;
     }
+    const uniqueGroups = new Set<string>();
+    this.networkHandler.activeNetwork.inputNetwork.nodes.forEach(node => {
+      uniqueGroups.add(node.group);
+    });
+    return Array.from(uniqueGroups);
   }
 
   public checkNodeGroupContext(nodeGroupKey) {
