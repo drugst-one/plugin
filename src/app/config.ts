@@ -76,8 +76,10 @@ export interface IConfig {
   networkMenuButtonAdjacentDisordersDrugsLabel: string;
   showNetworkMenuButtonAnimation: boolean;
   showNetworkMenuButtonLayout: boolean;
+  showNetworkMenuButtonUpload: boolean;
   networkMenuButtonAnimationLabel: string;
   networkMenuButtonLayoutLabel: string;
+  networkMenuButtonUploadLabel: string;
   showLegend: boolean;
   showLegendNodes: boolean;
   showLegendEdges: boolean;
@@ -175,6 +177,7 @@ export const defaultConfig: IConfig = {
   showNetworkMenuButtonCenter: true,
   showNetworkMenuButtonAnimation: true,
   showNetworkMenuButtonLayout: true,
+  showNetworkMenuButtonUpload: true,
   activateNetworkMenuButtonAdjacentDisorders: false,
   showNetworkMenuButtonAdjacentDisordersProteins: true,
   activateNetworkMenuButtonAdjacentDisorderDrugs: false,
@@ -185,6 +188,7 @@ export const defaultConfig: IConfig = {
   networkMenuButtonAdjacentDisordersDrugsLabel: 'Disorders (drug)',
   networkMenuButtonAnimationLabel: 'Animation',
   networkMenuButtonLayoutLabel: "Layout",
+  networkMenuButtonUploadLabel: "Upload",
   identifier: 'symbol',
   selfReferences: false,
   customEdges: { default: true, selectable: true },

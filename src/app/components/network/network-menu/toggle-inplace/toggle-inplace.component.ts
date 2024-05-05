@@ -17,6 +17,7 @@ export class ToggleInplaceComponent implements OnInit {
   @Input() icon: string;
 
   @Input() value: boolean;
+  @Input() useValue: boolean = true;
   @Output() valueChange = new EventEmitter<boolean>();
 
   constructor(public drugstoneConfig: DrugstoneConfigService) {

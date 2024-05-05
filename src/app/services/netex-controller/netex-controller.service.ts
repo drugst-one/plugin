@@ -59,6 +59,16 @@ export class NetexControllerService {
     return this.http.post(`${this.getBackend()}map_nodes/`, payload).toPromise();
   }
 
+  public async parseFile(file): Promise<any> {
+    /**
+     * parses file and returns network as JSON
+     */
+  
+    const formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+    return this.http.put(`${this.getBackend()}upload/` + file.name, formData).toPromise();
+  }
+
   public async applyLayout(nodes, hierachical_layout): Promise<any> {
     /**
      * Applies layout to nodes

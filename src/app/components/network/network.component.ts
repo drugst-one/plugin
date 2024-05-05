@@ -122,6 +122,8 @@ export class NetworkComponent implements OnInit {
   private selectMode = false;
 
   @Output() createNetwork: EventEmitter<string> = new EventEmitter<string>();
+  @Output() networkEmitter: EventEmitter<string> = new EventEmitter<string>();
+
 
   ngOnInit(): void {
     this.networkHandler.networks[this.networkType] = this;

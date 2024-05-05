@@ -87,7 +87,7 @@
       </div>
     </div>
 
-    <app-network-menu (resetEmitter)="reset()"
+    <app-network-menu (networkEmitter)="networkEmitter.emit($event)" (resetEmitter)="reset()"
       *ngIf="
         drugstoneConfig.config.showNetworkMenu &&
         drugstoneConfig.config.showNetworkMenu === 'right'
