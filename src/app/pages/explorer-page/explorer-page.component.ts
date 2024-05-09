@@ -375,6 +375,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public resetNetwork(network: string) {
     this.network = network;
+    this.reset();
   }
 
   /**

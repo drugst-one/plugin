@@ -64,6 +64,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
+import { IdspaceButtonComponent } from './components/network/network-menu/idspace-button/idspace-button.component';
 
 
 @NgModule({
@@ -111,6 +112,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ImageComponent,
     ImageFallbackDirective,
     ExternalAnalysisButtonComponent,
+    IdspaceButtonComponent,
   ],
   imports: [
     BrowserModule,
