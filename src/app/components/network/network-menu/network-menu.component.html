@@ -81,10 +81,10 @@
           <app-idspace-button (resetEmitter)="reset()" class="network-footer-toolbar-element" [buttonId]="'idspace-chooser'"></app-idspace-button>
         </div>
         <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonUpload" class="row is-full m-1">
-          <input type="file" #networkFileInput (change)="uploadNetworkFile($event)" accept=".csv, .sif, .graphml"
+          <input type="file" #networkFileInput (change)="uploadNetworkFile($event)" accept=".csv, .sif, .graphml, .gt"
             id="network-file-input" hidden>
           <app-toggle-inplace [useValue]="false" class="network-footer-toolbar-element"
-            text="{{ drugstoneConfig.config.networkMenuButtonUploadLabel }}" tooltip="Upload network as .csv, .sif or .graphml."
+            text="{{ drugstoneConfig.config.networkMenuButtonUploadLabel }}" tooltip="Upload network as .csv, .sif, .gt (id as node property 'name') or .graphml."
             (valueChange)="
                                 networkFileInput.click();
                               " icon="upload"></app-toggle-inplace>

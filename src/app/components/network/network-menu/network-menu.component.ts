@@ -38,13 +38,13 @@ export class NetworkMenuComponent implements OnInit {
         });
       } else {
         this.toast.setNewToast({
-          message: `The file ${file.name} could not be parsed. We support .csv adjacency lists, .sif and .graphml files.`,
+          message: `The file ${file.name} could not be parsed. We support .csv adjacency lists, .sif, .gt (id as node property 'name') and .graphml files.`,
           type: 'danger'
         });
       }
     }).catch(() => {
       this.toast.setNewToast({
-        message: `The file ${file.name} could not be parsed. We support .csv adjacency lists, .sif and .graphml files.`,
+        message: `The file ${file.name} could not be parsed. We support .csv adjacency lists, .sif, .gt (id as node property 'name') and .graphml files.`,
         type: 'danger'
       });
     });

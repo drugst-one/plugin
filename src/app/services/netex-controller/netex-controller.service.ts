@@ -66,7 +66,7 @@ export class NetexControllerService {
   
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
-    return this.http.put(`${this.getBackend()}upload/` + file.name, formData).toPromise();
+    return this.http.post(`${this.getBackend()}upload/` + file.name, formData).toPromise();
   }
 
   public async applyLayout(nodes, hierachical_layout): Promise<any> {
