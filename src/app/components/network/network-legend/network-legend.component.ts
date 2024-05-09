@@ -35,12 +35,24 @@ export class NetworkLegendComponent implements OnInit {
   public get_nodes_to_keep() {
     if (this.analysis.currentNetwork && this.analysis.analysisActive) {
       const uniqueGroups = new Set<string>();
+      if (this.legendService.context.includes("adjacentDisorders")) {
+        uniqueGroups.add("defaultDisorder");
+      }
+      if (this.legendService.context.includes("adjacentDrugs")) {
+        uniqueGroups.add("foundDrug");
+      }
       this.analysis.currentNetwork.nodes.forEach(node => {
         uniqueGroups.add(node.group);
       });
       return Array.from(uniqueGroups);
     }
     const uniqueGroups = new Set<string>();
+    if (this.legendService.context.includes("adjacentDisorders")) {
+      uniqueGroups.add("defaultDisorder");
+    }
+    if (this.legendService.context.includes("adjacentDrugs")) {
+      uniqueGroups.add("foundDrug");
+    }
     this.networkHandler.activeNetwork.inputNetwork.nodes.forEach(node => {
       uniqueGroups.add(node.group);
     });

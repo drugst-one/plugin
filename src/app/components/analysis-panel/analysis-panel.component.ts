@@ -701,6 +701,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.analysis.inPathwayAnalysis = false;
     this.analysis.nodesToAdd = [];
     this.token = null;
+    this.networkHandler.activeNetwork.updateLayoutEnabled(false);
     this.tokenChange.emit(this.token);
     this.legendService.remove_from_context('drug');
     this.legendService.remove_from_context('drugTarget');

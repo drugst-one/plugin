@@ -10,7 +10,7 @@ export class LegendService {
   }
 
   private default_delete = ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'onlyPathway', 'addedNode', 'connectorNode'];
-  private context = [];
+  public context = [];
   public networkHasConnector = false;
 
   private contextNodeGroupsToDelete = {
