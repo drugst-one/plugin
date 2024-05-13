@@ -36,7 +36,7 @@ export class QueryTileComponent implements OnInit {
     term = term.toLowerCase();
     const data = {...item.data}
     // add possible missing attributes to not throw errors
-    if (data.ensg === undefined) {
+    if (data.ensg === undefined || !data.ensg) {
       data.ensg = []
     }
     if (data.groupName === undefined) {
