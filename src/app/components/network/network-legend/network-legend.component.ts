@@ -61,7 +61,7 @@ export class NetworkLegendComponent implements OnInit {
 
   public checkNodeGroupContext(nodeGroupKey) {
     const to_keep = this.get_nodes_to_keep()
-    if (to_keep){
+    if (to_keep.length > 0){
       return to_keep.includes(nodeGroupKey);
     }
     if (nodeGroupKey === "selectedNode") {
