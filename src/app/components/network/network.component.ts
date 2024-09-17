@@ -65,6 +65,8 @@ export class NetworkComponent implements OnInit {
 
   public adjacentDrugs = false;
 
+  public ignorePosition = false;
+
   public selectedDrugTargetType = new Subject<string | null>();
   public selectedDrugTargetTypeLast: string | null = null;
   public selectedDrugTargetType$ = this.selectedDrugTargetType.asObservable();
@@ -118,6 +120,10 @@ export class NetworkComponent implements OnInit {
   public nodeGroupsWithExpression: Set<string> = new Set();
 
   private selectMode = false;
+
+  @Output() createNetwork: EventEmitter<string> = new EventEmitter<string>();
+  @Output() networkEmitter: EventEmitter<string> = new EventEmitter<string>();
+
 
   ngOnInit(): void {
     this.networkHandler.networks[this.networkType] = this;
@@ -636,6 +642,74 @@ export class NetworkComponent implements OnInit {
         },
       }
     });
+  }
+
+  getMinXCoordinate(nodes: any[]): number {
+    let minX = nodes.length > 0 ? nodes[0]["x"] : 0;
+    nodes.forEach(node => {
+      if (node["x"] < minX) {
+        minX = node["x"];
+      }
+    });
+    return minX;
+  }
+
+
+  drawLabelOnCanvas(canvasElement: HTMLCanvasElement, maxX: number, y: number, label: string) {
+    const context = canvasElement.getContext('2d');
+    const text = label;
+    const x = maxX - 500;
+    context.font = "bold 40px verdana, sans-serif ";
+    context.fillStyle = "black";
+    this.networkHandler.activeNetwork.networkInternal.on("beforeDrawing", function (ctx) {
+      context.fillText(text, x, y);
+    });
+  }
+
+  getYpositions(nodes: any[]): any {
+    let yPositions = {};
+    nodes.forEach(node => {
+      if (!(node["layer"] in yPositions)) {
+        yPositions[node["layer"]] = node["y"];
+      }
+    });
+    return yPositions;
+  }
+
+  private removeXYFromNodes(nodes: any[]): any[] {
+    return nodes.map(({ id, group }) => ({ id, group }));
+  }
+
+  public updateLayoutEnabled(bool: boolean, fromButton: boolean = false) {
+    this.drugstoneConfig.config.layoutOn = bool;
+    let minX;
+    let yPositions;
+    let ys: number[] = [];
+    this.loadingScreen.stateUpdate(true);
+
+    if (bool){
+      this.ignorePosition = false;
+      this.netex.applyLayout(this.nodeData.nodes.get(), "True").then(response => {
+        this.nodeData.nodes.update(response);
+        minX = this.getMinXCoordinate(response);
+        yPositions = this.getYpositions(response);
+        let originalCanvas = this.networkEl.nativeElement.querySelector('canvas');
+        ys = [];
+        Object.keys(yPositions).forEach(key => {
+          ys.push(yPositions[key]);
+          this.drawLabelOnCanvas(originalCanvas, minX, yPositions[key], key);
+        });
+      });
+    } else if (this.nodeData.nodes){
+      const nodes = this.removeXYFromNodes(this.nodeData.nodes.get());
+      this.nodeData.nodes.update(nodes);
+      if (fromButton) {
+        this.ignorePosition = true;
+        const network = {nodes: nodes, edges: this.nodeData.edges.get()};
+        this.createNetwork.emit(JSON.stringify(network));
+      }
+    }
+    this.loadingScreen.stateUpdate(false);
   }
 
   public getOptions() {

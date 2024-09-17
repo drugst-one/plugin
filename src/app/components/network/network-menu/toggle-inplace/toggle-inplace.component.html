@@ -21,12 +21,12 @@
   }}</span>
 
   <app-fa-solid-icon
-    *ngIf="value"
+    *ngIf="useValue && value"
     [icon]="iconOn"
     classString="is-small last-item-in-button has-text-success"
   ></app-fa-solid-icon>
   <app-fa-solid-icon
-    *ngIf="!value"
+    *ngIf="useValue && !value"
     [icon]="iconOff"
     classString="is-small last-item-in-button has-text-danger"
   ></app-fa-solid-icon>

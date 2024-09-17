@@ -174,6 +174,31 @@
                   </button>
                 </div>
               </div>
+              <div class="field" *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('drug-search')">
+                <div
+                  class="control"
+                  [pTooltip]="analysis.getCount() === 0 ? 'Select proteins by double clicking, to perform gene analysis.' : 'Perform gene analysis for the selected proteins.'"
+                  [tooltipStyleClass]="
+                    'drgstn drgstn-tooltip drgstn-tooltip-top'
+                  "
+                  tooltipPosition="top"
+                >
+                  <button
+                    (click)="
+                      analysisDialogTarget = 'gene'; showAnalysisDialog = true
+                    "
+                    class="button is-primary is-fullwidth is-rounded has-tooltip"
+                    [disabled]="analysis.getCount() === 0"
+                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                  >
+                    <app-fa-solid-icon icon="dna" classString="first-item-in-button"></app-fa-solid-icon>
+                    <span>
+                      {{ drugstoneConfig.config.pathwayEnrichment }}
+                    </span>
+                  </button>
+                
+                </div>
+              </div>
               <app-external-analysis-button [enabled]="analysis.getCount() > 0" label="g:Profiler enrichment analysis" tooltipDisabled="Select proteins by double clicking, to run enrichment analysis via g:Profiler (external)." tooltipEnabled="Use enrichment analysis via g:Profiler (external)." [callback]="openGProfiler.bind(this)" [hidden]="!drugstoneConfig.config.showAdvAnalysisContent.includes('enrichment-gprofiler')"></app-external-analysis-button>
 
               <app-external-analysis-button [enabled]="analysis.getCount() > 0" label="DIGEST enrichment analysis" tooltipDisabled="Select proteins by double clicking, to run enrichment analysis via DIGEST (external)." tooltipEnabled="Use enrichment analysis via DIGEST (external)." [callback]="openDigest.bind(this)" [hidden]="!drugstoneConfig.config.showAdvAnalysisContent.includes('enrichment-digest')"></app-external-analysis-button>
@@ -307,6 +332,15 @@
               >
                 <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
                 <span>Add connected components</span>
+              </a>
+               <a *ngIf="analysis.inPathwayAnalysis"
+                (click)="analysis.addSelectedToNetwork()"
+                class="card-footer-item text-primary"
+                tooltipPosition="top"
+                pTooltip="Add selected nodes to network."
+              >
+                <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
+                <span>Add selected nodes to network</span>
               </a>
             </footer>
             <footer class="card-footer">
@@ -482,7 +516,7 @@
           ></app-analysis-panel>
         </div>
         <!-- explorer network -->
-        <app-network (resetEmitter)="reset()" networkType="explorer" [nodeData]="nodeData"></app-network>
+        <app-network (networkEmitter)="resetNetwork($event)" (createNetwork)="resetNetwork($event)" (resetEmitter)="reset()" networkType="explorer" [nodeData]="nodeData"></app-network>
       </div>
       <!-- End  network block -->
 

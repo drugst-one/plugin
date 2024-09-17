@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {LegendContext} from '../../interfaces';
+import { Injectable } from '@angular/core';
+import { LegendContext } from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -9,16 +9,18 @@ export class LegendService {
   constructor() {
   }
 
-  private default_delete = ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder', 'connectorNode'];
-  private context = [];
+  private default_delete = ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'onlyPathway', 'addedNode', 'connectorNode'];
+  public context = [];
   public networkHasConnector = false;
 
   private contextNodeGroupsToDelete = {
-    adjacentDrugs: ['foundNode', 'seedNode', 'default', 'defaultDisorder', 'connectorNode'],
-    adjacentDisorders: ['foundDrug', 'foundNode', 'seedNode', 'default', 'connectorNode'],
-    drugTarget: ['foundDrug', 'seedNode', 'default', 'defaultDisorder'],
-    drug: ['foundNode', 'seedNode', 'default', 'defaultDisorder'],
-    seeds: ['default', 'foundNode', 'foundDrug', 'defaultDisorder']
+    pathway: ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder', 'connectorNode'],
+    louvain: ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'onlyPathway', 'addedNode', 'connectorNode'],
+    adjacentDrugs: ['foundNode', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'onlyPathway', 'addedNode', 'connectorNode'],
+    adjacentDisorders: ['foundDrug', 'foundNode', 'seedNode', 'default', 'overlap', 'onlyNetwork', 'onlyPathway', 'addedNode', 'connectorNode'],
+    drugTarget: ['foundDrug', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'addedNode', 'onlyPathway'],
+    drug: ['foundNode', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'addedNode', 'onlyPathway'],
+    seeds: ['default', 'foundNode', 'foundDrug', 'defaultDisorder', 'overlap', 'onlyNetwork', 'addedNode', 'onlyPathway']
   };
 
   public add_to_context(value: LegendContext) {
@@ -42,7 +44,7 @@ export class LegendService {
     const out = [].concat(this.default_delete);
     for (const node of this.default_delete) {
       let keep = false;
-      
+
       // delete connectorNodes if network does not contain any 
       if (node === 'connectorNode' && !this.networkHasConnector) {
         break;

@@ -10,6 +10,10 @@
         <app-fa-solid-icon icon="crosshairs"></app-fa-solid-icon>
         Find Drug Targets
       </p>
+      <p class="modal-card-title" *ngIf="target === 'gene'">
+        <app-fa-solid-icon icon="capsules"></app-fa-solid-icon>
+        Pathway enrichment
+      </p>
       <button (click)="close()" class="delete" aria-label="close"></button>
     </header>
     <section class="modal-card-body">
@@ -37,6 +41,54 @@
           </div>
         </div>
         <div class="column">
+
+          <div *ngIf="algorithm === 'pathway-enrichment'">
+            <div class="box">
+              <article class="media">
+                <div class="media-left">
+                  <app-fa-solid-icon icon="info"></app-fa-solid-icon>
+                </div>
+                <div class="media-content">
+                  <div class="content">
+                    <h6 class="is-6">About Pathway Enrichment</h6>
+                    <p>
+                      Pathway enrichment analysis is a method to identify pathways overrepresented in a list of genes or proteins. 
+                      It is recommended to select all nodes of the graph.
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <!--Parameters for pathway enrichment-->
+            <div class="field">
+              <label class="label" for="pathway-enrichment-alpha">Cutoff for adjusted p-value</label>
+              <div class="control">
+                <input
+                  [(ngModel)]="alpha"
+                  id="pathway-enrichment-alpha"
+                  class="input"
+                  type="number"
+                  placeholder="Cutoff for adjusted p-value."
+                  required
+                />
+              </div>
+            </div>
+             <div class="field">
+              <label class="label" for="pathway-enrichment-geneset">Genesets to consider in pathway enrichment</label>
+              <div class="control">
+                <div *ngFor="let option of pathways">
+                <label>
+                  <input type="checkbox" [(ngModel)]="option.selected">
+                  {{ option.label }}
+                 </label>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+
           <div *ngIf="algorithm === 'trustrank'">
             <div class="box">
               <article class="media">
@@ -505,6 +557,62 @@
             </div>
           </div>
 
+          <div *ngIf="algorithm === 'louvain-clustering'">
+            <div class="box">
+              <article class="media">
+                <div class="media-left">
+                  <app-fa-solid-icon icon="info"></app-fa-solid-icon>
+                </div>
+                <div class="media-content">
+                  <div class="content">
+                    <h6 class="is-6">About Louvain Clustering</h6>
+                    <p>
+                      Louvain Clustering is a community detection algorithm that is performed on undirected networks.
+                      It is recommended to select all nodes of the graph.
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="field">
+              <label class="label" for="pathway-enrichment-alpha">Ignore isolated nodes in Clustering</label>
+              <div class="control">
+                <label>
+                  <input type="checkbox" [(ngModel)]="ignore_isolated">
+                  ignore isolated nodes
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="algorithm === 'leiden-clustering'">
+            <div class="box">
+              <article class="media">
+                <div class="media-left">
+                  <app-fa-solid-icon icon="info"></app-fa-solid-icon>
+                </div>
+                <div class="media-content">
+                  <div class="content">
+                    <h6 class="is-6">About Leiden Clustering</h6>
+                    <p>
+                      Leiden Clustering is a community detection algorithm that is performed on undirected networks.
+                      It is recommended to select all nodes of the graph.
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="field">
+              <label class="label" for="pathway-enrichment-alpha">Ignore isolated nodes in Clustering</label>
+              <div class="control">
+                <label>
+                  <input type="checkbox" [(ngModel)]="ignore_isolated">
+                  ignore isolated nodes
+                </label>
+              </div>
+            </div>
+          </div>
+
           <div *ngIf="algorithm === 'betweenness'">
             <div class="box">
               <article class="media">
@@ -774,7 +882,7 @@
         pTooltip="Run the analysis."
         [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
         tooltipPosition="top"
-        [disabled]="!analysis.canLaunchTask()"
+        [disabled]="!analysis.canLaunchTask() || !isAnySelected()"
       >
         <app-fa-solid-icon icon="rocket"></app-fa-solid-icon>
         <span> Launch </span>
@@ -788,6 +896,13 @@
       >
         Close
       </button>
-    </footer>
+      <button mat-icon-button
+        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+        tooltipPosition="top"
+        pTooltip="Choose at least one geneset!"  
+        *ngIf="!isAnySelected()">
+        <app-fa-solid-icon icon="exclamation-triangle"></app-fa-solid-icon>
+      </button>   
+  </footer>
   </div>
 </div>

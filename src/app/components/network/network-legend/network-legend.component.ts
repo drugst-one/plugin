@@ -4,6 +4,7 @@ import { DrugstoneConfigService } from "src/app/services/drugstone-config/drugst
 import { IConfig } from "../../../config";
 import { LegendService } from "src/app/services/legend-service/legend-service.service";
 import { NetworkHandlerService } from "src/app/services/network-handler/network-handler.service";
+import { AnalysisService } from "src/app/services/analysis/analysis.service";
 
 @Component({
   selector: "app-network-legend",
@@ -30,7 +31,39 @@ export class NetworkLegendComponent implements OnInit {
     drugAndSeeds: ["default"],
   };
 
+
+  public get_nodes_to_keep() {
+    if (this.analysis.currentNetwork && this.analysis.analysisActive) {
+      const uniqueGroups = new Set<string>();
+      if (this.legendService.context.includes("adjacentDisorders")) {
+        uniqueGroups.add("defaultDisorder");
+      }
+      if (this.legendService.context.includes("adjacentDrugs")) {
+        uniqueGroups.add("foundDrug");
+      }
+      this.analysis.currentNetwork.nodes.forEach(node => {
+        uniqueGroups.add(node.group);
+      });
+      return Array.from(uniqueGroups);
+    }
+    const uniqueGroups = new Set<string>();
+    if (this.legendService.context.includes("adjacentDisorders")) {
+      uniqueGroups.add("defaultDisorder");
+    }
+    if (this.legendService.context.includes("adjacentDrugs")) {
+      uniqueGroups.add("foundDrug");
+    }
+    this.networkHandler.activeNetwork.inputNetwork.nodes.forEach(node => {
+      uniqueGroups.add(node.group);
+    });
+    return Array.from(uniqueGroups);
+  }
+
   public checkNodeGroupContext(nodeGroupKey) {
+    const to_keep = this.get_nodes_to_keep()
+    if (to_keep.length > 0){
+      return to_keep.includes(nodeGroupKey);
+    }
     if (nodeGroupKey === "selectedNode") {
       // selected node is not supposed to appear in legend
       return false;
@@ -53,7 +86,8 @@ export class NetworkLegendComponent implements OnInit {
   constructor(
     public drugstoneConfig: DrugstoneConfigService,
     public legendService: LegendService,
-    public networkHandler: NetworkHandlerService
+    public networkHandler: NetworkHandlerService,
+    public analysis: AnalysisService
   ) {}
 
   ngOnInit(): void {}

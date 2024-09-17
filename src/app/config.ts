@@ -1,4 +1,4 @@
-import {AlgorithmTarget, AlgorithmType, QuickAlgorithmType} from './interfaces';
+import { AlgorithmTarget, AlgorithmType, QuickAlgorithmType } from './interfaces';
 
 
 // https://visjs.github.io/vis-network/docs/network/nodes.html
@@ -33,7 +33,7 @@ export type InteractionDrugProteinDB = 'NeDRex' | 'DrugBank' | 'DrugCentral' | '
 export type InteractionProteinProteinDB = 'NeDRex' | 'BioGRID' | 'IID' | 'IntAct' | 'STRING' | 'APID';
 export type IndicationDrugDisorderDB = 'NeDRex' | 'CTD' | 'DrugCentral' | 'DrugBank';
 export type AssociatedProteinDisorderDB = 'NeDRex' | 'DisGeNET' | 'OMIM';
-export type AdvAnalysisContentTypes = 'drug-target-search' | 'drug-search' | 'enrichment-gprofiler' | 'enrichment-digest' | 'search-ndex';
+export type AdvAnalysisContentTypes = 'drug-target-search' | 'drug-search' | 'pathway-enrichment' | 'enrichment-gprofiler' | 'enrichment-digest' | 'search-ndex';
 
 
 // TODO: should this be external or integrated in the backend?
@@ -47,6 +47,7 @@ export interface IConfig {
   legendPos: 'left' | 'right';
   taskTargetName: string;
   taskDrugName: string;
+  pathwayEnrichment: string;
   showSidebar: false | 'left' | 'right';
   showOverview: boolean;
   showQuery: boolean;
@@ -74,10 +75,15 @@ export interface IConfig {
   showNetworkMenuButtonAdjacentDisordersDrugs: boolean;
   networkMenuButtonAdjacentDisordersDrugsLabel: string;
   showNetworkMenuButtonAnimation: boolean;
+  showNetworkMenuButtonLayout: boolean;
+  showNetworkMenuButtonUpload: boolean;
   networkMenuButtonAnimationLabel: string;
+  networkMenuButtonLayoutLabel: string;
+  networkMenuButtonUploadLabel: string;
   showLegend: boolean;
   showLegendNodes: boolean;
   showLegendEdges: boolean;
+  keepSelectedNodes: boolean;
   nodeGroups: { [key: string]: NodeGroup };
   edgeGroups: { [key: string]: EdgeGroup };
   selfReferences: boolean;
@@ -89,6 +95,7 @@ export interface IConfig {
   autofillEdges: boolean;
   interactions?: InteractionDatabase;
   physicsOn?: boolean;
+  layoutOn?: boolean;
   physicsInital?: boolean;
   licensedDatasets?: boolean;
   identifier?: Identifier;
@@ -146,6 +153,7 @@ export const defaultConfig: IConfig = {
   legendPos: 'left',
   taskTargetName: 'Drug target search',
   taskDrugName: 'Drug search',
+  pathwayEnrichment: 'Pathway enrichment',
   showSidebar: 'left',
   showLegendNodes: true,
   showLegendEdges: true,
@@ -154,7 +162,7 @@ export const defaultConfig: IConfig = {
   showItemSelector: true,
   showSimpleAnalysis: true,
   showAdvAnalysis: true,
-  showAdvAnalysisContent: ['drug-search', 'drug-target-search', 'enrichment-gprofiler', 'enrichment-digest', 'search-ndex'],
+  showAdvAnalysisContent: ['drug-search', 'drug-target-search', 'pathway-enrichment', 'enrichment-gprofiler', 'enrichment-digest', 'search-ndex'],
   showSelection: true,
   showTasks: true,
   showViews: true,
@@ -168,6 +176,8 @@ export const defaultConfig: IConfig = {
   activateNetworkMenuButtonAdjacentDrugs: false,
   showNetworkMenuButtonCenter: true,
   showNetworkMenuButtonAnimation: true,
+  showNetworkMenuButtonLayout: true,
+  showNetworkMenuButtonUpload: true,
   activateNetworkMenuButtonAdjacentDisorders: false,
   showNetworkMenuButtonAdjacentDisordersProteins: true,
   activateNetworkMenuButtonAdjacentDisorderDrugs: false,
@@ -177,15 +187,18 @@ export const defaultConfig: IConfig = {
   networkMenuButtonAdjacentDisordersProteinsLabel: 'Disorders (protein)',
   networkMenuButtonAdjacentDisordersDrugsLabel: 'Disorders (drug)',
   networkMenuButtonAnimationLabel: 'Animation',
+  networkMenuButtonLayoutLabel: "Layout",
+  networkMenuButtonUploadLabel: "Upload",
   identifier: 'symbol',
   selfReferences: false,
-  customEdges: {default: true, selectable: true},
+  customEdges: { default: true, selectable: true },
   interactionDrugProtein: 'NeDRex',
   interactionProteinProtein: 'NeDRex',
   indicationDrugDisorder: 'NeDRex',
   associatedProteinDisorder: 'NeDRex',
   autofillEdges: true,
   physicsOn: false,
+  layoutOn: false,
   physicsInital: true,
   nodeShadow: true,
   edgeShadow: true,
@@ -193,8 +206,10 @@ export const defaultConfig: IConfig = {
   customLinks: {}, // { test: 'test link', test2: 'test2 link' }
   algorithms: {
     drug: ['trustrank', 'closeness', 'degree', 'proximity'],
-    'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness']
+    'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness', 'louvain-clustering', 'leiden-clustering'],
+    gene: ['pathway-enrichment']
   },
+  keepSelectedNodes: false,
   nodeGroups: {
     // all NodeGroups but the default group must be set, if not provided by the user, they will be taken from here
     // IMPORTANT: node color must be hexacode!
@@ -213,6 +228,127 @@ export const defaultConfig: IConfig = {
       type: 'default node type',
     },
     connectorNode: connectorNodeGroup,
+    overlap: {
+      groupName: 'overlap',
+      color: {
+        border: '#F12590',
+        background: '#F12590',
+        highlight: {
+          border: '#F12590',
+          background: '#F12590'
+        }
+      },
+      shape: 'circle',
+      type: 'gene',
+      borderWidth: 0,
+      borderWidthSelected: 0,
+      font: {
+        color: '#000000',
+        size: 14,
+        face: 'arial',
+        stroke_width: 0,
+        stroke_color: '#ffffff',
+        align: 'center',
+        bold: false,
+        ital: false,
+        boldital: false,
+        mono: false
+      },
+      shadow: true,
+      groupID: 'overlap'
+    },
+
+
+    onlyNetwork: {
+      groupName: 'only in network',
+      color: {
+        border: '#FFFF00',
+        background: '#FFFF00',
+        highlight: {
+          border: '#FFFF00',
+          background: '#FFFF00'
+        }
+      },
+      shape: 'circle',
+      type: 'gene',
+      font: {
+        color: '#000000',
+        size: 14,
+        face: 'arial',
+        stroke_width: 0,
+        stroke_color: '#ffffff',
+        align: 'center',
+        bold: false,
+        ital: false,
+        boldital: false,
+        mono: false
+      },
+      borderWidth: 1,
+      borderWidthSelected: 2,
+      shadow: true,
+      groupID: 'only_network'
+    },
+
+    addedNode: {
+      groupName: 'added node',
+      color: {
+        border: '#FFB6C1',
+        background: '#FFB6C1',
+        highlight: {
+          border: '#FFB6C1',
+          background: '#FFB6C1'
+        }
+      },
+      shape: 'circle',
+      type: 'gene',
+      font: {
+        color: '#000000',
+        size: 14,
+        face: 'arial',
+        stroke_width: 0,
+        stroke_color: '#ffffff',
+        align: 'center',
+        bold: false,
+        ital: false,
+        boldital: false,
+        mono: false
+      },
+      borderWidth: 1,
+      borderWidthSelected: 2,
+      shadow: true,
+      groupID: 'added_node'
+    },
+
+    onlyPathway: {
+      groupName: 'only in pathway',
+      color: {
+        border: '#FFFF00',
+        background: '#FFCC09',
+        highlight: {
+          border: '#FFFF00',
+          background: '#FFCC09'
+        }
+      },
+      shape: 'circle',
+      type: 'gene',
+      font: {
+        color: '#000000',
+        size: 14,
+        face: 'arial',
+        stroke_width: 0,
+        stroke_color: '#ffffff',
+        align: 'center',
+        bold: false,
+        ital: false,
+        boldital: false,
+        mono: false
+      },
+      borderWidth: 1,
+      borderWidthSelected: 2,
+      shadow: true,
+      groupID: 'only_pathway'
+    },
+
     foundDrug: {
       groupName: 'Drugs',
       color: {

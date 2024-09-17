@@ -64,6 +64,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     explorerNetwork.nodeRenderer = null;
     explorerNetwork.nodeGroupsWithExpression = new Set();
     explorerNetwork.updatePhysicsEnabled(false);
+    explorerNetwork.updateLayoutEnabled(false);
     this.legendService.reset();
     this.network = this.network;
   }
@@ -147,7 +148,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public showAnalysisDialog = false;
   public showThresholdDialog = false;
-  public analysisDialogTarget: 'drug' | 'drug-target';
+  public analysisDialogTarget: 'drug' | 'drug-target' | 'gene';
 
 
   public showCustomProteinsDialog = false;
@@ -311,7 +312,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
     configObj = merge(configObj, groupsObj);
     if (this.drugstoneConfig.analysisConfig) {
-      this.drugstoneConfig.set_analysisConfig({...this.drugstoneConfig.analysisConfig, configObj});
+            this.drugstoneConfig.set_analysisConfig({...this.drugstoneConfig.analysisConfig, configObj});
       // this.drugstoneConfig.set_analysisConfig(merge(this.drugstoneConfig.analysisConfig, configObj));
     } else {
       this.drugstoneConfig.config = {...this.drugstoneConfig.config, ...configObj};
@@ -338,7 +339,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
     if (updateNetworkFlag && typeof this.networkJSON !== 'undefined') {
       // update network if network config has changed and networkJSON exists
-      if (this.networkHandler.activeNetwork.networkInternal !== null) {
+      if (this.networkHandler.activeNetwork.networkInternal !== null && !this.networkHandler.activeNetwork.ignorePosition) {
         // a network exists, save node positions
         this.networkHandler.activeNetwork.networkPositions = this.networkHandler.activeNetwork.networkInternal.getPositions();
       }
@@ -370,6 +371,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.networkHandler.activeNetwork.selectedWrapper = null;
     this.networkHandler.activeNetwork.updateQueryItems();
     // this.fillQueryItems(this.currentViewNodes);
+  }
+
+  public resetNetwork(network: string) {
+    this.network = network;
+    this.reset();
   }
 
   /**

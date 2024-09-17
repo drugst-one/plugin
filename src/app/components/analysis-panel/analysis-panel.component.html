@@ -10,6 +10,8 @@
       </p>
 
       <span class="mr-1 is-pulled-right columns is-flex is-vcentered">
+        <p style="margin-right:10px" *ngIf="geneSet && pathway"> {{geneSet}} - {{pathway}}</p>
+
         <div class="field has-addons">
           <p class="control" *ngIf="!fullscreen">
             <button
@@ -119,7 +121,7 @@
             <a (click)="tab = 'table'">Table</a>
           </li>
           <li [class.is-active]="tab === 'network'">
-            <a (click)="tab = 'network'">Network</a>
+            <a (click)="chooseNetwork();">Network</a>
           </li>
           <li [class.is-active]="tab === 'meta'" *ngIf="tokenType!=='view'">
             <a (click)="tab = 'meta'">Parameters</a>
@@ -226,6 +228,26 @@
               <tr *ngIf="task.info.parameters.hubPenalty !== undefined">
                 <td>Hub Penality</td>
                 <td>{{ task.info.parameters.hubPenalty }}</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.alpha !== undefined">
+                <td>Adjusted p-value cutoff</td>
+                <td>{{ task.info.parameters.alpha }}</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.kegg === true">
+                <td>Geneset</td>
+                <td>KEGG</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.reactome === true">
+                <td>Geneset</td>
+                <td>Reactome</td>
+              </tr>
+              <tr *ngIf="task.info.parameters.wiki === true">
+                <td>Geneset</td>
+                <td>WikiPathway</td>
+              </tr>
+               <tr *ngIf="task.info.parameters.ignoreIsolated !== undefined">
+                <td>ignore isolated nodes</td>
+                <td>{{task.info.parameters.ignoreIsolated}}</td>
               </tr>
               <tr
                 *ngIf="
@@ -396,7 +418,7 @@
 
       <div class="tab-content" [class.is-visible]="tab === 'network'">
         <!-- network start -->
-        <app-network (resetEmitter)="reset()" networkType="analysis" [nodeData]="nodeData"></app-network>
+        <app-network (createNetwork)="resetNetwork()" (resetEmitter)="reset()" networkType="analysis" [nodeData]="nodeData"></app-network>
         <!-- network end -->
       </div>
       <div
@@ -489,6 +511,102 @@
             <!-- drug table or placeholder if no drugs found END -->
           </div>
         </div>
+        <div *ngIf="task.info.algorithm === 'pathway-enrichment'">
+            <div class="column">
+              <h4 class="is-4">
+                <app-fa-solid-icon
+                  icon="dna"
+                  title="protein table"
+                ></app-fa-solid-icon>
+                <span>Pathway enrichment</span>
+                  <div class="field has-addons is-pulled-right m-1 control">
+                    <button (click)="downloadPathwayEnrichmentAsCSV()"
+                      class="button is-primary is-rounded is-outlined is-pulled-right is-small">
+                      <app-fa-solid-icon icon="download" title="download resulting proteins"></app-fa-solid-icon>
+                      <span>Download</span>
+                    </button>
+                  </div>
+              </h4>
+            </div>
+
+           <div style="display: flex; justify-content: flex-start; padding: 12px;">
+            <span style="padding-right: 12px;">Maximum number of nodes: </span>
+            <input type="range" *ngIf="maxSliderValue" (input)="onSliderValueChanged($event.target.value)" min=0
+              [max]="maxSliderValue" [value]="sliderValue" class="my-slider">
+            <label style="padding: 5px;">{{ sliderValue }}</label>
+           </div>
+            <div class="column">
+        <table *ngIf="['pathway-enrichment'].includes(task.info.algorithm) && result && result.tableView" class="table parameter-table" (matSortChange)="sortData($event)" matSort>
+              <thead>
+              <tr>
+                <th> </th>
+                <th mat-sort-header="geneset">Geneset</th>
+                <th mat-sort-header="pathway">Pathway</th>
+                <th mat-sort-header="overlap">Overlap</th>
+                <th mat-sort-header="p_value">Adjusted p-value</th>
+                <th mat-sort-header="odds_ratio">Odds ratio</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of sortedData">
+                <td><button class="button is-primary is-rounded has-tooltip"
+                    style="background-color: white !important;"
+                    pTooltip="Visualize pathway {{item.geneset}}: {{item.pathway}} in network."
+                    [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+                    
+                    [ngClass]="{
+                      'is-small': drugstoneConfig.smallStyle
+                    }" 
+                    (click)="choose_pathway_in_table(item.geneset, item.pathway)"> 
+                  <app-fa-solid-icon
+                  icon="play"
+                  style="color: #696969 !important;"
+                ></app-fa-solid-icon></button></td>
+                <td>{{ item.geneset }}</td>
+                <td>{{ item.pathway }}</td>
+                <td>{{ item.overlap }}</td>
+                <td>{{ item.adjPvalue }}</td>
+                <td>{{ item.oddsRatio }}</td>
+              </tr>
+              </tbody>
+            </table>
+            </div>
+            <!-- column normalization for drugs button START -->
+          </div>
+
+
+          <div *ngIf="task.info.algorithm === 'louvain-clustering' || task.info.algorithm === 'leiden-clustering'">
+              <div class="column">
+              <h4 class="is-4">
+                <app-fa-solid-icon
+                  icon="dna"
+                  title="protein table"
+                ></app-fa-solid-icon>
+                <span *ngIf="task.info.algorithm === 'louvain-clustering'">Louvain Clustering</span>
+                <span *ngIf="task.info.algorithm === 'leiden-clustering'">Leiden Clustering</span>
+              </h4>
+            </div>
+            <div class="column">
+
+        <table *ngIf="(['louvain-clustering'].includes(task.info.algorithm) || ['leiden-clustering'].includes(task.info.algorithm)) && result && result.tableView" class="table parameter-table">
+              <thead>
+              <tr>
+                <th>Cluster</th>
+                <th>Number of elements</th>
+                <th>Number of elements - percentage</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of result.tableView">
+                <td>Cluster {{ item.clusterId }}</td>
+                <td>{{ item.count }}</td>
+                <td>{{ item.percentage }}%</td>
+              </tr>
+              </tbody>
+            </table>
+            </div>
+          </div>
+
         <div *ngIf="tableProteins.length > 0" class="table-header">
           <div class="columns m-1">
             <div class="column">
@@ -567,6 +685,7 @@
               [tableProteinSelection]="tableProteinSelection"
               [tableSelectedProteins]="tableSelectedProteins"
               [identifier]="drugstoneConfig.currentConfig().identifier"
+              [partition]="partition"
             ></app-prot-table>
           </div>
         </div>

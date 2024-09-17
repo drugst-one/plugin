@@ -1,0 +1,26 @@
+<div class="dropdown is-hoverable">
+    <div class="dropdown-trigger">
+        <button [id]="buttonId" class="button is-rounded has-tooltip" aria-haspopup="true"
+            attr.aria-controls="{{ 'controls-' + buttonId }}" [ngClass]="{
+        'is-small': drugstoneConfig.smallStyle
+      }">
+            <app-fa-solid-icon icon="paperclip"></app-fa-solid-icon>
+            <span [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">{{idspace}}</span>
+        </button>
+    </div>
+    <div class="dropdown-menu" id="{{ 'controls-' + buttonId }}" role="menu" [ngClass]="{
+      'inner-dropdown': !networkHandler.networkSidebarOpen
+    }">
+        <div class="dropdown-content">
+            <a (click)="changeIdspace('symbol')" class="dropdown-item"
+                [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">symbol</a>
+            <a (click)="changeIdspace('uniprot')" class="dropdown-item"
+                [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">uniprot</a>
+            <a (click)="changeIdspace('ensg')" class="dropdown-item"
+                [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">ensembl</a>
+            <a (click)="changeIdspace('entrez')" class="dropdown-item"
+                [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">entrez</a>
+        </div>
+    </div>
+</div>
+

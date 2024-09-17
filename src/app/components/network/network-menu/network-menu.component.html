@@ -77,6 +77,18 @@
           ></app-download-button>
         </div>
       </div>
+        <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonUpload" class="row is-full m-1">
+          <app-idspace-button (resetEmitter)="reset()" class="network-footer-toolbar-element" [buttonId]="'idspace-chooser'"></app-idspace-button>
+        </div>
+        <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonUpload" class="row is-full m-1">
+          <input type="file" #networkFileInput (change)="uploadNetworkFile($event)" accept=".csv, .sif, .graphml, .gt"
+            id="network-file-input" hidden>
+          <app-toggle-inplace [useValue]="false" class="network-footer-toolbar-element"
+            text="{{ drugstoneConfig.config.networkMenuButtonUploadLabel }}" tooltip="Upload network as .csv, .sif, .gt (id as node property 'name') or .graphml."
+            (valueChange)="
+                                networkFileInput.click();
+                              " icon="upload"></app-toggle-inplace>
+        </div>
       <div
         class="row is-full m-1"
         *ngIf="drugstoneConfig.config.showNetworkMenuButtonExpression"
@@ -323,6 +335,13 @@
           "
           icon="bullseye"
         ></app-toggle-inplace>
+      </div>
+      <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonLayout" class="row is-full m-1">
+        <app-toggle-inplace class="network-footer-toolbar-element"
+          text="{{ drugstoneConfig.config.networkMenuButtonLayoutLabel }}" tooltip="Create layout based on cellular component."
+          [value]="drugstoneConfig.config.layoutOn" (valueChange)="
+                  networkHandler.activeNetwork.updateLayoutEnabled($event, true)
+                " icon="list"></app-toggle-inplace>
       </div>
     </div>
   </div>

@@ -58,6 +58,13 @@ import { ViewListComponent } from './components/analysis-panel/view-list/view-li
 import { ImageComponent } from './image/image.component';
 import { ImageFallbackDirective } from './directives/image-fallback/image-fallback.directive';
 import { ExternalAnalysisButtonComponent } from './components/external-analysis-button/external-analysis-button.component';
+import { MatSortModule } from '@angular/material/sort';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ReactiveFormsModule } from '@angular/forms';
+import { IdspaceButtonComponent } from './components/network/network-menu/idspace-button/idspace-button.component';
 
 
 @NgModule({
@@ -105,6 +112,7 @@ import { ExternalAnalysisButtonComponent } from './components/external-analysis-
     ImageComponent,
     ImageFallbackDirective,
     ExternalAnalysisButtonComponent,
+    IdspaceButtonComponent,
   ],
   imports: [
     BrowserModule,
@@ -117,6 +125,12 @@ import { ExternalAnalysisButtonComponent } from './components/external-analysis-
     TableModule,
     MatTooltipModule,
     TooltipModule,
+    MatSortModule,
+    MatIconModule,
+    MatButtonModule,
+    MatSliderModule,
+    MatFormFieldModule,
+    ReactiveFormsModule
   ],
   providers: [AnalysisService],
 })

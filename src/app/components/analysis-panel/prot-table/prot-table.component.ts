@@ -8,6 +8,7 @@ import {Component, Input, OnInit} from '@angular/core';
 export class ProtTableComponent implements OnInit {
 
   @Input() public tableHasScores = true;
+  @Input() public partition = true;
   @Input() public tableProteinScoreTooltip = '';
   @Input() public tableProteins = [];
   @Input() public tableSelectedProteins;

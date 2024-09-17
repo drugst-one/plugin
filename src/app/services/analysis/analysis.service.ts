@@ -1,4 +1,4 @@
-import {Wrapper, Task, getWrapperFromNode, Node, Dataset, Tissue} from '../../interfaces';
+import {Wrapper, Task, getWrapperFromNode, getNodeFromWrapper,Node, Dataset, Tissue} from '../../interfaces';
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
@@ -15,6 +15,9 @@ export type AlgorithmType =
   | 'closeness'
   | 'degree'
   | 'proximity'
+  | 'pathway-enrichment'
+  | 'louvain-clustering'
+  | 'leiden-clustering'
   | 'betweenness';
 export type QuickAlgorithmType = 'quick' | 'super' | 'connect' | 'connectSelected';
 
@@ -29,7 +32,10 @@ export const algorithmNames = {
   quick: 'Simple',
   super: 'Quick-start',
   connect: 'Connect all',
-  connectSelected: 'Connect selected'
+  connectSelected: 'Connect selected',
+  'pathway-enrichment': 'Pathway Enrichment',
+  'louvain-clustering': 'Louvain Clustering',
+  'leiden-clustering': 'Leiden Clustering'
 };
 
 export interface Algorithm {
@@ -44,6 +50,10 @@ export const NETWORK_PROXIMITY: Algorithm = {slug: 'proximity', name: algorithmN
 export const BETWEENNESS_CENTRALITY: Algorithm = {slug: 'betweenness', name: algorithmNames.betweenness};
 export const KEYPATHWAYMINER: Algorithm = {slug: 'keypathwayminer', name: algorithmNames.keypathwayminer};
 export const MULTISTEINER: Algorithm = {slug: 'multisteiner', name: algorithmNames.multisteiner};
+export const PATHWAYENRICHMENT: Algorithm = {slug: 'pathway-enrichment', name: algorithmNames['pathway-enrichment']};
+export const LOUVAINCLUSTERING: Algorithm = { slug: 'louvain-clustering', name: algorithmNames['louvain-clustering'] };
+export const LEIDENCLUSTERING: Algorithm = { slug: 'leiden-clustering', name: algorithmNames['leiden-clustering'] };
+
 
 export const MAX_TASKS = 3;
 
@@ -51,6 +61,8 @@ export const MAX_TASKS = 3;
   providedIn: 'any'
 })
 export class AnalysisService {
+
+  public analysisActive = false;
 
   private selection = 'main';
 
@@ -67,6 +79,13 @@ export class AnalysisService {
   private tokensFinishedCookieKey = `drugstone-finishedTokens-${window.location.host}`;
   public finishedTokens: string[] = [];
   public tasks: Task[] = [];
+
+  public currentNetwork:any;
+
+  public inPathwayAnalysis = false;
+  public nodesToAdd: Node[] = [];
+  
+  private nodesToAddNotifier = new Subject<boolean>();
 
   private intervalId: any;
   private canLaunchNewTask = true;
@@ -320,6 +339,19 @@ export class AnalysisService {
     this.addItems(wrappers);
   }
 
+  public addSelectedToNetwork() {
+    const nodesToAdd: Node[] = [];
+    this.selectedItems.forEach((wrapper) => {
+      nodesToAdd.push(getNodeFromWrapper(wrapper));
+    })
+    this.nodesToAdd = nodesToAdd;
+    this.nodesToAddNotifier.next(true);
+  }
+
+  getVariableObservable() {
+    return this.nodesToAddNotifier.asObservable();
+  }
+
   public addAllToSelection() {
     const wrappers: Wrapper[] = [];
     const unmappedNodes = [];
@@ -479,7 +511,7 @@ export class AnalysisService {
     return {taskId: resp.token, algorithm: algorithm, target: target, params: parameters};
   }
 
-  async startAnalysis(algorithm, target: 'drug' | 'drug-target', parameters) {
+  async startAnalysis(algorithm, target: 'drug' | 'drug-target' | 'gene', parameters) {
     if (!this.canLaunchTask()) {
       this.toast.setNewToast({
         message: `You can only run ${MAX_TASKS} tasks at once. Please wait for one of them to finish or delete it from the task list.`,

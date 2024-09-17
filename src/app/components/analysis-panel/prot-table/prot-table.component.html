@@ -36,6 +36,12 @@
         Name
         <p-sortIcon [field]="'proteinName'"></p-sortIcon>
       </th>
+      <th *ngIf="partition" [pSortableColumn]="'cluster'">
+        Cluster
+        <span class="question-icon has-text-info has-tooltip tooltip-button">
+        </span>
+        <p-sortIcon [field]="'cluster'"></p-sortIcon>
+      </th>
       <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
         Score
         <span
@@ -96,6 +102,7 @@
         >
       </td>
       <td>{{ e.proteinName }}</td>
+      <td *ngIf="partition">{{ e.cluster }}</td>
       <td *ngIf="tableHasScores">{{ formatNumber(e.score)}}</td>
       <td>
         <span *ngIf="e.isSeed">

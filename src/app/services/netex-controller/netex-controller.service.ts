@@ -45,6 +45,11 @@ export class NetexControllerService {
     return this.http.get<any>(`${this.getBackend()}task_result/?token=${token}`).toPromise();
   }
 
+  public async addEdges(network, result): Promise<any> {
+    const jsonString = JSON.stringify(result);
+    return this.http.post<any>(`${this.getBackend()}add_edges/`, { network: network, result: jsonString }).toPromise();
+  }
+
   public async mapNodes(nodes, identifier): Promise<any> {
     /**
      * Tries to map every node to a node object in out database
@@ -52,6 +57,25 @@ export class NetexControllerService {
      */
     const payload = {nodes: nodes, identifier: identifier};
     return this.http.post(`${this.getBackend()}map_nodes/`, payload).toPromise();
+  }
+
+  public async parseFile(file): Promise<any> {
+    /**
+     * parses file and returns network as JSON
+     */
+  
+    const formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+    return this.http.post(`${this.getBackend()}upload/` + file.name, formData).toPromise();
+  }
+
+  public async applyLayout(nodes, hierachical_layout): Promise<any> {
+    /**
+     * Applies layout to nodes
+     * Returns list of nodes with adjusted positions
+     */
+    const payload = { nodes: nodes, hierachical_layout: hierachical_layout };
+    return this.http.post(`${this.getBackend()}apply_layout/`, payload).toPromise();
   }
 
   public tissues(): Observable<any> {

@@ -19,11 +19,11 @@ export interface Node {
   interactions?: Node[];
   x?: number;
   y?: number;
-  state?: {hover: boolean, selected: boolean};
+  state?: { hover: boolean, selected: boolean };
   borderWidth: number;
   borderWidthSelected: number;
   opacity?: number;
-  shadow?:any;
+  shadow?: any;
   font: {
     color: string;
     size: number;
@@ -49,7 +49,7 @@ export type NodeType = 'protein' | 'drug' | 'disorder' | 'other'
 
 export type NetworkType = 'explorer' | 'analysis'
 
-export type LegendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget' | 'seeds' | 'adjacentDisorders';
+export type LegendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget' | 'seeds' | 'adjacentDisorders' | 'pathway' | 'louvain';
 
 /// drugstoneId to expressionlvl
 export type NodeAttributeMap = { string: number } | {};
@@ -78,7 +78,7 @@ export interface NetworkEdge {
   label: string;
 }
 
-export type AlgorithmTarget = 'drug' | 'drug-target'
+export type AlgorithmTarget = 'drug' | 'drug-target' | 'gene'
 
 export interface Task {
   token: string;
@@ -187,6 +187,38 @@ export function getWrapperFromNode(node: Node): Wrapper {
   };
 }
 
+export function getNodeFromWrapper(wrapper: Wrapper): Node {
+  const node = {
+    label: wrapper.data.label,
+    symbol: wrapper.data.symbol,
+    id: wrapper.data.id,
+    type: wrapper.data.type,
+    drugstoneId: wrapper.data.drugstoneId,
+    drugstoneType: wrapper.data.drugstoneType,
+    drugId: wrapper.data.drugId,
+    uniprot: wrapper.data.uniprot,
+    ensg: wrapper.data.ensg,
+    entrez: wrapper.data.entrez,
+    group: wrapper.data._group,
+    groupName: wrapper.data.groupName,
+    proteinName: wrapper.data.proteinName,
+    color: wrapper.data.color,
+    shape: wrapper.data.shape,
+    interactions: wrapper.data.interactions,
+    x: wrapper.data.x,
+    y: wrapper.data.y,
+    borderWidth: wrapper.data["borderWidth"],
+    borderWidthSelected: wrapper.data["borderWidthSelected"],
+    opacity: wrapper.data["opacity"],
+    shadow: wrapper.data["shadow"],
+    font: wrapper.data["font"],
+    cellularComponent: wrapper.data["cellularComponent"],
+    layer: wrapper.data["layer"]
+  }
+
+  return node
+}
+
 export type EdgeType = 'protein-protein' | 'protein-drug';
 
 export interface Wrapper {
@@ -220,6 +252,8 @@ export interface Wrapper {
     inLiterature?: boolean;
     trialLinks?: string[];
     detailShowLabel?: boolean;
+    cellularComponent?: Array<string>
+    layer?: string;
   };
   expression?: number;
 }
@@ -256,7 +290,10 @@ export type AlgorithmType =
   | 'closeness'
   | 'degree'
   | 'proximity'
-  | 'betweenness';
+  | 'betweenness'
+  | 'pathway-enrichment'
+  | 'leiden-clustering'
+  | 'louvain-clustering';
 export type QuickAlgorithmType = 'quick' | 'super' | 'connect' | 'connectSelected';
 
 export interface Algorithm {

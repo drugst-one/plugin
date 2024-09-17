@@ -1,11 +1,15 @@
 @import "src/stylesheets/variables";
 
-#update-available-icon{
+#update-available-icon {
   color: var(--drgstn-warning)
 }
 
-#update-icon{
+#update-icon {
   color: var(--drgstn-success)
+}
+
+.mat-slider-horizontal {
+  height: 10px
 }
 
 .analysis {
@@ -23,9 +27,11 @@
   // does not disappear in empty border
   padding-left: 0 !important;
   padding-right: 0 !important;
+
   .tabs {
     margin: 0;
   }
+
   .tab-content {
     width: 100%;
     height: calc(100% - #{$network-header-height} - #{$analysis-tab-header-height});
@@ -36,7 +42,8 @@
   height: $analysis-tab-header-height;
 }
 
-.parameter-table, .parameter-tab {
+.parameter-table,
+.parameter-tab {
   width: 100% !important;
   overflow-y: scroll;
   height: 80%;
@@ -45,13 +52,16 @@
 .tab-content {
   visibility: hidden;
   position: absolute;
+
   &.is-visible {
     visibility: visible;
   }
+
   &.scrollable {
     overflow-y: auto;
     padding-right: 10px;
   }
+
   &.table-tab {
     // 100% - #{$network-header-height} - #{$analysis-tab-header-height} - normalization-button
     height: calc(100% - 40px - 1.5rem - 72px - 6px);
@@ -69,6 +79,7 @@
 .meta {
   table {
     width: 500px;
+
     td {
       width: 50px;
     }
@@ -81,7 +92,7 @@
   width: 10px;
 }
 
-.scroll-y{
+.scroll-y {
   overflow-y: auto;
 }
 
@@ -130,4 +141,3 @@ div.control.dropdown {
   font-size: .6rem !important;
   padding-bottom: 0 !important;
 }
-
