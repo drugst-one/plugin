@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  backend: 'https://drugstone-dev-api.zbh.uni-hamburg.de/'
+  backend: 'https://dev.api.drugst.one/'
 };
 /*
  * For easier debugging in development mode, you can import the following file
