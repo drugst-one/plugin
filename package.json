@@ -22,6 +22,7 @@
     "build:netex": "npm run prefix && npm run build-prod netex && node build-netex.js",
     "build:netex-stable": "npm run prefix && npm run build-stable netex && node build-netex.js",
     "build:netex-dev": "npm run prefix && npm run build-dev netex && node build-netex.js",
+    "build:netex-dev-server": "npm run prefix && npm run build-dev-server netex && node build-netex.js",
     "build:drugstone": "npm run prefix && npm run build-prod netex && node build-netex.js && npm run prefix:cleanup",
     "build:drugstone-dev": "npm run prefix && npm run build-dev netex && node build-netex.js && npm run prefix:cleanup",
     "build:drugstone-dev-server": "npm run prefix && npm run build-dev-server netex && node build-netex.js && npm run prefix:cleanup"
