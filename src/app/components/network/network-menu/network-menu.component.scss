@@ -43,6 +43,7 @@
   top: $network-header-height;
   background-color: var(--drgstn-panel);
   z-index: $network-footer-container-z;
+  margin-bottom: 20px;
 
   &.small-sidebar {
     width: $network-footer-width-small;
@@ -76,9 +77,10 @@
 
   &-inner-container {
     width: 100%;
-    height: $network-footer-inner-container-height;
+    height: 100%;
     position: absolute;
     top: 0;
+    overflow-y: auto;
   }
 
   &-element {
