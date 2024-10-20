@@ -57,6 +57,10 @@
         </span>
         <p-sortIcon [field]="'score'"></p-sortIcon>
       </th>
+      <th [pSortableColumn]="'layer'">
+        Cellular Component
+        <p-sortIcon [field]="'layer'"></p-sortIcon>
+      </th>
       <th [pSortableColumn]="'isSeed'">
         Seed
         <p-sortIcon [field]="'isSeed'"></p-sortIcon>
@@ -104,6 +108,9 @@
       <td>{{ e.proteinName }}</td>
       <td *ngIf="partition">{{ e.cluster }}</td>
       <td *ngIf="tableHasScores">{{ formatNumber(e.score)}}</td>
+      <td [ngClass]="{'text-light-gray': e.layer === 'Unknown' || e.layer === 'Other'}">
+        {{ e.layer }}
+      </td>
       <td>
         <span *ngIf="e.isSeed">
           <app-fa-solid-icon

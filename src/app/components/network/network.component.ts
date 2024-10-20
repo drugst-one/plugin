@@ -657,7 +657,7 @@ export class NetworkComponent implements OnInit {
 
   drawLabelOnCanvas(canvasElement: HTMLCanvasElement, maxX: number, y: number, label: string) {
     const context = canvasElement.getContext('2d');
-    const text = label;
+    const text = label.startsWith("Multiple") ? "Multiple" : label;
     const x = maxX - 500;
     context.font = "bold 40px verdana, sans-serif ";
     context.fillStyle = "black";

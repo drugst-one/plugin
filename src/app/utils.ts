@@ -414,6 +414,7 @@ export const downloadNodeAttributes = [
   'groupName',
   'cluster',
   'layer',
+  'cellularComponent',
   'group',
 ];
 
