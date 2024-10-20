@@ -613,6 +613,24 @@
             </div>
           </div>
 
+          <div *ngIf="algorithm === 'first-neighbor'">
+            <div class="box">
+              <article class="media">
+                <div class="media-left">
+                  <app-fa-solid-icon icon="info"></app-fa-solid-icon>
+                </div>
+                <div class="media-content">
+                  <div class="content">
+                    <h6 class="is-6">About First Neighbor</h6>
+                    <p>
+                      The First Neighbor Approach adds all first neighbors of the seed genes to the network.
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+
           <div *ngIf="algorithm === 'betweenness'">
             <div class="box">
               <article class="media">

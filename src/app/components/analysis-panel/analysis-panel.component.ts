@@ -804,7 +804,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       this.analysis.currentNetwork = network;
       return network
 
-    } else if (result.algorithm === "louvain_clustering" || result.algorithm === "leiden_clustering") {
+    } else if (result.algorithm === "louvain_clustering" || result.algorithm === "leiden_clustering" || result.algorithm === "first_neighbor") {
       result.network["edges"] = result.network["edges"].map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
       this.analysis.currentNetwork = result.network;
       return result.network;

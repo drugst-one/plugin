@@ -206,7 +206,7 @@ export const defaultConfig: IConfig = {
   customLinks: {}, // { test: 'test link', test2: 'test2 link' }
   algorithms: {
     drug: ['trustrank', 'closeness', 'degree', 'proximity'],
-    'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness', 'louvain-clustering', 'leiden-clustering'],
+    'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness', 'louvain-clustering', 'leiden-clustering', 'first-neighbor'],
     gene: ['pathway-enrichment']
   },
   keepSelectedNodes: false,

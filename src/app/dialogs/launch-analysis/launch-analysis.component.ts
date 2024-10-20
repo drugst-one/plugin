@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {
   AnalysisService, BETWEENNESS_CENTRALITY, CLOSENESS_CENTRALITY,
   DEGREE_CENTRALITY,
+  FIRSTNEIGHBOR,
   KEYPATHWAYMINER, LEIDENCLUSTERING, LOUVAINCLUSTERING, MAX_TASKS,
   MULTISTEINER, NETWORK_PROXIMITY,
   PATHWAYENRICHMENT,
@@ -101,7 +102,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.target === 'drug-target') {
-      this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, BETWEENNESS_CENTRALITY, LOUVAINCLUSTERING, LEIDENCLUSTERING];
+      this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, BETWEENNESS_CENTRALITY, LOUVAINCLUSTERING, LEIDENCLUSTERING, FIRSTNEIGHBOR];
     } else if (this.target === 'drug') {
       this.algorithms = [TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, NETWORK_PROXIMITY];
     } else if (this.target === 'gene') {
@@ -219,6 +220,8 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.ignore_isolated = this.ignore_isolated
     } else if (this.algorithm === 'leiden-clustering') {
       parameters.ignore_isolated = this.ignore_isolated
+    } else if (this.algorithm === 'first-neighbor'){
+      // no parameters so far
     }
     const token = await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
     const object = {taskId: token, algorithm: this.algorithm, target: this.target, params: parameters};

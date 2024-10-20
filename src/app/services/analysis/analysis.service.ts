@@ -18,7 +18,8 @@ export type AlgorithmType =
   | 'pathway-enrichment'
   | 'louvain-clustering'
   | 'leiden-clustering'
-  | 'betweenness';
+  | 'betweenness'
+  | 'first-neighbor';
 export type QuickAlgorithmType = 'quick' | 'super' | 'connect' | 'connectSelected';
 
 export const algorithmNames = {
@@ -35,7 +36,8 @@ export const algorithmNames = {
   connectSelected: 'Connect selected',
   'pathway-enrichment': 'Pathway Enrichment',
   'louvain-clustering': 'Louvain Clustering',
-  'leiden-clustering': 'Leiden Clustering'
+  'leiden-clustering': 'Leiden Clustering',
+  'first-neighbor': 'First Neighbor'
 };
 
 export interface Algorithm {
@@ -53,6 +55,7 @@ export const MULTISTEINER: Algorithm = {slug: 'multisteiner', name: algorithmNam
 export const PATHWAYENRICHMENT: Algorithm = {slug: 'pathway-enrichment', name: algorithmNames['pathway-enrichment']};
 export const LOUVAINCLUSTERING: Algorithm = { slug: 'louvain-clustering', name: algorithmNames['louvain-clustering'] };
 export const LEIDENCLUSTERING: Algorithm = { slug: 'leiden-clustering', name: algorithmNames['leiden-clustering'] };
+export const FIRSTNEIGHBOR: Algorithm = { slug: 'first-neighbor', name: algorithmNames['first-neighbor'] };
 
 
 export const MAX_TASKS = 3;

@@ -293,7 +293,8 @@ export type AlgorithmType =
   | 'betweenness'
   | 'pathway-enrichment'
   | 'leiden-clustering'
-  | 'louvain-clustering';
+  | 'louvain-clustering'
+  | 'first-neighbor';
 export type QuickAlgorithmType = 'quick' | 'super' | 'connect' | 'connectSelected';
 
 export interface Algorithm {
