@@ -86,6 +86,10 @@
       </div>
       <app-network-upload-dialog [(show)]="showAnalysisDialog" (showChange)="showAnalysisDialog = $event" (uploadEvent)="handleUploadEvent($event)">
       </app-network-upload-dialog>
+      <div class="row is-full m-1">
+        <app-idspace-button [buttonId]="'idspace-button'" class="network-footer-toolbar-element">
+        </app-idspace-button>
+      </div>
       <div
         class="row is-full m-1"
         *ngIf="drugstoneConfig.config.showNetworkMenuButtonExpression"

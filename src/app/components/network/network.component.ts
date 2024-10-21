@@ -680,6 +680,14 @@ export class NetworkComponent implements OnInit {
     return nodes.map(({ id, group }) => ({ id, group }));
   }
 
+  public updateLabel(idspace: string) {
+    for (const node of this.nodeData.nodes.get()) {
+      node["label"] = node[idspace][0];
+    }
+    const nodes = this.nodeData.nodes.get();
+    this.nodeData.nodes.update(nodes);
+  }
+
   public updateLayoutEnabled(bool: boolean, fromButton: boolean = false) {
     this.drugstoneConfig.config.layoutOn = bool;
     let minX;

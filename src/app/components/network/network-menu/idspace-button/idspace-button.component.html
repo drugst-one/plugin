@@ -4,7 +4,7 @@
             attr.aria-controls="{{ 'controls-' + buttonId }}" [ngClass]="{
         'is-small': drugstoneConfig.smallStyle
       }">
-            <app-fa-solid-icon icon="paperclip"></app-fa-solid-icon>
+            <app-fa-solid-icon icon="tag"></app-fa-solid-icon>
             <span [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">{{idspace}}</span>
         </button>
     </div>
@@ -12,13 +12,13 @@
       'inner-dropdown': !networkHandler.networkSidebarOpen
     }">
         <div class="dropdown-content">
-            <a (click)="changeIdspace('symbol')" class="dropdown-item"
+            <a (click)="changeLabel('symbol')" class="dropdown-item"
                 [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">symbol</a>
-            <a (click)="changeIdspace('uniprot')" class="dropdown-item"
+            <a (click)="changeLabel('uniprot')" class="dropdown-item"
                 [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">uniprot</a>
-            <a (click)="changeIdspace('ensg')" class="dropdown-item"
+            <a (click)="changeLabel('ensg')" class="dropdown-item"
                 [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">ensembl</a>
-            <a (click)="changeIdspace('entrez')" class="dropdown-item"
+            <a (click)="changeLabel('entrez')" class="dropdown-item"
                 [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">entrez</a>
         </div>
     </div>
