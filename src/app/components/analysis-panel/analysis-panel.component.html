@@ -246,8 +246,12 @@
                 <td>WikiPathway</td>
               </tr>
                <tr *ngIf="task.info.parameters.ignoreIsolated !== undefined">
-                <td>ignore isolated nodes</td>
+                <td>Ignore isolated nodes</td>
                 <td>{{task.info.parameters.ignoreIsolated}}</td>
+              </tr>
+              <tr *ngIf="result.parameters.seed !== undefined">
+                <td>Seed</td>
+                <td>{{result.parameters.seed}}</td>
               </tr>
               <tr
                 *ngIf="
@@ -563,10 +567,33 @@
                   style="color: #696969 !important;"
                 ></app-fa-solid-icon></button></td>
                 <td>{{ item.geneset }}</td>
-                <td>{{ item.pathway }}</td>
+                
+                <td>
+                  <!-- For Reactome pathway -->
+                  <ng-container *ngIf="item.geneset === 'reactome'">
+                    <a [href]="'https://reactome.org/content/detail/' + item.pathway.split(' ').pop()" target="_blank">
+                      {{ item.pathway.split(' ').slice(0, -1).join(' ') }}
+                    </a>
+                  </ng-container>
+                
+                  <!-- For WikiPathways -->
+                  <ng-container *ngIf="item.geneset === 'wiki'">
+                    <a [href]="'https://www.wikipathways.org/pathways/' + item.pathway.split(' ').pop()" target="_blank">
+                      {{ item.pathway.split(' ').slice(0, -1).join(' ') }}
+                    </a>
+                  </ng-container>
+
+                  <!-- For Kegg pathways -->
+                  <ng-container *ngIf="item.geneset === 'kegg'">
+                    <a [href]="'https://www.kegg.jp/kegg-bin/search_pathway_text?map=hsa&keyword=' + item.pathway" target="_blank">
+                      {{ item.pathway }}
+                    </a>
+                  </ng-container>
+                </td>
+                
                 <td>{{ item.overlap }}</td>
                 <td>{{ item.adjPvalue }}</td>
-                <td>{{ item.oddsRatio }}</td>
+                <td>{{ item.oddsRatio | number: '1.2-2' }}</td>
               </tr>
               </tbody>
             </table>
@@ -585,6 +612,11 @@
                 <span *ngIf="task.info.algorithm === 'louvain-clustering'">Louvain Clustering</span>
                 <span *ngIf="task.info.algorithm === 'leiden-clustering'">Leiden Clustering</span>
               </h4>
+            </div>
+            <div class="column">
+              <p *ngIf="result.modularity !== undefined">
+                <strong>Modularity:</strong> {{ result.modularity | number: '1.4-4' }}
+              </p>
             </div>
             <div class="column">
 

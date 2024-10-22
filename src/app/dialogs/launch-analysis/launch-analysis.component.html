@@ -574,16 +574,32 @@
                 </div>
               </article>
             </div>
+          
             <div class="field">
-              <label class="label" for="pathway-enrichment-alpha">Ignore isolated nodes in Clustering</label>
+              <label class="label" for="ignore-isolated-louvain">Ignore isolated nodes in Clustering</label>
               <div class="control">
-                <label>
-                  <input type="checkbox" [(ngModel)]="ignore_isolated">
-                  ignore isolated nodes
+                <label class="checkbox">
+                  <input type="checkbox" [(ngModel)]="ignore_isolated" id="ignore-isolated-louvain">
+                  Ignore isolated nodes
                 </label>
               </div>
+              <p class="has-text-info is-size-7">
+                Isolated nodes will not be considered in the clustering algorithm. They would form their own cluster anyways.
+              </p>
+            </div>
+          
+            <div class="field">
+              <label class="label" for="seed-louvain">Seed</label>
+              <div class="control">
+                <input type="number" [(ngModel)]="seed" id="seed-louvain" class="input" placeholder="Enter a seed or leave empty"
+                  (ngModelChange)="onSeedChange($event)" />
+              </div>
+              <p class="has-text-info is-size-7">
+                Optional: Provide a seed for the random number generator, or leave empty to auto-generate one.
+              </p>
             </div>
           </div>
+
 
           <div *ngIf="algorithm === 'leiden-clustering'">
             <div class="box">
@@ -602,16 +618,31 @@
                 </div>
               </article>
             </div>
+          
             <div class="field">
-              <label class="label" for="pathway-enrichment-alpha">Ignore isolated nodes in Clustering</label>
+              <label class="label" for="ignore-isolated">Ignore isolated nodes in Clustering</label>
               <div class="control">
-                <label>
-                  <input type="checkbox" [(ngModel)]="ignore_isolated">
-                  ignore isolated nodes
+                <label class="checkbox">
+                  <input type="checkbox" [(ngModel)]="ignore_isolated" id="ignore-isolated">
+                  Ignore isolated nodes
                 </label>
               </div>
+              <p class="has-text-info is-size-7">Isolated nodes will not be considered in the clustering algorithm. They would form their own cluster anyways.</p>
+            </div>
+          
+            <div class="field">
+              <label class="label" for="seed">Seed</label>
+              <div class="control">
+                <input type="number" [(ngModel)]="seed" id="seed" class="input" placeholder="Enter a seed or leave empty"
+                  (ngModelChange)="onSeedChange($event)" />
+              </div>
+              <p class="has-text-info is-size-7">
+                Optional: Provide a seed for the random number generator, or leave empty to auto-generate one.
+              </p>
             </div>
           </div>
+
+
 
           <div *ngIf="algorithm === 'first-neighbor'">
             <div class="box">

@@ -43,8 +43,9 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     { label: 'Wiki Pathways', selected: true }
   ];
 
-  // Louvain Clustering parameters
+  // Louvain/Leiden Clustering parameters
   public ignore_isolated: boolean = true;
+  public seed: number | null = null;
 
 
   // Trustrank Parameters
@@ -218,14 +219,20 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.wiki = this.pathways.find(pathway => pathway.label === 'Wiki Pathways').selected;
     } else if (this.algorithm === 'louvain-clustering'){
       parameters.ignore_isolated = this.ignore_isolated
+      parameters.seed = this.seed
     } else if (this.algorithm === 'leiden-clustering') {
       parameters.ignore_isolated = this.ignore_isolated
+      parameters.seed = this.seed
     } else if (this.algorithm === 'first-neighbor'){
       // no parameters so far
     }
     const token = await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
     const object = {taskId: token, algorithm: this.algorithm, target: this.target, params: parameters};
     this.taskEvent.emit(object);
+  }
+
+  onSeedChange(value: string): void {
+    this.seed = value === '' ? null : parseInt(value, 10);
   }
 
 }
