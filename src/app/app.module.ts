@@ -66,6 +66,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IdspaceButtonComponent } from './components/network/network-menu/idspace-button/idspace-button.component';
 import { NetworkUploadDialogComponent } from './dialogs/network-upload-dialog/network-upload-dialog.component';
+import { GeneRowsComponent } from './components/analysis-panel/gene-rows/gene-rows.component';
 
 
 @NgModule({
@@ -115,6 +116,7 @@ import { NetworkUploadDialogComponent } from './dialogs/network-upload-dialog/ne
     ExternalAnalysisButtonComponent,
     IdspaceButtonComponent,
     NetworkUploadDialogComponent,
+    GeneRowsComponent,
   ],
   imports: [
     BrowserModule,
