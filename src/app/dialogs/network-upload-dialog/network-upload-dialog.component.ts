@@ -28,6 +28,7 @@ export class NetworkUploadDialogComponent implements OnInit {
 
   public close() {
     this.show = false;
+    this.selectedFile = null;
     this.showChange.emit(this.show);
   }
 
