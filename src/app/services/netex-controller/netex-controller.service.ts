@@ -50,6 +50,10 @@ export class NetexControllerService {
     return this.http.post<any>(`${this.getBackend()}add_edges/`, { network: network, result: jsonString }).toPromise();
   }
 
+  public async autofill_edges(network): Promise<any> {
+    return this.http.post<any>(`${this.getBackend()}autofill_edges/`, { "network": network, "config": this.drugstoneConfig.currentConfig()}).toPromise();
+  }
+
   public async mapNodes(nodes, identifier): Promise<any> {
     /**
      * Tries to map every node to a node object in out database
@@ -76,6 +80,17 @@ export class NetexControllerService {
      */
     const payload = { nodes: nodes, hierachical_layout: hierachical_layout };
     return this.http.post(`${this.getBackend()}apply_layout/`, payload).toPromise();
+  }
+
+  public async searchProteins(query: string, identifier: string, label: string): Promise<any> {
+    /**
+     * Searches for proteins in our database
+     */
+    const params = new HttpParams()
+      .set('query', query)
+      .set('identifier', identifier)
+      .set('label', label);
+    return this.http.get(`${this.getBackend()}search_proteins/?query=${query}`, {params}).toPromise();
   }
 
   public tissues(): Observable<any> {

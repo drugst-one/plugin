@@ -24,7 +24,7 @@ import {LegendService} from 'src/app/services/legend-service/legend-service.serv
 import {LoadingScreenService} from 'src/app/services/loading-screen/loading-screen.service';
 import {version} from '../../../version';
 import {Subject} from 'rxjs';
-import {HttpClient} from "@angular/common/http";
+import { ToastService } from 'src/app/services/toast/toast.service';
 
 @Component({
   selector: 'app-network',
@@ -41,6 +41,7 @@ export class NetworkComponent implements OnInit {
     public netex: NetexControllerService,
     public omnipath: OmnipathControllerService,
     public loadingScreen: LoadingScreenService,
+    public toast: ToastService,
   ) {
     try {
       this.versionString = version;
@@ -686,6 +687,21 @@ export class NetworkComponent implements OnInit {
     }
     const nodes = this.nodeData.nodes.get();
     this.nodeData.nodes.update(nodes);
+  }
+
+  public async addNode(node: Node) {
+    const nodes = this.nodeData.nodes.get();
+    for (const n of nodes) {
+      if (n.id === node.id) {
+        this.toast.setNewToast({ "message": 'The added node was already part of the network.', type: 'warning' });
+        return;
+      }
+    }
+    nodes.push(node);
+    const edges = this.nodeData.edges.get();
+    const edges_updated = await this.netex.autofill_edges({nodes, edges})
+    this.nodeData.nodes.update(nodes);
+    this.nodeData.edges.update(edges_updated);
   }
 
   public updateLayoutEnabled(bool: boolean, fromButton: boolean = false) {

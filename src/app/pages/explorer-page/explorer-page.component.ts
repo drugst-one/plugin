@@ -26,6 +26,7 @@ import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugston
 import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
 import {LegendService} from '../../services/legend-service/legend-service.service';
 import {ToastService} from '../../services/toast/toast.service';
+import { Subject } from 'rxjs';
 
 
 declare var vis: any;
@@ -49,6 +50,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public id: undefined | string;
 
   @ViewChild('analysis') analysisElement;
+
+  proteinQuery = '';
+  chosenProtein: any = null;
+  proteinSuggestions: any = [];
+  private searchSubject = new Subject<string>();
 
   public reset() {
     // const analysisNetwork = this.networkHandler.networks['analysis'];
@@ -267,6 +273,35 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.setWindowWidth(document.getElementById('appWindow').getBoundingClientRect().width);
     this.analysis.setViewTokenCallback(this.setViewToken.bind(this));
     this.analysis.setTaskTokenCallback(this.setTaskToken.bind(this));
+
+    this.searchSubject.subscribe(async query => {
+      this.proteinSuggestions = await this.netex.searchProteins(query, this.drugstoneConfig.currentConfig().identifier, this.drugstoneConfig.currentConfig().label);
+    });
+
+  }
+
+  addProtein() {
+    this.chosenProtein["group"] = "addedNode";
+    this.proteinQuery = '';
+    this.addProteinToNetwork(this.chosenProtein);
+    this.chosenProtein = null;
+  }
+
+  private async addProteinToNetwork(protein) {
+    this.networkHandler.activeNetwork.addNode(protein);
+  }
+
+  onProteinSearch() {
+    if (this.proteinQuery.length == 0){
+      this.chosenProtein = null;
+    }
+    this.searchSubject.next(this.proteinQuery);
+  }
+
+  selectProtein(protein) {
+    this.chosenProtein = protein;
+    this.proteinQuery = `${protein.symbol}`;
+    this.proteinSuggestions = [];
   }
 
   async ngAfterViewInit() {
@@ -344,6 +379,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.networkHandler.activeNetwork.networkPositions = this.networkHandler.activeNetwork.networkInternal.getPositions();
       }
       this.createNetwork().then(async () => {
+        this.networkHandler.activeNetwork.updateLabel(this.drugstoneConfig.currentConfig().label);
         if (this.drugstoneConfig.currentConfig().physicsOn) {
           this.networkHandler.activeNetwork.updatePhysicsEnabled(true);
         }

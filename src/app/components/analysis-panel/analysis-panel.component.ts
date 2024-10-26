@@ -608,6 +608,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             });
 
           }).then(nodes => {
+            this.networkHandler.activeNetwork.updateLabel(this.drugstoneConfig.currentConfig().label);
             this.tableDrugs = nodes.filter(e => e.drugstoneId && e.drugstoneType === 'drug');
             this.tableDrugs.forEach((r) => {
               r.rawScore = r.score;

@@ -16,13 +16,14 @@ export class IdspaceButtonComponent implements OnInit {
   @Input() buttonId: string;
 
   ngOnInit(): void {
-    if (this.drugstoneConfig.currentConfig().identifier){
-      this.idspace = this.drugstoneConfig.currentConfig().identifier;
+    if (this.drugstoneConfig.currentConfig().label){
+      this.idspace = this.drugstoneConfig.currentConfig().label;
     }
   }
 
   public changeLabel(idspace: Identifier){
     this.idspace = idspace;
     this.networkHandler.activeNetwork.updateLabel(idspace);
+    this.drugstoneConfig.currentConfig().label = idspace;
   } 
 }

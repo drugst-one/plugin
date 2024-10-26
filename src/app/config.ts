@@ -99,6 +99,7 @@ export interface IConfig {
   physicsInital?: boolean;
   licensedDatasets?: boolean;
   identifier?: Identifier;
+  label?: string;
   nodeShadow?: boolean;
   edgeShadow?: boolean;
   customLinks?: {};
@@ -190,6 +191,7 @@ export const defaultConfig: IConfig = {
   networkMenuButtonLayoutLabel: "Layout",
   networkMenuButtonUploadLabel: "Upload",
   identifier: 'symbol',
+  label: 'symbol',
   selfReferences: false,
   customEdges: { default: true, selectable: true },
   interactionDrugProtein: 'NeDRex',

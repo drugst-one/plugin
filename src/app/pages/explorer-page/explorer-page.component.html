@@ -401,6 +401,35 @@
             <!-- </div>  -->
           </div>
         </div>
+
+        <div *ngIf="drugstoneConfig.config.showSelection" class="card bar-large">
+          <header class="card-header" [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }">
+            <p class="card-header-title">
+              <app-fa-solid-icon icon="edit"></app-fa-solid-icon>
+              Edit Network
+            </p>
+          </header>
+          <!-- Search Input -->
+          <div class="card-content">
+            <div>
+            <input class="input" type="text" placeholder="Search Protein..." [(ngModel)]="proteinQuery" (input)="onProteinSearch()"
+              style="padding: 5px; box-sizing: border-box; width: 100%;"/>
+            </div>
+            <div *ngIf="proteinSuggestions.length > 0" class="autocomplete-suggestions scrollable-container">
+              <div style="cursor: pointer; z-index: 10" *ngFor="let suggestion of proteinSuggestions; let i = index" (click)="selectProtein(suggestion)">
+                <strong>{{ suggestion.symbol && suggestion.symbol.length > 0 ? suggestion.symbol[0] : '-' }}</strong> |
+                {{ suggestion.uniprot && suggestion.uniprot.length > 0 ? suggestion.uniprot[0] : '-' }} <br>
+                {{ suggestion.ensg && suggestion.ensg.length > 0 ? suggestion.ensg[0] : '-' }} |
+                {{ suggestion.entrez && suggestion.entrez.length > 0 ? suggestion.entrez[0] : '-' }}
+                <div *ngIf="i < proteinSuggestions.length - 1" class="separator"></div>
+              </div>
+            </div>
+            <button class="button is-primary is-rounded has-tooltip" [disabled]="!chosenProtein" (click)="addProtein()"
+              style="padding: 5px; box-sizing: border-box; width: 100%; margin-top: 5%;">
+              Add Protein
+            </button>
+          </div>
+        </div>        
         <div *ngIf="drugstoneConfig.config.showViews" class="card bar-large">
           <header
             class="card-header"

@@ -11,6 +11,21 @@
   max-height: 800px;
 }
 
+.separator {
+  height: 1px;
+  background-color: #ccc;
+  margin: 8px 0;
+}
+
+.scrollable-container {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  background-color: white;
+}
+
 .quick-find {
   .notification {
     padding: 1.25rem 1rem 1.25rem 1rem !important;
