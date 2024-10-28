@@ -249,9 +249,9 @@
                 <td>Ignore isolated nodes</td>
                 <td>{{task.info.parameters.ignoreIsolated}}</td>
               </tr>
-              <tr *ngIf="result.parameters.seed !== undefined">
+              <tr *ngIf="result?.parameters?.seed !== undefined">
                 <td>Seed</td>
-                <td>{{result.parameters.seed}}</td>
+                <td>{{result?.parameters?.seed}}</td>
               </tr>
               <tr
                 *ngIf="
@@ -633,8 +633,8 @@
               </h4>
             </div>
             <div class="column">
-              <p *ngIf="result.modularity !== undefined">
-                <strong>Modularity:</strong> {{ result.modularity | number: '1.4-4' }}
+              <p *ngIf="result?.modularity !== undefined">
+                <strong>Modularity:</strong> {{ result?.modularity | number: '1.4-4' }}
               </p>
             </div>
             <div class="column">

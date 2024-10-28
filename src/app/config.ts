@@ -394,6 +394,23 @@ export const defaultConfig: IConfig = {
         size: 14
       }
     },
+    firstNeighbor: {
+      groupName: 'First Neighbors',
+      shape: 'triangle',
+      type: 'gene',
+      color: {
+        border: '#000000',
+        background: '#A8D8FF',
+        highlight: {
+          border: '#000000',
+          background: '#A8D8FF'
+        },
+      },
+      font: {
+        color: '#000000',
+        size: 14
+      }
+    },
     selectedNode: {
       borderWidth: 3,
       borderWidthSelected: 4,

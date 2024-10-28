@@ -9,18 +9,19 @@ export class LegendService {
   constructor() {
   }
 
-  private default_delete = ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'onlyPathway', 'addedNode', 'connectorNode'];
+  private default_delete = ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'onlyPathway', 'addedNode', 'connectorNode', 'firstNeighbor'];
   public context = [];
   public networkHasConnector = false;
 
   private contextNodeGroupsToDelete = {
-    pathway: ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder', 'connectorNode'],
-    louvain: ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'onlyPathway', 'addedNode', 'connectorNode'],
-    adjacentDrugs: ['foundNode', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'onlyPathway', 'addedNode', 'connectorNode'],
-    adjacentDisorders: ['foundDrug', 'foundNode', 'seedNode', 'default', 'overlap', 'onlyNetwork', 'onlyPathway', 'addedNode', 'connectorNode'],
-    drugTarget: ['foundDrug', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'addedNode', 'onlyPathway'],
-    drug: ['foundNode', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'addedNode', 'onlyPathway'],
-    seeds: ['default', 'foundNode', 'foundDrug', 'defaultDisorder', 'overlap', 'onlyNetwork', 'addedNode', 'onlyPathway']
+    pathway: ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder', 'connectorNode', 'firstNeighbor'],
+    louvain: ['foundNode', 'foundDrug', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'onlyPathway', 'addedNode', 'connectorNode', 'firstNeighbor'],
+    adjacentDrugs: ['foundNode', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'onlyPathway', 'addedNode', 'connectorNode', 'firstNeighbor'],
+    adjacentDisorders: ['foundDrug', 'foundNode', 'seedNode', 'default', 'overlap', 'onlyNetwork', 'onlyPathway', 'addedNode', 'connectorNode', 'firstNeighbor'],
+    drugTarget: ['foundDrug', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'addedNode', 'onlyPathway', 'firstNeighbor'],
+    drug: ['foundNode', 'seedNode', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'addedNode', 'onlyPathway', 'firstNeighbor'],
+    seeds: ['default', 'foundNode', 'foundDrug', 'defaultDisorder', 'overlap', 'onlyNetwork', 'addedNode', 'onlyPathway', 'firstNeighbor'],
+    firstNeighbor: ['foundNode', 'foundDrug', 'default', 'defaultDisorder', 'overlap', 'onlyNetwork', 'onlyPathway', 'addedNode', 'connectorNode'],
   };
 
   public add_to_context(value: LegendContext) {

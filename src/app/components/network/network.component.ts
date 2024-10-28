@@ -683,10 +683,18 @@ export class NetworkComponent implements OnInit {
 
   public updateLabel(idspace: string) {
     for (const node of this.nodeData.nodes.get()) {
-      node["label"] = node[idspace][0];
-    }
+      const labelArray = node[idspace];
+      node["label"] = labelArray && labelArray.length > 0 ? labelArray[0] : node.id;    }
     const nodes = this.nodeData.nodes.get();
     this.nodeData.nodes.update(nodes);
+  }
+
+  public async removeNode(node: Node) {
+    const nodesToRemove = this.nodeData.nodes.get().filter(n => n.id === node.id);
+    const edgesToRemove = this.nodeData.edges.get().filter(e => e.from === node.id || e.to === node.id);
+
+    this.nodeData.nodes.remove(nodesToRemove.map(n => n.id));
+    this.nodeData.edges.remove(edgesToRemove.map(e => e.id));
   }
 
   public async addNode(node: Node) {

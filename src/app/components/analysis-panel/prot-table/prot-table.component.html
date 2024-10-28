@@ -32,6 +32,9 @@
         Ensembl GeneID
         <p-sortIcon [field]="'ensg'"></p-sortIcon>
       </th>
+      <th [pSortableColumn]="'label'">
+        Label
+        <p-sortIcon [field]="'label'"></p-sortIcon>
       <th [pSortableColumn]="'proteinName'">
         Name
         <p-sortIcon [field]="'proteinName'"></p-sortIcon>
@@ -105,6 +108,7 @@
           >{{ ensg + (i == e.ensg.length - 1 ? "" : ", ") }}</a
         >
       </td>
+      <td>{{ e.label }}</td>
       <td>{{ e.proteinName }}</td>
       <td *ngIf="partition">{{ e.cluster }}</td>
       <td *ngIf="tableHasScores">{{ formatNumber(e.score)}}</td>

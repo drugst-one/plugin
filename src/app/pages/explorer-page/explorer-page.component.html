@@ -409,10 +409,10 @@
               Edit Network
             </p>
           </header>
-          <!-- Search Input -->
+          <!-- Add Protein Input -->
           <div class="card-content">
             <div>
-            <input class="input" type="text" placeholder="Search Protein..." [(ngModel)]="proteinQuery" (input)="onProteinSearch()"
+            <input class="input" type="text" placeholder="Add Protein..." [(ngModel)]="proteinQuery" (input)="onProteinSearch()"
               style="padding: 5px; box-sizing: border-box; width: 100%;"/>
             </div>
             <div *ngIf="proteinSuggestions.length > 0" class="autocomplete-suggestions scrollable-container">
@@ -427,6 +427,28 @@
             <button class="button is-primary is-rounded has-tooltip" [disabled]="!chosenProtein" (click)="addProtein()"
               style="padding: 5px; box-sizing: border-box; width: 100%; margin-top: 5%;">
               Add Protein
+            </button>
+          </div>
+
+          <!-- Delete Protein Input -->
+          <div class="card-content">
+            <div>
+              <input class="input" type="text" placeholder="Delete Protein..." [(ngModel)]="deleteProteinQuery"
+                (input)="onDeleteProteinSearch()" style="padding: 5px; box-sizing: border-box; width: 100%;" />
+            </div>
+            <div *ngIf="deleteProteinSuggestions.length > 0" class="autocomplete-suggestions scrollable-container">
+              <div style="cursor: pointer; z-index: 10" *ngFor="let suggestionDelete of deleteProteinSuggestions; let i = index"
+                (click)="selectProteinToDelete(suggestionDelete)">
+                <strong>{{ suggestionDelete.symbol && suggestionDelete.symbol.length > 0 ? suggestionDelete.symbol[0] : '-' }}</strong> |
+                {{ suggestionDelete.uniprot && suggestionDelete.uniprot.length > 0 ? suggestionDelete.uniprot[0] : '-' }} <br>
+                {{ suggestionDelete.ensg && suggestionDelete.ensg.length > 0 ? suggestionDelete.ensg[0] : '-' }} |
+                {{ suggestionDelete.entrez && suggestionDelete.entrez.length > 0 ? suggestionDelete.entrez[0] : '-' }}
+                <div *ngIf="i < deleteProteinSuggestions.length - 1" class="separator"></div>
+              </div>
+            </div>
+            <button class="button is-primary is-rounded has-tooltip" [disabled]="!chosenProteinToDelete" (click)="deleteProtein()"
+              style="padding: 5px; box-sizing: border-box; width: 100%; margin-top: 5%;">
+              Delete Protein
             </button>
           </div>
         </div>        

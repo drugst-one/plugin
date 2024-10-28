@@ -52,9 +52,13 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   @ViewChild('analysis') analysisElement;
 
   proteinQuery = '';
+  deleteProteinQuery = '';
   chosenProtein: any = null;
+  chosenProteinToDelete: any = null;
   proteinSuggestions: any = [];
+  deleteProteinSuggestions: any = [];
   private searchSubject = new Subject<string>();
+  private searchSubjectDelete = new Subject<string>();
 
   public reset() {
     // const analysisNetwork = this.networkHandler.networks['analysis'];
@@ -278,6 +282,36 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.proteinSuggestions = await this.netex.searchProteins(query, this.drugstoneConfig.currentConfig().identifier, this.drugstoneConfig.currentConfig().label);
     });
 
+    this.searchSubjectDelete.subscribe(query => {
+      this.deleteProteinSuggestions = this.networkHandler.activeNetwork.inputNetwork.nodes.filter(node => {
+        const queryLower = query.toLowerCase();
+        return (
+          (node.symbol && node.symbol.some((s: string) => s.toLowerCase().includes(queryLower))) ||
+          (node.uniprot && node.uniprot.some((u: string) => u.toLowerCase().includes(queryLower))) ||
+          (node.ensg && node.ensg.some((e: string) => e.toLowerCase().includes(queryLower))) ||
+          (node.entrez && node.entrez.some((en: string) => en.toLowerCase().includes(queryLower)))
+        );
+      });    
+    });
+  }
+
+  selectProteinToDelete(protein) {
+    this.chosenProteinToDelete = protein;
+    this.deleteProteinQuery = `${protein.label}`;
+    this.deleteProteinSuggestions = [];
+  }
+
+  onDeleteProteinSearch() {
+    if (this.deleteProteinQuery.length == 0){
+      this.chosenProtein = null;
+    }
+    this.searchSubjectDelete.next(this.deleteProteinQuery);
+  }
+
+  deleteProtein() {
+    this.networkHandler.activeNetwork.removeNode(this.chosenProteinToDelete);
+    this.chosenProteinToDelete = null;
+    this.deleteProteinQuery = '';
   }
 
   addProtein() {
@@ -300,7 +334,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   selectProtein(protein) {
     this.chosenProtein = protein;
-    this.proteinQuery = `${protein.symbol}`;
+    this.proteinQuery = `${protein.label}`;
     this.proteinSuggestions = [];
   }
 

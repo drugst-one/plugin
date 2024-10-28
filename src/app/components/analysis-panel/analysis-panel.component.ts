@@ -418,6 +418,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         if (!this.drugstoneConfig.selfReferences) {
           edges = edges.filter(el => el.from !== el.to);
         }
+        for (const node of nodes) {
+          const labelArray = node[this.drugstoneConfig.currentConfig().label];
+          node["label"] = labelArray && labelArray.length > 0 ? labelArray[0] : node.id;
+        }
         this.networkHandler.activeNetwork.inputNetwork = { nodes: nodes, edges: edges };
         this.nodeData.nodes = new vis.DataSet(nodes);
         this.nodeData.edges = new vis.DataSet(edges);
@@ -557,6 +561,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             this.legendService.add_to_context('louvain');
             this.partition = true;
           }
+          if (this.result.parameters.algorithm === 'first_neighbor') {
+            this.legendService.add_to_context('firstNeighbor');
+          }
         }
         const nodeAttributes = this.result.nodeAttributes || {};
         const analysisNetwork = this.networkHandler.networks['analysis'];
@@ -574,6 +581,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             }
             const nodes = nw.nodes;
             const edges = nw.edges;
+            for (const node of nodes) {
+              const labelArray = node[this.drugstoneConfig.currentConfig().label];
+              node["label"] = labelArray && labelArray.length > 0 ? labelArray[0] : node.id;
+            }
             analysisNetwork.inputNetwork = { nodes: nodes, edges: edges };
             this.nodeData.nodes = new vis.DataSet(nodes);
             this.nodeData.edges = new vis.DataSet(edges);
@@ -606,9 +617,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
                 resolve(nodes);
               });
             });
-
           }).then(nodes => {
-            this.networkHandler.activeNetwork.updateLabel(this.drugstoneConfig.currentConfig().label);
             this.tableDrugs = nodes.filter(e => e.drugstoneId && e.drugstoneType === 'drug');
             this.tableDrugs.forEach((r) => {
               r.rawScore = r.score;
