@@ -316,6 +316,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   addProtein() {
     this.chosenProtein["group"] = "addedNode";
+    this.chosenProtein["drugstoneType"] = "protein";
     this.proteinQuery = '';
     this.addProteinToNetwork(this.chosenProtein);
     this.chosenProtein = null;

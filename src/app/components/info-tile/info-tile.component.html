@@ -86,6 +86,13 @@
   </span>
 </p>
 
+<p *ngIf="_wrapper.data.isReviewed" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
+  <b><span>Reviewed:</span></b>
+  <span class="is-capitalized">
+    {{ _wrapper.data.isReviewed }}
+  </span>
+</p>
+
 <p
   *ngIf="getExpressionScore() != null"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"

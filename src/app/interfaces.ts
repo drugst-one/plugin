@@ -254,6 +254,7 @@ export interface Wrapper {
     detailShowLabel?: boolean;
     cellularComponent?: Array<string>
     layer?: string;
+    isReviewed?: boolean;
   };
   expression?: number;
 }
