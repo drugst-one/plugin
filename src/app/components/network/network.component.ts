@@ -710,11 +710,11 @@ export class NetworkComponent implements OnInit {
     const edges_updated = await this.netex.autofill_edges({nodes, edges})
     this.nodeData.nodes.update(nodes);
     this.nodeData.edges.update(edges_updated);
-    await this.updateAdjacentDrugDisorders(this.adjacentDisordersDrug, false);
-    await this.updateAdjacentProteinDisorders(this.adjacentDisordersProtein, false);
-    await this.updateAdjacentDrugs(this.adjacentDrugs, false);
-    this.updateLayoutEnabled(false, true);
     this.drugstoneConfig.config.layoutOn = false;
+    this.updateLayoutEnabled(false);
+    await this.updateAdjacentDrugs(this.adjacentDrugs, true);
+    await this.updateAdjacentProteinDisorders(this.adjacentDisordersProtein, true);
+    await this.updateAdjacentDrugDisorders(this.adjacentDisordersDrug, true);
   }
 
   public updateLayoutEnabled(bool: boolean, fromButton: boolean = false) {
