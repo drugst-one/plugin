@@ -240,14 +240,22 @@
   </div>
 </div>
 
-<app-toggle
-  *ngIf="_wrapper.data.drugstoneId && _wrapper.data.drugstoneType === 'protein'"
-  [value]="analysis.inSelection(_wrapper)"
-  (valueChange)="
-    $event ? analysis.addItems([_wrapper]) : analysis.removeItems([_wrapper])
-  "
-  textOn="Selected"
-  textOff="Off"
-  tooltipOn="Add protein to selection."
-  tooltipOff="Remove protein from selection."
-></app-toggle>
+<div class="toggle-container">
+  <app-toggle
+    *ngIf="_wrapper.data.drugstoneId && _wrapper.data.drugstoneType === 'protein'"
+    [value]="analysis.inSelection(_wrapper)"
+    (valueChange)="
+      $event ? analysis.addItems([_wrapper]) : analysis.removeItems([_wrapper])
+    "
+    textOn="Selected"
+    textOff="Off"
+    tooltipOn="Add protein to selection."
+    tooltipOff="Remove protein from selection."
+  ></app-toggle>
+
+  <app-fa-solid-icon icon="trash" (click)="removeProtein()" class="has-text-danger is-pulled-right"
+    pTooltip="Delete Node."
+    [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+    tooltipPosition="top"
+  ></app-fa-solid-icon>
+</div>

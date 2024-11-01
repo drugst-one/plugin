@@ -1,3 +1,13 @@
 .link-icon-margin { 
     margin: 0 2px;
 }
+
+.toggle-container {
+    display: flex;
+    align-items: center;
+}
+
+.toggle-container app-fa-solid-icon {
+    margin-left: 20%;
+    cursor: pointer;
+}

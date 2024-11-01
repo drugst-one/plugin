@@ -689,7 +689,7 @@ export class NetworkComponent implements OnInit {
     this.nodeData.nodes.update(nodes);
   }
 
-  public async removeNode(node: Node) {
+  public async removeNode(node: any) {
     const nodesToRemove = this.nodeData.nodes.get().filter(n => n.id === node.id);
     const edgesToRemove = this.nodeData.edges.get().filter(e => e.from === node.id || e.to === node.id);
 
@@ -710,6 +710,11 @@ export class NetworkComponent implements OnInit {
     const edges_updated = await this.netex.autofill_edges({nodes, edges})
     this.nodeData.nodes.update(nodes);
     this.nodeData.edges.update(edges_updated);
+    await this.updateAdjacentDrugDisorders(this.adjacentDisordersDrug, false);
+    await this.updateAdjacentProteinDisorders(this.adjacentDisordersProtein, false);
+    await this.updateAdjacentDrugs(this.adjacentDrugs, false);
+    this.updateLayoutEnabled(false, true);
+    this.drugstoneConfig.config.layoutOn = false;
   }
 
   public updateLayoutEnabled(bool: boolean, fromButton: boolean = false) {

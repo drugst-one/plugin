@@ -46,6 +46,10 @@ export class InfoTileComponent implements OnInit {
     }
   }
 
+  public removeProtein(){
+    this.networkHandler.activeNetwork.removeNode(this._wrapper);
+  }
+
   public beautify(url: string): string {
     if (url.startsWith("https://")) {
       url = url.substr("https://".length);

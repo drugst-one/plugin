@@ -146,6 +146,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public collapseBaitFilter = true;
   public collapseQuery = true;
   public collapseData = true;
+  public collapseEditor = true;
 
   public proteinData: ProteinNetwork;
   public edgeAttributes: Map<string, NodeInteraction>;

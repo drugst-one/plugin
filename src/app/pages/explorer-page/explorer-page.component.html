@@ -408,9 +408,14 @@
               <app-fa-solid-icon icon="edit"></app-fa-solid-icon>
               Edit Network
             </p>
+            <a (click)="collapseEditor = !collapseEditor" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
+              aria-label="more options">
+              <app-fa-solid-icon *ngIf="!collapseEditor" icon="angle-down"></app-fa-solid-icon>
+              <app-fa-solid-icon *ngIf="collapseEditor" icon="angle-left"></app-fa-solid-icon>
+            </a>
           </header>
           <!-- Add Protein Input -->
-          <div class="card-content">
+          <div class="card-content" *ngIf="!collapseEditor">
             <div>
             <input class="input" type="text" placeholder="Add Protein..." [(ngModel)]="proteinQuery" (input)="onProteinSearch()"
               style="padding: 5px; box-sizing: border-box; width: 100%;"/>
@@ -431,7 +436,7 @@
           </div>
 
           <!-- Delete Protein Input -->
-          <div class="card-content">
+          <div class="card-content" *ngIf="!collapseEditor">
             <div>
               <input class="input" type="text" placeholder="Delete Protein..." [(ngModel)]="deleteProteinQuery"
                 (input)="onDeleteProteinSearch()" style="padding: 5px; box-sizing: border-box; width: 100%;" />
