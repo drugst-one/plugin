@@ -255,6 +255,7 @@ export interface Wrapper {
     cellularComponent?: Array<string>
     layer?: string;
     isReviewed?: boolean;
+    properties?: { [key: string]: any };
   };
   expression?: number;
 }

@@ -93,6 +93,15 @@
   </span>
 </p>
 
+<p *ngIf="_wrapper.data.properties" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
+  <b><span>Properties:</span></b>
+  <div *ngFor="let property of _wrapper.data.properties | keyvalue" style="padding-left: 10px;">
+    <i><span>{{ property.key }}:</span></i>
+    <span class="is-capitalized">
+      {{ property.value }}
+    </span>
+  </div>
+<br>
 <p
   *ngIf="getExpressionScore() != null"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
