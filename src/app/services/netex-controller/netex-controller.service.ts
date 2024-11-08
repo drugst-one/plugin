@@ -54,12 +54,12 @@ export class NetexControllerService {
     return this.http.post<any>(`${this.getBackend()}autofill_edges/`, { "network": network, "config": this.drugstoneConfig.currentConfig()}).toPromise();
   }
 
-  public async mapNodes(nodes, identifier): Promise<any> {
+  public async mapNodes(nodes, identifier, reviewed): Promise<any> {
     /**
      * Tries to map every node to a node object in out database
      * Returns list of mapped nodes if node was found, otherwise original node to not lose information
      */
-    const payload = {nodes: nodes, identifier: identifier};
+    const payload = {nodes: nodes, identifier: identifier, reviewed: reviewed};
     return this.http.post(`${this.getBackend()}map_nodes/`, payload).toPromise();
   }
 
@@ -82,13 +82,14 @@ export class NetexControllerService {
     return this.http.post(`${this.getBackend()}apply_layout/`, payload).toPromise();
   }
 
-  public async searchProteins(query: string, identifier: string, label: string): Promise<any> {
+  public async searchProteins(query: string, identifier: string, label: string, reviewed: boolean): Promise<any> {
     /**
      * Searches for proteins in our database
      */
     const params = new HttpParams()
       .set('query', query)
       .set('identifier', identifier)
+      .set('reviewed', reviewed)
       .set('label', label);
     return this.http.get(`${this.getBackend()}search_proteins/?query=${query}`, {params}).toPromise();
   }

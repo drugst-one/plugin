@@ -103,6 +103,7 @@ export interface IConfig {
   nodeShadow?: boolean;
   edgeShadow?: boolean;
   customLinks?: {};
+  reviewed?: boolean;
   algorithms: { [key in AlgorithmTarget]: Array<AlgorithmType | QuickAlgorithmType> };
 }
 
@@ -205,6 +206,7 @@ export const defaultConfig: IConfig = {
   nodeShadow: true,
   edgeShadow: true,
   licensedDatasets: false,
+  reviewed: false,
   customLinks: {}, // { test: 'test link', test2: 'test2 link' }
   algorithms: {
     drug: ['trustrank', 'closeness', 'degree', 'proximity'],

@@ -280,7 +280,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.analysis.setTaskTokenCallback(this.setTaskToken.bind(this));
 
     this.searchSubject.subscribe(async query => {
-      this.proteinSuggestions = await this.netex.searchProteins(query, this.drugstoneConfig.currentConfig().identifier, this.drugstoneConfig.currentConfig().label);
+      this.proteinSuggestions = await this.netex.searchProteins(query, this.drugstoneConfig.currentConfig().identifier, this.drugstoneConfig.currentConfig().label, this.drugstoneConfig.currentConfig().reviewed);
     });
 
     this.searchSubjectDelete.subscribe(query => {
@@ -645,7 +645,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     // map data to nodes in backend
     if (network.nodes != null && network.nodes.length) {
-      network.nodes = await this.netex.mapNodes(network.nodes, this.drugstoneConfig.currentConfig().identifier);
+      network.nodes = await this.netex.mapNodes(network.nodes, this.drugstoneConfig.currentConfig().identifier, this.drugstoneConfig.currentConfig().reviewed);
     }
 
     // if (this.drugstoneConfig.config.identifier === 'ensg') {
