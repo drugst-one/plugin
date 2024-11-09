@@ -67,6 +67,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { IdspaceButtonComponent } from './components/network/network-menu/idspace-button/idspace-button.component';
 import { NetworkUploadDialogComponent } from './dialogs/network-upload-dialog/network-upload-dialog.component';
 import { GeneRowsComponent } from './components/analysis-panel/gene-rows/gene-rows.component';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+
 
 
 @NgModule({
@@ -134,7 +136,8 @@ import { GeneRowsComponent } from './components/analysis-panel/gene-rows/gene-ro
     MatButtonModule,
     MatSliderModule,
     MatFormFieldModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgMultiSelectDropDownModule.forRoot(),
   ],
   providers: [AnalysisService],
 })

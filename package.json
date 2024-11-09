@@ -49,6 +49,7 @@
     "dom-to-image-cross-origin": "^2.6.7",
     "json5": "^2.2.0",
     "lodash.merge": "^4.6.2",
+    "ng-multiselect-dropdown": "^0.3.8",
     "primeng": "^14.2.3",
     "rxjs": "^6.5.3",
     "tslib": "^2.0.0",

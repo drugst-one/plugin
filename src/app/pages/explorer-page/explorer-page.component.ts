@@ -147,6 +147,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public collapseQuery = true;
   public collapseData = true;
   public collapseEditor = true;
+  public collapsePropertiesPruning = true;
 
   public proteinData: ProteinNetwork;
   public edgeAttributes: Map<string, NodeInteraction>;
@@ -161,6 +162,20 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public showThresholdDialog = false;
   public analysisDialogTarget: 'drug' | 'drug-target' | 'gene';
 
+  objectKeys = Object.keys;
+  selectedProperty: string = '';
+  pruningType = '';
+  minPruningValue?: number;
+  maxPruningValue?: number;
+  pruningValues?: string[];
+  pruneDirection = 'greater';
+  cutoff?: number;
+  prunedNetwork: any;
+  step: number;
+
+  selectedValues: any[] = [];
+
+  dropdownSettings = {};
 
   public showCustomProteinsDialog = false;
   public selectedAnalysisTokenType: 'task' | 'view' | null = null;
@@ -275,6 +290,15 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'id',          
+      textField: 'itemName',
+      selectAllText: 'Select All',
+      unSelectAllText: 'Unselect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
     this.setWindowWidth(document.getElementById('appWindow').getBoundingClientRect().width);
     this.analysis.setViewTokenCallback(this.setViewToken.bind(this));
     this.analysis.setTaskTokenCallback(this.setTaskToken.bind(this));
@@ -294,6 +318,68 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         );
       });    
     });
+  }
+
+  async selectProperty(propertyKey: string) { 
+    this.prunedNetwork = null;
+    this.selectedProperty = propertyKey;
+    const result = await this.netex.prepareNetwork(this.networkHandler.activeNetwork.inputNetwork.nodes, propertyKey);
+    this.pruningType = result['type'];
+    if(this.pruningType === "string"){
+      this.pruningValues = result['uniqueValues'];
+    } else if (this.pruningType === "int" || this.pruningType === "float"){
+      this.minPruningValue = result['min'];
+      this.maxPruningValue = result['max'];
+      this.step = this.dynamicStep();
+      if (this.pruneDirection === 'greater'){
+        this.cutoff = result['min']
+      } else {
+        this.cutoff = result['max']
+      }
+    }
+  }
+
+  onSelectionChange(event) {
+    if (event.length === 0) {
+      this.selectedValues = [];
+    }
+    if (event === "all"){
+      this.selectedValues = this.pruningValues;
+    }
+    this.netex.pruneNetworkString(this.networkHandler.activeNetwork.inputNetwork, this.selectedProperty, this.selectedValues).then((result) => {
+      this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
+      this.prunedNetwork = result["prunedNetwork"];
+    });
+  }
+
+  pruneNetwork() {
+    this.network = this.prunedNetwork;
+    this.prunedNetwork = null;
+    this.reset();
+    this.selectedProperty = null;
+    this.pruningType = null;
+    this.minPruningValue = null;
+    this.maxPruningValue = null;
+    this.selectedValues = null;
+    this.collapsePropertiesPruning = true;
+  }
+
+  isLast(propertyKey: string): boolean {
+    const properties = this.networkHandler.activeNetwork.inputNetwork.nodes[0].properties;
+    const keys = Object.keys(properties);
+    return keys.indexOf(propertyKey) === keys.length - 1;
+  }
+
+  onSliderValueChanged() {
+    this.netex.pruneNetworkNumber(this.networkHandler.activeNetwork.inputNetwork, this.selectedProperty, this.cutoff, this.pruneDirection).then((result) => {
+      this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
+      this.prunedNetwork = result["prunedNetwork"];
+      console.log(result);
+    });
+  }
+
+  dynamicStep(): number {
+    return (this.maxPruningValue - this.minPruningValue) / 100;
   }
 
   selectProteinToDelete(protein) {

@@ -456,7 +456,70 @@
               Delete Protein
             </button>
           </div>
-        </div>        
+        </div>
+        
+        <div *ngIf="networkHandler.activeNetwork.inputNetwork?.nodes[0]?.properties" class="card bar-large">
+          <header class="card-header" [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }">
+            <p class="card-header-title">
+              <app-fa-solid-icon icon="edit"></app-fa-solid-icon>
+              Properties-based Pruning
+            </p>
+            <a (click)="collapsePropertiesPruning = !collapsePropertiesPruning" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
+              aria-label="more options">
+              <app-fa-solid-icon *ngIf="!collapsePropertiesPruning" icon="angle-down"></app-fa-solid-icon>
+              <app-fa-solid-icon *ngIf="collapsePropertiesPruning" icon="angle-left"></app-fa-solid-icon>
+            </a>
+          </header>
+          <div class="card-content" *ngIf="!collapsePropertiesPruning">
+            <div *ngIf="networkHandler.activeNetwork.inputNetwork.nodes">
+              <div *ngIf="networkHandler.activeNetwork.inputNetwork.nodes[0].properties">
+                <!-- Überschrift für die Auswahl -->
+                <div class="choose-property-title">
+                  Choose property to prune:
+                </div>
+                <!-- Dropdown zur Auswahl eines Property -->
+                <div *ngIf="networkHandler.activeNetwork.inputNetwork">
+                  <div *ngFor="let propertyKey of objectKeys(networkHandler.activeNetwork.inputNetwork.nodes[0].properties)">
+                    <div class="property-item" [class.selected]="selectedProperty === propertyKey" (click)="selectProperty(propertyKey)">
+                      {{ propertyKey }}
+                    </div>
+                    <!-- Divider Linie zwischen den Einträgen -->
+                    <div class="divider" *ngIf="!isLast(propertyKey)"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          <div *ngIf="pruningType === 'string'"  class="pruning-dropdown-container">
+            <ng-multiselect-dropdown class="multiselect-dropdown" [placeholder]="'Select values'" [data]="pruningValues" [(ngModel)]="selectedValues"
+              [settings]="dropdownSettings" (onDeSelect)="onSelectionChange($event)" (onSelect)="onSelectionChange($event)" (onSelectAll)="onSelectionChange('all')" (onDeSelectAll)="onSelectionChange($event)">
+            </ng-multiselect-dropdown>
+          </div>
+
+            
+            <div *ngIf="pruningType === 'int' || pruningType === 'float'">
+              <div class="prune-dropdown-container">
+                <div class="choose-property-title">Select Prune Direction:</div>
+                <select [(ngModel)]="pruneDirection" id="pruneDirection" class="prune-select">
+                  <option value="greater">Greater than/equal</option>
+                  <option value="lesser">Less than/equal</option>
+                </select>
+              </div>
+              <div>
+                <span>Prune based on range:</span>
+                <br>
+                <input type="range" [min]="minPruningValue" [max]="maxPruningValue" [(ngModel)]="cutoff"
+                  (input)="onSliderValueChanged()" [step]="pruningType === 'float' ? step : 1" >
+                <label style="padding: 5px;">{{ cutoff }}</label>
+              </div>
+            </div>
+            <button class="button is-primary is-rounded has-tooltip" [disabled]="!prunedNetwork || prunedNetwork['nodes'].length === 0" (click)="pruneNetwork()"
+              style="padding: 5px; box-sizing: border-box; width: 100%; margin-top: 5%;">
+              Prune Network
+            </button>
+          </div>
+        </div>
+
         <div *ngIf="drugstoneConfig.config.showViews" class="card bar-large">
           <header
             class="card-header"

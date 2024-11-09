@@ -54,6 +54,21 @@ export class NetexControllerService {
     return this.http.post<any>(`${this.getBackend()}autofill_edges/`, { "network": network, "config": this.drugstoneConfig.currentConfig()}).toPromise();
   }
 
+  public async prepareNetwork(nodes, pruning_attribute): Promise<any> {
+    const payload = JSON.stringify({ nodes: nodes, pruning_attribute: pruning_attribute });
+    return this.http.post(`${this.getBackend()}prepare_pruning/`, payload).toPromise();
+  }
+
+  public async pruneNetworkString(network, pruning_attribute, unique_values): Promise<any> {
+    const payload = JSON.stringify({ network: network, pruning_attribute: pruning_attribute, unique_values: unique_values });
+    return this.http.post(`${this.getBackend()}prune/`, payload).toPromise();
+  }
+
+  public async pruneNetworkNumber(network, pruning_attribute, cutoff, pruningDirection): Promise<any> {
+    const payload = JSON.stringify({ network: network, pruning_attribute: pruning_attribute, cutoff: cutoff, pruningDirection: pruningDirection });
+    return this.http.post(`${this.getBackend()}prune/`, payload).toPromise();
+  }
+
   public async mapNodes(nodes, identifier, reviewed): Promise<any> {
     /**
      * Tries to map every node to a node object in out database
