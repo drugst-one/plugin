@@ -379,7 +379,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   dynamicStep(): number {
-    return (this.maxPruningValue - this.minPruningValue) / 100;
+    return (this.maxPruningValue - this.minPruningValue) / 1000;
   }
 
   selectProteinToDelete(protein) {

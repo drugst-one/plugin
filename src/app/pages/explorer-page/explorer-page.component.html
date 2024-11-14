@@ -508,9 +508,16 @@
               <div>
                 <span>Prune based on range:</span>
                 <br>
-                <input type="range" [min]="minPruningValue" [max]="maxPruningValue" [(ngModel)]="cutoff"
+                <input style="margin-top: 5px; width: 80%" type="range" [min]="minPruningValue" [max]="maxPruningValue" [(ngModel)]="cutoff"
                   (input)="onSliderValueChanged()" [step]="pruningType === 'float' ? step : 1" >
                 <label style="padding: 5px;">{{ cutoff }}</label>
+              </div>
+              <br>
+              <div>
+                <span>Enter exact cutoff value:</span>
+                <br>
+                <input style="margin-top: 5px; width: 50%" type="number" [min]="minPruningValue" [max]="maxPruningValue" [(ngModel)]="cutoff"
+                  [step]="pruningType === 'float' ? step : 1" (input)="onSliderValueChanged()">
               </div>
             </div>
             <button class="button is-primary is-rounded has-tooltip" [disabled]="!prunedNetwork || prunedNetwork['nodes'].length === 0" (click)="pruneNetwork()"
