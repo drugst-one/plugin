@@ -374,7 +374,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.netex.pruneNetworkNumber(this.networkHandler.activeNetwork.inputNetwork, this.selectedProperty, this.cutoff, this.pruneDirection).then((result) => {
       this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
       this.prunedNetwork = result["prunedNetwork"];
-      console.log(result);
     });
   }
 

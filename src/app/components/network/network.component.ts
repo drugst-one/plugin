@@ -695,6 +695,10 @@ export class NetworkComponent implements OnInit {
 
     this.nodeData.nodes.remove(nodesToRemove.map(n => n.id));
     this.nodeData.edges.remove(edgesToRemove.map(e => e.id));
+    // remove drugs and disorders when node is added
+    await this.updateAdjacentDrugs(false, true);
+    await this.updateAdjacentProteinDisorders(false, true);
+    await this.updateAdjacentDrugDisorders(false, true);
   }
 
   public async addNode(node: Node) {
@@ -712,9 +716,10 @@ export class NetworkComponent implements OnInit {
     this.nodeData.edges.update(edges_updated);
     this.drugstoneConfig.config.layoutOn = false;
     this.updateLayoutEnabled(false);
-    await this.updateAdjacentDrugs(this.adjacentDrugs, true);
-    await this.updateAdjacentProteinDisorders(this.adjacentDisordersProtein, true);
-    await this.updateAdjacentDrugDisorders(this.adjacentDisordersDrug, true);
+    // remove drugs and disorders when node is added
+    await this.updateAdjacentDrugs(false, true);
+    await this.updateAdjacentProteinDisorders(false, true);
+    await this.updateAdjacentDrugDisorders(false, true);
   }
 
   public updateLayoutEnabled(bool: boolean, fromButton: boolean = false) {
