@@ -69,6 +69,11 @@ export class NetexControllerService {
     return this.http.post(`${this.getBackend()}prune/`, payload).toPromise();
   }
 
+  public async recalculateStatistics(network, config): Promise<any> {
+    const payload = JSON.stringify({ "network": network, "config": config });
+    return this.http.post(`${this.getBackend()}recalculate_statistics/`, payload).toPromise();
+  }
+
   public async mapNodes(nodes, identifier, reviewed): Promise<any> {
     /**
      * Tries to map every node to a node object in out database

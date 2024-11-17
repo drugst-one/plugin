@@ -59,6 +59,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   deleteProteinSuggestions: any = [];
   private searchSubject = new Subject<string>();
   private searchSubjectDelete = new Subject<string>();
+  properties: string[] = [];
+  missingProperties: string[] = [];
 
   public reset() {
     // const analysisNetwork = this.networkHandler.networks['analysis'];
@@ -162,7 +164,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public showThresholdDialog = false;
   public analysisDialogTarget: 'drug' | 'drug-target' | 'gene';
 
-  objectKeys = Object.keys;
   selectedProperty: string = '';
   pruningType = '';
   minPruningValue?: number;
@@ -320,10 +321,37 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
+  hasProperties(): boolean {
+    const nodesData = this.networkHandler.activeNetwork.nodeData.nodes || {};
+    const nodes = Array.from(nodesData._data?.values() || []);
+
+    const uniqueProperties = new Set<string>();
+    const missingProperties = new Set<string>();
+
+    for (const node of nodes) {
+      if (node['properties']) {
+        Object.keys(node["properties"]).forEach(key => uniqueProperties.add(key));
+      }
+    }
+
+    // Check for properties not present in all nodes
+    for (const property of uniqueProperties) {
+      const isInAllNodes = nodes.every(node => node['properties']?.hasOwnProperty(property));
+      if (!isInAllNodes) {
+        missingProperties.add(property);
+      }
+    }
+
+    this.properties = Array.from(uniqueProperties);
+    this.missingProperties = Array.from(missingProperties);
+    return uniqueProperties.size > 0;
+  }
+
+
   async selectProperty(propertyKey: string) { 
     this.prunedNetwork = null;
     this.selectedProperty = propertyKey;
-    const result = await this.netex.prepareNetwork(this.networkHandler.activeNetwork.inputNetwork.nodes, propertyKey);
+    const result = await this.netex.prepareNetwork(this.networkHandler.activeNetwork.nodeData.nodes.get(), propertyKey);
     this.pruningType = result['type'];
     if(this.pruningType === "string"){
       this.pruningValues = result['uniqueValues'];
@@ -346,7 +374,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (event === "all"){
       this.selectedValues = this.pruningValues;
     }
-    this.netex.pruneNetworkString(this.networkHandler.activeNetwork.inputNetwork, this.selectedProperty, this.selectedValues).then((result) => {
+    const network = {"nodes": this.networkHandler.activeNetwork.nodeData.nodes.get(), "edges": this.networkHandler.activeNetwork.nodeData.edges.get()};
+    this.netex.pruneNetworkString(network, this.selectedProperty, this.selectedValues).then((result) => {
       this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
       this.prunedNetwork = result["prunedNetwork"];
     });
@@ -371,7 +400,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   onSliderValueChanged() {
-    this.netex.pruneNetworkNumber(this.networkHandler.activeNetwork.inputNetwork, this.selectedProperty, this.cutoff, this.pruneDirection).then((result) => {
+    const network = { "nodes": this.networkHandler.activeNetwork.nodeData.nodes.get(), "edges": this.networkHandler.activeNetwork.nodeData.edges.get() };
+    this.netex.pruneNetworkNumber(network, this.selectedProperty, this.cutoff, this.pruneDirection).then((result) => {
       this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
       this.prunedNetwork = result["prunedNetwork"];
     });
@@ -609,6 +639,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.toast.setNewToast({message: 'Duplicate node ids removed: ' + duplicateNodeIds.join(', '), type: 'warning'});
         nodes = uniqueNodes;
       }
+
+      nodes = await this.netex.recalculateStatistics({"nodes": nodes, "edges": edges}, this.drugstoneConfig.currentConfig());
 
       this.nodeData.nodes = new vis.DataSet(nodes);
       this.nodeData.edges = new vis.DataSet(edges);

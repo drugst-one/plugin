@@ -695,6 +695,8 @@ export class NetworkComponent implements OnInit {
 
     this.nodeData.nodes.remove(nodesToRemove.map(n => n.id));
     this.nodeData.edges.remove(edgesToRemove.map(e => e.id));
+    const nodes = await this.netex.recalculateStatistics({ "nodes": this.nodeData.nodes.get(), "edges": this.nodeData.edges.get() }, this.drugstoneConfig.currentConfig());
+    this.nodeData.nodes.update(nodes);
     // remove drugs and disorders when node is added
     await this.updateAdjacentDrugs(false, true);
     await this.updateAdjacentProteinDisorders(false, true);
@@ -702,7 +704,7 @@ export class NetworkComponent implements OnInit {
   }
 
   public async addNode(node: Node) {
-    const nodes = this.nodeData.nodes.get();
+    var nodes = this.nodeData.nodes.get();
     for (const n of nodes) {
       if (n.id === node.id) {
         this.toast.setNewToast({ "message": 'The added node was already part of the network.', type: 'warning' });
@@ -712,6 +714,7 @@ export class NetworkComponent implements OnInit {
     nodes.push(node);
     const edges = this.nodeData.edges.get();
     const edges_updated = await this.netex.autofill_edges({nodes, edges})
+    nodes = await this.netex.recalculateStatistics({"nodes": nodes, "edges": edges_updated}, this.drugstoneConfig.currentConfig());
     this.nodeData.nodes.update(nodes);
     this.nodeData.edges.update(edges_updated);
     this.drugstoneConfig.config.layoutOn = false;

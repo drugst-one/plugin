@@ -471,20 +471,28 @@
             </a>
           </header>
           <div class="card-content" *ngIf="!collapsePropertiesPruning">
-            <div *ngIf="networkHandler.activeNetwork.inputNetwork.nodes">
-              <div *ngIf="networkHandler.activeNetwork.inputNetwork.nodes[0].properties">
-                <!-- Überschrift für die Auswahl -->
+            <div *ngIf="networkHandler.activeNetwork.nodeData.nodes">
+              <div *ngIf="hasProperties()">
+                <!-- Header -->
                 <div class="choose-property-title">
                   Choose property to prune:
                 </div>
-                <!-- Dropdown zur Auswahl eines Property -->
-                <div *ngIf="networkHandler.activeNetwork.inputNetwork">
-                  <div *ngFor="let propertyKey of objectKeys(networkHandler.activeNetwork.inputNetwork.nodes[0].properties)">
+                <!-- Dropdown for properties -->
+                <div *ngIf="properties && properties.length > 0">
+                  <div *ngFor="let propertyKey of properties; let i = index">
                     <div class="property-item" [class.selected]="selectedProperty === propertyKey" (click)="selectProperty(propertyKey)">
-                      {{ propertyKey }}
+                      <span class="property-label">{{ propertyKey }}</span>
+                      <!-- Warning Icon -->
+                      <a *ngIf="missingProperties.includes(propertyKey)"
+                        pTooltip="Property not present in all nodes. Nodes without this property will be deleted!"
+                        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top"
+                        class="warning-icon has-text-warning">
+                        <app-fa-solid-icon icon="exclamation-circle"></app-fa-solid-icon>
+                      </a>
                     </div>
-                    <!-- Divider Linie zwischen den Einträgen -->
-                    <div class="divider" *ngIf="!isLast(propertyKey)"></div>
+
+                    <!-- Divider Line between entries -->
+                    <div class="divider" *ngIf="i < properties.length - 1"></div>
                   </div>
                 </div>
               </div>
