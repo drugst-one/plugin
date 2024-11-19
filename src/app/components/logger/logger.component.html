@@ -1,0 +1,22 @@
+<div class="logger" [ngStyle]="{ 'height': collapseLogger ? '48px' : '300px' }">
+    <div class="logger-header">
+        <h2 class="logger-title"><b>Logger</b></h2>
+        <a (click)="collapseLogger = !collapseLogger"
+            class="card-header-icon is-hidden-fullscreen">
+            <app-fa-solid-icon *ngIf="!collapseLogger" icon="angle-down"></app-fa-solid-icon>
+            <app-fa-solid-icon *ngIf="collapseLogger" icon="angle-left"></app-fa-solid-icon>
+        </a>
+    </div>
+
+    <div *ngIf="!collapseLogger">
+        <div *ngIf="logger.logs.length; else noLogs" class="logs-container" #logsContainer>
+            <ul class="logs-list">
+                <li *ngFor="let log of logger.logs" class="log-item">{{ log }}</li>
+            </ul>
+        </div>
+
+        <ng-template #noLogs>
+            <p class="no-logs">No logs available.</p>
+        </ng-template>
+    </div>
+</div>

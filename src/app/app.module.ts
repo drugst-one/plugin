@@ -68,6 +68,7 @@ import { IdspaceButtonComponent } from './components/network/network-menu/idspac
 import { NetworkUploadDialogComponent } from './dialogs/network-upload-dialog/network-upload-dialog.component';
 import { GeneRowsComponent } from './components/analysis-panel/gene-rows/gene-rows.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { LoggerComponent } from './components/logger/logger.component';
 
 
 
@@ -119,6 +120,7 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
     IdspaceButtonComponent,
     NetworkUploadDialogComponent,
     GeneRowsComponent,
+    LoggerComponent,
   ],
   imports: [
     BrowserModule,

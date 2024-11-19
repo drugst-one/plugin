@@ -9,19 +9,20 @@ import {OmnipathControllerService} from '../omnipath-controller/omnipath-control
 import {LegendService} from '../legend-service/legend-service.service';
 import {LoadingScreenService} from '../loading-screen/loading-screen.service';
 import { ToastService } from '../toast/toast.service';
+import { LoggerService } from '../logger/logger.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NetworkHandlerService {
 
-  constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public netex: NetexControllerService, public omnipath: OmnipathControllerService, public loadingScreen: LoadingScreenService, public toast: ToastService,) {
+  constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public netex: NetexControllerService, public omnipath: OmnipathControllerService, public loadingScreen: LoadingScreenService, public toast: ToastService, public logger: LoggerService) {
   }
 
   private change = new Subject<any>();
   public networkSidebarOpen = this.drugstoneConfig.config.expandNetworkMenu || false;
   public networks: { NetworkType: NetworkComponent } | {} = {};
-  public activeNetwork: NetworkComponent = new NetworkComponent(this.legendService, this.networkHandler, this.analysis, this.drugstoneConfig, this.netex, this.omnipath, this.loadingScreen, this.toast);
+  public activeNetwork: NetworkComponent = new NetworkComponent(this.legendService, this.networkHandler, this.analysis, this.drugstoneConfig, this.netex, this.omnipath, this.loadingScreen, this.toast, this.logger);
 
 
   public shiftDown = false;

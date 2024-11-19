@@ -25,6 +25,7 @@ import {LoadingScreenService} from 'src/app/services/loading-screen/loading-scre
 import {version} from '../../../version';
 import {Subject} from 'rxjs';
 import { ToastService } from 'src/app/services/toast/toast.service';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 @Component({
   selector: 'app-network',
@@ -42,6 +43,7 @@ export class NetworkComponent implements OnInit {
     public omnipath: OmnipathControllerService,
     public loadingScreen: LoadingScreenService,
     public toast: ToastService,
+    public logger: LoggerService
   ) {
     try {
       this.versionString = version;
@@ -690,6 +692,7 @@ export class NetworkComponent implements OnInit {
   }
 
   public async removeNode(node: any) {
+    this.logger.logMessage(`Deleted node with id: ${node["id"]} and label: ${node["data"]["label"] ?? node["id"]}`);
     const nodesToRemove = this.nodeData.nodes.get().filter(n => n.id === node.id);
     const edgesToRemove = this.nodeData.edges.get().filter(e => e.from === node.id || e.to === node.id);
 
@@ -698,12 +701,15 @@ export class NetworkComponent implements OnInit {
     const nodes = await this.netex.recalculateStatistics({ "nodes": this.nodeData.nodes.get(), "edges": this.nodeData.edges.get() }, this.drugstoneConfig.currentConfig());
     this.nodeData.nodes.update(nodes);
     // remove drugs and disorders when node is added
-    await this.updateAdjacentDrugs(false, true);
-    await this.updateAdjacentProteinDisorders(false, true);
-    await this.updateAdjacentDrugDisorders(false, true);
+    if(this.adjacentDrugs || this.adjacentDisordersDrug || this.adjacentDisordersProtein){
+      await this.updateAdjacentDrugs(false, true);
+      await this.updateAdjacentProteinDisorders(false, true);
+      await this.updateAdjacentDrugDisorders(false, true);
+    }
   }
 
   public async addNode(node: Node) {
+    this.logger.logMessage(`Added node with id: ${node["id"]} and label: ${node["label"] ?? node["id"]}`);
     var nodes = this.nodeData.nodes.get();
     for (const n of nodes) {
       if (n.id === node.id) {
@@ -720,9 +726,11 @@ export class NetworkComponent implements OnInit {
     this.drugstoneConfig.config.layoutOn = false;
     this.updateLayoutEnabled(false);
     // remove drugs and disorders when node is added
-    await this.updateAdjacentDrugs(false, true);
-    await this.updateAdjacentProteinDisorders(false, true);
-    await this.updateAdjacentDrugDisorders(false, true);
+    if (this.adjacentDrugs || this.adjacentDisordersDrug || this.adjacentDisordersProtein) {
+      await this.updateAdjacentDrugs(false, true);
+      await this.updateAdjacentProteinDisorders(false, true);
+      await this.updateAdjacentDrugDisorders(false, true);
+    }
   }
 
   public updateLayoutEnabled(bool: boolean, fromButton: boolean = false) {
