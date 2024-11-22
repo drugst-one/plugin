@@ -517,6 +517,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       this.loading = true;
       this.netex.getTaskResult(this.token).then(async result => {
         console.log(result)
+        this.analysis.target = result.parameters.target;
         if (!("network" in result)) {
           this.tab = 'table';
         }

@@ -86,6 +86,7 @@ export class AnalysisService {
   public currentNetwork:any;
 
   public inPathwayAnalysis = false;
+  public target = '';
   public nodesToAdd: Node[] = [];
   
   private nodesToAddNotifier = new Subject<boolean>();
