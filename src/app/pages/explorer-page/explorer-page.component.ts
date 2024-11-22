@@ -62,7 +62,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   properties: string[] = [];
   missingProperties: string[] = [];
 
-  public reset() {
+  public reset(network: string = '') {
     // const analysisNetwork = this.networkHandler.networks['analysis'];
     const explorerNetwork = this.networkHandler.networks['explorer'];
     if (this.analysisElement) {
@@ -78,7 +78,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     explorerNetwork.updatePhysicsEnabled(false);
     explorerNetwork.updateLayoutEnabled(false);
     this.legendService.reset();
-    this.network = this.network;
+    if (network.length > 0) {
+      this.network = network;
+    } else {
+      this.network = this.network;
+    }
   }
 
   @Input()
@@ -561,8 +565,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public resetNetwork(network: string) {
-    this.network = network;
-    this.reset();
+    this.reset(network);
   }
 
   /**
