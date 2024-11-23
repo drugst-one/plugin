@@ -8,7 +8,7 @@ import { LoggerService } from 'src/app/services/logger/logger.service';
 })
 export class LoggerComponent implements OnInit, AfterViewChecked {
   @ViewChild('logsContainer') logsContainer!: ElementRef;
-  collapseLogger: boolean = false;
+  collapseLogger: boolean = true;
 
   constructor(public logger: LoggerService) { }
 

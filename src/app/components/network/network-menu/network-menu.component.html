@@ -77,7 +77,7 @@
           ></app-download-button>
         </div>
       </div>
-      <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonUpload" class="row is-full m-1">
+      <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonUpload && !analysis.analysisActive" class="row is-full m-1">
         <app-toggle-inplace [useValue]="false" class="network-footer-toolbar-element"
           text="{{ drugstoneConfig.config.networkMenuButtonUploadLabel }}"
           tooltip="Upload network as .csv, .sif, .gt (id as node property 'name') or .graphml." (valueChange)="

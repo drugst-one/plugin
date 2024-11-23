@@ -1,7 +1,7 @@
 import { Injector, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -141,7 +141,7 @@ import { LoggerComponent } from './components/logger/logger.component';
     ReactiveFormsModule,
     NgMultiSelectDropDownModule.forRoot(),
   ],
-  providers: [AnalysisService],
+  providers: [AnalysisService, DatePipe],
 })
 export class AppModule {
 

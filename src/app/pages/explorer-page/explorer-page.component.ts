@@ -27,6 +27,7 @@ import {NetworkHandlerService} from 'src/app/services/network-handler/network-ha
 import {LegendService} from '../../services/legend-service/legend-service.service';
 import {ToastService} from '../../services/toast/toast.service';
 import { Subject } from 'rxjs';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 
 declare var vis: any;
@@ -247,6 +248,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     public networkHandler: NetworkHandlerService,
     public legendService: LegendService,
     public toast: ToastService,
+    public logger: LoggerService
   ) {
 
     this.showDetails = false;
@@ -386,15 +388,29 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   pruneNetwork() {
-    this.network = this.prunedNetwork;
+    const jsonString = JSON.stringify(this.prunedNetwork);
+    this.logPruning();
+    this.reset(jsonString);
     this.prunedNetwork = null;
-    this.reset();
     this.selectedProperty = null;
     this.pruningType = null;
     this.minPruningValue = null;
     this.maxPruningValue = null;
     this.selectedValues = null;
     this.collapsePropertiesPruning = true;
+    this.cutoff = null;
+    this.pruningValues = null;
+  }
+
+  logPruning() {
+    this.logger.MAIN_NETWORK = this.logger.component + ' | Pruned';
+    this.logger.changeComponent(this.logger.MAIN_NETWORK);
+    if (this.pruningType === "string") {
+      const values = this.selectedValues.join(', ');
+      this.logger.logMessage(`Pruned network based on property ${this.selectedProperty} with values ${values}. Remaining Nodes: ${this.prunedNetwork.nodes.length}, Edges: ${this.prunedNetwork.edges.length}.`);
+    } else {
+      this.logger.logMessage(`Pruned network based on property ${this.selectedProperty} with cutoff ${this.cutoff}. Remaining Nodes: ${this.prunedNetwork.nodes.length}, Edges: ${this.prunedNetwork.edges.length}.`);
+    }
   }
 
   isLast(propertyKey: string): boolean {

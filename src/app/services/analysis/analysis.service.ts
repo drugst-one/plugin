@@ -7,6 +7,8 @@ import {DrugstoneConfigService} from '../drugstone-config/drugstone-config.servi
 import {NetworkHandlerService} from '../network-handler/network-handler.service';
 import {ToastService} from '../toast/toast.service';
 import {NodeGroup} from 'src/app/config';
+import { LoggerService } from '../logger/logger.service';
+import { DatePipe } from '@angular/common';
 
 export type AlgorithmType =
   'trustrank'
@@ -107,7 +109,9 @@ export class AnalysisService {
     private http: HttpClient,
     public netex: NetexControllerService,
     public drugstoneConfig: DrugstoneConfigService,
-    public networkHandler: NetworkHandlerService
+    public networkHandler: NetworkHandlerService,
+    public logger: LoggerService,
+    public datePipe: DatePipe
   ) {
     const tokens = localStorage.getItem(this.tokensCookieKey);
     const selections = localStorage.getItem(this.selectionsCookieKey);
@@ -407,7 +411,6 @@ export class AnalysisService {
   }
 
   async viewFromSelection() {
-
     const seeds = this.getSelection().map((item) => item.id);
     const seedsFiltered = seeds.filter(el => el != null);
     const initialNetwork = this.networkHandler.activeNetwork.getResetInputNetwork();
@@ -418,6 +421,8 @@ export class AnalysisService {
       config: this.drugstoneConfig.currentConfig(),
       network: {nodes: filteredNodes, edges: filteredEdges}
     };
+    const formattedDate = this.datePipe.transform(new Date(), 'short');
+    this.logger.logMessage(`A new network view was created based on the selection. Nodes: ${filteredNodes.length}, Edges: ${filteredEdges.length}. Created at ${formattedDate}`);
     const resp = await this.http.post<any>(`${this.netex.getBackend()}save_selection`, payload).toPromise();
     // @ts-ignore
     this.viewTokens.push(resp.token);

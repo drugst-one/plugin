@@ -33,6 +33,8 @@ import { LoadingScreenService } from 'src/app/services/loading-screen/loading-sc
 import { version } from '../../../version';
 import { downloadResultCSV, downloadNodeAttributes } from 'src/app/utils';
 import { Sort } from '@angular/material/sort';
+import { LoggerService } from 'src/app/services/logger/logger.service';
+import { DatePipe } from '@angular/common';
 
 declare var vis: any;
 
@@ -108,7 +110,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public sliderValue: number;
 
 
-  constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService, public loadingScreen: LoadingScreenService) {
+  constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService, public loadingScreen: LoadingScreenService, public logger: LoggerService, private datePipe: DatePipe) {
     try {
       this.versionString = version;
     } catch (e) {
@@ -362,6 +364,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.loading = true;
     this.loadingScreen.stateUpdate(true);
     this.getView(this.token).then(async view => {
+      this.logger.changeComponent('View ' + this.datePipe.transform(view.createdAt, "short"));
+      this.logger.logMessage('View loaded. Nodes: ' + view.network.nodes.length + ', Edges: ' + view.network.edges.length + '.');
       this.task = view;
       this.result = view;
       this.drugstoneConfig.set_analysisConfig(view.config);
@@ -478,6 +482,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.loadingScreen.stateUpdate(true);
     this.analysis.analysisActive = true;
     this.task = await this.getTask(this.token);
+    this.logger.changeComponent(algorithmNames[this.task["info"]["algorithm"]] + " | " + this.task["info"]["target"]);
+    const formattedDate = this.datePipe.transform(this.task["info"]["finishedAt"], 'short');
+    this.logger.logMessage(`Analysis started. Task finished at: ${formattedDate}.`);
     this.analysis.switchSelection(this.token);
 
     if (this.task.info.algorithm === 'degree') {
@@ -701,6 +708,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   close() {
     this.analysis.analysisActive = false;
+    this.logger.logMessage("Analysis/View closed.");
+    this.logger.changeComponent(this.logger.MAIN_NETWORK);
     const analysisNetwork = this.networkHandler.networks['analysis'];
     analysisNetwork.gradientMap = {};
     this.drugstoneConfig.remove_analysisConfig();
