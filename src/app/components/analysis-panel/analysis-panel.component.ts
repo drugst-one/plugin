@@ -355,9 +355,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.tab = "network";
     this.loading = true;
     this.loadingScreen.stateUpdate(true);
-    this.parse_pathway(this.token, this.geneSet, this.pathway).then(result => {
-      this.refreshTask();
-    });
+    this.parse_pathway(this.token, this.geneSet, this.pathway).then(async result => {
+      await this.refreshTask();
+      this.logPathwayAnalysis();
+  });
   }
 
   private async refreshView() {
@@ -482,9 +483,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.loadingScreen.stateUpdate(true);
     this.analysis.analysisActive = true;
     this.task = await this.getTask(this.token);
-    this.logger.changeComponent(algorithmNames[this.task["info"]["algorithm"]] + " | " + this.task["info"]["target"]);
-    const formattedDate = this.datePipe.transform(this.task["info"]["finishedAt"], 'short');
-    this.logger.logMessage(`Analysis started. Task finished at: ${formattedDate}.`);
+    if(!this.analysis.inPathwayAnalysis){
+      this.logger.changeComponent(algorithmNames[this.task["info"]["algorithm"]] + " | " + this.task["info"]["target"]);
+      const formattedDate = this.datePipe.transform(this.task["info"]["finishedAt"], 'short');
+      this.logger.logMessage(`Analysis started. Task finished at: ${formattedDate}.`);
+    }
     this.analysis.switchSelection(this.token);
 
     if (this.task.info.algorithm === 'degree') {
@@ -535,8 +538,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         this.drugstoneConfig.set_analysisConfig(result.parameters.config);
         if (result["algorithm"] === "pathway_enrichment") {
           if("geneset" in result){
+            let needLog = !this.geneSet || !this.pathway;
             this.geneSet = result["geneset"];
             this.pathway = result["pathway"];
+            if (needLog){
+              this.logPathwayAnalysis();
+            }
           }
           if (!this.maxSliderValue){
             this.maxSliderValue = this.findMaxOverlap(result["tableView"]);
@@ -978,5 +985,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   public openBugreport() {
     this.drugstoneConfig.showBugreport = true;
+  }
+
+  private logPathwayAnalysis() {
+    const component = algorithmNames[this.task["info"]["algorithm"]] + " | " + this.task["info"]["target"] + " | " + this.geneSet + " - " + this.pathway;
+    this.logger.changeComponent(component);
+    this.logger.logMessage("Pathway analysis started.");
   }
 }

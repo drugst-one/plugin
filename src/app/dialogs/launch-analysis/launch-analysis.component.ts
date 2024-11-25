@@ -6,11 +6,12 @@ import {
   KEYPATHWAYMINER, LEIDENCLUSTERING, LOUVAINCLUSTERING, MAX_TASKS,
   MULTISTEINER, NETWORK_PROXIMITY,
   PATHWAYENRICHMENT,
-  TRUSTRANK
+  TRUSTRANK, algorithmNames
 } from '../../services/analysis/analysis.service';
-import {Algorithm, AlgorithmType, QuickAlgorithmType} from 'src/app/interfaces';
+import {Algorithm, AlgorithmType, QuickAlgorithmType, Wrapper} from 'src/app/interfaces';
 import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
 import {NetworkHandlerService} from '../../services/network-handler/network-handler.service';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 @Component({
   selector: 'app-launch-analysis',
@@ -19,7 +20,7 @@ import {NetworkHandlerService} from '../../services/network-handler/network-hand
 })
 export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
-  constructor(public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public networkHandler: NetworkHandlerService) {
+  constructor(public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public networkHandler: NetworkHandlerService, public logger: LoggerService) {
   }
 
   @Input()
@@ -133,8 +134,18 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
 
   public async startTask() {
+    const selection = this.analysis.getSelection();
+    const groupCounts = selection.reduce((acc: Record<string, number>, node: Wrapper) => {
+      const group = node.data._group;
+      acc[group] = (acc[group] || 0) + 1;
+      return acc;
+    }, {});
+    const groupLog = Object.entries(groupCounts)
+      .map(([group, count]) => `${count} in ${this.drugstoneConfig.currentConfig().nodeGroups[group].groupName}`)
+      .join(', ');
+    this.logger.logMessage(`Starting analysis with ${this.analysis.getSelection().length} seeds and algorithm ${algorithmNames[this.algorithm]} (${this.target}). Groups of Selection: ${groupLog}.`);
     // all nodes in selection have drugstoneId, hence exist in the backend
-    const seeds = this.analysis.getSelection().map((item) => item.id);
+    const seeds = selection.map((item) => item.id);
     const seedsFiltered = seeds.filter(el => el != null);
         this.analysis.resetSelection();
     const parameters: any = {

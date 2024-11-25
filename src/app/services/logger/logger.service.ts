@@ -26,7 +26,6 @@ export class LoggerService {
 
     if (this.logs.length > this.maxLogs) {
       const removedLogs = this.logs.splice(0, this.logs.length - this.maxLogs);
-      console.log(`Removed ${removedLogs.length} old logs`);
     }
 
     this.saveLogsToStorage();
