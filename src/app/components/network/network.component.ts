@@ -608,6 +608,7 @@ export class NetworkComponent implements OnInit {
                   const a = document.createElement('a');
                   a.href = generatedImage;
                   a.download = `Network.png`;
+                  this.logger.logMessage(`Downloaded network as PNG: ${a.download}`);
                   a.click();
                 }).catch(e => {
                   console.error(e);

@@ -162,6 +162,7 @@ export function downLoadFile(
   a.href = URL.createObjectURL(blob);
   a.download = `${label}_${new Date().getTime()}.${fmt}`;
   a.click();
+  return a.download;
 }
 
 export function RGBAtoRGBwithoutA(rgbaString) {
@@ -462,7 +463,7 @@ export const downloadJSON = function (
   const dataFormatted = _formatNetworkData(nodes, edges, nodeAttrs, edgeAttrs);
   const output = JSON.stringify(dataFormatted);
   const fmt = 'json';
-  downLoadFile(output, `application/${fmt}`, fmt, label);
+  return downLoadFile(output, `application/${fmt}`, fmt, label);
 };
 
 
@@ -511,7 +512,7 @@ export const downloadGraphml = function (
 
   const output = graphml.join('');
   const fmt = 'graphml';
-  downLoadFile(output, `application/${fmt}`, fmt, label);
+  return downLoadFile(output, `application/${fmt}`, fmt, label);
 };
 
 export const downloadCSV = function (
@@ -556,7 +557,7 @@ export const downloadCSV = function (
 
   const output = rows.join('\n');
   const fmt = 'csv';
-  downLoadFile(output, `application/${fmt}`, fmt, label);
+  return downLoadFile(output, `application/${fmt}`, fmt, label);
 }
 
 export const downloadResultCSV = function (
@@ -594,5 +595,5 @@ export const downloadResultCSV = function (
     output += '\n';
   });
   const fmt = 'csv';
-  downLoadFile(output, `application/${fmt}`, fmt, label);
+  return downLoadFile(output, `application/${fmt}`, fmt, label);
 };

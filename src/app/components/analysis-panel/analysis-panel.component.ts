@@ -784,7 +784,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       data = data.sort((a, b) => b['score'] - a['score']);
     }
 
-    downloadResultCSV(data, downloadNodeAttributes, `drugstone_${view}`);
+    const filename = downloadResultCSV(data, downloadNodeAttributes, `drugstone_${view}`);
+    this.logger.logMessage(`Downloaded ${view.toLocaleUpperCase()}-nodes as CSV: ${filename}`);
   }
 
   public downloadPathwayEnrichmentAsCSV(){
@@ -792,7 +793,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       const tableView = this.result["tableView"];
       const columns = Object.keys(this.result["tableView"][0])
       console.log(tableView, columns)
-      downloadResultCSV(tableView, columns, `drugstone_pathwayEnrichment`);
+      const filename = downloadResultCSV(tableView, columns, `drugstone_pathwayEnrichment`);
+      this.logger.logMessage(`Downloaded Pathway Enrichment as CSV: ${filename}`);
     }
   }
 

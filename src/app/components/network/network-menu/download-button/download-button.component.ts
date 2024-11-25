@@ -8,6 +8,7 @@ import {
   downloadGraphml, downloadResultCSV, downloadCSV,
 } from "src/app/utils";
 import { NetworkHandlerService } from "../../../../services/network-handler/network-handler.service";
+import { LoggerService } from "src/app/services/logger/logger.service";
 
 @Component({
   selector: "app-download-button",
@@ -21,7 +22,8 @@ export class DownloadButtonComponent implements OnInit {
   constructor(
     public drugstoneConfig: DrugstoneConfigService,
     public netex: NetexControllerService,
-    public networkHandler: NetworkHandlerService
+    public networkHandler: NetworkHandlerService,
+    public logger: LoggerService
   ) {}
 
   ngOnInit(): void {}
@@ -49,26 +51,29 @@ export class DownloadButtonComponent implements OnInit {
     }
 
     if (fmt === "json") {
-      downloadJSON(
+      const fileName = downloadJSON(
         nodes,
         edges,
         downloadNodeAttributes,
         downloadEdgeAttributes
       );
+      this.logger.logMessage(`Downloaded network as JSON: ${fileName}`);
     } else if (fmt === 'graphml') {
-      downloadGraphml(
+      const filename = downloadGraphml(
         nodes,
         edges,
         downloadNodeAttributes,
         downloadEdgeAttributes
       )
+      this.logger.logMessage(`Downloaded network as GraphML: ${filename}`);
     } else if(fmt === 'csv'){
-      downloadCSV(
+      const filename = downloadCSV(
         nodes,
         edges,
         downloadNodeAttributes,
         downloadEdgeAttributes
       )
+      this.logger.logMessage(`Downloaded network as CSV: ${filename}`);
     }
 
   }
