@@ -812,11 +812,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       let edges_mapped = result.network.edges.map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
       let nodes_list: any[] = result.network.nodes;
       if (nodesToAdd.length > 0) {
-        const addedNodesString = nodesToAdd
-          .map(node => node.label || node.id)
-          .join(", ");
+        const addedNodesList = [];
         nodesToAdd.forEach(node => {
           if (!nodes_list.find(n => n.id === node.id)){
+            const label = node.label? node.label : node.id;
+            addedNodesList.push(label);
             if (!node.groupName) {
               node.group = "addedNode"
               node.groupName = this.drugstoneConfig.currentConfig().nodeGroups[node.group]["groupName"]
@@ -827,6 +827,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         })
         const edges = await this.netex.addEdges({ nodes: nodes_list, edges: edges_mapped }, result);
         edges_mapped = edges.map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+        const addedNodesString = addedNodesList.join(", ");
         this.logger.logMessage(`Added nodes during Pathway Enrichment Analysis: ${addedNodesString}`);
       }
       const nodes: any = nodes_list;
