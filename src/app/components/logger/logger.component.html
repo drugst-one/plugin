@@ -1,13 +1,18 @@
 <div class="logger" [ngStyle]="{ 'height': collapseLogger ? '48px' : '300px' }">
     <div class="logger-header">
         <h2 class="logger-title"><b>Logger</b></h2>
-        <a style="margin-left: auto;" (click)="logger.downloadLogs()" class="card-header-icon is-hidden-fullscreen">
-            <app-fa-solid-icon icon="download"></app-fa-solid-icon>
-        </a>
-        <a (click)="collapseLogger = !collapseLogger" class="card-header-icon is-hidden-fullscreen">
-            <app-fa-solid-icon *ngIf="!collapseLogger" icon="angle-down"></app-fa-solid-icon>
-            <app-fa-solid-icon *ngIf="collapseLogger" icon="angle-left"></app-fa-solid-icon>
-        </a>
+        <div style="display: flex; gap: 5px;">
+            <a  style="margin-left: auto;"  (click)="logger.clearLogs()" class="card-header-icon">
+                <app-fa-solid-icon pTooltip="Clear logs." tooltipPosition="top" [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" icon="trash"></app-fa-solid-icon>
+            </a>
+            <a  style="margin-left: auto;" (click)="logger.downloadLogs()" class="card-header-icon">
+                <app-fa-solid-icon pTooltip="Download logs."  tooltipPosition="top" [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" icon="download"></app-fa-solid-icon>
+            </a>
+            <a (click)="collapseLogger = !collapseLogger" class="card-header-icon is-hidden-fullscreen">
+                <app-fa-solid-icon *ngIf="!collapseLogger" icon="angle-down"></app-fa-solid-icon>
+                <app-fa-solid-icon *ngIf="collapseLogger" icon="angle-left"></app-fa-solid-icon>
+            </a>
+        </div>
     </div>
 
     <div *ngIf="!collapseLogger">

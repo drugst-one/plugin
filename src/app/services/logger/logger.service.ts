@@ -10,6 +10,7 @@ export class LoggerService {
   component: string;
   private storageKey = 'loggerLogs';
   private maxLogs = 100;
+
   constructor() {
     this.restoreLogsFromStorage();
     this.component = this.MAIN_NETWORK;
@@ -23,10 +24,6 @@ export class LoggerService {
       time: new Date(),
     };
     this.logs.push(log);
-
-    if (this.logs.length > this.maxLogs) {
-      const removedLogs = this.logs.splice(0, this.logs.length - this.maxLogs);
-    }
 
     this.saveLogsToStorage();
   }
@@ -47,7 +44,17 @@ export class LoggerService {
         ...log,
         time: new Date(log.time),
       }));
+
+      if (this.logs.length > this.maxLogs) {
+        this.logs = this.logs.slice(-this.maxLogs);
+      }
     }
+  }
+  
+  clearLogs(): void {
+    this.logs = [];
+    localStorage.removeItem(this.storageKey);
+    this.logMessage('Logs cleared.');
   }
 
   downloadLogs() {

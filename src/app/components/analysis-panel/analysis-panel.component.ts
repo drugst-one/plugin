@@ -486,7 +486,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     if(!this.analysis.inPathwayAnalysis){
       this.logger.changeComponent(algorithmNames[this.task["info"]["algorithm"]] + " | " + this.task["info"]["target"]);
       const formattedDate = this.datePipe.transform(this.task["info"]["finishedAt"], 'short');
-      this.logger.logMessage(`Analysis started. Task finished at: ${formattedDate}.`);
+      this.logger.logMessage(`Analysis Result View loaded: ${algorithmNames[this.task["info"]["algorithm"]]} (${this.task["info"]["target"]}). Task finished at: ${formattedDate}.`);
     }
     this.analysis.switchSelection(this.token);
 
