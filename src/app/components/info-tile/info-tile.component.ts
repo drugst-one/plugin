@@ -63,6 +63,13 @@ export class InfoTileComponent implements OnInit {
     return url;
   }
 
+  hasProperties(): boolean {
+    return (
+      this._wrapper?.data?.properties &&
+      Object.keys(this._wrapper.data.properties).length > 0
+    );
+  }
+
   writeZeros(n: number) {
     let out = "";
     while (n > 0) {
