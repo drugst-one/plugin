@@ -417,6 +417,14 @@ export const downloadNodeAttributes = [
   'layer',
   'cellularComponent',
   'group',
+  'chiSquared',
+  'degreeInNetwork',
+  'SPD',
+  'degreeInPpi',
+  'localClusteringCoefficient',
+  'mostSignificantOccurenceLog10',
+  'occurenceScore',
+  'pValueLog10'
 ];
 
 const _formatNetworkData = function (
@@ -565,6 +573,16 @@ export const downloadResultCSV = function (
   columns: string[],
   label: string = 'drugstone'
 ) {
+  const flattenedArray = array.map((el) => {
+    if ('properties' in el && typeof el.properties === 'object') {
+      const properties = el.properties;
+      Object.keys(properties).forEach((key) => {
+        el[key] = properties[key];
+      });
+      delete el.properties;
+    }
+    return el;
+  });
   // test which columns occur in array elements, function should not fail if columns do not occur
   const headerColumns = [];
   columns.forEach((col) => {
@@ -576,7 +594,7 @@ export const downloadResultCSV = function (
   // headerColumns has all attributes from 'columns' that appear in the elements of 'array'
   let output = headerColumns.join(',') + '\n';
   // fetch data from array, consider only attributes in headerColumns
-  array.forEach((el) => {
+  flattenedArray.forEach((el) => {
     const row = [];
     headerColumns.forEach((col) => {
       let value = el[col];

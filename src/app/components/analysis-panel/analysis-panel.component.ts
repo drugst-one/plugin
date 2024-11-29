@@ -709,6 +709,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     return await this.http.put(`${this.netex.getBackend()}calculate_result_for_pathway/?token=${encodeURIComponent(token)}&geneset=${encodeURIComponent(geneset)}&pathway=${encodeURIComponent(pathway)}`, {}).toPromise();
   }
 
+  private async get_all_scores_pathway_enrichment(token: string): Promise<any> {
+    return await this.http.get(`${this.netex.getBackend()}get_all_scores_pathway_enrichment/?token=${encodeURIComponent(token)}`, {}).toPromise();
+  }
+
   private async getTask(token: string): Promise<any> {
     return await this.http.get(`${this.netex.getBackend()}task/?token=${token}`).toPromise();
   }
@@ -791,11 +795,15 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public downloadPathwayEnrichmentAsCSV(){
     if (this.result["tableView"].length > 0){
       const tableView = this.result["tableView"];
-      const columns = Object.keys(this.result["tableView"][0])
-      console.log(tableView, columns)
+      const columns = Object.keys(this.result["tableView"][0]).filter(column => column !== 'genes');
       const filename = downloadResultCSV(tableView, columns, `drugstone_pathwayEnrichment`);
       this.logger.logMessage(`Downloaded Pathway Enrichment as CSV: ${filename}`);
     }
+    this.get_all_scores_pathway_enrichment(this.token).then(result => {
+      const columns = Object.keys(result[0]);
+      const filename = downloadResultCSV(result, columns, `drugstone_pathwayEnrichment_scores`);
+      this.logger.logMessage(`Downloaded Pathway Enrichment Scores as CSV: ${filename}`);
+    });
   }
 
   /**
