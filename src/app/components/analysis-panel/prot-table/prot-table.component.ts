@@ -22,6 +22,9 @@ export class ProtTableComponent implements OnInit {
   }
 
   formatNumber(input): string {
+    if (input === 0) {
+      return '0';
+    }
     if (!input) {
       return 'NA';
     }
@@ -30,6 +33,10 @@ export class ProtTableComponent implements OnInit {
       return n.toPrecision(3);
     }
     return n.toExponential(3).toString();
+  }
+
+  hasPathwayEnrichmentScore(): boolean {
+    return this.tableProteins.some(row => row.properties && row.properties.pValueLog10 !== undefined);
   }
 
 }

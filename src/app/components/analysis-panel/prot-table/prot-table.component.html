@@ -64,6 +64,10 @@
         Cellular Component
         <p-sortIcon [field]="'layer'"></p-sortIcon>
       </th>
+      <th *ngIf="hasPathwayEnrichmentScore()" [pSortableColumn]="'properties.pValueLog10'">
+        Pathway Score
+        <p-sortIcon [field]="'properties.pValueLog10'"></p-sortIcon>
+      </th>
       <th [pSortableColumn]="'isSeed'">
         Seed
         <p-sortIcon [field]="'isSeed'"></p-sortIcon>
@@ -115,6 +119,7 @@
       <td [ngClass]="{'text-light-gray': e.layer === 'Unknown' || e.layer === 'Other'}">
         {{ e.layer }}
       </td>
+      <td *ngIf="hasPathwayEnrichmentScore()">{{ formatNumber(e.properties.pValueLog10)}}</td>
       <td>
         <span *ngIf="e.isSeed">
           <app-fa-solid-icon
