@@ -528,6 +528,12 @@
                   [step]="pruningType === 'float' ? step : 1" (input)="onSliderValueChanged()">
               </div>
             </div>
+            <div style="margin: 8px !important;">
+              <label style="display: flex; align-items: center;">
+                <input type="checkbox" [(ngModel)]="pruneOrphanNodes" style="margin-right: 8px;">
+                Prune Orphan Nodes
+              </label>
+            </div>
             <button class="button is-primary is-rounded has-tooltip" [disabled]="!prunedNetwork || prunedNetwork['nodes'].length === 0" (click)="pruneNetwork()"
               style="padding: 5px; box-sizing: border-box; width: 100%; margin-top: 5%;">
               Prune Network

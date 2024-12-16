@@ -178,6 +178,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   cutoff?: number;
   prunedNetwork: any;
   step: number;
+  pruneOrphanNodes = false;
 
   selectedValues: any[] = [];
 
@@ -388,6 +389,16 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   pruneNetwork() {
+    if (this.pruneOrphanNodes && this.prunedNetwork) {
+      const connectedNodes = new Set<string>();
+      this.prunedNetwork.edges.forEach((edge: { from: string; to: string }) => {
+        connectedNodes.add(edge.from);
+        connectedNodes.add(edge.to);
+      });
+      this.prunedNetwork.nodes = this.prunedNetwork.nodes.filter((node: { id: string }) =>
+        connectedNodes.has(node.id)
+      );
+    }
     const jsonString = JSON.stringify(this.prunedNetwork);
     this.logPruning();
     this.reset(jsonString);
@@ -405,11 +416,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   logPruning() {
     this.logger.MAIN_NETWORK = this.logger.component + ' | Pruned';
     this.logger.changeComponent(this.logger.MAIN_NETWORK);
+    const orphanNodesLog = this.pruneOrphanNodes? "The orphan Nodes were deleted." : "Orphan nodes remain in the Network."
     if (this.pruningType === "string") {
       const values = this.selectedValues.join(', ');
-      this.logger.logMessage(`Pruned network based on property ${this.selectedProperty} with values ${values}. Remaining Nodes: ${this.prunedNetwork.nodes.length}, Edges: ${this.prunedNetwork.edges.length}.`);
+      this.logger.logMessage(`Pruned network based on property ${this.selectedProperty} with values ${values}. ${orphanNodesLog} Remaining Nodes: ${this.prunedNetwork.nodes.length}, Edges: ${this.prunedNetwork.edges.length}.`);
     } else {
-      this.logger.logMessage(`Pruned network based on property ${this.selectedProperty} with cutoff ${this.cutoff}. Remaining Nodes: ${this.prunedNetwork.nodes.length}, Edges: ${this.prunedNetwork.edges.length}.`);
+      this.logger.logMessage(`Pruned network based on property ${this.selectedProperty} with cutoff ${this.cutoff}. ${orphanNodesLog} Remaining Nodes: ${this.prunedNetwork.nodes.length}, Edges: ${this.prunedNetwork.edges.length}.`);
     }
   }
 

@@ -36,7 +36,11 @@ export class ProtTableComponent implements OnInit {
   }
 
   hasPathwayEnrichmentScore(): boolean {
-    return this.tableProteins.some(row => row.properties && row.properties.pValueLog10 !== undefined);
+    return this.tableProteins.some(row => row.properties && row.properties.score !== undefined);
+  }
+
+  hasPathwayEnrichmentRank(): boolean {
+    return this.tableProteins.some(row => row.properties && row.properties.rank !== undefined);
   }
 
 }
