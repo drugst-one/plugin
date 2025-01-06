@@ -348,7 +348,7 @@
         <app-toggle-inplace class="network-footer-toolbar-element"
           text="{{ drugstoneConfig.config.networkMenuButtonOverlayDirectedEdgesLabel }}"
           tooltip="Overlay edges with directions from OmniPath." [value]="drugstoneConfig.config.overlayDirectedEdges" (valueChange)="
-                        networkHandler.activeNetwork.updateDirectedEdgesOverlay($event, true)
+                        networkHandler.activeNetwork.updateDirectedEdgesOverlay($event)
                       " icon="arrow-right"></app-toggle-inplace>
       </div>
     </div>

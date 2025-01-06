@@ -399,7 +399,7 @@ export function pieChartContextRenderer({
   };
 }
 
-export const downloadEdgeAttributes = ['from', 'to', 'groupName'];
+export const downloadEdgeAttributes = ['from', 'to', 'groupName', 'isStimulation', 'isDirected', 'isInhibition'];
 export const downloadNodeAttributes = [
   'label',
   'drugId', // DrugBank ID
