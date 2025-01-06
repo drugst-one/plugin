@@ -344,7 +344,7 @@
                   networkHandler.activeNetwork.updateLayoutEnabled($event, true)
                 " icon="list"></app-toggle-inplace>
       </div>
-      <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonOverlayDirectedEdges && drugstoneConfig.config.interactionProteinProtein != 'OmniPath'" class="row is-full m-1">
+      <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonOverlayDirectedEdges && drugstoneConfig.currentConfig().interactionProteinProtein != 'OmniPath'" class="row is-full m-1">
         <app-toggle-inplace class="network-footer-toolbar-element"
           text="{{ drugstoneConfig.config.networkMenuButtonOverlayDirectedEdgesLabel }}"
           tooltip="Overlay edges with directions from OmniPath." [value]="drugstoneConfig.config.overlayDirectedEdges" (valueChange)="

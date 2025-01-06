@@ -411,6 +411,7 @@ export class AnalysisService {
   }
 
   async viewFromSelection() {
+    this.networkHandler.activeNetwork.updateDirectedEdgesOverlay(false);
     const seeds = this.getSelection().map((item) => item.id);
     const seedsFiltered = seeds.filter(el => el != null);
     const initialNetwork = this.networkHandler.activeNetwork.getResetInputNetwork();

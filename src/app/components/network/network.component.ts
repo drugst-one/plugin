@@ -772,7 +772,7 @@ export class NetworkComponent implements OnInit {
   }
 
   public updateDirectedEdgesOverlay(bool: boolean) {
-    this.drugstoneConfig.config.overlayDirectedEdges = bool;
+    this.drugstoneConfig.currentConfig().overlayDirectedEdges = bool;
     this.loadingScreen.stateUpdate(true);
     if (bool) {
       this.undirectedEdges = this.nodeData.edges.get();
@@ -797,12 +797,11 @@ export class NetworkComponent implements OnInit {
         this.nodeData.edges.update(this.undirectedEdges);
       }
     }
-
     this.loadingScreen.stateUpdate(false);
   }
 
   public updateLayoutEnabled(bool: boolean, fromButton: boolean = false) {
-    this.drugstoneConfig.config.layoutOn = bool;
+    this.drugstoneConfig.currentConfig().layoutOn = bool;
     let minX;
     let yPositions;
     let ys: number[] = [];
