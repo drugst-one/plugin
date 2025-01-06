@@ -123,7 +123,6 @@ export function mapCustomEdge(customEdge: NodeInteraction, config: IConfig, drug
         edge2 = JSON.parse(JSON.stringify(config.edgeGroups.inhibition));
       } else if (customEdge['isStimulation']) {
         edge = JSON.parse(JSON.stringify(config.edgeGroups.stimulation));
-        console.log("stimulation", edge);
       } else if (customEdge['isInhibition']) {
         edge = JSON.parse(JSON.stringify(config.edgeGroups.inhibition));
       } else {
