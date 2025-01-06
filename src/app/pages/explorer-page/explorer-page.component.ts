@@ -446,6 +446,21 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // We need to add the cluster config groups to the config object
+  handleConfigNodeGroups(configNodeGroups: any) {
+    const configObj = JSON5.parse(this._config);
+    const currentConfig = this.drugstoneConfig.currentConfig().nodeGroups;
+    for (const key in currentConfig) {
+      if (currentConfig.hasOwnProperty(key) && key.startsWith("cluster")) {
+        configNodeGroups[key] = currentConfig[key];
+      }
+    }
+    configObj['nodeGroups'] = configNodeGroups;
+    this.drugstoneConfig.config["nodeGroups"] = configNodeGroups;
+    this._config = JSON5.stringify(configObj);
+  }
+
+
   dynamicStep(): number {
     return (this.maxPruningValue - this.minPruningValue) / 1000;
   }

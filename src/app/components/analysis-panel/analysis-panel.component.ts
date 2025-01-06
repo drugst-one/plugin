@@ -65,6 +65,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   @Output() showDetailsChange = new EventEmitter<Wrapper>();
   @Output() setInputNetwork = new EventEmitter<any>();
   @Output() visibleItems = new EventEmitter<[any[], [Node[], Tissue], NodeInteraction[]]>();
+  @Output() configNodeGroupsChange = new EventEmitter<any>();
   public task: Task | null = null;
   public result: any = null;
 
@@ -569,6 +570,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           if (this.result.parameters.algorithm === 'louvain-clustering' || this.result.parameters.algorithm === 'leiden-clustering') {
             this.legendService.add_to_context('louvain');
             this.partition = true;
+            const currentConfig = this.drugstoneConfig.currentConfig().nodeGroups;
+            const configNodeGroups = this.drugstoneConfig.config["nodeGroups"];
+            for (const key in currentConfig) {
+              if (currentConfig.hasOwnProperty(key) && key.startsWith("cluster")) {
+                configNodeGroups[key] = currentConfig[key];
+              }
+            }
+            this.configNodeGroupsChange.emit(configNodeGroups);
           }
           if (this.result.parameters.algorithm === 'first_neighbor') {
             this.legendService.add_to_context('firstNeighbor');
