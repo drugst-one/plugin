@@ -65,11 +65,11 @@
         <p-sortIcon [field]="'layer'"></p-sortIcon>
       </th>
       <th *ngIf="hasPathwayEnrichmentScore()" [pSortableColumn]="'properties.score'">
-        Pathway Score
+        Enrichment Score
         <p-sortIcon [field]="'properties.score'"></p-sortIcon>
       </th>
       <th *ngIf="hasPathwayEnrichmentRank()" [pSortableColumn]="'properties.rank'">
-        Pathway Rank
+        Enrichment Rank
         <p-sortIcon [field]="'properties.rank'"></p-sortIcon>
       </th>
       <th [pSortableColumn]="'isSeed'">

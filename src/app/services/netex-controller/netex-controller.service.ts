@@ -59,14 +59,19 @@ export class NetexControllerService {
     return this.http.post(`${this.getBackend()}prepare_pruning/`, payload).toPromise();
   }
 
-  public async pruneNetworkString(network, pruning_attribute, unique_values): Promise<any> {
-    const payload = JSON.stringify({ network: network, pruning_attribute: pruning_attribute, unique_values: unique_values });
+  public async pruneNetworkString(network, pruning_attribute, unique_values, pruneOrphanNodes): Promise<any> {
+    const payload = JSON.stringify({ network: network, pruning_attribute: pruning_attribute, unique_values: unique_values, pruneOrphanNodes: pruneOrphanNodes });
     return this.http.post(`${this.getBackend()}prune/`, payload).toPromise();
   }
 
-  public async pruneNetworkNumber(network, pruning_attribute, cutoff, pruningDirection): Promise<any> {
-    const payload = JSON.stringify({ network: network, pruning_attribute: pruning_attribute, cutoff: cutoff, pruningDirection: pruningDirection });
+  public async pruneNetworkNumber(network, pruning_attribute, cutoff, pruningDirection, pruneOrphanNodes): Promise<any> {
+    const payload = JSON.stringify({ network: network, pruning_attribute: pruning_attribute, cutoff: cutoff, pruningDirection: pruningDirection, pruneOrphanNodes: pruneOrphanNodes });
     return this.http.post(`${this.getBackend()}prune/`, payload).toPromise();
+  }
+
+  public async overlayDirectedEdges(edges, nodes_mapped_dict, drugstone_mapping ): Promise<any> {
+    const payload = JSON.stringify({ "ppi_dataset": "OmniPath", "licenced": false, "edges": edges, "nodes_mapped_dict": nodes_mapped_dict, "drugstone_mapping": drugstone_mapping});
+    return this.http.post(`${this.getBackend()}overlay_directed_edges/`, payload).toPromise();
   }
 
   public async recalculateStatistics(network, config): Promise<any> {

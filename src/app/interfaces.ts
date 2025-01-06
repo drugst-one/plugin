@@ -58,6 +58,9 @@ export interface NetexInteraction {
   dataset: string;
   proteinA: string;
   proteinB: string;
+  isDirected: boolean;
+  isStimulation: boolean;
+  isInhibition: boolean;
 }
 
 export interface NodeInteraction {

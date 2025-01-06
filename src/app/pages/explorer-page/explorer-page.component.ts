@@ -77,7 +77,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     explorerNetwork.nodeRenderer = null;
     explorerNetwork.nodeGroupsWithExpression = new Set();
     explorerNetwork.updatePhysicsEnabled(false);
+    explorerNetwork.undirectedEdges = false;
     explorerNetwork.updateLayoutEnabled(false);
+    explorerNetwork.updateDirectedEdgesOverlay(false);
     this.legendService.reset();
     if (network.length > 0) {
       this.network = network;
@@ -382,23 +384,28 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       this.selectedValues = this.pruningValues;
     }
     const network = {"nodes": this.networkHandler.activeNetwork.nodeData.nodes.get(), "edges": this.networkHandler.activeNetwork.nodeData.edges.get()};
-    this.netex.pruneNetworkString(network, this.selectedProperty, this.selectedValues).then((result) => {
+    this.netex.pruneNetworkString(network, this.selectedProperty, this.selectedValues, this.pruneOrphanNodes).then((result) => {
       this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
       this.prunedNetwork = result["prunedNetwork"];
     });
   }
 
-  pruneNetwork() {
-    if (this.pruneOrphanNodes && this.prunedNetwork) {
-      const connectedNodes = new Set<string>();
-      this.prunedNetwork.edges.forEach((edge: { from: string; to: string }) => {
-        connectedNodes.add(edge.from);
-        connectedNodes.add(edge.to);
+  onPruneOrphanNodesChange(){
+    const network = { "nodes": this.networkHandler.activeNetwork.nodeData.nodes.get(), "edges": this.networkHandler.activeNetwork.nodeData.edges.get() };
+    if(this.pruningType === "string"){
+      this.netex.pruneNetworkString(network, this.selectedProperty, this.selectedValues, this.pruneOrphanNodes).then((result) => {
+        this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
+        this.prunedNetwork = result["prunedNetwork"];
       });
-      this.prunedNetwork.nodes = this.prunedNetwork.nodes.filter((node: { id: string }) =>
-        connectedNodes.has(node.id)
-      );
+    } else {
+      this.netex.pruneNetworkNumber(network, this.selectedProperty, this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then((result) => {
+        this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
+        this.prunedNetwork = result["prunedNetwork"];
+      });
     }
+  }
+
+  pruneNetwork() {
     const jsonString = JSON.stringify(this.prunedNetwork);
     this.logPruning();
     this.reset(jsonString);
@@ -433,7 +440,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   onSliderValueChanged() {
     const network = { "nodes": this.networkHandler.activeNetwork.nodeData.nodes.get(), "edges": this.networkHandler.activeNetwork.nodeData.edges.get() };
-    this.netex.pruneNetworkNumber(network, this.selectedProperty, this.cutoff, this.pruneDirection).then((result) => {
+    this.netex.pruneNetworkNumber(network, this.selectedProperty, this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then((result) => {
       this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
       this.prunedNetwork = result["prunedNetwork"];
     });

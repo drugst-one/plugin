@@ -549,12 +549,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             this.maxSliderValue = this.findMaxOverlap(result["tableView"]);
             this.sliderValue = this.maxSliderValue;
           }
-          if (!this.drugstoneConfig.config["nodeGroups"]["overlap"] || !this.drugstoneConfig.config["nodeGroups"]["onlyNetwork"] || !this.drugstoneConfig.config["nodeGroups"]["onlyPathway"] || !this.drugstoneConfig.config["nodeGroups"]["addedNode"]) {
-            this.drugstoneConfig.config["nodeGroups"]["overlap"] = this.drugstoneConfig.currentConfig().nodeGroups["overlap"];
-            this.drugstoneConfig.config["nodeGroups"]["onlyNetwork"] = this.drugstoneConfig.currentConfig().nodeGroups["onlyNetwork"];
-            this.drugstoneConfig.config["nodeGroups"]["onlyPathway"] = this.drugstoneConfig.currentConfig().nodeGroups["onlyPathway"];
-            this.drugstoneConfig.config["nodeGroups"]["addedNode"] = this.drugstoneConfig.currentConfig().nodeGroups["addedNode"];
-          }
         }
         this.analysis.switchSelection(this.token);
         this.legendService.reset();
@@ -623,6 +617,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             }
             analysisNetwork.networkInternal.stabilize();
             this.networkHandler.activeNetwork.updateLayoutEnabled(false);
+            this.networkHandler.activeNetwork.undirectedEdges = false;
+            this.networkHandler.activeNetwork.updateDirectedEdgesOverlay(false);
             analysisNetwork.networkInternal.once('stabilizationIterationsDone', async () => {
 
               if (!this.drugstoneConfig.config.physicsOn || analysisNetwork.isBig()) {
@@ -733,6 +729,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.analysis.nodesToAdd = [];
     this.token = null;
     this.networkHandler.activeNetwork.updateLayoutEnabled(false);
+    this.networkHandler.activeNetwork.undirectedEdges = false;
+    this.networkHandler.activeNetwork.updateDirectedEdgesOverlay(false);
     this.tokenChange.emit(this.token);
     this.legendService.remove_from_context('drug');
     this.legendService.remove_from_context('drugTarget');
