@@ -371,6 +371,10 @@ class BuildManager:
         ParserJS().parseDirectory('src/app/')
 
     def cleanup(self):
+        # check if self.buildPath exists
+        if not os.path.exists(self.buildPath):
+            print(f'SKIPPING CLEANUP: build path "{self.buildPath}" does not exist.')
+            return
         shutil.rmtree('src')
         shutil.copytree(os.path.join(self.buildPath, 'src'), 'src')
         shutil.rmtree('node_modules')
@@ -395,7 +399,6 @@ def cleanup():
     buildManager = BuildManager(ORIGDIR)
     buildManager.cleanup()
     print('Cleanup done!')
-
 
 
 parser = argparse.ArgumentParser()

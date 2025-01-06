@@ -1,6 +1,6 @@
 {
   "name": "netex",
-  "version": "1.2.2",
+  "version": "2.0.0-rc7",
   "scripts": {
     "ng": "ng",
     "start:dev": "ng serve --configuration=dev",
@@ -13,6 +13,7 @@
     "build-prod": "ng build --configuration=production --output-hashing=none",
     "build-stable": "ng build --configuration=stable --output-hashing=none",
     "build-dev": "ng build --configuration=development --output-hashing=none",
+    "build-dev-server": "ng build --configuration=development_server --output-hashing=none",
     "package-es5": "cd dist/netex && cat runtime-es5.js polyfills-es5.js main-es5.js > bundle-es5.js",
     "package-es2015": "cd dist/netex && cat runtime-es2015.js polyfills-es2015.js main-es2015.js > bundle-es2015.js",
     "bundle": "npm run build-prod netex && npm run package-es5 && npm run package-es2015",
@@ -21,8 +22,11 @@
     "build:netex": "npm run prefix && npm run build-prod netex && node build-netex.js",
     "build:netex-stable": "npm run prefix && npm run build-stable netex && node build-netex.js",
     "build:netex-dev": "npm run prefix && npm run build-dev netex && node build-netex.js",
+    "build:netex-dev-server": "npm run prefix && npm run build-dev-server netex && node build-netex.js",
     "build:drugstone": "npm run prefix && npm run build-prod netex && node build-netex.js && npm run prefix:cleanup",
-    "build:drugstone-dev": "npm run prefix && npm run build-dev netex && node build-netex.js && npm run prefix:cleanup"
+    "build:drugstone-stable": "npm run prefix && npm run build-stable netex && node build-netex.js  && npm run prefix:cleanup",
+    "build:drugstone-dev": "npm run prefix && npm run build-dev netex && node build-netex.js && npm run prefix:cleanup",
+    "build:drugstone-dev-server": "npm run prefix && npm run build-dev-server netex && node build-netex.js && npm run prefix:cleanup"
   },
   "private": true,
   "dependencies": {
@@ -93,6 +97,7 @@
     "tough-cookie": ">=4.1.3",
     "codelyzer": {
       "@angular/core": ">=10.2.5"
-    }
+    },
+    "ws": ">=8.17.1"
   }
 }
