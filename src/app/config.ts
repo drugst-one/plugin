@@ -60,6 +60,8 @@ export interface IConfig {
   showTasks: boolean;
   showViews: boolean;
   showSelection: boolean;
+  showEditNetwork: boolean;
+  showPruning: boolean;
   showNetworkMenu: false | 'left' | 'right';
   expandNetworkMenu: boolean;
   showNetworkMenuButtonExpression: boolean;
@@ -172,6 +174,8 @@ export const defaultConfig: IConfig = {
   showAdvAnalysis: true,
   showAdvAnalysisContent: ['drug-search', 'drug-target-search', 'pathway-enrichment', 'enrichment-gprofiler', 'enrichment-digest', 'search-ndex'],
   showSelection: true,
+  showEditNetwork: true,
+  showPruning: true,
   showTasks: true,
   showViews: true,
   showNetworkMenu: 'right',

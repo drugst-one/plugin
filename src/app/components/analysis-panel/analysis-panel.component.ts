@@ -806,11 +806,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       const filename = downloadResultCSV(tableView, columns, `drugstone_pathwayEnrichment`);
       this.logger.logMessage(`Downloaded Pathway Enrichment as CSV: ${filename}`);
     }
-    this.get_all_scores_pathway_enrichment(this.token).then(result => {
-      const columns = Object.keys(result[0]);
-      const filename = downloadResultCSV(result, columns, `drugstone_pathwayEnrichment_scores`);
-      this.logger.logMessage(`Downloaded Pathway Enrichment Scores as CSV: ${filename}`);
-    });
+    //This is only for calculating statistics regarding the scores
+    // this.get_all_scores_pathway_enrichment(this.token).then(result => {
+    //   const columns = Object.keys(result[0]);
+    //   const filename = downloadResultCSV(result, columns, `drugstone_pathwayEnrichment_scores`);
+    //   this.logger.logMessage(`Downloaded Pathway Enrichment Scores as CSV: ${filename}`);
+    // });
   }
 
   /**

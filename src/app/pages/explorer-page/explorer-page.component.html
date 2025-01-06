@@ -402,7 +402,7 @@
           </div>
         </div>
 
-        <div *ngIf="drugstoneConfig.config.showSelection" class="card bar-large">
+        <div *ngIf="drugstoneConfig.config.showEditNetwork" class="card bar-large">
           <header class="card-header" [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }">
             <p class="card-header-title">
               <app-fa-solid-icon icon="edit"></app-fa-solid-icon>
@@ -458,7 +458,7 @@
           </div>
         </div>
         
-        <div *ngIf="networkHandler.activeNetwork?.nodeData?.nodes && hasProperties() && !(analysis.target=='drug' && analysis.analysisActive)" class="card bar-large">
+        <div *ngIf="drugstoneConfig.config.showPruning && networkHandler.activeNetwork?.nodeData?.nodes && hasProperties() && !(analysis.target=='drug' && analysis.analysisActive)" class="card bar-large">
           <header class="card-header" [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }">
             <p class="card-header-title">
               <app-fa-solid-icon icon="edit"></app-fa-solid-icon>

@@ -402,6 +402,7 @@ export function pieChartContextRenderer({
 export const downloadEdgeAttributes = ['from', 'to', 'groupName', 'isStimulation', 'isDirected', 'isInhibition'];
 export const downloadNodeAttributes = [
   'label',
+  'id',
   'drugId', // DrugBank ID
   'symbol',
   'uniprot',
@@ -417,14 +418,11 @@ export const downloadNodeAttributes = [
   'layer',
   'cellularComponent',
   'group',
-  'chiSquared',
   'degreeInNetwork',
   'SPD',
   'degreeInPpi',
   'localClusteringCoefficient',
-  'mostSignificantOccurenceLog10',
-  'occurenceScore',
-  'pValueLog10'
+  'rank',
 ];
 
 const _formatNetworkData = function (
@@ -536,8 +534,8 @@ export const downloadCSV = function (
   const value_map = {};
   const nr_of_nodes = Object.keys(dataFormatted.nodes).length;
   Object.keys(dataFormatted.nodes).forEach((key) => {
-    idx_map[key] = dataFormatted.nodes[key].label;
-    value_map[dataFormatted.nodes[key].label] = key;
+    idx_map[key] = dataFormatted.nodes[key].id;
+    value_map[dataFormatted.nodes[key].id] = key;
     let line = []
     // @ts-ignore
     for (let i = 0; i < nr_of_nodes; i++) {
