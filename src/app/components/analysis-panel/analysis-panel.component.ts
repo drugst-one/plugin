@@ -25,7 +25,7 @@ import {
 } from '../../interfaces';
 import { NetworkSettings } from '../../network-settings';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
-import { mapCustomEdge, mapNetexEdge, ProteinNetwork } from 'src/app/main-network';
+import { mapCustomEdge, mapNetexEdge } from 'src/app/main-network';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
 import { LegendService } from 'src/app/services/legend-service/legend-service.service';
@@ -815,7 +815,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       if (!("network" in result)) {
         return { edges: [], nodes: [] };
       }
-      let edges_mapped = result.network.edges.map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+      let edges_mapped = result.network.edges.flatMap(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
       let nodes_list: any[] = result.network.nodes;
       if (nodesToAdd.length > 0) {
         const addedNodesList = [];
@@ -832,7 +832,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           }
         })
         const edges = await this.netex.addEdges({ nodes: nodes_list, edges: edges_mapped }, result);
-        edges_mapped = edges.map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+        edges_mapped = edges.flatMap(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
         const addedNodesString = addedNodesList.join(", ");
         this.logger.logMessage(`Added nodes during Pathway Enrichment Analysis: ${addedNodesString}`);
       }
@@ -845,7 +845,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       return network
 
     } else if (result.algorithm === "louvain_clustering" || result.algorithm === "leiden_clustering" || result.algorithm === "first_neighbor") {
-      result.network["edges"] = result.network["edges"].map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+      result.network["edges"] = result.network["edges"].flatMap(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
       this.analysis.currentNetwork = result.network;
       return result.network;
     }
@@ -905,7 +905,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       const skippedDrugIds = new Set<string>();
       const drugEdgeTypes = new Set<string>();
       for (const edge of network.edges) {
-        const e = mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig);
+        const edges_mapped = mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig);
+        // Only 2 edges if protein edge is directed and is stimulation and inhibition
+        const e = edges_mapped[0];
         const isDrugEdge = e.to[0] === 'd' && e.to[1] === 'r';
         e.from = e.from[0] === 'p' && nodeIdMap[e.from] ? nodeIdMap[e.from] : e.from;
         e.to = e.to[0] === 'p' && nodeIdMap[e.to] ? nodeIdMap[e.to] : e.to;
@@ -929,7 +931,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         const hash = e.from + '_' + e.to;
         if (uniqEdges.indexOf(hash) === -1) {
           uniqEdges.push(hash);
-          edges.push(e);
+          edges.push(...edges_mapped);
         }
       }
       // remove self-edges/loops

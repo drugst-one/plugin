@@ -1,7 +1,7 @@
-import {defaultConfig, IConfig} from './config';
-import {NodeInteraction, Node, getProteinNodeId, NetexInteraction} from './interfaces';
+import { IConfig } from './config';
+import { NodeInteraction, Node, NetexInteraction } from './interfaces';
 import * as merge from 'lodash/fp/merge';
-import {DrugstoneConfigService} from './services/drugstone-config/drugstone-config.service';
+import { DrugstoneConfigService } from './services/drugstone-config/drugstone-config.service';
 
 export function getDatasetFilename(dataset: Array<[string, string]>): string {
   return `network-${JSON.stringify(dataset).replace(/[\[\]\",]/g, '')}.json`;
@@ -110,11 +110,26 @@ export function mapCustomNode(customNode: any, config: IConfig, drugstoneConfig:
  * @param drugstoneConfig
  * @returns
  */
-export function mapCustomEdge(customEdge: NodeInteraction, config: IConfig, drugstoneConfig: DrugstoneConfigService): any {
+export function mapCustomEdge(customEdge: NodeInteraction, config: IConfig, drugstoneConfig: DrugstoneConfigService, isPPI: boolean = true): any {
   let edge;
+  let edge2 = null;
   if (customEdge.group === undefined) {
     // fallback to default node
-    edge = JSON.parse(JSON.stringify(config.edgeGroups.default));
+    if(!customEdge['isDirected']) {
+      edge = JSON.parse(JSON.stringify(config.edgeGroups.default));
+    } else {
+      if (customEdge['isStimulation'] && customEdge['isInhibition']) {
+        edge = JSON.parse(JSON.stringify(config.edgeGroups.stimulation));
+        edge2 = JSON.parse(JSON.stringify(config.edgeGroups.inhibition));
+      } else if (customEdge['isStimulation']) {
+        edge = JSON.parse(JSON.stringify(config.edgeGroups.stimulation));
+        console.log("stimulation", edge);
+      } else if (customEdge['isInhibition']) {
+        edge = JSON.parse(JSON.stringify(config.edgeGroups.inhibition));
+      } else {
+        edge = JSON.parse(JSON.stringify(config.edgeGroups.neutral));
+      }
+    }
   } else {
     if (config.edgeGroups[customEdge.group] === undefined) {
       drugstoneConfig.groupIssue = true;
@@ -128,12 +143,30 @@ export function mapCustomEdge(customEdge: NodeInteraction, config: IConfig, drug
     {
       edge = JSON.parse(JSON.stringify(config.edgeGroups[customEdge.group]));
     }
-  }
+  } 
+  const edges = [];
   edge = {
     ...edge,
     ...customEdge
   };
-  return edge;
+  if (!isPPI) {
+    return edge;
+  }
+  edges.push(edge);
+  if (edge2) {
+    edge2 = {
+      ...edge2,
+      ...customEdge
+    };
+    delete edge2['id'];
+    edge2['smooth'] = {
+      enabled: true,
+      type: 'curvedCCW',
+      roundness: 0.2
+    };
+    edges.push(edge2);
+  }
+  return edges;
 }
 
 /** Maps netex retrieved edge to network edge object
@@ -147,11 +180,40 @@ export function mapNetexEdge(customEdge: NetexInteraction, config: IConfig, node
   const edges = [];
   node_map[customEdge['proteinA']].forEach(from => {
     node_map[customEdge['proteinB']].forEach(to => {
-      const edge = JSON.parse(JSON.stringify(config.edgeGroups.default));
+      let edge;
+      let edge2 = null;
+
+      if (!customEdge['isDirected']) {
+        edge = JSON.parse(JSON.stringify(config.edgeGroups.default));
+      } else {
+        if (customEdge['isStimulation'] && customEdge['isInhibition']) {
+          edge = JSON.parse(JSON.stringify(config.edgeGroups.stimulation));
+          edge2 = JSON.parse(JSON.stringify(config.edgeGroups.inhibition));
+        } else if (customEdge['isStimulation']) {
+          edge = JSON.parse(JSON.stringify(config.edgeGroups.stimulation));
+        } else if (customEdge['isInhibition']) {
+          edge = JSON.parse(JSON.stringify(config.edgeGroups.inhibition));
+        } else {
+          edge = JSON.parse(JSON.stringify(config.edgeGroups.neutral));
+        }
+      }
+
       edge['from'] = from;
       edge['to'] = to;
       edge['dataset'] = customEdge['dataset'];
       edges.push(edge);
+
+      if (edge2) {
+        edge2['from'] = from;
+        edge2['to'] = to;
+        edge2['dataset'] = customEdge['dataset'];
+        edges.push(edge2);
+        edge2['smooth'] = {
+          enabled: true,
+          type: 'curvedCCW',
+          roundness: 0.2
+        };
+      }
     });
   });
   return edges;

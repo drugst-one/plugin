@@ -253,7 +253,7 @@ export class NetworkComponent implements OnInit {
             const edge = mapCustomEdge({
               from: interaction.protein,
               to: interaction.disorder
-            }, this.drugstoneConfig.config, this.drugstoneConfig);
+            }, this.drugstoneConfig.config, this.drugstoneConfig, false);
             if (proteinMap[edge.from]) {
               proteinMap[edge.from].forEach(from => {
                 if (addedEdge[from] && addedEdge[from].indexOf(edge.to) !== -1) {
@@ -321,7 +321,7 @@ export class NetworkComponent implements OnInit {
         this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'drugs', this.drugstoneConfig.config.indicationDrugDisorder, this.drugstoneConfig.config.licensedDatasets).then(response => {
           for (const interaction of response.edges) {
             const edge = {from: interaction.drug, to: interaction.disorder};
-            this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+            this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig, false));
           }
           for (const disorder of response.disorders) {
             disorder.group = 'defaultDisorder';
@@ -459,7 +459,7 @@ export class NetworkComponent implements OnInit {
             const edge = mapCustomEdge({
               from: interaction.protein,
               to: interaction.drug
-            }, this.drugstoneConfig.currentConfig(), this.drugstoneConfig);
+            }, this.drugstoneConfig.currentConfig(), this.drugstoneConfig, false);
             if (proteinMap[edge.from]) {
               proteinMap[edge.from].forEach(from => {
                 if (addedEdge[from] && addedEdge[from].indexOf(edge.to) !== -1) {
@@ -788,12 +788,8 @@ export class NetworkComponent implements OnInit {
         }
       });
       this.netex.overlayDirectedEdges(this.nodeData.edges.get(), nodesMappedDict, drugstoneMapping).then(response => {
-        for (let i = 0; i < response.length; i++) {
-          let edge = response[i];
-          edge = mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig);
-          response[i] = edge;
-        }
-        this.nodeData.edges.update(response);
+        const mappedEdges = response.flatMap(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+        this.nodeData.edges.update(mappedEdges);
       }
     )} else {
       if (this.undirectedEdges) {
