@@ -10,7 +10,7 @@
       </p>
 
       <span class="mr-1 is-pulled-right columns is-flex is-vcentered">
-        <p style="margin-right:10px" *ngIf="geneSet && pathway"> {{geneSet}} - {{pathway}}</p>
+        <p style="margin-right:10px" *ngIf="geneSet && pathway && analysis.inPathwayAnalysis"> {{geneSet}} - {{pathway}}</p>
 
         <div class="field has-addons">
           <p class="control" *ngIf="!fullscreen">
