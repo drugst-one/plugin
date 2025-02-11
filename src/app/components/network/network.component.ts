@@ -703,7 +703,7 @@ export class NetworkComponent implements OnInit {
   }
 
   public async removeNode(node: any) {
-    this.logger.logMessage(`Deleted node with id: ${node["id"]} and label: ${node["data"]["label"] ?? node["id"]}`);
+    this.logger.logMessage(`Deleted node with id: ${node["id"]} and label: ${node["label"] ?? node["id"]}`);
     const nodesToRemove = this.nodeData.nodes.get().filter(n => n.id === node.id);
     const edgesToRemove = this.nodeData.edges.get().filter(e => e.from === node.id || e.to === node.id);
 
