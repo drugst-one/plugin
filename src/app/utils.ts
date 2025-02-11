@@ -162,6 +162,7 @@ export function downLoadFile(
   a.href = URL.createObjectURL(blob);
   a.download = `${label}_${new Date().getTime()}.${fmt}`;
   a.click();
+  return a.download;
 }
 
 export function RGBAtoRGBwithoutA(rgbaString) {
@@ -398,9 +399,10 @@ export function pieChartContextRenderer({
   };
 }
 
-export const downloadEdgeAttributes = ['from', 'to', 'groupName'];
+export const downloadEdgeAttributes = ['from', 'to', 'groupName', 'isStimulation', 'isDirected', 'isInhibition'];
 export const downloadNodeAttributes = [
   'label',
+  'id',
   'drugId', // DrugBank ID
   'symbol',
   'uniprot',
@@ -414,7 +416,13 @@ export const downloadNodeAttributes = [
   'groupName',
   'cluster',
   'layer',
+  'cellularComponent',
   'group',
+  'degreeInNetwork',
+  'SPD',
+  'degreeInPpi',
+  'localClusteringCoefficient',
+  'rank',
 ];
 
 const _formatNetworkData = function (
@@ -461,7 +469,7 @@ export const downloadJSON = function (
   const dataFormatted = _formatNetworkData(nodes, edges, nodeAttrs, edgeAttrs);
   const output = JSON.stringify(dataFormatted);
   const fmt = 'json';
-  downLoadFile(output, `application/${fmt}`, fmt, label);
+  return downLoadFile(output, `application/${fmt}`, fmt, label);
 };
 
 
@@ -510,7 +518,7 @@ export const downloadGraphml = function (
 
   const output = graphml.join('');
   const fmt = 'graphml';
-  downLoadFile(output, `application/${fmt}`, fmt, label);
+  return downLoadFile(output, `application/${fmt}`, fmt, label);
 };
 
 export const downloadCSV = function (
@@ -526,8 +534,8 @@ export const downloadCSV = function (
   const value_map = {};
   const nr_of_nodes = Object.keys(dataFormatted.nodes).length;
   Object.keys(dataFormatted.nodes).forEach((key) => {
-    idx_map[key] = dataFormatted.nodes[key].label;
-    value_map[dataFormatted.nodes[key].label] = key;
+    idx_map[key] = dataFormatted.nodes[key].id;
+    value_map[dataFormatted.nodes[key].id] = key;
     let line = []
     // @ts-ignore
     for (let i = 0; i < nr_of_nodes; i++) {
@@ -555,7 +563,7 @@ export const downloadCSV = function (
 
   const output = rows.join('\n');
   const fmt = 'csv';
-  downLoadFile(output, `application/${fmt}`, fmt, label);
+  return downLoadFile(output, `application/${fmt}`, fmt, label);
 }
 
 export const downloadResultCSV = function (
@@ -563,6 +571,16 @@ export const downloadResultCSV = function (
   columns: string[],
   label: string = 'drugstone'
 ) {
+  const flattenedArray = array.map((el) => {
+    if ('properties' in el && typeof el.properties === 'object') {
+      const properties = el.properties;
+      Object.keys(properties).forEach((key) => {
+        el[key] = properties[key];
+      });
+      delete el.properties;
+    }
+    return el;
+  });
   // test which columns occur in array elements, function should not fail if columns do not occur
   const headerColumns = [];
   columns.forEach((col) => {
@@ -574,7 +592,7 @@ export const downloadResultCSV = function (
   // headerColumns has all attributes from 'columns' that appear in the elements of 'array'
   let output = headerColumns.join(',') + '\n';
   // fetch data from array, consider only attributes in headerColumns
-  array.forEach((el) => {
+  flattenedArray.forEach((el) => {
     const row = [];
     headerColumns.forEach((col) => {
       let value = el[col];
@@ -593,5 +611,5 @@ export const downloadResultCSV = function (
     output += '\n';
   });
   const fmt = 'csv';
-  downLoadFile(output, `application/${fmt}`, fmt, label);
+  return downLoadFile(output, `application/${fmt}`, fmt, label);
 };

@@ -17,7 +17,7 @@
     ></app-fa-solid-icon>
   </a>
   <div class="network-footer-toolbar-inner-container">
-    <div class="rows">
+    <div class="rows" style="margin-bottom: 20px;">
       <div
         class="row is-full m-1"
         *ngIf="networkHandler.activeNetwork.networkType === 'analysis' && networkHandler.showSeedsButton"
@@ -77,18 +77,19 @@
           ></app-download-button>
         </div>
       </div>
-        <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonUpload" class="row is-full m-1">
-          <app-idspace-button (resetEmitter)="reset()" class="network-footer-toolbar-element" [buttonId]="'idspace-chooser'"></app-idspace-button>
-        </div>
-        <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonUpload" class="row is-full m-1">
-          <input type="file" #networkFileInput (change)="uploadNetworkFile($event)" accept=".csv, .sif, .graphml, .gt"
-            id="network-file-input" hidden>
-          <app-toggle-inplace [useValue]="false" class="network-footer-toolbar-element"
-            text="{{ drugstoneConfig.config.networkMenuButtonUploadLabel }}" tooltip="Upload network as .csv, .sif, .gt (id as node property 'name') or .graphml."
-            (valueChange)="
-                                networkFileInput.click();
-                              " icon="upload"></app-toggle-inplace>
-        </div>
+      <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonUpload && !analysis.analysisActive" class="row is-full m-1">
+        <app-toggle-inplace [useValue]="false" class="network-footer-toolbar-element"
+          text="{{ drugstoneConfig.config.networkMenuButtonUploadLabel }}"
+          tooltip="Upload network as .csv, .sif, .gt (id as node property 'name') or .graphml." (valueChange)="
+                                      showAnalysisDialog = $event; upload=false;
+                                    " icon="upload"></app-toggle-inplace>
+      </div>
+      <app-network-upload-dialog [(show)]="showAnalysisDialog" (showChange)="showAnalysisDialog = $event" (uploadEvent)="handleUploadEvent($event)">
+      </app-network-upload-dialog>
+      <div class="row is-full m-1">
+        <app-idspace-button [buttonId]="'idspace-button'" class="network-footer-toolbar-element">
+        </app-idspace-button>
+      </div>
       <div
         class="row is-full m-1"
         *ngIf="drugstoneConfig.config.showNetworkMenuButtonExpression"
@@ -342,6 +343,13 @@
           [value]="drugstoneConfig.config.layoutOn" (valueChange)="
                   networkHandler.activeNetwork.updateLayoutEnabled($event, true)
                 " icon="list"></app-toggle-inplace>
+      </div>
+      <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonOverlayDirectedEdges && drugstoneConfig.currentConfig().interactionProteinProtein != 'OmniPath'" class="row is-full m-1">
+        <app-toggle-inplace class="network-footer-toolbar-element"
+          text="{{ drugstoneConfig.config.networkMenuButtonOverlayDirectedEdgesLabel }}"
+          tooltip="Overlay edges with directions from OmniPath." [value]="drugstoneConfig.config.overlayDirectedEdges" (valueChange)="
+                        networkHandler.activeNetwork.updateDirectedEdgesOverlay($event)
+                      " icon="arrow-right"></app-toggle-inplace>
       </div>
     </div>
   </div>

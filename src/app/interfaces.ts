@@ -49,7 +49,7 @@ export type NodeType = 'protein' | 'drug' | 'disorder' | 'other'
 
 export type NetworkType = 'explorer' | 'analysis'
 
-export type LegendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget' | 'seeds' | 'adjacentDisorders' | 'pathway' | 'louvain';
+export type LegendContext = 'explorer' | 'adjacentDrugs' | 'drug' | 'drugTarget' | 'seeds' | 'adjacentDisorders' | 'pathway' | 'louvain' | 'firstNeighbor';
 
 /// drugstoneId to expressionlvl
 export type NodeAttributeMap = { string: number } | {};
@@ -58,6 +58,9 @@ export interface NetexInteraction {
   dataset: string;
   proteinA: string;
   proteinB: string;
+  isDirected: boolean;
+  isStimulation: boolean;
+  isInhibition: boolean;
 }
 
 export interface NodeInteraction {
@@ -254,6 +257,8 @@ export interface Wrapper {
     detailShowLabel?: boolean;
     cellularComponent?: Array<string>
     layer?: string;
+    isReviewed?: boolean;
+    properties?: { [key: string]: any };
   };
   expression?: number;
 }
@@ -293,7 +298,8 @@ export type AlgorithmType =
   | 'betweenness'
   | 'pathway-enrichment'
   | 'leiden-clustering'
-  | 'louvain-clustering';
+  | 'louvain-clustering'
+  | 'first-neighbor';
 export type QuickAlgorithmType = 'quick' | 'super' | 'connect' | 'connectSelected';
 
 export interface Algorithm {

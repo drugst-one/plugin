@@ -4,7 +4,7 @@ import {InteractionDatabase} from 'src/app/config';
 import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
 import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
 import {OmnipathControllerService} from 'src/app/services/omnipath-controller/omnipath-controller.service';
-import {mapCustomEdge, mapCustomNode} from '../../main-network';
+import {mapCustomEdge, mapCustomNode, mapNetexEdge} from '../../main-network';
 import {
   getDrugNodeId,
   getWrapperFromNode,
@@ -24,7 +24,8 @@ import {LegendService} from 'src/app/services/legend-service/legend-service.serv
 import {LoadingScreenService} from 'src/app/services/loading-screen/loading-screen.service';
 import {version} from '../../../version';
 import {Subject} from 'rxjs';
-import {HttpClient} from "@angular/common/http";
+import { ToastService } from 'src/app/services/toast/toast.service';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 @Component({
   selector: 'app-network',
@@ -41,6 +42,8 @@ export class NetworkComponent implements OnInit {
     public netex: NetexControllerService,
     public omnipath: OmnipathControllerService,
     public loadingScreen: LoadingScreenService,
+    public toast: ToastService,
+    public logger: LoggerService
   ) {
     try {
       this.versionString = version;
@@ -81,6 +84,8 @@ export class NetworkComponent implements OnInit {
   public adjacentProteinDisorderEdgesList: Node[] = [];
   public adjacentDrugDisorderList: Node[] = [];
   public adjacentDrugDisorderEdgesList: Node[] = [];
+
+  public undirectedEdges;
 
   public currentDataset = [];
 
@@ -144,14 +149,22 @@ export class NetworkComponent implements OnInit {
 
 
   getResetInputNetwork(): NetworkData {
-    const nodes = [...this.inputNetwork.nodes];
+    const nodes = [...this.nodeData.nodes.get()];
     nodes.forEach(n => {
       if (n._group) {
         n.group = n._group;
         delete n._group;
       }
     });
-    return {edges: this.inputNetwork.edges, nodes};
+    const uniqueEdges = new Map();
+    this.nodeData.edges.get().forEach(edge => {
+      const key = `${edge.from}->${edge.to}`;
+      if (!uniqueEdges.has(key)) {
+        uniqueEdges.set(key, edge);
+      }
+    });
+    const edges = Array.from(uniqueEdges.values());
+    return {edges: edges, nodes};
   }
 
   public getDrugTargetTypes() {
@@ -240,7 +253,7 @@ export class NetworkComponent implements OnInit {
             const edge = mapCustomEdge({
               from: interaction.protein,
               to: interaction.disorder
-            }, this.drugstoneConfig.config, this.drugstoneConfig);
+            }, this.drugstoneConfig.config, this.drugstoneConfig, false);
             if (proteinMap[edge.from]) {
               proteinMap[edge.from].forEach(from => {
                 if (addedEdge[from] && addedEdge[from].indexOf(edge.to) !== -1) {
@@ -308,7 +321,7 @@ export class NetworkComponent implements OnInit {
         this.netex.adjacentDisorders(this.nodeData.nodes.get(), 'drugs', this.drugstoneConfig.config.indicationDrugDisorder, this.drugstoneConfig.config.licensedDatasets).then(response => {
           for (const interaction of response.edges) {
             const edge = {from: interaction.drug, to: interaction.disorder};
-            this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+            this.adjacentDrugDisorderEdgesList.push(mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig, false));
           }
           for (const disorder of response.disorders) {
             disorder.group = 'defaultDisorder';
@@ -446,7 +459,7 @@ export class NetworkComponent implements OnInit {
             const edge = mapCustomEdge({
               from: interaction.protein,
               to: interaction.drug
-            }, this.drugstoneConfig.currentConfig(), this.drugstoneConfig);
+            }, this.drugstoneConfig.currentConfig(), this.drugstoneConfig, false);
             if (proteinMap[edge.from]) {
               proteinMap[edge.from].forEach(from => {
                 if (addedEdge[from] && addedEdge[from].indexOf(edge.to) !== -1) {
@@ -605,6 +618,7 @@ export class NetworkComponent implements OnInit {
                   const a = document.createElement('a');
                   a.href = generatedImage;
                   a.download = `Network.png`;
+                  this.logger.logMessage(`Downloaded network as PNG: ${a.download}`);
                   a.click();
                 }).catch(e => {
                   console.error(e);
@@ -657,7 +671,7 @@ export class NetworkComponent implements OnInit {
 
   drawLabelOnCanvas(canvasElement: HTMLCanvasElement, maxX: number, y: number, label: string) {
     const context = canvasElement.getContext('2d');
-    const text = label;
+    const text = label.startsWith("Multiple") ? "Multiple" : label;
     const x = maxX - 500;
     context.font = "bold 40px verdana, sans-serif ";
     context.fillStyle = "black";
@@ -680,8 +694,114 @@ export class NetworkComponent implements OnInit {
     return nodes.map(({ id, group }) => ({ id, group }));
   }
 
+  public updateLabel(idspace: string) {
+    for (const node of this.nodeData.nodes.get()) {
+      const labelArray = node[idspace];
+      node["label"] = labelArray && labelArray.length > 0 ? labelArray[0] : node.id;    }
+    const nodes = this.nodeData.nodes.get();
+    this.nodeData.nodes.update(nodes);
+  }
+
+  public async removeNode(node: any) {
+    this.logger.logMessage(`Deleted node with id: ${node["id"]} and label: ${node["data"]["label"] ?? node["id"]}`);
+    const nodesToRemove = this.nodeData.nodes.get().filter(n => n.id === node.id);
+    const edgesToRemove = this.nodeData.edges.get().filter(e => e.from === node.id || e.to === node.id);
+
+    this.nodeData.nodes.remove(nodesToRemove.map(n => n.id));
+    this.nodeData.edges.remove(edgesToRemove.map(e => e.id));
+    const nodes = await this.netex.recalculateStatistics({ "nodes": this.nodeData.nodes.get(), "edges": this.nodeData.edges.get() }, this.drugstoneConfig.currentConfig());
+    this.nodeData.nodes.update(nodes);
+    // remove drugs and disorders when node is added
+    if(this.adjacentDrugs || this.adjacentDisordersDrug || this.adjacentDisordersProtein){
+      await this.updateAdjacentDrugs(false, true);
+      await this.updateAdjacentProteinDisorders(false, true);
+      await this.updateAdjacentDrugDisorders(false, true);
+    }
+  }
+
+  public async addNode(node: Node) {
+    this.updateDirectedEdgesOverlay(false);
+    this.logger.logMessage(`Added node with id: ${node["id"]} and label: ${node["label"] ?? node["id"]}`);
+    var nodes = this.nodeData.nodes.get();
+    for (const n of nodes) {
+      if (n.id === node.id) {
+        this.toast.setNewToast({ "message": 'The added node was already part of the network.', type: 'warning' });
+        return;
+      }
+    }
+    nodes.push(node);
+    const edges = this.nodeData.edges.get();
+    if(this.drugstoneConfig.currentConfig().autofillEdges){
+      await this.autofill_edges_for_new_node(nodes, edges, node);
+    }
+    nodes = await this.netex.recalculateStatistics({"nodes": nodes, "edges": edges}, this.drugstoneConfig.currentConfig());
+    this.nodeData.nodes.update(nodes);
+    this.nodeData.edges.update(edges);
+    this.drugstoneConfig.config.layoutOn = false;
+    this.updateLayoutEnabled(false);
+    // remove drugs and disorders when node is added
+    if (this.adjacentDrugs || this.adjacentDisordersDrug || this.adjacentDisordersProtein) {
+      await this.updateAdjacentDrugs(false, true);
+      await this.updateAdjacentProteinDisorders(false, true);
+      await this.updateAdjacentDrugDisorders(false, true);
+    }
+  }
+
+  private async autofill_edges_for_new_node(nodes: any, edges: any, addedNode: any) {
+    let node_map = {};
+    nodes.filter(n => n.drugstoneType === 'protein').forEach(node => {
+      if (typeof node.drugstoneId === 'string') {
+        if (node_map[node.drugstoneId]) {
+          node_map[node.drugstoneId].push(node.id);
+        } else {
+          node_map[node.drugstoneId] = [node.id];
+        }
+      } else {
+        node.drugstoneId.forEach(n => {
+          if (node_map[n]) {
+            node_map[n].push(node.id);
+          } else {
+            node_map[n] = [node.id];
+          }
+        });
+      }
+    });
+    const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.currentConfig().interactionProteinProtein, this.drugstoneConfig.currentConfig().licensedDatasets);
+    const filteredEdges = netexEdges.filter(edge => edge.proteinA === addedNode["drugstoneId"][0] || edge.proteinB === addedNode["drugstoneId"][0]);
+    edges.push(...filteredEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.currentConfig(), node_map)).flatMap(e => e));
+  }
+
+  public updateDirectedEdgesOverlay(bool: boolean) {
+    this.drugstoneConfig.currentConfig().overlayDirectedEdges = bool;
+    this.loadingScreen.stateUpdate(true);
+    if (bool) {
+      this.undirectedEdges = this.nodeData.edges.get();
+      const nodes = this.nodeData.nodes.get();
+      const nodesMappedDict: { [key: string]: any } = {};
+      nodes.forEach((node: any) => {
+        nodesMappedDict[node["id"]] = node;
+      });
+      const drugstoneMapping: { [key: string]: string } = {};
+      nodes.forEach((node: any) => {
+        if (node.drugstoneId && node.drugstoneId.length > 0) {
+          drugstoneMapping[node["drugstoneId"][0]] = node["id"];
+        }
+      });
+      this.netex.overlayDirectedEdges(this.nodeData.edges.get(), nodesMappedDict, drugstoneMapping).then(response => {
+        const mappedEdges = response.flatMap(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+        this.nodeData.edges.update(mappedEdges);
+      }
+    )} else {
+      if (this.undirectedEdges) {
+        this.nodeData.edges.clear();
+        this.nodeData.edges.update(this.undirectedEdges);
+      }
+    }
+    this.loadingScreen.stateUpdate(false);
+  }
+
   public updateLayoutEnabled(bool: boolean, fromButton: boolean = false) {
-    this.drugstoneConfig.config.layoutOn = bool;
+    this.drugstoneConfig.currentConfig().layoutOn = bool;
     let minX;
     let yPositions;
     let ys: number[] = [];

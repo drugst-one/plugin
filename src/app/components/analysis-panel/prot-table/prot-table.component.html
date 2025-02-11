@@ -32,6 +32,9 @@
         Ensembl GeneID
         <p-sortIcon [field]="'ensg'"></p-sortIcon>
       </th>
+      <th [pSortableColumn]="'label'">
+        Label
+        <p-sortIcon [field]="'label'"></p-sortIcon>
       <th [pSortableColumn]="'proteinName'">
         Name
         <p-sortIcon [field]="'proteinName'"></p-sortIcon>
@@ -56,6 +59,18 @@
           ></app-fa-solid-icon>
         </span>
         <p-sortIcon [field]="'score'"></p-sortIcon>
+      </th>
+      <th [pSortableColumn]="'layer'">
+        Cellular Component
+        <p-sortIcon [field]="'layer'"></p-sortIcon>
+      </th>
+      <th *ngIf="hasPathwayEnrichmentScore()" [pSortableColumn]="'properties.score'">
+        Enrichment Score
+        <p-sortIcon [field]="'properties.score'"></p-sortIcon>
+      </th>
+      <th *ngIf="hasPathwayEnrichmentRank()" [pSortableColumn]="'properties.rank'">
+        Enrichment Rank
+        <p-sortIcon [field]="'properties.rank'"></p-sortIcon>
       </th>
       <th [pSortableColumn]="'isSeed'">
         Seed
@@ -101,9 +116,15 @@
           >{{ ensg + (i == e.ensg.length - 1 ? "" : ", ") }}</a
         >
       </td>
+      <td>{{ e.label }}</td>
       <td>{{ e.proteinName }}</td>
       <td *ngIf="partition">{{ e.cluster }}</td>
       <td *ngIf="tableHasScores">{{ formatNumber(e.score)}}</td>
+      <td [ngClass]="{'text-light-gray': e.layer === 'Unknown' || e.layer === 'Other'}">
+        {{ e.layer }}
+      </td>
+      <td *ngIf="hasPathwayEnrichmentScore()">{{ formatNumber(e.properties.score)}}</td>
+      <td *ngIf="hasPathwayEnrichmentRank()">{{ e.properties.rank}}</td>
       <td>
         <span *ngIf="e.isSeed">
           <app-fa-solid-icon

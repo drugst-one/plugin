@@ -26,6 +26,8 @@ import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugston
 import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
 import {LegendService} from '../../services/legend-service/legend-service.service';
 import {ToastService} from '../../services/toast/toast.service';
+import { Subject } from 'rxjs';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 
 declare var vis: any;
@@ -50,7 +52,18 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   @ViewChild('analysis') analysisElement;
 
-  public reset() {
+  proteinQuery = '';
+  deleteProteinQuery = '';
+  chosenProtein: any = null;
+  chosenProteinToDelete: any = null;
+  proteinSuggestions: any = [];
+  deleteProteinSuggestions: any = [];
+  private searchSubject = new Subject<string>();
+  private searchSubjectDelete = new Subject<string>();
+  properties: string[] = [];
+  missingProperties: string[] = [];
+
+  public reset(network: string = '') {
     // const analysisNetwork = this.networkHandler.networks['analysis'];
     const explorerNetwork = this.networkHandler.networks['explorer'];
     if (this.analysisElement) {
@@ -64,9 +77,15 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     explorerNetwork.nodeRenderer = null;
     explorerNetwork.nodeGroupsWithExpression = new Set();
     explorerNetwork.updatePhysicsEnabled(false);
+    explorerNetwork.undirectedEdges = false;
     explorerNetwork.updateLayoutEnabled(false);
+    explorerNetwork.updateDirectedEdgesOverlay(false);
     this.legendService.reset();
-    this.network = this.network;
+    if (network.length > 0) {
+      this.network = network;
+    } else {
+      this.network = this.network;
+    }
   }
 
   @Input()
@@ -136,6 +155,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public collapseBaitFilter = true;
   public collapseQuery = true;
   public collapseData = true;
+  public collapseEditor = true;
+  public collapsePropertiesPruning = true;
 
   public proteinData: ProteinNetwork;
   public edgeAttributes: Map<string, NodeInteraction>;
@@ -150,6 +171,20 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   public showThresholdDialog = false;
   public analysisDialogTarget: 'drug' | 'drug-target' | 'gene';
 
+  selectedProperty: string = '';
+  pruningType = '';
+  minPruningValue?: number;
+  maxPruningValue?: number;
+  pruningValues?: string[];
+  pruneDirection = 'greater';
+  cutoff?: number;
+  prunedNetwork: any;
+  step: number;
+  pruneOrphanNodes = false;
+
+  selectedValues: any[] = [];
+
+  dropdownSettings = {};
 
   public showCustomProteinsDialog = false;
   public selectedAnalysisTokenType: 'task' | 'view' | null = null;
@@ -216,6 +251,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     public networkHandler: NetworkHandlerService,
     public legendService: LegendService,
     public toast: ToastService,
+    public logger: LoggerService
   ) {
 
     this.showDetails = false;
@@ -264,9 +300,213 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'id',          
+      textField: 'itemName',
+      selectAllText: 'Select All',
+      unSelectAllText: 'Unselect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
     this.setWindowWidth(document.getElementById('appWindow').getBoundingClientRect().width);
     this.analysis.setViewTokenCallback(this.setViewToken.bind(this));
     this.analysis.setTaskTokenCallback(this.setTaskToken.bind(this));
+
+    this.searchSubject.subscribe(async query => {
+      this.proteinSuggestions = await this.netex.searchProteins(query, this.drugstoneConfig.currentConfig().identifier, this.drugstoneConfig.currentConfig().label, this.drugstoneConfig.currentConfig().reviewed);
+    });
+
+    this.searchSubjectDelete.subscribe(query => {
+      this.deleteProteinSuggestions = this.networkHandler.activeNetwork.inputNetwork.nodes.filter(node => {
+        const queryLower = query.toLowerCase();
+        return (
+          (node.symbol && node.symbol.some((s: string) => s.toLowerCase().includes(queryLower))) ||
+          (node.uniprot && node.uniprot.some((u: string) => u.toLowerCase().includes(queryLower))) ||
+          (node.ensg && node.ensg.some((e: string) => e.toLowerCase().includes(queryLower))) ||
+          (node.entrez && node.entrez.some((en: string) => en.toLowerCase().includes(queryLower)))
+        );
+      });    
+    });
+  }
+
+  hasProperties(): boolean {
+    const nodesData = this.networkHandler.activeNetwork.nodeData.nodes || {};
+    const nodes = Array.from(nodesData._data?.values() || []);
+
+    const uniqueProperties = new Set<string>();
+    const missingProperties = new Set<string>();
+
+    for (const node of nodes) {
+      if (node['properties']) {
+        Object.keys(node["properties"]).forEach(key => uniqueProperties.add(key));
+      }
+    }
+
+    // Check for properties not present in all nodes
+    for (const property of uniqueProperties) {
+      const isInAllNodes = nodes.every(node => node['properties']?.hasOwnProperty(property));
+      if (!isInAllNodes) {
+        missingProperties.add(property);
+      }
+    }
+
+    this.properties = Array.from(uniqueProperties);
+    this.missingProperties = Array.from(missingProperties);
+    return uniqueProperties.size > 0;
+  }
+
+
+  async selectProperty(propertyKey: string) { 
+    this.prunedNetwork = null;
+    this.selectedProperty = propertyKey;
+    const result = await this.netex.prepareNetwork(this.networkHandler.activeNetwork.nodeData.nodes.get(), propertyKey);
+    this.pruningType = result['type'];
+    if(this.pruningType === "string"){
+      this.pruningValues = result['uniqueValues'];
+    } else if (this.pruningType === "int" || this.pruningType === "float"){
+      this.minPruningValue = result['min'];
+      this.maxPruningValue = result['max'];
+      this.step = this.dynamicStep();
+      if (this.pruneDirection === 'greater'){
+        this.cutoff = result['min']
+      } else {
+        this.cutoff = result['max']
+      }
+    }
+  }
+
+  onSelectionChange(event) {
+    if (event.length === 0) {
+      this.selectedValues = [];
+    }
+    if (event === "all"){
+      this.selectedValues = this.pruningValues;
+    }
+    const network = {"nodes": this.networkHandler.activeNetwork.nodeData.nodes.get(), "edges": this.networkHandler.activeNetwork.nodeData.edges.get()};
+    this.netex.pruneNetworkString(network, this.selectedProperty, this.selectedValues, this.pruneOrphanNodes).then((result) => {
+      this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
+      this.prunedNetwork = result["prunedNetwork"];
+    });
+  }
+
+  onPruneOrphanNodesChange(){
+    const network = { "nodes": this.networkHandler.activeNetwork.nodeData.nodes.get(), "edges": this.networkHandler.activeNetwork.nodeData.edges.get() };
+    if(this.pruningType === "string"){
+      this.netex.pruneNetworkString(network, this.selectedProperty, this.selectedValues, this.pruneOrphanNodes).then((result) => {
+        this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
+        this.prunedNetwork = result["prunedNetwork"];
+      });
+    } else {
+      this.netex.pruneNetworkNumber(network, this.selectedProperty, this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then((result) => {
+        this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
+        this.prunedNetwork = result["prunedNetwork"];
+      });
+    }
+  }
+
+  pruneNetwork() {
+    const jsonString = JSON.stringify(this.prunedNetwork);
+    this.logPruning();
+    this.reset(jsonString);
+    this.prunedNetwork = null;
+    this.selectedProperty = null;
+    this.pruningType = null;
+    this.minPruningValue = null;
+    this.maxPruningValue = null;
+    this.selectedValues = null;
+    this.collapsePropertiesPruning = true;
+    this.cutoff = null;
+    this.pruningValues = null;
+  }
+
+  logPruning() {
+    this.logger.MAIN_NETWORK = this.logger.component + ' | Pruned';
+    this.logger.changeComponent(this.logger.MAIN_NETWORK);
+    const orphanNodesLog = this.pruneOrphanNodes? "The orphan Nodes were deleted." : "Orphan nodes remain in the Network."
+    if (this.pruningType === "string") {
+      const values = this.selectedValues.join(', ');
+      this.logger.logMessage(`Pruned network based on property ${this.selectedProperty} with values ${values}. ${orphanNodesLog} Remaining Nodes: ${this.prunedNetwork.nodes.length}, Edges: ${this.prunedNetwork.edges.length}.`);
+    } else {
+      this.logger.logMessage(`Pruned network based on property ${this.selectedProperty} with cutoff ${this.cutoff}. ${orphanNodesLog} Remaining Nodes: ${this.prunedNetwork.nodes.length}, Edges: ${this.prunedNetwork.edges.length}.`);
+    }
+  }
+
+  isLast(propertyKey: string): boolean {
+    const properties = this.networkHandler.activeNetwork.inputNetwork.nodes[0].properties;
+    const keys = Object.keys(properties);
+    return keys.indexOf(propertyKey) === keys.length - 1;
+  }
+
+  onSliderValueChanged() {
+    const network = { "nodes": this.networkHandler.activeNetwork.nodeData.nodes.get(), "edges": this.networkHandler.activeNetwork.nodeData.edges.get() };
+    this.netex.pruneNetworkNumber(network, this.selectedProperty, this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then((result) => {
+      this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
+      this.prunedNetwork = result["prunedNetwork"];
+    });
+  }
+
+  // We need to add the cluster config groups to the config object
+  handleConfigNodeGroups(configNodeGroups: any) {
+    const configObj = JSON5.parse(this._config);
+    const currentConfig = this.drugstoneConfig.currentConfig().nodeGroups;
+    for (const key in currentConfig) {
+      if (currentConfig.hasOwnProperty(key) && key.startsWith("cluster")) {
+        configNodeGroups[key] = currentConfig[key];
+      }
+    }
+    configObj['nodeGroups'] = configNodeGroups;
+    this.drugstoneConfig.config["nodeGroups"] = configNodeGroups;
+    this._config = JSON5.stringify(configObj);
+  }
+
+
+  dynamicStep(): number {
+    return (this.maxPruningValue - this.minPruningValue) / 1000;
+  }
+
+  selectProteinToDelete(protein) {
+    this.chosenProteinToDelete = protein;
+    this.deleteProteinQuery = `${protein.label}`;
+    this.deleteProteinSuggestions = [];
+  }
+
+  onDeleteProteinSearch() {
+    if (this.deleteProteinQuery.length == 0){
+      this.chosenProtein = null;
+    }
+    this.searchSubjectDelete.next(this.deleteProteinQuery);
+  }
+
+  deleteProtein() {
+    this.networkHandler.activeNetwork.removeNode(this.chosenProteinToDelete);
+    this.chosenProteinToDelete = null;
+    this.deleteProteinQuery = '';
+  }
+
+  addProtein() {
+    this.chosenProtein["group"] = "addedNode";
+    this.chosenProtein["drugstoneType"] = "protein";
+    this.proteinQuery = '';
+    this.addProteinToNetwork(this.chosenProtein);
+    this.chosenProtein = null;
+  }
+
+  private async addProteinToNetwork(protein) {
+    this.networkHandler.activeNetwork.addNode(protein);
+  }
+
+  onProteinSearch() {
+    if (this.proteinQuery.length == 0){
+      this.chosenProtein = null;
+    }
+    this.searchSubject.next(this.proteinQuery);
+  }
+
+  selectProtein(protein) {
+    this.chosenProtein = protein;
+    this.proteinQuery = `${protein.label}`;
+    this.proteinSuggestions = [];
   }
 
   async ngAfterViewInit() {
@@ -344,6 +584,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.networkHandler.activeNetwork.networkPositions = this.networkHandler.activeNetwork.networkInternal.getPositions();
       }
       this.createNetwork().then(async () => {
+        this.networkHandler.activeNetwork.updateLabel(this.drugstoneConfig.currentConfig().label);
         if (this.drugstoneConfig.currentConfig().physicsOn) {
           this.networkHandler.activeNetwork.updatePhysicsEnabled(true);
         }
@@ -374,8 +615,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public resetNetwork(network: string) {
-    this.network = network;
-    this.reset();
+    this.reset(network);
   }
 
   /**
@@ -452,6 +692,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.toast.setNewToast({message: 'Duplicate node ids removed: ' + duplicateNodeIds.join(', '), type: 'warning'});
         nodes = uniqueNodes;
       }
+
+      nodes = await this.netex.recalculateStatistics({"nodes": nodes, "edges": edges}, this.drugstoneConfig.currentConfig());
 
       this.nodeData.nodes = new vis.DataSet(nodes);
       this.nodeData.edges = new vis.DataSet(edges);
@@ -573,7 +815,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     // map data to nodes in backend
     if (network.nodes != null && network.nodes.length) {
-      network.nodes = await this.netex.mapNodes(network.nodes, this.drugstoneConfig.currentConfig().identifier);
+      network.nodes = await this.netex.mapNodes(network.nodes, this.drugstoneConfig.currentConfig().identifier, this.drugstoneConfig.currentConfig().reviewed);
     }
 
     // if (this.drugstoneConfig.config.identifier === 'ensg') {

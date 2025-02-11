@@ -50,12 +50,41 @@ export class NetexControllerService {
     return this.http.post<any>(`${this.getBackend()}add_edges/`, { network: network, result: jsonString }).toPromise();
   }
 
-  public async mapNodes(nodes, identifier): Promise<any> {
+  public async autofill_edges(network): Promise<any> {
+    return this.http.post<any>(`${this.getBackend()}autofill_edges/`, { "network": network, "config": this.drugstoneConfig.currentConfig()}).toPromise();
+  }
+
+  public async prepareNetwork(nodes, pruning_attribute): Promise<any> {
+    const payload = JSON.stringify({ nodes: nodes, pruning_attribute: pruning_attribute });
+    return this.http.post(`${this.getBackend()}prepare_pruning/`, payload).toPromise();
+  }
+
+  public async pruneNetworkString(network, pruning_attribute, unique_values, pruneOrphanNodes): Promise<any> {
+    const payload = JSON.stringify({ network: network, pruning_attribute: pruning_attribute, unique_values: unique_values, pruneOrphanNodes: pruneOrphanNodes });
+    return this.http.post(`${this.getBackend()}prune/`, payload).toPromise();
+  }
+
+  public async pruneNetworkNumber(network, pruning_attribute, cutoff, pruningDirection, pruneOrphanNodes): Promise<any> {
+    const payload = JSON.stringify({ network: network, pruning_attribute: pruning_attribute, cutoff: cutoff, pruningDirection: pruningDirection, pruneOrphanNodes: pruneOrphanNodes });
+    return this.http.post(`${this.getBackend()}prune/`, payload).toPromise();
+  }
+
+  public async overlayDirectedEdges(edges, nodes_mapped_dict, drugstone_mapping ): Promise<any> {
+    const payload = JSON.stringify({ "ppi_dataset": "OmniPath", "licenced": false, "edges": edges, "nodes_mapped_dict": nodes_mapped_dict, "drugstone_mapping": drugstone_mapping});
+    return this.http.post(`${this.getBackend()}overlay_directed_edges/`, payload).toPromise();
+  }
+
+  public async recalculateStatistics(network, config): Promise<any> {
+    const payload = JSON.stringify({ "network": network, "config": config });
+    return this.http.post(`${this.getBackend()}recalculate_statistics/`, payload).toPromise();
+  }
+
+  public async mapNodes(nodes, identifier, reviewed): Promise<any> {
     /**
      * Tries to map every node to a node object in out database
      * Returns list of mapped nodes if node was found, otherwise original node to not lose information
      */
-    const payload = {nodes: nodes, identifier: identifier};
+    const payload = {nodes: nodes, identifier: identifier, reviewed: reviewed};
     return this.http.post(`${this.getBackend()}map_nodes/`, payload).toPromise();
   }
 
@@ -76,6 +105,18 @@ export class NetexControllerService {
      */
     const payload = { nodes: nodes, hierachical_layout: hierachical_layout };
     return this.http.post(`${this.getBackend()}apply_layout/`, payload).toPromise();
+  }
+
+  public async searchProteins(query: string, identifier: string, label: string, reviewed: boolean): Promise<any> {
+    /**
+     * Searches for proteins in our database
+     */
+    const params = new HttpParams()
+      .set('query', query)
+      .set('identifier', identifier)
+      .set('reviewed', reviewed)
+      .set('label', label);
+    return this.http.get(`${this.getBackend()}search_proteins/?query=${query}`, {params}).toPromise();
   }
 
   public tissues(): Observable<any> {

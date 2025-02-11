@@ -36,6 +36,9 @@ export class InfoTileEdgeComponent implements OnInit {
     delete _edge['color'];
     delete _edge['id'];
     delete _edge['shadow'];
+    delete _edge['arrows'];
+    delete _edge['highlight'];
+    delete _edge['smooth'];
 
     // order such that 'from' and 'to' are first
     let from =  _edge['from'];

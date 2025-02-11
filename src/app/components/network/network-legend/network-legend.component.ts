@@ -41,9 +41,15 @@ export class NetworkLegendComponent implements OnInit {
       if (this.legendService.context.includes("adjacentDrugs")) {
         uniqueGroups.add("foundDrug");
       }
-      this.analysis.currentNetwork.nodes.forEach(node => {
-        uniqueGroups.add(node.group);
-      });
+      if (this.networkHandler.activeNetwork.nodeData?.nodes) {
+        this.networkHandler.activeNetwork.nodeData.nodes.forEach(node => {
+          uniqueGroups.add(node.group);
+        });
+      } else {
+        this.analysis.currentNetwork.nodes.forEach(node => {
+          uniqueGroups.add(node.group);
+        });
+      }
       return Array.from(uniqueGroups);
     }
     const uniqueGroups = new Set<string>();
@@ -53,9 +59,15 @@ export class NetworkLegendComponent implements OnInit {
     if (this.legendService.context.includes("adjacentDrugs")) {
       uniqueGroups.add("foundDrug");
     }
-    this.networkHandler.activeNetwork.inputNetwork.nodes.forEach(node => {
-      uniqueGroups.add(node.group);
-    });
+    if(this.networkHandler.activeNetwork.nodeData?.nodes){
+      this.networkHandler.activeNetwork.nodeData.nodes.forEach(node => {
+        uniqueGroups.add(node.group);
+      });
+    } else {
+      this.networkHandler.activeNetwork.inputNetwork.nodes.forEach(node => {
+        uniqueGroups.add(node.group);
+      });
+    }
     return Array.from(uniqueGroups);
   }
 

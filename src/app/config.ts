@@ -26,11 +26,13 @@ export interface EdgeGroup {
   // see https://visjs.github.io/vis-network/docs/network/edges.html
   dashes?: false | Array<number>;
   shadow?: any;
+  highlight?: string;
+  arrows?: { to: { type: 'arrow' | 'bar' | 'circle', enabled: boolean, scaleFactor: number } };
 }
 
 export type Identifier = 'symbol' | 'uniprot' | 'ensg' | 'entrez';
 export type InteractionDrugProteinDB = 'NeDRex' | 'DrugBank' | 'DrugCentral' | 'ChEMBL' | 'DGIdb';
-export type InteractionProteinProteinDB = 'NeDRex' | 'BioGRID' | 'IID' | 'IntAct' | 'STRING' | 'APID';
+export type InteractionProteinProteinDB = 'NeDRex' | 'BioGRID' | 'IID' | 'IntAct' | 'STRING' | 'APID' | 'OmniPath';
 export type IndicationDrugDisorderDB = 'NeDRex' | 'CTD' | 'DrugCentral' | 'DrugBank';
 export type AssociatedProteinDisorderDB = 'NeDRex' | 'DisGeNET' | 'OMIM';
 export type AdvAnalysisContentTypes = 'drug-target-search' | 'drug-search' | 'pathway-enrichment' | 'enrichment-gprofiler' | 'enrichment-digest' | 'search-ndex';
@@ -58,6 +60,8 @@ export interface IConfig {
   showTasks: boolean;
   showViews: boolean;
   showSelection: boolean;
+  showEditNetwork: boolean;
+  showPruning: boolean;
   showNetworkMenu: false | 'left' | 'right';
   expandNetworkMenu: boolean;
   showNetworkMenuButtonExpression: boolean;
@@ -76,9 +80,11 @@ export interface IConfig {
   networkMenuButtonAdjacentDisordersDrugsLabel: string;
   showNetworkMenuButtonAnimation: boolean;
   showNetworkMenuButtonLayout: boolean;
+  showNetworkMenuButtonOverlayDirectedEdges: boolean;
   showNetworkMenuButtonUpload: boolean;
   networkMenuButtonAnimationLabel: string;
   networkMenuButtonLayoutLabel: string;
+  networkMenuButtonOverlayDirectedEdgesLabel: string;
   networkMenuButtonUploadLabel: string;
   showLegend: boolean;
   showLegendNodes: boolean;
@@ -96,12 +102,16 @@ export interface IConfig {
   interactions?: InteractionDatabase;
   physicsOn?: boolean;
   layoutOn?: boolean;
+  overlayDirectedEdges?: boolean;
   physicsInital?: boolean;
   licensedDatasets?: boolean;
   identifier?: Identifier;
+  label?: string;
   nodeShadow?: boolean;
   edgeShadow?: boolean;
   customLinks?: {};
+  reviewed?: boolean;
+  calculateProperties?: boolean;
   algorithms: { [key in AlgorithmTarget]: Array<AlgorithmType | QuickAlgorithmType> };
 }
 
@@ -164,6 +174,8 @@ export const defaultConfig: IConfig = {
   showAdvAnalysis: true,
   showAdvAnalysisContent: ['drug-search', 'drug-target-search', 'pathway-enrichment', 'enrichment-gprofiler', 'enrichment-digest', 'search-ndex'],
   showSelection: true,
+  showEditNetwork: true,
+  showPruning: true,
   showTasks: true,
   showViews: true,
   showNetworkMenu: 'right',
@@ -177,6 +189,7 @@ export const defaultConfig: IConfig = {
   showNetworkMenuButtonCenter: true,
   showNetworkMenuButtonAnimation: true,
   showNetworkMenuButtonLayout: true,
+  showNetworkMenuButtonOverlayDirectedEdges: true,
   showNetworkMenuButtonUpload: true,
   activateNetworkMenuButtonAdjacentDisorders: false,
   showNetworkMenuButtonAdjacentDisordersProteins: true,
@@ -188,8 +201,10 @@ export const defaultConfig: IConfig = {
   networkMenuButtonAdjacentDisordersDrugsLabel: 'Disorders (drug)',
   networkMenuButtonAnimationLabel: 'Animation',
   networkMenuButtonLayoutLabel: "Layout",
+  networkMenuButtonOverlayDirectedEdgesLabel: "Overlay Directions",
   networkMenuButtonUploadLabel: "Upload",
   identifier: 'symbol',
+  label: 'symbol',
   selfReferences: false,
   customEdges: { default: true, selectable: true },
   interactionDrugProtein: 'NeDRex',
@@ -199,14 +214,17 @@ export const defaultConfig: IConfig = {
   autofillEdges: true,
   physicsOn: false,
   layoutOn: false,
+  overlayDirectedEdges: false,
   physicsInital: true,
   nodeShadow: true,
   edgeShadow: true,
   licensedDatasets: false,
+  reviewed: true,
+  calculateProperties: true,
   customLinks: {}, // { test: 'test link', test2: 'test2 link' }
   algorithms: {
     drug: ['trustrank', 'closeness', 'degree', 'proximity'],
-    'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness', 'louvain-clustering', 'leiden-clustering'],
+    'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness', 'louvain-clustering', 'leiden-clustering', 'first-neighbor'],
     gene: ['pathway-enrichment']
   },
   keepSelectedNodes: false,
@@ -392,6 +410,23 @@ export const defaultConfig: IConfig = {
         size: 14
       }
     },
+    firstNeighbor: {
+      groupName: 'First Neighbors',
+      shape: 'triangle',
+      type: 'gene',
+      color: {
+        border: '#000000',
+        background: '#A8D8FF',
+        highlight: {
+          border: '#000000',
+          background: '#A8D8FF'
+        },
+      },
+      font: {
+        color: '#000000',
+        size: 14
+      }
+    },
     selectedNode: {
       borderWidth: 3,
       borderWidthSelected: 4,
@@ -413,6 +448,24 @@ export const defaultConfig: IConfig = {
       groupName: 'Default Edge Group',
       color: 'black',
       dashes: false
+    },
+    stimulation: {
+      groupName: 'Stimulation',
+      color: 'green',
+      highlight: 'lightgreen',
+      arrows: { to: { type: 'arrow', enabled: true, scaleFactor: 1 } }
+    },
+    inhibition: {
+      groupName: 'Inhibition',
+      color: 'red',
+      highlight: 'lightcoral',
+      arrows: { to: { type: 'bar', enabled: true, scaleFactor: 1 } }
+    },
+    neutral: {
+      groupName: 'Neutral',
+      color: 'black',
+      highlight: 'lightgray',
+      arrows: { to: { type: 'arrow', enabled: true, scaleFactor: 1 } }
     }
   }
 };

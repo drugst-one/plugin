@@ -2,14 +2,16 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {
   AnalysisService, BETWEENNESS_CENTRALITY, CLOSENESS_CENTRALITY,
   DEGREE_CENTRALITY,
+  FIRSTNEIGHBOR,
   KEYPATHWAYMINER, LEIDENCLUSTERING, LOUVAINCLUSTERING, MAX_TASKS,
   MULTISTEINER, NETWORK_PROXIMITY,
   PATHWAYENRICHMENT,
-  TRUSTRANK
+  TRUSTRANK, algorithmNames
 } from '../../services/analysis/analysis.service';
-import {Algorithm, AlgorithmType, QuickAlgorithmType} from 'src/app/interfaces';
+import {Algorithm, AlgorithmType, QuickAlgorithmType, Wrapper} from 'src/app/interfaces';
 import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
 import {NetworkHandlerService} from '../../services/network-handler/network-handler.service';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 @Component({
   selector: 'app-launch-analysis',
@@ -18,7 +20,7 @@ import {NetworkHandlerService} from '../../services/network-handler/network-hand
 })
 export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
-  constructor(public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public networkHandler: NetworkHandlerService) {
+  constructor(public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public networkHandler: NetworkHandlerService, public logger: LoggerService) {
   }
 
   @Input()
@@ -42,8 +44,9 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     { label: 'Wiki Pathways', selected: true }
   ];
 
-  // Louvain Clustering parameters
+  // Louvain/Leiden Clustering parameters
   public ignore_isolated: boolean = true;
+  public seed: number | null = null;
 
 
   // Trustrank Parameters
@@ -101,7 +104,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.target === 'drug-target') {
-      this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, BETWEENNESS_CENTRALITY, LOUVAINCLUSTERING, LEIDENCLUSTERING];
+      this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, BETWEENNESS_CENTRALITY, LOUVAINCLUSTERING, LEIDENCLUSTERING, FIRSTNEIGHBOR];
     } else if (this.target === 'drug') {
       this.algorithms = [TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, NETWORK_PROXIMITY];
     } else if (this.target === 'gene') {
@@ -131,8 +134,18 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
 
   public async startTask() {
+    const selection = this.analysis.getSelection();
+    const groupCounts = selection.reduce((acc: Record<string, number>, node: Wrapper) => {
+      const group = node.data._group;
+      acc[group] = (acc[group] || 0) + 1;
+      return acc;
+    }, {});
+    const groupLog = Object.entries(groupCounts)
+      .map(([group, count]) => `${count} in ${this.drugstoneConfig.currentConfig().nodeGroups[group].groupName}`)
+      .join(', ');
+    this.logger.logMessage(`Starting analysis with ${this.analysis.getSelection().length} seeds and algorithm ${algorithmNames[this.algorithm]} (${this.target}). Groups of Selection: ${groupLog}.`);
     // all nodes in selection have drugstoneId, hence exist in the backend
-    const seeds = this.analysis.getSelection().map((item) => item.id);
+    const seeds = selection.map((item) => item.id);
     const seedsFiltered = seeds.filter(el => el != null);
         this.analysis.resetSelection();
     const parameters: any = {
@@ -217,12 +230,20 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.wiki = this.pathways.find(pathway => pathway.label === 'Wiki Pathways').selected;
     } else if (this.algorithm === 'louvain-clustering'){
       parameters.ignore_isolated = this.ignore_isolated
+      parameters.seed = this.seed
     } else if (this.algorithm === 'leiden-clustering') {
       parameters.ignore_isolated = this.ignore_isolated
+      parameters.seed = this.seed
+    } else if (this.algorithm === 'first-neighbor'){
+      // no parameters so far
     }
     const token = await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
     const object = {taskId: token, algorithm: this.algorithm, target: this.target, params: parameters};
     this.taskEvent.emit(object);
+  }
+
+  onSeedChange(value: string): void {
+    this.seed = value === '' ? null : parseInt(value, 10);
   }
 
 }

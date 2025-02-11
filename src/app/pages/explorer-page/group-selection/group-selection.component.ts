@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {NodeGroup} from 'src/app/config';
+import { LegendService } from 'src/app/services/legend-service/legend-service.service';
 
 @Component({
   selector: 'app-group-selection',
@@ -8,7 +9,7 @@ import {NodeGroup} from 'src/app/config';
 })
 export class GroupSelectionComponent implements OnInit {
 
-  constructor() {
+  constructor(public legendService: LegendService) {
   }
 
   ngOnInit(): void {
@@ -21,9 +22,17 @@ export class GroupSelectionComponent implements OnInit {
   @Output() selectGroupEmitter: EventEmitter<NodeGroup> = new EventEmitter();
 
   @Input() set nodeGroups(value: { string: NodeGroup }) {
-    Object.entries(value).forEach(e => e[1].groupID = e[0])
-    this._nodeGroupsList = Object.values(value).filter(nodeGroup => !this.unselecableGroups.includes(nodeGroup.groupName));
-  }
+    const groupsToDelete = this.legendService.get_nodes_to_delete();
+    this._nodeGroupsList = Object.entries(value)
+      .filter(([key, nodeGroup]) =>
+        !this.unselecableGroups.includes(nodeGroup.groupName) &&
+        !groupsToDelete.includes(key)
+      )
+      .map(([key, nodeGroup]) => {
+        nodeGroup.groupID = key;
+        return nodeGroup;
+      });
+}
 
   public selectedGroup = null;
 

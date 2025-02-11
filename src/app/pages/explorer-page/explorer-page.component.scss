@@ -11,6 +11,21 @@
   max-height: 800px;
 }
 
+.separator {
+  height: 1px;
+  background-color: #ccc;
+  margin: 8px 0;
+}
+
+.scrollable-container {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  background-color: white;
+}
+
 .quick-find {
   .notification {
     padding: 1.25rem 1rem 1.25rem 1rem !important;
@@ -147,4 +162,90 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.choose-property-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: var(--drgstn-text-primary);
+}
+
+.property-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  color: var(--drgstn-text-primary);
+}
+
+.property-item:hover {
+  background-color: var(--drgstn-primary);
+  color: var(--drgstn-text-secondary);
+}
+
+.property-item.selected {
+  background-color: var(--drgstn-primary);
+  color: var(--drgstn-text-secondary);
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--drgstn-border);
+  margin: 5px 0;
+}
+
+.prune-dropdown-container {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  margin: 15px 0;
+}
+
+.prune-label {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: var(--drgstn-text-primary);
+}
+
+.prune-select {
+  padding: 10px 15px;
+  font-size: 14px;
+  color: var(--drgstn-text-primary);
+  background-color: var(--drgstn-panel);
+  border: 1px solid var(--drgstn-border);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.prune-select:hover,
+.prune-select:focus {
+  border-color: var(--drgstn-primary);
+  outline: none;
+}
+
+.prune-select option {
+  padding: 10px;
+  font-size: 14px;
+}
+
+.prune-select:focus option {
+  background-color: var(--drgstn-primary);
+  color: white;
+}
+
+.pruning-dropdown-container {
+  width: 100% !important;
+  max-width: 100%;
+  min-width: 100%;
+  padding-top: 20px;
+  box-sizing: border-box !important;
+}
+
+.warning-icon {
+  color: orange;
+  margin-left: 8px;
+  cursor: pointer;
 }

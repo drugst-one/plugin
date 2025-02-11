@@ -1,0 +1,30 @@
+<div class="gene-row">
+    <div>
+        <div><strong>Symbol:</strong></div>
+        <div>{{ formatArray(gene.symbol) }}</div>
+    </div>
+    <div>
+        <div><strong>Uniprot:</strong></div>
+        <div>{{ formatArray(gene.uniprot) }}</div>
+    </div>
+    <div>
+        <div><strong>Entrez:</strong></div>
+        <div>{{ formatArray(gene.entrez) }}</div>
+    </div>
+    <div>
+        <div><strong>ENSG:</strong></div>
+        <div>{{ formatArray(gene.ensg) }}</div>
+    </div>
+    <div>
+        <div><strong>Protein Name:</strong></div>
+        <div>{{ formatArray(gene.proteinName) }}</div>
+    </div>
+    <div>
+        <div><strong>Layer:</strong></div>
+        <div [ngStyle]="{ 'color': (gene.layer === 'Unknown' || gene.layer === 'Other') ? '#A9A9A9' : 'inherit' }">
+            {{ gene.layer }}
+        </div>
+    </div>
+
+</div>
+<hr />

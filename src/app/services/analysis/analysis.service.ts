@@ -7,6 +7,8 @@ import {DrugstoneConfigService} from '../drugstone-config/drugstone-config.servi
 import {NetworkHandlerService} from '../network-handler/network-handler.service';
 import {ToastService} from '../toast/toast.service';
 import {NodeGroup} from 'src/app/config';
+import { LoggerService } from '../logger/logger.service';
+import { DatePipe } from '@angular/common';
 
 export type AlgorithmType =
   'trustrank'
@@ -18,7 +20,8 @@ export type AlgorithmType =
   | 'pathway-enrichment'
   | 'louvain-clustering'
   | 'leiden-clustering'
-  | 'betweenness';
+  | 'betweenness'
+  | 'first-neighbor';
 export type QuickAlgorithmType = 'quick' | 'super' | 'connect' | 'connectSelected';
 
 export const algorithmNames = {
@@ -35,7 +38,8 @@ export const algorithmNames = {
   connectSelected: 'Connect selected',
   'pathway-enrichment': 'Pathway Enrichment',
   'louvain-clustering': 'Louvain Clustering',
-  'leiden-clustering': 'Leiden Clustering'
+  'leiden-clustering': 'Leiden Clustering',
+  'first-neighbor': 'First Neighbor'
 };
 
 export interface Algorithm {
@@ -53,6 +57,7 @@ export const MULTISTEINER: Algorithm = {slug: 'multisteiner', name: algorithmNam
 export const PATHWAYENRICHMENT: Algorithm = {slug: 'pathway-enrichment', name: algorithmNames['pathway-enrichment']};
 export const LOUVAINCLUSTERING: Algorithm = { slug: 'louvain-clustering', name: algorithmNames['louvain-clustering'] };
 export const LEIDENCLUSTERING: Algorithm = { slug: 'leiden-clustering', name: algorithmNames['leiden-clustering'] };
+export const FIRSTNEIGHBOR: Algorithm = { slug: 'first-neighbor', name: algorithmNames['first-neighbor'] };
 
 
 export const MAX_TASKS = 3;
@@ -83,6 +88,7 @@ export class AnalysisService {
   public currentNetwork:any;
 
   public inPathwayAnalysis = false;
+  public target = '';
   public nodesToAdd: Node[] = [];
   
   private nodesToAddNotifier = new Subject<boolean>();
@@ -103,7 +109,9 @@ export class AnalysisService {
     private http: HttpClient,
     public netex: NetexControllerService,
     public drugstoneConfig: DrugstoneConfigService,
-    public networkHandler: NetworkHandlerService
+    public networkHandler: NetworkHandlerService,
+    public logger: LoggerService,
+    public datePipe: DatePipe
   ) {
     const tokens = localStorage.getItem(this.tokensCookieKey);
     const selections = localStorage.getItem(this.selectionsCookieKey);
@@ -403,7 +411,7 @@ export class AnalysisService {
   }
 
   async viewFromSelection() {
-
+    this.networkHandler.activeNetwork.updateDirectedEdgesOverlay(false);
     const seeds = this.getSelection().map((item) => item.id);
     const seedsFiltered = seeds.filter(el => el != null);
     const initialNetwork = this.networkHandler.activeNetwork.getResetInputNetwork();
@@ -414,6 +422,8 @@ export class AnalysisService {
       config: this.drugstoneConfig.currentConfig(),
       network: {nodes: filteredNodes, edges: filteredEdges}
     };
+    const formattedDate = this.datePipe.transform(new Date(), 'short');
+    this.logger.logMessage(`A new network view was created based on the selection. Nodes: ${filteredNodes.length}, Edges: ${filteredEdges.length}. Created at ${formattedDate}`);
     const resp = await this.http.post<any>(`${this.netex.getBackend()}save_selection`, payload).toPromise();
     // @ts-ignore
     this.viewTokens.push(resp.token);

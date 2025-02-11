@@ -46,6 +46,10 @@ export class InfoTileComponent implements OnInit {
     }
   }
 
+  public removeProtein(){
+    this.networkHandler.activeNetwork.removeNode(this._wrapper);
+  }
+
   public beautify(url: string): string {
     if (url.startsWith("https://")) {
       url = url.substr("https://".length);
@@ -57,6 +61,13 @@ export class InfoTileComponent implements OnInit {
       return url.substr(0, slashPos);
     }
     return url;
+  }
+
+  hasProperties(): boolean {
+    return (
+      this._wrapper?.data?.properties &&
+      Object.keys(this._wrapper.data.properties).length > 0
+    );
   }
 
   writeZeros(n: number) {

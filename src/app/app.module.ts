@@ -1,7 +1,7 @@
 import { Injector, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -65,6 +65,11 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IdspaceButtonComponent } from './components/network/network-menu/idspace-button/idspace-button.component';
+import { NetworkUploadDialogComponent } from './dialogs/network-upload-dialog/network-upload-dialog.component';
+import { GeneRowsComponent } from './components/analysis-panel/gene-rows/gene-rows.component';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { LoggerComponent } from './components/logger/logger.component';
+
 
 
 @NgModule({
@@ -113,6 +118,9 @@ import { IdspaceButtonComponent } from './components/network/network-menu/idspac
     ImageFallbackDirective,
     ExternalAnalysisButtonComponent,
     IdspaceButtonComponent,
+    NetworkUploadDialogComponent,
+    GeneRowsComponent,
+    LoggerComponent,
   ],
   imports: [
     BrowserModule,
@@ -130,9 +138,10 @@ import { IdspaceButtonComponent } from './components/network/network-menu/idspac
     MatButtonModule,
     MatSliderModule,
     MatFormFieldModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgMultiSelectDropDownModule.forRoot(),
   ],
-  providers: [AnalysisService],
+  providers: [AnalysisService, DatePipe],
 })
 export class AppModule {
 

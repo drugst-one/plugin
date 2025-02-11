@@ -25,7 +25,7 @@ import {
 } from '../../interfaces';
 import { NetworkSettings } from '../../network-settings';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
-import { mapCustomEdge, mapNetexEdge, ProteinNetwork } from 'src/app/main-network';
+import { mapCustomEdge, mapNetexEdge } from 'src/app/main-network';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
 import { LegendService } from 'src/app/services/legend-service/legend-service.service';
@@ -33,6 +33,8 @@ import { LoadingScreenService } from 'src/app/services/loading-screen/loading-sc
 import { version } from '../../../version';
 import { downloadResultCSV, downloadNodeAttributes } from 'src/app/utils';
 import { Sort } from '@angular/material/sort';
+import { LoggerService } from 'src/app/services/logger/logger.service';
+import { DatePipe } from '@angular/common';
 
 declare var vis: any;
 
@@ -63,6 +65,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   @Output() showDetailsChange = new EventEmitter<Wrapper>();
   @Output() setInputNetwork = new EventEmitter<any>();
   @Output() visibleItems = new EventEmitter<[any[], [Node[], Tissue], NodeInteraction[]]>();
+  @Output() configNodeGroupsChange = new EventEmitter<any>();
   public task: Task | null = null;
   public result: any = null;
 
@@ -108,7 +111,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public sliderValue: number;
 
 
-  constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService, public loadingScreen: LoadingScreenService) {
+  constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService, public loadingScreen: LoadingScreenService, public logger: LoggerService, private datePipe: DatePipe) {
     try {
       this.versionString = version;
     } catch (e) {
@@ -353,15 +356,19 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.tab = "network";
     this.loading = true;
     this.loadingScreen.stateUpdate(true);
-    this.parse_pathway(this.token, this.geneSet, this.pathway).then(result => {
-      this.refreshTask();
-    });
+    this.parse_pathway(this.token, this.geneSet, this.pathway).then(async result => {
+      await this.refreshTask();
+      this.logPathwayAnalysis();
+  });
   }
 
   private async refreshView() {
+    this.networkHandler.activeNetwork.updateDirectedEdgesOverlay(false);
     this.loading = true;
     this.loadingScreen.stateUpdate(true);
     this.getView(this.token).then(async view => {
+      this.logger.changeComponent('View ' + this.datePipe.transform(view.createdAt, "short"));
+      this.logger.logMessage('View loaded. Nodes: ' + view.network.nodes.length + ', Edges: ' + view.network.edges.length + '.');
       this.task = view;
       this.result = view;
       this.drugstoneConfig.set_analysisConfig(view.config);
@@ -393,7 +400,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               });
             }
           });
-          const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.config.interactionProteinProtein, this.drugstoneConfig.config.licensedDatasets);
+          const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.currentConfig().interactionProteinProtein, this.drugstoneConfig.currentConfig().licensedDatasets);
           edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.currentConfig(), node_map)).flatMap(e => e));
         }
 
@@ -417,6 +424,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         // @ts-ignore
         if (!this.drugstoneConfig.selfReferences) {
           edges = edges.filter(el => el.from !== el.to);
+        }
+        for (const node of nodes) {
+          const labelArray = node[this.drugstoneConfig.currentConfig().label];
+          node["label"] = labelArray && labelArray.length > 0 ? labelArray[0] : node.id;
         }
         this.networkHandler.activeNetwork.inputNetwork = { nodes: nodes, edges: edges };
         this.nodeData.nodes = new vis.DataSet(nodes);
@@ -474,6 +485,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.loadingScreen.stateUpdate(true);
     this.analysis.analysisActive = true;
     this.task = await this.getTask(this.token);
+    this.analysis.inPathwayAnalysis = this.task["info"]["algorithm"] === "pathway-enrichment";
+    if(!this.analysis.inPathwayAnalysis){
+      this.logger.changeComponent(algorithmNames[this.task["info"]["algorithm"]] + " | " + this.task["info"]["target"]);
+      const formattedDate = this.datePipe.transform(this.task["info"]["finishedAt"], 'short');
+      this.logger.logMessage(`Analysis Result View loaded: ${algorithmNames[this.task["info"]["algorithm"]]} (${this.task["info"]["target"]}). Task finished at: ${formattedDate}.`);
+    }
     this.analysis.switchSelection(this.token);
 
     if (this.task.info.algorithm === 'degree') {
@@ -513,6 +530,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       this.loading = true;
       this.netex.getTaskResult(this.token).then(async result => {
         console.log(result)
+        this.analysis.target = result.parameters.target;
         if (!("network" in result)) {
           this.tab = 'table';
         }
@@ -523,18 +541,16 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         this.drugstoneConfig.set_analysisConfig(result.parameters.config);
         if (result["algorithm"] === "pathway_enrichment") {
           if("geneset" in result){
+            let needLog = !this.geneSet || !this.pathway;
             this.geneSet = result["geneset"];
             this.pathway = result["pathway"];
+            if (needLog){
+              this.logPathwayAnalysis();
+            }
           }
           if (!this.maxSliderValue){
             this.maxSliderValue = this.findMaxOverlap(result["tableView"]);
             this.sliderValue = this.maxSliderValue;
-          }
-          if (!this.drugstoneConfig.config["nodeGroups"]["overlap"] || !this.drugstoneConfig.config["nodeGroups"]["onlyNetwork"] || !this.drugstoneConfig.config["nodeGroups"]["onlyPathway"] || !this.drugstoneConfig.config["nodeGroups"]["addedNode"]) {
-            this.drugstoneConfig.config["nodeGroups"]["overlap"] = this.drugstoneConfig.currentConfig().nodeGroups["overlap"];
-            this.drugstoneConfig.config["nodeGroups"]["onlyNetwork"] = this.drugstoneConfig.currentConfig().nodeGroups["onlyNetwork"];
-            this.drugstoneConfig.config["nodeGroups"]["onlyPathway"] = this.drugstoneConfig.currentConfig().nodeGroups["onlyPathway"];
-            this.drugstoneConfig.config["nodeGroups"]["addedNode"] = this.drugstoneConfig.currentConfig().nodeGroups["addedNode"];
           }
         }
         this.analysis.switchSelection(this.token);
@@ -556,6 +572,17 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           if (this.result.parameters.algorithm === 'louvain-clustering' || this.result.parameters.algorithm === 'leiden-clustering') {
             this.legendService.add_to_context('louvain');
             this.partition = true;
+            const currentConfig = this.drugstoneConfig.currentConfig().nodeGroups;
+            const configNodeGroups = this.drugstoneConfig.config["nodeGroups"];
+            for (const key in currentConfig) {
+              if (currentConfig.hasOwnProperty(key) && key.startsWith("cluster")) {
+                configNodeGroups[key] = currentConfig[key];
+              }
+            }
+            this.configNodeGroupsChange.emit(configNodeGroups);
+          }
+          if (this.result.parameters.algorithm === 'first_neighbor') {
+            this.legendService.add_to_context('firstNeighbor');
           }
         }
         const nodeAttributes = this.result.nodeAttributes || {};
@@ -574,6 +601,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             }
             const nodes = nw.nodes;
             const edges = nw.edges;
+            for (const node of nodes) {
+              const labelArray = node[this.drugstoneConfig.currentConfig().label];
+              node["label"] = labelArray && labelArray.length > 0 ? labelArray[0] : node.id;
+            }
             analysisNetwork.inputNetwork = { nodes: nodes, edges: edges };
             this.nodeData.nodes = new vis.DataSet(nodes);
             this.nodeData.edges = new vis.DataSet(edges);
@@ -597,6 +628,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             }
             analysisNetwork.networkInternal.stabilize();
             this.networkHandler.activeNetwork.updateLayoutEnabled(false);
+            this.networkHandler.activeNetwork.undirectedEdges = false;
+            this.networkHandler.activeNetwork.updateDirectedEdgesOverlay(false);
             analysisNetwork.networkInternal.once('stabilizationIterationsDone', async () => {
 
               if (!this.drugstoneConfig.config.physicsOn || analysisNetwork.isBig()) {
@@ -606,7 +639,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
                 resolve(nodes);
               });
             });
-
           }).then(nodes => {
             this.tableDrugs = nodes.filter(e => e.drugstoneId && e.drugstoneType === 'drug');
             this.tableDrugs.forEach((r) => {
@@ -684,12 +716,18 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     return await this.http.put(`${this.netex.getBackend()}calculate_result_for_pathway/?token=${encodeURIComponent(token)}&geneset=${encodeURIComponent(geneset)}&pathway=${encodeURIComponent(pathway)}`, {}).toPromise();
   }
 
+  private async get_all_scores_pathway_enrichment(token: string): Promise<any> {
+    return await this.http.get(`${this.netex.getBackend()}get_all_scores_pathway_enrichment/?token=${encodeURIComponent(token)}`, {}).toPromise();
+  }
+
   private async getTask(token: string): Promise<any> {
     return await this.http.get(`${this.netex.getBackend()}task/?token=${token}`).toPromise();
   }
 
   close() {
     this.analysis.analysisActive = false;
+    this.logger.logMessage("Analysis/View closed.");
+    this.logger.changeComponent(this.logger.MAIN_NETWORK);
     const analysisNetwork = this.networkHandler.networks['analysis'];
     analysisNetwork.gradientMap = {};
     this.drugstoneConfig.remove_analysisConfig();
@@ -702,6 +740,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.analysis.nodesToAdd = [];
     this.token = null;
     this.networkHandler.activeNetwork.updateLayoutEnabled(false);
+    this.networkHandler.activeNetwork.undirectedEdges = false;
+    this.networkHandler.activeNetwork.updateDirectedEdgesOverlay(false);
     this.tokenChange.emit(this.token);
     this.legendService.remove_from_context('drug');
     this.legendService.remove_from_context('drugTarget');
@@ -757,16 +797,23 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       data = data.sort((a, b) => b['score'] - a['score']);
     }
 
-    downloadResultCSV(data, downloadNodeAttributes, `drugstone_${view}`);
+    const filename = downloadResultCSV(data, downloadNodeAttributes, `drugstone_${view}`);
+    this.logger.logMessage(`Downloaded ${view.toLocaleUpperCase()}-nodes as CSV: ${filename}`);
   }
 
   public downloadPathwayEnrichmentAsCSV(){
     if (this.result["tableView"].length > 0){
       const tableView = this.result["tableView"];
-      const columns = Object.keys(this.result["tableView"][0])
-      console.log(tableView, columns)
-      downloadResultCSV(tableView, columns, `drugstone_pathwayEnrichment`);
+      const columns = Object.keys(this.result["tableView"][0]).filter(column => column !== 'genes');
+      const filename = downloadResultCSV(tableView, columns, `drugstone_pathwayEnrichment`);
+      this.logger.logMessage(`Downloaded Pathway Enrichment as CSV: ${filename}`);
     }
+    //This is only for calculating statistics regarding the scores
+    // this.get_all_scores_pathway_enrichment(this.token).then(result => {
+    //   const columns = Object.keys(result[0]);
+    //   const filename = downloadResultCSV(result, columns, `drugstone_pathwayEnrichment_scores`);
+    //   this.logger.logMessage(`Downloaded Pathway Enrichment Scores as CSV: ${filename}`);
+    // });
   }
 
   /**
@@ -780,11 +827,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       if (!("network" in result)) {
         return { edges: [], nodes: [] };
       }
-      let edges_mapped = result.network.edges.map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+      let edges_mapped = result.network.edges.flatMap(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
       let nodes_list: any[] = result.network.nodes;
       if (nodesToAdd.length > 0) {
+        const addedNodesList = [];
         nodesToAdd.forEach(node => {
           if (!nodes_list.find(n => n.id === node.id)){
+            const label = node.label? node.label : node.id;
+            addedNodesList.push(label);
             if (!node.groupName) {
               node.group = "addedNode"
               node.groupName = this.drugstoneConfig.currentConfig().nodeGroups[node.group]["groupName"]
@@ -794,7 +844,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           }
         })
         const edges = await this.netex.addEdges({ nodes: nodes_list, edges: edges_mapped }, result);
-        edges_mapped = edges.map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+        edges_mapped = edges.flatMap(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+        const addedNodesString = addedNodesList.join(", ");
+        this.logger.logMessage(`Added nodes during Pathway Enrichment Analysis: ${addedNodesString}`);
       }
       const nodes: any = nodes_list;
       const network = {
@@ -804,8 +856,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       this.analysis.currentNetwork = network;
       return network
 
-    } else if (result.algorithm === "louvain_clustering" || result.algorithm === "leiden_clustering") {
-      result.network["edges"] = result.network["edges"].map(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
+    } else if (result.algorithm === "louvain_clustering" || result.algorithm === "leiden_clustering" || result.algorithm === "first_neighbor") {
+      result.network["edges"] = result.network["edges"].flatMap(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
       this.analysis.currentNetwork = result.network;
       return result.network;
     }
@@ -865,7 +917,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       const skippedDrugIds = new Set<string>();
       const drugEdgeTypes = new Set<string>();
       for (const edge of network.edges) {
-        const e = mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig);
+        const edges_mapped = mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig);
+        // Only 2 edges if protein edge is directed and is stimulation and inhibition
+        const e = edges_mapped[0];
         const isDrugEdge = e.to[0] === 'd' && e.to[1] === 'r';
         e.from = e.from[0] === 'p' && nodeIdMap[e.from] ? nodeIdMap[e.from] : e.from;
         e.to = e.to[0] === 'p' && nodeIdMap[e.to] ? nodeIdMap[e.to] : e.to;
@@ -889,7 +943,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         const hash = e.from + '_' + e.to;
         if (uniqEdges.indexOf(hash) === -1) {
           uniqEdges.push(hash);
-          edges.push(e);
+          edges.push(...edges_mapped);
         }
       }
       // remove self-edges/loops
@@ -958,5 +1012,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   public openBugreport() {
     this.drugstoneConfig.showBugreport = true;
+  }
+
+  private logPathwayAnalysis() {
+    const component = algorithmNames[this.task["info"]["algorithm"]] + " | " + this.task["info"]["target"] + " | " + this.geneSet + " - " + this.pathway;
+    this.logger.changeComponent(component);
+    this.logger.logMessage("Pathway analysis started.");
   }
 }

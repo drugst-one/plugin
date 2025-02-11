@@ -86,6 +86,21 @@
   </span>
 </p>
 
+<p *ngIf="_wrapper.data.isReviewed" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
+  <b><span>Reviewed:</span></b>
+  <span class="is-capitalized">
+    {{ _wrapper.data.isReviewed }}
+  </span>
+</p>
+
+<p *ngIf="hasProperties()" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
+  <b><span>Properties:</span></b>
+  <div *ngFor="let property of _wrapper.data.properties | keyvalue" style="padding-left: 10px; padding-bottom: 5px;">
+    <i><span>{{ property.key }}:</span></i>
+    <span class="is-capitalized">
+      {{ property.value }}
+    </span>
+  </div>
 <p
   *ngIf="getExpressionScore() != null"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
@@ -233,14 +248,22 @@
   </div>
 </div>
 
-<app-toggle
-  *ngIf="_wrapper.data.drugstoneId && _wrapper.data.drugstoneType === 'protein'"
-  [value]="analysis.inSelection(_wrapper)"
-  (valueChange)="
-    $event ? analysis.addItems([_wrapper]) : analysis.removeItems([_wrapper])
-  "
-  textOn="Selected"
-  textOff="Off"
-  tooltipOn="Add protein to selection."
-  tooltipOff="Remove protein from selection."
-></app-toggle>
+<div class="toggle-container">
+  <app-toggle
+    *ngIf="_wrapper.data.drugstoneId && _wrapper.data.drugstoneType === 'protein'"
+    [value]="analysis.inSelection(_wrapper)"
+    (valueChange)="
+      $event ? analysis.addItems([_wrapper]) : analysis.removeItems([_wrapper])
+    "
+    textOn="Selected"
+    textOff="Off"
+    tooltipOn="Add protein to selection."
+    tooltipOff="Remove protein from selection."
+  ></app-toggle>
+
+  <app-fa-solid-icon icon="trash" (click)="removeProtein()" class="has-text-danger is-pulled-right"
+    pTooltip="Delete Node."
+    [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+    tooltipPosition="top"
+  ></app-fa-solid-icon>
+</div>
