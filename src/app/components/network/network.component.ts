@@ -691,7 +691,7 @@ export class NetworkComponent implements OnInit {
   }
 
   private removeXYFromNodes(nodes: any[]): any[] {
-    return nodes.map(({ id, group }) => ({ id, group }));
+    return nodes.map(({ id, groupId: group }) => ({ id, group }));
   }
 
   public updateLabel(idspace: string) {
@@ -703,7 +703,7 @@ export class NetworkComponent implements OnInit {
   }
 
   public async removeNode(node: any) {
-    this.logger.logMessage(`Deleted node with id: ${node["id"]} and label: ${node["data"]["label"] ?? node["id"]}`);
+    this.logger.logMessage(`Deleted node with id: ${node["id"]} and label: ${node["label"] ?? node["id"]}`);
     const nodesToRemove = this.nodeData.nodes.get().filter(n => n.id === node.id);
     const edgesToRemove = this.nodeData.edges.get().filter(e => e.from === node.id || e.to === node.id);
 
@@ -721,6 +721,9 @@ export class NetworkComponent implements OnInit {
 
   public async addNode(node: Node) {
     this.updateDirectedEdgesOverlay(false);
+    if (this.drugstoneConfig.currentConfig().layoutOn) {
+      await this.updateLayoutEnabled(false, true);
+    }
     this.logger.logMessage(`Added node with id: ${node["id"]} and label: ${node["label"] ?? node["id"]}`);
     var nodes = this.nodeData.nodes.get();
     for (const n of nodes) {
@@ -735,10 +738,8 @@ export class NetworkComponent implements OnInit {
       await this.autofill_edges_for_new_node(nodes, edges, node);
     }
     nodes = await this.netex.recalculateStatistics({"nodes": nodes, "edges": edges}, this.drugstoneConfig.currentConfig());
-    this.nodeData.nodes.update(nodes);
-    this.nodeData.edges.update(edges);
-    this.drugstoneConfig.config.layoutOn = false;
-    this.updateLayoutEnabled(false);
+    await this.nodeData.nodes.update(nodes);
+    await this.nodeData.edges.update(edges);
     // remove drugs and disorders when node is added
     if (this.adjacentDrugs || this.adjacentDisordersDrug || this.adjacentDisordersProtein) {
       await this.updateAdjacentDrugs(false, true);
@@ -800,7 +801,7 @@ export class NetworkComponent implements OnInit {
     this.loadingScreen.stateUpdate(false);
   }
 
-  public updateLayoutEnabled(bool: boolean, fromButton: boolean = false) {
+  public async updateLayoutEnabled(bool: boolean, fromButton: boolean = false) {
     this.drugstoneConfig.currentConfig().layoutOn = bool;
     let minX;
     let yPositions;
@@ -822,7 +823,7 @@ export class NetworkComponent implements OnInit {
       });
     } else if (this.nodeData.nodes){
       const nodes = this.removeXYFromNodes(this.nodeData.nodes.get());
-      this.nodeData.nodes.update(nodes);
+      await this.nodeData.nodes.update(nodes);
       if (fromButton) {
         this.ignorePosition = true;
         const network = {nodes: nodes, edges: this.nodeData.edges.get()};
