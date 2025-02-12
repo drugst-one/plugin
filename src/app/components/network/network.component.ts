@@ -691,7 +691,7 @@ export class NetworkComponent implements OnInit {
   }
 
   private removeXYFromNodes(nodes: any[]): any[] {
-    return nodes.map(({ id, group }) => ({ id, group }));
+    return nodes.map(({ id, groupId: group }) => ({ id, group }));
   }
 
   public updateLabel(idspace: string) {
