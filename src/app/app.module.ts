@@ -69,6 +69,7 @@ import { NetworkUploadDialogComponent } from './dialogs/network-upload-dialog/ne
 import { GeneRowsComponent } from './components/analysis-panel/gene-rows/gene-rows.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { LoggerComponent } from './components/logger/logger.component';
+import { ScientificPipe } from './components/analysis-panel/scientific-pipe/scientific.pipe';
 
 
 
@@ -121,6 +122,7 @@ import { LoggerComponent } from './components/logger/logger.component';
     NetworkUploadDialogComponent,
     GeneRowsComponent,
     LoggerComponent,
+    ScientificPipe,
   ],
   imports: [
     BrowserModule,
