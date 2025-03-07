@@ -1,7 +1,7 @@
 <div *ngIf="token">
   <div
     class="card analysis analysis-view"
-    [ngClass]="{ fullscreen: fullscreen }"
+    [ngClass]="{ fullscreen: drugstoneConfig.config.fullscreen }"
   >
     <header class="card-header">
       <p class="card-header-title">
@@ -13,7 +13,7 @@
         <p style="margin-right:10px" *ngIf="geneSet && pathway && analysis.inPathwayAnalysis"> {{geneSet}} - {{pathway}}</p>
 
         <div class="field has-addons">
-          <p class="control" *ngIf="!fullscreen">
+          <p class="control" *ngIf="!drugstoneConfig.config.fullscreen">
             <button
               (click)="analysis.removeAnalysis(token, tokenType); close()"
               class="button is-rounded is-small is-outlined highlight-danger has-text-danger"
@@ -34,7 +34,7 @@
               pTooltip="Open in fullscreen"
               [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
               tooltipPosition="left"
-              *ngIf="!fullscreen"
+              *ngIf="!drugstoneConfig.config.fullscreen"
               (click)="toggleFullscreen()"
               class="button is-rounded is-small is-outlined highlight-primary"
             >
@@ -47,7 +47,7 @@
               pTooltip="Close fullscreen"
               [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
               tooltipPosition="left"
-              *ngIf="fullscreen"
+              *ngIf="drugstoneConfig.config.fullscreen"
               (click)="toggleFullscreen()"
               class="button is-rounded is-small is-outlined highlight-primary"
             >

@@ -1,4 +1,4 @@
-<div id="appWindow" (window:resize)="onResize($event)">
+<div id="appWindow" (window:resize)="onResize($event)" [ngClass]="{ fullscreen: drugstoneConfig.config.fullscreen }">
 
   <div class="is-hidden-mobile fullheight" id="appContainer">
     <app-fa-icons></app-fa-icons>
@@ -39,6 +39,7 @@
       <div
         class="drugstone sidebar column"
         *ngIf="drugstoneConfig.config.showSidebar"
+        [ngClass]="{ fullscreenMenue: drugstoneConfig.config.fullscreen }"
       >
 
         <app-summary-node *ngIf="drugstoneConfig.config.showItemSelector"></app-summary-node>
@@ -667,8 +668,8 @@
         or visit this page with another device with a larger screen.
       </div>
     </div>
+    <app-logger></app-logger>
   </div>
-  <app-logger></app-logger>
 
   <app-toast></app-toast>
 </div>

@@ -1,9 +1,19 @@
 .fullscreen {
   position: fixed !important;
   height: 100vh !important;
+  width: calc(100vw - var(--sidebar-width, 350px)) !important;  
+  top: 0 !important;
+  left: var(--sidebar-width, 350px) !important;
+  z-index: $fullscreen-z !important;
+}
+
+.fullscreenMenue {
+  position: fixed !important;
+  height: 100vh !important;
   width: 100vw !important;
   top: 0 !important;
   left: 0 !important;
-  z-index: $fullscreen-z !important;
+  z-index: $fullscreen-menue-z !important;
+  background-color: white !important
 }
 

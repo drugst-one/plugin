@@ -102,6 +102,7 @@ export interface IConfig {
   interactions?: InteractionDatabase;
   physicsOn?: boolean;
   layoutOn?: boolean;
+  fullscreen?: boolean;
   overlayDirectedEdges?: boolean;
   physicsInital?: boolean;
   licensedDatasets?: boolean;
@@ -214,6 +215,7 @@ export const defaultConfig: IConfig = {
   autofillEdges: true,
   physicsOn: false,
   layoutOn: false,
+  fullscreen: false,
   overlayDirectedEdges: false,
   physicsInital: true,
   nodeShadow: true,

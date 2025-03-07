@@ -516,6 +516,11 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       // tslint:disable-next-line:no-eval
       eval(this.onload);
     }
+    const sidebar = document.querySelector('.drugstone.sidebar') as HTMLElement;
+    if (sidebar) {
+      const sidebarWidth = Math.round(sidebar.getBoundingClientRect().width);
+      document.documentElement.style.setProperty('--sidebar-width', `${sidebarWidth}px`);
+    }
   }
 
   public activateConfig(updateNetworkFlag = false) {

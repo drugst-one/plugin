@@ -1002,8 +1002,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   };
 
   public toggleFullscreen() {
-    this.fullscreen = !this.fullscreen;
-    this.loadingScreen.fullscreenUpdate(this.fullscreen);
+    this.drugstoneConfig.config.fullscreen = !this.drugstoneConfig.config.fullscreen;
+    this.loadingScreen.fullscreenUpdate(this.drugstoneConfig.config.fullscreen);
   }
 
   public showEULA() {

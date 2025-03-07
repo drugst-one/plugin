@@ -691,7 +691,11 @@ export class NetworkComponent implements OnInit {
   }
 
   private removeXYFromNodes(nodes: any[]): any[] {
-    return nodes.map(({ id, groupId: group }) => ({ id, group }));
+    for (const node of nodes) {
+      delete node["x"];
+      delete node["y"];
+    }
+    return nodes;
   }
 
   public updateLabel(idspace: string) {
@@ -801,6 +805,10 @@ export class NetworkComponent implements OnInit {
     this.loadingScreen.stateUpdate(false);
   }
 
+  clearCanvas() {
+    this.networkInternal.off("beforeDrawing");
+  }
+
   public async updateLayoutEnabled(bool: boolean, fromButton: boolean = false) {
     this.drugstoneConfig.currentConfig().layoutOn = bool;
     let minX;
@@ -822,13 +830,11 @@ export class NetworkComponent implements OnInit {
         });
       });
     } else if (this.nodeData.nodes){
+      this.clearCanvas();
       const nodes = this.removeXYFromNodes(this.nodeData.nodes.get());
       await this.nodeData.nodes.update(nodes);
-      if (fromButton) {
-        this.ignorePosition = true;
-        const network = {nodes: nodes, edges: this.nodeData.edges.get()};
-        this.createNetwork.emit(JSON.stringify(network));
-      }
+
+      await this.stabilize();
     }
     this.loadingScreen.stateUpdate(false);
   }
@@ -1063,8 +1069,12 @@ export class NetworkComponent implements OnInit {
   }
 
   public toggleFullscreen() {
-    this.fullscreen = !this.fullscreen;
-    this.loadingScreen.fullscreenUpdate(this.fullscreen);
+    this.drugstoneConfig.config.fullscreen = !this.drugstoneConfig.config.fullscreen;
+    this.loadingScreen.fullscreenUpdate(this.drugstoneConfig.config.fullscreen);
+  }
+
+  public isFullscreen() {
+    return this.drugstoneConfig.config.fullscreen && !this.analysis.analysisActive;
   }
 
   public showEULA() {
