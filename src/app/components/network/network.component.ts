@@ -691,7 +691,11 @@ export class NetworkComponent implements OnInit {
   }
 
   private removeXYFromNodes(nodes: any[]): any[] {
-    return nodes.map(({ id, groupId: group }) => ({ id, group }));
+    for (const node of nodes) {
+      delete node["x"];
+      delete node["y"];
+    }
+    return nodes;
   }
 
   public updateLabel(idspace: string) {
@@ -722,7 +726,7 @@ export class NetworkComponent implements OnInit {
   public async addNode(node: Node) {
     this.updateDirectedEdgesOverlay(false);
     if (this.drugstoneConfig.currentConfig().layoutOn) {
-      await this.updateLayoutEnabled(false, true);
+      await this.updateLayoutEnabled(false);
     }
     this.logger.logMessage(`Added node with id: ${node["id"]} and label: ${node["label"] ?? node["id"]}`);
     var nodes = this.nodeData.nodes.get();
@@ -767,7 +771,8 @@ export class NetworkComponent implements OnInit {
         });
       }
     });
-    const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.currentConfig().interactionProteinProtein, this.drugstoneConfig.currentConfig().licensedDatasets);
+    const filteredNodes = nodes.filter(n => n.drugstoneType === 'protein');
+    const netexEdges = await this.netex.fetchEdges(filteredNodes, this.drugstoneConfig.currentConfig().interactionProteinProtein, this.drugstoneConfig.currentConfig().licensedDatasets);
     const filteredEdges = netexEdges.filter(edge => edge.proteinA === addedNode["drugstoneId"][0] || edge.proteinB === addedNode["drugstoneId"][0]);
     edges.push(...filteredEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.currentConfig(), node_map)).flatMap(e => e));
   }
@@ -801,7 +806,11 @@ export class NetworkComponent implements OnInit {
     this.loadingScreen.stateUpdate(false);
   }
 
-  public async updateLayoutEnabled(bool: boolean, fromButton: boolean = false) {
+  clearCanvas() {
+    this.networkInternal.off("beforeDrawing");
+  }
+
+  public async updateLayoutEnabled(bool: boolean) {
     this.drugstoneConfig.currentConfig().layoutOn = bool;
     let minX;
     let yPositions;
@@ -822,13 +831,11 @@ export class NetworkComponent implements OnInit {
         });
       });
     } else if (this.nodeData.nodes){
+      this.clearCanvas();
       const nodes = this.removeXYFromNodes(this.nodeData.nodes.get());
       await this.nodeData.nodes.update(nodes);
-      if (fromButton) {
-        this.ignorePosition = true;
-        const network = {nodes: nodes, edges: this.nodeData.edges.get()};
-        this.createNetwork.emit(JSON.stringify(network));
-      }
+
+      await this.stabilize();
     }
     this.loadingScreen.stateUpdate(false);
   }
@@ -1063,8 +1070,12 @@ export class NetworkComponent implements OnInit {
   }
 
   public toggleFullscreen() {
-    this.fullscreen = !this.fullscreen;
-    this.loadingScreen.fullscreenUpdate(this.fullscreen);
+    this.drugstoneConfig.config.fullscreen = !this.drugstoneConfig.config.fullscreen;
+    this.loadingScreen.fullscreenUpdate(this.drugstoneConfig.config.fullscreen);
+  }
+
+  public isFullscreen() {
+    return this.drugstoneConfig.config.fullscreen && !this.analysis.analysisActive;
   }
 
   public showEULA() {

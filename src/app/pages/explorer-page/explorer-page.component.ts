@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   Component,
+  ElementRef,
   EventEmitter,
   HostListener,
   Input,
@@ -299,6 +300,19 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.setWindowWidth(document.getElementById('appWindow').getBoundingClientRect().width);
   }
 
+  @ViewChild('logger', { read: ElementRef, static: false }) loggerElement!: ElementRef;
+  @ViewChild('mainColumn', { read: ElementRef, static: false }) mainColumn!: ElementRef;
+  @ViewChild('sidebar', { read: ElementRef, static: false }) sidebar!: ElementRef;
+  updateMainColumnHeight() {
+    if (this.loggerElement && this.mainColumn && this.sidebar) {
+      const loggerHeight = this.loggerElement.nativeElement.offsetHeight;
+      const drgstnHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--drgstn-height'));
+      const newHeight = drgstnHeight - loggerHeight;
+      this.mainColumn.nativeElement.style.height = `${newHeight}px`;
+      this.sidebar.nativeElement.style.height = `${newHeight}px`;
+    }
+  }
+
   ngOnInit() {
     this.dropdownSettings = {
       singleSelection: false,
@@ -511,10 +525,16 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   async ngAfterViewInit() {
     this.networkHandler.setActiveNetwork('explorer');
+    this.updateMainColumnHeight();
 
     if (this.onload) {
       // tslint:disable-next-line:no-eval
       eval(this.onload);
+    }
+    const sidebar = document.querySelector('.drugstone.sidebar') as HTMLElement;
+    if (sidebar) {
+      const sidebarWidth = Math.round(sidebar.getBoundingClientRect().width);
+      document.documentElement.style.setProperty('--sidebar-width', `${sidebarWidth}px`);
     }
   }
 
