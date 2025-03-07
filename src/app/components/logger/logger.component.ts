@@ -11,10 +11,12 @@ export class LoggerComponent implements OnInit {
   @ViewChild('logsContainer') logsContainer!: ElementRef;
   collapseLogger: boolean = true;
   private logsSubscription: Subscription;
+  initialDrgstnHeight: number;
 
-  constructor(public logger: LoggerService) { }
+  constructor(public logger: LoggerService, private el: ElementRef) { }
 
   ngOnInit(): void {
+    this.initialDrgstnHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--drgstn-height'));
     this.logsSubscription = this.logger.logs$.subscribe(() => {
       this.scrollToBottom();
     });
@@ -35,5 +37,12 @@ export class LoggerComponent implements OnInit {
   collapseLog(): void {
     this.collapseLogger = !this.collapseLogger
     this.scrollToBottom();
+    if (this.collapseLogger) {
+      document.documentElement.style.setProperty('--drgstn-height', `${this.initialDrgstnHeight}px`);
+    } else {
+      const componentHeight = this.el.nativeElement.offsetHeight;
+      const newHeight = this.initialDrgstnHeight + componentHeight;
+      document.documentElement.style.setProperty('--drgstn-height', newHeight);
+    }
   }
 }

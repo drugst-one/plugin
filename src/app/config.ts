@@ -62,6 +62,7 @@ export interface IConfig {
   showSelection: boolean;
   showEditNetwork: boolean;
   showPruning: boolean;
+  showLogger: boolean;
   showNetworkMenu: false | 'left' | 'right';
   expandNetworkMenu: boolean;
   showNetworkMenuButtonExpression: boolean;
@@ -177,6 +178,7 @@ export const defaultConfig: IConfig = {
   showSelection: true,
   showEditNetwork: true,
   showPruning: true,
+  showLogger: true,
   showTasks: true,
   showViews: true,
   showNetworkMenu: 'right',

@@ -29,7 +29,8 @@
 
     <!-- Start explorer -->
     <div
-      class="drugstone explorer columns is-gapless"
+      class="drugstone explorer columns is-gapless" 
+      style="display: flex; flex-wrap: wrap;"
       [ngClass]="{
         'is-flex-direction-row-reverse':
           drugstoneConfig.config.showSidebar === 'right'
@@ -37,7 +38,7 @@
     >
       <!-- Start left sidebar -->
       <div
-        class="drugstone sidebar column"
+        class="drugstone sidebar column" #sidebar
         *ngIf="drugstoneConfig.config.showSidebar"
         [ngClass]="{ fullscreenMenue: drugstoneConfig.config.fullscreen }"
       >
@@ -644,7 +645,7 @@
       </div>
 
       <!-- Start network block -->
-      <div class="drugstone network column" id="main-column">
+      <div class="drugstone network column" id="main-column" #mainColumn>
         <!-- analysis panel with analysis network -->
         <div *ngIf="selectedToken">
           <app-analysis-panel #analysis (resetEmitter)="reset()"
@@ -661,6 +662,7 @@
         <app-network (networkEmitter)="resetNetwork($event)" (createNetwork)="resetNetwork($event)" (resetEmitter)="reset()" networkType="explorer" [nodeData]="nodeData"></app-network>
       </div>
       <!-- End  network block -->
+      <app-logger *ngIf="drugstoneConfig.currentConfig().showLogger" class="drugstone logger column" #logger style="order: 2; flex-basis: 100%; width: 100%"></app-logger>
 
       <div class="is-hidden-tablet mobile-fallback">
         Sorry, drugstone is not available for mobile phones. To find information
@@ -668,7 +670,6 @@
         or visit this page with another device with a larger screen.
       </div>
     </div>
-    <app-logger></app-logger>
   </div>
 
   <app-toast></app-toast>

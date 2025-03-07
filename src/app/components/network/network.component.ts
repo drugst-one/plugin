@@ -726,7 +726,7 @@ export class NetworkComponent implements OnInit {
   public async addNode(node: Node) {
     this.updateDirectedEdgesOverlay(false);
     if (this.drugstoneConfig.currentConfig().layoutOn) {
-      await this.updateLayoutEnabled(false, true);
+      await this.updateLayoutEnabled(false);
     }
     this.logger.logMessage(`Added node with id: ${node["id"]} and label: ${node["label"] ?? node["id"]}`);
     var nodes = this.nodeData.nodes.get();
@@ -771,7 +771,8 @@ export class NetworkComponent implements OnInit {
         });
       }
     });
-    const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.currentConfig().interactionProteinProtein, this.drugstoneConfig.currentConfig().licensedDatasets);
+    const filteredNodes = nodes.filter(n => n.drugstoneType === 'protein');
+    const netexEdges = await this.netex.fetchEdges(filteredNodes, this.drugstoneConfig.currentConfig().interactionProteinProtein, this.drugstoneConfig.currentConfig().licensedDatasets);
     const filteredEdges = netexEdges.filter(edge => edge.proteinA === addedNode["drugstoneId"][0] || edge.proteinB === addedNode["drugstoneId"][0]);
     edges.push(...filteredEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.currentConfig(), node_map)).flatMap(e => e));
   }
@@ -809,7 +810,7 @@ export class NetworkComponent implements OnInit {
     this.networkInternal.off("beforeDrawing");
   }
 
-  public async updateLayoutEnabled(bool: boolean, fromButton: boolean = false) {
+  public async updateLayoutEnabled(bool: boolean) {
     this.drugstoneConfig.currentConfig().layoutOn = bool;
     let minX;
     let yPositions;
