@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LogMessage } from './logMessage.interface';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,9 @@ export class LoggerService {
   component: string;
   private storageKey = 'loggerLogs';
   private maxLogs = 100;
+
+  private logsSubject = new BehaviorSubject<void>(undefined);
+  logs$ = this.logsSubject.asObservable();
 
   constructor() {
     this.restoreLogsFromStorage();
@@ -26,6 +30,7 @@ export class LoggerService {
     this.logs.push(log);
 
     this.saveLogsToStorage();
+    this.logsSubject.next();
   }
 
   changeComponent(component: string): void {
