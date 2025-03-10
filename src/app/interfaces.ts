@@ -24,6 +24,9 @@ export interface Node {
   borderWidthSelected: number;
   opacity?: number;
   shadow?: any;
+  rank?: number;
+  score?: number;
+  properties?: any;
   font: {
     color: string;
     size: number;
@@ -191,6 +194,9 @@ export function getWrapperFromNode(node: Node): Wrapper {
 }
 
 export function getNodeFromWrapper(wrapper: Wrapper): Node {
+  wrapper.data['properties'] = wrapper.data['properties'] ? wrapper.data['properties'] : {};
+  wrapper.data['properties']['score'] = wrapper.data["score"];
+  wrapper.data['properties']['rank'] = wrapper.data["rank"];
   const node = {
     label: wrapper.data.label,
     symbol: wrapper.data.symbol,
@@ -216,7 +222,10 @@ export function getNodeFromWrapper(wrapper: Wrapper): Node {
     shadow: wrapper.data["shadow"],
     font: wrapper.data["font"],
     cellularComponent: wrapper.data["cellularComponent"],
-    layer: wrapper.data["layer"]
+    layer: wrapper.data["layer"],
+    score: wrapper.data["score"],
+    rank: wrapper.data["rank"],
+    properties: wrapper.data["properties"],
   }
 
   return node
