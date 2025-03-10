@@ -342,7 +342,7 @@
                                             showAnalysisDialog = $event; upload=false;
                                           " icon="upload"></app-toggle-inplace>
       </div>
-      <app-network-upload-dialog [(show)]="showAnalysisDialog" (showChange)="showAnalysisDialog = $event"
+      <app-network-upload-dialog [(show)]="showAnalysisDialog" (showChange)="showAnalysisDialog = $event" style="z-index: 80"
         (uploadEvent)="handleUploadEvent($event)">
       </app-network-upload-dialog>
       <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonLayout" class="row is-full m-1">
