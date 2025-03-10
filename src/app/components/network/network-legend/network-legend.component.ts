@@ -20,6 +20,12 @@ export class NetworkLegendComponent implements OnInit {
   }
   @Input() config: IConfig;
 
+  private directedEdgeGroups = new Set<string>([
+    "stimulation",
+    "inhibition",
+    "neutral",
+  ]);
+
   private contextEdgeGroupsToDelete = {
     explorer: ["default"],
     adjacentDrugs: ["default"],
@@ -84,9 +90,14 @@ export class NetworkLegendComponent implements OnInit {
   }
 
   public checkEdgeGroupContext(edgeGroupKey) {
-    return !this.contextEdgeGroupsToDelete[this._context].includes(
-      edgeGroupKey
-    );
+    const display = !this.contextEdgeGroupsToDelete[this._context].includes(edgeGroupKey)
+    if (this.directedEdgeGroups.has(edgeGroupKey)) {
+      if (this.drugstoneConfig.currentConfig().interactionProteinProtein == "OmniPath" || this.drugstoneConfig.currentConfig().overlayDirectedEdges) {
+        return true;
+      }
+      return false;
+    }
+    return display;
   }
 
   public checkIfEdgeConfigEmpty() {
