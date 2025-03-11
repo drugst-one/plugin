@@ -83,6 +83,7 @@ export interface IConfig {
   showNetworkMenuButtonLayout: boolean;
   showNetworkMenuButtonOverlayDirectedEdges: boolean;
   showNetworkMenuButtonUpload: boolean;
+  showNetworkMenuButtonLabelIdspace: boolean;
   networkMenuButtonAnimationLabel: string;
   networkMenuButtonLayoutLabel: string;
   networkMenuButtonOverlayDirectedEdgesLabel: string;
@@ -194,6 +195,7 @@ export const defaultConfig: IConfig = {
   showNetworkMenuButtonLayout: true,
   showNetworkMenuButtonOverlayDirectedEdges: true,
   showNetworkMenuButtonUpload: true,
+  showNetworkMenuButtonLabelIdspace: true,
   activateNetworkMenuButtonAdjacentDisorders: false,
   showNetworkMenuButtonAdjacentDisordersProteins: true,
   activateNetworkMenuButtonAdjacentDisorderDrugs: false,
