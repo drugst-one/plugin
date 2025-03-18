@@ -225,7 +225,7 @@ export const defaultConfig: IConfig = {
   nodeShadow: true,
   edgeShadow: true,
   licensedDatasets: false,
-  reviewed: true,
+  reviewed: false,
   calculateProperties: true,
   customLinks: {}, // { test: 'test link', test2: 'test2 link' }
   algorithms: {
