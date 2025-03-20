@@ -91,7 +91,6 @@ export interface IConfig {
   showLegend: boolean;
   showLegendNodes: boolean;
   showLegendEdges: boolean;
-  keepSelectedNodes: boolean;
   nodeGroups: { [key: string]: NodeGroup };
   edgeGroups: { [key: string]: EdgeGroup };
   selfReferences: boolean;
@@ -177,9 +176,9 @@ export const defaultConfig: IConfig = {
   showAdvAnalysis: true,
   showAdvAnalysisContent: ['drug-search', 'drug-target-search', 'pathway-enrichment', 'enrichment-gprofiler', 'enrichment-digest', 'search-ndex'],
   showSelection: true,
-  showEditNetwork: true,
-  showPruning: true,
-  showLogger: true,
+  showEditNetwork: false,
+  showPruning: false,
+  showLogger: false,
   showTasks: true,
   showViews: true,
   showNetworkMenu: 'right',
@@ -194,7 +193,7 @@ export const defaultConfig: IConfig = {
   showNetworkMenuButtonAnimation: true,
   showNetworkMenuButtonLayout: true,
   showNetworkMenuButtonOverlayDirectedEdges: true,
-  showNetworkMenuButtonUpload: true,
+  showNetworkMenuButtonUpload: false,
   showNetworkMenuButtonLabelIdspace: true,
   activateNetworkMenuButtonAdjacentDisorders: false,
   showNetworkMenuButtonAdjacentDisordersProteins: true,
@@ -226,14 +225,13 @@ export const defaultConfig: IConfig = {
   edgeShadow: true,
   licensedDatasets: false,
   reviewed: false,
-  calculateProperties: true,
+  calculateProperties: false,
   customLinks: {}, // { test: 'test link', test2: 'test2 link' }
   algorithms: {
     drug: ['trustrank', 'closeness', 'degree', 'proximity'],
     'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness', 'louvain-clustering', 'leiden-clustering', 'first-neighbor'],
     gene: ['pathway-enrichment']
   },
-  keepSelectedNodes: false,
   nodeGroups: {
     // all NodeGroups but the default group must be set, if not provided by the user, they will be taken from here
     // IMPORTANT: node color must be hexacode!
