@@ -138,6 +138,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.activateConfig(true);
   }
 
+  ngOnChanges() {
+    this.updateMainColumnHeight();
+  }
+
   @Output()
   public taskEvent = new EventEmitter<object>();
 
@@ -304,6 +308,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   @ViewChild('mainColumn', { read: ElementRef, static: false }) mainColumn!: ElementRef;
   @ViewChild('sidebar', { read: ElementRef, static: false }) sidebar!: ElementRef;
   updateMainColumnHeight() {
+    if (!this.drugstoneConfig.currentConfig().showLogger) {
+      const drgstnHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--drgstn-height'));
+      this.mainColumn.nativeElement.style.height = `${drgstnHeight}px`;
+      this.sidebar.nativeElement.style.height = `${drgstnHeight}px`;
+      return;
+    }
     if (this.loggerElement && this.mainColumn && this.sidebar) {
       const loggerHeight = this.loggerElement.nativeElement.offsetHeight;
       const drgstnHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--drgstn-height'));
@@ -525,7 +535,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   async ngAfterViewInit() {
     this.networkHandler.setActiveNetwork('explorer');
-    this.updateMainColumnHeight();
 
     if (this.onload) {
       // tslint:disable-next-line:no-eval

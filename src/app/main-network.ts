@@ -115,7 +115,7 @@ export function mapCustomEdge(customEdge: NodeInteraction, config: IConfig, drug
   let edge2 = null;
   if (customEdge.group === undefined) {
     // fallback to default node
-    if(!customEdge['isDirected']) {
+    if(!customEdge['isDirected'] || (customEdge['isDirected'] === "False")) {
       edge = JSON.parse(JSON.stringify(config.edgeGroups.default));
     } else {
       if (customEdge['isStimulation'] && customEdge['isInhibition']) {
