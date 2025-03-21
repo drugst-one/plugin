@@ -596,7 +596,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         // Create
         await this.createNetwork(this.result, this.analysis.nodesToAdd).then(nw => {
           return new Promise<any>((resolve, reject) => {
-            if (this.networkHandler.activeNetwork.networkType !== 'analysis') {
+            if (this.networkHandler.activeNetwork.networkType !== 'analysis' || nw.nodes.length === 0) {
+              this.loading = false;
+              this.loadingScreen.stateUpdate(false);
               return;
             }
             const nodes = nw.nodes;

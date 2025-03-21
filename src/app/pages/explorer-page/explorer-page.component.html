@@ -176,7 +176,7 @@
                   </button>
                 </div>
               </div>
-              <div class="field" *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('drug-search')">
+              <div class="field" *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('pathway-enrichment')">
                 <div
                   class="control"
                   [pTooltip]="analysis.getCount() === 0 ? 'Select proteins by double clicking, to perform gene analysis.' : 'Perform gene analysis for the selected proteins.'"
