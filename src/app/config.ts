@@ -455,14 +455,14 @@ export const defaultConfig: IConfig = {
     },
     stimulation: {
       groupName: 'Stimulation',
-      color: 'red',
-      highlight: 'lightcoral',
+      color: '#2196F3',
+      highlight: 'lightblue',
       arrows: { to: { type: 'arrow', enabled: true, scaleFactor: 1 } }
     },
     inhibition: {
       groupName: 'Inhibition',
-      color: 'blue',
-      highlight: 'lightblue',
+      color: 'red',
+      highlight: 'lightcoral',
       arrows: { to: { type: 'bar', enabled: true, scaleFactor: 1 } }
     },
     neutral: {

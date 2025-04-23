@@ -47,6 +47,8 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   // Louvain/Leiden Clustering parameters
   public ignore_isolated: boolean = true;
   public seed: number | null = null;
+  public max_nodes: number | null = null;
+  public resolution_louvain: number = 1.0;
 
 
   // Trustrank Parameters
@@ -231,9 +233,11 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     } else if (this.algorithm === 'louvain-clustering'){
       parameters.ignore_isolated = this.ignore_isolated
       parameters.seed = this.seed
+      parameters.resolution = this.resolution_louvain
     } else if (this.algorithm === 'leiden-clustering') {
       parameters.ignore_isolated = this.ignore_isolated
       parameters.seed = this.seed
+      parameters.max_nodes = this.max_nodes !== null ? this.max_nodes : 0
     } else if (this.algorithm === 'first-neighbor'){
       // no parameters so far
     }
@@ -244,6 +248,10 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   onSeedChange(value: string): void {
     this.seed = value === '' ? null : parseInt(value, 10);
+  }
+
+  onMaxNodesChange(value: number): void {
+    this.max_nodes = Number.isNaN(value) ? null : value;
   }
 
 }
