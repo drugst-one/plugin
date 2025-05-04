@@ -137,11 +137,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.sortedData = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       const activeColumn = sort.active;
-      if (activeColumn === 'geneset' || activeColumn === 'pathway' || activeColumn == 'odds_ratio' || activeColumn == 'p_value') {
-        return this.compare_string_number(a[activeColumn], b[activeColumn], isAsc);
-      } else if (activeColumn === "overlap") {
-        return this.compare_overlap(a[activeColumn], b[activeColumn], isAsc);
-      }
+      return this.compare_string_number(a[activeColumn], b[activeColumn], isAsc);
     });
   }
 
@@ -154,12 +150,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   private compare_string_number(a: number | string, b: number | string, isAsc: boolean){
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-  }
-
-  private compare_overlap(a: string, b: string, isAsc: boolean) {
-    const a1 = Number(a.split("/")[0])
-    const b1 = Number(b.split("/")[0])
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 
@@ -183,8 +173,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     if (this.result) {
       this.sliderValue = event
       this.sortedData = this.result["tableView"].filter(entry => {
-        const parts = entry.overlap.split('/');
-        const rightValue = parseInt(parts[1], 10);
+        const rightValue = entry["pathwaySize"];
 
         return !isNaN(rightValue) && rightValue <= this.sliderValue;
       });
@@ -339,8 +328,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     let maxOverlap = 0;
 
     for (const entry of entries) {
-      const overlapValue = entry.overlap.split('/')[1];
-      const rightValue = parseInt(overlapValue, 10);
+      const rightValue = entry["pathwaySize"];
 
       if (!isNaN(rightValue) && rightValue > maxOverlap) {
         maxOverlap = rightValue;

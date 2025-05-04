@@ -548,9 +548,11 @@
               <th> </th>
               <th mat-sort-header="geneset">Geneset</th>
               <th mat-sort-header="pathway">Pathway</th>
-              <th mat-sort-header="overlap">Overlap</th>
-              <th mat-sort-header="p_value">Adjusted p-value</th>
-              <th mat-sort-header="odds_ratio">Odds ratio</th>
+              <th mat-sort-header="overlap">Overlapping Genes</th>
+              <th mat-sort-header="pathwaySize">Pathway Size</th>
+              <th mat-sort-header="overlapPercentage">Overlap Percentage</th>
+              <th mat-sort-header="adjPvalue">Adjusted p-value</th>
+              <th mat-sort-header="oddsRatio">Odds ratio</th>
             </tr>
           </thead>
           <tbody>
@@ -602,12 +604,14 @@
                     </button>
                   </div>
                 </td>
+                <td>{{ item.pathwaySize }}</td>
+                <td>{{ item.overlapPercentage | number: '1.2-2' }}%</td>
                 <td>{{ item.adjPvalue | scientific }}</td>
                 <td>{{ item.oddsRatio | number: '1.2-2' }}</td>
               </tr>
         
               <tr *ngIf="item.showGenes">
-                <td colspan="6">
+                <td colspan="8">
                   <div *ngFor="let gene of item.genes">
                     <app-gene-rows [gene]="gene"></app-gene-rows>
                   </div>
