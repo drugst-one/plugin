@@ -145,7 +145,7 @@ export class AnalysisService {
   setViewInfos(): void {
     this.netex.getViewInfos(this.viewTokens).then(res => {
       // @ts-ignore
-      this.viewInfos = res.reverse();
+      this.viewInfos = res;
     });
   }
 
