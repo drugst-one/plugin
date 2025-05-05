@@ -724,7 +724,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }
 
       nodes = await this.netex.recalculateStatistics({"nodes": nodes, "edges": edges}, this.drugstoneConfig.currentConfig());
-      console.log('Network nodes and edges after statistics calculation', nodes, edges);
       this.nodeData.nodes = new vis.DataSet(nodes);
       this.nodeData.edges = new vis.DataSet(edges);
 
