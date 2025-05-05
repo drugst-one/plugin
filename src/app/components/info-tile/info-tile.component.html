@@ -155,6 +155,10 @@
     <span class="is-capitalized"> {{ _wrapper.data.drugId }}</span>
   </a>
 </p>
+<p *ngIf="_wrapper.data.drugId" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
+  <b><span>Status:</span></b>
+  <span class="is-capitalized"> {{ _wrapper.data.status || 'Not Approved' }}</span>
+</p>
 <p
   *ngIf="_wrapper.data.disorderId"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"

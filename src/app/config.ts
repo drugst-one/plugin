@@ -113,6 +113,7 @@ export interface IConfig {
   edgeShadow?: boolean;
   customLinks?: {};
   reviewed?: boolean;
+  approvedDrugs?: boolean;
   calculateProperties?: boolean;
   algorithms: { [key in AlgorithmTarget]: Array<AlgorithmType | QuickAlgorithmType> };
 }
@@ -225,6 +226,7 @@ export const defaultConfig: IConfig = {
   edgeShadow: true,
   licensedDatasets: false,
   reviewed: false,
+  approvedDrugs: false,
   calculateProperties: false,
   customLinks: {}, // { test: 'test link', test2: 'test2 link' }
   algorithms: {

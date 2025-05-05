@@ -163,7 +163,7 @@ export class NetexControllerService {
     return this.http.post<any>(`${this.getBackend()}adjacent_disorders/`, params).toPromise();
   }
 
-  public adjacentDrugs(pdiDataset: InteractionDrugProteinDB, licenced: boolean, nodes: Node[]): Promise<any> {
+  public adjacentDrugs(pdiDataset: InteractionDrugProteinDB, licenced: boolean, nodes: Node[], approvedDrugs: boolean = false): Promise<any> {
     /**
      * Returns the expression in the given tissue for given nodes and cancerNodes
      */
@@ -172,7 +172,8 @@ export class NetexControllerService {
     const params = {
       pdi_dataset: pdiDataset,
       proteins: genesBackendIds,
-      licenced: licenced
+      licenced: licenced,
+      approved: approvedDrugs
     };
     return this.http.post<any>(`${this.getBackend()}adjacent_drugs/`, params).toPromise();
   }

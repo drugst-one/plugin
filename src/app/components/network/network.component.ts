@@ -443,7 +443,7 @@ export class NetworkComponent implements OnInit {
         this.legendService.add_to_context('adjacentDrugs');
         const addedEdge = {};
         const proteinMap = this.getProteinMap();
-        this.netex.adjacentDrugs(this.drugstoneConfig.config.interactionDrugProtein, this.drugstoneConfig.config.licensedDatasets, this.nodeData.nodes.get()).then(response => {
+        this.netex.adjacentDrugs(this.drugstoneConfig.config.interactionDrugProtein, this.drugstoneConfig.config.licensedDatasets, this.nodeData.nodes.get(), this.drugstoneConfig.currentConfig().approvedDrugs).then(response => {
           const existingDrugIDs = this.nodeData.nodes.get().filter(n => n.drugstoneId && n.drugstoneType === 'drug').map(n => n.drugstoneId);
           const availableDrugTargetTypes = new Set<string>();
           for (const interaction of response.pdis) {
