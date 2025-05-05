@@ -684,6 +684,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.config.interactionProteinProtein, this.drugstoneConfig.config.licensedDatasets);
         edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.currentConfig(), node_map)).flatMap(e => e));
       }
+      edges = edges.flat();
       const edge_map = {};
 
       edges = edges.filter(edge => {
@@ -723,7 +724,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }
 
       nodes = await this.netex.recalculateStatistics({"nodes": nodes, "edges": edges}, this.drugstoneConfig.currentConfig());
-
+      console.log('Network nodes and edges after statistics calculation', nodes, edges);
       this.nodeData.nodes = new vis.DataSet(nodes);
       this.nodeData.edges = new vis.DataSet(edges);
 
