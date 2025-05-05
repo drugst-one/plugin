@@ -41,7 +41,7 @@
               "src/stylesheets/theme-styles.scss",
               "src/stylesheets/styles.scss"
             ],
-            "scripts": [],
+            "scripts": ["node_modules/canvas2svg-visjs/canvas2svg.js"],
             "crossOrigin": "use-credentials",
             "vendorChunk": true,
             "extractLicenses": false,
@@ -195,7 +195,7 @@
               "src/stylesheets/styles.scss",
               "src/stylesheets/theme-css"
             ],
-            "scripts": []
+            "scripts": ["node_modules/canvas2svg-visjs/canvas2svg.js"]
           }
         },
         "lint": {
