@@ -245,6 +245,21 @@
                   </button>
                 </div>
               </div>
+
+              <div class="field"
+                *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('clustering')">
+                <div class="control"
+                  [pTooltip]="analysis.getCount() === 0 ? 'Select proteins by double clicking, to perform clustering analysis.' : 'Perform clustering analysis for the selected proteins.'"
+                  [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">
+                  <button (click)="analysisDialogTarget = 'clustering'; showAnalysisDialog = true" class="button is-primary is-fullwidth is-rounded has-tooltip"
+                    [disabled]="analysis.getCount() === 0" [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">
+                    <app-fa-solid-icon icon="project-diagram" classString="first-item-in-button"></app-fa-solid-icon>
+                    <span>
+                      {{ drugstoneConfig.config.clusteringName }}
+                    </span>
+                  </button>
+                </div>
+              </div>
               <app-external-analysis-button [enabled]="analysis.getCount() > 0" label="g:Profiler enrichment analysis"
                 tooltipDisabled="Select proteins by double clicking, to run enrichment analysis via g:Profiler (external)."
                 tooltipEnabled="Use enrichment analysis via g:Profiler (external)." [callback]="openGProfiler.bind(this)"

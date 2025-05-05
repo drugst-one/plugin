@@ -355,8 +355,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.loading = true;
     this.loadingScreen.stateUpdate(true);
     this.getView(this.token).then(async view => {
-      this.logger.changeComponent('View ' + this.datePipe.transform(view.createdAt, "short"));
-      this.logger.logMessage('View loaded. Nodes: ' + view.network.nodes.length + ', Edges: ' + view.network.edges.length + '.');
+      const name = view["name"] || "Manual Selection";
+      this.logger.changeComponent('View "'+ name + '" ' + this.datePipe.transform(view.createdAt, "short"));
+      this.logger.logMessage('View "' + name + '" loaded. Nodes: ' + view.network.nodes.length + ', Edges: ' + view.network.edges.length + '.');
       this.task = view;
       this.result = view;
       this.drugstoneConfig.set_analysisConfig(view.config);

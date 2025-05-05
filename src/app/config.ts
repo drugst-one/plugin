@@ -35,7 +35,7 @@ export type InteractionDrugProteinDB = 'NeDRex' | 'DrugBank' | 'DrugCentral' | '
 export type InteractionProteinProteinDB = 'NeDRex' | 'BioGRID' | 'IID' | 'IntAct' | 'STRING' | 'APID' | 'OmniPath';
 export type IndicationDrugDisorderDB = 'NeDRex' | 'CTD' | 'DrugCentral' | 'DrugBank';
 export type AssociatedProteinDisorderDB = 'NeDRex' | 'DisGeNET' | 'OMIM';
-export type AdvAnalysisContentTypes = 'drug-target-search' | 'drug-search' | 'pathway-enrichment' | 'enrichment-gprofiler' | 'enrichment-digest' | 'search-ndex';
+export type AdvAnalysisContentTypes = 'drug-target-search' | 'drug-search' | 'pathway-enrichment' | 'clustering' | 'enrichment-gprofiler' | 'enrichment-digest' | 'search-ndex';
 
 
 // TODO: should this be external or integrated in the backend?
@@ -50,6 +50,7 @@ export interface IConfig {
   taskTargetName: string;
   taskDrugName: string;
   pathwayEnrichment: string;
+  clusteringName: string;
   showSidebar: false | 'left' | 'right';
   showOverview: boolean;
   showQuery: boolean;
@@ -164,9 +165,10 @@ export const defaultConfig: IConfig = {
   legendUrl: '',
   legendClass: 'legend',
   legendPos: 'left',
-  taskTargetName: 'Drug target search',
+  taskTargetName: 'Target identification',
   taskDrugName: 'Drug search',
   pathwayEnrichment: 'Pathway enrichment',
+  clusteringName: 'Clustering',
   showSidebar: 'left',
   showLegendNodes: true,
   showLegendEdges: true,
@@ -175,7 +177,7 @@ export const defaultConfig: IConfig = {
   showItemSelector: true,
   showSimpleAnalysis: true,
   showAdvAnalysis: true,
-  showAdvAnalysisContent: ['drug-search', 'drug-target-search', 'pathway-enrichment', 'enrichment-gprofiler', 'enrichment-digest', 'search-ndex'],
+  showAdvAnalysisContent: ['drug-search', 'drug-target-search', 'pathway-enrichment', 'clustering', 'enrichment-gprofiler', 'enrichment-digest', 'search-ndex'],
   showSelection: true,
   showEditNetwork: false,
   showPruning: false,
@@ -231,8 +233,8 @@ export const defaultConfig: IConfig = {
   customLinks: {}, // { test: 'test link', test2: 'test2 link' }
   algorithms: {
     drug: ['trustrank', 'closeness', 'degree', 'proximity'],
-    'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness', 'louvain-clustering', 'leiden-clustering', 'first-neighbor'],
-    gene: ['pathway-enrichment']
+    'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness', 'first-neighbor'],
+    gene: ['pathway-enrichment'], clustering: ['louvain-clustering', 'leiden-clustering']
   },
   nodeGroups: {
     // all NodeGroups but the default group must be set, if not provided by the user, they will be taken from here

@@ -521,7 +521,7 @@ export class AnalysisService {
     return {taskId: resp.token, algorithm: algorithm, target: target, params: parameters};
   }
 
-  async startAnalysis(algorithm, target: 'drug' | 'drug-target' | 'gene', parameters) {
+  async startAnalysis(algorithm, target: 'drug' | 'drug-target' | 'gene' | 'clustering', parameters) {
     if (!this.canLaunchTask()) {
       this.toast.setNewToast({
         message: `You can only run ${MAX_TASKS} tasks at once. Please wait for one of them to finish or delete it from the task list.`,

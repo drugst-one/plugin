@@ -84,7 +84,7 @@ export interface NetworkEdge {
   label: string;
 }
 
-export type AlgorithmTarget = 'drug' | 'drug-target' | 'gene'
+export type AlgorithmTarget = 'drug' | 'drug-target' | 'gene' | 'clustering'
 
 export interface Task {
   token: string;

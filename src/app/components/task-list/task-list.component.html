@@ -22,8 +22,9 @@
               ></app-fa-solid-icon>
               <app-fa-solid-icon
                 icon="dna"
-                *ngIf="task.info.target === 'gene'"
+                *ngIf="task.info.target === 'clustering'"
               ></app-fa-solid-icon>
+              <app-fa-solid-icon icon="project-diagram" *ngIf="task.info.target === 'gene'"></app-fa-solid-icon>
               {{ algorithmNames[task.info.algorithm] }}</span
             >
           </div>
@@ -82,6 +83,7 @@
                 icon="dna"
                 *ngIf="task.info.target === 'gene'"
               ></app-fa-solid-icon>
+              <app-fa-solid-icon icon="project-diagram" *ngIf="task.info.target === 'clustering'"></app-fa-solid-icon>
               {{ algorithmNames[task.info.algorithm] }}</span
             >
           </div>
@@ -132,6 +134,7 @@
                 icon="dna"
                 *ngIf="task.info.target === 'gene'"
               ></app-fa-solid-icon>
+              <app-fa-solid-icon icon="project-diagram" *ngIf="task.info.target === 'clustering'"></app-fa-solid-icon>
               {{ algorithmNames[task.info.algorithm] }}</span
             >
           </div>
@@ -175,6 +178,7 @@
                 icon="dna"
                 *ngIf="task.info.target === 'gene'"
               ></app-fa-solid-icon>
+              <app-fa-solid-icon icon="project-diagram" *ngIf="task.info.target === 'clustering'"></app-fa-solid-icon>
               {{ algorithmNames[task.info.algorithm] }}</span
             >
           </div>

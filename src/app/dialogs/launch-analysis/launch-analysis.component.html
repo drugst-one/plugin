@@ -11,8 +11,12 @@
         Find Drug Targets
       </p>
       <p class="modal-card-title" *ngIf="target === 'gene'">
-        <app-fa-solid-icon icon="capsules"></app-fa-solid-icon>
+        <app-fa-solid-icon icon="dna"></app-fa-solid-icon>
         Pathway enrichment
+      </p>
+      <p class="modal-card-title" *ngIf="target === 'clustering'">
+        <app-fa-solid-icon icon="project-diagram"></app-fa-solid-icon>
+        Clustering
       </p>
       <button (click)="close()" class="delete" aria-label="close"></button>
     </header>

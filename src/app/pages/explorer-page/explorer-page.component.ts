@@ -174,7 +174,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public showAnalysisDialog = false;
   public showThresholdDialog = false;
-  public analysisDialogTarget: 'drug' | 'drug-target' | 'gene';
+  public analysisDialogTarget: 'drug' | 'drug-target' | 'gene' | 'clustering';
 
   selectedProperty: string = '';
   pruningType = '';
