@@ -279,62 +279,6 @@
           </div>
         </div>
 
-        <div *ngIf="drugstoneConfig.config.showViews" class="card bar-large">
-          <header class="card-header" [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }">
-            <p class="card-header-title">
-              <app-fa-solid-icon icon="eye"></app-fa-solid-icon>
-              Views ({{ analysis.viewTokens != null ? analysis.viewTokens.length : 0 }})
-            </p>
-            <a (click)="collapseViews = !collapseViews" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
-              aria-label="more options">
-              <app-fa-solid-icon *ngIf="collapseViews" icon="angle-down"></app-fa-solid-icon>
-              <app-fa-solid-icon *ngIf="!collapseViews" icon="angle-left"></app-fa-solid-icon>
-            </a>
-          </header>
-          <div *ngIf="collapseViews">
-            <div class="overflow task-list-container" *ngIf="analysis.viewTokens && analysis.viewTokens.length > 0">
-              <app-view-list [(token)]="selectedViewToken"></app-view-list>
-            </div>
-            <footer class="card-footer">
-              <a *ngIf="analysis.viewTokens && analysis.viewTokens.length > 0" (click)="
-                          analysis.removeAllSelections(); selectedViewToken = null
-                        " class="card-footer-item has-text-danger" pTooltip="Delete all selection views."
-                [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">
-                <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
-                <span> Delete all </span>
-              </a>
-            </footer>
-          </div>
-        </div>
-        <div *ngIf="drugstoneConfig.config.showTasks" class="card bar-large">
-          <header class="card-header" [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }">
-            <p class="card-header-title">
-              <app-fa-solid-icon icon="tasks"></app-fa-solid-icon>
-              Tasks ({{ analysis.tasks != null ? analysis.tasks.length : 0 }})
-            </p>
-            <a (click)="collapseTask = !collapseTask" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
-              aria-label="more options">
-              <app-fa-solid-icon *ngIf="collapseTask" icon="angle-down"></app-fa-solid-icon>
-              <app-fa-solid-icon *ngIf="!collapseTask" icon="angle-left"></app-fa-solid-icon>
-            </a>
-          </header>
-          <div *ngIf="collapseTask">
-            <div class="overflow task-list-container" *ngIf="analysis.tasks && analysis.tasks.length > 0">
-              <app-task-list [(token)]="selectedAnalysisToken"></app-task-list>
-            </div>
-            <footer class="card-footer">
-              <a *ngIf="analysis.tasks && analysis.tasks.length > 0" (click)="
-                          analysis.removeAllTasks(); selectedAnalysisToken = null
-                        " class="card-footer-item has-text-danger" pTooltip="Delete all tasks."
-                [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">
-                <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
-                <span> Delete all </span>
-              </a>
-            </footer>
-          </div>
-        </div>
-
-
         <div
           *ngIf="drugstoneConfig.config.showQuery"
           class="card bar-large"
@@ -521,6 +465,60 @@
               style="padding: 5px; box-sizing: border-box; width: 100%; margin-top: 5%;">
               Prune Network
             </button>
+          </div>
+        </div>
+        <div *ngIf="drugstoneConfig.config.showViews" class="card bar-large">
+          <header class="card-header" [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }">
+            <p class="card-header-title">
+              <app-fa-solid-icon icon="eye"></app-fa-solid-icon>
+              Views ({{ analysis.viewTokens != null ? analysis.viewTokens.length : 0 }})
+            </p>
+            <a (click)="collapseViews = !collapseViews" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
+              aria-label="more options">
+              <app-fa-solid-icon *ngIf="collapseViews" icon="angle-down"></app-fa-solid-icon>
+              <app-fa-solid-icon *ngIf="!collapseViews" icon="angle-left"></app-fa-solid-icon>
+            </a>
+          </header>
+          <div *ngIf="collapseViews">
+            <div class="overflow task-list-container" *ngIf="analysis.viewTokens && analysis.viewTokens.length > 0">
+              <app-view-list [(token)]="selectedViewToken"></app-view-list>
+            </div>
+            <footer class="card-footer">
+              <a *ngIf="analysis.viewTokens && analysis.viewTokens.length > 0" (click)="
+                                  analysis.removeAllSelections(); selectedViewToken = null
+                                " class="card-footer-item has-text-danger" pTooltip="Delete all selection views."
+                [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">
+                <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
+                <span> Delete all </span>
+              </a>
+            </footer>
+          </div>
+        </div>
+        <div *ngIf="drugstoneConfig.config.showTasks" class="card bar-large">
+          <header class="card-header" [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }">
+            <p class="card-header-title">
+              <app-fa-solid-icon icon="tasks"></app-fa-solid-icon>
+              Tasks ({{ analysis.tasks != null ? analysis.tasks.length : 0 }})
+            </p>
+            <a (click)="collapseTask = !collapseTask" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
+              aria-label="more options">
+              <app-fa-solid-icon *ngIf="collapseTask" icon="angle-down"></app-fa-solid-icon>
+              <app-fa-solid-icon *ngIf="!collapseTask" icon="angle-left"></app-fa-solid-icon>
+            </a>
+          </header>
+          <div *ngIf="collapseTask">
+            <div class="overflow task-list-container" *ngIf="analysis.tasks && analysis.tasks.length > 0">
+              <app-task-list [(token)]="selectedAnalysisToken"></app-task-list>
+            </div>
+            <footer class="card-footer">
+              <a *ngIf="analysis.tasks && analysis.tasks.length > 0" (click)="
+                                  analysis.removeAllTasks(); selectedAnalysisToken = null
+                                " class="card-footer-item has-text-danger" pTooltip="Delete all tasks."
+                [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">
+                <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
+                <span> Delete all </span>
+              </a>
+            </footer>
           </div>
         </div>
 
