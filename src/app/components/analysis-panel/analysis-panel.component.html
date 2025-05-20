@@ -595,13 +595,12 @@
         
                 <td style="vertical-align: middle; text-align: center;">
                   <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                    <span style="white-space: nowrap;">{{ item.overlap }}</span>
-        
                     <button (click)="item.showGenes = !item.showGenes" pTooltip="Show overlapping genes."
                       class="button is-small" style="vertical-align: middle;">
                       <span *ngIf="!item.showGenes">&#9654;</span> <!-- Right arrow (collapsed) -->
                       <span *ngIf="item.showGenes">&#9660;</span> <!-- Down arrow (expanded) -->
                     </button>
+                    <span style="white-space: nowrap;">{{ item.overlap }}</span>
                   </div>
                 </td>
                 <td>{{ item.pathwaySize }}</td>
