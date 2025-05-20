@@ -49,6 +49,7 @@ interface Seeded {
 }
 
 
+const maxNodeLimit = 250;
 @Component({
   selector: 'app-analysis-panel',
   templateUrl: './analysis-panel.component.html',
@@ -110,6 +111,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public maxSliderValue: number;
   public sliderValue: number;
 
+  minPruningValue = 0;
+  maxPruningValue = 1;
+  pruneDirection = 'greater';
+  cutoff?: number = 0;
+  prunedNetwork: any;
+  step: number = 0.01;
+  pruneOrphanNodes = false;
 
   constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService, public loadingScreen: LoadingScreenService, public logger: LoggerService, private datePipe: DatePipe) {
     try {
@@ -178,6 +186,21 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         return !isNaN(rightValue) && rightValue <= this.sliderValue;
       });
     }
+  }
+
+  async pruningSliderChange() {
+    const network = { "nodes": this.result?.networkInitial?.nodes, "edges": this.result?.networkInitial?.edges };
+    this.netex.pruneNetworkNumber(network, "SPD", this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then( (res) => {
+      this.prunedNetwork = res["prunedNetwork"];
+    });
+  }
+
+  async pruneNetwork() {
+    this.prunedNetwork["nodes"] = await this.netex.recalculateStatistics(this.prunedNetwork, this.drugstoneConfig.currentConfig());
+    await this.netex.updateResultNetwork(this.token, this.prunedNetwork, this.cutoff, this.pruneOrphanNodes).then(async () => {
+      await this.refreshTask();
+    });
+    this.logger.logMessage("Network pruned on SPD with cutoff " + this.cutoff + "; Prune orphan nodes: " + this.pruneOrphanNodes + ", resulting nodes: " + this.prunedNetwork["nodes"].length);
   }
 
   @Output() resetEmitter: EventEmitter<boolean> = new EventEmitter();
@@ -520,8 +543,15 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       this.netex.getTaskResult(this.token).then(async result => {
         console.log(result)
         this.analysis.target = result.parameters.target;
-        if (!("network" in result)) {
+        if ("cutoff" in result) {
+          this.cutoff = result["cutoff"];
+          this.prunedNetwork = result["network"];
+          this.pruneOrphanNodes = result["pruneOrphanNodes"];
+        }
+        if (!("network" in result) || result["network"]["nodes"].length > maxNodeLimit) {
           this.tab = 'table';
+        } else {
+          this.tab = 'network';
         }
 
         if (this.networkHandler.activeNetwork.networkType !== 'analysis') {

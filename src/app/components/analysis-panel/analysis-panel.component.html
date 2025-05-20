@@ -623,6 +623,57 @@
             <!-- column normalization for drugs button START -->
           </div>
 
+          <div *ngIf="task.info.algorithm === 'first-neighbor'">
+            <div class="column">
+              <h4 class="is-4">
+                <app-fa-solid-icon icon="crosshairs" title="protein table"></app-fa-solid-icon>
+                <span style="padding-left: 4px;">First Neighbor</span>
+              </h4>
+            </div>
+            <div class="column">
+              <h5 class="is-5">
+                <app-fa-solid-icon icon="edit"></app-fa-solid-icon>
+                <strong>Prune on SPD value</strong>
+              </h5>
+              <div>
+                <p *ngIf="result?.network?.nodes?.length !== undefined">
+                  <strong>Initial Network Size:</strong> {{ result?.networkInitial?.nodes?.length }}
+                </p>
+                <div style="padding-left: 15px;">
+                  <div>
+                    <span>Prune based on range:</span>
+                    <br>
+                    <input style="margin-top: 5px; width: 80%" type="range" [min]="minPruningValue" [max]="maxPruningValue"
+                      [(ngModel)]="cutoff" (input)="pruningSliderChange()" [step]="step">
+                    <label style="padding: 5px;">{{ cutoff }}</label>
+                  </div>
+                  <br>
+                  <div>
+                    <span>Enter exact cutoff value:</span>
+                    <br>
+                    <input style="margin-top: 5px; width: 50%" type="number" [min]="minPruningValue" [max]="maxPruningValue"
+                      [(ngModel)]="cutoff" [step]="step" (input)="pruningSliderChange()">
+          
+                  </div>
+                  <br>
+                  <div style="margin: 8px !important;">
+                    <label style="display: flex; align-items: center;">
+                      <input type="checkbox" [(ngModel)]="pruneOrphanNodes" (ngModelChange)="pruningSliderChange()" style="margin-right: 8px;">
+                      Prune Orphan Nodes
+                    </label>
+                  </div>
+                </div>
+                <br>
+              </div>
+              <p>
+                <strong>Pruned Network Size:</strong> {{ prunedNetwork?.nodes?.length ?? result?.networkInitial?.nodes?.length }}
+              </p>
+              <button class="button is-primary is-rounded has-tooltip" [disabled]="false" (click)="pruneNetwork()"
+                style="padding: 5px; box-sizing: border-box; width: 100%; margin-top: 3%;">
+                Prune Network
+              </button>
+            </div>
+          </div>
 
           <div *ngIf="task.info.algorithm === 'louvain-clustering' || task.info.algorithm === 'leiden-clustering'">
               <div class="column">

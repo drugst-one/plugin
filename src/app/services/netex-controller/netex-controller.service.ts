@@ -69,6 +69,11 @@ export class NetexControllerService {
     return this.http.post(`${this.getBackend()}prune/`, payload).toPromise();
   }
 
+  public async updateResultNetwork(token, network, cutoff = 0, pruneOrphanNodes = false): Promise<any> {
+    const payload = JSON.stringify({ network: network, token: token , cutoff: cutoff, pruneOrphanNodes: pruneOrphanNodes });
+    return this.http.post(`${this.getBackend()}update_result_network/`, payload, { headers: { 'Content-Type': 'application/json' } }).toPromise();
+  }
+
   public async overlayDirectedEdges(edges, nodes_mapped_dict, drugstone_mapping ): Promise<any> {
     const payload = JSON.stringify({ "ppi_dataset": "OmniPath", "licenced": false, "edges": edges, "nodes_mapped_dict": nodes_mapped_dict, "drugstone_mapping": drugstone_mapping});
     return this.http.post(`${this.getBackend()}overlay_directed_edges/`, payload).toPromise();
