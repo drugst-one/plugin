@@ -253,7 +253,7 @@
                   [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">
                   <button (click)="analysisDialogTarget = 'clustering'; showAnalysisDialog = true" class="button is-primary is-fullwidth is-rounded has-tooltip"
                     [disabled]="analysis.getCount() === 0" [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">
-                    <app-fa-solid-icon icon="project-diagram" classString="first-item-in-button"></app-fa-solid-icon>
+                    <app-fa-solid-icon icon="hexagon-nodes" classString="first-item-in-button"></app-fa-solid-icon>
                     <span>
                       {{ drugstoneConfig.config.clusteringName }}
                     </span>
