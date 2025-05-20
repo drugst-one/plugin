@@ -265,7 +265,7 @@
     tooltipOff="Remove protein from selection."
   ></app-toggle>
 
-  <app-fa-solid-icon icon="trash" (click)="removeProtein()" class="has-text-danger is-pulled-right"
+  <app-fa-solid-icon *ngIf="_wrapper.data.drugstoneType === 'protein'" icon="trash" (click)="removeProtein()" class="has-text-danger is-pulled-right"
     pTooltip="Delete Node."
     [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
     tooltipPosition="top"

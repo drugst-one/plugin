@@ -767,7 +767,7 @@ export class NetworkComponent implements OnInit {
     this.nodeData.edges.remove(edgesToRemove.map(e => e.id));
     const nodes = await this.netex.recalculateStatistics({ "nodes": this.nodeData.nodes.get(), "edges": this.nodeData.edges.get() }, this.drugstoneConfig.currentConfig());
     this.nodeData.nodes.update(nodes);
-    // remove drugs and disorders when node is added
+    // remove drugs and disorders when node is deleted
     if(this.adjacentDrugs || this.adjacentDisordersDrug || this.adjacentDisordersProtein){
       await this.updateAdjacentDrugs(false, true);
       await this.updateAdjacentProteinDisorders(false, true);
