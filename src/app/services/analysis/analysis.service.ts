@@ -220,6 +220,9 @@ export class AnalysisService {
   }
 
   public addItems(wrappers: Wrapper[]): number {
+    if (this.drugstoneConfig.currentConfig().selectionMultiDrag) {
+      this.selectNetworkNodes(wrappers);
+    }
     const addedWrappers: Wrapper[] = [];
     for (const wrapper of wrappers) {
       if (!this.inSelection(wrapper)) {
@@ -231,6 +234,13 @@ export class AnalysisService {
     return addedWrappers.length;
   }
 
+  private selectNetworkNodes(wrappers: Wrapper[]) {
+    const selectedIds = wrappers.map(w => w.id);
+    const stillSelectedIds = Array.from(this.selectedItems.keys());
+    stillSelectedIds.push(...selectedIds);
+    this.networkHandler.activeNetwork.networkInternal.selectNodes(stillSelectedIds);
+  }
+
   public removeItems(wrappers: Wrapper[]) {
     const removedWrappers: Wrapper[] = [];
     for (const wrapper of wrappers) {
@@ -238,7 +248,23 @@ export class AnalysisService {
         removedWrappers.push(wrapper);
       }
     }
+    if (this.drugstoneConfig.currentConfig().selectionMultiDrag) {
+      const stillSelectedIds = Array.from(this.selectedItems.keys());
+      this.networkHandler.activeNetwork.networkInternal.selectNodes(stillSelectedIds);
+    }
     this.selectListSubject.next({items: removedWrappers, selected: false});
+  }
+
+  updateMultiDragSelection(checked: boolean) {
+    this.drugstoneConfig.currentConfig().selectionMultiDrag = checked;
+    if (this.drugstoneConfig.currentConfig().selectionMultiDrag) {
+      const selectedIds = Array.from(this.selectedItems.keys());
+      this.networkHandler.activeNetwork.networkInternal.selectNodes(selectedIds);
+    }
+    else {
+      this.networkHandler.activeNetwork.networkInternal.selectNodes([]);
+    }
+    this.selectListSubject.next({ items: Array.from(this.selectedItems.values()), selected: true });
   }
 
   public addGroupToSelection(group: NodeGroup) {
@@ -399,6 +425,10 @@ export class AnalysisService {
     for (const wrapper of newSelection) {
       this.selectedItems.set(wrapper.id, wrapper);
     }
+    if (this.drugstoneConfig.currentConfig().selectionMultiDrag) {
+      const selectedIds = newSelection.map(w => w.id);
+      this.networkHandler.activeNetwork.networkInternal.selectNodes(selectedIds);
+    }
     this.selectListSubject.next({items: newSelection, selected: true});
     if (unmappedNodes.length > 0) {
       this.unmappedNodesToast(unmappedNodes);
@@ -408,6 +438,9 @@ export class AnalysisService {
   resetSelection() {
     this.selectListSubject.next({items: Array.from(this.selectedItems.values()), selected: false});
     this.selectedItems.clear();
+    if (this.networkHandler?.activeNetwork?.networkInternal && this.drugstoneConfig.currentConfig().selectionMultiDrag) {
+      this.networkHandler.activeNetwork.networkInternal.selectNodes([]);
+    }
   }
 
   async viewFromSelection() {

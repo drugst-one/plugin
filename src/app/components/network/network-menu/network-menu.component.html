@@ -354,6 +354,12 @@
           class="network-footer-toolbar-element"
                 ></app-toggle-inplace>
       </div>
+      <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonSelectionMultiDrag" class="row is-full m-1">
+        <app-toggle-inplace text="{{ drugstoneConfig.config.networkMenuButtonSelectionMultiDragLabel }}"
+          tooltip="Enable Multi-drag for the selection." [value]="drugstoneConfig.config.selectionMultiDrag" (valueChange)="
+                        analysis.updateMultiDragSelection($event)
+                      " icon="filter" class="network-footer-toolbar-element"></app-toggle-inplace>
+      </div>
       <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonOverlayDirectedEdges && drugstoneConfig.currentConfig().interactionProteinProtein != 'OmniPath'" class="row is-full m-1">
         <app-toggle-inplace 
         class="network-footer-toolbar-element"

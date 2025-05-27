@@ -548,7 +548,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           this.prunedNetwork = result["network"];
           this.pruneOrphanNodes = result["pruneOrphanNodes"];
         }
-        if (!("network" in result) || result["network"]["nodes"].length > maxNodeLimit) {
+        if (!("network" in result) || (result["network"]["nodes"].length > maxNodeLimit && result["algorithm"] === "first_neighbor")) {
           this.tab = 'table';
         } else {
           this.tab = 'network';

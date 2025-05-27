@@ -82,11 +82,13 @@ export interface IConfig {
   networkMenuButtonAdjacentDisordersDrugsLabel: string;
   showNetworkMenuButtonAnimation: boolean;
   showNetworkMenuButtonLayout: boolean;
+  showNetworkMenuButtonSelectionMultiDrag: boolean;
   showNetworkMenuButtonOverlayDirectedEdges: boolean;
   showNetworkMenuButtonUpload: boolean;
   showNetworkMenuButtonLabelIdspace: boolean;
   networkMenuButtonAnimationLabel: string;
   networkMenuButtonLayoutLabel: string;
+  networkMenuButtonSelectionMultiDragLabel: string;
   networkMenuButtonOverlayDirectedEdgesLabel: string;
   networkMenuButtonUploadLabel: string;
   showLegend: boolean;
@@ -104,6 +106,7 @@ export interface IConfig {
   interactions?: InteractionDatabase;
   physicsOn?: boolean;
   layoutOn?: boolean;
+  selectionMultiDrag?: boolean;
   fullscreen?: boolean;
   overlayDirectedEdges?: boolean;
   physicsInital?: boolean;
@@ -195,6 +198,7 @@ export const defaultConfig: IConfig = {
   showNetworkMenuButtonCenter: true,
   showNetworkMenuButtonAnimation: true,
   showNetworkMenuButtonLayout: true,
+  showNetworkMenuButtonSelectionMultiDrag: true,
   showNetworkMenuButtonOverlayDirectedEdges: true,
   showNetworkMenuButtonUpload: false,
   showNetworkMenuButtonLabelIdspace: true,
@@ -208,6 +212,7 @@ export const defaultConfig: IConfig = {
   networkMenuButtonAdjacentDisordersDrugsLabel: 'Disorders (drug)',
   networkMenuButtonAnimationLabel: 'Animation',
   networkMenuButtonLayoutLabel: "Layout",
+  networkMenuButtonSelectionMultiDragLabel: "Multi-Drag",
   networkMenuButtonOverlayDirectedEdgesLabel: "Overlay Directions",
   networkMenuButtonUploadLabel: "Upload",
   identifier: 'symbol',
@@ -221,6 +226,7 @@ export const defaultConfig: IConfig = {
   autofillEdges: true,
   physicsOn: false,
   layoutOn: false,
+  selectionMultiDrag: true,
   fullscreen: false,
   overlayDirectedEdges: false,
   physicsInital: true,
