@@ -190,7 +190,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   async pruningSliderChange() {
     const network = { "nodes": this.result?.networkInitial?.nodes, "edges": this.result?.networkInitial?.edges };
-    this.netex.pruneNetworkNumber(network, "SPD", this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then( (res) => {
+    this.netex.pruneNetworkNumber(network, "spd", this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then( (res) => {
       this.prunedNetwork = res["prunedNetwork"];
     });
   }
