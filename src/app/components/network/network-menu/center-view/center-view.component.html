@@ -1,43 +1,63 @@
-<div class="dropdown is-hoverable">
-  <div class="dropdown-trigger">
-    <button
-      aria-haspopup="true"
-      attr.aria-controls="controls-menu-button"
-      class="button is-rounded is-outlined highlight-primary"
-      [ngClass]="{
-              'is-small': drugstoneConfig.smallStyle
-            }"
-    >
-      <app-fa-solid-icon icon="sync-alt" classString="is-small"></app-fa-solid-icon>
-      <span
-        [ngClass]="{
-      'text-small': drugstoneConfig.smallStyle
-    }"
-      >
-    Reset
-  </span>
-    </button>
-  </div>
-  <div class="dropdown-menu dropdown-list " id="controls-menu-button" role="menu"
-       [ngClass]="{'inner-dropdown':!networkHandler.networkSidebarOpen}">
-    <div class="dropdown-content">
-      <a class="dropdown-item has-tooltip" pTooltip="Reset the network zoom and position."
-         (click)="fitNetwork()"
-         [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
-         tooltipPosition="left"
-         [ngClass]="{
-    'text-small': drugstoneConfig.smallStyle
-  }">Reset View
-      </a>
-      <a class="dropdown-item has-tooltip" pTooltip="Reset everything to the initial state."
-         (click)="fullReset()"
-         [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
-         tooltipPosition="left"
-         [ngClass]="{
-    'text-small': drugstoneConfig.smallStyle
-  }">Full Reset
-      </a>
-    </div>
-    <!--</button>-->
-  </div>
+<div class="drugstone-plugin-dropdown drugstone-plugin-is-hoverable">
+
+<div class="drugstone-plugin-dropdown-trigger">
+
+<button
+
+aria-haspopup="true"
+
+attr.aria-controls="controls-menu-button"
+
+class="drugstone-plugin-button drugstone-plugin-is-rounded drugstone-plugin-is-outlined drugstone-plugin-highlight-primary"
+
+[ngClass]="{ 'drugstone-plugin-is-small': drugstoneConfig.smallStyle }"     >
+
+<app-fa-solid-icon icon="sync-alt" classString="drugstone-plugin-is-small"></app-fa-solid-icon>
+
+<span
+
+[ngClass]="{ 'drugstone-plugin-text-small': drugstoneConfig.smallStyle }"       >
+
+Reset
+
+</span>
+
+</button>
+
 </div>
+
+<div class="drugstone-plugin-dropdown-menu drugstone-plugin-dropdown-list" id="drugstone-plugin-controls-menu-button" role="menu"
+
+[ngClass]="{'drugstone-plugin-inner-dropdown':!networkHandler.networkSidebarOpen}">
+
+<div class="drugstone-plugin-dropdown-content">
+
+<a class="drugstone-plugin-dropdown-item drugstone-plugin-has-tooltip" pTooltip="Reset the network zoom and position."
+
+(click)="fitNetwork()"
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-left'"
+
+tooltipPosition="left"
+
+[ngClass]="{ 'drugstone-plugin-text-small': drugstoneConfig.smallStyle }">Reset View       </a>
+
+<a class="drugstone-plugin-dropdown-item drugstone-plugin-has-tooltip" pTooltip="Reset everything to the initial state."
+
+(click)="fullReset()"
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-left'"
+
+tooltipPosition="left"
+
+[ngClass]="{ 'drugstone-plugin-text-small': drugstoneConfig.smallStyle }">Full Reset       </a>
+
+</div>
+
+<!--</button>-->
+
+</div>
+
+</div>
+
+

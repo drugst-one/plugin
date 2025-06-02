@@ -1,557 +1,891 @@
-<div id="appWindow" (window:resize)="onResize($event)" [ngClass]="{ fullscreen: drugstoneConfig.config.fullscreen }">
+<div id="drugstone-plugin-appWindow" (window:resize)="onResize($event)" [ngClass]="{ fullscreen: drugstoneConfig.config.fullscreen }">
 
-  <div class="is-hidden-mobile fullheight" id="appContainer">
-    <app-fa-icons></app-fa-icons>
-    <app-loading-screen (reset)="reset()"></app-loading-screen>
-    <app-network-warning></app-network-warning>
-    <app-network-empty-warning></app-network-empty-warning>
-    <app-group-warning></app-group-warning>
-    <app-parser-warning></app-parser-warning>
-    <app-privacy-banner></app-privacy-banner>
-    <app-license-agreement></app-license-agreement>
-    <app-bug-report></app-bug-report>
+<div class="drugstone-plugin-is-hidden-mobile drugstone-plugin-fullheight" id="drugstone-plugin-appContainer">
 
-    <app-launch-analysis
-      [(show)]="showAnalysisDialog"
-      [target]="analysisDialogTarget"
-      (taskEvent)="emitTaskEvent($event)"
-    >
-    </app-launch-analysis>
+<app-fa-icons></app-fa-icons>
 
-    <app-add-expressed-proteins
-      [(show)]="showThresholdDialog"
-      [selectedTissue]="networkHandler.activeNetwork.currentViewSelectedTissue"
-      [visibleNodes]="networkHandler.activeNetwork.currentViewNodes"
-      [currentViewProteins]="networkHandler.activeNetwork.currentViewProteins"
-      [expressionMap]="networkHandler.activeNetwork.expressionMap"
-    >
-    </app-add-expressed-proteins>
+<app-loading-screen (reset)="reset()"></app-loading-screen>
 
-    <!-- Start explorer -->
-    <div
-      class="drugstone explorer columns is-gapless" 
-      style="display: flex; flex-wrap: wrap;"
-      [ngClass]="{
-        'is-flex-direction-row-reverse':
-          drugstoneConfig.config.showSidebar === 'right'
-      }"
-    >
-      <!-- Start left sidebar -->
-      <div
-        class="drugstone sidebar column" #sidebar
-        *ngIf="drugstoneConfig.config.showSidebar"
-        [ngClass]="{ fullscreenMenue: drugstoneConfig.config.fullscreen }"
-      >
+<app-network-warning></app-network-warning>
 
-        <app-summary-node *ngIf="drugstoneConfig.config.showItemSelector"></app-summary-node>
+<app-network-empty-warning></app-network-empty-warning>
 
-        <app-network-overview *ngIf="drugstoneConfig.config.showOverview"></app-network-overview>
+<app-group-warning></app-group-warning>
 
-        <div *ngIf="drugstoneConfig.config.showSelection" class="card bar-large">
-          <header class="card-header" [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }">
-            <p class="card-header-title">
-              <app-fa-solid-icon icon="filter"></app-fa-solid-icon>
-              Selection ({{ analysis.getCount() }})
-            </p>
-            <a (click)="collapseSelection = !collapseSelection" data-action="collapse"
-              class="card-header-icon is-hidden-fullscreen" aria-label="more options">
-              <app-fa-solid-icon *ngIf="collapseSelection" icon="angle-down"></app-fa-solid-icon>
-              <app-fa-solid-icon *ngIf="!collapseSelection" icon="angle-left"></app-fa-solid-icon>
-            </a>
-          </header>
-          <div *ngIf="collapseSelection" class="seed-selection" [ngClass]="{ 'text-normal': 'drugstoneConfig.smallStyle' }">
-            <div class="card-content">
-              <table class="table selection-table" *ngIf="analysis.getCount() > 0">
-                <thead>
-                  <tr>
-                    <td>Label</td>
-                    <td>Group</td>
-                    <!--                  <td *ngIf="drugstoneConfig.currentConfig().identifier !== 'symbol'">-->
-                    <!--                    Symbol-->
-                    <!--                  </td>-->
-                    <!--                  <td *ngIf="drugstoneConfig.currentConfig().identifier !== 'uniprot'">-->
-                    <!--                    Uniprot-->
-                    <!--                  </td>-->
-                    <td style="text-align: center">Actions</td>
-                  </tr>
-                </thead>
-                <tbody class="overflow">
-                  <tr *ngFor="let p of analysis.getSelection()">
-                    <td>
-                      <p class="is-capitalized">{{ p.data.label }}</p>
-                    </td>
-                    <td>
-                      <p>
-                        {{
-                        drugstoneConfig.currentConfig().nodeGroups[p.data['_group']][
-                        "groupName"
-                        ]
-                        }}
-                      </p>
-                    </td>
-                    <!--                  <td *ngIf="drugstoneConfig.currentConfig().identifier !== 'symbol'">-->
-                    <!--                    <p>{{ p.data.symbol }}</p>-->
-                    <!--                  </td>-->
-                    <!--                  <td-->
-                    <!--                    *ngIf="drugstoneConfig.currentConfig().identifier !== 'uniprot'"-->
-                    <!--                    class="uniprot"-->
-                    <!--                    title="{{ p.data.uniprot }}"-->
-                    <!--                  >-->
-                    <!--                    <p>{{ p.data.uniprot }}</p>-->
-                    <!--                  </td>-->
-                    <td style="text-align: center">
-                      <button (click)="analysis.removeItems([p])" class="button is-small is-danger is-outlined has-tooltip"
-                        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top"
-                        pTooltip="Remove from selection.">
-                        <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <i *ngIf="analysis.getCount() === 0">
-                <b>Double-click</b> on a node to select it for the analysis. <br>Press <b>Shift</b> and draw a rectangular
-                selection lasso around nodes to select groups of nodes.
-              </i>
-            </div>
-        
-            <footer class="card-footer">
-              <a (click)="analysis.addAllToSelection()" class="card-footer-item text-primary" tooltipPosition="top"
-                pTooltip="Add all proteins to the selection.">
-                <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
-                <span>Add all</span>
-              </a>
-              <a (click)="analysis.addFirstNeighbors()" class="card-footer-item text-primary" tooltipPosition="top"
-                pTooltip="Add first neighbor proteins of selection.">
-                <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
-                <span>Add first neighbors</span>
-              </a>
-            </footer>
-            <footer class="card-footer">
-              <a (click)="analysis.addConnectedComponents()" class="card-footer-item text-primary" tooltipPosition="top"
-                pTooltip="Add full connected components of all nodes in selection.">
-                <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
-                <span>Add connected components</span>
-              </a>
-              <a *ngIf="analysis.inPathwayAnalysis" (click)="analysis.addSelectedToNetwork()"
-                class="card-footer-item text-primary" tooltipPosition="top" pTooltip="Add selected nodes to network.">
-                <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
-                <span>Add selected nodes to network</span>
-              </a>
-            </footer>
-            <footer class="card-footer">
-              <a class="card-footer-item text-primary" tooltipPosition="top" pTooltip="Add all proteins to the selection.">
-                <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
-                <span class="is-fullwidth">
-                  <app-group-selection (selectGroupEmitter)="analysis.addGroupToSelection($event)"
-                    [nodeGroups]="drugstoneConfig.currentConfig().nodeGroups"></app-group-selection>
-                </span>
-              </a>
-            </footer>
-            <footer class="card-footer">
-              <a (click)="
-                          analysis.invertSelection(
-                            networkHandler.activeNetwork.currentViewNodes
-                          )
-                        " class="card-footer-item text-primary" tooltipPosition="top" pTooltip="Invert the current selection.">
-                <app-fa-solid-icon icon="sync"></app-fa-solid-icon>
-                <span> Invert </span>
-              </a>
-              <a *ngIf="analysis.getSelection().length" (click)="analysis.viewFromSelection()"
-                class="card-footer-item text-primary" tooltipPosition="top" pTooltip="Create view from the selection.">
-                <app-fa-solid-icon icon="check"></app-fa-solid-icon>
-                <span> Save selection </span>
-              </a>
-            </footer>
-            <footer class="card-footer">
-              <a *ngIf="analysis.getSelection().length" (click)="analysis.resetSelection()"
-                class="card-footer-item has-text-danger" tooltipPosition="top"
-                pTooltip="Remove all entries from the selection.">
-                <app-fa-solid-icon icon="broom"></app-fa-solid-icon>
-                <span> Reset </span>
-              </a>
-        
-            </footer>
-        
-            <!-- </div> -->
-            <!-- </div>  -->
-          </div>
-        </div>
+<app-parser-warning></app-parser-warning>
 
-        <div *ngIf="drugstoneConfig.config.showAdvAnalysis" class="card bar-large">
-          <header class="card-header" [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }">
-            <p class="card-header-title">
-              <app-fa-solid-icon icon="flask"></app-fa-solid-icon>
-              Analysis
-            </p>
-            <a (click)="collapseAnalysis = !collapseAnalysis" data-action="collapse"
-              class="card-header-icon is-hidden-fullscreen" aria-label="more options">
-              <app-fa-solid-icon *ngIf="collapseAnalysis" icon="angle-down"></app-fa-solid-icon>
-              <app-fa-solid-icon *ngIf="!collapseAnalysis" icon="angle-left"></app-fa-solid-icon>
-            </a>
-          </header>
-          <div *ngIf="collapseAnalysis">
-            <div class="card-content">
-              <div class="field"
-                *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('drug-target-search')">
-                <div class="control"
-                  [pTooltip]="analysis.getCount() === 0 ? 'Select proteins by double clicking, to identify drug targets for them.' : 'Find drug targets for the selected proteins.'"
-                  [tooltipStyleClass]="
-                            'drgstn drgstn-tooltip drgstn-tooltip-top'
-                          " tooltipPosition="top">
-                  <button (click)="
-                              analysisDialogTarget = 'drug-target';
-                              showAnalysisDialog = true
-                            " class="button is-primary is-fullwidth is-rounded has-tooltip"
-                    [disabled]="analysis.getCount() === 0" [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">
-                    <app-fa-solid-icon icon="crosshairs" classString="first-item-in-button"></app-fa-solid-icon>
-                    <span>{{ drugstoneConfig.config.taskTargetName }}</span>
-                  </button>
-                </div>
-              </div>
-              <div class="field"
-                *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('drug-search')">
-                <div class="control"
-                  [pTooltip]="analysis.getCount() === 0 ? 'Select proteins by double clicking, to identify drugs for them.' : 'Find drugs for the selected proteins.'"
-                  [tooltipStyleClass]="
-                            'drgstn drgstn-tooltip drgstn-tooltip-top'
-                          " tooltipPosition="top">
-                  <button (click)="
-                              analysisDialogTarget = 'drug'; showAnalysisDialog = true
-                            " class="button is-primary is-fullwidth is-rounded has-tooltip"
-                    [disabled]="analysis.getCount() === 0" [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">
-                    <app-fa-solid-icon icon="capsules" classString="first-item-in-button"></app-fa-solid-icon>
-                    <span>
-                      {{ drugstoneConfig.config.taskDrugName }}
-                    </span>
-                  </button>
-                </div>
-              </div>
-              <div class="field"
-                *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('pathway-enrichment')">
-                <div class="control"
-                  [pTooltip]="analysis.getCount() === 0 ? 'Select proteins by double clicking, to perform gene analysis.' : 'Perform gene analysis for the selected proteins.'"
-                  [tooltipStyleClass]="
-                            'drgstn drgstn-tooltip drgstn-tooltip-top'
-                          " tooltipPosition="top">
-                  <button (click)="
-                              analysisDialogTarget = 'gene'; showAnalysisDialog = true
-                            " class="button is-primary is-fullwidth is-rounded has-tooltip"
-                    [disabled]="analysis.getCount() === 0" [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">
-                    <app-fa-solid-icon icon="dna" classString="first-item-in-button"></app-fa-solid-icon>
-                    <span>
-                      {{ drugstoneConfig.config.pathwayEnrichment }}
-                    </span>
-                  </button>
-                </div>
-              </div>
+<app-privacy-banner></app-privacy-banner>
 
-              <div class="field"
-                *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('clustering')">
-                <div class="control"
-                  [pTooltip]="analysis.getCount() === 0 ? 'Select proteins by double clicking, to perform clustering analysis.' : 'Perform clustering analysis for the selected proteins.'"
-                  [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">
-                  <button (click)="analysisDialogTarget = 'clustering'; showAnalysisDialog = true" class="button is-primary is-fullwidth is-rounded has-tooltip"
-                    [disabled]="analysis.getCount() === 0" [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">
-                    <app-fa-solid-icon icon="hexagon-nodes" classString="first-item-in-button"></app-fa-solid-icon>
-                    <span>
-                      {{ drugstoneConfig.config.clusteringName }}
-                    </span>
-                  </button>
-                </div>
-              </div>
-              <app-external-analysis-button [enabled]="analysis.getCount() > 0" label="g:Profiler enrichment analysis"
-                tooltipDisabled="Select proteins by double clicking, to run enrichment analysis via g:Profiler (external)."
-                tooltipEnabled="Use enrichment analysis via g:Profiler (external)." [callback]="openGProfiler.bind(this)"
-                [hidden]="!drugstoneConfig.config.showAdvAnalysisContent.includes('enrichment-gprofiler')"></app-external-analysis-button>
-        
-              <app-external-analysis-button [enabled]="analysis.getCount() > 0" label="DIGEST enrichment analysis"
-                tooltipDisabled="Select proteins by double clicking, to run enrichment analysis via DIGEST (external)."
-                tooltipEnabled="Use enrichment analysis via DIGEST (external)." [callback]="openDigest.bind(this)"
-                [hidden]="!drugstoneConfig.config.showAdvAnalysisContent.includes('enrichment-digest')"></app-external-analysis-button>
-        
-              <app-external-analysis-button [enabled]="analysis.getCount() > 0" label="NDEx Integrated Query"
-                tooltipDisabled="Select proteins by double clicking, to find similar, curated pathways via NDEx Integrated Query to (external)."
-                tooltipEnabled="Use NDEx Integrated Query to find similar, curated pathways (external)."
-                [callback]="openNDEx.bind(this)"
-                [hidden]="!drugstoneConfig.config.showAdvAnalysisContent.includes('search-ndex')"></app-external-analysis-button>
-            </div>
-          </div>
-        </div>
+<app-license-agreement></app-license-agreement>
 
-        <div
-          *ngIf="drugstoneConfig.config.showQuery"
-          class="card bar-large"
-          [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
-        >
-          <header class="card-header">
-            <p class="card-header-title">
-              <app-fa-solid-icon icon="search"></app-fa-solid-icon>
-              Query Node
-            </p>
-            <a
-              (click)="collapseQuery = !collapseQuery"
-              data-action="collapse"
-              class="card-header-icon is-hidden-fullscreen"
-              aria-label="more options"
-            >
-              <app-fa-solid-icon
-                *ngIf="collapseQuery"
-                icon="angle-down"
-              ></app-fa-solid-icon>
-              <app-fa-solid-icon
-                *ngIf="!collapseQuery"
-                icon="angle-left"
-              ></app-fa-solid-icon>
-            </a>
-          </header>
-          <div *ngIf="collapseQuery">
-            <div class="card-content">
-              <div class="field">
-                <div class="control">
-                  <app-query-tile-component
-                    (selectItem)="queryAction($event)"
-                    [queryItems]="networkHandler.activeNetwork.queryItems"
-                  ></app-query-tile-component>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+<app-bug-report></app-bug-report>
 
-        <app-quick-drug-target
-          *ngIf="drugstoneConfig.config.showConnectGenes"
-          (taskEvent)="emitTaskEvent($event)"
-        ></app-quick-drug-target>
+<app-launch-analysis
 
-        <app-quick-drug
-          *ngIf="drugstoneConfig.config.showSimpleAnalysis"
-          (taskEvent)="emitTaskEvent($event)"
-        ></app-quick-drug>
+[(show)]="showAnalysisDialog"
 
-        <div *ngIf="drugstoneConfig.config.showEditNetwork" class="card bar-large">
-          <header class="card-header" [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }">
-            <p class="card-header-title">
-              <app-fa-solid-icon icon="edit"></app-fa-solid-icon>
-              Edit Network
-            </p>
-            <a (click)="collapseEditor = !collapseEditor" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
-              aria-label="more options">
-              <app-fa-solid-icon *ngIf="!collapseEditor" icon="angle-down"></app-fa-solid-icon>
-              <app-fa-solid-icon *ngIf="collapseEditor" icon="angle-left"></app-fa-solid-icon>
-            </a>
-          </header>
-          <!-- Add Protein Input -->
-          <div class="card-content" *ngIf="!collapseEditor">
-            <div>
-            <input class="input" type="text" placeholder="Add Protein..." [(ngModel)]="proteinQuery" (input)="onProteinSearch()"
-              style="padding: 5px; box-sizing: border-box; width: 100%;"/>
-            </div>
-            <div *ngIf="proteinSuggestions.length > 0" class="autocomplete-suggestions scrollable-container">
-              <div style="cursor: pointer; z-index: 10" *ngFor="let suggestion of proteinSuggestions; let i = index" (click)="selectProtein(suggestion)">
-                <strong>{{ suggestion.symbol && suggestion.symbol.length > 0 ? suggestion.symbol[0] : '-' }}</strong> |
-                {{ suggestion.uniprot && suggestion.uniprot.length > 0 ? suggestion.uniprot[0] : '-' }} <br>
-                {{ suggestion.ensg && suggestion.ensg.length > 0 ? suggestion.ensg[0] : '-' }} |
-                {{ suggestion.entrez && suggestion.entrez.length > 0 ? suggestion.entrez[0] : '-' }}
-                <div *ngIf="i < proteinSuggestions.length - 1" class="separator"></div>
-              </div>
-            </div>
-            <button class="button is-primary is-rounded has-tooltip" [disabled]="!chosenProtein" (click)="addProtein()"
-              style="padding: 5px; box-sizing: border-box; width: 100%; margin-top: 5%;">
-              Add Protein
-            </button>
-          </div>
+[target]="analysisDialogTarget"
 
-          <!-- Delete Protein Input -->
-          <div class="card-content" *ngIf="!collapseEditor">
-            <div>
-              <input class="input" type="text" placeholder="Delete Protein..." [(ngModel)]="deleteProteinQuery"
-                (input)="onDeleteProteinSearch()" style="padding: 5px; box-sizing: border-box; width: 100%;" />
-            </div>
-            <div *ngIf="deleteProteinSuggestions.length > 0" class="autocomplete-suggestions scrollable-container">
-              <div style="cursor: pointer; z-index: 10" *ngFor="let suggestionDelete of deleteProteinSuggestions; let i = index"
-                (click)="selectProteinToDelete(suggestionDelete)">
-                <strong>{{ suggestionDelete.symbol && suggestionDelete.symbol.length > 0 ? suggestionDelete.symbol[0] : '-' }}</strong> |
-                {{ suggestionDelete.uniprot && suggestionDelete.uniprot.length > 0 ? suggestionDelete.uniprot[0] : '-' }} <br>
-                {{ suggestionDelete.ensg && suggestionDelete.ensg.length > 0 ? suggestionDelete.ensg[0] : '-' }} |
-                {{ suggestionDelete.entrez && suggestionDelete.entrez.length > 0 ? suggestionDelete.entrez[0] : '-' }}
-                <div *ngIf="i < deleteProteinSuggestions.length - 1" class="separator"></div>
-              </div>
-            </div>
-            <button class="button is-primary is-rounded has-tooltip" [disabled]="!chosenProteinToDelete" (click)="deleteProtein()"
-              style="padding: 5px; box-sizing: border-box; width: 100%; margin-top: 5%;">
-              Delete Protein
-            </button>
-          </div>
-        </div>
-        
-        <div *ngIf="drugstoneConfig.config.showPruning && networkHandler.activeNetwork?.nodeData?.nodes && hasProperties() && !(analysis.target=='drug' && analysis.analysisActive)" class="card bar-large">
-          <header class="card-header" [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }">
-            <p class="card-header-title">
-              <app-fa-solid-icon icon="edit"></app-fa-solid-icon>
-              Properties-based Pruning
-            </p>
-            <a (click)="collapsePropertiesPruning = !collapsePropertiesPruning" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
-              aria-label="more options">
-              <app-fa-solid-icon *ngIf="!collapsePropertiesPruning" icon="angle-down"></app-fa-solid-icon>
-              <app-fa-solid-icon *ngIf="collapsePropertiesPruning" icon="angle-left"></app-fa-solid-icon>
-            </a>
-          </header>
-          <div class="card-content" *ngIf="!collapsePropertiesPruning">
-            <div *ngIf="networkHandler.activeNetwork.nodeData.nodes">
-              <div *ngIf="hasProperties()">
-                <!-- Header -->
-                <div class="choose-property-title">
-                  Choose property to prune:
-                </div>
-                <!-- Dropdown for properties -->
-                <div *ngIf="properties && properties.length > 0">
-                  <div *ngFor="let propertyKey of properties; let i = index">
-                    <div class="property-item" [class.selected]="selectedProperty === propertyKey" (click)="selectProperty(propertyKey)">
-                      <span class="property-label">{{ propertyKey }}</span>
-                      <!-- Warning Icon -->
-                      <a *ngIf="missingProperties.includes(propertyKey)"
-                        pTooltip="Property not present in all nodes. Nodes without this property will be deleted!"
-                        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top"
-                        class="warning-icon has-text-warning">
-                        <app-fa-solid-icon icon="exclamation-circle"></app-fa-solid-icon>
-                      </a>
-                    </div>
+(taskEvent)="emitTaskEvent($event)"
 
-                    <!-- Divider Line between entries -->
-                    <div class="divider" *ngIf="i < properties.length - 1"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
+>
 
-          <div *ngIf="pruningType === 'string'"  class="pruning-dropdown-container">
-            <ng-multiselect-dropdown class="multiselect-dropdown" [placeholder]="'Select values'" [data]="pruningValues" [(ngModel)]="selectedValues"
-              [settings]="dropdownSettings" (onDeSelect)="onSelectionChange($event)" (onSelect)="onSelectionChange($event)" (onSelectAll)="onSelectionChange('all')" (onDeSelectAll)="onSelectionChange($event)">
-            </ng-multiselect-dropdown>
-          </div>
+</app-launch-analysis>
 
-            
-            <div *ngIf="pruningType === 'int' || pruningType === 'float'">
-              <div class="prune-dropdown-container">
-                <div class="choose-property-title">Select Prune Direction:</div>
-                <select [(ngModel)]="pruneDirection" id="pruneDirection" class="prune-select">
-                  <option value="greater">Greater than/equal</option>
-                  <option value="lesser">Less than/equal</option>
-                </select>
-              </div>
-              <div>
-                <span>Prune based on range:</span>
-                <br>
-                <input style="margin-top: 5px; width: 80%" type="range" [min]="minPruningValue" [max]="maxPruningValue" [(ngModel)]="cutoff"
-                  (input)="onSliderValueChanged()" [step]="pruningType === 'float' ? step : 1" >
-                <label style="padding: 5px;">{{ cutoff }}</label>
-              </div>
-              <br>
-              <div>
-                <span>Enter exact cutoff value:</span>
-                <br>
-                <input style="margin-top: 5px; width: 50%" type="number" [min]="minPruningValue" [max]="maxPruningValue" [(ngModel)]="cutoff"
-                  [step]="pruningType === 'float' ? step : 1" (input)="onSliderValueChanged()">
-              </div>
-            </div>
-            <div *ngIf="prunedNetwork" style="margin: 8px !important;">
-              <label style="display: flex; align-items: center;">
-                <input type="checkbox" [(ngModel)]="pruneOrphanNodes" (ngModelChange)="onPruneOrphanNodesChange()" style="margin-right: 8px;">
-                Prune Orphan Nodes
-              </label>
-            </div>
-            <button class="button is-primary is-rounded has-tooltip" [disabled]="!prunedNetwork || prunedNetwork['nodes'].length === 0" (click)="pruneNetwork()"
-              style="padding: 5px; box-sizing: border-box; width: 100%; margin-top: 5%;">
-              Prune Network
-            </button>
-          </div>
-        </div>
-        <div *ngIf="drugstoneConfig.config.showViews" class="card bar-large">
-          <header class="card-header" [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }">
-            <p class="card-header-title">
-              <app-fa-solid-icon icon="eye"></app-fa-solid-icon>
-              Views ({{ analysis.viewTokens != null ? analysis.viewTokens.length : 0 }})
-            </p>
-            <a (click)="collapseViews = !collapseViews" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
-              aria-label="more options">
-              <app-fa-solid-icon *ngIf="collapseViews" icon="angle-down"></app-fa-solid-icon>
-              <app-fa-solid-icon *ngIf="!collapseViews" icon="angle-left"></app-fa-solid-icon>
-            </a>
-          </header>
-          <div *ngIf="collapseViews">
-            <div class="overflow task-list-container" *ngIf="analysis.viewTokens && analysis.viewTokens.length > 0">
-              <app-view-list [(token)]="selectedViewToken"></app-view-list>
-            </div>
-            <footer class="card-footer">
-              <a *ngIf="analysis.viewTokens && analysis.viewTokens.length > 0" (click)="
-                                  analysis.removeAllSelections(); selectedViewToken = null
-                                " class="card-footer-item has-text-danger" pTooltip="Delete all selection views."
-                [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">
-                <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
-                <span> Delete all </span>
-              </a>
-            </footer>
-          </div>
-        </div>
-        <div *ngIf="drugstoneConfig.config.showTasks" class="card bar-large">
-          <header class="card-header" [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }">
-            <p class="card-header-title">
-              <app-fa-solid-icon icon="tasks"></app-fa-solid-icon>
-              Tasks ({{ analysis.tasks != null ? analysis.tasks.length : 0 }})
-            </p>
-            <a (click)="collapseTask = !collapseTask" data-action="collapse" class="card-header-icon is-hidden-fullscreen"
-              aria-label="more options">
-              <app-fa-solid-icon *ngIf="collapseTask" icon="angle-down"></app-fa-solid-icon>
-              <app-fa-solid-icon *ngIf="!collapseTask" icon="angle-left"></app-fa-solid-icon>
-            </a>
-          </header>
-          <div *ngIf="collapseTask">
-            <div class="overflow task-list-container" *ngIf="analysis.tasks && analysis.tasks.length > 0">
-              <app-task-list [(token)]="selectedAnalysisToken"></app-task-list>
-            </div>
-            <footer class="card-footer">
-              <a *ngIf="analysis.tasks && analysis.tasks.length > 0" (click)="
-                                  analysis.removeAllTasks(); selectedAnalysisToken = null
-                                " class="card-footer-item has-text-danger" pTooltip="Delete all tasks."
-                [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">
-                <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
-                <span> Delete all </span>
-              </a>
-            </footer>
-          </div>
-        </div>
+<app-add-expressed-proteins
 
+[(show)]="showThresholdDialog"
 
-      </div>
+[selectedTissue]="networkHandler.activeNetwork.currentViewSelectedTissue"
 
-      <!-- Start network block -->
-      <div class="drugstone network column" id="main-column" #mainColumn>
-        <!-- analysis panel with analysis network -->
-        <div *ngIf="selectedToken">
-          <app-analysis-panel #analysis (resetEmitter)="reset()"
-            [(token)]="selectedToken"
-            [(tokenType)]="selectedAnalysisTokenType"
-            (showDetailsChange)="
-              networkHandler.activeNetwork.selectedWrapper = $event
-            "
-            (visibleItems)="analysisWindowChanged($event)"
-            (configNodeGroupsChange)="handleConfigNodeGroups($event)"
-          ></app-analysis-panel>
-        </div>
-        <!-- explorer network -->
-        <app-network (networkEmitter)="resetNetwork($event)" (createNetwork)="resetNetwork($event)" (resetEmitter)="reset()" networkType="explorer" [nodeData]="nodeData"></app-network>
-      </div>
-      <!-- End  network block -->
-      <app-logger *ngIf="drugstoneConfig.currentConfig().showLogger" class="drugstone logger column" #logger style="order: 2; flex-basis: 100%; width: 100%"></app-logger>
+[visibleNodes]="networkHandler.activeNetwork.currentViewNodes"
 
-      <div class="is-hidden-tablet mobile-fallback">
-        Sorry, drugstone is not available for mobile phones. To find information
-        about drugstone, please check the <a routerLink="/about">About</a> page
-        or visit this page with another device with a larger screen.
-      </div>
-    </div>
-  </div>
+[currentViewProteins]="networkHandler.activeNetwork.currentViewProteins"
 
-  <app-toast></app-toast>
+[expressionMap]="networkHandler.activeNetwork.expressionMap"
+
+>
+
+</app-add-expressed-proteins>
+
+<!-- Start explorer -->
+
+<div
+
+class="drugstone-plugin-drugstone drugstone-plugin-explorer drugstone-plugin-columns drugstone-plugin-is-gapless"
+
+style="display: flex; flex-wrap: wrap;"
+
+[ngClass]="{ 'drugstone-plugin-is-flex-direction-row-reverse': drugstoneConfig.config.showSidebar === 'right' }"     >
+
+<!-- Start left sidebar -->
+
+<div
+
+class="drugstone-plugin-drugstone drugstone-plugin-sidebar drugstone-plugin-column" #sidebar
+
+*ngIf="drugstoneConfig.config.showSidebar"
+
+[ngClass]="{ fullscreenMenue: drugstoneConfig.config.fullscreen }"
+
+>
+
+<app-summary-node *ngIf="drugstoneConfig.config.showItemSelector"></app-summary-node>
+
+<app-network-overview *ngIf="drugstoneConfig.config.showOverview"></app-network-overview>
+
+<div *ngIf="drugstoneConfig.config.showSelection" class="drugstone-plugin-card drugstone-plugin-bar-large">
+
+<header class="drugstone-plugin-card-header" [ngClass]="{ 'drugstone-plugin-b-text-small': drugstoneConfig.smallStyle }">
+
+<p class="drugstone-plugin-card-header-title">
+
+<app-fa-solid-icon icon="filter"></app-fa-solid-icon>
+
+Selection ({{ analysis.getCount() }})
+
+</p>
+
+<a (click)="collapseSelection = !collapseSelection" data-action="collapse"
+
+class="drugstone-plugin-card-header-icon drugstone-plugin-is-hidden-fullscreen" aria-label="more options">
+
+<app-fa-solid-icon *ngIf="collapseSelection" icon="angle-down"></app-fa-solid-icon>
+
+<app-fa-solid-icon *ngIf="!collapseSelection" icon="angle-left"></app-fa-solid-icon>
+
+</a>
+
+</header>
+
+<div *ngIf="collapseSelection" class="drugstone-plugin-seed-selection" [ngClass]="{ 'drugstone-plugin-text-normal': 'drugstoneConfig.smallStyle' }">
+
+<div class="drugstone-plugin-card-content">
+
+<table class="drugstone-plugin-table drugstone-plugin-selection-table" *ngIf="analysis.getCount() > 0">
+
+<thead>
+
+<tr>
+
+<td>Label</td>
+
+<td>Group</td>
+
+<!--                  <td *ngIf="drugstoneConfig.currentConfig().identifier !== 'symbol'">-->
+
+<!--                    Symbol-->
+
+<!--                  </td>-->
+
+<!--                  <td *ngIf="drugstoneConfig.currentConfig().identifier !== 'uniprot'">-->
+
+<!--                    Uniprot-->
+
+<!--                  </td>-->
+
+<td style="text-align: center">Actions</td>
+
+</tr>
+
+</thead>
+
+<tbody class="drugstone-plugin-overflow">
+
+<tr *ngFor="let p of analysis.getSelection()">
+
+<td>
+
+<p class="drugstone-plugin-is-capitalized">{{ p.data.label }}</p>
+
+</td>
+
+<td>
+
+<p>
+
+{{
+
+drugstoneConfig.currentConfig().nodeGroups[p.data['_group']][
+
+"groupName"
+
+]
+
+}}
+
+</p>
+
+</td>
+
+<!--                  <td *ngIf="drugstoneConfig.currentConfig().identifier !== 'symbol'">-->
+
+<!--                    <p>{{ p.data.symbol }}</p>-->
+
+<!--                  </td>-->
+
+<!--                  <td-->
+
+<!--                    *ngIf="drugstoneConfig.currentConfig().identifier !== 'uniprot'"-->
+
+<!--                    class="drugstone-plugin-uniprot"-->
+
+<!--                    title="{{ p.data.uniprot }}"-->
+
+<!--                  >-->
+
+<!--                    <p>{{ p.data.uniprot }}</p>-->
+
+<!--                  </td>-->
+
+<td style="text-align: center">
+
+<button (click)="analysis.removeItems([p])" class="drugstone-plugin-button drugstone-plugin-is-small drugstone-plugin-is-danger drugstone-plugin-is-outlined drugstone-plugin-has-tooltip"
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'" tooltipPosition="top"
+
+pTooltip="Remove from selection.">
+
+<app-fa-solid-icon icon="trash"></app-fa-solid-icon>
+
+</button>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<i *ngIf="analysis.getCount() === 0">
+
+<b>Double-click</b> on a node to select it for the analysis. <br>Press <b>Shift</b> and draw a rectangular
+
+selection lasso around nodes to select groups of nodes.
+
+</i>
+
 </div>
+
+<footer class="drugstone-plugin-card-footer">
+
+<a (click)="analysis.addAllToSelection()" class="drugstone-plugin-card-footer-item drugstone-plugin-text-primary" tooltipPosition="top"
+
+pTooltip="Add all proteins to the selection.">
+
+<app-fa-solid-icon icon="plus"></app-fa-solid-icon>
+
+<span>Add all</span>
+
+</a>
+
+<a (click)="analysis.addFirstNeighbors()" class="drugstone-plugin-card-footer-item drugstone-plugin-text-primary" tooltipPosition="top"
+
+pTooltip="Add first neighbor proteins of selection.">
+
+<app-fa-solid-icon icon="plus"></app-fa-solid-icon>
+
+<span>Add first neighbors</span>
+
+</a>
+
+</footer>
+
+<footer class="drugstone-plugin-card-footer">
+
+<a (click)="analysis.addConnectedComponents()" class="drugstone-plugin-card-footer-item drugstone-plugin-text-primary" tooltipPosition="top"
+
+pTooltip="Add full connected components of all nodes in selection.">
+
+<app-fa-solid-icon icon="plus"></app-fa-solid-icon>
+
+<span>Add connected components</span>
+
+</a>
+
+<a *ngIf="analysis.inPathwayAnalysis" (click)="analysis.addSelectedToNetwork()"
+
+class="drugstone-plugin-card-footer-item drugstone-plugin-text-primary" tooltipPosition="top" pTooltip="Add selected nodes to network.">
+
+<app-fa-solid-icon icon="plus"></app-fa-solid-icon>
+
+<span>Add selected nodes to network</span>
+
+</a>
+
+</footer>
+
+<footer class="drugstone-plugin-card-footer">
+
+<a class="drugstone-plugin-card-footer-item drugstone-plugin-text-primary" tooltipPosition="top" pTooltip="Add all proteins to the selection.">
+
+<app-fa-solid-icon icon="plus"></app-fa-solid-icon>
+
+<span class="drugstone-plugin-is-fullwidth">
+
+<app-group-selection (selectGroupEmitter)="analysis.addGroupToSelection($event)"
+
+[nodeGroups]="drugstoneConfig.currentConfig().nodeGroups"></app-group-selection>
+
+</span>
+
+</a>
+
+</footer>
+
+<footer class="drugstone-plugin-card-footer">
+
+<a (click)=" analysis.invertSelection( networkHandler.activeNetwork.currentViewNodes ) " class="drugstone-plugin-card-footer-item drugstone-plugin-text-primary" tooltipPosition="top" pTooltip="Invert the current selection."> <app-fa-solid-icon icon="sync"></app-fa-solid-icon> <span> Invert </span> </a> <a *ngIf="analysis.getSelection().length" (click)="analysis.viewFromSelection()" class="card-footer-item text-primary" tooltipPosition="top" pTooltip="Create view from the selection."> <app-fa-solid-icon icon="check"></app-fa-solid-icon> <span> Save selection </span> </a> </footer> <footer class="card-footer"> <a *ngIf="analysis.getSelection().length" (click)="analysis.resetSelection()" class="card-footer-item has-text-danger" tooltipPosition="top" pTooltip="Remove all entries from the selection."> <app-fa-solid-icon icon="broom"></app-fa-solid-icon> <span> Reset </span> </a> </footer> <!-- </div> --> <!-- </div>  --> </div> </div> <div *ngIf="drugstoneConfig.config.showAdvAnalysis" class="card bar-large"> <header class="card-header" [ngClass]="{ 'drugstone-plugin-b-text-small': drugstoneConfig.smallStyle }"> <p class="card-header-title"> <app-fa-solid-icon icon="flask"></app-fa-solid-icon> Analysis </p> <a (click)="collapseAnalysis = !collapseAnalysis" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options"> <app-fa-solid-icon *ngIf="collapseAnalysis" icon="angle-down"></app-fa-solid-icon> <app-fa-solid-icon *ngIf="!collapseAnalysis" icon="angle-left"></app-fa-solid-icon> </a> </header> <div *ngIf="collapseAnalysis"> <div class="card-content"> <div class="field" *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('drug-target-search')"> <div class="control" [pTooltip]="analysis.getCount() === 0 ? 'Select proteins by double clicking, to identify drug targets for them.' : 'Find drug targets for the selected proteins.'" [tooltipStyleClass]="                             'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'
+
+" tooltipPosition="top">
+
+<button (click)=" analysisDialogTarget = 'drug-target'; showAnalysisDialog = true " class="drugstone-plugin-button drugstone-plugin-is-primary drugstone-plugin-is-fullwidth drugstone-plugin-is-rounded drugstone-plugin-has-tooltip"                     [disabled]="analysis.getCount() === 0" [ngClass]="{ 'drugstone-plugin-text-small': drugstoneConfig.smallStyle }">
+
+<app-fa-solid-icon icon="crosshairs" classString="drugstone-plugin-first-item-in-button"></app-fa-solid-icon>
+
+<span>{{ drugstoneConfig.config.taskTargetName }}</span>
+
+</button>
+
+</div>
+
+</div>
+
+<div class="drugstone-plugin-field"
+
+*ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('drug-search')">
+
+<div class="drugstone-plugin-control"
+
+[pTooltip]="analysis.getCount() === 0 ? 'Select proteins by double clicking, to identify drugs for them.' : 'Find drugs for the selected proteins.'"
+
+[tooltipStyleClass]=" 'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top' " tooltipPosition="top"> <button (click)="                               analysisDialogTarget = 'drug'; showAnalysisDialog = true
+
+" class="drugstone-plugin-button drugstone-plugin-is-primary drugstone-plugin-is-fullwidth drugstone-plugin-is-rounded drugstone-plugin-has-tooltip" [disabled]="analysis.getCount() === 0" [ngClass]="{ 'drugstone-plugin-text-small': drugstoneConfig.smallStyle }"> <app-fa-solid-icon icon="capsules" classString="drugstone-plugin-first-item-in-button"></app-fa-solid-icon> <span> {{ drugstoneConfig.config.taskDrugName }} </span> </button> </div> </div> <div class="field" *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('pathway-enrichment')"> <div class="control" [pTooltip]="analysis.getCount() === 0 ? 'Select proteins by double clicking, to perform gene analysis.' : 'Perform gene analysis for the selected proteins.'" [tooltipStyleClass]="                             'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'
+
+" tooltipPosition="top">
+
+<button (click)=" analysisDialogTarget = 'gene'; showAnalysisDialog = true " class="drugstone-plugin-button drugstone-plugin-is-primary drugstone-plugin-is-fullwidth drugstone-plugin-is-rounded drugstone-plugin-has-tooltip"                     [disabled]="analysis.getCount() === 0" [ngClass]="{ 'drugstone-plugin-text-small': drugstoneConfig.smallStyle }">
+
+<app-fa-solid-icon icon="dna" classString="drugstone-plugin-first-item-in-button"></app-fa-solid-icon>
+
+<span>
+
+{{ drugstoneConfig.config.pathwayEnrichment }}
+
+</span>
+
+</button>
+
+</div>
+
+</div>
+
+<div class="drugstone-plugin-field"
+
+*ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('clustering')">
+
+<div class="drugstone-plugin-control"
+
+[pTooltip]="analysis.getCount() === 0 ? 'Select proteins by double clicking, to perform clustering analysis.' : 'Perform clustering analysis for the selected proteins.'"
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'" tooltipPosition="top">
+
+<button (click)="analysisDialogTarget = 'clustering'; showAnalysisDialog = true" class="drugstone-plugin-button drugstone-plugin-is-primary drugstone-plugin-is-fullwidth drugstone-plugin-is-rounded drugstone-plugin-has-tooltip"
+
+[disabled]="analysis.getCount() === 0" [ngClass]="{ 'drugstone-plugin-text-small': drugstoneConfig.smallStyle }">
+
+<app-fa-solid-icon icon="hexagon-nodes" classString="drugstone-plugin-first-item-in-button"></app-fa-solid-icon>
+
+<span>
+
+{{ drugstoneConfig.config.clusteringName }}
+
+</span>
+
+</button>
+
+</div>
+
+</div>
+
+<app-external-analysis-button [enabled]="analysis.getCount() > 0" label="g:Profiler enrichment analysis"
+
+tooltipDisabled="Select proteins by double clicking, to run enrichment analysis via g:Profiler (external)."
+
+tooltipEnabled="Use enrichment analysis via g:Profiler (external)." [callback]="openGProfiler.bind(this)"
+
+[hidden]="!drugstoneConfig.config.showAdvAnalysisContent.includes('enrichment-gprofiler')"></app-external-analysis-button>
+
+<app-external-analysis-button [enabled]="analysis.getCount() > 0" label="DIGEST enrichment analysis"
+
+tooltipDisabled="Select proteins by double clicking, to run enrichment analysis via DIGEST (external)."
+
+tooltipEnabled="Use enrichment analysis via DIGEST (external)." [callback]="openDigest.bind(this)"
+
+[hidden]="!drugstoneConfig.config.showAdvAnalysisContent.includes('enrichment-digest')"></app-external-analysis-button>
+
+<app-external-analysis-button [enabled]="analysis.getCount() > 0" label="NDEx Integrated Query"
+
+tooltipDisabled="Select proteins by double clicking, to find similar, curated pathways via NDEx Integrated Query to (external)."
+
+tooltipEnabled="Use NDEx Integrated Query to find similar, curated pathways (external)."
+
+[callback]="openNDEx.bind(this)"
+
+[hidden]="!drugstoneConfig.config.showAdvAnalysisContent.includes('search-ndex')"></app-external-analysis-button>
+
+</div>
+
+</div>
+
+</div>
+
+<div
+
+*ngIf="drugstoneConfig.config.showQuery"
+
+class="drugstone-plugin-card drugstone-plugin-bar-large"
+
+[ngClass]="{ 'drugstone-plugin-b-text-small': drugstoneConfig.smallStyle }"
+
+>
+
+<header class="drugstone-plugin-card-header">
+
+<p class="drugstone-plugin-card-header-title">
+
+<app-fa-solid-icon icon="search"></app-fa-solid-icon>
+
+Query Node
+
+</p>
+
+<a
+
+(click)="collapseQuery = !collapseQuery"
+
+data-action="collapse"
+
+class="drugstone-plugin-card-header-icon drugstone-plugin-is-hidden-fullscreen"
+
+aria-label="more options"
+
+>
+
+<app-fa-solid-icon
+
+*ngIf="collapseQuery"
+
+icon="angle-down"
+
+></app-fa-solid-icon>
+
+<app-fa-solid-icon
+
+*ngIf="!collapseQuery"
+
+icon="angle-left"
+
+></app-fa-solid-icon>
+
+</a>
+
+</header>
+
+<div *ngIf="collapseQuery">
+
+<div class="drugstone-plugin-card-content">
+
+<div class="drugstone-plugin-field">
+
+<div class="drugstone-plugin-control">
+
+<app-query-tile-component
+
+(selectItem)="queryAction($event)"
+
+[queryItems]="networkHandler.activeNetwork.queryItems"
+
+></app-query-tile-component>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<app-quick-drug-target
+
+*ngIf="drugstoneConfig.config.showConnectGenes"
+
+(taskEvent)="emitTaskEvent($event)"
+
+></app-quick-drug-target>
+
+<app-quick-drug
+
+*ngIf="drugstoneConfig.config.showSimpleAnalysis"
+
+(taskEvent)="emitTaskEvent($event)"
+
+></app-quick-drug>
+
+<div *ngIf="drugstoneConfig.config.showEditNetwork" class="drugstone-plugin-card drugstone-plugin-bar-large">
+
+<header class="drugstone-plugin-card-header" [ngClass]="{ 'drugstone-plugin-b-text-small': drugstoneConfig.smallStyle }">
+
+<p class="drugstone-plugin-card-header-title">
+
+<app-fa-solid-icon icon="edit"></app-fa-solid-icon>
+
+Edit Network
+
+</p>
+
+<a (click)="collapseEditor = !collapseEditor" data-action="collapse" class="drugstone-plugin-card-header-icon drugstone-plugin-is-hidden-fullscreen"
+
+aria-label="more options">
+
+<app-fa-solid-icon *ngIf="!collapseEditor" icon="angle-down"></app-fa-solid-icon>
+
+<app-fa-solid-icon *ngIf="collapseEditor" icon="angle-left"></app-fa-solid-icon>
+
+</a>
+
+</header>
+
+<!-- Add Protein Input -->
+
+<div class="drugstone-plugin-card-content" *ngIf="!collapseEditor">
+
+<div>
+
+<input class="drugstone-plugin-input" type="text" placeholder="Add Protein..." [(ngModel)]="proteinQuery" (input)="onProteinSearch()"
+
+style="padding: 5px; box-sizing: border-box; width: 100%;"/>
+
+</div>
+
+<div *ngIf="proteinSuggestions.length > 0" class="drugstone-plugin-autocomplete-suggestions drugstone-plugin-scrollable-container">
+
+<div style="cursor: pointer; z-index: 10" *ngFor="let suggestion of proteinSuggestions; let i = index" (click)="selectProtein(suggestion)">
+
+<strong>{{ suggestion.symbol && suggestion.symbol.length > 0 ? suggestion.symbol[0] : '-' }}</strong> |
+
+{{ suggestion.uniprot && suggestion.uniprot.length > 0 ? suggestion.uniprot[0] : '-' }} <br>
+
+{{ suggestion.ensg && suggestion.ensg.length > 0 ? suggestion.ensg[0] : '-' }} |
+
+{{ suggestion.entrez && suggestion.entrez.length > 0 ? suggestion.entrez[0] : '-' }}
+
+<div *ngIf="i < proteinSuggestions.length - 1" class="drugstone-plugin-separator"></div>
+
+</div>
+
+</div>
+
+<button class="drugstone-plugin-button drugstone-plugin-is-primary drugstone-plugin-is-rounded drugstone-plugin-has-tooltip" [disabled]="!chosenProtein" (click)="addProtein()"
+
+style="padding: 5px; box-sizing: border-box; width: 100%; margin-top: 5%;">
+
+Add Protein
+
+</button>
+
+</div>
+
+<!-- Delete Protein Input -->
+
+<div class="drugstone-plugin-card-content" *ngIf="!collapseEditor">
+
+<div>
+
+<input class="drugstone-plugin-input" type="text" placeholder="Delete Protein..." [(ngModel)]="deleteProteinQuery"
+
+(input)="onDeleteProteinSearch()" style="padding: 5px; box-sizing: border-box; width: 100%;" />
+
+</div>
+
+<div *ngIf="deleteProteinSuggestions.length > 0" class="drugstone-plugin-autocomplete-suggestions drugstone-plugin-scrollable-container">
+
+<div style="cursor: pointer; z-index: 10" *ngFor="let suggestionDelete of deleteProteinSuggestions; let i = index"
+
+(click)="selectProteinToDelete(suggestionDelete)">
+
+<strong>{{ suggestionDelete.symbol && suggestionDelete.symbol.length > 0 ? suggestionDelete.symbol[0] : '-' }}</strong> |
+
+{{ suggestionDelete.uniprot && suggestionDelete.uniprot.length > 0 ? suggestionDelete.uniprot[0] : '-' }} <br>
+
+{{ suggestionDelete.ensg && suggestionDelete.ensg.length > 0 ? suggestionDelete.ensg[0] : '-' }} |
+
+{{ suggestionDelete.entrez && suggestionDelete.entrez.length > 0 ? suggestionDelete.entrez[0] : '-' }}
+
+<div *ngIf="i < deleteProteinSuggestions.length - 1" class="drugstone-plugin-separator"></div>
+
+</div>
+
+</div>
+
+<button class="drugstone-plugin-button drugstone-plugin-is-primary drugstone-plugin-is-rounded drugstone-plugin-has-tooltip" [disabled]="!chosenProteinToDelete" (click)="deleteProtein()"
+
+style="padding: 5px; box-sizing: border-box; width: 100%; margin-top: 5%;">
+
+Delete Protein
+
+</button>
+
+</div>
+
+</div>
+
+<div *ngIf="drugstoneConfig.config.showPruning && networkHandler.activeNetwork?.nodeData?.nodes && hasProperties() && !(analysis.target=='drug' && analysis.analysisActive)" class="drugstone-plugin-card drugstone-plugin-bar-large">
+
+<header class="drugstone-plugin-card-header" [ngClass]="{ 'drugstone-plugin-b-text-small': drugstoneConfig.smallStyle }">
+
+<p class="drugstone-plugin-card-header-title">
+
+<app-fa-solid-icon icon="edit"></app-fa-solid-icon>
+
+Properties-based Pruning
+
+</p>
+
+<a (click)="collapsePropertiesPruning = !collapsePropertiesPruning" data-action="collapse" class="drugstone-plugin-card-header-icon drugstone-plugin-is-hidden-fullscreen"
+
+aria-label="more options">
+
+<app-fa-solid-icon *ngIf="!collapsePropertiesPruning" icon="angle-down"></app-fa-solid-icon>
+
+<app-fa-solid-icon *ngIf="collapsePropertiesPruning" icon="angle-left"></app-fa-solid-icon>
+
+</a>
+
+</header>
+
+<div class="drugstone-plugin-card-content" *ngIf="!collapsePropertiesPruning">
+
+<div *ngIf="networkHandler.activeNetwork.nodeData.nodes">
+
+<div *ngIf="hasProperties()">
+
+<!-- Header -->
+
+<div class="drugstone-plugin-choose-property-title">
+
+Choose property to prune:
+
+</div>
+
+<!-- Dropdown for properties -->
+
+<div *ngIf="properties && properties.length > 0">
+
+<div *ngFor="let propertyKey of properties; let i = index">
+
+<div class="drugstone-plugin-property-item" [class.drugstone-plugin-selected]="selectedProperty === propertyKey" (click)="selectProperty(propertyKey)">
+
+<span class="drugstone-plugin-property-label">{{ propertyKey }}</span>
+
+<!-- Warning Icon -->
+
+<a *ngIf="missingProperties.includes(propertyKey)"
+
+pTooltip="Property not present in all nodes. Nodes without this property will be deleted!"
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'" tooltipPosition="top"
+
+class="drugstone-plugin-warning-icon drugstone-plugin-has-text-warning">
+
+<app-fa-solid-icon icon="exclamation-circle"></app-fa-solid-icon>
+
+</a>
+
+</div>
+
+<!-- Divider Line between entries -->
+
+<div class="drugstone-plugin-divider" *ngIf="i < properties.length - 1"></div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div *ngIf="pruningType === 'string'"  class="drugstone-plugin-pruning-dropdown-container">
+
+<ng-multiselect-dropdown class="drugstone-plugin-multiselect-dropdown" [placeholder]="'Select values'" [data]="pruningValues" [(ngModel)]="selectedValues"
+
+[settings]="dropdownSettings" (onDeSelect)="onSelectionChange($event)" (onSelect)="onSelectionChange($event)" (onSelectAll)="onSelectionChange('all')" (onDeSelectAll)="onSelectionChange($event)">
+
+</ng-multiselect-dropdown>
+
+</div>
+
+<div *ngIf="pruningType === 'int' || pruningType === 'float'">
+
+<div class="drugstone-plugin-prune-dropdown-container">
+
+<div class="drugstone-plugin-choose-property-title">Select Prune Direction:</div>
+
+<select [(ngModel)]="pruneDirection" id="drugstone-plugin-pruneDirection" class="drugstone-plugin-prune-select">
+
+<option value="greater">Greater than/equal</option>
+
+<option value="lesser">Less than/equal</option>
+
+</select>
+
+</div>
+
+<div>
+
+<span>Prune based on range:</span>
+
+<br>
+
+<input style="margin-top: 5px; width: 80%" type="range" [min]="minPruningValue" [max]="maxPruningValue" [(ngModel)]="cutoff"
+
+(input)="onSliderValueChanged()" [step]="pruningType === 'float' ? step : 1" >
+
+<label style="padding: 5px;">{{ cutoff }}</label>
+
+</div>
+
+<br>
+
+<div>
+
+<span>Enter exact cutoff value:</span>
+
+<br>
+
+<input style="margin-top: 5px; width: 50%" type="number" [min]="minPruningValue" [max]="maxPruningValue" [(ngModel)]="cutoff"
+
+[step]="pruningType === 'float' ? step : 1" (input)="onSliderValueChanged()">
+
+</div>
+
+</div>
+
+<div *ngIf="prunedNetwork" style="margin: 8px !important;">
+
+<label style="display: flex; align-items: center;">
+
+<input type="checkbox" [(ngModel)]="pruneOrphanNodes" (ngModelChange)="onPruneOrphanNodesChange()" style="margin-right: 8px;">
+
+Prune Orphan Nodes
+
+</label>
+
+</div>
+
+<button class="drugstone-plugin-button drugstone-plugin-is-primary drugstone-plugin-is-rounded drugstone-plugin-has-tooltip" [disabled]="!prunedNetwork || prunedNetwork['nodes'].length === 0" (click)="pruneNetwork()"
+
+style="padding: 5px; box-sizing: border-box; width: 100%; margin-top: 5%;">
+
+Prune Network
+
+</button>
+
+</div>
+
+</div>
+
+<div *ngIf="drugstoneConfig.config.showViews" class="drugstone-plugin-card drugstone-plugin-bar-large">
+
+<header class="drugstone-plugin-card-header" [ngClass]="{ 'drugstone-plugin-b-text-small': drugstoneConfig.smallStyle }">
+
+<p class="drugstone-plugin-card-header-title">
+
+<app-fa-solid-icon icon="eye"></app-fa-solid-icon>
+
+Views ({{ analysis.viewTokens != null ? analysis.viewTokens.length : 0 }})
+
+</p>
+
+<a (click)="collapseViews = !collapseViews" data-action="collapse" class="drugstone-plugin-card-header-icon drugstone-plugin-is-hidden-fullscreen"
+
+aria-label="more options">
+
+<app-fa-solid-icon *ngIf="collapseViews" icon="angle-down"></app-fa-solid-icon>
+
+<app-fa-solid-icon *ngIf="!collapseViews" icon="angle-left"></app-fa-solid-icon>
+
+</a>
+
+</header>
+
+<div *ngIf="collapseViews">
+
+<div class="drugstone-plugin-overflow drugstone-plugin-task-list-container" *ngIf="analysis.viewTokens && analysis.viewTokens.length > 0">
+
+<app-view-list [(token)]="selectedViewToken"></app-view-list>
+
+</div>
+
+<footer class="drugstone-plugin-card-footer">
+
+<a *ngIf="analysis.viewTokens && analysis.viewTokens.length > 0" (click)=" analysis.removeAllSelections(); selectedViewToken = null " class="drugstone-plugin-card-footer-item drugstone-plugin-has-text-danger" pTooltip="Delete all selection views."                 [tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'" tooltipPosition="top">
+
+<app-fa-solid-icon icon="trash"></app-fa-solid-icon>
+
+<span> Delete all </span>
+
+</a>
+
+</footer>
+
+</div>
+
+</div>
+
+<div *ngIf="drugstoneConfig.config.showTasks" class="drugstone-plugin-card drugstone-plugin-bar-large">
+
+<header class="drugstone-plugin-card-header" [ngClass]="{ 'drugstone-plugin-b-text-small': drugstoneConfig.smallStyle }">
+
+<p class="drugstone-plugin-card-header-title">
+
+<app-fa-solid-icon icon="tasks"></app-fa-solid-icon>
+
+Tasks ({{ analysis.tasks != null ? analysis.tasks.length : 0 }})
+
+</p>
+
+<a (click)="collapseTask = !collapseTask" data-action="collapse" class="drugstone-plugin-card-header-icon drugstone-plugin-is-hidden-fullscreen"
+
+aria-label="more options">
+
+<app-fa-solid-icon *ngIf="collapseTask" icon="angle-down"></app-fa-solid-icon>
+
+<app-fa-solid-icon *ngIf="!collapseTask" icon="angle-left"></app-fa-solid-icon>
+
+</a>
+
+</header>
+
+<div *ngIf="collapseTask">
+
+<div class="drugstone-plugin-overflow drugstone-plugin-task-list-container" *ngIf="analysis.tasks && analysis.tasks.length > 0">
+
+<app-task-list [(token)]="selectedAnalysisToken"></app-task-list>
+
+</div>
+
+<footer class="drugstone-plugin-card-footer">
+
+<a *ngIf="analysis.tasks && analysis.tasks.length > 0" (click)=" analysis.removeAllTasks(); selectedAnalysisToken = null " class="drugstone-plugin-card-footer-item drugstone-plugin-has-text-danger" pTooltip="Delete all tasks."                 [tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'" tooltipPosition="top">
+
+<app-fa-solid-icon icon="trash"></app-fa-solid-icon>
+
+<span> Delete all </span>
+
+</a>
+
+</footer>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Start network block -->
+
+<div class="drugstone-plugin-drugstone drugstone-plugin-network drugstone-plugin-column" id="drugstone-plugin-main-column" #mainColumn>
+
+<!-- analysis panel with analysis network -->
+
+<div *ngIf="selectedToken">
+
+<app-analysis-panel #analysis (resetEmitter)="reset()"
+
+[(token)]="selectedToken"
+
+[(tokenType)]="selectedAnalysisTokenType"
+
+(showDetailsChange)=" networkHandler.activeNetwork.selectedWrapper = $event "             (visibleItems)="analysisWindowChanged($event)"
+
+(configNodeGroupsChange)="handleConfigNodeGroups($event)"
+
+></app-analysis-panel>
+
+</div>
+
+<!-- explorer network -->
+
+<app-network (networkEmitter)="resetNetwork($event)" (createNetwork)="resetNetwork($event)" (resetEmitter)="reset()" networkType="explorer" [nodeData]="nodeData"></app-network>
+
+</div>
+
+<!-- End  network block -->
+
+<app-logger *ngIf="drugstoneConfig.currentConfig().showLogger" class="drugstone-plugin-drugstone drugstone-plugin-logger drugstone-plugin-column" #logger style="order: 2; flex-basis: 100%; width: 100%"></app-logger>
+
+<div class="drugstone-plugin-is-hidden-tablet drugstone-plugin-mobile-fallback">
+
+Sorry, drugstone is not available for mobile phones. To find information
+
+about drugstone, please check the <a routerLink="/about">About</a> page
+
+or visit this page with another device with a larger screen.
+
+</div>
+
+</div>
+
+</div>
+
+<app-toast></app-toast>
+
+</div>
+
+

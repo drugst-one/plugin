@@ -1,208 +1,405 @@
-<div class="content">
-  <div
-    class="list is-hoverable"
-    [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
-  >
-    <a
-      *ngFor="let task of analysis.tasks"
-      class="list-item box small-box"
-      [class.is-active]="task.token === token"
-    >
-      <div *ngIf="!task.info.startedAt">
-        <div class="columns mb-0">
-          <div class="column is-8">
-            <span
-              ><app-fa-solid-icon
-                icon="crosshairs"
-                *ngIf="task.info.target === 'drug-target'"
-              ></app-fa-solid-icon>
-              <app-fa-solid-icon
-                icon="capsules"
-                *ngIf="task.info.target === 'drug'"
-              ></app-fa-solid-icon>
-              <app-fa-solid-icon
-                icon="hexagon-nodes"
-                *ngIf="task.info.target === 'clustering'"
-              ></app-fa-solid-icon>
-              <app-fa-solid-icon icon="dna" *ngIf="task.info.target === 'gene'"></app-fa-solid-icon>
-              {{ algorithmNames[task.info.algorithm] }}</span
-            >
-          </div>
-          <div class="column">
-            <app-fa-solid-icon
-              classString="is-pulled-right has-text-warning"
-              icon="pause"
-            ></app-fa-solid-icon>
-          </div>
-        </div>
-        <div class="columns mb-0">
-          <div class="column is-8 pt-0 pb-0">
-            <small
-              *ngIf="
-                task.stats.queueLength > 0 && task.stats.queuePosition === 1
-              "
-            >
-              Queued: 1 other task to finish
-            </small>
-            <small
-              *ngIf="task.stats.queueLength > 0 && task.stats.queuePosition > 1"
-            >
-              Queued: {{ task.stats.queuePosition }} other tasks to finish
-            </small>
-            <small
-              *ngIf="
-                task.stats.queueLength === 0 || task.stats.queuePosition === 0
-              "
-            >
-              Execution imminent...
-            </small>
-          </div>
-          <div class="column pt-0 pb-0">
-            <a
-              (click)="analysis.removeTask(task.token)"
-              class="has-text-danger is-pulled-right"
-            >
-              <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
-            </a>
-          </div>
-        </div>
-      </div>
-      <div *ngIf="!task.info.done && !task.info.failed && task.info.startedAt">
-        <div class="columns mb-0">
-          <div class="column is-8">
-            <span
-              ><app-fa-solid-icon
-                icon="crosshairs"
-                *ngIf="task.info.target === 'drug-target'"
-              ></app-fa-solid-icon>
-              <app-fa-solid-icon
-                icon="capsules"
-                *ngIf="task.info.target === 'drug'"
-              ></app-fa-solid-icon>
-              <app-fa-solid-icon
-                icon="dna"
-                *ngIf="task.info.target === 'gene'"
-              ></app-fa-solid-icon>
-              <app-fa-solid-icon icon="hexagon-nodes" *ngIf="task.info.target === 'clustering'"></app-fa-solid-icon>
-              {{ algorithmNames[task.info.algorithm] }}</span
-            >
-          </div>
-          <div class="column p-0">
-            <div
-              class="control is-loading center"
-              alt="loading..."
-            ></div>
-          </div>
-        </div>
-        <div class="columns mb-0">
-          <div class="column is-8 pt-0 pb-0">
-            <small>Started {{ task.info.startedAt | date: "short" }}</small>
-          </div>
-          <div class="column pt-0 pb-0">
-            <a
-              (click)="analysis.removeTask(task.token)"
-              class="has-text-danger is-pulled-right"
-            >
-              <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
-            </a>
-          </div>
-        </div>
-        <progress
-          class="progress is-success"
-          [value]="task.info.progress * 100"
-          max="100"
-        ></progress>
-      </div>
-      <div
-        *ngIf="task.info.done"
-      >
-        <div class="columns mb-0" (click)="open(task.token)"
-             pTooltip="Show analysis results"
-             [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
-             tooltipPosition="top">
-          <div class="column is-8">
-            <span
-              ><app-fa-solid-icon
-                icon="crosshairs"
-                *ngIf="task.info.target === 'drug-target'"
-              ></app-fa-solid-icon>
-              <app-fa-solid-icon
-                icon="capsules"
-                *ngIf="task.info.target === 'drug'"
-              ></app-fa-solid-icon>
-              <app-fa-solid-icon
-                icon="dna"
-                *ngIf="task.info.target === 'gene'"
-              ></app-fa-solid-icon>
-              <app-fa-solid-icon icon="hexagon-nodes" *ngIf="task.info.target === 'clustering'"></app-fa-solid-icon>
-              {{ algorithmNames[task.info.algorithm] }}</span
-            >
-          </div>
-          <div class="column">
-            <app-fa-solid-icon
-              classString="is-pulled-right has-text-success"
-              icon="check"
-            ></app-fa-solid-icon>
-          </div>
-        </div>
-        <div class="columns mb-0">
-          <div class="column is-8 pt-0 pb-0">
-            <small>Finished {{ task.info.finishedAt | date: "short" }}</small>
-          </div>
-          <div class="column pt-0 pb-0">
-            <a
-              (click)="analysis.removeTask(task.token)"
-              class="has-text-danger is-pulled-right"
-              pTooltip="Delete task"
-              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
-              tooltipPosition="top"
-            >
-              <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
-            </a>
-          </div>
-        </div>
-      </div>
-      <div *ngIf="task.info.failed">
-        <div class="columns mb-0">
-          <div class="column is-8">
-            <span
-              ><app-fa-solid-icon
-                icon="crosshairs"
-                *ngIf="task.info.target === 'drug-target'"
-              ></app-fa-solid-icon>
-              <app-fa-solid-icon
-                icon="capsules"
-                *ngIf="task.info.target === 'drug'"
-              ></app-fa-solid-icon>
-              <app-fa-solid-icon
-                icon="dna"
-                *ngIf="task.info.target === 'gene'"
-              ></app-fa-solid-icon>
-              <app-fa-solid-icon icon="hexagon-nodes" *ngIf="task.info.target === 'clustering'"></app-fa-solid-icon>
-              {{ algorithmNames[task.info.algorithm] }}</span
-            >
-          </div>
-          <div class="column">
-            <app-fa-solid-icon
-              classString="is-pulled-right has-text-danger"
-              icon="exclamation-triangle"
-            ></app-fa-solid-icon>
-          </div>
-        </div>
-        <div class="columns mb-0">
-          <div class="column is-8 pt-0 pb-0 has-text-danger">
-            <small class="status-field">{{ task.info.status }}</small>
-          </div>
-          <div class="column pt-0 pb-0">
-            <a
-              (click)="analysis.removeTask(task.token)"
-              class="has-text-danger is-pulled-right"
-            >
-              <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
-            </a>
-          </div>
-        </div>
-      </div>
-    </a>
-  </div>
+<div class="drugstone-plugin-content">
+
+<div
+
+class="drugstone-plugin-list drugstone-plugin-is-hoverable"
+
+[ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }"
+
+>
+
+<a
+
+*ngFor="let task of analysis.tasks"
+
+class="drugstone-plugin-list-item drugstone-plugin-box drugstone-plugin-small-box"
+
+[class.drugstone-plugin-is-active]="task.token === token"
+
+>
+
+<div *ngIf="!task.info.startedAt">
+
+<div class="drugstone-plugin-columns drugstone-plugin-mb-0">
+
+<div class="drugstone-plugin-column drugstone-plugin-is-8">
+
+<span
+
+><app-fa-solid-icon
+
+icon="crosshairs"
+
+*ngIf="task.info.target === 'drug-target'"
+
+></app-fa-solid-icon>
+
+<app-fa-solid-icon
+
+icon="capsules"
+
+*ngIf="task.info.target === 'drug'"
+
+></app-fa-solid-icon>
+
+<app-fa-solid-icon
+
+icon="hexagon-nodes"
+
+*ngIf="task.info.target === 'clustering'"
+
+></app-fa-solid-icon>
+
+<app-fa-solid-icon icon="dna" *ngIf="task.info.target === 'gene'"></app-fa-solid-icon>
+
+{{ algorithmNames[task.info.algorithm] }}</span
+
+>
+
 </div>
+
+<div class="drugstone-plugin-column">
+
+<app-fa-solid-icon
+
+classString="drugstone-plugin-is-pulled-right drugstone-plugin-has-text-warning"
+
+icon="pause"
+
+></app-fa-solid-icon>
+
+</div>
+
+</div>
+
+<div class="drugstone-plugin-columns drugstone-plugin-mb-0">
+
+<div class="drugstone-plugin-column drugstone-plugin-is-8 drugstone-plugin-pt-0 drugstone-plugin-pb-0">
+
+<small
+
+*ngIf=" task.stats.queueLength > 0 && task.stats.queuePosition === 1 "             >
+
+Queued: 1 other task to finish
+
+</small>
+
+<small
+
+*ngIf="task.stats.queueLength > 0 && task.stats.queuePosition > 1"
+
+>
+
+Queued: {{ task.stats.queuePosition }} other tasks to finish
+
+</small>
+
+<small
+
+*ngIf=" task.stats.queueLength === 0 || task.stats.queuePosition === 0 "             >
+
+Execution imminent...
+
+</small>
+
+</div>
+
+<div class="drugstone-plugin-column drugstone-plugin-pt-0 drugstone-plugin-pb-0">
+
+<a
+
+(click)="analysis.removeTask(task.token)"
+
+class="drugstone-plugin-has-text-danger drugstone-plugin-is-pulled-right"
+
+>
+
+<app-fa-solid-icon icon="trash"></app-fa-solid-icon>
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<div *ngIf="!task.info.done && !task.info.failed && task.info.startedAt">
+
+<div class="drugstone-plugin-columns drugstone-plugin-mb-0">
+
+<div class="drugstone-plugin-column drugstone-plugin-is-8">
+
+<span
+
+><app-fa-solid-icon
+
+icon="crosshairs"
+
+*ngIf="task.info.target === 'drug-target'"
+
+></app-fa-solid-icon>
+
+<app-fa-solid-icon
+
+icon="capsules"
+
+*ngIf="task.info.target === 'drug'"
+
+></app-fa-solid-icon>
+
+<app-fa-solid-icon
+
+icon="dna"
+
+*ngIf="task.info.target === 'gene'"
+
+></app-fa-solid-icon>
+
+<app-fa-solid-icon icon="hexagon-nodes" *ngIf="task.info.target === 'clustering'"></app-fa-solid-icon>
+
+{{ algorithmNames[task.info.algorithm] }}</span
+
+>
+
+</div>
+
+<div class="drugstone-plugin-column drugstone-plugin-p-0">
+
+<div
+
+class="drugstone-plugin-control drugstone-plugin-is-loading drugstone-plugin-center"
+
+alt="loading..."
+
+></div>
+
+</div>
+
+</div>
+
+<div class="drugstone-plugin-columns drugstone-plugin-mb-0">
+
+<div class="drugstone-plugin-column drugstone-plugin-is-8 drugstone-plugin-pt-0 drugstone-plugin-pb-0">
+
+<small>Started {{ task.info.startedAt | date: "short" }}</small>
+
+</div>
+
+<div class="drugstone-plugin-column drugstone-plugin-pt-0 drugstone-plugin-pb-0">
+
+<a
+
+(click)="analysis.removeTask(task.token)"
+
+class="drugstone-plugin-has-text-danger drugstone-plugin-is-pulled-right"
+
+>
+
+<app-fa-solid-icon icon="trash"></app-fa-solid-icon>
+
+</a>
+
+</div>
+
+</div>
+
+<progress
+
+class="drugstone-plugin-progress drugstone-plugin-is-success"
+
+[value]="task.info.progress * 100"
+
+max="100"
+
+></progress>
+
+</div>
+
+<div
+
+*ngIf="task.info.done"
+
+>
+
+<div class="drugstone-plugin-columns drugstone-plugin-mb-0" (click)="open(task.token)"
+
+pTooltip="Show analysis results"
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'"
+
+tooltipPosition="top">
+
+<div class="drugstone-plugin-column drugstone-plugin-is-8">
+
+<span
+
+><app-fa-solid-icon
+
+icon="crosshairs"
+
+*ngIf="task.info.target === 'drug-target'"
+
+></app-fa-solid-icon>
+
+<app-fa-solid-icon
+
+icon="capsules"
+
+*ngIf="task.info.target === 'drug'"
+
+></app-fa-solid-icon>
+
+<app-fa-solid-icon
+
+icon="dna"
+
+*ngIf="task.info.target === 'gene'"
+
+></app-fa-solid-icon>
+
+<app-fa-solid-icon icon="hexagon-nodes" *ngIf="task.info.target === 'clustering'"></app-fa-solid-icon>
+
+{{ algorithmNames[task.info.algorithm] }}</span
+
+>
+
+</div>
+
+<div class="drugstone-plugin-column">
+
+<app-fa-solid-icon
+
+classString="drugstone-plugin-is-pulled-right drugstone-plugin-has-text-success"
+
+icon="check"
+
+></app-fa-solid-icon>
+
+</div>
+
+</div>
+
+<div class="drugstone-plugin-columns drugstone-plugin-mb-0">
+
+<div class="drugstone-plugin-column drugstone-plugin-is-8 drugstone-plugin-pt-0 drugstone-plugin-pb-0">
+
+<small>Finished {{ task.info.finishedAt | date: "short" }}</small>
+
+</div>
+
+<div class="drugstone-plugin-column drugstone-plugin-pt-0 drugstone-plugin-pb-0">
+
+<a
+
+(click)="analysis.removeTask(task.token)"
+
+class="drugstone-plugin-has-text-danger drugstone-plugin-is-pulled-right"
+
+pTooltip="Delete task"
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'"
+
+tooltipPosition="top"
+
+>
+
+<app-fa-solid-icon icon="trash"></app-fa-solid-icon>
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<div *ngIf="task.info.failed">
+
+<div class="drugstone-plugin-columns drugstone-plugin-mb-0">
+
+<div class="drugstone-plugin-column drugstone-plugin-is-8">
+
+<span
+
+><app-fa-solid-icon
+
+icon="crosshairs"
+
+*ngIf="task.info.target === 'drug-target'"
+
+></app-fa-solid-icon>
+
+<app-fa-solid-icon
+
+icon="capsules"
+
+*ngIf="task.info.target === 'drug'"
+
+></app-fa-solid-icon>
+
+<app-fa-solid-icon
+
+icon="dna"
+
+*ngIf="task.info.target === 'gene'"
+
+></app-fa-solid-icon>
+
+<app-fa-solid-icon icon="hexagon-nodes" *ngIf="task.info.target === 'clustering'"></app-fa-solid-icon>
+
+{{ algorithmNames[task.info.algorithm] }}</span
+
+>
+
+</div>
+
+<div class="drugstone-plugin-column">
+
+<app-fa-solid-icon
+
+classString="drugstone-plugin-is-pulled-right drugstone-plugin-has-text-danger"
+
+icon="exclamation-triangle"
+
+></app-fa-solid-icon>
+
+</div>
+
+</div>
+
+<div class="drugstone-plugin-columns drugstone-plugin-mb-0">
+
+<div class="drugstone-plugin-column drugstone-plugin-is-8 drugstone-plugin-pt-0 drugstone-plugin-pb-0 drugstone-plugin-has-text-danger">
+
+<small class="drugstone-plugin-status-field">{{ task.info.status }}</small>
+
+</div>
+
+<div class="drugstone-plugin-column drugstone-plugin-pt-0 drugstone-plugin-pb-0">
+
+<a
+
+(click)="analysis.removeTask(task.token)"
+
+class="drugstone-plugin-has-text-danger drugstone-plugin-is-pulled-right"
+
+>
+
+<app-fa-solid-icon icon="trash"></app-fa-solid-icon>
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</a>
+
+</div>
+
+</div>
+
+

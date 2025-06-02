@@ -1,5 +1,4 @@
 @import "src/stylesheets/variables";
-
 @keyframes hideSidebar {
   from {
     right: 0;
@@ -8,7 +7,6 @@
     right: $network-footer-right-closed;
   }
 }
-
 @keyframes showSidebar {
   from {
     right: $network-footer-right-closed;
@@ -17,7 +15,6 @@
     right: 0;
   }
 }
-
 @keyframes hideSidebarSmall {
   from {
     right: 0;
@@ -26,7 +23,6 @@
     right: $network-footer-right-closed-small;
   }
 }
-
 @keyframes showSidebarSmall {
   from {
     right: $network-footer-right-closed-small;
@@ -35,8 +31,7 @@
     right: 0;
   }
 }
-
-.network-footer-toolbar {
+.drugstone-plugin-network-footer-toolbar {
   position: absolute;
   height: calc(100% - #{$network-header-height});
   width: $network-footer-width;
@@ -44,37 +39,30 @@
   background-color: var(--drgstn-panel);
   z-index: $network-footer-container-z;
   margin-bottom: 20px;
-
-  &.small-sidebar {
+  &.drugstone-plugin-small-sidebar {
     width: $network-footer-width-small;
   }
-
-  &.no-header {
+  &.drugstone-plugin-no-header {
     top: 0;
     height: 100%;
   }
-
-  &.opened {
+  &.drugstone-plugin-opened {
     right: 0;
     animation-name: showSidebar;
     animation-duration: 1s;
-
-    &.small-sidebar {
+    &.drugstone-plugin-small-sidebar {
       animation-name: showSidebarSmall;
     }
   }
-
-  &.closed {
+  &.drugstone-plugin-closed {
     right: $network-footer-right-closed;
     animation-name: hideSidebar;
     animation-duration: 1s;
-
-    &.small-sidebar {
+    &.drugstone-plugin-small-sidebar {
       animation-name: hideSidebarSmall;
       right: $network-footer-right-closed-small;
     }
   }
-
   &-inner-container {
     width: 100%;
     height: 100%;
@@ -82,13 +70,11 @@
     top: 0;
     overflow-y: auto;
   }
-
   &-element {
     position: relative;
     margin-left: 10px;
   }
-
-  .network-toolbar-toggle {
+  .drugstone-plugin-network-toolbar-toggle {
     z-index: $network-footer-container-toggle-z;
     position: relative;
     top: calc(50% - 10px);
@@ -97,35 +83,30 @@
     left: -12px;
     padding: calc(.75em - 1px) !important;
     height: 1em !important;
-    &.rotated {
+    &.drugstone-plugin-rotated {
       -ms-transform: rotate(180deg); /* IE 9 */
       transform: rotate(180deg);
     }
   }
 }
-
-.dropdown-menu {
+.drugstone-plugin-dropdown-menu {
   z-index: $network-tissue-options-z !important;
-
-  .dropdown-content {
-    .scroll-area {
+  .drugstone-plugin-dropdown-content {
+    .drugstone-plugin-scroll-area {
       height: 15rem;
       padding: 5px;
     }
   }
 }
-
-.inner-dropdown {
-  .dropdown-menu {
+.drugstone-plugin-inner-dropdown {
+  .drugstone-plugin-dropdown-menu {
     margin-left: calc(-250px - 1px);
     width: 250px;
     margin-top: -45px;
-
-    .dropdown-content {
+    .drugstone-plugin-dropdown-content {
       padding-left: 0.5rem;
       padding-right: 0.5rem;
-
-      .dropdown-item {
+      .drugstone-plugin-dropdown-item {
         padding: .375rem 0 !important;
       }
     }

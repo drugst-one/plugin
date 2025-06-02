@@ -1,13 +1,12 @@
 @import "src/stylesheets/variables";
-
-#network-empty-banner{
+#drugstone-plugin-network-empty-banner{
   position: absolute;
   bottom: 0;
   z-index: $network-empty-banner-z;
   width: 100%;
   padding-left: 0;
   padding-right: 0;
-  &.disabled {
+  &.drugstone-plugin-disabled {
     display: none;
   }
 }

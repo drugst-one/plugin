@@ -1,49 +1,99 @@
 <div
-  class="modal absolute"
-  [class.is-active]="drugstoneConfig.showBugreport"
+
+class="drugstone-plugin-modal drugstone-plugin-absolute"
+
+[class.drugstone-plugin-is-active]="drugstoneConfig.showBugreport"
+
 >
-  <div class="modal-background"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">
-        <app-fa-solid-icon icon="bug"></app-fa-solid-icon>
-        Submit Bug report
-      </p>
-    </header>
-    <section class="modal-card-body">
-      <div class="is-text-align-justify" style="margin-bottom: 16px">
-        <i
-        >If you experienced some unexpected behaviour and error or another clear sign for a bug we are happy to receive
-          your report to improve the Drugst.One application:</i
-        >
-      </div>
-      <div class="bugreport-input">
-        <input #title class="input" type="text" placeholder="Title">
-        <textarea #body class="textarea" placeholder="Report details about the bug" rows="10"></textarea>
-        <input #email class="input" type="text" placeholder="Optional: Email">
-      </div>
-    </section>
-    <footer class="modal-card-foot">
-      <button
-        (click)="send(title.value, body.value, email.value)"
-        class="button is-rounded has-tooltip is-success"
-        pTooltip="Send bug report to contact@drugst.one"
-        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
-        tooltipPosition="top"
-      >
-        <app-fa-solid-icon icon="bug"></app-fa-solid-icon>
-        Send
-      </button>
-      <button
-        (click)="close()"
-        class="button is-rounded has-tooltip is-danger"
-        pTooltip="Close without sending bug report"
-        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
-        tooltipPosition="top"
-      >
-        <app-fa-solid-icon icon="times"></app-fa-solid-icon>
-        Close
-      </button>
-    </footer>
-  </div>
+
+<div class="drugstone-plugin-modal-background"></div>
+
+<div class="drugstone-plugin-modal-card">
+
+<header class="drugstone-plugin-modal-card-head">
+
+<p class="drugstone-plugin-modal-card-title">
+
+<app-fa-solid-icon icon="bug"></app-fa-solid-icon>
+
+Submit Bug report
+
+</p>
+
+</header>
+
+<section class="drugstone-plugin-modal-card-body">
+
+<div class="drugstone-plugin-is-text-align-justify" style="margin-bottom: 16px">
+
+<i
+
+>If you experienced some unexpected behaviour and error or another clear sign for a bug we are happy to receive
+
+your report to improve the Drugst.One application:</i
+
+>
+
 </div>
+
+<div class="drugstone-plugin-bugreport-input">
+
+<input #title class="drugstone-plugin-input" type="text" placeholder="Title">
+
+<textarea #body class="drugstone-plugin-textarea" placeholder="Report details about the bug" rows="10"></textarea>
+
+<input #email class="drugstone-plugin-input" type="text" placeholder="Optional: Email">
+
+</div>
+
+</section>
+
+<footer class="drugstone-plugin-modal-card-foot">
+
+<button
+
+(click)="send(title.value, body.value, email.value)"
+
+class="drugstone-plugin-button drugstone-plugin-is-rounded drugstone-plugin-has-tooltip drugstone-plugin-is-success"
+
+pTooltip="Send bug report to contact@drugst.one"
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'"
+
+tooltipPosition="top"
+
+>
+
+<app-fa-solid-icon icon="bug"></app-fa-solid-icon>
+
+Send
+
+</button>
+
+<button
+
+(click)="close()"
+
+class="drugstone-plugin-button drugstone-plugin-is-rounded drugstone-plugin-has-tooltip drugstone-plugin-is-danger"
+
+pTooltip="Close without sending bug report"
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'"
+
+tooltipPosition="top"
+
+>
+
+<app-fa-solid-icon icon="times"></app-fa-solid-icon>
+
+Close
+
+</button>
+
+</footer>
+
+</div>
+
+</div>
+
+

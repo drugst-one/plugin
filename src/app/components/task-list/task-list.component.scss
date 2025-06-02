@@ -1,20 +1,16 @@
-.list {
+.drugstone-plugin-list {
   p {
     margin-bottom: 0;
   }
-
   progress {
     margin-top: 5px;
     margin-bottom: 5px;
   }
-
-  .icon {
+  .drugstone-plugin-icon {
     display: block !important;
   }
-
 }
-
-.status-field {
+.drugstone-plugin-status-field {
   background-color: var(--drgstn-background);
   padding: 2px;
   font-size: 10px;
@@ -24,10 +20,6 @@
   border: 1px solid var(--drgstn-border);
   display: inline-block;
 }
-
-.small-box {
-  //margin: 0.5rem;
-  //padding: 0.5rem;
+.drugstone-plugin-small-box {
   background-color: var(--drgstn-panel-secondary) !important;
 }
-

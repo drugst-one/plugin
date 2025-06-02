@@ -1,37 +1,25 @@
-#appWindow {
-
+#drugstone-plugin-appWindow {
   @import "../../node_modules/bulma/bulma";
-
-
-  // bulma variables
   $dropdown-content-radius: 20px;
-
-
   margin: 0;
   font-family: var(--drgstn-font-family);
-
   p {
     margin-bottom: .4rem;
   }
-
-  .card-content.explorer-network-view-settings {
+  .drugstone-plugin-card-content.drugstone-plugin-explorer-network-view-settings {
     padding: 0 !important;
   }
-
-  .delete, .modal-close {
+  .drugstone-plugin-delete, .drugstone-plugin-modal-close {
     padding: 0 !important;
   }
-
   hr {
     margin-top: .25rem;
     margin-bottom: .25rem;
   }
-
   button {
     height: auto !important;
   }
-
-  .box {
+  .drugstone-plugin-box {
     padding: .5rem !important;
     margin-bottom: .5rem !important;
   }

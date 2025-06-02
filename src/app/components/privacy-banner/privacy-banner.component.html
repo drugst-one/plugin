@@ -1,11 +1,21 @@
-<div class="notification center" [class.disabled]="disabled" id="privacy-banner">
-  <button class="delete" (click)="close()"></button>
-  <span class="has-text-justified px-6">
-    By using Drugst.One you agree to the end-user license agreement about redistribution policies of integrated data-sources. The license text can be shown <a
-    class="link-style" (click)="drugstoneConfig.showLicense=true">here</a> or in the menu on the top right. Further, Drugst.One stores essential data in the browser necessary to its functionality, but does not track user data in any way.
-    <br><br>
-    All data will be processed at Drugst.One.&nbsp;<a target="_blank" href="https://drugst.one/doc#privacy_policy">More
-    information</a>.
-    </span>
+<div class="drugstone-plugin-notification drugstone-plugin-center" [class.drugstone-plugin-disabled]="disabled" id="drugstone-plugin-privacy-banner">
+
+<button class="drugstone-plugin-delete" (click)="close()"></button>
+
+<span class="drugstone-plugin-has-text-justified drugstone-plugin-px-6">
+
+By using Drugst.One you agree to the end-user license agreement about redistribution policies of integrated data-sources. The license text can be shown <a
+
+class="drugstone-plugin-link-style" (click)="drugstoneConfig.showLicense=true">here</a> or in the menu on the top right. Further, Drugst.One stores essential data in the browser necessary to its functionality, but does not track user data in any way.
+
+<br><br>
+
+All data will be processed at Drugst.One.&nbsp;<a target="_blank" href="https://drugst.one/doc#privacy_policy">More
+
+information</a>.
+
+</span>
 
 </div>
+
+

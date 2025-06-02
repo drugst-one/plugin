@@ -1,18 +1,37 @@
-<span class="add-group-selector">
-  <ng-select
-    [items]="_nodeGroupsList"
-    bindLabel="groupName"
-    bindValue="groupID"
-    [virtualScroll]="true"
-    [placeholder]="getAddGroupLabel()"
-    (change)="selectGroup($event)"
-    pTooltip="Select all nodes of a group."
-    [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-right'"
-    tooltipPosition="right"
-    [clearable]="false"
-  >
-    <ng-template ng-option-tmp let-item="item">
-      <span>{{ item.groupName }}</span>
-    </ng-template>
-  </ng-select>
+<span class="drugstone-plugin-add-group-selector">
+
+<ng-select
+
+[items]="_nodeGroupsList"
+
+bindLabel="groupName"
+
+bindValue="groupID"
+
+[virtualScroll]="true"
+
+[placeholder]="getAddGroupLabel()"
+
+(change)="selectGroup($event)"
+
+pTooltip="Select all nodes of a group."
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-right'"
+
+tooltipPosition="right"
+
+[clearable]="false"
+
+>
+
+<ng-template ng-option-tmp let-item="item">
+
+<span>{{ item.groupName }}</span>
+
+</ng-template>
+
+</ng-select>
+
 </span>
+
+

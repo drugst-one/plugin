@@ -1,56 +1,44 @@
 @charset "utf-8";
-.tab-content {
+.drugstone-plugin-tab-content {
   visibility: hidden;
   position: absolute;
   width: calc(100% - 50px);
   height: calc(100% - 41px - 67px - 24px);
-
-  &.is-visible {
+  &.drugstone-plugin-is-visible {
     visibility: visible;
   }
-
-  &.scrollable {
+  &.drugstone-plugin-scrollable {
     overflow-y: auto;
     padding-right: 10px;
   }
-
   h4 {
     margin-top: 60px;
   }
 }
-
-.table-header {
+.drugstone-plugin-table-header {
   margin-bottom: 50px;
 }
-
-.checkbox-col {
+.drugstone-plugin-checkbox-col {
   width: 50px;
 }
-
-.text-light-gray {
+.drugstone-plugin-text-light-gray {
   color: lightgray;
 }
-
-.icon {
+.drugstone-plugin-icon {
   align-items: center;
   display: inline-flex;
   justify-content: center;
   height: 1.5rem;
   width: 1.5rem;
 }
-
 td {
   padding: 0.2rem 1rem 0.2rem 1rem !important;
   vertical-align: middle !important;
 }
-
-th.rank-column {
+th.drugstone-plugin-rank-column {
     width: 75px;
   }
-
-td.rank-column {
+td.drugstone-plugin-rank-column {
   text-align: right !important;
   padding-right: 35px !important;
 }
-
-

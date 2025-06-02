@@ -1,25 +1,19 @@
 @import "src/stylesheets/variables";
-
-
-.dropdown-menu {
+.drugstone-plugin-dropdown-menu {
   z-index: $network-tissue-options-z !important;
 }
-
-.inner-dropdown.dropdown-menu {
+.drugstone-plugin-inner-dropdown.drugstone-plugin-dropdown-menu {
   margin-left: 134px;
   width: 150px;
   margin-top: -45px;
-
-  .dropdown-content {
+  .drugstone-plugin-dropdown-content {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
-
-    .dropdown-item {
+    .drugstone-plugin-dropdown-item {
       padding: .375rem !important;
     }
   }
 }
-
-.inner-dropdown.small-border {
+.drugstone-plugin-inner-dropdown.drugstone-plugin-small-border {
   margin-left: 100px;
 }

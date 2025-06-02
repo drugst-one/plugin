@@ -5,106 +5,82 @@
 @import "bulma";
 @import "variables";
 @import "@ng-select/ng-select/themes/default.theme.css";
-
-#appWindow {
-
+#drugstone-plugin-appWindow {
   @import "./styles-no-prefix.scss";
-
   font-family: var(--drgstn-font-family) !important;
   height: var(--drgstn-height, 500px) !important;
   display: block !important;
   all: initial;
   position: relative;
-
   .ng-dropdown-panel .ng-dropdown-panel-items {
     max-height: 150px !important;
   }
-
-  .is-selected{
+  .drugstone-plugin-is-selected{
     border-width: 3px !important;
     border-color: var(--drgstn-primary) !important;
   }
-
-  .drgstn-box-shadow {
+  .drugstone-plugin-drgstn-box-shadow {
     box-shadow: 0 0.125em 0.25em hsla(0, 0%, 4%, 0.1);
   }
-
-  .fullheight {
+  .drugstone-plugin-fullheight {
     height: 100%;
   }
-
-  .question-icon {
+  .drugstone-plugin-question-icon {
     vertical-align: middle;
   }
-
-  .card-content .tabs-header {
+  .drugstone-plugin-card-content .drugstone-plugin-tabs-header {
     margin-bottom: 0;
   }
-
-  .is-fullwidth {
+  .drugstone-plugin-is-fullwidth {
     width: 100%;
   }
-
-  .canvas-content {
+  .drugstone-plugin-canvas-content {
     height: calc(100% - #{$network-footer-height});
     z-index: $explorer-network-z;
   }
-
-  nav.navbar {
+  nav.drugstone-plugin-navbar {
     height: 60px;
   }
-
-  .modal-card {
+  .drugstone-plugin-modal-card {
     max-height: 90% !important;
   }
-
-  img.menu-icon.is-hoverable.navbar-item.logo {
+  img.drugstone-plugin-menu-icon.drugstone-plugin-is-hoverable.drugstone-plugin-navbar-item.drugstone-plugin-logo {
     height: 40px;
     width: 125px;
     padding: 0;
   }
-
-  .tissue-dropdown {
+  .drugstone-plugin-tissue-dropdown {
     padding: 5px;
-
-    .scroll-area {
+    .drugstone-plugin-scroll-area {
       max-height: 250px;
       overflow-y: scroll;
       padding-right: 5px;
     }
   }
-
-  .rotated {
+  .drugstone-plugin-rotated {
     -ms-transform: rotate(180deg); /* IE 9 */
     transform: rotate(180deg);
   }
-
-  div.navbar-menu {
+  div.drugstone-plugin-navbar-menu {
     margin-left: 5px;
   }
-
-  span.icon {
+  span.drugstone-plugin-icon {
     margin-right: 5px;
   }
-
-  .mb-3 {
+  .drugstone-plugin-mb-3 {
     margin-bottom: 10px;
   }
-
-  img.inline {
+  img.drugstone-plugin-inline {
     height: 30px;
     align: middle;
   }
-
-  button.i {
+  button.drugstone-plugin-i {
     margin-left: 5px;
   }
-
-  input.checkbox {
+  input.drugstone-plugin-checkbox {
     margin-left: 15px;
   }
-
-  div.drugstone.sidebar {
+  div.drugstone-plugin-drugstone.drugstone-plugin-sidebar {
     height: $height;
     overflow-y: auto;
     overflow-x: hidden;
@@ -115,7 +91,6 @@
     &::-webkit-scrollbar {
       display: none;
     }
-
     /* Hide scrollbar for IE, Edge and Firefox */
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
@@ -123,167 +98,131 @@
       max-width: 350px;
     }
   }
-
-  div.card.bar-small {
+  div.drugstone-plugin-card.drugstone-plugin-bar-small {
     margin-bottom: 15px;
     word-wrap: break-word;
     height: 130px;
   }
-
-  div.card.bar-medium {
+  div.drugstone-plugin-card.drugstone-plugin-bar-medium {
     margin-bottom: 15px;
     word-wrap: break-word;
     height: 170px;
   }
-
-  div.card.bar-large {
+  div.drugstone-plugin-card.drugstone-plugin-bar-large {
     margin: 5px;
     max-height: 800px;
   }
-
-  div.card-content.overflow {
+  div.drugstone-plugin-card-content.drugstone-plugin-overflow {
     overflow-y: auto;
     max-height: 350px;
   }
-
-  tbody.overflow {
+  tbody.drugstone-plugin-overflow {
     overflow-y: auto;
     max-height: $sidebar-selection-table-height;
   }
-
-  div.drugstone.network {
+  div.drugstone-plugin-drugstone.drugstone-plugin-network {
     height: 100%;
     position: relative;
   }
-
-  div.card.network {
+  div.drugstone-plugin-card.drugstone-plugin-network {
     width: 100%;
     height: $height;
     overflow: hidden;
   }
-
-  div.parent {
+  div.drugstone-plugin-parent {
     position: relative;
   }
-
-  div.image1 {
+  div.drugstone-plugin-image1 {
     position: relative;
   }
-
-  div.center {
+  div.drugstone-plugin-center {
     display: flex;
     align-items: center;
     justify-content: center;
   }
-
-  div.drugstone.explorer {
+  div.drugstone-plugin-drugstone.drugstone-plugin-explorer {
     height: $height;
     overflow: hidden;
   }
-
-  .analysis-view {
+  .drugstone-plugin-analysis-view {
     height: 100%;
     width: 100%;
     margin-top: 0;
     z-index: $analysis-view-z;
-
-    .canvas-content {
+    .drugstone-plugin-canvas-content {
       z-index: $analysis-network-z;
     }
   }
-
-  div.field.has-addons.add-remove-toggle {
+  div.drugstone-plugin-field.drugstone-plugin-has-addons.drugstone-plugin-add-remove-toggle {
     margin-top: 20px;
   }
-
-  // classes for different screen sizes
-  .text-small {
+  .drugstone-plugin-text-small {
     font-size: $text-small-font-size;
   }
-
-  .text-normal {
+  .drugstone-plugin-text-normal {
     font-size: $text-normal-font-size;
   }
-
-  .b-text-small {
+  .drugstone-plugin-b-text-small {
     font-size: $b-text-small-font-size;
   }
-
-  .b-text-smaller {
+  .drugstone-plugin-b-text-smaller {
     font-size: $b-text-smaller-font-size;
   }
-
-  .dropdown-item {
+  .drugstone-plugin-dropdown-item {
     color: var(--drgstn-text-primary);
   }
-
-  // general network settings, some will be overwritten in analysis
-
-  .analysis-view {
-    .network-footer-toolbar {
+  .drugstone-plugin-analysis-view {
+    .drugstone-plugin-network-footer-toolbar {
       z-index: $analysis-network-footer-container-z;
-
-      .network-toolbar-toggle {
+      .drugstone-plugin-network-toolbar-toggle {
         z-index: $analysis-network-footer-container-toggle-z;
       }
     }
   }
-
-  button.is-secondary,
-  button.is-secondary:hover {
+  button.drugstone-plugin-is-secondary,
+  button.drugstone-plugin-is-secondary:hover {
     background-color: var(--drgstn-secondary) !important;
   }
-
-  .row > * {
+  .drugstone-plugin-row > * {
     padding-right: 0;
     padding-left: 0;
   }
-
-  .col > * {
+  .drugstone-plugin-col > * {
     padding-right: 0;
     padding-left: 0;
   }
-
-  .card-header {
+  .drugstone-plugin-card-header {
     padding: 0 0;
     line-height: 18px;
   }
-
-  .has-text-danger {
+  .drugstone-plugin-has-text-danger {
     color: var(--drgstn-danger) !important;
   }
-
-  .has-text-warning {
+  .drugstone-plugin-has-text-warning {
     color: var(--drgstn-warning) !important;
   }
-
-  .highlight-primary:hover {
+  .drugstone-plugin-highlight-primary:hover {
     background-color: var(--drgstn-primary) !important;
     color: var(--drgstn-text-secondary) !important;
   }
-
-  .highlight-danger:hover {
+  .drugstone-plugin-highlight-danger:hover {
     background-color: var(--drgstn-danger) !important;
     color: var(--drgstn-text-secondary) !important;
   }
 }
-
-.row > * {
+.drugstone-plugin-row > * {
   padding-right: calc(1.5rem * 0.5);
   padding-left: calc(1.5rem * 0.5);
 }
-
-.col > * {
+.drugstone-plugin-col > * {
   padding-right: calc(1.5rem * 0.5);
   padding-left: calc(1.5rem * 0.5);
 }
-
-.card-header {
+.drugstone-plugin-card-header {
   padding: 0.5rem 1rem;
   line-height: 24px;
 }
-
-.toast {
+.drugstone-plugin-toast {
   z-index: $toast-z;
   position: relative;
   max-width: 60vw;
@@ -303,7 +242,7 @@
   &.drugstone-plugin-warning {
     background-color: var(--drgstn-warning);
     color: black;
-    .icon {
+    .drugstone-plugin-icon {
       color: black !important;
     }
   }
@@ -311,16 +250,15 @@
     color: var(--drgstn-text-secondary);
     background-color: var(--drgstn-info);
   }
-  .close {
+  .drugstone-plugin-close {
     display: inline;
     float: right;
-    .icon {
+    .drugstone-plugin-icon {
       color: var(--drgstn-text-secondary);
     }
   }
 }
-
-.link-icon {
+.drugstone-plugin-link-icon {
     height: 1.2em !important;
     vertical-align: bottom !important;
 }

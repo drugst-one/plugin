@@ -1,106 +1,80 @@
 @import "src/stylesheets/variables";
-
-#update-available-icon {
+#drugstone-plugin-update-available-icon {
   color: var(--drgstn-warning)
 }
-
-#update-icon {
+#drugstone-plugin-update-icon {
   color: var(--drgstn-success)
 }
-
-.mat-slider-horizontal {
+.drugstone-plugin-mat-slider-horizontal {
   height: 10px
 }
-
-.analysis {
+.drugstone-plugin-analysis {
   position: absolute !important;
   height: 100% !important;
   width: 100% !important;
 }
-
-.tab-header-small {
+.drugstone-plugin-tab-header-small {
   padding: 0 !important;
 }
-
-.network-view-settings {
-  // remove margin from tab header when network is displayed, so that network
-  // does not disappear in empty border
+.drugstone-plugin-network-view-settings {
   padding-left: 0 !important;
   padding-right: 0 !important;
-
-  .tabs {
+  .drugstone-plugin-tabs {
     margin: 0;
   }
-
-  .tab-content {
+  .drugstone-plugin-tab-content {
     width: 100%;
     height: calc(100% - #{$network-header-height} - #{$analysis-tab-header-height});
   }
 }
-
-.tabs-header {
+.drugstone-plugin-tabs-header {
   height: $analysis-tab-header-height;
 }
-
-.parameter-table,
-.parameter-tab {
+.drugstone-plugin-parameter-table,
+.drugstone-plugin-parameter-tab {
   width: 100% !important;
   overflow-y: scroll;
   height: 80%;
 }
-
-.tab-content {
+.drugstone-plugin-tab-content {
   visibility: hidden;
   position: absolute;
-
-  &.is-visible {
+  &.drugstone-plugin-is-visible {
     visibility: visible;
   }
-
-  &.scrollable {
+  &.drugstone-plugin-scrollable {
     overflow-y: auto;
     padding-right: 10px;
   }
-
-  &.table-tab {
-    // 100% - #{$network-header-height} - #{$analysis-tab-header-height} - normalization-button
+  &.drugstone-plugin-table-tab {
     height: calc(100% - 40px - 1.5rem - 72px - 6px);
   }
-
   h4 {
     margin-top: 60px;
   }
 }
-
-.checkbox-col {
+.drugstone-plugin-checkbox-col {
   width: 50px;
 }
-
-.meta {
+.drugstone-plugin-meta {
   table {
     width: 500px;
-
     td {
       width: 50px;
     }
   }
-
 }
-
-.tooltip-button {
+.drugstone-plugin-tooltip-button {
   font-size: 10px;
   width: 10px;
 }
-
-.scroll-y {
+.drugstone-plugin-scroll-y {
   overflow-y: auto;
 }
-
-.legend {
+.drugstone-plugin-legend {
   z-index: $analysis-network-legend-z !important;
 }
-
-div.dropdown-list {
+div.drugstone-plugin-dropdown-list {
   padding: 0 !important;
   border-radius: 5px !important;
   right: 0;
@@ -109,76 +83,59 @@ div.dropdown-list {
   min-width: $menu-width !important;
   width: auto;
 }
-
-div.control.dropdown {
+div.drugstone-plugin-control.drugstone-plugin-dropdown {
   margin-bottom: 0.4rem;
 }
-
-.dropdown-menu {
+.drugstone-plugin-dropdown-menu {
   z-index: $menu-z-index !important;
 }
-
-.inner-dropdown {
+.drugstone-plugin-inner-dropdown {
   padding-bottom: 0 !important;
-
-  .dropdown-menu {
+  .drugstone-plugin-dropdown-menu {
     margin-left: calc(150px - 15px);
     width: 150px;
     margin-top: -45px;
-
-    .dropdown-content {
+    .drugstone-plugin-dropdown-content {
       padding-left: 0.5rem;
       padding-right: 0.5rem;
-
-      .dropdown-item {
+      .drugstone-plugin-dropdown-item {
         padding: .375rem !important;
       }
     }
   }
 }
-
-.version-text {
+.drugstone-plugin-version-text {
   font-size: .6rem !important;
   padding-bottom: 0 !important;
 }
-
-.pathway-table th:nth-child(1) {
+.drugstone-plugin-pathway-table th:nth-child(1) {
   width: 8%;
 }
-
-.pathway-table th:nth-child(2) {
+.drugstone-plugin-pathway-table th:nth-child(2) {
   width: 12%;
 }
-
-.pathway-table th:nth-child(3) {
+.drugstone-plugin-pathway-table th:nth-child(3) {
   width: 25%;
 }
-
-.pathway-table th:nth-child(4) {
+.drugstone-plugin-pathway-table th:nth-child(4) {
   width: 13%;
 }
-
-.pathway-table th:nth-child(5) {
+.drugstone-plugin-pathway-table th:nth-child(5) {
   width: 8%;
 }
-
-.pathway-table th:nth-child(6) {
+.drugstone-plugin-pathway-table th:nth-child(6) {
   width: 12%;
 }
-
-.pathway-table th:nth-child(7) {
+.drugstone-plugin-pathway-table th:nth-child(7) {
   width: 11%;
 }
-
-.pathway-table th:nth-child(8) {
+.drugstone-plugin-pathway-table th:nth-child(8) {
   width: 8%;
 }
-
-.pathway-table td {
+.drugstone-plugin-pathway-table td {
   vertical-align: middle !important;
 }
-
-.sticky-row {
+.drugstone-plugin-sticky-row {
   position: sticky;
   top: 0;
   background-color: #fff;

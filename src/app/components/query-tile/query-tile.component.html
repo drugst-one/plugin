@@ -1,19 +1,39 @@
-<div class="content">
-  <ng-select
-    [items]="queryItems"
-    bindLabel="data.label"
-    bindValue="data.label"
-    [virtualScroll]="true"
-    [placeholder]="getLabel()"
-    [hideSelected]="true"
-    [searchFn]="querySearch"
-    (change)="select($event)"
-    pTooltip="Find nodes in the network."
-    [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
-    tooltipPosition="top"
-  >
-    <ng-template ng-option-tmp let-item="item">
-      <span>{{ item.data.label }}</span>
-    </ng-template>
-  </ng-select>
+<div class="drugstone-plugin-content">
+
+<ng-select
+
+[items]="queryItems"
+
+bindLabel="data.label"
+
+bindValue="data.label"
+
+[virtualScroll]="true"
+
+[placeholder]="getLabel()"
+
+[hideSelected]="true"
+
+[searchFn]="querySearch"
+
+(change)="select($event)"
+
+pTooltip="Find nodes in the network."
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'"
+
+tooltipPosition="top"
+
+>
+
+<ng-template ng-option-tmp let-item="item">
+
+<span>{{ item.data.label }}</span>
+
+</ng-template>
+
+</ng-select>
+
 </div>
+
+
