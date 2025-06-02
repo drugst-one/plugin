@@ -1,7 +1,7 @@
 <div *ngIf="token">
   <div
     class="card analysis analysis-view"
-    [ngClass]="{ fullscreen: drugstoneConfig.config.fullscreen }"
+    [ngClass]="{ fullscreenAnalysis: drugstoneConfig.config.fullscreen }"
   >
     <header class="card-header">
       <p class="card-header-title">
@@ -548,9 +548,11 @@
               <th> </th>
               <th mat-sort-header="geneset">Geneset</th>
               <th mat-sort-header="pathway">Pathway</th>
-              <th mat-sort-header="overlap">Overlap</th>
-              <th mat-sort-header="p_value">Adjusted p-value</th>
-              <th mat-sort-header="odds_ratio">Odds ratio</th>
+              <th mat-sort-header="overlap">Overlapping Genes</th>
+              <th mat-sort-header="pathwaySize">Pathway Size</th>
+              <th mat-sort-header="overlapPercentage">Overlap Percentage</th>
+              <th mat-sort-header="adjPvalue">Adjusted p-value</th>
+              <th mat-sort-header="oddsRatio">Odds ratio</th>
             </tr>
           </thead>
           <tbody>
@@ -593,21 +595,22 @@
         
                 <td style="vertical-align: middle; text-align: center;">
                   <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                    <span style="white-space: nowrap;">{{ item.overlap }}</span>
-        
                     <button (click)="item.showGenes = !item.showGenes" pTooltip="Show overlapping genes."
                       class="button is-small" style="vertical-align: middle;">
                       <span *ngIf="!item.showGenes">&#9654;</span> <!-- Right arrow (collapsed) -->
                       <span *ngIf="item.showGenes">&#9660;</span> <!-- Down arrow (expanded) -->
                     </button>
+                    <span style="white-space: nowrap;">{{ item.overlap }}</span>
                   </div>
                 </td>
+                <td>{{ item.pathwaySize }}</td>
+                <td>{{ item.overlapPercentage | number: '1.2-2' }}%</td>
                 <td>{{ item.adjPvalue | scientific }}</td>
                 <td>{{ item.oddsRatio | number: '1.2-2' }}</td>
               </tr>
         
               <tr *ngIf="item.showGenes">
-                <td colspan="6">
+                <td colspan="8">
                   <div *ngFor="let gene of item.genes">
                     <app-gene-rows [gene]="gene"></app-gene-rows>
                   </div>
@@ -620,12 +623,63 @@
             <!-- column normalization for drugs button START -->
           </div>
 
+          <div *ngIf="task.info.algorithm === 'first-neighbor'">
+            <div class="column">
+              <h4 class="is-4">
+                <app-fa-solid-icon icon="crosshairs" title="protein table"></app-fa-solid-icon>
+                <span style="padding-left: 4px;">First Neighbor</span>
+              </h4>
+            </div>
+            <div class="column">
+              <h5 class="is-5">
+                <app-fa-solid-icon icon="edit"></app-fa-solid-icon>
+                <strong>Prune on SPD value</strong>
+              </h5>
+              <div>
+                <p *ngIf="result?.network?.nodes?.length !== undefined">
+                  <strong>Initial Network Size:</strong> {{ result?.networkInitial?.nodes?.length }}
+                </p>
+                <div style="padding-left: 15px;">
+                  <div>
+                    <span>Prune based on range:</span>
+                    <br>
+                    <input style="margin-top: 5px; width: 80%" type="range" [min]="minPruningValue" [max]="maxPruningValue"
+                      [(ngModel)]="cutoff" (input)="pruningSliderChange()" [step]="step">
+                    <label style="padding: 5px;">{{ cutoff }}</label>
+                  </div>
+                  <br>
+                  <div>
+                    <span>Enter exact cutoff value:</span>
+                    <br>
+                    <input style="margin-top: 5px; width: 50%" type="number" [min]="minPruningValue" [max]="maxPruningValue"
+                      [(ngModel)]="cutoff" [step]="step" (input)="pruningSliderChange()">
+          
+                  </div>
+                  <br>
+                  <div style="margin: 8px !important;">
+                    <label style="display: flex; align-items: center;">
+                      <input type="checkbox" [(ngModel)]="pruneOrphanNodes" (ngModelChange)="pruningSliderChange()" style="margin-right: 8px;">
+                      Prune Orphan Nodes
+                    </label>
+                  </div>
+                </div>
+                <br>
+              </div>
+              <p>
+                <strong>Pruned Network Size:</strong> {{ prunedNetwork?.nodes?.length ?? result?.networkInitial?.nodes?.length }}
+              </p>
+              <button class="button is-primary is-rounded has-tooltip" [disabled]="false" (click)="pruneNetwork()"
+                style="padding: 5px; box-sizing: border-box; width: 100%; margin-top: 3%;">
+                Prune Network
+              </button>
+            </div>
+          </div>
 
           <div *ngIf="task.info.algorithm === 'louvain-clustering' || task.info.algorithm === 'leiden-clustering'">
               <div class="column">
               <h4 class="is-4">
                 <app-fa-solid-icon
-                  icon="dna"
+                  icon="hexagon-nodes"
                   title="protein table"
                 ></app-fa-solid-icon>
                 <span *ngIf="task.info.algorithm === 'louvain-clustering'">Louvain Clustering</span>

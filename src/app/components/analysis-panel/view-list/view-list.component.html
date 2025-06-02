@@ -11,16 +11,26 @@
       <div
         *ngIf="task"
       >
-        <div class="columns mb-0" (click)="open(task.token)" pTooltip="Show selection view"
-             [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
-             tooltipPosition="top">
-          <div class="column is-8">
-            <span
-            ><app-fa-solid-icon
-              icon="crosshairs"
-            ></app-fa-solid-icon>
-              Manual selection</span
-            >
+        <div class="columns mb-0 is-flex is-align-items-center">
+          <div class="column is-8" *ngIf="!editing || currentEditingTask !== task.token">
+            <app-fa-solid-icon class="mr-2" icon="crosshairs"></app-fa-solid-icon>
+            <span (click)="open(task.token)" pTooltip="Show selection view"
+              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">{{ task.name }}</span>
+            <app-fa-solid-icon icon="pen" (click)="editingTask(task)" class="ml-2" style="cursor: pointer;"></app-fa-solid-icon>
+          </div>
+        
+          <div class="column is-8 is-flex is-align-items-center" *ngIf="editing && currentEditingTask === task.token">
+            <app-fa-solid-icon class="mr-2" icon="crosshairs"></app-fa-solid-icon>
+            <input [(ngModel)]="taskTextMap[task.token]" class="input is-small ml-3" minlength="4"
+              style="width: auto; display: inline-block; font-size: 1rem; padding: 2px 6px;" />
+            <app-fa-solid-icon icon="check" (click)="saveSelectionName(task)"
+              [class.has-text-grey-light]="taskTextMap[task.token]?.length < 4"
+              [style.pointerEvents]="taskTextMap[task.token]?.length < 4 ? 'none' : 'auto'" class="ml-2"
+              style="cursor: pointer;"></app-fa-solid-icon>
+            <app-fa-solid-icon *ngIf="taskTextMap[task.token]?.length < 4" icon="exclamation-triangle"
+              class="has-text-danger ml-2" pTooltip="Please enter at least 4 characters" tooltipPosition="top"
+              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'">
+            </app-fa-solid-icon>
           </div>
         </div>
         <div class="columns mb-0">

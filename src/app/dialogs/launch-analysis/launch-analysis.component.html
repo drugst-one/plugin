@@ -11,8 +11,12 @@
         Find Drug Targets
       </p>
       <p class="modal-card-title" *ngIf="target === 'gene'">
-        <app-fa-solid-icon icon="capsules"></app-fa-solid-icon>
+        <app-fa-solid-icon icon="dna"></app-fa-solid-icon>
         Pathway enrichment
+      </p>
+      <p class="modal-card-title" *ngIf="target === 'clustering'">
+        <app-fa-solid-icon icon="hexagon-nodes"></app-fa-solid-icon>
+        Clustering
       </p>
       <button (click)="close()" class="delete" aria-label="close"></button>
     </header>
@@ -589,13 +593,23 @@
             </div>
           
             <div class="field">
-              <label class="label" for="seed-louvain">Seed</label>
+              <label class="label" for="seed-louvain">Random Number Generator Seed</label>
               <div class="control">
                 <input type="number" [(ngModel)]="seed" id="seed-louvain" class="input" placeholder="Enter a seed or leave empty"
                   (ngModelChange)="onSeedChange($event)" />
               </div>
               <p class="has-text-info is-size-7">
                 Optional: Provide a seed for the random number generator, or leave empty to auto-generate one.
+              </p>
+            </div>
+            <div class="field">
+              <label class="label" for="resolution_louvain">Resolution</label>
+              <div class="control">
+                <input type="number" step="0.1" min="0" max="1" [(ngModel)]="resolution_louvain" id="resolution_louvain" class="input"
+                  placeholder="Enter a resolution value for the Louvain algorithm"/>
+              </div>
+              <p class="has-text-info is-size-7">
+                Provide the Resolution value for the Louvain algorithm. Default: 1.0
               </p>
             </div>
           </div>
@@ -631,13 +645,23 @@
             </div>
           
             <div class="field">
-              <label class="label" for="seed">Seed</label>
+              <label class="label" for="seed">Random Number Generator Seed</label>
               <div class="control">
                 <input type="number" [(ngModel)]="seed" id="seed" class="input" placeholder="Enter a seed or leave empty"
                   (ngModelChange)="onSeedChange($event)" />
               </div>
               <p class="has-text-info is-size-7">
                 Optional: Provide a seed for the random number generator, or leave empty to auto-generate one.
+              </p>
+            </div>
+            <div class="field">
+              <label class="label" for="max_nodes">Max Cluster Size</label>
+              <div class="control">
+                <input type="number" [(ngModel)]="max_nodes" id="max_nodes" class="input" placeholder="Enter a max cluster size or leave empty"
+                  (ngModelChange)="onMaxNodesChange($event)" />
+              </div>
+              <p class="has-text-info is-size-7">
+                Optional: Provide a maximum cluster size or leave empty for no limit.
               </p>
             </div>
           </div>

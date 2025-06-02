@@ -419,7 +419,7 @@ export const downloadNodeAttributes = [
   'cellularComponent',
   'group',
   'degreeInNetwork',
-  'SPD',
+  'spd',
   'degreeInPpi',
   'localClusteringCoefficient',
   'rank',

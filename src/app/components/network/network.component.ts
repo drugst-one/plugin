@@ -18,7 +18,7 @@ import {
 } from '../../interfaces';
 import {AnalysisService} from 'src/app/services/analysis/analysis.service';
 import {NetworkSettings} from 'src/app/network-settings';
-import {pieChartContextRenderer} from 'src/app/utils';
+import {downLoadFile, pieChartContextRenderer} from 'src/app/utils';
 import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
 import {LegendService} from 'src/app/services/legend-service/legend-service.service';
 import {LoadingScreenService} from 'src/app/services/loading-screen/loading-screen.service';
@@ -26,6 +26,8 @@ import {version} from '../../../version';
 import {Subject} from 'rxjs';
 import { ToastService } from 'src/app/services/toast/toast.service';
 import { LoggerService } from 'src/app/services/logger/logger.service';
+
+declare var C2S: any;
 
 @Component({
   selector: 'app-network',
@@ -145,6 +147,56 @@ export class NetworkComponent implements OnInit {
   }
   async readLatestVersion() {
     this.latestVersionString = await this.netex.getLatestVersion(this.versionString)
+  }
+
+  exportSVG() {
+    // Found this idea in a bug ticket: https://github.com/almende/vis/issues/723#issuecomment-460763667
+
+    const canvas = this.networkEl.nativeElement.querySelector('canvas');
+
+    // Create a new SVG context
+    const ctx = new C2S({
+      width: canvas.width,
+      height: canvas.height,
+      embedImages: true,
+    });
+
+    // Monkey patch the canvas context temporarily
+    const canvasProto = this.networkInternal.canvas.__proto__;
+    const originalGetContext = canvasProto.getContext;
+
+    canvasProto.getContext = function () {
+      return ctx;
+    };
+
+    // Force redraw with SVG context
+    const originalOptions = this.networkInternal.getOptionsFromConfigurator?.() || {};
+    const svgOptions = {
+      nodes: {
+        shapeProperties: {
+          interpolation: false,
+        },
+        scaling: {
+          label: { drawThreshold: 0 },
+        },
+      },
+      edges: {
+        scaling: {
+          label: { drawThreshold: 0 },
+        },
+      },
+    };
+
+    this.networkInternal.setOptions(svgOptions);
+    this.networkInternal.redraw();
+
+    const svgString = ctx.getSerializedSvg(true);
+
+    // Restore the original context and options after export
+    canvasProto.getContext = originalGetContext;
+    this.networkInternal.setOptions(originalOptions);
+
+    return downLoadFile(svgString, "mage/svg+xml;charset=utf-8", "svg", "drugstone" );
   }
 
 
@@ -443,7 +495,7 @@ export class NetworkComponent implements OnInit {
         this.legendService.add_to_context('adjacentDrugs');
         const addedEdge = {};
         const proteinMap = this.getProteinMap();
-        this.netex.adjacentDrugs(this.drugstoneConfig.config.interactionDrugProtein, this.drugstoneConfig.config.licensedDatasets, this.nodeData.nodes.get()).then(response => {
+        this.netex.adjacentDrugs(this.drugstoneConfig.config.interactionDrugProtein, this.drugstoneConfig.config.licensedDatasets, this.nodeData.nodes.get(), this.drugstoneConfig.currentConfig().approvedDrugs).then(response => {
           const existingDrugIDs = this.nodeData.nodes.get().filter(n => n.drugstoneId && n.drugstoneType === 'drug').map(n => n.drugstoneId);
           const availableDrugTargetTypes = new Set<string>();
           for (const interaction of response.pdis) {
@@ -715,7 +767,7 @@ export class NetworkComponent implements OnInit {
     this.nodeData.edges.remove(edgesToRemove.map(e => e.id));
     const nodes = await this.netex.recalculateStatistics({ "nodes": this.nodeData.nodes.get(), "edges": this.nodeData.edges.get() }, this.drugstoneConfig.currentConfig());
     this.nodeData.nodes.update(nodes);
-    // remove drugs and disorders when node is added
+    // remove drugs and disorders when node is deleted
     if(this.adjacentDrugs || this.adjacentDisordersDrug || this.adjacentDisordersProtein){
       await this.updateAdjacentDrugs(false, true);
       await this.updateAdjacentProteinDisorders(false, true);

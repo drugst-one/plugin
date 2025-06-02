@@ -74,6 +74,9 @@ export class DownloadButtonComponent implements OnInit {
         downloadEdgeAttributes
       )
       this.logger.logMessage(`Downloaded network as CSV: ${filename}`);
+    } else if(fmt === 'svg'){
+      const filename = this.networkHandler.activeNetwork.exportSVG();
+      this.logger.logMessage(`Downloaded network as SVG: ${filename}`);
     }
 
   }

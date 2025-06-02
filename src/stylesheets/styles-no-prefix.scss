@@ -7,6 +7,15 @@
   z-index: $fullscreen-z !important;
 }
 
+.fullscreenAnalysis {
+  position: fixed !important;
+  height: 100vh !important;
+  width: calc(100vw - var(--sidebar-width, 350px)) !important;  
+  top: 0 !important;
+  left: var(--sidebar-width, 350px) !important;
+  z-index: $fullscreen-z-analysis !important;
+}
+
 .fullscreenMenue {
   position: fixed !important;
   height: 100vh !important;

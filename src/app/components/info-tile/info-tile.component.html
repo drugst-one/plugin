@@ -155,6 +155,10 @@
     <span class="is-capitalized"> {{ _wrapper.data.drugId }}</span>
   </a>
 </p>
+<p *ngIf="_wrapper.data.drugId" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
+  <b><span>Status:</span></b>
+  <span class="is-capitalized"> {{ _wrapper.data.status || 'Not Approved' }}</span>
+</p>
 <p
   *ngIf="_wrapper.data.disorderId"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
@@ -261,7 +265,7 @@
     tooltipOff="Remove protein from selection."
   ></app-toggle>
 
-  <app-fa-solid-icon icon="trash" (click)="removeProtein()" class="has-text-danger is-pulled-right"
+  <app-fa-solid-icon *ngIf="_wrapper.data.drugstoneType === 'protein'" icon="trash" (click)="removeProtein()" class="has-text-danger is-pulled-right"
     pTooltip="Delete Node."
     [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
     tooltipPosition="top"

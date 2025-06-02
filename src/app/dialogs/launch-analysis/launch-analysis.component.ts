@@ -26,7 +26,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   @Input()
   public show = false;
   @Input()
-  public target: 'drug' | 'drug-target' | 'gene';
+  public target: 'drug' | 'drug-target' | 'gene' | 'clustering';
   @Output()
   public showChange = new EventEmitter<boolean>();
   @Output()
@@ -47,6 +47,8 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   // Louvain/Leiden Clustering parameters
   public ignore_isolated: boolean = true;
   public seed: number | null = null;
+  public max_nodes: number | null = null;
+  public resolution_louvain: number = 1.0;
 
 
   // Trustrank Parameters
@@ -104,12 +106,14 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.target === 'drug-target') {
-      this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, BETWEENNESS_CENTRALITY, LOUVAINCLUSTERING, LEIDENCLUSTERING, FIRSTNEIGHBOR];
+      this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, BETWEENNESS_CENTRALITY, FIRSTNEIGHBOR];
     } else if (this.target === 'drug') {
       this.algorithms = [TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, NETWORK_PROXIMITY];
     } else if (this.target === 'gene') {
       this.algorithms = [PATHWAYENRICHMENT];
-    } 
+    }  else if (this.target === 'clustering') {
+      this.algorithms = [LOUVAINCLUSTERING, LEIDENCLUSTERING];
+    }
     else {
       // return because this.target === undefined
       return;
@@ -162,7 +166,23 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     parameters.ppi_dataset = this.drugstoneConfig.config.interactionProteinProtein;
     parameters.pdi_dataset = this.drugstoneConfig.config.interactionDrugProtein;
     parameters.licenced = this.drugstoneConfig.config.licensedDatasets;
-    parameters.target = this.target === 'drug' ? 'drug' : (this.target === 'gene' ? 'gene' : 'drug-target');
+    switch (this.target) {
+      case 'drug':
+        parameters.target = 'drug';
+        break;
+      case 'gene':
+        parameters.target = 'gene';
+        break;
+      case 'clustering':
+        parameters.target = 'clustering';
+        break;
+      case 'drug-target':
+        parameters.target = 'drug-target';
+        break;
+      default:
+        parameters.target = 'drug-target';
+        break;
+    }
     // pass network data to reconstruct network in analysis result to connect non-proteins to results
     // drop interactions in nodes beforehand to no cause cyclic error, information is contained in edges
     // @ts-ignore
@@ -231,9 +251,11 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     } else if (this.algorithm === 'louvain-clustering'){
       parameters.ignore_isolated = this.ignore_isolated
       parameters.seed = this.seed
+      parameters.resolution = this.resolution_louvain
     } else if (this.algorithm === 'leiden-clustering') {
       parameters.ignore_isolated = this.ignore_isolated
       parameters.seed = this.seed
+      parameters.max_nodes = this.max_nodes !== null ? this.max_nodes : 0
     } else if (this.algorithm === 'first-neighbor'){
       // no parameters so far
     }
@@ -244,6 +266,10 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   onSeedChange(value: string): void {
     this.seed = value === '' ? null : parseInt(value, 10);
+  }
+
+  onMaxNodesChange(value: number): void {
+    this.max_nodes = Number.isNaN(value) ? null : value;
   }
 
 }

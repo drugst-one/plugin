@@ -126,12 +126,12 @@
             <hr
               *ngIf="!edgeGroup.value.dashes"
               class="edge"
-              [style.background-color]="edgeGroup.value.color"
+              [style.background-color]="edgeGroup.value.color" [style.height.px]="6"
             />
             <hr
               *ngIf="edgeGroup.value.dashes"
               class="edge dashes"
-              [style.color]="edgeGroup.value.color"
+              [style.color]="edgeGroup.value.color" [style.height.px]="6"
             />
           </th>
           <td class="group-name">&nbsp;{{ edgeGroup.value.groupName }}</td>

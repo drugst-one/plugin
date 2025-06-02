@@ -49,6 +49,7 @@ interface Seeded {
 }
 
 
+const maxNodeLimit = 250;
 @Component({
   selector: 'app-analysis-panel',
   templateUrl: './analysis-panel.component.html',
@@ -110,6 +111,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public maxSliderValue: number;
   public sliderValue: number;
 
+  minPruningValue = 0;
+  maxPruningValue = 1;
+  pruneDirection = 'greater';
+  cutoff?: number = 0;
+  prunedNetwork: any;
+  step: number = 0.01;
+  pruneOrphanNodes = false;
 
   constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService, public loadingScreen: LoadingScreenService, public logger: LoggerService, private datePipe: DatePipe) {
     try {
@@ -137,11 +145,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.sortedData = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       const activeColumn = sort.active;
-      if (activeColumn === 'geneset' || activeColumn === 'pathway' || activeColumn == 'odds_ratio' || activeColumn == 'p_value') {
-        return this.compare_string_number(a[activeColumn], b[activeColumn], isAsc);
-      } else if (activeColumn === "overlap") {
-        return this.compare_overlap(a[activeColumn], b[activeColumn], isAsc);
-      }
+      return this.compare_string_number(a[activeColumn], b[activeColumn], isAsc);
     });
   }
 
@@ -154,12 +158,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   private compare_string_number(a: number | string, b: number | string, isAsc: boolean){
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-  }
-
-  private compare_overlap(a: string, b: string, isAsc: boolean) {
-    const a1 = Number(a.split("/")[0])
-    const b1 = Number(b.split("/")[0])
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 
@@ -183,12 +181,26 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     if (this.result) {
       this.sliderValue = event
       this.sortedData = this.result["tableView"].filter(entry => {
-        const parts = entry.overlap.split('/');
-        const rightValue = parseInt(parts[1], 10);
+        const rightValue = entry["pathwaySize"];
 
         return !isNaN(rightValue) && rightValue <= this.sliderValue;
       });
     }
+  }
+
+  async pruningSliderChange() {
+    const network = { "nodes": this.result?.networkInitial?.nodes, "edges": this.result?.networkInitial?.edges };
+    this.netex.pruneNetworkNumber(network, "spd", this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then( (res) => {
+      this.prunedNetwork = res["prunedNetwork"];
+    });
+  }
+
+  async pruneNetwork() {
+    this.prunedNetwork["nodes"] = await this.netex.recalculateStatistics(this.prunedNetwork, this.drugstoneConfig.currentConfig());
+    await this.netex.updateResultNetwork(this.token, this.prunedNetwork, this.cutoff, this.pruneOrphanNodes).then(async () => {
+      await this.refreshTask();
+    });
+    this.logger.logMessage("Network pruned on SPD with cutoff " + this.cutoff + "; Prune orphan nodes: " + this.pruneOrphanNodes + ", resulting nodes: " + this.prunedNetwork["nodes"].length);
   }
 
   @Output() resetEmitter: EventEmitter<boolean> = new EventEmitter();
@@ -339,8 +351,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     let maxOverlap = 0;
 
     for (const entry of entries) {
-      const overlapValue = entry.overlap.split('/')[1];
-      const rightValue = parseInt(overlapValue, 10);
+      const rightValue = entry["pathwaySize"];
 
       if (!isNaN(rightValue) && rightValue > maxOverlap) {
         maxOverlap = rightValue;
@@ -367,8 +378,9 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.loading = true;
     this.loadingScreen.stateUpdate(true);
     this.getView(this.token).then(async view => {
-      this.logger.changeComponent('View ' + this.datePipe.transform(view.createdAt, "short"));
-      this.logger.logMessage('View loaded. Nodes: ' + view.network.nodes.length + ', Edges: ' + view.network.edges.length + '.');
+      const name = view["name"] || "Manual Selection";
+      this.logger.changeComponent('View "'+ name + '" ' + this.datePipe.transform(view.createdAt, "short"));
+      this.logger.logMessage('View "' + name + '" loaded. Nodes: ' + view.network.nodes.length + ', Edges: ' + view.network.edges.length + '.');
       this.task = view;
       this.result = view;
       this.drugstoneConfig.set_analysisConfig(view.config);
@@ -531,8 +543,15 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       this.netex.getTaskResult(this.token).then(async result => {
         console.log(result)
         this.analysis.target = result.parameters.target;
-        if (!("network" in result)) {
+        if ("cutoff" in result) {
+          this.cutoff = result["cutoff"];
+          this.prunedNetwork = result["network"];
+          this.pruneOrphanNodes = result["pruneOrphanNodes"];
+        }
+        if (!("network" in result) || (result["network"]["nodes"].length > maxNodeLimit && result["algorithm"] === "first_neighbor")) {
           this.tab = 'table';
+        } else {
+          this.tab = 'network';
         }
 
         if (this.networkHandler.activeNetwork.networkType !== 'analysis') {

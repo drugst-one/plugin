@@ -174,7 +174,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   public showAnalysisDialog = false;
   public showThresholdDialog = false;
-  public analysisDialogTarget: 'drug' | 'drug-target' | 'gene';
+  public analysisDialogTarget: 'drug' | 'drug-target' | 'gene' | 'clustering';
 
   selectedProperty: string = '';
   pruningType = '';
@@ -401,6 +401,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   onSelectionChange(event) {
+    this.analysis.resetSelection();
     if (event.length === 0) {
       this.selectedValues = [];
     }
@@ -415,6 +416,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   onPruneOrphanNodesChange(){
+    this.analysis.resetSelection();
     const network = { "nodes": this.networkHandler.activeNetwork.nodeData.nodes.get(), "edges": this.networkHandler.activeNetwork.nodeData.edges.get() };
     if(this.pruningType === "string"){
       this.netex.pruneNetworkString(network, this.selectedProperty, this.selectedValues, this.pruneOrphanNodes).then((result) => {
@@ -463,6 +465,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   onSliderValueChanged() {
+    this.analysis.resetSelection();
     const network = { "nodes": this.networkHandler.activeNetwork.nodeData.nodes.get(), "edges": this.networkHandler.activeNetwork.nodeData.edges.get() };
     this.netex.pruneNetworkNumber(network, this.selectedProperty, this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then((result) => {
       this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
@@ -684,6 +687,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         const netexEdges = await this.netex.fetchEdges(nodes, this.drugstoneConfig.config.interactionProteinProtein, this.drugstoneConfig.config.licensedDatasets);
         edges.push(...netexEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.currentConfig(), node_map)).flatMap(e => e));
       }
+      edges = edges.flat();
       const edge_map = {};
 
       edges = edges.filter(edge => {
@@ -723,7 +727,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }
 
       nodes = await this.netex.recalculateStatistics({"nodes": nodes, "edges": edges}, this.drugstoneConfig.currentConfig());
-
       this.nodeData.nodes = new vis.DataSet(nodes);
       this.nodeData.edges = new vis.DataSet(edges);
 

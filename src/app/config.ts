@@ -35,7 +35,7 @@ export type InteractionDrugProteinDB = 'NeDRex' | 'DrugBank' | 'DrugCentral' | '
 export type InteractionProteinProteinDB = 'NeDRex' | 'BioGRID' | 'IID' | 'IntAct' | 'STRING' | 'APID' | 'OmniPath';
 export type IndicationDrugDisorderDB = 'NeDRex' | 'CTD' | 'DrugCentral' | 'DrugBank';
 export type AssociatedProteinDisorderDB = 'NeDRex' | 'DisGeNET' | 'OMIM';
-export type AdvAnalysisContentTypes = 'drug-target-search' | 'drug-search' | 'pathway-enrichment' | 'enrichment-gprofiler' | 'enrichment-digest' | 'search-ndex';
+export type AdvAnalysisContentTypes = 'drug-target-search' | 'drug-search' | 'pathway-enrichment' | 'clustering' | 'enrichment-gprofiler' | 'enrichment-digest' | 'search-ndex';
 
 
 // TODO: should this be external or integrated in the backend?
@@ -50,6 +50,7 @@ export interface IConfig {
   taskTargetName: string;
   taskDrugName: string;
   pathwayEnrichment: string;
+  clusteringName: string;
   showSidebar: false | 'left' | 'right';
   showOverview: boolean;
   showQuery: boolean;
@@ -81,11 +82,13 @@ export interface IConfig {
   networkMenuButtonAdjacentDisordersDrugsLabel: string;
   showNetworkMenuButtonAnimation: boolean;
   showNetworkMenuButtonLayout: boolean;
+  showNetworkMenuButtonSelectionMultiDrag: boolean;
   showNetworkMenuButtonOverlayDirectedEdges: boolean;
   showNetworkMenuButtonUpload: boolean;
   showNetworkMenuButtonLabelIdspace: boolean;
   networkMenuButtonAnimationLabel: string;
   networkMenuButtonLayoutLabel: string;
+  networkMenuButtonSelectionMultiDragLabel: string;
   networkMenuButtonOverlayDirectedEdgesLabel: string;
   networkMenuButtonUploadLabel: string;
   showLegend: boolean;
@@ -103,6 +106,7 @@ export interface IConfig {
   interactions?: InteractionDatabase;
   physicsOn?: boolean;
   layoutOn?: boolean;
+  selectionMultiDrag?: boolean;
   fullscreen?: boolean;
   overlayDirectedEdges?: boolean;
   physicsInital?: boolean;
@@ -113,6 +117,7 @@ export interface IConfig {
   edgeShadow?: boolean;
   customLinks?: {};
   reviewed?: boolean;
+  approvedDrugs?: boolean;
   calculateProperties?: boolean;
   algorithms: { [key in AlgorithmTarget]: Array<AlgorithmType | QuickAlgorithmType> };
 }
@@ -163,9 +168,10 @@ export const defaultConfig: IConfig = {
   legendUrl: '',
   legendClass: 'legend',
   legendPos: 'left',
-  taskTargetName: 'Drug target search',
+  taskTargetName: 'Target identification',
   taskDrugName: 'Drug search',
   pathwayEnrichment: 'Pathway enrichment',
+  clusteringName: 'Clustering',
   showSidebar: 'left',
   showLegendNodes: true,
   showLegendEdges: true,
@@ -174,7 +180,7 @@ export const defaultConfig: IConfig = {
   showItemSelector: true,
   showSimpleAnalysis: true,
   showAdvAnalysis: true,
-  showAdvAnalysisContent: ['drug-search', 'drug-target-search', 'pathway-enrichment', 'enrichment-gprofiler', 'enrichment-digest', 'search-ndex'],
+  showAdvAnalysisContent: ['drug-search', 'drug-target-search', 'pathway-enrichment', 'clustering', 'enrichment-gprofiler', 'enrichment-digest', 'search-ndex'],
   showSelection: true,
   showEditNetwork: false,
   showPruning: false,
@@ -192,6 +198,7 @@ export const defaultConfig: IConfig = {
   showNetworkMenuButtonCenter: true,
   showNetworkMenuButtonAnimation: true,
   showNetworkMenuButtonLayout: true,
+  showNetworkMenuButtonSelectionMultiDrag: true,
   showNetworkMenuButtonOverlayDirectedEdges: true,
   showNetworkMenuButtonUpload: false,
   showNetworkMenuButtonLabelIdspace: true,
@@ -205,6 +212,7 @@ export const defaultConfig: IConfig = {
   networkMenuButtonAdjacentDisordersDrugsLabel: 'Disorders (drug)',
   networkMenuButtonAnimationLabel: 'Animation',
   networkMenuButtonLayoutLabel: "Layout",
+  networkMenuButtonSelectionMultiDragLabel: "Multi-Drag",
   networkMenuButtonOverlayDirectedEdgesLabel: "Overlay Directions",
   networkMenuButtonUploadLabel: "Upload",
   identifier: 'symbol',
@@ -218,6 +226,7 @@ export const defaultConfig: IConfig = {
   autofillEdges: true,
   physicsOn: false,
   layoutOn: false,
+  selectionMultiDrag: true,
   fullscreen: false,
   overlayDirectedEdges: false,
   physicsInital: true,
@@ -225,12 +234,13 @@ export const defaultConfig: IConfig = {
   edgeShadow: true,
   licensedDatasets: false,
   reviewed: false,
+  approvedDrugs: false,
   calculateProperties: false,
   customLinks: {}, // { test: 'test link', test2: 'test2 link' }
   algorithms: {
     drug: ['trustrank', 'closeness', 'degree', 'proximity'],
-    'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness', 'louvain-clustering', 'leiden-clustering', 'first-neighbor'],
-    gene: ['pathway-enrichment']
+    'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness', 'first-neighbor'],
+    gene: ['pathway-enrichment'], clustering: ['louvain-clustering', 'leiden-clustering']
   },
   nodeGroups: {
     // all NodeGroups but the default group must be set, if not provided by the user, they will be taken from here
@@ -455,14 +465,14 @@ export const defaultConfig: IConfig = {
     },
     stimulation: {
       groupName: 'Stimulation',
-      color: 'red',
-      highlight: 'lightcoral',
+      color: '#2196F3',
+      highlight: 'lightblue',
       arrows: { to: { type: 'arrow', enabled: true, scaleFactor: 1 } }
     },
     inhibition: {
       groupName: 'Inhibition',
-      color: 'blue',
-      highlight: 'lightblue',
+      color: 'red',
+      highlight: 'lightcoral',
       arrows: { to: { type: 'bar', enabled: true, scaleFactor: 1 } }
     },
     neutral: {
