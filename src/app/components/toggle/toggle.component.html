@@ -1,43 +1,87 @@
-<div class="field has-addons">
-  <p class="control has-tooltip">
-    <button
-      class="button is-rounded has-tooltip"
-      [pTooltip]="tooltipOn"
-      [disabled]="disabled"
-      [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
-      tooltipPosition="top"
-      [class.is-primary]="value"
-      (click)="toggle(true)"
-      [ngClass]="{ 'is-small': drugstoneConfig.smallStyle }"
-    >
-      <app-fa-solid-icon
-        classString="is-small first-item-in-button has-text-success"
-        [icon]="iconOn"
-      ></app-fa-solid-icon>
-      <span [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">{{
-        textOn
-      }}</span>
-    </button>
-  </p>
-  <p class="control">
-    <button
-      class="button is-rounded has-tooltip"
-      [pTooltip]="tooltipOff"
-      [disabled]="disabled"
-      [tooltipStyleClass]="'drgstn drgstn-tooltip-top'"
-      tooltipPosition="top"
-      [class.is-primary]="!value"
-      (click)="toggle(false)"
-      [ngClass]="{ 'is-small': drugstoneConfig.smallStyle }"
-    >
-      <span [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">{{
-        textOff
-      }}</span>
-      <app-fa-solid-icon
-        *ngIf="iconOff"
-        classString="is-small last-item-in-button has-text-danger"
-        [icon]="iconOff"
-      ></app-fa-solid-icon>
-    </button>
-  </p>
+<div class="drugstone-plugin-field drugstone-plugin-has-addons">
+
+<p class="drugstone-plugin-control drugstone-plugin-has-tooltip">
+
+<button
+
+class="drugstone-plugin-button drugstone-plugin-is-rounded drugstone-plugin-has-tooltip"
+
+[pTooltip]="tooltipOn"
+
+[disabled]="disabled"
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'"
+
+tooltipPosition="top"
+
+[class.drugstone-plugin-is-primary]="value"
+
+(click)="toggle(true)"
+
+[ngClass]="{ 'drugstone-plugin-is-small': drugstoneConfig.smallStyle }"
+
+>
+
+<app-fa-solid-icon
+
+classString="drugstone-plugin-is-small drugstone-plugin-first-item-in-button drugstone-plugin-has-text-success"
+
+[icon]="iconOn"
+
+></app-fa-solid-icon>
+
+<span [ngClass]="{ 'drugstone-plugin-text-small': drugstoneConfig.smallStyle }">{{
+
+textOn
+
+}}</span>
+
+</button>
+
+</p>
+
+<p class="drugstone-plugin-control">
+
+<button
+
+class="drugstone-plugin-button drugstone-plugin-is-rounded drugstone-plugin-has-tooltip"
+
+[pTooltip]="tooltipOff"
+
+[disabled]="disabled"
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip-top'"
+
+tooltipPosition="top"
+
+[class.drugstone-plugin-is-primary]="!value"
+
+(click)="toggle(false)"
+
+[ngClass]="{ 'drugstone-plugin-is-small': drugstoneConfig.smallStyle }"
+
+>
+
+<span [ngClass]="{ 'drugstone-plugin-text-small': drugstoneConfig.smallStyle }">{{
+
+textOff
+
+}}</span>
+
+<app-fa-solid-icon
+
+*ngIf="iconOff"
+
+classString="drugstone-plugin-is-small drugstone-plugin-last-item-in-button drugstone-plugin-has-text-danger"
+
+[icon]="iconOff"
+
+></app-fa-solid-icon>
+
+</button>
+
+</p>
+
 </div>
+
+

@@ -1,26 +1,18 @@
 @import "src/stylesheets/variables";
-
-#ex-update-available-icon{
+#drugstone-plugin-ex-update-available-icon{
   color: var(--drgstn-warning)
 }
-
-#ex-update-icon{
+#drugstone-plugin-ex-update-icon{
   color: var(--drgstn-success)
 }
-
-
-.network-view-settings {
-  // remove margin from tab header when network is displayed, so that network
-  // does not disappear in empty border
+.drugstone-plugin-network-view-settings {
   padding: 0 !important;
   height: calc(100% - #{$network-header-height});
-
-  &.analysis {
+  &.drugstone-plugin-analysis {
     height: calc(100% - 0.5rem);
   }
 }
-
-div.dropdown-list {
+div.drugstone-plugin-dropdown-list {
   padding: 0 !important;
   border-radius: 5px !important;
   right: 0;
@@ -29,36 +21,28 @@ div.dropdown-list {
   min-width: $menu-width !important;
   width: auto;
 }
-
-div.control.dropdown {
+div.drugstone-plugin-control.drugstone-plugin-dropdown {
   margin-bottom: 0.4rem;
 }
-
-.dropdown-menu {
+.drugstone-plugin-dropdown-menu {
   z-index: $menu-z-index !important;
 }
-
-.inner-dropdown {
+.drugstone-plugin-inner-dropdown {
   padding-bottom: 0 !important;
-
-  .dropdown-menu {
+  .drugstone-plugin-dropdown-menu {
     margin-left: calc(150px - 15px);
     width: 150px;
     margin-top: -45px;
-
-    .dropdown-content {
+    .drugstone-plugin-dropdown-content {
       padding-left: 0.5rem;
       padding-right: 0.5rem;
-
-      .dropdown-item {
+      .drugstone-plugin-dropdown-item {
         padding: .375rem !important;
       }
     }
   }
 }
-
-.version-text {
+.drugstone-plugin-version-text {
   font-size: .6rem !important;
   padding-bottom: 0 !important;
 }
-

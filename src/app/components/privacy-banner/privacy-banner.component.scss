@@ -1,19 +1,16 @@
 @import "src/stylesheets/variables";
-
-#privacy-banner {
+#drugstone-plugin-privacy-banner {
   position: absolute;
   bottom: 0;
   z-index: $privacy-banner-z;
   width: 100%;
   padding-left: 0;
   padding-right: 0;
-
-  &.disabled {
+  &.drugstone-plugin-disabled {
     display: none;
   }
 }
-
-.link-style {
+.drugstone-plugin-link-style {
   cursor: pointer;
   text-decoration: underline;
 }

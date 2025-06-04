@@ -1,23 +1,19 @@
 @import "src/stylesheets/variables";
-
-.quick-icon {
+.drugstone-plugin-quick-icon {
   display: flex;
   align-content: center;
   justify-content: center;
   margin: auto;
 }
-
-.seed-selection {
+.drugstone-plugin-seed-selection {
   max-height: 800px;
 }
-
-.separator {
+.drugstone-plugin-separator {
   height: 1px;
   background-color: #ccc;
   margin: 8px 0;
 }
-
-.scrollable-container {
+.drugstone-plugin-scrollable-container {
   max-height: 200px;
   overflow-y: auto;
   border: 1px solid #ccc;
@@ -25,12 +21,10 @@
   padding: 10px;
   background-color: white;
 }
-
-.quick-find {
-  .notification {
+.drugstone-plugin-quick-find {
+  .drugstone-plugin-notification {
     padding: 1.25rem 1rem 1.25rem 1rem !important;
-
-    .digit {
+    .drugstone-plugin-digit {
       color: rgba(255, 255, 255, 0.5);
       font-size: 32px;
       border: 2px solid rgba(255, 255, 255, 0.5);
@@ -43,8 +37,7 @@
       margin: auto 0;
       font-weight: bold;
     }
-
-    .digit-small {
+    .drugstone-plugin-digit-small {
       color: rgba(255, 255, 255, 0.5);
       font-size: 24px;
       border: 2px solid rgba(255, 255, 255, 0.5);
@@ -58,27 +51,22 @@
       font-weight: bold;
     }
   }
-
-  .notification.small {
+  .drugstone-plugin-notification.drugstone-plugin-small {
     padding: 0.5rem 1rem !important;
   }
-
-  .divisor-rapid {
+  .drugstone-plugin-divisor-rapid {
     margin-top: -10px;
     margin-bottom: 10px;
     text-align: center;
   }
 }
-
-.card-content.quick-find.small {
+.drugstone-plugin-card-content.drugstone-plugin-quick-find.drugstone-plugin-small {
   padding: 0.5rem !important;
 }
-
-.card-content.quick-find {
+.drugstone-plugin-card-content.drugstone-plugin-quick-find {
   padding: 1.5rem !important;
 }
-
-.quick-start-btn {
+.drugstone-plugin-quick-start-btn {
   align-self: center;
   justify-self: center;
   margin-top: auto;
@@ -86,17 +74,14 @@
   margin-left: auto !important;
   margin-right: auto !important;
 }
-
-.align-vmiddle {
+.drugstone-plugin-align-vmiddle {
   width: 100%;
   display: flex;
   vertical-align: middle;
   height: 50px;
-
   div {
     display: inline-block;
   }
-
   button,
   span,
   div {
@@ -105,41 +90,32 @@
     margin-right: 5px;
   }
 }
-
-.mobile-fallback {
+.drugstone-plugin-mobile-fallback {
   padding: 15px;
   font-weight: bold;
 }
-
-.network-header {
+.drugstone-plugin-network-header {
   height: $network-header-height;
 }
-
-.card-footer {
+.drugstone-plugin-card-footer {
   font-size: 12px;
-
   a {
     padding: 3px;
   }
 }
-
-.scroll-x {
+.drugstone-plugin-scroll-x {
   overflow-x: auto;
 }
-
-.selection-table {
+.drugstone-plugin-selection-table {
   width: 100%;
   display: block;
-
   td {
     vertical-align: middle !important;
   }
-
   thead, tbody {
     width: 100%;
     display: block !important;
   }
-
   thead, tbody tr {
     width: 100%;
     display: table !important;
@@ -152,27 +128,23 @@
     margin-bottom: 0 !important;
   }
 }
-
-.task-list-container {
+.drugstone-plugin-task-list-container {
   padding: 0.5rem !important;
   max-height: 500px;
   overflow-y: auto;
 }
-
-.uniprot p {
+.drugstone-plugin-uniprot p {
   max-width: 50px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-.choose-property-title {
+.drugstone-plugin-choose-property-title {
   font-weight: bold;
   margin-bottom: 10px;
   color: var(--drgstn-text-primary);
 }
-
-.property-item {
+.drugstone-plugin-property-item {
   display: flex;
   justify-content: space-between;
   padding: 8px;
@@ -181,38 +153,32 @@
   transition: background-color 0.3s ease;
   color: var(--drgstn-text-primary);
 }
-
-.property-item:hover {
+.drugstone-plugin-property-item:hover {
   background-color: var(--drgstn-primary);
   color: var(--drgstn-text-secondary);
 }
-
-.property-item.selected {
+.drugstone-plugin-property-item.drugstone-plugin-selected {
   background-color: var(--drgstn-primary);
   color: var(--drgstn-text-secondary);
 }
-
-.divider {
+.drugstone-plugin-divider {
   height: 1px;
   background-color: var(--drgstn-border);
   margin: 5px 0;
 }
-
-.prune-dropdown-container {
+.drugstone-plugin-prune-dropdown-container {
   display: flex;
   flex-direction: column;
   width: 200px;
   margin: 15px 0;
 }
-
-.prune-label {
+.drugstone-plugin-prune-label {
   font-weight: 600;
   font-size: 14px;
   margin-bottom: 5px;
   color: var(--drgstn-text-primary);
 }
-
-.prune-select {
+.drugstone-plugin-prune-select {
   padding: 10px 15px;
   font-size: 14px;
   color: var(--drgstn-text-primary);
@@ -221,32 +187,27 @@
   border-radius: 8px;
   transition: all 0.3s ease;
 }
-
-.prune-select:hover,
-.prune-select:focus {
+.drugstone-plugin-prune-select:hover,
+.drugstone-plugin-prune-select:focus {
   border-color: var(--drgstn-primary);
   outline: none;
 }
-
-.prune-select option {
+.drugstone-plugin-prune-select option {
   padding: 10px;
   font-size: 14px;
 }
-
-.prune-select:focus option {
+.drugstone-plugin-prune-select:focus option {
   background-color: var(--drgstn-primary);
   color: white;
 }
-
-.pruning-dropdown-container {
+.drugstone-plugin-pruning-dropdown-container {
   width: 100% !important;
   max-width: 100%;
   min-width: 100%;
   padding-top: 20px;
   box-sizing: border-box !important;
 }
-
-.warning-icon {
+.drugstone-plugin-warning-icon {
   color: orange;
   margin-left: 8px;
   cursor: pointer;

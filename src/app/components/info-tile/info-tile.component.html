@@ -1,273 +1,492 @@
 <p
-  *ngIf="!_wrapper.data.drugstoneId && _wrapper.data.label"
-  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+
+*ngIf="!_wrapper.data.drugstoneId && _wrapper.data.label"
+
+[ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }"
+
 >
-  <b><span>Label:</span></b>
-  <span class="is-capitalized"> {{ _wrapper.data.label }}</span>
-</p>
-<p
-  *ngIf="_wrapper.data.proteinName"
-  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
->
-  <b><span>Name:</span></b>
-  <span class="is-capitalized"> {{ _wrapper.data.proteinName }}</span>
-</p>
-<p
-  *ngIf="_wrapper.data.symbol"
-  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
->
-  <b><span>Symbol:</span></b>
-  <a
-    class="is-capitalized"
-    href="https://www.genecards.org/cgi-bin/carddisp.pl?gene={{
-      _wrapper.data.symbol
-    }}"
-    target="_blank"
-  >
-    {{ _wrapper.data.symbol }}
-  </a>
+
+<b><span>Label:</span></b>
+
+<span class="drugstone-plugin-is-capitalized"> {{ _wrapper.data.label }}</span>
+
 </p>
 
 <p
-  *ngIf="_wrapper.data.uniprot"
-  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+
+*ngIf="_wrapper.data.proteinName"
+
+[ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }"
+
 >
-  <b><span>Uniprot:</span></b>
-  <a
-    *ngFor="let uniprot of _wrapper.data.uniprot"
-    href="https://www.uniprot.org/uniprot/{{ uniprot }}"
-    target="_blank"
-  >
-    <span class="is-capitalized"> {{ uniprot }}</span>
-  </a>
+
+<b><span>Name:</span></b>
+
+<span class="drugstone-plugin-is-capitalized"> {{ _wrapper.data.proteinName }}</span>
+
 </p>
+
 <p
-  *ngIf="_wrapper.data.ensg"
-  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+
+*ngIf="_wrapper.data.symbol"
+
+[ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }"
+
 >
-  <b><span>Ensembl:</span></b>
-  <a
-    *ngFor="let ensg of _wrapper.data.ensg"
-    href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={{ ensg }}"
-    target="_blank"
-  >
-    <span class="is-capitalized"> {{ ensg }}</span>
-  </a>
+
+<b><span>Symbol:</span></b>
+
+<a
+
+class="drugstone-plugin-is-capitalized"
+
+href="https://www.genecards.org/cgi-bin/carddisp.pl?gene={{ _wrapper.data.symbol }}"     target="_blank"
+
+>
+
+{{ _wrapper.data.symbol }}
+
+</a>
+
 </p>
+
 <p
-  *ngIf="_wrapper.data.entrez"
-  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+
+*ngIf="_wrapper.data.uniprot"
+
+[ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }"
+
 >
-  <b><span>Entrez:</span></b>
-  <a
-    *ngFor="let entrez of _wrapper.data.entrez"
-    href="https://www.ncbi.nlm.nih.gov/gene/{{ entrez }}"
-    target="_blank"
-  >
-    <span class="is-capitalized"> {{ entrez }}</span>
-  </a>
+
+<b><span>Uniprot:</span></b>
+
+<a
+
+*ngFor="let uniprot of _wrapper.data.uniprot"
+
+href="https://www.uniprot.org/uniprot/{{ uniprot }}"
+
+target="_blank"
+
+>
+
+<span class="drugstone-plugin-is-capitalized"> {{ uniprot }}</span>
+
+</a>
+
+</p>
+
+<p
+
+*ngIf="_wrapper.data.ensg"
+
+[ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }"
+
+>
+
+<b><span>Ensembl:</span></b>
+
+<a
+
+*ngFor="let ensg of _wrapper.data.ensg"
+
+href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={{ ensg }}"
+
+target="_blank"
+
+>
+
+<span class="drugstone-plugin-is-capitalized"> {{ ensg }}</span>
+
+</a>
+
+</p>
+
+<p
+
+*ngIf="_wrapper.data.entrez"
+
+[ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }"
+
+>
+
+<b><span>Entrez:</span></b>
+
+<a
+
+*ngFor="let entrez of _wrapper.data.entrez"
+
+href="https://www.ncbi.nlm.nih.gov/gene/{{ entrez }}"
+
+target="_blank"
+
+>
+
+<span class="drugstone-plugin-is-capitalized"> {{ entrez }}</span>
+
+</a>
+
 </p>
 
 <p *ngIf="_wrapper.data.cellularComponent && _wrapper.data.cellularComponent.length > 0"
-  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
-  <b><span>Cellular component: </span></b>
-  <ng-container *ngFor="let cc of _wrapper.data.cellularComponent; let last = last">
-    <a href="https://www.ebi.ac.uk/QuickGO/term/GO:{{cc.split(':')[0]}}">
-      <span class="is-capitalized">{{ cc.split(':')[1] }}</span>
-    </a>
-    <span *ngIf="!last"> | </span> <!-- Trennzeichen für alle Elemente außer dem letzten -->
-  </ng-container>
+
+[ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }">
+
+<b><span>Cellular component: </span></b>
+
+<ng-container *ngFor="let cc of _wrapper.data.cellularComponent; let last = last">
+
+<a href="https://www.ebi.ac.uk/QuickGO/term/GO:{{cc.split(':')[0]}}">
+
+<span class="drugstone-plugin-is-capitalized">{{ cc.split(':')[1] }}</span>
+
+</a>
+
+<span *ngIf="!last"> | </span> <!-- Trennzeichen für alle Elemente außer dem letzten -->
+
+</ng-container>
+
 </p>
 
-<p *ngIf="_wrapper.data.layer" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
-  <b><span>Layer:</span></b>
-  <span class="is-capitalized">
-    {{ _wrapper.data.layer }}
-  </span>
+<p *ngIf="_wrapper.data.layer" [ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }">
+
+<b><span>Layer:</span></b>
+
+<span class="drugstone-plugin-is-capitalized">
+
+{{ _wrapper.data.layer }}
+
+</span>
+
 </p>
 
-<p *ngIf="_wrapper.data.isReviewed" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
-  <b><span>Reviewed:</span></b>
-  <span class="is-capitalized">
-    {{ _wrapper.data.isReviewed }}
-  </span>
+<p *ngIf="_wrapper.data.isReviewed" [ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }">
+
+<b><span>Reviewed:</span></b>
+
+<span class="drugstone-plugin-is-capitalized">
+
+{{ _wrapper.data.isReviewed }}
+
+</span>
+
 </p>
 
-<p *ngIf="hasProperties()" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
-  <b><span>Properties:</span></b>
-  <div *ngFor="let property of _wrapper.data.properties | keyvalue" style="padding-left: 10px; padding-bottom: 5px;">
-    <i><span>{{ property.key }}:</span></i>
-    <span class="is-capitalized">
-      {{ property.value }}
-    </span>
-  </div>
+<p *ngIf="hasProperties()" [ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }">
+
+<b><span>Properties:</span></b>
+
+<div *ngFor="let property of _wrapper.data.properties | keyvalue" style="padding-left: 10px; padding-bottom: 5px;">
+
+<i><span>{{ property.key }}:</span></i>
+
+<span class="drugstone-plugin-is-capitalized">
+
+{{ property.value }}
+
+</span>
+
+</div>
+
 <p
-  *ngIf="getExpressionScore() != null"
-  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+
+*ngIf="getExpressionScore() != null"
+
+[ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }"
+
 >
-  <b
-    ><span
-      >Median expression in
-      {{ "'" + networkHandler.activeNetwork.selectedTissue.name + "'" }}
-      (TPM):</span
-    ></b
-  >
-  <span class="is-capitalized"> {{ getExpressionScore() | number }}</span>
-  <span
-    class="icon has-text-info"
-    pTooltip="Median expression data is provided by the GTEx project. Unit is TPM (transcript per million)."
-    [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
-    tooltipPosition="left"
-  >
-    <app-fa-solid-icon icon="info-circle"></app-fa-solid-icon>
-  </span>
+
+<b
+
+><span
+
+>Median expression in
+
+{{ "'" + networkHandler.activeNetwork.selectedTissue.name + "'" }}
+
+(TPM):</span
+
+></b
+
+>
+
+<span class="drugstone-plugin-is-capitalized"> {{ getExpressionScore() | number }}</span>
+
+<span
+
+class="drugstone-plugin-icon drugstone-plugin-has-text-info"
+
+pTooltip="Median expression data is provided by the GTEx project. Unit is TPM (transcript per million)."
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-left'"
+
+tooltipPosition="left"
+
+>
+
+<app-fa-solid-icon icon="info-circle"></app-fa-solid-icon>
+
+</span>
+
 </p>
+
 <p
-  *ngIf="_wrapper.data.drugId || _wrapper.data.disorderId"
-  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+
+*ngIf="_wrapper.data.drugId || _wrapper.data.disorderId"
+
+[ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }"
+
 >
-  <b><span>Name:</span></b>
-  <span class="is-capitalized"> {{ _wrapper.data.label }}</span>
+
+<b><span>Name:</span></b>
+
+<span class="drugstone-plugin-is-capitalized"> {{ _wrapper.data.label }}</span>
+
 </p>
+
 <p
-  *ngIf="_wrapper.data.icd10"
-  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+
+*ngIf="_wrapper.data.icd10"
+
+[ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }"
+
 >
-  <b><span>ICD10:</span></b>
-  <span class="is-capitalized">
-    {{
-      _wrapper.data.icd10.length === 0 ||
-      (_wrapper.data.icd10.length === 1 && _wrapper.data.icd10[0].length === 0)
-        ? "-"
-        : _wrapper.data.icd10
-    }}</span
-  >
+
+<b><span>ICD10:</span></b>
+
+<span class="drugstone-plugin-is-capitalized">
+
+{{
+
+_wrapper.data.icd10.length === 0 ||
+
+(_wrapper.data.icd10.length === 1 && _wrapper.data.icd10[0].length === 0)
+
+? "-"
+
+: _wrapper.data.icd10
+
+}}</span
+
+>
+
 </p>
+
 <p
-  *ngIf="_wrapper.data.drugId"
-  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+
+*ngIf="_wrapper.data.drugId"
+
+[ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }"
+
 >
-  <b><span>DrugBank:</span></b>
-  <a
-    href="https://go.drugbank.com/drugs/{{ _wrapper.data.drugId }}"
-    target="_blank"
-  >
-    <span class="is-capitalized"> {{ _wrapper.data.drugId }}</span>
-  </a>
+
+<b><span>DrugBank:</span></b>
+
+<a
+
+href="https://go.drugbank.com/drugs/{{ _wrapper.data.drugId }}"
+
+target="_blank"
+
+>
+
+<span class="drugstone-plugin-is-capitalized"> {{ _wrapper.data.drugId }}</span>
+
+</a>
+
 </p>
-<p *ngIf="_wrapper.data.drugId" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
-  <b><span>Status:</span></b>
-  <span class="is-capitalized"> {{ _wrapper.data.status || 'Not Approved' }}</span>
+
+<p *ngIf="_wrapper.data.drugId" [ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }">
+
+<b><span>Status:</span></b>
+
+<span class="drugstone-plugin-is-capitalized"> {{ _wrapper.data.status || 'Not Approved' }}</span>
+
 </p>
+
 <p
-  *ngIf="_wrapper.data.disorderId"
-  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+
+*ngIf="_wrapper.data.disorderId"
+
+[ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }"
+
 >
-  <b><span>Mondo:</span></b>
-  <a
-    href="https://www.ebi.ac.uk/ols/ontologies/mondo/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FMONDO_{{
-      writeZeros(7 - ('' + _wrapper.data.disorderId).length)
-    }}{{ _wrapper.data.disorderId }}"
-    target="_blank"
-  >
-    <span class="is-capitalized"> MONDO:{{ _wrapper.data.disorderId }}</span>
-  </a>
+
+<b><span>Mondo:</span></b>
+
+<a
+
+href="https://www.ebi.ac.uk/ols/ontologies/mondo/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FMONDO_{{ writeZeros(7 - ('' + _wrapper.data.disorderId).length) }}{{ _wrapper.data.disorderId }}"     target="_blank"
+
+>
+
+<span class="drugstone-plugin-is-capitalized"> MONDO:{{ _wrapper.data.disorderId }}</span>
+
+</a>
+
 </p>
+
 <p
-  *ngIf="
-    drugstoneConfig.currentConfig().nodeGroups[
-      networkHandler.activeNetwork.selectedWrapper.data[
-        networkHandler.activeNetwork.selectedWrapper.data.group ===
-        'selectedNode'
-          ? '_group'
-          : 'group'
-      ]
-    ].groupName
-  "
-  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+
+*ngIf=" drugstoneConfig.currentConfig().nodeGroups[ networkHandler.activeNetwork.selectedWrapper.data[ networkHandler.activeNetwork.selectedWrapper.data.group === 'selectedNode' ? '_group' : 'group' ] ].groupName "   [ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }"
+
 >
-  <b><span>Group:</span></b>
-  <span class="is-capitalized">
-    {{
-      drugstoneConfig.currentConfig().nodeGroups[
-        networkHandler.activeNetwork.selectedWrapper.data[
-          networkHandler.activeNetwork.selectedWrapper.data.group ===
-          "selectedNode"
-            ? "_group"
-            : "group"
-        ]
-      ].groupName
-    }}</span
-  >
+
+<b><span>Group:</span></b>
+
+<span class="drugstone-plugin-is-capitalized">
+
+{{
+
+drugstoneConfig.currentConfig().nodeGroups[
+
+networkHandler.activeNetwork.selectedWrapper.data[
+
+networkHandler.activeNetwork.selectedWrapper.data.group ===
+
+"selectedNode"
+
+? "_group"
+
+: "group"
+
+]
+
+].groupName
+
+}}</span
+
+>
+
 </p>
+
 <p
-  *ngIf="_showLinks"
-  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+
+*ngIf="_showLinks"
+
+[ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }"
+
 >
-  <b><span>Links:</span></b>
-  <span *ngFor="let target of linkoutMap | keyvalue">
-    <a
-      *ngIf="showLinkout(target.key)"
-      [href]="getLinkoutURL(target.key)"
-      target="_blank"
-      class="link-icon-margin"
-    >
-      <app-image
-        _class="link-icon"
-        _src="assets/{{ target.value }}.png"
-        _alt="{{ target.value }}"
-        _title="{{ target.value }}"
-      ></app-image>
-    </a>
-  </span>
-  <a
-    class="link-icon-margin"
-    href="https://clinicaltrials.gov/ct2/results?term={{ _wrapper.data.symbol }}"
-    target="_blank"
-  >
-    <app-image
-      _class="link-icon"
-      _src="assets/clinicaltrials.png"
-      _alt="ClinicalTrials.gov"
-      _title="ClinicalTrials.gov"
-    ></app-image>
-  </a>
+
+<b><span>Links:</span></b>
+
+<span *ngFor="let target of linkoutMap | keyvalue">
+
+<a
+
+*ngIf="showLinkout(target.key)"
+
+[href]="getLinkoutURL(target.key)"
+
+target="_blank"
+
+class="drugstone-plugin-link-icon-margin"
+
+>
+
+<app-image
+
+_class="drugstone-plugin-link-icon"
+
+_src="assets/{{ target.value }}.png"
+
+_alt="{{ target.value }}"
+
+_title="{{ target.value }}"
+
+></app-image>
+
+</a>
+
+</span>
+
+<a
+
+class="drugstone-plugin-link-icon-margin"
+
+href="https://clinicaltrials.gov/ct2/results?term={{ _wrapper.data.symbol }}"
+
+target="_blank"
+
+>
+
+<app-image
+
+_class="drugstone-plugin-link-icon"
+
+_src="assets/clinicaltrials.png"
+
+_alt="ClinicalTrials.gov"
+
+_title="ClinicalTrials.gov"
+
+></app-image>
+
+</a>
+
 </p>
 
 <div
-  [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
+
+[ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }"
+
 >
-  <div *ngFor="let link_data of drugstoneConfig.currentConfig().customLinks | keyvalue">
-    <a
-      *ngIf="getCustomLink(link_data.key)"
-      [href]="getCustomLink(link_data.key)"
-      target="_blank"
-      class="link-icon-margin"
-    >
-      <button
-        class="button is-rounded is-small is-primary mb-1">
-        {{ link_data.value }}
-      </button>
-    </a>
-  </div>
+
+<div *ngFor="let link_data of drugstoneConfig.currentConfig().customLinks | keyvalue">
+
+<a
+
+*ngIf="getCustomLink(link_data.key)"
+
+[href]="getCustomLink(link_data.key)"
+
+target="_blank"
+
+class="drugstone-plugin-link-icon-margin"
+
+>
+
+<button
+
+class="drugstone-plugin-button drugstone-plugin-is-rounded drugstone-plugin-is-small drugstone-plugin-is-primary drugstone-plugin-mb-1">
+
+{{ link_data.value }}
+
+</button>
+
+</a>
+
 </div>
 
-<div class="toggle-container">
-  <app-toggle
-    *ngIf="_wrapper.data.drugstoneId && _wrapper.data.drugstoneType === 'protein'"
-    [value]="analysis.inSelection(_wrapper)"
-    (valueChange)="
-      $event ? analysis.addItems([_wrapper]) : analysis.removeItems([_wrapper])
-    "
-    textOn="Selected"
-    textOff="Off"
-    tooltipOn="Add protein to selection."
-    tooltipOff="Remove protein from selection."
-  ></app-toggle>
-
-  <app-fa-solid-icon *ngIf="_wrapper.data.drugstoneType === 'protein'" icon="trash" (click)="removeProtein()" class="has-text-danger is-pulled-right"
-    pTooltip="Delete Node."
-    [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
-    tooltipPosition="top"
-  ></app-fa-solid-icon>
 </div>
+
+<div class="drugstone-plugin-toggle-container">
+
+<app-toggle
+
+*ngIf="_wrapper.data.drugstoneId && _wrapper.data.drugstoneType === 'protein'"
+
+[value]="analysis.inSelection(_wrapper)"
+
+(valueChange)=" $event ? analysis.addItems([_wrapper]) : analysis.removeItems([_wrapper]) "     textOn="Selected"
+
+textOff="Off"
+
+tooltipOn="Add protein to selection."
+
+tooltipOff="Remove protein from selection."
+
+></app-toggle>
+
+<app-fa-solid-icon *ngIf="_wrapper.data.drugstoneType === 'protein'" icon="trash" (click)="removeProtein()" class="drugstone-plugin-has-text-danger drugstone-plugin-is-pulled-right"
+
+pTooltip="Delete Node."
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'"
+
+tooltipPosition="top"
+
+></app-fa-solid-icon>
+
+</div>
+

@@ -1,12 +1,10 @@
 @import '../stylesheets/icons';
-
-.drgstn-tooltip {
+.drugstone-plugin-drgstn-tooltip {
   position: absolute !important;
   padding: .25em .5rem !important;
   max-width: 12.5rem !important;
 }
-
-.drgstn-tooltip-top {
+.drugstone-plugin-drgstn-tooltip-top {
   .p-tooltip-text:before {
     width: 0;
     left: 50%;
@@ -15,11 +13,9 @@
     border-top: 6px solid var(--drgstn-tooltip);
     border-bottom: 0;
     transform: translate(-50%, calc(100% + 3px));
-
   }
 }
-
-.drgstn-tooltip-bottom {
+.drugstone-plugin-drgstn-tooltip-bottom {
   .p-tooltip-text:before {
     width: 0;
     left: 50%;
@@ -30,8 +26,7 @@
     transform: translate(-50%, -5px);
   }
 }
-
-.drgstn-tooltip-left {
+.drugstone-plugin-drgstn-tooltip-left {
   .p-tooltip-text:before {
     height: 0;
     top: 50%;
@@ -42,8 +37,7 @@
     transform: translate(calc(100% - 1px),-50% );
   }
 }
-
-.drgstn-tooltip-right {
+.drugstone-plugin-drgstn-tooltip-right {
   .p-tooltip-text:before {
     height: 0;
     top: 50%;
@@ -54,18 +48,14 @@
     transform: translate(-5px,-50% );
   }
 }
-
-.drgstn {
+.drugstone-plugin-drgstn {
   @import '../assets/styles/theme';
-
   .p-hidden-accessible {
     position: absolute;
   }
-
   .p-tooltip-arrow {
     display: none !important;
   }
-
   .p-tooltip-text {
     white-space: pre-line !important;
     background: var(--drgstn-tooltip) !important;
@@ -75,13 +65,11 @@
     font-family:  var(--drgstn-font-family) !important;
     font-size: .75rem !important;
   }
-
   .p-tooltip-text:before {
     content: '';
     position: absolute;
     display: block;
   }
-
   .p-checkbox .p-checkbox-box {
     border-color: var(--drgstn-text-primary) !important;
     color: var(--drgstn-text-primary) !important;
@@ -92,148 +80,29 @@
     height: 18px !important;
     position: relative !important;
   }
-
   .p-checkbox .p-checkbox-box.p-highlight .p-checkbox-icon.pi-check:before {
     top: 8px !important;
     left: 2px !important;
     border-color: var(--drgstn-text-primary) !important;
   }
-
-
   .p-datatable .p-sortable-column .p-sortable-column-icon {
     color: inherit !important;
   }
-
   .p-datatable .p-datatable-tfoot > tr > td, .p-datatable .p-datatable-thead > tr > th {
     background-color: var(--drgstn-panel) !important;
     border-color: var(--drgstn-border) !important;
     color: var(--drgstn-text-primary) !important;
   }
-
   .p-datatable .p-sortable-column.p-highlight, .p-datatable .p-sortable-column:not(.p-highlight):hover, .p-datatable .p-sortable-column.p-highlight:hover {
     background-color: var(--drgstn-panel) !important;
     border-color: var(--drgstn-border) !important;
     color: var(--drgstn-primary) !important;
   }
-
-
-  .p-datatable .p-datatable-tbody > tr > td, .button.is-light {
+  .p-datatable .p-datatable-tbody > tr > td, .drugstone-plugin-button.drugstone-plugin-is-light {
     border-color: var(--drgstn-border) !important;
     background-color: var(--drgstn-panel) !important;
     color: var(--drgstn-text-primary) !important;
   }
-
 }
-
-#appWindow {
-
-  //.ng-select{
-  //  box-sizing: border-box !important;
-  //  display: block !important;
-  //  position: relative !important;
-  //  clear: both;
-  //  font-size: 1rem;
-  //  text-align: inherit;
-  //}
-  //
-  //.ng-select.ng-select-single .ng-select-container .ng-value-container, .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-value {
-  //  overflow: hidden;
-  //  text-overflow: ellipsis;
-  //  white-space: nowrap;
-  //}
-  //
-  //.ng-select .ng-select-container .ng-value-container {
-  //  display: flex;
-  //  flex: 1;
-  //}
-  //
-  //.ng-select .ng-select-container .ng-value-container {
-  //  align-items: center;
-  //  padding-left: 10px;
-  //}
-  //
-  //.ng-select.ng-select-single .ng-select-container {
-  //  height: 36px;
-  //}
-  //
-  //.control {
-  //  box-sizing: border-box;
-  //  clear: both;
-  //  font-size: 1rem;
-  //  position: relative;
-  //  text-align: inherit;
-  //}
-  //
-  //.ng-select .ng-select-container {
-  //  cursor: default;
-  //  display: flex;
-  //  outline: none;
-  //  overflow: hidden;
-  //  position: relative;
-  //  width: 100%;
-  //  color: #333;
-  //  background-color: #fff;
-  //  border-radius: 4px;
-  //  border: 1px solid #ccc;
-  //  min-height: 36px;
-  //  align-items: center;
-  //}
-  //
-  //.ng-dropdown-panel.ng-select-bottom {
-  //  top: 100%;
-  //  border-bottom-right-radius: 4px;
-  //  border-bottom-left-radius: 4px;
-  //  border-top-color: #e6e6e6;
-  //  margin-top: -1px;
-  //}
-  //
-  //.ng-dropdown-panel {
-  //  -webkit-overflow-scrolling: touch;
-  //  box-sizing: border-box;
-  //  opacity: 0;
-  //  position: absolute;
-  //  width: 100%;
-  //  z-index: 1050;
-  //}
-  //
-  //.ng-dropdown-panel {
-  //  background-color: #fff;
-  //  border: 1px solid #ccc;
-  //  box-shadow: 0 1px 0 rgba(0,0,0,.06);
-  //  left: 0;
-  //}
-  //
-  //.ng-dropdown-panel .total-padding {
-  //  opacity: 0;
-  //  width: 1px;
-  //}
-  //
-  //.ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
-  //  box-sizing: border-box;
-  //  cursor: pointer;
-  //  display: block;
-  //}
-  //
-  //.ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
-  //  background-color: #fff;
-  //  color: rgba(0,0,0,.87);
-  //  padding: 8px 10px;
-  //}
-  //
-  //.ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup, .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
-  //  overflow: hidden;
-  //  text-overflow: ellipsis;
-  //  white-space: nowrap;
-  //}
-  //
-  //
-  //.ng-select-container {
-  //  background-color: var(--drgstn-panel-secondary);
-  //  border-color: var(--drgstn-border);
-  //}
-  //
-  //.ng-select.ng-select-opened.ng-select-bottom>.ng-select-container {
-  //  border-bottom-right-radius: 0;
-  //  border-bottom-left-radius: 0;
-  //}
+#drugstone-plugin-appWindow {
 }

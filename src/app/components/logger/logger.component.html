@@ -1,38 +1,72 @@
-<div class="logger" [ngStyle]="{ 'height': collapseLogger ? '48px' : '300px' }">
-    <div class="logger-header">
-        <h2 class="logger-title"><b>Logger</b></h2>
-        <div style="display: flex; gap: 5px;">
-            <a  style="margin-left: auto;"  (click)="logger.clearLogs()" class="card-header-icon">
-                <app-fa-solid-icon pTooltip="Clear logs." tooltipPosition="top" [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" icon="trash"></app-fa-solid-icon>
-            </a>
-            <a  style="margin-left: auto;" (click)="logger.downloadLogs()" class="card-header-icon">
-                <app-fa-solid-icon pTooltip="Download logs."  tooltipPosition="top" [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" icon="download"></app-fa-solid-icon>
-            </a>
-            <a (click)="collapseLog()" class="card-header-icon is-hidden-fullscreen">
-                <app-fa-solid-icon *ngIf="!collapseLogger" icon="angle-down"></app-fa-solid-icon>
-                <app-fa-solid-icon *ngIf="collapseLogger" icon="angle-left"></app-fa-solid-icon>
-            </a>
-        </div>
-    </div>
+<div class="drugstone-plugin-logger" [ngStyle]="{ 'height': collapseLogger ? '48px' : '300px' }">
 
-    <div *ngIf="!collapseLogger">
-        <div *ngIf="logger.logs.length; else noLogs" class="logs-container" #logsContainer>
-            <table class="log-table">
-                <tbody>
-                    <tr *ngFor="let log of logger.logs">
-                        <td style="width: 19%;">{{ log.component }}</td>
-                        <td class="message-column">{{ log.message }}</td>
-                        <td style="width: 11%;">{{ log.time | date: 'dd.MM.yyyy HH:mm:ss' }}</td>
-                    </tr>
-                    <tr *ngIf="logger.logs.length === 0">
-                        <td colspan="3" class="no-logs">No logs available.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+<div class="drugstone-plugin-logger-header">
 
-        <ng-template #noLogs>
-            <p class="no-logs">No logs available.</p>
-        </ng-template>
-    </div>
+<h2 class="drugstone-plugin-logger-title"><b>Logger</b></h2>
+
+<div style="display: flex; gap: 5px;">
+
+<a  style="margin-left: auto;"  (click)="logger.clearLogs()" class="drugstone-plugin-card-header-icon">
+
+<app-fa-solid-icon pTooltip="Clear logs." tooltipPosition="top" [tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'" icon="trash"></app-fa-solid-icon>
+
+</a>
+
+<a  style="margin-left: auto;" (click)="logger.downloadLogs()" class="drugstone-plugin-card-header-icon">
+
+<app-fa-solid-icon pTooltip="Download logs."  tooltipPosition="top" [tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'" icon="download"></app-fa-solid-icon>
+
+</a>
+
+<a (click)="collapseLog()" class="drugstone-plugin-card-header-icon drugstone-plugin-is-hidden-fullscreen">
+
+<app-fa-solid-icon *ngIf="!collapseLogger" icon="angle-down"></app-fa-solid-icon>
+
+<app-fa-solid-icon *ngIf="collapseLogger" icon="angle-left"></app-fa-solid-icon>
+
+</a>
+
 </div>
+
+</div>
+
+<div *ngIf="!collapseLogger">
+
+<div *ngIf="logger.logs.length; else noLogs" class="drugstone-plugin-logs-container" #logsContainer>
+
+<table class="drugstone-plugin-log-table">
+
+<tbody>
+
+<tr *ngFor="let log of logger.logs">
+
+<td style="width: 19%;">{{ log.component }}</td>
+
+<td class="drugstone-plugin-message-column">{{ log.message }}</td>
+
+<td style="width: 11%;">{{ log.time | date: 'dd.MM.yyyy HH:mm:ss' }}</td>
+
+</tr>
+
+<tr *ngIf="logger.logs.length === 0">
+
+<td colspan="3" class="drugstone-plugin-no-logs">No logs available.</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<ng-template #noLogs>
+
+<p class="drugstone-plugin-no-logs">No logs available.</p>
+
+</ng-template>
+
+</div>
+
+</div>
+

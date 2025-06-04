@@ -1,4 +1,4 @@
-.gene-row {
+.drugstone-plugin-gene-row {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 2fr 3fr 2fr;
     background-color: #fafafa;
@@ -6,18 +6,14 @@
     padding: '10px';
     border-radius: '5px'
 }
-
-.gene-row div {
+.drugstone-plugin-gene-row div {
     text-align: center;
 }
-
-.gene-row div>div:first-child {
+.drugstone-plugin-gene-row div>div:first-child {
     font-weight: bold;
     margin-bottom: 5px;
 }
-
 hr {
     border-top: 1px #999;
     width: 100%;
 }
-

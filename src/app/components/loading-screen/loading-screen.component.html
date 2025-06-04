@@ -1,24 +1,37 @@
-<div class="loading-screen" [class.loading-screen-fullscreen]="fullscreen" *ngIf="active">
-  <div class="loading-screen-inner">
-    <div class="loading-screen-inner-text pulse">
-      Loading...
-    </div>
-    <button (click)="cancel()"
-            class="button is-primary is-rounded has-tooltip"
-            pTooltip="Cancel the loading screen in case it takes too long or gets stuck."
-            [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-bottom'"
-            tooltipPosition="bottom"
-            [ngClass]="{
-              'is-small': drugstoneConfig.smallStyle
-            }"
-    >
-      <app-fa-solid-icon icon="times"></app-fa-solid-icon>
-      <span
-        [ngClass]="{
-                'text-normal': drugstoneConfig.smallStyle
-              }"
-      >Cancel</span
-      >
-    </button>
-  </div>
+<div class="drugstone-plugin-loading-screen" [class.drugstone-plugin-loading-screen-fullscreen]="fullscreen" *ngIf="active">
+
+<div class="drugstone-plugin-loading-screen-inner">
+
+<div class="drugstone-plugin-loading-screen-inner-text drugstone-plugin-pulse">
+
+Loading...
+
 </div>
+
+<button (click)="cancel()"
+
+class="drugstone-plugin-button drugstone-plugin-is-primary drugstone-plugin-is-rounded drugstone-plugin-has-tooltip"
+
+pTooltip="Cancel the loading screen in case it takes too long or gets stuck."
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-bottom'"
+
+tooltipPosition="bottom"
+
+[ngClass]="{ 'drugstone-plugin-is-small': drugstoneConfig.smallStyle }"     >
+
+<app-fa-solid-icon icon="times"></app-fa-solid-icon>
+
+<span
+
+[ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }"       >Cancel</span
+
+>
+
+</button>
+
+</div>
+
+</div>
+
+

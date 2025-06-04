@@ -1,19 +1,15 @@
 @import "src/stylesheets/variables";
-
-.dropdown-menu {
+.drugstone-plugin-dropdown-menu {
   z-index: $menu-z-index !important;
 }
-
-.inner-dropdown.dropdown-menu {
+.drugstone-plugin-inner-dropdown.drugstone-plugin-dropdown-menu {
   margin-left: calc(-150px - 43px) !important;
   width: 150px;
   margin-top: -45px;
-
-  .dropdown-content {
+  .drugstone-plugin-dropdown-content {
     padding-left: 0.5rem !important;
     padding-right: 0.5rem !important;
-
-    .dropdown-item {
+    .drugstone-plugin-dropdown-item {
       padding: .375rem 0 !important;
     }
   }

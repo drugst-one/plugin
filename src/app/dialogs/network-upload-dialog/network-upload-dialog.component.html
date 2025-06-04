@@ -1,48 +1,90 @@
-<div class="modal" [class.is-active]="show">
-    <div class="modal-background"></div>
-    <div class="modal-card">
-        <header class="modal-card-head">
-            <p class="modal-card-title">
-                <app-fa-solid-icon icon="capsules"></app-fa-solid-icon>
-                Upload Network
-            </p>
-        </header>
+<div class="drugstone-plugin-modal" [class.drugstone-plugin-is-active]="show">
 
-        <section class="modal-card-body">
-            <div class="field">
-                <label class="label">Upload Network File</label>
-                <div class="control">
-                    <input type="file" #networkFileInput (change)="onFileSelected($event)"
-                        accept=".csv, .sif, .graphml, .gt" id="network-file-input" class="input"
-                        pTooltip="Supported formats: .csv, .sif, .graphml, .gt (with node property 'name')."
-                        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top" />
-                </div>
-            </div>
+<div class="drugstone-plugin-modal-background"></div>
 
-            <div class="field">
-                <label class="label">ID-Space</label>
-                <div class="control">
-                    <div class="select">
-                        <select [(ngModel)]="selectedIdSpace" pTooltip="Select the ID-Space for the network."
-                            [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">
-                            <option *ngFor="let space of idSpaces" [value]="space">{{ space }}</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </section>
+<div class="drugstone-plugin-modal-card">
 
-        <footer class="modal-card-foot">
-            <button (click)="launchUpload()" class="button is-success is-rounded has-tooltip"
-                pTooltip="Upload the selected network file and selectthe idspace."
-                [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top" [disabled]="!(selectedFile && selectedIdSpace)">
-                <app-fa-solid-icon icon="rocket"></app-fa-solid-icon>
-                <span> Launch </span>
-            </button>
-            <button (click)="close()" class="button is-rounded has-tooltip" pTooltip="Close the current window."
-                [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">
-                Close
-            </button>
-        </footer>
-    </div>
+<header class="drugstone-plugin-modal-card-head">
+
+<p class="drugstone-plugin-modal-card-title">
+
+<app-fa-solid-icon icon="capsules"></app-fa-solid-icon>
+
+Upload Network
+
+</p>
+
+</header>
+
+<section class="drugstone-plugin-modal-card-body">
+
+<div class="drugstone-plugin-field">
+
+<label class="drugstone-plugin-label">Upload Network File</label>
+
+<div class="drugstone-plugin-control">
+
+<input type="file" #networkFileInput (change)="onFileSelected($event)"
+
+accept=".csv, .sif, .graphml, .gt" id="drugstone-plugin-network-file-input" class="drugstone-plugin-input"
+
+pTooltip="Supported formats: .csv, .sif, .graphml, .gt (with node property 'name')."
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'" tooltipPosition="top" />
+
 </div>
+
+</div>
+
+<div class="drugstone-plugin-field">
+
+<label class="drugstone-plugin-label">ID-Space</label>
+
+<div class="drugstone-plugin-control">
+
+<div class="drugstone-plugin-select">
+
+<select [(ngModel)]="selectedIdSpace" pTooltip="Select the ID-Space for the network."
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'" tooltipPosition="top">
+
+<option *ngFor="let space of idSpaces" [value]="space">{{ space }}</option>
+
+</select>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<footer class="drugstone-plugin-modal-card-foot">
+
+<button (click)="launchUpload()" class="drugstone-plugin-button drugstone-plugin-is-success drugstone-plugin-is-rounded drugstone-plugin-has-tooltip"
+
+pTooltip="Upload the selected network file and selectthe idspace."
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'" tooltipPosition="top" [disabled]="!(selectedFile && selectedIdSpace)">
+
+<app-fa-solid-icon icon="rocket"></app-fa-solid-icon>
+
+<span> Launch </span>
+
+</button>
+
+<button (click)="close()" class="drugstone-plugin-button drugstone-plugin-is-rounded drugstone-plugin-has-tooltip" pTooltip="Close the current window."
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'" tooltipPosition="top">
+
+Close
+
+</button>
+
+</footer>
+
+</div>
+
+</div>
+

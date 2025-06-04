@@ -1,19 +1,15 @@
 @import "src/stylesheets/variables";
-
-div.legend-background {
+div.drugstone-plugin-legend-background {
   /* Fit to the legend size */
   width: 100%;
   height: 100%;
   position: absolute;
-
   /* Add the blur effect */
   opacity: 0.8;
   background-color: var(--drgstn-panel);
-
   border-radius: 1rem;
 }
-
-div.legend {
+div.drugstone-plugin-legend {
   max-height:95%;
   overflow-y: auto;
   position: absolute;
@@ -22,15 +18,14 @@ div.legend {
   width: auto;
   max-width: 11rem;
   z-index: $explorer-networklegend-z;
-  // border size below legend
   margin-bottom: 2px;
   transform-origin: bottom left;
   zoom: $legend-scaling;
   -moz-transform: scale($legend-scaling);
-  &.right {
+  &.drugstone-plugin-right {
     right: 0;
   }
-  &.legend-small {
+  &.drugstone-plugin-legend-small {
     zoom: $legend-scaling-small;
     -moz-transform: scale($legend-scaling-small);
   }
@@ -38,35 +33,31 @@ div.legend {
     z-index: $explorer-networklegend-foreground-z;
     position: relative;
     tr:first-child {
-      // no border line on top of first element
       border-top: none;
     }
   }
   img {
     max-width: 20vw;
-    // margin-bottom: 1rem;
   }
   th {
-    // make all nodes a bit smaller
     zoom: 0.8;
     -moz-transform: scale(0.8);
   }
-  td.group-name {
+  td.drugstone-plugin-group-name {
     color: var(--drgstn-text-primary) !important;
   }
-  tr.list-item {
+  tr.drugstone-plugin-list-item {
     line-height: calc(#{$legend-row-height} / 2);
-    // border-top: var(--drgstn-text-primary) 1px solid;
     th {
       height: $legend-row-height;
       width: $legend-row-height;
       vertical-align: middle !important;
       padding: 2px !important;
-      .text {
+      .drugstone-plugin-text {
         font-style: italic;
         color: var(--drgstn-text-primary) !important;
       }
-      .diamond {
+      .drugstone-plugin-diamond {
         height: $legend-diamond-size;
         text-align: center;
         transform: rotate(45deg);
@@ -74,34 +65,33 @@ div.legend {
         margin-left: 12.5%;
         display: inline-block;
       }
-      .box {
-        // class "box" exists in bulma css, only small changes needed
+      .drugstone-plugin-box {
         height: 100%;
         width: 100%;
         display: inline-block;
         padding: unset;
       }
-      .ellipse {
+      .drugstone-plugin-ellipse {
         height: 75%;
         width: 100%;
         border-radius: 50%;
         display: inline-block;
       }
-      .dot:not(.expression-style) {
+      .drugstone-plugin-dot:not(.drugstone-plugin-expression-style) {
         background: $legend-default-background-color;
         border-radius: 50%;
         width: $legend-circle-size;
         height: $legend-circle-size;
         display: inline-block;
       }
-      .dot.expression-style {
+      .drugstone-plugin-dot.drugstone-plugin-expression-style {
         background: conic-gradient(rgba(255, 255, 255, .6) 0.00% 25.00%, rgba(255, 255, 255, .0) 25.00% 40.00%, rgba(255, 255, 255, .6) 40.00%);
         border-radius: 50%;
         width: $legend-circle-size;
         height: $legend-circle-size;
         display: inline-block;
       }
-      .circle {
+      .drugstone-plugin-circle {
         background: $legend-default-background-color;
         border-radius: 50%;
         width: $legend-circle-size;
@@ -111,7 +101,7 @@ div.legend {
         align-content: center;
         line-height: $legend-circle-line-height;
       }
-      .triangle {
+      .drugstone-plugin-triangle {
         width: 0;
         height: 0;
         border-left: calc(#{$legend-triangle-size} / 2) solid transparent;
@@ -119,7 +109,7 @@ div.legend {
         border-bottom: $legend-triangle-height solid black; // default color will be changed by user input
         display: inline-block;
       }
-      .triangleDown {
+      .drugstone-plugin-triangleDown {
         width: 0;
         height: 0;
         border-left: calc(#{$legend-triangle-size} / 2) solid transparent;
@@ -127,7 +117,7 @@ div.legend {
         border-top: $legend-triangle-height solid black; // default color will be changed by user input
         display: inline-block;
       }
-      .star {
+      .drugstone-plugin-star {
         position: relative;
         display: inline-block;
         width: 0;
@@ -138,7 +128,7 @@ div.legend {
         border-right: 0.3em solid transparent;
         border-bottom: 0.7em solid $legend-star-color;
         border-left: 0.3em solid transparent;
-        /* Controlls the size of the stars. */
+        /* Controlls the size of the stars */
         font-size: $legend-star-size;
         &:before,
         &:after {
@@ -158,26 +148,26 @@ div.legend {
           transform: rotate(35deg);
         }
       }
-      .square {
+      .drugstone-plugin-square {
         background: $legend-default-background-color;
         width: $legend-square-width;
         height: $legend-square-width;
         display: inline-block;
       }
-      .hexagon {
+      .drugstone-plugin-hexagon {
         font-size: $legend-hexagon-font-size;
         display: inline-block;
       }
-      .legend-icon {
+      .drugstone-plugin-legend-icon {
         width: $legend-row-height;
         height: $legend-row-height;
       }
-      hr.edge {
+      hr.drugstone-plugin-edge {
         width: $legend-edge-width;
         height: $legend-edge-height;
         /* Center edge icon */
         margin: 0 auto;
-        &.dashes {
+        &.drugstone-plugin-dashes {
           border-top: dotted !important;
           background-color: transparent !important;
         }

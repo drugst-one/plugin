@@ -1,13 +1,12 @@
 @import "src/stylesheets/variables";
-
-#parser-issue-banner{
+#drugstone-plugin-parser-issue-banner{
   position: absolute;
   bottom: 0;
   z-index: $parser-issue-banner-z;
   width: 100%;
   padding-left: 0;
   padding-right: 0;
-  &.disabled {
+  &.drugstone-plugin-disabled {
     display: none;
   }
 }

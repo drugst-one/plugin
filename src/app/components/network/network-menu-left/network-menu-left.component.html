@@ -1,247 +1,251 @@
 <div
-  class="network-footer-toolbar drgstn-box-shadow"
-  [ngClass]="
-    networkHandler.networkSidebarOpen ? 'opened' : 'closed'
-  "
-  [class.no-header]="networkHandler.activeNetwork.networkType === 'analysis'"
-  [class.small-sidebar]="drugstoneConfig.smallStyle"
+
+class="drugstone-plugin-network-footer-toolbar drugstone-plugin-drgstn-box-shadow"
+
+[ngClass]=" networkHandler.networkSidebarOpen ? 'drugstone-plugin-opened' : 'drugstone-plugin-closed' "   [class.drugstone-plugin-no-header]="networkHandler.activeNetwork.networkType === 'analysis'"
+
+[class.drugstone-plugin-small-sidebar]="drugstoneConfig.smallStyle"
+
 >
-  <a
-    (click)="networkHandler.activeNetwork.toggleNetworkSidebar()"
-    class="button is-small is-primary network-toolbar-toggle"
-    [ngClass]="{ 'rotated': !networkHandler.networkSidebarOpen }"
-  >
-    <app-fa-solid-icon
-      icon="angle-left"
-      classString="only-item-in-button"
-    ></app-fa-solid-icon>
-  </a>
-  <div class="network-footer-toolbar-inner-container">
-    <div class="rows">
-      <div
-        class="row is-full m-1 is-pulled-right"
-        *ngIf="networkHandler.activeNetwork.networkType === 'analysis' && networkHandler.showSeedsButton"
-      >
-        <app-toggle-inplace-reversed
-          class="network-footer-toolbar-element"
-          text="Seeds"
-          tooltip="Highlight seed nodes."
-          [value]="networkHandler.activeNetwork.highlightSeeds"
-          (valueChange)="
-            networkHandler.activeNetwork.updateHighlightSeeds($event)
-          "
-          icon="seedling"
-        ></app-toggle-inplace-reversed>
-      </div>
-      <div
-        class="row is-full m-1 is-pulled-right"
-        *ngIf="drugstoneConfig.config.showNetworkMenuButtonScreenshot"
-      >
-        <div class="network-footer-toolbar-element">
-          <app-center-view-inverse (resetEmitter)="reset()"></app-center-view-inverse>
-        </div>
-      </div>
-      <div
-        class="row is-full m-1 is-pulled-right"
-        *ngIf="drugstoneConfig.config.showNetworkMenuButtonScreenshot"
-      >
-        <div class="network-footer-toolbar-element">
-          <button
-            (click)="networkHandler.activeNetwork.toImage()"
-            class="button is-primary is-rounded has-tooltip"
-            pTooltip="Take a screenshot of the current network."
-            [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-right'"
-            tooltipPosition="right"
-            [ngClass]="{
-              'is-small': drugstoneConfig.smallStyle
-            }"
-          >
-            <span
-              [ngClass]="{
-                'text-normal': drugstoneConfig.smallStyle
-              }"
-              >Screenshot</span
-            >
-            <app-fa-solid-icon
-              icon="camera"
-              classString="is-small last-item-in-button"
-            ></app-fa-solid-icon>
-          </button>
-        </div>
-      </div>
-      <div
-        class="row is-full m-1 is-pulled-right"
-        *ngIf="drugstoneConfig.config.showNetworkMenuButtonExportGraphml"
-      >
-        <div class="network-footer-toolbar-element">
-          <app-download-button-inverse
-            [nodeData]="networkHandler.activeNetwork.nodeData"
-            [buttonId]="'explorer-download'"
-          ></app-download-button-inverse>
-        </div>
-      </div>
-      <div
-        class="row is-full m-1 is-pulled-right"
-        *ngIf="drugstoneConfig.config.showNetworkMenuButtonExpression"
-      >
-        <div
-          class="dropdown network-footer-toolbar-element"
-          [class.is-active]="networkHandler.activeNetwork.expressionExpanded"
-          [ngClass]="{
-            'inner-dropdown': !networkHandler.networkSidebarOpen
-          }"
-        >
-          <div class="dropdown-trigger">
-            <button
-              (click)="
-                networkHandler.activeNetwork.expressionExpanded =
-                  !networkHandler.activeNetwork.expressionExpanded
-              "
-              class="button is-rounded"
-              [class.is-primary]="networkHandler.activeNetwork.selectedTissue"
-              aria-haspopup="true"
-              aria-controls="dropdown-menu-id"
-              pTooltip="Tissue expression data is provided by the GTEx project."
-              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-right'"
-              tooltipPosition="right"
-              [ngClass]="{
-                'is-small': drugstoneConfig.smallStyle
-              }"
-            >
-              <app-fa-solid-icon
-                *ngIf="networkHandler.activeNetwork.expressionExpanded"
-                icon="angle-down"
-              ></app-fa-solid-icon>
-              <app-fa-solid-icon
-                *ngIf="!networkHandler.activeNetwork.expressionExpanded"
-                icon="angle-right"
-              ></app-fa-solid-icon>
-              <span
-                *ngIf="!networkHandler.activeNetwork.selectedTissue"
-                [ngClass]="{
-                  'text-small': drugstoneConfig.smallStyle
-                }"
-                >Tissue</span
-              >
-              <span
-                *ngIf="networkHandler.activeNetwork.selectedTissue"
-                [ngClass]="{
-                  'text-small': drugstoneConfig.smallStyle
-                }"
-                >{{ networkHandler.activeNetwork.selectedTissue.name }}</span
-              >
-              <app-fa-solid-icon
-                classString="is-small last-item-in-button"
-                icon="child"
-              ></app-fa-solid-icon>
-            </button>
-          </div>
-          <div class="dropdown-menu" id="dropdown-menu-id" role="menu" [ngClass]="{
-                'small-border': drugstoneConfig.smallStyle}">
-            <div class="dropdown-content tissue-dropdown">
-              <div class="scroll-area">
-                <a
-                  (click)="networkHandler.activeNetwork.selectTissue(null)"
-                  [class.is-active]="
-                    !networkHandler.activeNetwork.selectedTissue
-                  "
-                  [ngClass]="{'text-small': drugstoneConfig.smallStyle}"
-                  class="dropdown-item"
-                >
-                  None
-                </a>
-                <a
-                  *ngFor="
-                    let tissue of networkHandler.activeNetwork.analysis.getTissues()
-                  "
-                  (click)="networkHandler.activeNetwork.selectTissue(tissue)"
-                  [ngClass]="{'text-small': drugstoneConfig.smallStyle}"
-                  [class.is-active]="
-                    networkHandler.activeNetwork.selectedTissue &&
-                    tissue.drugstoneId ===
-                      networkHandler.activeNetwork.selectedTissue.drugstoneId
-                  "
-                  class="dropdown-item"
-                >
-                  {{ tissue.name }}
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="row is-full m-1 is-pulled-right"
-        *ngIf="drugstoneConfig.config.showNetworkMenuButtonAdjacentDrugs"
-      >
-        <app-toggle-inplace-reversed
-          class="network-footer-toolbar-element"
-          text="{{
-            drugstoneConfig.config.networkMenuButtonAdjacentDrugsLabel
-          }}"
-          icon="capsules"
-          tooltip="Display adjacent drugs."
-          [value]="networkHandler.activeNetwork.adjacentDrugs"
-          (valueChange)="
-            networkHandler.activeNetwork.updateAdjacentDrugs($event, true)
-          "
-        ></app-toggle-inplace-reversed>
-      </div>
-      <div
-        class="row is-full m-1 is-pulled-right"
-        *ngIf="
-          drugstoneConfig.config.showNetworkMenuButtonAdjacentDisordersProteins
-        "
-      >
-        <app-toggle-inplace-reversed
-          class="network-footer-toolbar-element"
-          text="{{
-            drugstoneConfig.config
-              .networkMenuButtonAdjacentDisordersProteinsLabel
-          }}"
-          tooltip="Show disorders adjacent to all currently displayed proteins/genes."
-          [value]="networkHandler.activeNetwork.adjacentDisordersProtein"
-          (valueChange)="
-            networkHandler.activeNetwork.updateAdjacentProteinDisorders($event, true)
-          "
-          icon="head-side-mask"
-        ></app-toggle-inplace-reversed>
-      </div>
-      <div
-        class="row is-full m-1 is-pulled-right"
-        *ngIf="
-          drugstoneConfig.config.showNetworkMenuButtonAdjacentDisordersDrugs
-        "
-      >
-        <app-toggle-inplace-reversed
-          class="network-footer-toolbar-element"
-          text="{{
-            drugstoneConfig.config.networkMenuButtonAdjacentDisordersDrugsLabel
-          }}"
-          tooltip="Show disorders adjacent to all currently displayed drugs."
-          [value]="networkHandler.activeNetwork.adjacentDisordersDrug"
-          [disabled]="!networkHandler.activeNetwork.hasDrugsLoaded()"
-          (valueChange)="
-            networkHandler.activeNetwork.updateAdjacentDrugDisorders($event, true)
-          "
-          icon="biohazard"
-        ></app-toggle-inplace-reversed>
-      </div>
-      <div
-        class="row is-full m-1 is-pulled-right"
-        *ngIf="drugstoneConfig.config.showNetworkMenuButtonAnimation"
-      >
-        <app-toggle-inplace-reversed
-          class="network-footer-toolbar-element"
-          text="{{ drugstoneConfig.config.networkMenuButtonAnimationLabel }}"
-          tooltip="Toggle the network animation."
-          [value]="drugstoneConfig.currentConfig().physicsOn"
-          (valueChange)="
-            networkHandler.activeNetwork.updatePhysicsEnabled($event)
-          "
-          icon="bullseye"
-        ></app-toggle-inplace-reversed>
-      </div>
-    </div>
-  </div>
+
+<a
+
+(click)="networkHandler.activeNetwork.toggleNetworkSidebar()"
+
+class="drugstone-plugin-button drugstone-plugin-is-small drugstone-plugin-is-primary drugstone-plugin-network-toolbar-toggle"
+
+[ngClass]="{ 'drugstone-plugin-rotated': !networkHandler.networkSidebarOpen }"
+
+>
+
+<app-fa-solid-icon
+
+icon="angle-left"
+
+classString="drugstone-plugin-only-item-in-button"
+
+></app-fa-solid-icon>
+
+</a>
+
+<div class="drugstone-plugin-network-footer-toolbar-inner-container">
+
+<div class="drugstone-plugin-rows">
+
+<div
+
+class="drugstone-plugin-row drugstone-plugin-is-full drugstone-plugin-m-1 drugstone-plugin-is-pulled-right"
+
+*ngIf="networkHandler.activeNetwork.networkType === 'analysis' && networkHandler.showSeedsButton"
+
+>
+
+<app-toggle-inplace-reversed
+
+class="drugstone-plugin-network-footer-toolbar-element"
+
+text="Seeds"
+
+tooltip="Highlight seed nodes."
+
+[value]="networkHandler.activeNetwork.highlightSeeds"
+
+(valueChange)=" networkHandler.activeNetwork.updateHighlightSeeds($event) "           icon="seedling"
+
+></app-toggle-inplace-reversed>
+
 </div>
+
+<div
+
+class="drugstone-plugin-row drugstone-plugin-is-full drugstone-plugin-m-1 drugstone-plugin-is-pulled-right"
+
+*ngIf="drugstoneConfig.config.showNetworkMenuButtonScreenshot"
+
+>
+
+<div class="drugstone-plugin-network-footer-toolbar-element">
+
+<app-center-view-inverse (resetEmitter)="reset()"></app-center-view-inverse>
+
+</div>
+
+</div>
+
+<div
+
+class="drugstone-plugin-row drugstone-plugin-is-full drugstone-plugin-m-1 drugstone-plugin-is-pulled-right"
+
+*ngIf="drugstoneConfig.config.showNetworkMenuButtonScreenshot"
+
+>
+
+<div class="drugstone-plugin-network-footer-toolbar-element">
+
+<button
+
+(click)="networkHandler.activeNetwork.toImage()"
+
+class="drugstone-plugin-button drugstone-plugin-is-primary drugstone-plugin-is-rounded drugstone-plugin-has-tooltip"
+
+pTooltip="Take a screenshot of the current network."
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-right'"
+
+tooltipPosition="right"
+
+[ngClass]="{ 'drugstone-plugin-is-small': drugstoneConfig.smallStyle }"           >
+
+<span
+
+[ngClass]="{ 'drugstone-plugin-text-normal': drugstoneConfig.smallStyle }"               >Screenshot</span
+
+>
+
+<app-fa-solid-icon
+
+icon="camera"
+
+classString="drugstone-plugin-is-small drugstone-plugin-last-item-in-button"
+
+></app-fa-solid-icon>
+
+</button>
+
+</div>
+
+</div>
+
+<div
+
+class="drugstone-plugin-row drugstone-plugin-is-full drugstone-plugin-m-1 drugstone-plugin-is-pulled-right"
+
+*ngIf="drugstoneConfig.config.showNetworkMenuButtonExportGraphml"
+
+>
+
+<div class="drugstone-plugin-network-footer-toolbar-element">
+
+<app-download-button-inverse
+
+[nodeData]="networkHandler.activeNetwork.nodeData"
+
+[buttonId]="'explorer-download'"
+
+></app-download-button-inverse>
+
+</div>
+
+</div>
+
+<div
+
+class="drugstone-plugin-row drugstone-plugin-is-full drugstone-plugin-m-1 drugstone-plugin-is-pulled-right"
+
+*ngIf="drugstoneConfig.config.showNetworkMenuButtonExpression"
+
+>
+
+<div
+
+class="drugstone-plugin-dropdown drugstone-plugin-network-footer-toolbar-element"
+
+[class.drugstone-plugin-is-active]="networkHandler.activeNetwork.expressionExpanded"
+
+[ngClass]="{ 'drugstone-plugin-inner-dropdown': !networkHandler.networkSidebarOpen }"         >
+
+<div class="drugstone-plugin-dropdown-trigger">
+
+<button
+
+(click)=" networkHandler.activeNetwork.expressionExpanded = !networkHandler.activeNetwork.expressionExpanded "               class="drugstone-plugin-button drugstone-plugin-is-rounded"
+
+[class.drugstone-plugin-is-primary]="networkHandler.activeNetwork.selectedTissue"
+
+aria-haspopup="true"
+
+aria-controls="dropdown-menu-id"
+
+pTooltip="Tissue expression data is provided by the GTEx project."
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-right'"
+
+tooltipPosition="right"
+
+[ngClass]="{ 'drugstone-plugin-is-small': drugstoneConfig.smallStyle }"             >
+
+<app-fa-solid-icon
+
+*ngIf="networkHandler.activeNetwork.expressionExpanded"
+
+icon="angle-down"
+
+></app-fa-solid-icon>
+
+<app-fa-solid-icon
+
+*ngIf="!networkHandler.activeNetwork.expressionExpanded"
+
+icon="angle-right"
+
+></app-fa-solid-icon>
+
+<span
+
+*ngIf="!networkHandler.activeNetwork.selectedTissue"
+
+[ngClass]="{ 'drugstone-plugin-text-small': drugstoneConfig.smallStyle }"                 >Tissue</span
+
+>
+
+<span
+
+*ngIf="networkHandler.activeNetwork.selectedTissue"
+
+[ngClass]="{ 'drugstone-plugin-text-small': drugstoneConfig.smallStyle }"                 >{{ networkHandler.activeNetwork.selectedTissue.name }}</span
+
+>
+
+<app-fa-solid-icon
+
+classString="drugstone-plugin-is-small drugstone-plugin-last-item-in-button"
+
+icon="child"
+
+></app-fa-solid-icon>
+
+</button>
+
+</div>
+
+<div class="drugstone-plugin-dropdown-menu" id="drugstone-plugin-dropdown-menu-id" role="menu" [ngClass]="{ 'drugstone-plugin-small-border': drugstoneConfig.smallStyle}"> <div class="dropdown-content tissue-dropdown"> <div class="scroll-area"> <a (click)="networkHandler.activeNetwork.selectTissue(null)" [class.drugstone-plugin-is-active]="                     !networkHandler.activeNetwork.selectedTissue
+
+" [ngClass]="{'drugstone-plugin-text-small': drugstoneConfig.smallStyle}" class="drugstone-plugin-dropdown-item" > None </a> <a *ngFor="                     let tissue of networkHandler.activeNetwork.analysis.getTissues()
+
+" (click)="networkHandler.activeNetwork.selectTissue(tissue)" [ngClass]="{'drugstone-plugin-text-small': drugstoneConfig.smallStyle}" [class.drugstone-plugin-is-active]="                     networkHandler.activeNetwork.selectedTissue &&
+
+tissue.drugstoneId ===
+
+networkHandler.activeNetwork.selectedTissue.drugstoneId
+
+" class="drugstone-plugin-dropdown-item" > {{ tissue.name }} </a> </div> </div> </div> </div> </div> <div class="row is-full m-1 is-pulled-right" *ngIf="drugstoneConfig.config.showNetworkMenuButtonAdjacentDrugs" > <app-toggle-inplace-reversed class="network-footer-toolbar-element" text="{{             drugstoneConfig.config.networkMenuButtonAdjacentDrugsLabel
+
+}}" icon="capsules" tooltip="Display adjacent drugs." [value]="networkHandler.activeNetwork.adjacentDrugs" (valueChange)="             networkHandler.activeNetwork.updateAdjacentDrugs($event, true)
+
+" ></app-toggle-inplace-reversed> </div> <div class="drugstone-plugin-row drugstone-plugin-is-full drugstone-plugin-m-1 drugstone-plugin-is-pulled-right" *ngIf="           drugstoneConfig.config.showNetworkMenuButtonAdjacentDisordersProteins
+
+" > <app-toggle-inplace-reversed class="drugstone-plugin-network-footer-toolbar-element" text="{{             drugstoneConfig.config
+
+.networkMenuButtonAdjacentDisordersProteinsLabel
+
+}}" tooltip="Show disorders adjacent to all currently displayed proteins/genes." [value]="networkHandler.activeNetwork.adjacentDisordersProtein" (valueChange)="             networkHandler.activeNetwork.updateAdjacentProteinDisorders($event, true)
+
+" icon="head-side-mask" ></app-toggle-inplace-reversed> </div> <div class="drugstone-plugin-row drugstone-plugin-is-full drugstone-plugin-m-1 drugstone-plugin-is-pulled-right" *ngIf="           drugstoneConfig.config.showNetworkMenuButtonAdjacentDisordersDrugs
+
+" > <app-toggle-inplace-reversed class="drugstone-plugin-network-footer-toolbar-element" text="{{             drugstoneConfig.config.networkMenuButtonAdjacentDisordersDrugsLabel
+
+}}" tooltip="Show disorders adjacent to all currently displayed drugs." [value]="networkHandler.activeNetwork.adjacentDisordersDrug" [disabled]="!networkHandler.activeNetwork.hasDrugsLoaded()" (valueChange)="             networkHandler.activeNetwork.updateAdjacentDrugDisorders($event, true)
+
+" icon="biohazard" ></app-toggle-inplace-reversed> </div> <div class="drugstone-plugin-row drugstone-plugin-is-full drugstone-plugin-m-1 drugstone-plugin-is-pulled-right" *ngIf="drugstoneConfig.config.showNetworkMenuButtonAnimation" > <app-toggle-inplace-reversed class="network-footer-toolbar-element" text="{{ drugstoneConfig.config.networkMenuButtonAnimationLabel }}" tooltip="Toggle the network animation." [value]="drugstoneConfig.currentConfig().physicsOn" (valueChange)="             networkHandler.activeNetwork.updatePhysicsEnabled($event)
+
+" icon="bullseye" ></app-toggle-inplace-reversed> </div> </div> </div> </div>

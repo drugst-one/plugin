@@ -1,350 +1,265 @@
 @import "default-theme.css";
-
-// For testing theme override
-// :root {
-//   --drgstn-primary:#4285F4;
-//   --drgstn-secondary:#303030;
-//   --drgstn-success:#48C774;
-//   --drgstn-warning:#f5f5f5;
-//   --drgstn-danger:#ff2744;
-//   --drgstn-background:#ffffff;
-//   --drgstn-panel:#ededed;
-//   --drgstn-info:#61c43d;
-//   --drgstn-text-primary:#151515;
-//   --drgstn-text-secondary:#ebecf0;
-//   --drgstn-border:rgba(0, 0, 0, 0.2);
-//   --drgstn-tooltip:rgba(74,74,74,0.9);
-//   --drgstn-panel-secondary:#f5f5f5;
-//   --drgstn-height:600px;
-//   --drgstn-font-family:Helvetica Neue, sans-serif;
-// }
-
-#appWindow {
+#drugstone-plugin-appWindow {
   background-color: var(--drgstn-background) !important;
-
-  .dropdown-content {
+  .drugstone-plugin-dropdown-content {
     background-color: var(--drgstn-panel) !important;
     color: var(--drgstn-text-primary) !important;
   }
-
-  .tile.notification.quick-start.warning {
+  .drugstone-plugin-tile.drugstone-plugin-notification.drugstone-plugin-quick-start.drugstone-plugin-warning {
     background-color: var(--drgstn-info) !important;
   }
-
-  .tile.notification.quick-start {
+  .drugstone-plugin-tile.drugstone-plugin-notification.drugstone-plugin-quick-start {
     background-color: var(--drgstn-primary) !important;
     color: var(--drgstn-text-secondary) !important;
   }
-
-  .card-header-title,
-  .card-content,
-  .title {
+  .drugstone-plugin-card-header-title,
+  .drugstone-plugin-card-content,
+  .drugstone-plugin-title {
     color: var(--drgstn-text-primary) !important;
   }
-
-  .card {
+  .drugstone-plugin-card {
     background-color: var(--drgstn-panel) !important;
   }
-
-  .card-footer,
-  .card-footer-item:not(:last-child),
-  .tabs ul,
-  .tabs a .tabs a:hover {
+  .drugstone-plugin-card-footer,
+  .drugstone-plugin-card-footer-item:not(:last-child),
+  .drugstone-plugin-tabs ul,
+  .drugstone-plugin-tabs a .drugstone-plugin-tabs a:hover {
     border-color: var(--drgstn-border) !important;
   }
-
-  .tabs a {
+  .drugstone-plugin-tabs a {
     color: var(--drgstn-text-primary) !important;
   }
-
-  .tabs.is-toggle a {
+  .drugstone-plugin-tabs.drugstone-plugin-is-toggle a {
     border-color: var(--drgstn-border) !important;
   }
-
-  .tabs.is-toggle a:hover {
+  .drugstone-plugin-tabs.drugstone-plugin-is-toggle a:hover {
     background-color: var(--drgstn-panel) !important;
   }
-
   .fa-spinner {
     color: var(--drgstn-secondary) !important;
   }
-
-  .tabs li a {
+  .drugstone-plugin-tabs li a {
     border-bottom: none;
   }
-
-  .tabs li.is-active a,
-  .tabs.is-toggle li.is-active a,
-  .tabs a:hover {
+  .drugstone-plugin-tabs li.drugstone-plugin-is-active a,
+  .drugstone-plugin-tabs.drugstone-plugin-is-toggle li.drugstone-plugin-is-active a,
+  .drugstone-plugin-tabs a:hover {
     border-color: var(--drgstn-primary) !important;
     color: var(--drgstn-text-primary) !important;
     border-bottom: solid;
   }
-
-  .content h4,
-  .content h6 {
+  .drugstone-plugin-content h4,
+  .drugstone-plugin-content h6 {
     color: var(--drgstn-text-primary) !important;
   }
-
-  .has-text-normal,
-  .modal-card-title {
+  .drugstone-plugin-has-text-normal,
+  .drugstone-plugin-modal-card-title {
     color: var(--drgstn-text-primary) !important;
   }
-
-  .modal-card,
-  .modal-card-body {
+  .drugstone-plugin-modal-card,
+  .drugstone-plugin-modal-card-body {
     background-color: var(--drgstn-panel) !important;
   }
-
-  .modal-card-head,
-  .modal-card-foot {
+  .drugstone-plugin-modal-card-head,
+  .drugstone-plugin-modal-card-foot {
     border-color: var(--drgstn-border) !important;
     background-color: var(--drgstn-border) !important;
   }
-
-  .tr {
+  .drugstone-plugin-tr {
     border-color: var(--drgstn-text-primary) !important;
   }
-
-  // legend styles
-  .legend {
+  .drugstone-plugin-legend {
     color: var(--drgstn-text-primary) !important;
   }
-
-  .modal-card-head,
-  .modal-card-foot {
+  .drugstone-plugin-modal-card-head,
+  .drugstone-plugin-modal-card-foot {
     background-color: var(--drgstn-border) !important;
   }
-
-  .modal-card-body {
-    .label {
+  .drugstone-plugin-modal-card-body {
+    .drugstone-plugin-label {
       color: var(--drgstn-text-primary) !important;
     }
-
-    .input,
-    .select select,
-    .textarea,
-    .box {
+    .drugstone-plugin-input,
+    .drugstone-plugin-select select,
+    .drugstone-plugin-textarea,
+    .drugstone-plugin-box {
       background-color: var(--drgstn-panel-secondary) !important;
       border-color: var(--drgstn-border) !important;
       color: var(--drgstn-text-primary) !important;
     }
   }
-
-  .input,
-  .select select,
-  .textarea,
-  .box {
+  .drugstone-plugin-input,
+  .drugstone-plugin-select select,
+  .drugstone-plugin-textarea,
+  .drugstone-plugin-box {
     background-color: var(--drgstn-panel-secondary) !important;
     border-color: var(--drgstn-border) !important;
   }
-
   .fa-check {
     color: var(--drgstn-success) !important;
   }
-
   app-task-list a, app-view-list a,
-  a.card-header-icon {
+  a.drugstone-plugin-card-header-icon {
     color: var(--drgstn-secondary) !important;
   }
-
   a:hover {
     color: var(--drgstn-primary) !important;
   }
-
-  .button.is-primary {
+  .drugstone-plugin-button.drugstone-plugin-is-primary {
     background-color: var(--drgstn-primary) !important;
     border-color: transparent !important;
     color: var(--drgstn-text-secondary) !important;
   }
-
-  .button.is-primary.is-outlined {
+  .drugstone-plugin-button.drugstone-plugin-is-primary.drugstone-plugin-is-outlined {
     background-color: transparent !important;
     border-color: var(--drgstn-border) !important;
     color: var(--drgstn-primary) !important;
   }
-
-  a.dropdown-item:hover,
-  button.dropdown-item:hover {
+  a.drugstone-plugin-dropdown-item:hover,
+  button.drugstone-plugin-dropdown-item:hover {
     background-color: var(--drgstn-panel-secondary) !important;
   }
-
-  .tissue-dropdown {
+  .drugstone-plugin-tissue-dropdown {
     background-color: var(--drgstn-panel) !important;
   }
-
-  .button.is-primary.is-focused,
-  .button.is-primary:focus {
+  .drugstone-plugin-button.drugstone-plugin-is-primary.drugstone-plugin-is-focused,
+  .drugstone-plugin-button.drugstone-plugin-is-primary:focus {
     background-color: var(--drgstn-primary) !important;
     border-color: transparent !important;
     color: var(--drgstn-text-secondary) !important;
   }
-
-  .button.is-primary.button.is-hovered,
-  .button.is-primary.button:hover {
+  .drugstone-plugin-button.drugstone-plugin-is-primary.drugstone-plugin-button.drugstone-plugin-is-hovered,
+  .drugstone-plugin-button.drugstone-plugin-is-primary.drugstone-plugin-button:hover {
     color: var(--drgstn-text-secondary) !important;
     background-color: var(--drgstn-primary) !important;
   }
-
-  .button.is-primary.is-focused:not(:active),
-  .button.is-primary:focus:not(:active) {
+  .drugstone-plugin-button.drugstone-plugin-is-primary.drugstone-plugin-is-focused:not(:active),
+  .drugstone-plugin-button.drugstone-plugin-is-primary:focus:not(:active) {
     box-shadow: none !important;
   }
-
-  .button.is-danger.is-outlined {
+  .drugstone-plugin-button.drugstone-plugin-is-danger.drugstone-plugin-is-outlined {
     border-color: var(--drgstn-danger) !important;
     color: var(--drgstn-danger) !important;
   }
-
-  .button.is-success {
+  .drugstone-plugin-button.drugstone-plugin-is-success {
     background-color: var(--drgstn-success) !important;
     color: var(--drgstn-text-secondary) !important;
   }
-
-  .text-primary {
+  .drugstone-plugin-text-primary {
     color: var(--drgstn-primary) !important;
   }
-
-  .is-primary {
+  .drugstone-plugin-is-primary {
     background-color: var(--drgstn-primary) !important;
   }
-
   .ng-select .ng-select-container .ng-value-container .ng-input > input {
     color: var(--drgstn-text-primary) !important;
   }
-
-  .fa-search.investigational,
+  .fa-search.drugstone-plugin-investigational,
   .fa-pause {
     color: var(--drgstn-warning) !important;
   }
-
   .fa-exclamation-triangle,
   .fa-times,
-  .help,
-  .delete:after,
-  .delete:before,
-  .modal-close:after,
-  .modal-close:before {
+  .drugstone-plugin-help,
+  .drugstone-plugin-delete:after,
+  .drugstone-plugin-delete:before,
+  .drugstone-plugin-modal-close:after,
+  .drugstone-plugin-modal-close:before {
     color: var(--drgstn-danger) !important;
   }
-
   .fa-check {
     color: var(--drgstn-success) !important;
   }
-
-  .table {
+  .drugstone-plugin-table {
     background-color: var(--drgstn-panel) !important;
     color: var(--drgstn-text-primary) !important;
   }
-
-  .table thead td,
-  .table thead th {
+  .drugstone-plugin-table thead td,
+  .drugstone-plugin-table thead th {
     color: var(--drgstn-text-primary) !important;
   }
-
-  .button.is-hovered,
-  .button:hover,
-  .button {
+  .drugstone-plugin-button.drugstone-plugin-is-hovered,
+  .drugstone-plugin-button:hover,
+  .drugstone-plugin-button {
     background-color: var(--drgstn-panel-secondary) !important;
     color: var(--drgstn-text-primary) !important;
     border-color: var(--drgstn-border) !important;
     font-family: var(--drgstn-font-family) !important;
   }
-
   a {
     color: var(--drgstn-secondary);
   }
-
   a:hover {
     color: var(--drgstn-text-primary);
   }
-
   .ng-select-container,
   .ng-dropdown-panel.ng-select-bottom {
     background-color: var(--drgstn-panel-secondary) !important;
     border-color: var(--drgstn-border) !important;
-
     .ng-value-container {
       .ng-placeholder {
         color: var(--drgstn-text-primary) !important;
       }
     }
   }
-
   .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
     background-color: var(--drgstn-panel) !important;
     color: var(--drgstn-text-primary) !important;
   }
-
   .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
     background-color: var(--drgstn-panel-secondary) !important;
     color: var(--drgstn-text-primary) !important;
   }
-
   .ng-select {
     .ng-arrow-wrapper .ng-arrow {
       border-top-color: var(--drgstn-text-primary) !important;
     }
-
     .ng-clear-wrapper,
     .ng-select-container {
       color: var(--drgstn-text-primary) !important;
     }
   }
-
   .ng-select.ng-select-opened > .ng-select-container .ng-arrow {
     border-bottom-color: var(--drgstn-text-primary) !important;
   }
-
   ::-webkit-scrollbar {
     width: 10px !important;
   }
-
   ::-webkit-scrollbar-track {
     background: var(--scrollbarBG) !important;
   }
-
   ::-webkit-scrollbar-thumb {
     background: var(--thumbBG) !important;
     border-radius: 6px !important;
     border: 3px solid var(--scrollbarBG) !important;
   }
-
   ::-moz-scrollbar-button:decrement,
   ::-moz-scrollbar-button:increment,
   ::-webkit-scrollbar-button:decrement,
   ::-webkit-scrollbar-button:increment {
     width: 0px !important;
   }
-
-  .has-text-primary {
+  .drugstone-plugin-has-text-primary {
     color: var(--drgstn-text-primary) !important;
   }
-
-  .has-text-secondary {
+  .drugstone-plugin-has-text-secondary {
     color: var(--drgstn-text-secondary) !important;
   }
-
-  .has-background-panel {
+  .drugstone-plugin-has-background-panel {
     color: var(--drgstn-panel) !important;
   }
-
-  .algorithm-button.is-active {
+  .drugstone-plugin-algorithm-button.drugstone-plugin-is-active {
     a {
       background-color: var(--drgstn-primary) !important;
     }
-
     a:hover {
       background-color: var(--drgstn-primary) !important;
     }
   }
 }
-
-// scrolllbar styles
 network-expander {
   --thumbBG: var(--drgstn-primary) !important;
   --scrollbarBG: var(--drgstn-panel) !important;
-
   scrollbar-width: thin !important;
   scrollbar-color: var(--thumbBG) var(--scrollbarBG) !important;
 }

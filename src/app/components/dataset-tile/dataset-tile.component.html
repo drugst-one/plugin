@@ -1,20 +1,39 @@
-<div class="content">
-  <ng-select [items]="datasetItems" bindLabel="label" [virtualScroll]="true" class="custom"
-             placeholder="Select..." [ngModel]="selectedDataset" (ngModelChange)="select($event)" pTooltip="Choose the dataset you want to explore." [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">
-    <ng-template ng-option-tmp let-item="item">
-      {{item.strains}} <br/>
-      <small>{{item.datasetNames}}</small>
-    </ng-template>
-  </ng-select>
+<div class="drugstone-plugin-content">
 
-  <div *ngIf="selectedDataset" class="info">
-    <ul>
-      <li *ngIf="selectedDataset.strains"><b>Virus: </b>{{selectedDataset.strains}}</li>
-      <li *ngIf="selectedDataset.hostTarget"><b>Host/Target: </b>{{selectedDataset.hostTarget}}</li>
-      <li *ngIf="selectedDataset.method"><b>Method: </b>{{selectedDataset.method}}</li>
-      <li *ngIf="selectedDataset.source"><b>Source: </b> <a href="{{selectedDataset.source[0]}}"> {{selectedDataset.source[1]}}</a>
-      </li>
-      <li *ngIf="selectedDataset.year"><b>Year: </b>{{selectedDataset.year}}</li>
-    </ul>
-  </div>
+<ng-select [items]="datasetItems" bindLabel="label" [virtualScroll]="true" class="drugstone-plugin-custom"
+
+placeholder="Select..." [ngModel]="selectedDataset" (ngModelChange)="select($event)" pTooltip="Choose the dataset you want to explore." [tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-top'" tooltipPosition="top">
+
+<ng-template ng-option-tmp let-item="item">
+
+{{item.strains}} <br/>
+
+<small>{{item.datasetNames}}</small>
+
+</ng-template>
+
+</ng-select>
+
+<div *ngIf="selectedDataset" class="drugstone-plugin-info">
+
+<ul>
+
+<li *ngIf="selectedDataset.strains"><b>Virus: </b>{{selectedDataset.strains}}</li>
+
+<li *ngIf="selectedDataset.hostTarget"><b>Host/Target: </b>{{selectedDataset.hostTarget}}</li>
+
+<li *ngIf="selectedDataset.method"><b>Method: </b>{{selectedDataset.method}}</li>
+
+<li *ngIf="selectedDataset.source"><b>Source: </b> <a href="{{selectedDataset.source[0]}}"> {{selectedDataset.source[1]}}</a>
+
+</li>
+
+<li *ngIf="selectedDataset.year"><b>Year: </b>{{selectedDataset.year}}</li>
+
+</ul>
+
 </div>
+
+</div>
+
+

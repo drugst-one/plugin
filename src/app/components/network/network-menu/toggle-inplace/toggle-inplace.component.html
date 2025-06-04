@@ -1,33 +1,55 @@
 <button
-  class="button is-rounded has-tooltip"
-  [pTooltip]="tooltip"
-  [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
-  tooltipPosition="left"
-  [disabled]="disabled"
-  (click)="toggle()"
-  [ngClass]="{
-    'is-selected': value,
-    'is-small': drugstoneConfig.smallStyle
-  }"
->
-  <app-fa-solid-icon
-    *ngIf="icon"
-    [icon]="icon"
-    classString="is-small"
-  ></app-fa-solid-icon>
 
-  <span [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">{{
-    text
-  }}</span>
+class="drugstone-plugin-button drugstone-plugin-is-rounded drugstone-plugin-has-tooltip"
 
-  <app-fa-solid-icon
-    *ngIf="useValue && value"
-    [icon]="iconOn"
-    classString="is-small last-item-in-button has-text-success"
-  ></app-fa-solid-icon>
-  <app-fa-solid-icon
-    *ngIf="useValue && !value"
-    [icon]="iconOff"
-    classString="is-small last-item-in-button has-text-danger"
-  ></app-fa-solid-icon>
+[pTooltip]="tooltip"
+
+[tooltipStyleClass]="'drugstone-plugin-drgstn drugstone-plugin-drgstn-tooltip drugstone-plugin-drgstn-tooltip-left'"
+
+tooltipPosition="left"
+
+[disabled]="disabled"
+
+(click)="toggle()"
+
+[ngClass]="{ 'drugstone-plugin-is-selected': value, 'drugstone-plugin-is-small': drugstoneConfig.smallStyle }" >
+
+<app-fa-solid-icon
+
+*ngIf="icon"
+
+[icon]="icon"
+
+classString="drugstone-plugin-is-small"
+
+></app-fa-solid-icon>
+
+<span [ngClass]="{ 'drugstone-plugin-text-small': drugstoneConfig.smallStyle }">{{
+
+text
+
+}}</span>
+
+<app-fa-solid-icon
+
+*ngIf="useValue && value"
+
+[icon]="iconOn"
+
+classString="drugstone-plugin-is-small drugstone-plugin-last-item-in-button drugstone-plugin-has-text-success"
+
+></app-fa-solid-icon>
+
+<app-fa-solid-icon
+
+*ngIf="useValue && !value"
+
+[icon]="iconOff"
+
+classString="drugstone-plugin-is-small drugstone-plugin-last-item-in-button drugstone-plugin-has-text-danger"
+
+></app-fa-solid-icon>
+
 </button>
+
+

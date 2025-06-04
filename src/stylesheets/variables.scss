@@ -1,6 +1,4 @@
-// media queries
 $screen-lg: 1400px;
-
 $row-data-selector-height: auto;
 $network-header-height: 3rem;
 $network-footer-height: 0rem;
@@ -16,30 +14,23 @@ $network-footer-right-closed-small: calc(
 );
 $network-footer-container-z: 20;
 $network-footer-container-toggle-z: 21;
-
 $network-footer-inner-container-height: 25rem;
 $network-footer-space-button-to-border: 0.5rem;
-
 $explorer-network-z: 10;
 $explorer-networklegend-z: 20;
 $explorer-networklegend-foreground-z: 21;
-
 $analysis-view-z: 30;
 $analysis-network-z: 40;
 $analysis-network-legend-z: 40;
 $analysis-network-footer-container-z: 60;
 $analysis-network-footer-container-toggle-z: 70;
-
 $network-tissue-options-z: 80;
-
 $analysis-tab-header-height: 2.5rem;
 $analysis-tab-header-padding: 1.5rem;
-
-// Settings Legend
 $legend-default-background-color: #143d1f;
 $legend-row-height: 40px;
 $legend-circle-size: $legend-row-height;
-$legend-circle-line-height: 28px; // for '...' in middle of circle
+$legend-circle-line-height: 28px; // for '.drugstone-plugin-' in middle of circle
 $legend-star-size: 20px;
 $legend-square-width: $legend-row-height;
 $legend-edge-width: 20px;
@@ -51,27 +42,21 @@ $legend-hexagon-font-size: 38px;
 $legend-diamond-size: 25px;
 $legend-scaling: 0.8;
 $legend-scaling-small: 0.75;
-
 $height: 100%;
-
 $sidebar-width: 25%;
 $sidebar-min-width: 240px;
 $sidebar-selection-table-height: 300px;
-// settings for different screen sizes
 $b-text-small-font-size: 14px;
 $b-text-smaller-font-size: 12px;
 $text-normal-font-size: 12px;
 $text-small-font-size: 11px;
-
 $privacy-banner-z: 40;
 $network-empty-banner-z: 41;
 $parser-issue-banner-z: 42;
-
 $fullscreen-z: 38;
 $fullscreen-z-analysis: 39;
 $fullscreen-menue-z: 38;
 $toast-z: 2147483647;
 $loading-overlay-z: 2147483647;
-
 $menu-width: 150px;
 $menu-z-index: calc(2147483647 - 1)

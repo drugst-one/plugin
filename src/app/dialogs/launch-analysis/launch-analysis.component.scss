@@ -1,25 +1,20 @@
-.modal-card {
+.drugstone-plugin-modal-card {
   height: 500px;
 }
-
-.modal-card-body {
+.drugstone-plugin-modal-card-body {
   padding-left: 40px;
   padding-right: 40px;
 }
-
-.warning {
+.drugstone-plugin-warning {
   margin-bottom: 15px;
 }
-
-.has-text-info.info {
+.drugstone-plugin-has-text-info.drugstone-plugin-info {
   margin-bottom: 20px;
-
-  .icon {
+  .drugstone-plugin-icon {
     background-color: blue;
   }
 }
-
-.doc-link {
+.drugstone-plugin-doc-link {
   margin-top: 15px;
   font-size: 11px;
 }

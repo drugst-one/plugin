@@ -1,6 +1,5 @@
 @import "src/stylesheets/variables";
-
-.loading-screen {
+.drugstone-plugin-loading-screen {
   position: absolute;
   z-index: $loading-overlay-z;
   height: 100%;
@@ -24,14 +23,11 @@
     left: 0;
   }
 }
-
-.pulse {
+.drugstone-plugin-pulse {
     animation: pulse 5s infinite;
-    // animation-direction: alternate;
     -webkit-animation-name: pulse;
     animation-name: pulse;
   }
-      
   @-webkit-keyframes pulse {
     0% {
       -webkit-transform: scale(1);
@@ -39,7 +35,6 @@
     50% { -webkit-transform: scale(1.3); }
     100% { -webkit-transform: scale(1); }
   }
-      
   @keyframes pulse {
     0% {
       transform: scale(1);
