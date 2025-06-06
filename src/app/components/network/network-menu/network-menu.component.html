@@ -354,7 +354,7 @@
           class="network-footer-toolbar-element"
                 ></app-toggle-inplace>
       </div>
-      <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonSelectionMultiDrag" class="row is-full m-1">
+      <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonSelectionMultiDrag" class="drugstone-plugin-row row is-full m-1">
         <app-toggle-inplace text="{{ drugstoneConfig.config.networkMenuButtonSelectionMultiDragLabel }}"
           tooltip="Enable Multi-drag for the selection." [value]="drugstoneConfig.config.selectionMultiDrag" (valueChange)="
                         analysis.updateMultiDragSelection($event)
