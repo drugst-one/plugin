@@ -5,6 +5,7 @@ const concat = require('concat');
     './dist/netex/runtime.js',
     './dist/netex/polyfills.js',
     './scripts/vis-network-9.1.9.min.js',
+    './scripts/canvas2svg.js',
     // './dist/netex/scripts.js',
     './dist/netex/main.js'
   ];

@@ -178,9 +178,9 @@
           </div>
         </div>
 
-        <div *ngIf="drugstoneConfig.config.showAdvAnalysis" class="card bar-large">
-          <header class="card-header" [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }">
-            <p class="card-header-title">
+        <div *ngIf="drugstoneConfig.config.showAdvAnalysis" class="drugstone-plugin-card drugstone-plugin-bar-large  card bar-large">
+          <header class="drugstone-plugin-card-header card-header" [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }">
+            <p class="drugstone-plugin-card-header-title card-header-title">
               <app-fa-solid-icon icon="flask"></app-fa-solid-icon>
               Analysis
             </p>
@@ -191,10 +191,10 @@
             </a>
           </header>
           <div *ngIf="collapseAnalysis">
-            <div class="card-content">
-              <div class="field"
+            <div class="drugstone-plugin-card-content card-content">
+              <div class="drugstone-plugin-field field"
                 *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('drug-target-search')">
-                <div class="control"
+                <div class="drugstone-plugin-control control"
                   [pTooltip]="analysis.getCount() === 0 ? 'Select proteins by double clicking, to identify drug targets for them.' : 'Find drug targets for the selected proteins.'"
                   [tooltipStyleClass]="
                             'drgstn drgstn-tooltip drgstn-tooltip-top'
@@ -227,9 +227,9 @@
                   </button>
                 </div>
               </div>
-              <div class="field"
+              <div class="drugstone-plugin-field field"
                 *ngIf="!drugstoneConfig.config.showAdvAnalysisContent || drugstoneConfig.config.showAdvAnalysisContent.includes('pathway-enrichment')">
-                <div class="control"
+                <div class="drugstone-plugin-control control"
                   [pTooltip]="analysis.getCount() === 0 ? 'Select proteins by double clicking, to perform gene analysis.' : 'Perform gene analysis for the selected proteins.'"
                   [tooltipStyleClass]="
                             'drgstn drgstn-tooltip drgstn-tooltip-top'
