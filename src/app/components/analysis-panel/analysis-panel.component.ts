@@ -223,6 +223,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     });
     this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {
       this.showDetailsChange.emit(null);
+      if (this.drugstoneConfig.currentConfig().selectionMultiDrag) {
+        // Delay re-selecting to allow doubleClick to finish
+        setTimeout(() => {
+          const selectedIds = this.analysis.getSelectionIds();
+          this.networkHandler.activeNetwork.networkInternal.selectNodes(selectedIds);
+        }, 50); // 50ms is usually enough
+      }
     });
     this.networkHandler.activeNetwork.networkInternal.on('doubleClick', (properties) => {
       const nodeIds: Array<string> = properties.nodes;

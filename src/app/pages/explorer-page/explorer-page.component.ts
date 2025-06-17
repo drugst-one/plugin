@@ -803,6 +803,13 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
       this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {
         this.closeSummary();
+        if (this.drugstoneConfig.currentConfig().selectionMultiDrag) {
+          // Delay re-selecting to allow doubleClick to finish
+          setTimeout(() => {
+            const selectedIds = this.analysis.getSelectionIds();
+            this.networkHandler.activeNetwork.networkInternal.selectNodes(selectedIds);
+          }, 50);
+        }
       });
 
       if (this.networkHandler.activeNetwork.selectedWrapper) {
