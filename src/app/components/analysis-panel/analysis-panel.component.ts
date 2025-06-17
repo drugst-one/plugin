@@ -228,7 +228,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         setTimeout(() => {
           const selectedIds = this.analysis.getSelectionIds();
           this.networkHandler.activeNetwork.networkInternal.selectNodes(selectedIds);
-        }, 50); // 50ms is usually enough
+        }, 50);
       }
     });
     this.networkHandler.activeNetwork.networkInternal.on('doubleClick', (properties) => {
