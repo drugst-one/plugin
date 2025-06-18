@@ -142,6 +142,10 @@ export class AnalysisService {
     this.taskTokenCallback = f;
   }
 
+  getSelectionIds(): string[] {
+    return Array.from(this.selectedItems.keys());
+  }
+
   setViewInfos(): void {
     this.netex.getViewInfos(this.viewTokens).then(res => {
       // @ts-ignore

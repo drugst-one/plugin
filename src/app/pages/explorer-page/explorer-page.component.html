@@ -158,12 +158,12 @@
                 <span> Invert </span>
               </a>
               <a *ngIf="analysis.getSelection().length" (click)="analysis.viewFromSelection()"
-                class="card-footer-item text-primary" tooltipPosition="top" pTooltip="Create view from the selection.">
+                class="drugstone-plugin-card-footer-item card-footer-item text-primary" tooltipPosition="top" pTooltip="Create view from the selection.">
                 <app-fa-solid-icon icon="check"></app-fa-solid-icon>
                 <span> Save selection </span>
               </a>
             </footer>
-            <footer class="card-footer">
+            <footer class="drugstone-plugin-card-footer card-footer">
               <a *ngIf="analysis.getSelection().length" (click)="analysis.resetSelection()"
                 class="card-footer-item has-text-danger" tooltipPosition="top"
                 pTooltip="Remove all entries from the selection.">
@@ -185,7 +185,7 @@
               Analysis
             </p>
             <a (click)="collapseAnalysis = !collapseAnalysis" data-action="collapse"
-              class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+              class="drugstone-plugin-card-header-icon card-header-icon drugstone-plugin-is-hidden-fullscreen is-hidden-fullscreen" aria-label="more options">
               <app-fa-solid-icon *ngIf="collapseAnalysis" icon="angle-down"></app-fa-solid-icon>
               <app-fa-solid-icon *ngIf="!collapseAnalysis" icon="angle-left"></app-fa-solid-icon>
             </a>
