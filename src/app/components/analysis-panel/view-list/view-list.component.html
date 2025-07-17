@@ -12,7 +12,7 @@
         *ngIf="task"
       >
         <div class="columns mb-0 is-flex is-align-items-center">
-          <div class="column is-8" *ngIf="!editing || currentEditingTask !== task.token">
+          <div class="column is-8" *ngIf="!editing || currentEditingTask !== task.token" style="width: 90% !important;">
             <app-fa-solid-icon class="mr-2" icon="crosshairs"></app-fa-solid-icon>
             <span (click)="open(task.token)" pTooltip="Show selection view"
               [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">{{ task.name }}</span>
