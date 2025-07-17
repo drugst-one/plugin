@@ -49,11 +49,11 @@ export class NetworkLegendComponent implements OnInit {
       }
       if (this.networkHandler.activeNetwork.nodeData?.nodes) {
         this.networkHandler.activeNetwork.nodeData.nodes.forEach(node => {
-          uniqueGroups.add(node.group);
+          uniqueGroups.add(node.groupID);
         });
       } else {
         this.analysis.currentNetwork.nodes.forEach(node => {
-          uniqueGroups.add(node.group);
+          uniqueGroups.add(node.groupID);
         });
       }
       return Array.from(uniqueGroups);
@@ -67,11 +67,11 @@ export class NetworkLegendComponent implements OnInit {
     }
     if(this.networkHandler.activeNetwork.nodeData?.nodes){
       this.networkHandler.activeNetwork.nodeData.nodes.forEach(node => {
-        uniqueGroups.add(node.group);
+        uniqueGroups.add(node.groupID);
       });
     } else {
       this.networkHandler.activeNetwork.inputNetwork.nodes.forEach(node => {
-        uniqueGroups.add(node.group);
+        uniqueGroups.add(node.groupID);
       });
     }
     return Array.from(uniqueGroups);
