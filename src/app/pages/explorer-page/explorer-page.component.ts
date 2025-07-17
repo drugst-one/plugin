@@ -798,7 +798,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           return;
         }
         this.analysis.addNodesByIdsToSelection(node_ids);
-        this.networkHandler.activeNetwork.networkInternal.unselectAll();
+        //this.networkHandler.activeNetwork.networkInternal.unselectAll();
       });
 
       this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {
