@@ -431,8 +431,14 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   pruneNetwork() {
     this.prunedNetwork.nodes.forEach(node => {
-      node.group = node.groupID;
-      delete node.shadow
+      if (node.group === "selectedNode") {
+        if ("groupID" in node) {
+          node.group = node.groupID;
+        } else if ("groupId" in node) {
+          node.group = node.groupId;
+        }
+        delete node.shadow;
+      }
     });
     const jsonString = JSON.stringify(this.prunedNetwork);
     this.logPruning();
