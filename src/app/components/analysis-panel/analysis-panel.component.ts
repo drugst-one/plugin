@@ -619,6 +619,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         this.nodeData = { nodes: null, edges: null };
         analysisNetwork.networkEl.nativeElement.innerHTML = '';
         analysisNetwork.networkInternal = null;
+        if (!("network" in result) || (result["network"]["nodes"].length > maxNodeLimit && result["algorithm"] === "first_neighbor")) {
+          this.loading = false;
+          this.loadingScreen.stateUpdate(false);
+          return
+        }
         // Create
         await this.createNetwork(this.result, this.analysis.nodesToAdd).then(nw => {
           return new Promise<any>((resolve, reject) => {

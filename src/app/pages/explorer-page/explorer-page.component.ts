@@ -401,7 +401,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   onSelectionChange(event) {
-    this.analysis.resetSelection();
     if (event.length === 0) {
       this.selectedValues = [];
     }
@@ -416,7 +415,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   onPruneOrphanNodesChange(){
-    this.analysis.resetSelection();
     const network = { "nodes": this.networkHandler.activeNetwork.nodeData.nodes.get(), "edges": this.networkHandler.activeNetwork.nodeData.edges.get() };
     if(this.pruningType === "string"){
       this.netex.pruneNetworkString(network, this.selectedProperty, this.selectedValues, this.pruneOrphanNodes).then((result) => {
@@ -432,6 +430,16 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   pruneNetwork() {
+    this.prunedNetwork.nodes.forEach(node => {
+      if (node.group === "selectedNode") {
+        if ("groupID" in node) {
+          node.group = node.groupID;
+        } else if ("groupId" in node) {
+          node.group = node.groupId;
+        }
+        delete node.shadow;
+      }
+    });
     const jsonString = JSON.stringify(this.prunedNetwork);
     this.logPruning();
     this.reset(jsonString);
@@ -465,7 +473,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   onSliderValueChanged() {
-    this.analysis.resetSelection();
     const network = { "nodes": this.networkHandler.activeNetwork.nodeData.nodes.get(), "edges": this.networkHandler.activeNetwork.nodeData.edges.get() };
     this.netex.pruneNetworkNumber(network, this.selectedProperty, this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then((result) => {
       this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
@@ -798,7 +805,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           return;
         }
         this.analysis.addNodesByIdsToSelection(node_ids);
-        this.networkHandler.activeNetwork.networkInternal.unselectAll();
+        //this.networkHandler.activeNetwork.networkInternal.unselectAll();
       });
 
       this.networkHandler.activeNetwork.networkInternal.on('deselectNode', (properties) => {

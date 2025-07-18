@@ -49,11 +49,19 @@ export class NetworkLegendComponent implements OnInit {
       }
       if (this.networkHandler.activeNetwork.nodeData?.nodes) {
         this.networkHandler.activeNetwork.nodeData.nodes.forEach(node => {
-          uniqueGroups.add(node.group);
+          if ("groupID" in node) {
+            uniqueGroups.add(node.groupID);
+          } else if ("groupId" in node) {
+            uniqueGroups.add(node.groupId);
+          }
         });
       } else {
         this.analysis.currentNetwork.nodes.forEach(node => {
-          uniqueGroups.add(node.group);
+          if ("groupID" in node) {
+            uniqueGroups.add(node.groupID);
+          } else if ("groupId" in node) {
+            uniqueGroups.add(node.groupId);
+          }
         });
       }
       return Array.from(uniqueGroups);
@@ -67,11 +75,19 @@ export class NetworkLegendComponent implements OnInit {
     }
     if(this.networkHandler.activeNetwork.nodeData?.nodes){
       this.networkHandler.activeNetwork.nodeData.nodes.forEach(node => {
-        uniqueGroups.add(node.group);
+        if ("groupID" in node) {
+          uniqueGroups.add(node.groupID);
+        } else if ("groupId" in node) {
+          uniqueGroups.add(node.groupId);
+        }
       });
     } else {
       this.networkHandler.activeNetwork.inputNetwork.nodes.forEach(node => {
-        uniqueGroups.add(node.group);
+        if ("groupID" in node) {
+          uniqueGroups.add(node.groupID);
+        } else if ("groupId" in node) {
+          uniqueGroups.add(node.groupId);
+        }
       });
     }
     return Array.from(uniqueGroups);
