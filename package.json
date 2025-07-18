@@ -1,6 +1,6 @@
 {
   "name": "netex",
-  "version": "2.1.1-rc10",
+  "version": "2.1.1-rc11",
   "scripts": {
     "ng": "ng",
     "start:dev": "ng serve --configuration=dev",
@@ -104,6 +104,6 @@
     "webpack-dev-middleware": ">5.3.3",
     "webpack-dev-server": ">5.2.0",
     "esbuild": "0.25.0",
-    "@babel/runtime":">7.26.10"
+    "@babel/runtime": ">7.26.10"
   }
 }
