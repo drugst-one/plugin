@@ -58,8 +58,7 @@
     "primeng": "^14.2.3",
     "rxjs": "^6.5.3",
     "tslib": "^2.0.0",
-    "zone.js": "~0.11.4",
-    "vis-network": "10.0.1"
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "^14.1.0",
