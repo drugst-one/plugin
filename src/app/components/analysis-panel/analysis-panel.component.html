@@ -120,8 +120,12 @@
           <li [class.is-active]="tab === 'table'" *ngIf="tokenType!=='view'">
             <a (click)="tab = 'table'">Table</a>
           </li>
-          <li [class.is-active]="tab === 'network'">
-            <a (click)="chooseNetwork();">Network</a>
+          <li [class.is-active]="tab === 'network'" [class.is-disabled]="isNetworkTabDisabled()">
+            <a (click)="!isNetworkTabDisabled() && chooseNetwork();"      
+            [pTooltip]="isNetworkTabDisabled() ? 'Currently, no network is selected!' : ''"
+            [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-bottom'"
+            tooltipPosition="bottom"
+            [class.is-disabled]="isNetworkTabDisabled()">Network</a>
           </li>
           <li [class.is-active]="tab === 'meta'" *ngIf="tokenType!=='view'">
             <a (click)="tab = 'meta'">Parameters</a>
