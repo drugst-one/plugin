@@ -1047,6 +1047,16 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.drugstoneConfig.showBugreport = true;
   }
 
+  public isNetworkTabDisabled(): boolean {
+    if (!this.result) {
+      return true;
+    }
+
+    return !("network" in this.result) ||
+      (this.result["network"]["nodes"].length > maxNodeLimit &&
+        this.result["algorithm"] === "first_neighbor");
+  }
+
   private logPathwayAnalysis() {
     const component = algorithmNames[this.task["info"]["algorithm"]] + " | " + this.task["info"]["target"] + " | " + this.geneSet + " - " + this.pathway;
     this.logger.changeComponent(component);
