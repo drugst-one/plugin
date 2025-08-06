@@ -308,6 +308,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   @ViewChild('mainColumn', { read: ElementRef, static: false }) mainColumn!: ElementRef;
   @ViewChild('sidebar', { read: ElementRef, static: false }) sidebar!: ElementRef;
   updateMainColumnHeight() {
+    if (!this.mainColumn && !this.sidebar){
+      setTimeout(()=>{this.updateMainColumnHeight()}, 1000)
+    }
     if (!this.drugstoneConfig.currentConfig().showLogger) {
       const drgstnHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--drgstn-height'));
       this.mainColumn.nativeElement.style.height = `${drgstnHeight}px`;
@@ -326,7 +329,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.dropdownSettings = {
       singleSelection: false,
-      idField: 'id',          
+      idField: 'id',
       textField: 'itemName',
       selectAllText: 'Select All',
       unSelectAllText: 'Unselect All',
@@ -350,7 +353,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           (node.ensg && node.ensg.some((e: string) => e.toLowerCase().includes(queryLower))) ||
           (node.entrez && node.entrez.some((en: string) => en.toLowerCase().includes(queryLower)))
         );
-      });    
+      });
     });
   }
 
@@ -381,7 +384,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
 
-  async selectProperty(propertyKey: string) { 
+  async selectProperty(propertyKey: string) {
     this.prunedNetwork = null;
     this.selectedProperty = propertyKey;
     const result = await this.netex.prepareNetwork(this.networkHandler.activeNetwork.nodeData.nodes.get(), propertyKey);
@@ -545,7 +548,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
   async ngAfterViewInit() {
     this.networkHandler.setActiveNetwork('explorer');
-
     if (this.onload) {
       // tslint:disable-next-line:no-eval
       eval(this.onload);
@@ -747,7 +749,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
           this.networkHandler.activeNetwork.updatePhysicsEnabled(false);
         }
       });
-      
+
       this.networkHandler.activeNetwork.networkInternal.on('doubleClick', (properties) => {
         const nodeIds: Array<string> = properties.nodes;
         if (nodeIds != null && nodeIds.length > 0) {
