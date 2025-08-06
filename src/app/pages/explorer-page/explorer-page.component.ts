@@ -308,6 +308,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   @ViewChild('mainColumn', { read: ElementRef, static: false }) mainColumn!: ElementRef;
   @ViewChild('sidebar', { read: ElementRef, static: false }) sidebar!: ElementRef;
   updateMainColumnHeight() {
+    if (!this.mainColumn || !this.sidebar) {
+      return;
+    }
+
     if (!this.drugstoneConfig.currentConfig().showLogger) {
       const drgstnHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--drgstn-height'));
       this.mainColumn.nativeElement.style.height = `${drgstnHeight}px`;
