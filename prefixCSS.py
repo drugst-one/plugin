@@ -140,34 +140,40 @@ class ParserHTML:
                 line = line.strip()
                 if '<i' in line:
                     iTagOpen = True
+
                 classStart = line.find(self.CLASSSEARCHPATTERN)
-                if classStart > -1:
+                while classStart > -1:
                     classStart += len(self.CLASSSEARCHPATTERN)
                     classIndices, classEnd = self.findClassStrings(line, classStart)
                     line = self.updateClassStrings(line, classIndices, classStart, classEnd, iTagOpen)
+                    classStart = line.find(self.CLASSSEARCHPATTERN, classEnd)
 
                 iconClassStart = line.find(self.ICONCLASSSEARCHPATTERN)
-                if iconClassStart > -1:
+                while iconClassStart > -1:
                     iconClassStart += len(self.ICONCLASSSEARCHPATTERN)
                     classIndices, classEnd = self.findClassStrings(line, iconClassStart)
                     line = self.updateClassStrings(line, classIndices, iconClassStart, classEnd, iTagOpen)
+                    iconClassStart = line.find(self.ICONCLASSSEARCHPATTERN, classEnd)
 
                 ngClassStart = line.find(self.NGCLASSSEARCHPATTERN)
-                if ngClassStart > -1:
+                while ngClassStart > -1:
                     ngClassStart += len(self.NGCLASSSEARCHPATTERN)
                     line = self.prefixNgClassStrings(line, ngClassStart)
+                    ngClassStart = line.find(self.NGCLASSSEARCHPATTERN, ngClassStart+1)
 
                 ngClassIndivStart = line.find(self.NGCLASSINDIVIDUALPATTERN)
-                if ngClassIndivStart > -1:
+                while ngClassIndivStart > -1:
                     ngClassIndivStart += len(self.NGCLASSINDIVIDUALPATTERN)
                     # exclude .fa classes
                     if not line[ngClassIndivStart:].startswith('fa-'):
                         line = self.prefixNgIndivClassStrings(line, ngClassIndivStart)
+                    ngClassIndivStart = line.find(self.NGCLASSINDIVIDUALPATTERN, ngClassIndivStart+1)
 
                 tooltipClassStart = line.find(self.TOOLTIPCLASSPATTERN)
-                if tooltipClassStart > -1:
+                while tooltipClassStart > -1:
                     tooltipClassStart += len(self.TOOLTIPCLASSPATTERN)
                     line = self.prefixtooltipStrings(line, tooltipClassStart)
+                    tooltipClassStart = line.find(self.TOOLTIPCLASSPATTERN, tooltipClassStart+1)
 
                 if self.IDSEARCHPATTERN in line:
                     line = line.replace(self.IDSEARCHPATTERN, self.IDSEARCHPATTERN + self.PREFIX)

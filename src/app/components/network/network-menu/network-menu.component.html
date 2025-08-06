@@ -37,7 +37,7 @@
         class="row is-full m-1"
         *ngIf="drugstoneConfig.config.showNetworkMenuButtonCenter"
       >
-        <div 
+        <div
         class="network-footer-toolbar-element">
           <app-center-view (resetEmitter)="reset()"></app-center-view>
         </div>
@@ -46,7 +46,7 @@
         class="row is-full m-1"
         *ngIf="drugstoneConfig.config.showNetworkMenuButtonScreenshot"
       >
-        <div 
+        <div
         class="network-footer-toolbar-element">
           <button
             (click)="networkHandler.activeNetwork.toImage()"
@@ -72,7 +72,7 @@
         class="row is-full m-1"
         *ngIf="drugstoneConfig.config.showNetworkMenuButtonExportGraphml"
       >
-        <div 
+        <div
         class="network-footer-toolbar-element">
           <app-download-button
             [nodeData]="networkHandler.activeNetwork.nodeData"
@@ -170,7 +170,7 @@
         </div>
       </div>
         <div class="row is-full m-1" *ngIf="drugstoneConfig.config.showNetworkMenuButtonLabelIdspace">
-          <div 
+          <div
           class="network-footer-toolbar-element">
           <app-idspace-button [buttonId]="'idspace-button'">
           </app-idspace-button>
@@ -335,7 +335,7 @@
         ></app-toggle-inplace>
       </div>
       <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonUpload && !analysis.analysisActive" class="row is-full m-1">
-        <app-toggle-inplace [useValue]="false" 
+        <app-toggle-inplace [useValue]="false"
         class="network-footer-toolbar-element"
           text="{{ drugstoneConfig.config.networkMenuButtonUploadLabel }}"
           tooltip="Upload network as .csv, .sif, .gt (id as node property 'name') or .graphml." (valueChange)="
@@ -346,7 +346,7 @@
         (uploadEvent)="handleUploadEvent($event)">
       </app-network-upload-dialog>
       <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonLayout" class="row is-full m-1">
-        <app-toggle-inplace 
+        <app-toggle-inplace
           text="{{ drugstoneConfig.config.networkMenuButtonLayoutLabel }}" tooltip="Create layout based on cellular component."
           [value]="drugstoneConfig.config.layoutOn" (valueChange)="
                   networkHandler.activeNetwork.updateLayoutEnabled($event)
@@ -354,14 +354,14 @@
           class="network-footer-toolbar-element"
                 ></app-toggle-inplace>
       </div>
-      <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonSelectionMultiDrag" class="drugstone-plugin-row row is-full m-1">
+      <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonSelectionMultiDrag" class="row is-full m-1">
         <app-toggle-inplace text="{{ drugstoneConfig.config.networkMenuButtonSelectionMultiDragLabel }}"
           tooltip="Enable Multi-drag for the selection." [value]="drugstoneConfig.config.selectionMultiDrag" (valueChange)="
                         analysis.updateMultiDragSelection($event)
                       " icon="filter" class="network-footer-toolbar-element"></app-toggle-inplace>
       </div>
       <div *ngIf="drugstoneConfig.config.showNetworkMenuButtonOverlayDirectedEdges && drugstoneConfig.currentConfig().interactionProteinProtein != 'OmniPath'" class="row is-full m-1">
-        <app-toggle-inplace 
+        <app-toggle-inplace
         class="network-footer-toolbar-element"
           text="{{ drugstoneConfig.config.networkMenuButtonOverlayDirectedEdgesLabel }}"
           tooltip="Overlay edges with directions from OmniPath." [value]="drugstoneConfig.config.overlayDirectedEdges" (valueChange)="
