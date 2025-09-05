@@ -97,7 +97,7 @@ export class NetexControllerService {
     /**
      * parses file and returns network as JSON
      */
-  
+
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
     return this.http.post(`${this.getBackend()}upload/` + file.name, formData).toPromise();

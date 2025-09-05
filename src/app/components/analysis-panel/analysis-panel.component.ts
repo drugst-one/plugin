@@ -10,8 +10,8 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { algorithmNames, AnalysisService } from '../../services/analysis/analysis.service';
+import {HttpClient} from '@angular/common/http';
+import {algorithmNames, AnalysisService} from '../../services/analysis/analysis.service';
 import {
   Drug,
   getProteinNodeId,
@@ -23,18 +23,18 @@ import {
   Wrapper,
   NodeInteraction,
 } from '../../interfaces';
-import { NetworkSettings } from '../../network-settings';
-import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
-import { mapCustomEdge, mapNetexEdge } from 'src/app/main-network';
-import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
-import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
-import { LegendService } from 'src/app/services/legend-service/legend-service.service';
-import { LoadingScreenService } from 'src/app/services/loading-screen/loading-screen.service';
-import { version } from '../../../version';
-import { downloadResultCSV, downloadNodeAttributes } from 'src/app/utils';
-import { Sort } from '@angular/material/sort';
-import { LoggerService } from 'src/app/services/logger/logger.service';
-import { DatePipe } from '@angular/common';
+import {NetworkSettings} from '../../network-settings';
+import {NetexControllerService} from 'src/app/services/netex-controller/netex-controller.service';
+import {mapCustomEdge, mapNetexEdge} from 'src/app/main-network';
+import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
+import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
+import {LegendService} from 'src/app/services/legend-service/legend-service.service';
+import {LoadingScreenService} from 'src/app/services/loading-screen/loading-screen.service';
+import {version} from '../../../version';
+import {downloadResultCSV, downloadNodeAttributes} from 'src/app/utils';
+import {Sort} from '@angular/material/sort';
+import {LoggerService} from 'src/app/services/logger/logger.service';
+import {DatePipe} from '@angular/common';
 
 declare var vis: any;
 
@@ -50,6 +50,7 @@ interface Seeded {
 
 
 const maxNodeLimit = 250;
+
 @Component({
   selector: 'app-analysis-panel',
   templateUrl: './analysis-panel.component.html',
@@ -57,7 +58,7 @@ const maxNodeLimit = 250;
 })
 export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit {
 
-  @ViewChild('networkWithLegend', { static: false }) networkWithLegendEl: ElementRef;
+  @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
   @Input() token: string | null = null;
   @Input() tokenType: string | null = null;
 
@@ -75,7 +76,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public algorithmDefault = undefined;
 
   public network: any;
-  public nodeData: { nodes: any, edges: any } = { nodes: null, edges: null };
+  public nodeData: { nodes: any, edges: any } = {nodes: null, edges: null};
   // private drugNodes: any[] = [];
   // private drugEdges: any[] = [];
   public tab: 'meta' | 'network' | 'table' = 'network';
@@ -150,14 +151,14 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   public resetNetwork() {
-    if(this.tokenType === 'view'){
+    if (this.tokenType === 'view') {
       this.refreshView();
-    } else if (this.tokenType === 'task'){
+    } else if (this.tokenType === 'task') {
       this.refreshTask();
     }
   }
 
-  private compare_string_number(a: number | string, b: number | string, isAsc: boolean){
+  private compare_string_number(a: number | string, b: number | string, isAsc: boolean) {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 
@@ -168,8 +169,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   ngAfterViewInit() {
     this.networkHandler.setActiveNetwork('analysis');
     this.networkHandler.activeNetwork.subscribeSelection(() => {
-      this.refresh();
-    }
+        this.refresh();
+      }
     );
   }
 
@@ -189,8 +190,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   async pruningSliderChange() {
-    const network = { "nodes": this.result?.networkInitial?.nodes, "edges": this.result?.networkInitial?.edges };
-    this.netex.pruneNetworkNumber(network, "spd", this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then( (res) => {
+    const network = {"nodes": this.result?.networkInitial?.nodes, "edges": this.result?.networkInitial?.edges};
+    this.netex.pruneNetworkNumber(network, "spd", this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then((res) => {
       this.prunedNetwork = res["prunedNetwork"];
     });
   }
@@ -377,7 +378,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.parse_pathway(this.token, this.geneSet, this.pathway).then(async result => {
       await this.refreshTask();
       this.logPathwayAnalysis();
-  });
+    });
   }
 
   private async refreshView() {
@@ -386,7 +387,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.loadingScreen.stateUpdate(true);
     this.getView(this.token).then(async view => {
       const name = view["name"] || "Manual Selection";
-      this.logger.changeComponent('View "'+ name + '" ' + this.datePipe.transform(view.createdAt, "short"));
+      this.logger.changeComponent('View "' + name + '" ' + this.datePipe.transform(view.createdAt, "short"));
       this.logger.logMessage('View "' + name + '" loaded. Nodes: ' + view.network.nodes.length + ', Edges: ' + view.network.edges.length + '.');
       this.task = view;
       this.result = view;
@@ -394,7 +395,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       this.analysis.switchSelection(this.token);
       // this.loadingScreen.stateUpdate(false);
       // Reset
-      this.nodeData = { nodes: null, edges: null };
+      this.nodeData = {nodes: null, edges: null};
       // Create
       return new Promise<any>(async (resolve, reject) => {
         const nodes = view.network.nodes;
@@ -448,7 +449,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           const labelArray = node[this.drugstoneConfig.currentConfig().label];
           node["label"] = labelArray && labelArray.length > 0 ? labelArray[0] : node.id;
         }
-        this.networkHandler.activeNetwork.inputNetwork = { nodes: nodes, edges: edges };
+        this.networkHandler.activeNetwork.inputNetwork = {nodes: nodes, edges: edges};
         this.nodeData.nodes = new vis.DataSet(nodes);
         this.nodeData.edges = new vis.DataSet(edges);
         const container = this.networkHandler.activeNetwork.networkEl.nativeElement;
@@ -505,7 +506,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.analysis.analysisActive = true;
     this.task = await this.getTask(this.token);
     this.analysis.inPathwayAnalysis = this.task["info"]["algorithm"] === "pathway-enrichment";
-    if(!this.analysis.inPathwayAnalysis){
+    if (!this.analysis.inPathwayAnalysis) {
       this.logger.changeComponent(algorithmNames[this.task["info"]["algorithm"]] + " | " + this.task["info"]["target"]);
       const formattedDate = this.datePipe.transform(this.task["info"]["finishedAt"], 'short');
       this.logger.logMessage(`Analysis Result View loaded: ${algorithmNames[this.task["info"]["algorithm"]]} (${this.task["info"]["target"]}). Task finished at: ${formattedDate}.`);
@@ -566,15 +567,15 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         }
         this.drugstoneConfig.set_analysisConfig(result.parameters.config);
         if (result["algorithm"] === "pathway_enrichment") {
-          if("geneset" in result){
+          if ("geneset" in result) {
             let needLog = !this.geneSet || !this.pathway;
             this.geneSet = result["geneset"];
             this.pathway = result["pathway"];
-            if (needLog){
+            if (needLog) {
               this.logPathwayAnalysis();
             }
           }
-          if (!this.maxSliderValue){
+          if (!this.maxSliderValue) {
             this.maxSliderValue = this.findMaxOverlap(result["tableView"]);
             this.sliderValue = this.maxSliderValue;
           }
@@ -592,8 +593,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           if (this.result.algorithm === 'pathway_enrichment') {
             this.legendService.add_to_context('pathway');
           }
-        }
-        else {
+        } else {
           this.legendService.add_to_context('drugTarget');
           if (this.result.parameters.algorithm === 'louvain-clustering' || this.result.parameters.algorithm === 'leiden-clustering') {
             this.legendService.add_to_context('louvain');
@@ -616,7 +616,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         analysisNetwork.seedMap = nodeAttributes.isSeed || {};
 
         // Reset
-        this.nodeData = { nodes: null, edges: null };
+        this.nodeData = {nodes: null, edges: null};
         analysisNetwork.networkEl.nativeElement.innerHTML = '';
         analysisNetwork.networkInternal = null;
         if (!("network" in result) || (result["network"]["nodes"].length > maxNodeLimit && result["algorithm"] === "first_neighbor")) {
@@ -636,9 +636,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             const edges = nw.edges;
             for (const node of nodes) {
               const labelArray = node[this.drugstoneConfig.currentConfig().label];
-              node["label"] = labelArray && labelArray.length > 0 ? labelArray[0] : node.id;
+              if (node["drugstoneType"] === "protein") {
+                node["label"] = labelArray && labelArray.length > 0 ? labelArray[0] : node.id;
+              }
             }
-            analysisNetwork.inputNetwork = { nodes: nodes, edges: edges };
+            analysisNetwork.inputNetwork = {nodes: nodes, edges: edges};
             this.nodeData.nodes = new vis.DataSet(nodes);
             this.nodeData.edges = new vis.DataSet(edges);
             const container = analysisNetwork.networkEl.nativeElement;
@@ -834,8 +836,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.logger.logMessage(`Downloaded ${view.toLocaleUpperCase()}-nodes as CSV: ${filename}`);
   }
 
-  public downloadPathwayEnrichmentAsCSV(){
-    if (this.result["tableView"].length > 0){
+  public downloadPathwayEnrichmentAsCSV() {
+    if (this.result["tableView"].length > 0) {
       const tableView = this.result["tableView"];
       const columns = Object.keys(this.result["tableView"][0]).filter(column => column !== 'genes');
       const filename = downloadResultCSV(tableView, columns, `drugstone_pathwayEnrichment`);
@@ -858,15 +860,15 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   public async createNetwork(result: any, nodesToAdd: Node[] = []): Promise<{ edges: any[]; nodes: any[]; }> {
     if (result.algorithm === "pathway_enrichment") {
       if (!("network" in result)) {
-        return { edges: [], nodes: [] };
+        return {edges: [], nodes: []};
       }
       let edges_mapped = result.network.edges.flatMap(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
       let nodes_list: any[] = result.network.nodes;
       if (nodesToAdd.length > 0) {
         const addedNodesList = [];
         nodesToAdd.forEach(node => {
-          if (!nodes_list.find(n => n.id === node.id)){
-            const label = node.label? node.label : node.id;
+          if (!nodes_list.find(n => n.id === node.id)) {
+            const label = node.label ? node.label : node.id;
             addedNodesList.push(label);
             if (!node.groupName) {
               node.group = "addedNode"
@@ -876,7 +878,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             nodes_list.push(node);
           }
         })
-        const edges = await this.netex.addEdges({ nodes: nodes_list, edges: edges_mapped }, result);
+        const edges = await this.netex.addEdges({nodes: nodes_list, edges: edges_mapped}, result);
         edges_mapped = edges.flatMap(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
         const addedNodesString = addedNodesList.join(", ");
         this.logger.logMessage(`Added nodes during Pathway Enrichment Analysis: ${addedNodesString}`);
@@ -893,8 +895,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       result.network["edges"] = result.network["edges"].flatMap(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
       this.analysis.currentNetwork = result.network;
       return result.network;
-    }
-     else {
+    } else {
       const identifier = this.drugstoneConfig.currentConfig().identifier;
 
       // add drugGroup and foundNodesGroup for added nodes
