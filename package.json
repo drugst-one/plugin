@@ -100,10 +100,11 @@
       "@angular/core": ">=10.2.5"
     },
     "ws": ">=8.17.1",
-    "tar-fs": ">=2.1.2",
+    "tar-fs": ">=3.1.1",
     "webpack-dev-middleware": ">5.3.3",
     "webpack-dev-server": ">5.2.0",
     "esbuild": "0.25.0",
-    "@babel/runtime": ">7.26.10"
+    "@babel/runtime": ">7.26.10",
+    "tmp": ">=0.2.4"
   }
 }
