@@ -78,14 +78,31 @@
                 />
               </div>
             </div>
-             <div class="field">
+            <div class="field">
               <label class="label" for="pathway-enrichment-geneset">Genesets to consider in pathway enrichment</label>
+              <div class="notification is-warning is-light" *ngIf="moreThanOneSelected()">
+                <strong>Warning:</strong> You selected multiple pathway databases.
+                This may lead to overlapping pathways and duplicated enrichment results.
+              </div>
+              <span>Source: <a href="https://maayanlab.cloud/Enrichr/#libraries" target="_blank">Enrichr</a></span>
+
               <div class="control">
                 <div *ngFor="let option of pathways">
-                <label>
-                  <input type="checkbox" [(ngModel)]="option.selected">
-                  {{ option.label }}
-                 </label>
+                  <label>
+                    <input type="checkbox" [(ngModel)]="option.selected">
+                    {{ option.label }}
+                  
+                    <span class="info-icon" pTooltip="{{ option.name }}" tooltipPosition="right"
+                      [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-right'" tabindex="0">
+                      <app-fa-solid-icon icon="info" style="margin-left: 6px;"></app-fa-solid-icon>
+                    </span>
+                  
+                    <a [href]="option.url" target="_blank" rel="noopener noreferrer" class="linkout-icon">
+                      <app-fa-solid-icon icon="external-link-alt" style="margin-left: 4px;"></app-fa-solid-icon>
+                    </a>
+                  
+                  </label>
+            
                 </div>
               </div>
             </div>

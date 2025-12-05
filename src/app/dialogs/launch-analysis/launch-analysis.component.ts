@@ -12,6 +12,8 @@ import {Algorithm, AlgorithmType, QuickAlgorithmType, Wrapper} from 'src/app/int
 import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
 import {NetworkHandlerService} from '../../services/network-handler/network-handler.service';
 import { LoggerService } from 'src/app/services/logger/logger.service';
+import { HttpClient } from '@angular/common/http';
+import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
 
 @Component({
   selector: 'app-launch-analysis',
@@ -20,7 +22,7 @@ import { LoggerService } from 'src/app/services/logger/logger.service';
 })
 export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
-  constructor(public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public networkHandler: NetworkHandlerService, public logger: LoggerService) {
+  constructor(public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public networkHandler: NetworkHandlerService, public logger: LoggerService, private http: HttpClient, private netex: NetexControllerService) {
   }
 
   @Input()
@@ -38,11 +40,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   // Pathway enrichment parameters
   public alpha = 0.05;
-  pathways = [
-    { label: 'Reactome', selected: true },
-    { label: 'KEGG', selected: true },
-    { label: 'Wiki Pathways', selected: true }
-  ];
+  pathways: any;
 
   // Louvain/Leiden Clustering parameters
   public ignore_isolated: boolean = true;
@@ -102,6 +100,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public maxTasks = MAX_TASKS;
 
   ngOnInit(): void {
+    this.loadPathways();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -133,7 +132,13 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   }
 
   public isAnySelected(): boolean {
+    if (!this.pathways) return false
     return this.pathways.some(option => option.selected);
+  }
+
+  public moreThanOneSelected(): boolean {
+    if (!this.pathways) return false;
+    return this.pathways.filter(o => o.selected).length > 1;
   }
 
 
@@ -271,5 +276,26 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   onMaxNodesChange(value: number): void {
     this.max_nodes = Number.isNaN(value) ? null : value;
   }
+
+  private async loadPathways() {
+    const sources: any = await this.http.get(`${this.netex.getBackend()}get_pathway_sources`).toPromise();
+
+    this.pathways = sources.map(src => {
+      let name = src.label;
+
+      const match = src.url?.match(/libraryName=([^&]+)/);
+      if (match) {
+        name = decodeURIComponent(match[1]);
+      }
+
+      return {
+        label: src.label,
+        url: src.url,
+        name: name,
+        selected: src.label === 'KEGG'
+      };
+    });
+  }
+
 
 }
