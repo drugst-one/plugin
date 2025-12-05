@@ -95,12 +95,24 @@
 
 <p *ngIf="hasProperties()" [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }">
   <b><span>Properties:</span></b>
-  <div *ngFor="let property of _wrapper.data.properties | keyvalue" style="padding-left: 10px; padding-bottom: 5px;">
+  <br>
+  <span *ngFor="let property of _wrapper.data.properties | keyvalue" style="padding-left: 10px; padding-bottom: 5px;">
     <i><span>{{ property.key }}:</span></i>
     <span class="is-capitalized">
       {{ property.value }}
     </span>
-  </div>
+    <span *ngIf="property.key === 'rank'">
+      <app-fa-solid-icon icon="info" style="font-size: 12px;"
+        pTooltip="The node’s rank is the position of the most significant pathway containing it (pathways sorted by adjusted p-value ascending — smallest first)."
+        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-right'" tooltipPosition="right"></app-fa-solid-icon>
+    </span>
+    <span *ngIf="property.key === 'score'">
+      <app-fa-solid-icon icon="info" style="font-size: 12px;"
+        pTooltip="The node’s score summarizes its presence across all enriched pathways, increasing when the node appears in multiple highly significant pathways."
+        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-right'" tooltipPosition="right"></app-fa-solid-icon>
+    </span>
+    <br>
+  </span>
 <p
   *ngIf="getExpressionScore() != null"
   [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
