@@ -253,6 +253,12 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.kegg = this.pathways.find(pathway => pathway.label === 'KEGG').selected;
       parameters.reactome = this.pathways.find(pathway => pathway.label === 'Reactome').selected;
       parameters.wiki = this.pathways.find(pathway => pathway.label === 'Wiki Pathways').selected;
+      
+      // Log which sources are being used from loadPathways
+      const sourcesUsed = this.pathways
+        .filter(pathway => pathway.selected)
+        .map(pathway => `${pathway.label}${pathway.url ? ` (${pathway.url})` : ''}`);
+      this.logger.logMessage(`Pathway enrichment sources: ${sourcesUsed.join(', ') || 'none'}`);
     } else if (this.algorithm === 'louvain-clustering'){
       parameters.ignore_isolated = this.ignore_isolated
       parameters.seed = this.seed
