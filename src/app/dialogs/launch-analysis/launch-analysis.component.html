@@ -701,6 +701,17 @@
                 </div>
               </article>
             </div>
+
+            <div class="field" *ngIf="drugstoneConfig.config.interactionProteinProtein === 'OmniPath'">
+              <label class="label" for="upstream-regulators">Only add upstream regulators as first neighbors</label>
+              <div class="control">
+                <label class="checkbox">
+                  <input type="checkbox" [(ngModel)]="firstNeighborOnlyUpstreamRegulators" id="upstream-regulators">
+                  Only add upstream regulators
+                </label>
+              </div>
+              <p class="has-text-info is-size-7">Only upstream regulators will be added in the First Neighbor algorithm.</p>
+            </div>
           </div>
 
           <div *ngIf="algorithm === 'betweenness'">

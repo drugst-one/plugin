@@ -425,20 +425,35 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         }
 
         const edge_map = {};
+        const isOmnipath = this.drugstoneConfig.currentConfig().interactionProteinProtein === 'OmniPath';
 
         edges = edges.filter(edge => {
-          if (edge_map[edge.to] && edge_map[edge.to].indexOf(edge.from) !== -1) {
-            return false;
-          }
-          if (edge_map[edge.from] && edge_map[edge.from].indexOf(edge.to) !== -1) {
-            return false;
-          }
-          if (!edge_map[edge.from]) {
-            edge_map[edge.from] = [edge.to];
+          // For OmniPath (directed edges), only check exact direction
+          if (isOmnipath) {
+            if (edge_map[edge.from] && edge_map[edge.from].indexOf(edge.to) !== -1) {
+              return false;
+            }
+            if (!edge_map[edge.from]) {
+              edge_map[edge.from] = [edge.to];
+            } else {
+              edge_map[edge.from].push(edge.to);
+            }
+            return true;
           } else {
-            edge_map[edge.from].push(edge.to);
+            // For undirected edges, check both directions
+            if (edge_map[edge.to] && edge_map[edge.to].indexOf(edge.from) !== -1) {
+              return false;
+            }
+            if (edge_map[edge.from] && edge_map[edge.from].indexOf(edge.to) !== -1) {
+              return false;
+            }
+            if (!edge_map[edge.from]) {
+              edge_map[edge.from] = [edge.to];
+            } else {
+              edge_map[edge.from].push(edge.to);
+            }
+            return true;
           }
-          return true;
         });
 
         // @ts-ignore

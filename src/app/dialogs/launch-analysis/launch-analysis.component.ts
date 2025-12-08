@@ -42,6 +42,9 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public alpha = 0.05;
   pathways: any;
 
+  // First Neighbor Parameters
+  public firstNeighborOnlyUpstreamRegulators = false;
+
   // Louvain/Leiden Clustering parameters
   public ignore_isolated: boolean = true;
   public seed: number | null = null;
@@ -268,7 +271,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.seed = this.seed
       parameters.max_nodes = this.max_nodes !== null ? this.max_nodes : 0
     } else if (this.algorithm === 'first-neighbor'){
-      // no parameters so far
+      parameters.only_upstream_regulators = this.firstNeighborOnlyUpstreamRegulators;
     }
     const token = await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
     const object = {taskId: token, algorithm: this.algorithm, target: this.target, params: parameters};
