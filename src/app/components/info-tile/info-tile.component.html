@@ -108,7 +108,7 @@
     </span>
     <span *ngIf="property.key === 'score'">
       <app-fa-solid-icon icon="info" style="font-size: 12px;"
-        pTooltip="The node’s score summarizes its presence across all enriched pathways, increasing when the node appears in multiple highly significant pathways."
+        pTooltip="The node's score summarizes its presence across all enriched pathways, increasing when the node appears in multiple highly significant pathways. (The sum of significant -log(p) gene set values that include the gene, divided by the sum of all significant -log(p) gene set values.)"
         [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-right'" tooltipPosition="right"></app-fa-solid-icon>
     </span>
     <br>
