@@ -35,6 +35,7 @@ import {downloadResultCSV, downloadNodeAttributes} from 'src/app/utils';
 import {Sort} from '@angular/material/sort';
 import {LoggerService} from 'src/app/services/logger/logger.service';
 import {DatePipe} from '@angular/common';
+import {ToastService} from 'src/app/services/toast/toast.service';
 
 declare var vis: any;
 
@@ -120,7 +121,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   step: number = 0.01;
   pruneOrphanNodes = false;
 
-  constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService, public loadingScreen: LoadingScreenService, public logger: LoggerService, private datePipe: DatePipe) {
+  constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public drugstoneConfig: DrugstoneConfigService, private http: HttpClient, public analysis: AnalysisService, public netex: NetexControllerService, public loadingScreen: LoadingScreenService, public logger: LoggerService, private datePipe: DatePipe, public toast: ToastService) {
     try {
       this.versionString = version;
     } catch (e) {
@@ -190,6 +191,10 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   async pruningSliderChange() {
+    // Round cutoff to 3 decimal places
+    if (this.cutoff !== undefined && this.cutoff !== null) {
+      this.cutoff = Math.round(this.cutoff * 1000) / 1000;
+    }
     const network = {"nodes": this.result?.networkInitial?.nodes, "edges": this.result?.networkInitial?.edges};
     this.netex.pruneNetworkNumber(network, "spd", this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then((res) => {
       this.prunedNetwork = res["prunedNetwork"];
@@ -567,9 +572,36 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         console.log(result)
         this.analysis.target = result.parameters.target;
         if ("cutoff" in result) {
-          this.cutoff = result["cutoff"];
+          // Round cutoff to 3 decimal places for display
+          this.cutoff = result["cutoff"] !== undefined && result["cutoff"] !== null 
+            ? Math.round(result["cutoff"] * 1000) / 1000 
+            : result["cutoff"];
           this.prunedNetwork = result["network"];
           this.pruneOrphanNodes = result["pruneOrphanNodes"];
+          
+          // If this is an automatic cutoff, show notification
+          if (result["automaticCutoff"] === true) {
+            // Show toast notification about automatic cutoff
+            this.toast.setNewToast({
+              message: `Automatic SPD cutoff applied: ${this.cutoff.toFixed(3)}. Network pruned from ${result["networkInitial"]["nodes"].length} to ${result["network"]["nodes"].length} nodes.`,
+              type: 'info',
+              callback: () => {}
+            });
+            
+            // Log automatic pruning
+            this.logger.logMessage(`First Neighbor: Automatic SPD cutoff applied (${this.cutoff.toFixed(3)}). Network pruned from ${result["networkInitial"]["nodes"].length} to ${result["network"]["nodes"].length} nodes.`);
+          }
+        }
+        
+        // Setup pruning min/max values for first_neighbor (same as manual pruning)
+        if (result["algorithm"] === "first_neighbor" && result["networkInitial"]) {
+          this.netex.prepareNetwork(result["networkInitial"]["nodes"], "spd").then((pruningResult) => {
+            if (pruningResult['type'] === 'int' || pruningResult['type'] === 'float') {
+              this.minPruningValue = pruningResult['min'];
+              this.maxPruningValue = pruningResult['max'];
+              this.step = (this.maxPruningValue - this.minPruningValue) / 1000;
+            }
+          });
         }
         if (!("network" in result) || (result["network"]["nodes"].length > maxNodeLimit && result["algorithm"] === "first_neighbor")) {
           this.tab = 'table';
