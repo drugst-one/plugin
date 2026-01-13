@@ -650,7 +650,7 @@
                     <br>
                     <input style="margin-top: 5px; width: 80%" type="range" [min]="minPruningValue" [max]="maxPruningValue"
                       [(ngModel)]="cutoff" (input)="pruningSliderChange()" [step]="step">
-                    <label style="padding: 5px;">{{ cutoff }}</label>
+                    <label style="padding: 5px;">{{ cutoff | number:'1.0-3' }}</label>
                   </div>
                   <br>
                   <div>
