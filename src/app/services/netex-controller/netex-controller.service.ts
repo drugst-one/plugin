@@ -135,6 +135,10 @@ export class NetexControllerService {
     return this.http.get(this.getBackend() + 'get_default_params?algorithm=' + algorithm).toPromise();
   }
 
+  public getPathwaySources(): Promise<any> {
+    return this.http.get(this.getBackend() + 'get_pathway_sources').toPromise()
+  }
+
   public digest_request(payload): Promise<any> {
     return this.http.post('https://api.digest-validation.net/set', payload).toPromise();
   }

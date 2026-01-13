@@ -22,7 +22,7 @@ import { NetexControllerService } from 'src/app/services/netex-controller/netex-
 })
 export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
-  constructor(public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public networkHandler: NetworkHandlerService, public logger: LoggerService, private http: HttpClient, private netex: NetexControllerService) {
+  constructor(public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public networkHandler: NetworkHandlerService, public logger: LoggerService, private netex: NetexControllerService) {
   }
 
   @Input()
@@ -256,7 +256,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.kegg = this.pathways.find(pathway => pathway.label === 'KEGG').selected;
       parameters.reactome = this.pathways.find(pathway => pathway.label === 'Reactome').selected;
       parameters.wiki = this.pathways.find(pathway => pathway.label === 'Wiki Pathways').selected;
-      
+
       // Log which sources are being used from loadPathways
       const sourcesUsed = this.pathways
         .filter(pathway => pathway.selected)
@@ -287,7 +287,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   }
 
   private async loadPathways() {
-    const sources: any = await this.http.get(`${this.netex.getBackend()}get_pathway_sources`).toPromise();
+    const sources: any = await this.netex.getPathwaySources()
 
     this.pathways = sources.map(src => {
       let name = src.label;
