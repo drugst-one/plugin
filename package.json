@@ -1,6 +1,6 @@
 {
   "name": "netex",
-  "version": "2.1.7-rc3",
+  "version": "2.1.7-rc4",
   "scripts": {
     "ng": "ng",
     "start:dev": "ng serve --configuration=dev",
