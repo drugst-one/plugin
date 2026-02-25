@@ -4,9 +4,8 @@ const concat = require('concat');
   const files = [
     './dist/netex/runtime.js',
     './dist/netex/polyfills.js',
-    './scripts/vis-network-10.0.1.min.js',
+    './scripts/vis-network-10.0.2.min.js',
     './scripts/canvas2svg.js',
-    // './dist/netex/scripts.js',
     './dist/netex/main.js'
   ];
   await fs.ensureDir('drugsTone-build');
