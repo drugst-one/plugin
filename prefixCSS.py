@@ -363,52 +363,92 @@ class ParserCSS:
 
 class BuildManager:
 
-    def __init__(self, buildPath):
-        self.buildPath = buildPath
+    def __init__(self, target_dir):
+        self.target_dir = target_dir
 
-    def buildDevDir(self):
-        shutil.copytree('src', os.path.join(self.buildPath, 'src'))
-        shutil.copytree('node_modules', os.path.join(self.buildPath, 'node_modules'))
+    def prepare_workspace(self):
+        if os.path.exists(self.target_dir):
+            print(f"Cleaning existing target directory: {self.target_dir}")
+            shutil.rmtree(self.target_dir)
+        os.makedirs(self.target_dir)
+
+        # Essential configuration and build files
+        files_to_copy = [
+            'package.json', 'package-lock.json', 'angular.json',
+            'tsconfig.json', 'tsconfig.app.json', 'extra-webpack.config.js',
+            'build-netex.js'
+        ]
+        print("Copying configuration files...")
+        for f in files_to_copy:
+            if os.path.exists(f):
+                shutil.copy(f, self.target_dir)
+
+        # Copy source and script directories
+        dirs_to_copy = ['src', 'scripts']
+        print("Copying source and scripts...")
+        for d in dirs_to_copy:
+            if os.path.exists(d):
+                shutil.copytree(d, os.path.join(self.target_dir, d))
+
+        # Handle node_modules with intelligent symlinking
+        original_nm = 'node_modules'
+        if os.path.exists(original_nm):
+            print("Processing node_modules (copying CSS-containing packages, symlinking others)...")
+            target_nm = os.path.join(self.target_dir, 'node_modules')
+            os.makedirs(target_nm)
+            for item in os.listdir(original_nm):
+                src_path = os.path.join(original_nm, item)
+                dst_path = os.path.join(target_nm, item)
+                
+                # Handle scoped packages (@angular, @ng-bootstrap, etc.)
+                if item.startswith('@'):
+                    os.makedirs(dst_path)
+                    for subitem in os.listdir(src_path):
+                        sub_src = os.path.join(src_path, subitem)
+                        sub_dst = os.path.join(dst_path, subitem)
+                        self._copy_or_link_package(sub_src, sub_dst)
+                else:
+                    self._copy_or_link_package(src_path, dst_path)
+
+    def _copy_or_link_package(self, src, dst):
+        if self._contains_css(src):
+            shutil.copytree(src, dst)
+        else:
+            # Use absolute path for symlink to ensure it works from the target_dir
+            os.symlink(os.path.abspath(src), dst)
+
+    def _contains_css(self, path):
+        # We need to copy packages that contain files we want to prefix
+        for root, _, files in os.walk(path):
+            for f in files:
+                if f.endswith(('.css', '.scss', '.sass')):
+                    return True
+        return False
 
     def parseApp(self):
-        ParserHTML().parseDirectory('src/app/')
-        ParserCSS().parseDirectory('src/')
-        ParserCSS().parseDirectory('node_modules/')
-        ParserJS().parseDirectory('src/app/')
+        print(f"Prefixing files in {self.target_dir}...")
+        ParserHTML().parseDirectory(os.path.join(self.target_dir, 'src/app/'))
+        ParserCSS().parseDirectory(os.path.join(self.target_dir, 'src/'))
+        ParserCSS().parseDirectory(os.path.join(self.target_dir, 'node_modules/'))
+        ParserJS().parseDirectory(os.path.join(self.target_dir, 'src/app/'))
 
     def cleanup(self):
-        # check if self.buildPath exists
-        if not os.path.exists(self.buildPath):
-            print(f'SKIPPING CLEANUP: build path "{self.buildPath}" does not exist.')
-            return
-        shutil.rmtree('src')
-        shutil.copytree(os.path.join(self.buildPath, 'src'), 'src')
-        shutil.rmtree('node_modules')
-        shutil.rmtree(self.buildPath)
-        subprocess.run(['npm',  'i'])
+        if os.path.exists(self.target_dir):
+            print(f"Removing target directory: {self.target_dir}")
+            shutil.rmtree(self.target_dir)
 
 
-ORIGDIR = 'original'
-
-def parse():
-    print('Starting parsing...')
-    buildManager = BuildManager(ORIGDIR)
-    try:
-        buildManager.buildDevDir()
-        buildManager.parseApp()
-    except:
-        raise Exception('ERROR: CSS prefix script failed.')
-    print('Parsing done!')
-
-def cleanup():
-    print('Starting cleanup...')
-    buildManager = BuildManager(ORIGDIR)
-    buildManager.cleanup()
-    print('Cleanup done!')
+def prepare(target_dir):
+    print(f'Starting preparation for {target_dir}...')
+    buildManager = BuildManager(target_dir)
+    buildManager.prepare_workspace()
+    buildManager.parseApp()
+    print('Preparation done!')
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-s", "--stage", help = "Stage of building. Either 'parse' or 'cleanup'.")
+parser.add_argument("-s", "--stage", help = "Stage of building. Either 'prepare' or 'cleanup'.")
+parser.add_argument("-t", "--target", help = "Target directory for the build workspace.", default='build-tmp')
 
 
 if __name__ == '__main__':
@@ -416,18 +456,13 @@ if __name__ == '__main__':
     if not args.stage:
         raise Exception('Value for --stage is missing.')
 
-    if args.stage == 'parse':
-        try:
-            parse()
-        except:
-            # in case it fails, try again after running a cleanup
-            cleanup()
-            try:
-                parse()
-            except:
-                cleanup()
-
+    if args.stage == 'prepare':
+        prepare(args.target)
     elif args.stage == 'cleanup':
-        cleanup()
+        BuildManager(args.target).cleanup()
     else:
-        raise Exception(f'ERROR: Unknown argument for --stage: {args.stage}. Should be "parse" or "stage."')
+        # Compatibility with old stages if needed, or error out
+        if args.stage == 'parse':
+            prepare(args.target)
+        else:
+            raise Exception(f'ERROR: Unknown argument for --stage: {args.stage}. Should be "prepare" or "cleanup."')
