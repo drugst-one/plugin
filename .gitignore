@@ -59,3 +59,5 @@ original/*
 .prettierrc.angular
 .angular
 orignial
+drugsTone-build_old
+src/index_local_static_old.html
