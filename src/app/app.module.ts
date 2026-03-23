@@ -17,7 +17,7 @@ import { ToggleComponent } from './components/toggle/toggle.component';
 import { InfoTileComponent } from './components/info-tile/info-tile.component';
 import { DownloadButtonComponent } from './components/network/network-menu/download-button/download-button.component';
 
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 
 import { AnalysisService } from './services/analysis/analysis.service';
 import { AddExpressedProteinsComponent } from './dialogs/add-expressed-proteins/add-expressed-proteins.component';
@@ -60,9 +60,9 @@ import { ImageFallbackDirective } from './directives/image-fallback/image-fallba
 import { ExternalAnalysisButtonComponent } from './components/external-analysis-button/external-analysis-button.component';
 import { MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacySliderModule as MatSliderModule } from '@angular/material/legacy-slider';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IdspaceButtonComponent } from './components/network/network-menu/idspace-button/idspace-button.component';
 import { NetworkUploadDialogComponent } from './dialogs/network-upload-dialog/network-upload-dialog.component';
