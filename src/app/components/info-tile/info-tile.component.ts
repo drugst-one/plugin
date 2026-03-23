@@ -3,7 +3,6 @@ import { DrugstoneConfigService } from "src/app/services/drugstone-config/drugst
 import { Wrapper } from "../../interfaces";
 import { AnalysisService } from "../../services/analysis/analysis.service";
 import { NetworkHandlerService } from "../../services/network-handler/network-handler.service";
-import { validateComponent } from "codelyzer/walkerFactory/walkerFn";
 
 @Component({
   selector: "app-info-tile",
