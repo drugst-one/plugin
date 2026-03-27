@@ -28,11 +28,11 @@ export class ToastComponent implements OnInit {
     return 'drugstone-plugin-' + type
   }
 
-  public close(id: number) {
+  public close(id: any) {
     this.toast.deleteToast(id);
   }
 
-  public click(id: number) {
+  public click(id: any) {
     this.toast.toastClicked(id);
   }
 

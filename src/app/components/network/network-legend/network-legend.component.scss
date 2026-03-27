@@ -1,4 +1,4 @@
-@import "src/stylesheets/variables";
+@use "src/stylesheets/variables" as *;
 
 div.legend-background {
   /* Fit to the legend size */

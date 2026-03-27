@@ -1,4 +1,4 @@
-@import "src/stylesheets/variables";
+@use "src/stylesheets/variables" as *;
 
 .toast-holder {
   z-index: $toast-z;

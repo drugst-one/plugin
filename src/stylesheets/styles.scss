@@ -1,9 +1,9 @@
 @charset "utf-8";
+@use "variables" as *;
 @import url("https://fonts.googleapis.com/css?family=Varela+Round");
 @import "../../node_modules/animate.css/animate.min";
 @import "primeng";
 @import "bulma";
-@import "variables";
 @import "@ng-select/ng-select/themes/default.theme.css";
 
 #appWindow {

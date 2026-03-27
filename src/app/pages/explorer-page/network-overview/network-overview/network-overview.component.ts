@@ -12,6 +12,8 @@ import { NetworkHandlerService } from 'src/app/services/network-handler/network-
 })
 export class NetworkOverviewComponent implements OnInit {
 
+  public collapseOverview: boolean;
+
   constructor(    
     public analysis: AnalysisService,
     public drugstoneConfig: DrugstoneConfigService,
@@ -20,8 +22,7 @@ export class NetworkOverviewComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
+    this.collapseOverview = this.drugstoneConfig.config.showOverview;
   }
-
-  collapseOverview = this.drugstoneConfig.config.showOverview;
 
 }

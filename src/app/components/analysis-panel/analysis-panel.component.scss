@@ -1,4 +1,4 @@
-@import "src/stylesheets/variables";
+@use "src/stylesheets/variables" as *;
 
 #update-available-icon {
   color: var(--drgstn-warning)

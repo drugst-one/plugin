@@ -60,7 +60,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public trustrankMaxDeg = 0;
   public trustrankHubPenalty = 0.0;
   public trustrankResultSize = 20;
-  public trustrankCustomEdges = this.drugstoneConfig.config.customEdges.default;
+  public trustrankCustomEdges: boolean;
 
   // Closeness Parameters
   public closenessIncludeIndirectDrugs = false;
@@ -68,13 +68,13 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public closenessMaxDeg = 0;
   public closenessHubPenalty = 0.0;
   public closenessResultSize = 20;
-  public closenessCustomEdges = this.drugstoneConfig.config.customEdges.default;
+  public closenessCustomEdges: boolean;
 
   // Degree Parameters
   public degreeIncludeNonApprovedDrugs = false;
   public degreeMaxDeg = 0;
   public degreeResultSize = 20;
-  public degreeCustomEdges = this.drugstoneConfig.config.customEdges.default;
+  public degreeCustomEdges: boolean;
 
   // Network proximity
   public proximityIncludeNonApprovedDrugs = false;
@@ -83,13 +83,13 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public proximityResultSize = 20;
   public proximityNumRandomSeedSets = 32;
   public proximityNumDrugTargetSets = 32;
-  public proximityCustomEdges = this.drugstoneConfig.config.customEdges.default;
+  public proximityCustomEdges: boolean;
 
   // Betweenness Parameters
   public betweennessMaxDeg = 0;
   public betweennessHubPenalty = 0.0;
   public betweennessResultSize = 20;
-  public betweennessCustomEdges = this.drugstoneConfig.config.customEdges.default;
+  public betweennessCustomEdges: boolean;
 
   // Keypathwayminer Parameters
   public keypathwayminerK = 5;
@@ -99,11 +99,17 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public multisteinerTolerance = 10;
   public multisteinerMaxDeg = 0;
   public multisteinerHubPenalty = 0.0;
-  public multisteinerCustomEdges = this.drugstoneConfig.config.customEdges.default;
+  public multisteinerCustomEdges: boolean;
 
   public maxTasks = MAX_TASKS;
 
   ngOnInit(): void {
+    this.trustrankCustomEdges = this.drugstoneConfig.config.customEdges.default;
+    this.closenessCustomEdges = this.drugstoneConfig.config.customEdges.default;
+    this.degreeCustomEdges = this.drugstoneConfig.config.customEdges.default;
+    this.proximityCustomEdges = this.drugstoneConfig.config.customEdges.default;
+    this.betweennessCustomEdges = this.drugstoneConfig.config.customEdges.default;
+    this.multisteinerCustomEdges = this.drugstoneConfig.config.customEdges.default;
     this.loadPathways();
   }
 
