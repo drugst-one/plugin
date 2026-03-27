@@ -7,6 +7,7 @@ import { NetworkHandlerService } from "src/app/services/network-handler/network-
 import { AnalysisService } from "src/app/services/analysis/analysis.service";
 
 @Component({
+  standalone: false,
   selector: "app-network-legend",
   templateUrl: "./network-legend.component.html",
   styleUrls: ["./network-legend.component.scss"],

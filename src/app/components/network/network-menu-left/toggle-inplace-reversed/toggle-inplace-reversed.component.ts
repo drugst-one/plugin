@@ -3,6 +3,7 @@ import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugst
 
 
 @Component({
+  standalone: false,
   selector: 'app-toggle-inplace-reversed',
   templateUrl: './toggle-inplace-reversed.component.html',
   styleUrls: ['./toggle-inplace-reversed.component.scss']

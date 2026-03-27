@@ -11,6 +11,7 @@ import { NetworkHandlerService } from "../../../../services/network-handler/netw
 import { LoggerService } from "src/app/services/logger/logger.service";
 
 @Component({
+  standalone: false,
   selector: "app-download-button",
   templateUrl: "./download-button.component.html",
   styleUrls: ["./download-button.component.scss"],

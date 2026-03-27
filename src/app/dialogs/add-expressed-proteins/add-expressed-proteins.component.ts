@@ -6,6 +6,7 @@ import {HttpClient} from '@angular/common/http';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
 
 @Component({
+  standalone: false,
   selector: 'app-add-expressed-proteins',
   templateUrl: './add-expressed-proteins.component.html',
   styleUrls: ['./add-expressed-proteins.component.scss']

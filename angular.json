@@ -193,8 +193,8 @@
               "src/app-test"
             ],
             "styles": [
-              "src/stylesheets/styles.scss",
-              "src/stylesheets/theme-css"
+              "src/stylesheets/theme-styles.scss",
+              "src/stylesheets/styles.scss"
             ],
             "scripts": ["node_modules/canvas2svg-visjs/canvas2svg.js"]
           }

@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 
 @Component({
+  standalone: false,
   selector: 'app-toggle-inplace',
   templateUrl: './toggle-inplace.component.html',
   styleUrls: ['./toggle-inplace.component.scss']

@@ -1,6 +1,7 @@
 import { Directive, Input, HostBinding, HostListener } from '@angular/core';
 
 @Directive({
+  standalone: false,
   selector: 'img[fallback]'
 })
 export class ImageFallbackDirective {

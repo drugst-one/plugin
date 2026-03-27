@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
+  standalone: false,
   selector: 'app-gene-rows',
   templateUrl: './gene-rows.component.html',
   styleUrls: ['./gene-rows.component.scss']

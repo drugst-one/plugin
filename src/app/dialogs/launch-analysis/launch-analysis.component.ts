@@ -16,6 +16,7 @@ import { HttpClient } from '@angular/common/http';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
 
 @Component({
+  standalone: false,
   selector: 'app-launch-analysis',
   templateUrl: './launch-analysis.component.html',
   styleUrls: ['./launch-analysis.component.scss']

@@ -3,6 +3,7 @@ import {AnalysisService} from 'src/app/services/analysis/analysis.service';
 import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
 
 @Component({
+  standalone: false,
   selector: 'app-quick-drug-target',
   templateUrl: './quick-drug-target.component.html',
   styleUrls: ['./quick-drug-target.component.scss']

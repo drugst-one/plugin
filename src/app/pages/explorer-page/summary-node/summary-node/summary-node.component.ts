@@ -5,6 +5,7 @@ import { NetexControllerService } from 'src/app/services/netex-controller/netex-
 import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
 
 @Component({
+  standalone: false,
   selector: 'app-summary-node',
   templateUrl: './summary-node.component.html',
   styleUrls: ['./summary-node.component.scss']

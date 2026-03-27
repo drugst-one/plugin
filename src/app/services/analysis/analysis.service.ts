@@ -1,7 +1,7 @@
 import {Wrapper, Task, getWrapperFromNode, getNodeFromWrapper,Node, Dataset, Tissue} from '../../interfaces';
 import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import {Injectable, Injector} from '@angular/core';
 import {NetexControllerService} from '../netex-controller/netex-controller.service';
 import {DrugstoneConfigService} from '../drugstone-config/drugstone-config.service';
 import {NetworkHandlerService} from '../network-handler/network-handler.service';
@@ -109,7 +109,7 @@ export class AnalysisService {
     private http: HttpClient,
     public netex: NetexControllerService,
     public drugstoneConfig: DrugstoneConfigService,
-    public networkHandler: NetworkHandlerService,
+    private injector: Injector,
     public logger: LoggerService,
     public datePipe: DatePipe
   ) {
@@ -132,6 +132,10 @@ export class AnalysisService {
     this.netex.tissues().subscribe((tissues) => {
       this.tissues = tissues;
     });
+  }
+
+  public get networkHandler(): NetworkHandlerService {
+    return this.injector.get(NetworkHandlerService);
   }
 
   setViewTokenCallback(f): void {

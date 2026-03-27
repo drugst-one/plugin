@@ -12,6 +12,7 @@ import {
 import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
 
 @Component({
+  standalone: false,
   selector: 'app-download-button-inverse',
   templateUrl: './download-button-inverse.component.html',
   styleUrls: ['./download-button-inverse.component.scss']

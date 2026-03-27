@@ -4,6 +4,7 @@ import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugst
 import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
 
 @Component({
+  standalone: false,
   selector: 'app-idspace-button',
   templateUrl: './idspace-button.component.html',
   styleUrls: ['./idspace-button.component.scss']

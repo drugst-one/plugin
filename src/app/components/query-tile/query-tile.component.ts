@@ -4,6 +4,7 @@ import {NetworkHandlerService} from 'src/app/services/network-handler/network-ha
 import {Wrapper} from '../../interfaces';
 
 @Component({
+  standalone: false,
   selector: 'app-query-tile-component',
   templateUrl: './query-tile.component.html',
   styleUrls: ['./query-tile.component.scss']

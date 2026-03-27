@@ -8,6 +8,7 @@ import { LoggerService } from 'src/app/services/logger/logger.service';
 import { AnalysisService } from 'src/app/services/analysis/analysis.service';
 
 @Component({
+  standalone: false,
   selector: 'app-network-menu',
   templateUrl: './network-menu.component.html',
   styleUrls: ['./network-menu.component.scss']

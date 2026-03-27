@@ -53,6 +53,7 @@ interface Seeded {
 const maxNodeLimit = 250;
 
 @Component({
+  standalone: false,
   selector: 'app-analysis-panel',
   templateUrl: './analysis-panel.component.html',
   styleUrls: ['./analysis-panel.component.scss'],

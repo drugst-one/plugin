@@ -4,6 +4,7 @@ import {AnalysisService, algorithmNames} from '../../services/analysis/analysis.
 
 
 @Component({
+  standalone: false,
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss']

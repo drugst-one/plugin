@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
+  standalone: false,
   selector: 'app-prot-table',
   templateUrl: './prot-table.component.html',
   styleUrls: ['./prot-table.component.scss'],

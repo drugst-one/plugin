@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
+  standalone: false,
   selector: 'app-fa-solid-icon',
   templateUrl: './fa-solid-icon.component.html',
   styleUrls: ['./fa-solid-icon.component.scss']

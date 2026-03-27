@@ -34,6 +34,7 @@ import { LoggerService } from 'src/app/services/logger/logger.service';
 declare var vis: any;
 
 @Component({
+  standalone: false,
   selector: 'app-explorer-page',
   templateUrl: './explorer-page.component.html',
   styleUrls: ['./explorer-page.component.scss'],
