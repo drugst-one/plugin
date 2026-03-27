@@ -161,20 +161,20 @@
           "builder": "@angular-builders/custom-webpack:dev-server",
           "configurations": {
             "dev": {
-              "browserTarget": "netex:build:development"
+              "buildTarget": "netex:build:development"
             },
             "dev_server": {
-              "browserTarget": "netex:build:development_server"
+              "buildTarget": "netex:build:development_server"
             },
             "production": {
-              "browserTarget": "netex:build:production"
+              "buildTarget": "netex:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-builders/custom-webpack:extract-i18n",
           "options": {
-            "browserTarget": "netex:build"
+            "buildTarget": "netex:build"
           }
         },
         "test": {
