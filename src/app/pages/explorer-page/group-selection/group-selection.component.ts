@@ -3,6 +3,7 @@ import {NodeGroup} from 'src/app/config';
 import { LegendService } from 'src/app/services/legend-service/legend-service.service';
 
 @Component({
+  standalone: false,
   selector: 'app-group-selection',
   templateUrl: './group-selection.component.html',
   styleUrls: ['./group-selection.component.scss']

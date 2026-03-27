@@ -3,6 +3,7 @@ import { LiveToasts } from 'src/app/interfaces';
 import { ToastService } from 'src/app/services/toast/toast.service';
 
 @Component({
+  standalone: false,
   selector: 'app-toast',
   templateUrl: './toast.component.html',
   styleUrls: ['./toast.component.scss']
@@ -27,11 +28,11 @@ export class ToastComponent implements OnInit {
     return 'drugstone-plugin-' + type
   }
 
-  public close(id: number) {
+  public close(id: any) {
     this.toast.deleteToast(id);
   }
 
-  public click(id: number) {
+  public click(id: any) {
     this.toast.toastClicked(id);
   }
 

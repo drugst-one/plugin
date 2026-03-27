@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, Injector} from '@angular/core';
 import {Subject} from 'rxjs';
 import {NetworkComponent} from 'src/app/components/network/network.component';
 import {NetworkType} from 'src/app/interfaces';
@@ -16,13 +16,28 @@ import { LoggerService } from '../logger/logger.service';
 })
 export class NetworkHandlerService {
 
-  constructor(public legendService: LegendService, public networkHandler: NetworkHandlerService, public analysis: AnalysisService, public drugstoneConfig: DrugstoneConfigService, public netex: NetexControllerService, public omnipath: OmnipathControllerService, public loadingScreen: LoadingScreenService, public toast: ToastService, public logger: LoggerService) {
+  constructor(
+    public legendService: LegendService,
+    private injector: Injector,
+    public drugstoneConfig: DrugstoneConfigService,
+    public netex: NetexControllerService,
+    public omnipath: OmnipathControllerService,
+    public loadingScreen: LoadingScreenService,
+    public toast: ToastService,
+    public logger: LoggerService
+  ) {
+    this.networkSidebarOpen = this.drugstoneConfig.config.expandNetworkMenu || false;
+    this.activeNetwork = new NetworkComponent(this.legendService, this, this.analysis, this.drugstoneConfig, this.netex, this.omnipath, this.loadingScreen, this.toast, this.logger);
+  }
+
+  public get analysis(): AnalysisService {
+    return this.injector.get(AnalysisService);
   }
 
   private change = new Subject<any>();
-  public networkSidebarOpen = this.drugstoneConfig.config.expandNetworkMenu || false;
+  public networkSidebarOpen: boolean;
   public networks: { NetworkType: NetworkComponent } | {} = {};
-  public activeNetwork: NetworkComponent = new NetworkComponent(this.legendService, this.networkHandler, this.analysis, this.drugstoneConfig, this.netex, this.omnipath, this.loadingScreen, this.toast, this.logger);
+  public activeNetwork: NetworkComponent;
 
 
   public shiftDown = false;

@@ -1,4 +1,4 @@
-@import "src/stylesheets/variables";
+@use "src/stylesheets/variables" as *;
 
 #network-empty-banner{
   position: absolute;

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
 
 @Component({
+  standalone: false,
   selector: 'app-network-control',
   templateUrl: './network-control.component.html',
   styleUrls: ['./network-control.component.scss']

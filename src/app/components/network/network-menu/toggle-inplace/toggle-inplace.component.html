@@ -9,25 +9,28 @@
     'is-selected': value,
     'is-small': drugstoneConfig.smallStyle
   }"
->
-  <app-fa-solid-icon
-    *ngIf="icon"
-    [icon]="icon"
-    classString="is-small"
-  ></app-fa-solid-icon>
+  >
+  @if (icon) {
+    <app-fa-solid-icon
+      [icon]="icon"
+      classString="is-small"
+    ></app-fa-solid-icon>
+  }
 
   <span [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">{{
     text
   }}</span>
 
-  <app-fa-solid-icon
-    *ngIf="useValue && value"
-    [icon]="iconOn"
-    classString="is-small last-item-in-button has-text-success"
-  ></app-fa-solid-icon>
-  <app-fa-solid-icon
-    *ngIf="useValue && !value"
-    [icon]="iconOff"
-    classString="is-small last-item-in-button has-text-danger"
-  ></app-fa-solid-icon>
+  @if (useValue && value) {
+    <app-fa-solid-icon
+      [icon]="iconOn"
+      classString="is-small last-item-in-button has-text-success"
+    ></app-fa-solid-icon>
+  }
+  @if (useValue && !value) {
+    <app-fa-solid-icon
+      [icon]="iconOff"
+      classString="is-small last-item-in-button has-text-danger"
+    ></app-fa-solid-icon>
+  }
 </button>

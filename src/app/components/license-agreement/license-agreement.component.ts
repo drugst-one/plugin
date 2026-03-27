@@ -3,6 +3,7 @@ import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugst
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
 
 @Component({
+  standalone: false,
   selector: 'app-license-agreement',
   templateUrl: './license-agreement.component.html',
   styleUrls: ['./license-agreement.component.scss']

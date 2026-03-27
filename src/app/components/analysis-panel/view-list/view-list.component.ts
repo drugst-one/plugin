@@ -7,6 +7,7 @@ import { ToastService } from 'src/app/services/toast/toast.service';
 
 
 @Component({
+  standalone: false,
   selector: 'app-view-list',
   templateUrl: './view-list.component.html',
   styleUrls: ['./view-list.component.scss']

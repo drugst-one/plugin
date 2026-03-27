@@ -3,9 +3,9 @@ import { DrugstoneConfigService } from "src/app/services/drugstone-config/drugst
 import { Wrapper } from "../../interfaces";
 import { AnalysisService } from "../../services/analysis/analysis.service";
 import { NetworkHandlerService } from "../../services/network-handler/network-handler.service";
-import { validateComponent } from "codelyzer/walkerFactory/walkerFn";
 
 @Component({
+  standalone: false,
   selector: "app-info-tile",
   templateUrl: "./info-tile.component.html",
   styleUrls: [

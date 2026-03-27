@@ -3,6 +3,7 @@ import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugst
 import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
 
 @Component({
+  standalone: false,
   selector: 'app-network-menu-left',
   templateUrl: './network-menu-left.component.html',
   styleUrls: ['./network-menu-left.component.scss']

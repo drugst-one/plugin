@@ -7,6 +7,7 @@ import {
   Input,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {
@@ -34,6 +35,7 @@ import { LoggerService } from 'src/app/services/logger/logger.service';
 declare var vis: any;
 
 @Component({
+  standalone: false,
   selector: 'app-explorer-page',
   templateUrl: './explorer-page.component.html',
   styleUrls: ['./explorer-page.component.scss'],
@@ -138,7 +140,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.activateConfig(true);
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges<ExplorerPageComponent>) {
     this.updateMainColumnHeight();
   }
 

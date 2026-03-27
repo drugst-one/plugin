@@ -3,6 +3,7 @@ import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugst
 import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
 
 @Component({
+  standalone: false,
   selector: 'app-center-view-inverse',
   templateUrl: './center-view-inverse.component.html',
   styleUrls: ['./center-view-inverse.component.scss']

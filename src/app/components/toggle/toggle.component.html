@@ -9,7 +9,7 @@
       [class.is-primary]="value"
       (click)="toggle(true)"
       [ngClass]="{ 'is-small': drugstoneConfig.smallStyle }"
-    >
+      >
       <app-fa-solid-icon
         classString="is-small first-item-in-button has-text-success"
         [icon]="iconOn"
@@ -29,15 +29,16 @@
       [class.is-primary]="!value"
       (click)="toggle(false)"
       [ngClass]="{ 'is-small': drugstoneConfig.smallStyle }"
-    >
+      >
       <span [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">{{
         textOff
       }}</span>
-      <app-fa-solid-icon
-        *ngIf="iconOff"
-        classString="is-small last-item-in-button has-text-danger"
-        [icon]="iconOff"
-      ></app-fa-solid-icon>
+      @if (iconOff) {
+        <app-fa-solid-icon
+          classString="is-small last-item-in-button has-text-danger"
+          [icon]="iconOff"
+        ></app-fa-solid-icon>
+      }
     </button>
   </p>
 </div>

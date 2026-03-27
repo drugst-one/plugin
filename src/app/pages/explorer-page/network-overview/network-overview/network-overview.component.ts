@@ -5,11 +5,14 @@ import { NetexControllerService } from 'src/app/services/netex-controller/netex-
 import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
 
 @Component({
+  standalone: false,
   selector: 'app-network-overview',
   templateUrl: './network-overview.component.html',
   styleUrls: ['./network-overview.component.scss']
 })
 export class NetworkOverviewComponent implements OnInit {
+
+  public collapseOverview: boolean;
 
   constructor(    
     public analysis: AnalysisService,
@@ -19,8 +22,7 @@ export class NetworkOverviewComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
+    this.collapseOverview = this.drugstoneConfig.config.showOverview;
   }
-
-  collapseOverview = this.drugstoneConfig.config.showOverview;
 
 }

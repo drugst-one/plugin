@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {DrugstoneConfigService} from '../../services/drugstone-config/drugstone-config.service';
 
 @Component({
+  standalone: false,
   selector: 'app-group-warning',
   templateUrl: './group-warning.component.html',
   styleUrls: ['./group-warning.component.scss']

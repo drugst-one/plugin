@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {DrugstoneConfigService} from '../../services/drugstone-config/drugstone-config.service';
 
 @Component({
+  standalone: false,
   selector: 'app-parser-warning',
   templateUrl: './parser-warning.component.html',
   styleUrls: ['./parser-warning.component.scss']

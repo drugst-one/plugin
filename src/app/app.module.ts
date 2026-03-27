@@ -148,13 +148,15 @@ import { ScientificPipe } from './components/analysis-panel/scientific-pipe/scie
 export class AppModule {
 
 
-  constructor(injector: Injector) {
-    const NetworkExpander = createCustomElement(ExplorerPageComponent, { injector });
-    // Register the custom element with the browser.
-    customElements.define('drugst-one', NetworkExpander);
+  constructor(private injector: Injector) {
   }
 
   ngDoBootstrap() {
+    if (!customElements.get('drugst-one')) {
+      const NetworkExpander = createCustomElement(ExplorerPageComponent, { injector: this.injector });
+      // Register the custom element with the browser.
+      customElements.define('drugst-one', NetworkExpander);
+    }
   }
 
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {DrugstoneConfigService} from '../../services/drugstone-config/drugstone-config.service';
 
 @Component({
+  standalone: false,
   selector: 'app-privacy-banner',
   templateUrl: './privacy-banner.component.html',
   styleUrls: ['./privacy-banner.component.scss']

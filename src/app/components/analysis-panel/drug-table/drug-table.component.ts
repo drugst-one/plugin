@@ -1,6 +1,7 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 
 @Component({
+  standalone: false,
   selector: 'app-drug-table',
   templateUrl: './drug-table.component.html',
   styleUrls: ['./drug-table.component.scss'],

@@ -6,6 +6,7 @@ import {HttpClient} from '@angular/common/http';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
 
 @Component({
+  standalone: false,
   selector: 'app-add-expressed-proteins',
   templateUrl: './add-expressed-proteins.component.html',
   styleUrls: ['./add-expressed-proteins.component.scss']
@@ -33,7 +34,7 @@ export class AddExpressedProteinsComponent implements OnChanges {
   constructor(private http: HttpClient, private analysis: AnalysisService, private netex: NetexControllerService) {
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges<AddExpressedProteinsComponent>): void {
     this.setThreshold(this.threshold);
   }
 

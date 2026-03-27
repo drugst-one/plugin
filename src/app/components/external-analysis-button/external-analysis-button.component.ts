@@ -3,6 +3,7 @@ import {AnalysisService} from '../../services/analysis/analysis.service';
 import {DrugstoneConfigService} from '../../services/drugstone-config/drugstone-config.service';
 
 @Component({
+  standalone: false,
   selector: 'app-external-analysis-button',
   templateUrl: './external-analysis-button.component.html',
   styleUrls: ['./external-analysis-button.component.scss']

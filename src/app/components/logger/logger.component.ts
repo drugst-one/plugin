@@ -3,6 +3,7 @@ import { LoggerService } from 'src/app/services/logger/logger.service';
 import { Subscription } from 'rxjs';
 
 @Component({
+  standalone: false,
   selector: 'app-logger',
   templateUrl: './logger.component.html',
   styleUrls: ['./logger.component.scss']

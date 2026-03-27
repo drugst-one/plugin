@@ -5,6 +5,7 @@ import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugst
 import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
 
 @Component({
+  standalone: false,
   selector: 'app-info-tile-edge',
   templateUrl: './info-tile-edge.component.html',
   styleUrls: ['./info-tile-edge.component.scss']

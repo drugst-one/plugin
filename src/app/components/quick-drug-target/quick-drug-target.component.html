@@ -2,7 +2,7 @@
   <header
     class="card-header"
     [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }"
-  >
+    >
     <p class="card-header-title">
       <app-fa-solid-icon icon="project-diagram"></app-fa-solid-icon>
       Connect Genes
@@ -12,77 +12,89 @@
       data-action="collapse"
       class="card-header-icon is-hidden-fullscreen"
       aria-label="more options"
-    >
-      <app-fa-solid-icon
-        *ngIf="collapseQuickConnect"
-        icon="angle-down"
-      ></app-fa-solid-icon>
-      <app-fa-solid-icon
-        *ngIf="!collapseQuickConnect"
-        icon="angle-left"
-      ></app-fa-solid-icon>
+      >
+      @if (collapseQuickConnect) {
+        <app-fa-solid-icon
+          icon="angle-down"
+        ></app-fa-solid-icon>
+      }
+      @if (!collapseQuickConnect) {
+        <app-fa-solid-icon
+          icon="angle-left"
+        ></app-fa-solid-icon>
+      }
     </a>
   </header>
-  <div *ngIf="collapseQuickConnect">
-    <div
-      class="card-content quick-find"
-      [ngClass]="{ small: drugstoneConfig.smallStyle }"
-    >
-      <div class="field">
-        <div class="control">
-          <div style="display: flex; justify-content: center">
-            <button
-              (click)="runQuickAnalysis(true, 'connect')"
-              [disabled]="analysis.isLaunchingQuick()"
+  @if (collapseQuickConnect) {
+    <div>
+      <div
+        class="card-content quick-find"
+        [ngClass]="{ small: drugstoneConfig.smallStyle }"
+        >
+        <div class="field">
+          <div class="control">
+            <div style="display: flex; justify-content: center">
+              <button
+                (click)="runQuickAnalysis(true, 'connect')"
+                [disabled]="analysis.isLaunchingQuick()"
               [ngClass]="{
                 'text-small': drugstoneConfig.smallStyle
               }"
-              class="button is-rounded has-tooltip quick-start-btn is-fullwidth is-primary"
-              pTooltip="Connect all proteins in the network."
-              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
-              tooltipPosition="top"
-            >
-            <app-fa-solid-icon *ngIf="!analysis.isLaunchingQuick()" classString="quick-icon" icon="crosshairs"></app-fa-solid-icon>
-            <app-fa-solid-icon *ngIf="analysis.isLaunchingQuick()" classString="quick-icon" icon="spinner"></app-fa-solid-icon>
-              <span
+                class="button is-rounded has-tooltip quick-start-btn is-fullwidth is-primary"
+                pTooltip="Connect all proteins in the network."
+                [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+                tooltipPosition="top"
+                >
+                @if (!analysis.isLaunchingQuick()) {
+                  <app-fa-solid-icon classString="quick-icon" icon="crosshairs"></app-fa-solid-icon>
+                }
+                @if (analysis.isLaunchingQuick()) {
+                  <app-fa-solid-icon classString="quick-icon" icon="spinner"></app-fa-solid-icon>
+                }
+                <span
                 [ngClass]="{
                   'text-normal': drugstoneConfig.smallStyle
                 }"
-              >
-                Connect all
-              </span>
-            </button>
-          </div>
-          <div style="display: flex; justify-content: center; width: 100%">
-            <div class="divisor-rapid">&mdash; or &mdash;</div>
-          </div>
-          <div style="display: flex; justify-content: center">
-            <button
-              (click)="runQuickAnalysis(false, 'connectSelected')"
+                  >
+                  Connect all
+                </span>
+              </button>
+            </div>
+            <div style="display: flex; justify-content: center; width: 100%">
+              <div class="divisor-rapid">&mdash; or &mdash;</div>
+            </div>
+            <div style="display: flex; justify-content: center">
+              <button
+                (click)="runQuickAnalysis(false, 'connectSelected')"
               [disabled]="
                 analysis.getCount() === 0 || analysis.isLaunchingQuick()
               "
               [ngClass]="{
                 'text-small': drugstoneConfig.smallStyle
               }"
-              class="button is-rounded quick-start-btn drugs-btn is-fullwidth is-primary"
-              pTooltip="Connect the selected nodes."
-              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
-              tooltipPosition="top"
-            >
-            <app-fa-solid-icon *ngIf="!analysis.isLaunchingQuick()" classString="quick-icon" icon="crosshairs"></app-fa-solid-icon>
-            <app-fa-solid-icon *ngIf="analysis.isLaunchingQuick()" classString="quick-icon" icon="spinner"></app-fa-solid-icon>
-              <span
+                class="button is-rounded quick-start-btn drugs-btn is-fullwidth is-primary"
+                pTooltip="Connect the selected nodes."
+                [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+                tooltipPosition="top"
+                >
+                @if (!analysis.isLaunchingQuick()) {
+                  <app-fa-solid-icon classString="quick-icon" icon="crosshairs"></app-fa-solid-icon>
+                }
+                @if (analysis.isLaunchingQuick()) {
+                  <app-fa-solid-icon classString="quick-icon" icon="spinner"></app-fa-solid-icon>
+                }
+                <span
                 [ngClass]="{
                   'text-normal': drugstoneConfig.smallStyle
                 }"
-              >
-                Connect selected
-              </span>
-            </button>
+                  >
+                  Connect selected
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  }
 </div>

@@ -30,6 +30,7 @@ import { LoggerService } from 'src/app/services/logger/logger.service';
 declare var C2S: any;
 
 @Component({
+  standalone: false,
   selector: 'app-network',
   templateUrl: './network.component.html',
   styleUrls: ['./network.component.scss']

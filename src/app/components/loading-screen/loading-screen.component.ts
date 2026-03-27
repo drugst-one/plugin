@@ -3,6 +3,7 @@ import {LoadingScreenService} from 'src/app/services/loading-screen/loading-scre
 import {DrugstoneConfigService} from '../../services/drugstone-config/drugstone-config.service';
 
 @Component({
+  standalone: false,
   selector: 'app-loading-screen',
   templateUrl: './loading-screen.component.html',
   styleUrls: ['./loading-screen.component.scss']

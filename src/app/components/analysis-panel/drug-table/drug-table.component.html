@@ -1,28 +1,30 @@
-<p-table
-  styleClass="table is-hoverable is-narrow drgstn"
-  *ngIf="tableDrugs.length > 0"
-  [value]="tableDrugs"
-  class=""
->
-  <ng-template pTemplate="header">
-    <tr>
-      <th *ngIf="tableHasScores" [pSortableColumn]="'rank'" class="rank-column">
-        Rank
-        <p-sortIcon [field]="'rank'"></p-sortIcon>
-      </th>
-      <th [pSortableColumn]="'drugId'">
-        ID
-        <p-sortIcon [field]="'drugId'"></p-sortIcon>
-      </th>
-      <th [pSortableColumn]="'label'">
-        Label
-        <p-sortIcon [field]="'label'"></p-sortIcon>
-      </th>
-      <th [pSortableColumn]="'status'">
-        Approved
-        <p-sortIcon [field]="'status'"></p-sortIcon>
-      </th>
-      <!-- <th [pSortableColumn]="'inTrial'">
+@if (tableDrugs.length > 0) {
+  <p-table
+    styleClass="table is-hoverable is-narrow drgstn"
+    [value]="tableDrugs"
+    class=""
+    >
+    <ng-template pTemplate="header">
+      <tr>
+        @if (tableHasScores) {
+          <th [pSortableColumn]="'rank'" class="rank-column">
+            Rank
+            <p-sortIcon [field]="'rank'"></p-sortIcon>
+          </th>
+        }
+        <th [pSortableColumn]="'drugId'">
+          ID
+          <p-sortIcon [field]="'drugId'"></p-sortIcon>
+        </th>
+        <th [pSortableColumn]="'label'">
+          Label
+          <p-sortIcon [field]="'label'"></p-sortIcon>
+        </th>
+        <th [pSortableColumn]="'status'">
+          Approved
+          <p-sortIcon [field]="'status'"></p-sortIcon>
+        </th>
+        <!-- <th [pSortableColumn]="'inTrial'">
         In Trial
         <p-sortIcon [field]="'inTrial'"></p-sortIcon>
       </th>
@@ -30,52 +32,59 @@
         In Literature
         <p-sortIcon [field]="'inLiterature'"></p-sortIcon>
       </th> -->
-      <th *ngIf="tableHasScores" [pSortableColumn]="'score'">
-        Score
-        <span
-          class="has-tooltip tooltip-button has-text-info question-icon"
-          [pTooltip]="tableDrugScoreTooltip"
-          [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
-          tooltipPosition="top"
-        >
-          <app-fa-solid-icon
-            classString="icon"
-            icon="question-circle"
-          ></app-fa-solid-icon>
-        </span>
-        <p-sortIcon [field]="'score'"></p-sortIcon>
-      </th>
-
+      @if (tableHasScores) {
+        <th [pSortableColumn]="'score'">
+          Score
+          <span
+            class="has-tooltip tooltip-button has-text-info question-icon"
+            [pTooltip]="tableDrugScoreTooltip"
+            [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+            tooltipPosition="top"
+            >
+            <app-fa-solid-icon
+              classString="icon"
+              icon="question-circle"
+            ></app-fa-solid-icon>
+          </span>
+          <p-sortIcon [field]="'score'"></p-sortIcon>
+        </th>
+      }
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-e>
     <tr>
-      <td *ngIf="tableHasScores" class="rank-column">{{ e.rank}}</td>
+      @if (tableHasScores) {
+        <td class="rank-column">{{ e.rank}}</td>
+      }
       <td>
         <a
           href="https://www.drugbank.ca/drugs/{{ e.drugId }}"
           target="_blank"
           >{{ e.drugId }}</a
-        >
-      </td>
-      <td>{{ e.label }}</td>
-      <td>
-        <span *ngIf="e.status === 'approved'">
-          <app-fa-solid-icon
-            classString="icon has-text-success"
-            icon="check"
-          ></app-fa-solid-icon>
-          Approved
-        </span>
-        <span *ngIf="e.status !== 'approved'">
-          <app-fa-solid-icon
-            classString="icon has-text-danger"
-            icon="times"
-          ></app-fa-solid-icon>
-          Unapproved
-        </span>
-      </td>
-      <!-- <td>
+          >
+        </td>
+        <td>{{ e.label }}</td>
+        <td>
+          @if (e.status === 'approved') {
+            <span>
+              <app-fa-solid-icon
+                classString="icon has-text-success"
+                icon="check"
+              ></app-fa-solid-icon>
+              Approved
+            </span>
+          }
+          @if (e.status !== 'approved') {
+            <span>
+              <app-fa-solid-icon
+                classString="icon has-text-danger"
+                icon="times"
+              ></app-fa-solid-icon>
+              Unapproved
+            </span>
+          }
+        </td>
+        <!-- <td>
         <span *ngIf="e.inTrial">
           <app-fa-solid-icon
             classString="icon text-primary"
@@ -105,7 +114,10 @@
           ></app-fa-solid-icon>
         </span>
       </td> -->
-      <td *ngIf="tableHasScores">{{ formatNumber(e.score.toString()) }}</td>
+      @if (tableHasScores) {
+        <td>{{ formatNumber(e.score.toString()) }}</td>
+      }
     </tr>
   </ng-template>
 </p-table>
+}

@@ -3,6 +3,7 @@ import {DrugstoneConfigService} from '../../services/drugstone-config/drugstone-
 import {NetexControllerService} from '../../services/netex-controller/netex-controller.service';
 
 @Component({
+  standalone: false,
   selector: 'app-bug-report',
   templateUrl: './bug-report.component.html',
   styleUrls: ['./bug-report.component.scss']

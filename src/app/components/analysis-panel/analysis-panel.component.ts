@@ -53,6 +53,7 @@ interface Seeded {
 const maxNodeLimit = 250;
 
 @Component({
+  standalone: false,
   selector: 'app-analysis-panel',
   templateUrl: './analysis-panel.component.html',
   styleUrls: ['./analysis-panel.component.scss'],
@@ -175,7 +176,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     );
   }
 
-  async ngOnChanges(changes: SimpleChanges) {
+  async ngOnChanges(changes: SimpleChanges<AnalysisPanelComponent>) {
     await this.refresh();
   }
 

@@ -1,5 +1,4 @@
 // From https://stackoverflow.com/a/27709336/3850564
-import {ɵisListLikeIterable} from '@angular/core';
 import {NetworkEdge, Node} from './interfaces';
 
 export function getGradientColor(
