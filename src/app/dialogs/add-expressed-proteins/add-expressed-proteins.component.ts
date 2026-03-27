@@ -34,7 +34,7 @@ export class AddExpressedProteinsComponent implements OnChanges {
   constructor(private http: HttpClient, private analysis: AnalysisService, private netex: NetexControllerService) {
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges<AddExpressedProteinsComponent>): void {
     this.setThreshold(this.threshold);
   }
 

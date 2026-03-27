@@ -2,54 +2,61 @@
   <div
     class="list is-hoverable"
     [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
-  >
-    <a
-      *ngFor="let task of analysis.viewInfos"
-      class="list-item box small-box"
-      [class.is-active]="task.token === token"
     >
-      <div
-        *ngIf="task"
-      >
-        <div class="columns mb-0 is-flex is-align-items-center">
-          <div class="column is-8" *ngIf="!editing || currentEditingTask !== task.token" style="width: 90% !important;">
-            <app-fa-solid-icon class="mr-2" icon="crosshairs"></app-fa-solid-icon>
-            <span (click)="open(task.token)" pTooltip="Show selection view"
-              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">{{ task.name }}</span>
-            <app-fa-solid-icon icon="pen" (click)="editingTask(task)" class="ml-2" style="cursor: pointer;"></app-fa-solid-icon>
-          </div>
-        
-          <div class="column is-8 is-flex is-align-items-center" *ngIf="editing && currentEditingTask === task.token">
-            <app-fa-solid-icon class="mr-2" icon="crosshairs"></app-fa-solid-icon>
-            <input [(ngModel)]="taskTextMap[task.token]" class="input is-small ml-3" minlength="4"
-              style="width: auto; display: inline-block; font-size: 1rem; padding: 2px 6px;" />
-            <app-fa-solid-icon icon="check" (click)="saveSelectionName(task)"
-              [class.has-text-grey-light]="taskTextMap[task.token]?.length < 4"
-              [style.pointerEvents]="taskTextMap[task.token]?.length < 4 ? 'none' : 'auto'" class="ml-2"
-              style="cursor: pointer;"></app-fa-solid-icon>
-            <app-fa-solid-icon *ngIf="taskTextMap[task.token]?.length < 4" icon="exclamation-triangle"
-              class="has-text-danger ml-2" pTooltip="Please enter at least 4 characters" tooltipPosition="top"
-              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'">
-            </app-fa-solid-icon>
-          </div>
-        </div>
-        <div class="columns mb-0">
-          <div class="column is-8 pt-0 pb-0">
-            <small>Created {{ task.createdAt | date: "short" }}</small>
-          </div>
-          <div class="column pt-0 pb-0">
-            <a
-              (click)="analysis.removeView(task.token)"
-              class="has-text-danger is-pulled-right"
-              pTooltip="Delete view"
-              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
-              tooltipPosition="top"
+    @for (task of analysis.viewInfos; track task) {
+      <a
+        class="list-item box small-box"
+        [class.is-active]="task.token === token"
+        >
+        @if (task) {
+          <div
             >
-              <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
-            </a>
+            <div class="columns mb-0 is-flex is-align-items-center">
+              @if (!editing || currentEditingTask !== task.token) {
+                <div class="column is-8" style="width: 90% !important;">
+                  <app-fa-solid-icon class="mr-2" icon="crosshairs"></app-fa-solid-icon>
+                  <span (click)="open(task.token)" pTooltip="Show selection view"
+                  [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">{{ task.name }}</span>
+                  <app-fa-solid-icon icon="pen" (click)="editingTask(task)" class="ml-2" style="cursor: pointer;"></app-fa-solid-icon>
+                </div>
+              }
+              @if (editing && currentEditingTask === task.token) {
+                <div class="column is-8 is-flex is-align-items-center">
+                  <app-fa-solid-icon class="mr-2" icon="crosshairs"></app-fa-solid-icon>
+                  <input [(ngModel)]="taskTextMap[task.token]" class="input is-small ml-3" minlength="4"
+                    style="width: auto; display: inline-block; font-size: 1rem; padding: 2px 6px;" />
+                  <app-fa-solid-icon icon="check" (click)="saveSelectionName(task)"
+                    [class.has-text-grey-light]="taskTextMap[task.token]?.length < 4"
+                    [style.pointerEvents]="taskTextMap[task.token]?.length < 4 ? 'none' : 'auto'" class="ml-2"
+                  style="cursor: pointer;"></app-fa-solid-icon>
+                  @if (taskTextMap[task.token]?.length < 4) {
+                    <app-fa-solid-icon icon="exclamation-triangle"
+                      class="has-text-danger ml-2" pTooltip="Please enter at least 4 characters" tooltipPosition="top"
+                      [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'">
+                    </app-fa-solid-icon>
+                  }
+                </div>
+              }
+            </div>
+            <div class="columns mb-0">
+              <div class="column is-8 pt-0 pb-0">
+                <small>Created {{ task.createdAt | date: "short" }}</small>
+              </div>
+              <div class="column pt-0 pb-0">
+                <a
+                  (click)="analysis.removeView(task.token)"
+                  class="has-text-danger is-pulled-right"
+                  pTooltip="Delete view"
+                  [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+                  tooltipPosition="top"
+                  >
+                  <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
+                </a>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </a>
+        }
+      </a>
+    }
   </div>
 </div>

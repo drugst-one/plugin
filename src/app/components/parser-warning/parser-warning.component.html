@@ -1,4 +1,8 @@
-<div id="parser-issue-banner" *ngIf="!getClosedState()" class="center notification" style="background-color: rgba(255,41,41,0.6);">
-  <button *ngIf="!drugstoneConfig.parsingIssueNetwork" class="delete" (click)="close()"></button>
-  <span class="px-6">Issue while parsing JSON: {{getConfigs()}}. Please contact the page developer to get this issue resolved or check the browser console.</span>
-</div>
+@if (!getClosedState()) {
+  <div id="parser-issue-banner" class="center notification" style="background-color: rgba(255,41,41,0.6);">
+    @if (!drugstoneConfig.parsingIssueNetwork) {
+      <button class="delete" (click)="close()"></button>
+    }
+    <span class="px-6">Issue while parsing JSON: {{getConfigs()}}. Please contact the page developer to get this issue resolved or check the browser console.</span>
+  </div>
+}

@@ -139,7 +139,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     this.activateConfig(true);
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges<ExplorerPageComponent>) {
     this.updateMainColumnHeight();
   }
 

@@ -1,108 +1,122 @@
 <div class="card network" [ngClass]="{ fullscreen: isFullscreen()}">
-  <header class="card-header network-header" *ngIf="networkType === 'explorer'">
-    <p class="card-header-title">
-      {{ drugstoneConfig.config.title }}
-    </p>
-    <span class="mr-1 is-pulled-right columns is-flex is-vcentered">
-      <div class="field has-addons">
-        <p class="control">
-            <button
-              pTooltip="Open in fullscreen"
-              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
-              tooltipPosition="left"
-              *ngIf="!drugstoneConfig.config.fullscreen"
-              (click)="toggleFullscreen()"
-              class="button is-rounded is-small is-outlined highlight-primary"
-            >
-              <app-fa-solid-icon
-                icon="expand"
-                classString="only-item-in-button"
-              ></app-fa-solid-icon>
-            </button>
-            <button
-              pTooltip="Close fullscreen"
-              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
-              tooltipPosition="left"
-              *ngIf="drugstoneConfig.config.fullscreen"
-              (click)="toggleFullscreen()"
-              class="button is-rounded is-small is-outlined highlight-primary"
-            >
-              <app-fa-solid-icon
-                icon="compress"
-                classString="only-item-in-button"
-              ></app-fa-solid-icon>
-            </button>
+  @if (networkType === 'explorer') {
+    <header class="card-header network-header">
+      <p class="card-header-title">
+        {{ drugstoneConfig.config.title }}
+      </p>
+      <span class="mr-1 is-pulled-right columns is-flex is-vcentered">
+        <div class="field has-addons">
+          <p class="control">
+            @if (!drugstoneConfig.config.fullscreen) {
+              <button
+                pTooltip="Open in fullscreen"
+                [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+                tooltipPosition="left"
+                (click)="toggleFullscreen()"
+                class="button is-rounded is-small is-outlined highlight-primary"
+                >
+                <app-fa-solid-icon
+                  icon="expand"
+                  classString="only-item-in-button"
+                ></app-fa-solid-icon>
+              </button>
+            }
+            @if (drugstoneConfig.config.fullscreen) {
+              <button
+                pTooltip="Close fullscreen"
+                [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+                tooltipPosition="left"
+                (click)="toggleFullscreen()"
+                class="button is-rounded is-small is-outlined highlight-primary"
+                >
+                <app-fa-solid-icon
+                  icon="compress"
+                  classString="only-item-in-button"
+                ></app-fa-solid-icon>
+              </button>
+            }
           </p>
-        <div class="control dropdown is-hoverable">
-          <div class="dropdown-trigger">
-                    <button
-                            aria-haspopup="true"
-                            attr.aria-controls="controls-menu-button"
-                            class="button is-rounded is-small is-outlined highlight-primary">
-                              <app-fa-solid-icon icon="bars" classString="only-item-in-button"></app-fa-solid-icon>
-                  </button>
-            <div class="dropdown-menu dropdown-list " id="controls-menu-button" role="menu">
+          <div class="control dropdown is-hoverable">
+            <div class="dropdown-trigger">
+              <button
+                aria-haspopup="true"
+                attr.aria-controls="controls-menu-button"
+                class="button is-rounded is-small is-outlined highlight-primary">
+                <app-fa-solid-icon icon="bars" classString="only-item-in-button"></app-fa-solid-icon>
+              </button>
+              <div class="dropdown-menu dropdown-list " id="controls-menu-button" role="menu">
                 <div class="dropdown-content inner-dropdown">
-                    <a class="dropdown-item" pTooltip="Display end-user license agreement (EULA)."
-                       tooltipPosition="left"
-                       [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
-                       [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
-                       (click)="showEULA()">Show EULA</a>
+                  <a class="dropdown-item" pTooltip="Display end-user license agreement (EULA)."
+                    tooltipPosition="left"
+                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                    [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+                  (click)="showEULA()">Show EULA</a>
                   <a class="dropdown-item" pTooltip="Open window to submit a bug report"
-                       tooltipPosition="left"
-                       [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
-                       [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
-                       (click)="openBugreport()">Report bug</a>
-                    <a class="dropdown-item" pTooltip="Opens Drugst.One website" [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }" tooltipPosition="left"
-                       [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'" target="_blank"
-                       href="https://drugst.one/home">About Drugst.One</a>
-                            <b *ngIf="versionString" class="version-text dropdown-item"><app-fa-solid-icon
-                              *ngIf="versionString !== latestVersionString && (versionString.indexOf('-rc') < 0 || versionString.split('-rc')[0] !== latestVersionString)" id="ex-update-available-icon" icon="arrow-circle-up"
-                              [title]="'Updated version ' +latestVersionString+ ' available'"></app-fa-solid-icon>
-                     <app-fa-solid-icon
-                       *ngIf="!(versionString !== latestVersionString && (versionString.indexOf('-rc') < 0 || versionString.split('-rc')[0] !== latestVersionString))" id="ex-update-icon" icon="check-circle"
-                       title="No update available"></app-fa-solid-icon>
-                              {{versionString}}</b>
-                </div>
+                    tooltipPosition="left"
+                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                    [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'"
+                  (click)="openBugreport()">Report bug</a>
+                  <a class="dropdown-item" pTooltip="Opens Drugst.One website" [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }" tooltipPosition="left"
+                    [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-left'" target="_blank"
+                  href="https://drugst.one/home">About Drugst.One</a>
+                  @if (versionString) {
+                    <b class="version-text dropdown-item">@if (versionString !== latestVersionString && (versionString.indexOf('-rc') < 0 || versionString.split('-rc')[0] !== latestVersionString)) {
+                      <app-fa-solid-icon
+                        id="ex-update-available-icon" icon="arrow-circle-up"
+                      [title]="'Updated version ' +latestVersionString+ ' available'"></app-fa-solid-icon>
+                    }
+                    @if (!(versionString !== latestVersionString && (versionString.indexOf('-rc') < 0 || versionString.split('-rc')[0] !== latestVersionString))) {
+                      <app-fa-solid-icon
+                        id="ex-update-icon" icon="check-circle"
+                      title="No update available"></app-fa-solid-icon>
+                    }
+                  {{versionString}}</b>
+                }
+              </div>
             </div>
           </div>
         </div>
       </div>
     </span>
   </header>
-  <div
-    class="card-content network-view-settings"
-    [class.analysis]="networkType === 'analysis'"
+}
+<div
+  class="card-content network-view-settings"
+  [class.analysis]="networkType === 'analysis'"
   >
-    <div class="card-image canvas-content" #networkWithLegend>
-      <div *ngIf="drugstoneConfig.config.showLegend">
+  <div class="card-image canvas-content" #networkWithLegend>
+    @if (drugstoneConfig.config.showLegend) {
+      <div>
         <app-network-legend
           [config]="drugstoneConfig.currentConfig()"
         ></app-network-legend>
       </div>
-      <div class="center image1 fullheight" #network>
-        <button class="button is-loading center" alt="loading...">
-          Loading
-        </button>
-      </div>
+    }
+    <div class="center image1 fullheight" #network>
+      <button class="button is-loading center" alt="loading...">
+        Loading
+      </button>
     </div>
-
-    <app-network-menu (networkEmitter)="networkEmitter.emit($event)" (resetEmitter)="reset()"
-      *ngIf="
-        drugstoneConfig.config.showNetworkMenu &&
-        drugstoneConfig.config.showNetworkMenu === 'right'
-      "
-    ></app-network-menu>
-
-    <app-network-menu-left (resetEmitter)="reset()"
-      *ngIf="
-        drugstoneConfig.config.showNetworkMenu &&
-        drugstoneConfig.config.showNetworkMenu === 'left'
-      "
-    ></app-network-menu-left>
   </div>
-  <app-network-empty-warning></app-network-empty-warning>
-  <app-network-warning></app-network-warning>
-  <app-group-warning></app-group-warning>
-  <app-parser-warning></app-parser-warning>
+
+  @if (
+    drugstoneConfig.config.showNetworkMenu &&
+    drugstoneConfig.config.showNetworkMenu === 'right'
+    ) {
+    <app-network-menu (networkEmitter)="networkEmitter.emit($event)" (resetEmitter)="reset()"
+    ></app-network-menu>
+  }
+
+  @if (
+    drugstoneConfig.config.showNetworkMenu &&
+    drugstoneConfig.config.showNetworkMenu === 'left'
+    ) {
+    <app-network-menu-left (resetEmitter)="reset()"
+    ></app-network-menu-left>
+  }
+</div>
+<app-network-empty-warning></app-network-empty-warning>
+<app-network-warning></app-network-warning>
+<app-group-warning></app-group-warning>
+<app-parser-warning></app-parser-warning>
 </div>

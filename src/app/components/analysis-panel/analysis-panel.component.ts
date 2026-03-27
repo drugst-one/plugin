@@ -176,7 +176,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     );
   }
 
-  async ngOnChanges(changes: SimpleChanges) {
+  async ngOnChanges(changes: SimpleChanges<AnalysisPanelComponent>) {
     await this.refresh();
   }
 

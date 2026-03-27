@@ -9,39 +9,49 @@
       <button (click)="close()" class="delete" aria-label="close"></button>
     </header>
     <section class="modal-card-body">
-      <div class="notification is-warning" *ngIf="addedCount === 0">
-        No proteins have been selected or added.
-      </div>
-      <div class="notification is-warning" *ngIf="addedCount > 0">
-        {{ addedCount }} proteins have been selected or added.
-      </div>
-      <p *ngIf="!selectedTissue">
-        <i>
-          In order to add proteins expressed in specific tissues, please select
-          a tissue in the main network window to the bottom.
-        </i>
-      </p>
-      <p *ngIf="selectedTissue" class="mb-3">
-        Currently selected tissue: <strong>{{ selectedTissue.name }}</strong>
-      </p>
-      <div class="field" *ngIf="selectedTissue">
-        <label class="label" for="threshold">Threshold (TPM)</label>
-        <div class="control">
-          <input
-            [ngModel]="threshold"
-            (ngModelChange)="setThreshold($event)"
-            id="threshold"
-            class="input"
-            type="number"
-            placeholder="Threshold"
-            required
-          />
+      @if (addedCount === 0) {
+        <div class="notification is-warning">
+          No proteins have been selected or added.
         </div>
-        <p class="help">
-          All proteins above this threshold in transcripts per million (TPM)
-          will be added or selected.
+      }
+      @if (addedCount > 0) {
+        <div class="notification is-warning">
+          {{ addedCount }} proteins have been selected or added.
+        </div>
+      }
+      @if (!selectedTissue) {
+        <p>
+          <i>
+            In order to add proteins expressed in specific tissues, please select
+            a tissue in the main network window to the bottom.
+          </i>
         </p>
-      </div>
+      }
+      @if (selectedTissue) {
+        <p class="mb-3">
+          Currently selected tissue: <strong>{{ selectedTissue.name }}</strong>
+        </p>
+      }
+      @if (selectedTissue) {
+        <div class="field">
+          <label class="label" for="threshold">Threshold (TPM)</label>
+          <div class="control">
+            <input
+              [ngModel]="threshold"
+              (ngModelChange)="setThreshold($event)"
+              id="threshold"
+              class="input"
+              type="number"
+              placeholder="Threshold"
+              required
+              />
+          </div>
+          <p class="help">
+            All proteins above this threshold in transcripts per million (TPM)
+            will be added or selected.
+          </p>
+        </div>
+      }
     </section>
     <footer class="modal-card-foot">
       <button
@@ -51,7 +61,7 @@
         [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
         tooltipPosition="top"
         [disabled]="proteins.length === 0 || !selectedTissue || loading"
-      >
+        >
         <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
         <span> Add proteins </span>
       </button>
@@ -62,7 +72,7 @@
         [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
         tooltipPosition="top"
         [disabled]="proteins.length === 0 || !selectedTissue || loading"
-      >
+        >
         <app-fa-solid-icon icon="expand"></app-fa-solid-icon>
         <span> Select proteins ({{ proteins.length }}) </span>
       </button>
@@ -72,7 +82,7 @@
         pTooltip="Close the current window."
         [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
         tooltipPosition="top"
-      >
+        >
         Close
       </button>
     </footer>

@@ -107,7 +107,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     this.loadPathways();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges<LaunchAnalysisComponent>): void {
     if (this.target === 'drug-target') {
       this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, BETWEENNESS_CENTRALITY, FIRSTNEIGHBOR];
     } else if (this.target === 'drug') {
