@@ -1,4 +1,4 @@
-<div id="appWindow" (window:resize)="onResize($event)" [ngClass]="{ fullscreen: drugstoneConfig.config.fullscreen }">
+<div id="appWindow" (window:resize)="onResize($event)" [ngClass]="{ 'fullscreen': drugstoneConfig.config.fullscreen }">
 
   <div class="is-hidden-mobile fullheight" id="appContainer">
     <app-fa-icons></app-fa-icons>
@@ -36,7 +36,7 @@
       @if (drugstoneConfig.config.showSidebar) {
         <div
           class="drugstone sidebar column" #sidebar
-          [ngClass]="{ fullscreenMenue: drugstoneConfig.config.fullscreen }"
+          [ngClass]="{ 'fullscreenMenue': drugstoneConfig.config.fullscreen }"
           >
           @if (drugstoneConfig.config.showItemSelector) {
             <app-summary-node></app-summary-node>
