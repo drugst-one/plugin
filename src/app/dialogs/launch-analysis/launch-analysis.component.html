@@ -46,7 +46,7 @@
                 <div
                   [class.is-active]="algorithm === algo.slug"
                   class="is-fullwidth algorithm-button"
-                  >
+                >
                   <a (click)="algorithm = algo.slug" class="is-boxed is-medium">
                     {{ algo.name }}
                   </a>
@@ -68,7 +68,8 @@
                     <div class="content">
                       <h6 class="is-6">About Pathway Enrichment</h6>
                       <p>
-                        Pathway enrichment analysis is a method to identify pathways overrepresented in a list of genes or proteins.
+                        Pathway enrichment analysis is a method to identify pathways overrepresented in a list of genes
+                        or proteins.
                         It is recommended to select all nodes of the graph.
                       </p>
                     </div>
@@ -86,7 +87,7 @@
                     type="number"
                     placeholder="Cutoff for adjusted p-value."
                     required
-                    />
+                  />
                 </div>
               </div>
               <div class="field">
@@ -105,7 +106,7 @@
                         <input type="checkbox" [(ngModel)]="option.selected">
                         {{ option.label }}
                         <span class="info-icon" pTooltip="{{ option.name }}" tooltipPosition="right"
-                          [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-right'" tabindex="0">
+                              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-right'" tabindex="0">
                           <app-fa-solid-icon icon="info" style="margin-left: 6px;"></app-fa-solid-icon>
                         </span>
                         <a [href]="option.url" target="_blank" rel="noopener noreferrer" class="linkout-icon">
@@ -148,7 +149,7 @@
                     type="number"
                     placeholder="Result size"
                     required
-                    />
+                  />
                 </div>
               </div>
               @if (target === 'drug') {
@@ -160,7 +161,7 @@
                     tooltipOn="Include indirect drugs."
                     tooltipOff="Exclude indirect drugs from the result."
                     [(value)]="trustrankIncludeIndirectDrugs"
-                    >
+                  >
                   </app-toggle>
                   <p class="has-text-info is-size-7">
                     Specifies whether also drugs targeting interactors of the seed
@@ -177,7 +178,7 @@
                     tooltipOn="Include non-approved drugs."
                     tooltipOff="Exclude non-approved drugs from the result."
                     [(value)]="trustrankIncludeNonApprovedDrugs"
-                    >
+                  >
                   </app-toggle>
                 </div>
               }
@@ -193,7 +194,7 @@
                     min="0"
                     max="1"
                     required
-                    />
+                  />
                 </div>
                 <p class="has-text-info is-size-7">
                   The larger the damping factor, the faster the trust is
@@ -212,7 +213,7 @@
                     min="0"
                     max="1"
                     required
-                    />
+                  />
                 </div>
                 <p class="has-text-info is-size-7">
                   All nodes with degree greater than this value will be ignored.
@@ -231,14 +232,14 @@
                     min="0"
                     max="1"
                     required
-                    />
+                  />
                 </div>
                 <p class="has-text-info is-size-7">Penalty parameter for hubs.</p>
               </div>
               @if (drugstoneConfig.config.customEdges.selectable) {
                 <div
                   class="field"
-                  >
+                >
                   <label class="label">Include all displayed edges</label>
                   <app-toggle
                     textOn="Include"
@@ -246,7 +247,7 @@
                     tooltipOn="Use all edges from the visualized network and the Drugst.One database."
                     tooltipOff="Use only Drugst.One edges."
                     [(value)]="trustrankCustomEdges"
-                    >
+                  >
                   </app-toggle>
                   <p class="has-text-info is-size-7">
                     Include PPI edges from displayed network in the algorithms or
@@ -266,9 +267,9 @@
                   </div>
                   <div class="media-content">
                     <div class="content">
-                      <h6 class="is-6">About Harmonic Centrality</h6>
+                      <h6 class="is-6">About Closeness Centrality</h6>
                       <p>
-                        Harmonic Centrality is a node centrality measure that
+                        Closeness Centrality is a node centrality measure that
                         ranks the nodes in a network based on the lengths of their
                         shortest paths to all other nodes in the network.
                       </p>
@@ -286,7 +287,7 @@
                     type="number"
                     placeholder="Result size"
                     required
-                    />
+                  />
                 </div>
               </div>
               @if (target === 'drug') {
@@ -298,7 +299,7 @@
                     tooltipOn="Include indirect drugs."
                     tooltipOff="Exclude indirect drugs from the result."
                     [(value)]="closenessIncludeIndirectDrugs"
-                    >
+                  >
                   </app-toggle>
                   <p class="has-text-info is-size-7">
                     Specifies whether also drugs targeting interactors of the seed
@@ -315,7 +316,7 @@
                     tooltipOn="Include non-approved drugs."
                     tooltipOff="Exclude non-approved drugs from the result."
                     [(value)]="closenessIncludeNonApprovedDrugs"
-                    >
+                  >
                   </app-toggle>
                 </div>
               }
@@ -331,7 +332,7 @@
                     min="0"
                     max="1"
                     required
-                    />
+                  />
                 </div>
                 <p class="has-text-info is-size-7">
                   All nodes with degree greater than this value will be ignored.
@@ -350,14 +351,14 @@
                     min="0"
                     max="1"
                     required
-                    />
+                  />
                 </div>
                 <p class="has-text-info is-size-7">Penalty parameter for hubs.</p>
               </div>
               @if (drugstoneConfig.config.customEdges.selectable) {
                 <div
                   class="field"
-                  >
+                >
                   <label class="label">Include all displayed edges</label>
                   <app-toggle
                     textOn="Include"
@@ -365,7 +366,126 @@
                     tooltipOn="Use all edges from the visualized network and the Drugst.One database."
                     tooltipOff="Use only Drugst.One edges."
                     [(value)]="closenessCustomEdges"
-                    >
+                  >
+                  </app-toggle>
+                  <p class="has-text-info is-size-7">
+                    Include PPI edges from displayed network in the algorithms or
+                    use only edges from the Drugst.One database.
+                  </p>
+                </div>
+              }
+            </div>
+          }
+
+          @if (algorithm === 'harmonic') {
+            <div>
+              <div class="box">
+                <article class="media">
+                  <div class="media-left">
+                    <app-fa-solid-icon icon="info"></app-fa-solid-icon>
+                  </div>
+                  <div class="media-content">
+                    <div class="content">
+                      <h6 class="is-6">About Harmonic Centrality</h6>
+                      <p>
+                        Harmonic Centrality is a node centrality measure that
+                        ranks the nodes in a network based on the lengths of their
+                        shortest paths to all other nodes in the network.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              </div>
+              <div class="field">
+                <label class="label" for="harmonic-rs">Result Size</label>
+                <div class="control">
+                  <input
+                    [(ngModel)]="harmonicResultSize"
+                    id="harmonic-rs"
+                    class="input"
+                    type="number"
+                    placeholder="Result size"
+                    required
+                  />
+                </div>
+              </div>
+              @if (target === 'drug') {
+                <div class="field">
+                  <label class="label">Indirect Drugs</label>
+                  <app-toggle
+                    textOn="Include"
+                    textOff="Ignore"
+                    tooltipOn="Include indirect drugs."
+                    tooltipOff="Exclude indirect drugs from the result."
+                    [(value)]="harmonicIncludeIndirectDrugs"
+                  >
+                  </app-toggle>
+                  <p class="has-text-info is-size-7">
+                    Specifies whether also drugs targeting interactors of the seed
+                    nodes should be considered.
+                  </p>
+                </div>
+              }
+              @if (target === 'drug') {
+                <div class="field">
+                  <label class="label">Non-approved Drugs</label>
+                  <app-toggle
+                    textOn="Include"
+                    textOff="Ignore"
+                    tooltipOn="Include non-approved drugs."
+                    tooltipOff="Exclude non-approved drugs from the result."
+                    [(value)]="harmonicIncludeNonApprovedDrugs"
+                  >
+                  </app-toggle>
+                </div>
+              }
+              <div class="field">
+                <label class="label" for="harmonic-md">Maximum degree</label>
+                <div class="control">
+                  <input
+                    [(ngModel)]="harmonicMaxDeg"
+                    id="harmonic-md"
+                    class="input"
+                    type="number"
+                    placeholder="Maximum degree"
+                    min="0"
+                    max="1"
+                    required
+                  />
+                </div>
+                <p class="has-text-info is-size-7">
+                  All nodes with degree greater than this value will be ignored.
+                  Disabled if equal to 0.
+                </p>
+              </div>
+              <div class="field">
+                <label class="label" for="harmonic-hp">Hub penalty</label>
+                <div class="control">
+                  <input
+                    [(ngModel)]="harmonicHubPenalty"
+                    id="harmonic-hp"
+                    class="input"
+                    type="number"
+                    placeholder="Maximum degree"
+                    min="0"
+                    max="1"
+                    required
+                  />
+                </div>
+                <p class="has-text-info is-size-7">Penalty parameter for hubs.</p>
+              </div>
+              @if (drugstoneConfig.config.customEdges.selectable) {
+                <div
+                  class="field"
+                >
+                  <label class="label">Include all displayed edges</label>
+                  <app-toggle
+                    textOn="Include"
+                    textOff="Ignore"
+                    tooltipOn="Use all edges from the visualized network and the Drugst.One database."
+                    tooltipOff="Use only Drugst.One edges."
+                    [(value)]="harmonicCustomEdges"
+                  >
                   </app-toggle>
                   <p class="has-text-info is-size-7">
                     Include PPI edges from displayed network in the algorithms or
@@ -406,7 +526,7 @@
                     type="number"
                     placeholder="Result size"
                     required
-                    />
+                  />
                 </div>
               </div>
               @if (target === 'drug') {
@@ -433,7 +553,7 @@
                     min="0"
                     max="1"
                     required
-                    />
+                  />
                 </div>
                 <p class="has-text-info is-size-7">
                   All nodes with degree greater than this value will be ignored.
@@ -443,7 +563,7 @@
               @if (drugstoneConfig.config.customEdges.selectable) {
                 <div
                   class="field"
-                  >
+                >
                   <label class="label">Include all displayed edges</label>
                   <app-toggle
                     textOn="Include"
@@ -451,7 +571,7 @@
                     tooltipOn="Use all edges from the visualized network and the Drugst.One database."
                     tooltipOff="Use only Drugst.One edges."
                     [(value)]="degreeCustomEdges"
-                    >
+                  >
                   </app-toggle>
                   <p class="has-text-info is-size-7">
                     Include PPI edges from displayed network in the algorithms or
@@ -491,7 +611,7 @@
                     type="number"
                     placeholder="Result size"
                     required
-                    />
+                  />
                 </div>
               </div>
               <div class="field">
@@ -504,7 +624,7 @@
                     type="number"
                     placeholder="Number of random seet sets"
                     required
-                    />
+                  />
                 </div>
               </div>
               <div class="field">
@@ -517,7 +637,7 @@
                     type="number"
                     placeholder="Number of random drug target sets"
                     required
-                    />
+                  />
                 </div>
               </div>
               <div class="field">
@@ -540,7 +660,7 @@
                     type="number"
                     placeholder="Maximum degree"
                     required
-                    />
+                  />
                 </div>
                 <p class="has-text-info is-size-7">
                   All nodes with degree greater than this value will be ignored.
@@ -559,14 +679,14 @@
                     min="0"
                     max="1"
                     required
-                    />
+                  />
                 </div>
                 <p class="has-text-info is-size-7">Penalty parameter for hubs.</p>
               </div>
               @if (drugstoneConfig.config.customEdges.selectable) {
                 <div
                   class="field"
-                  >
+                >
                   <label class="label">Include all displayed edges</label>
                   <app-toggle
                     textOn="Include"
@@ -574,7 +694,7 @@
                     tooltipOn="Use all edges from the visualized network and the Drugst.One database."
                     tooltipOff="Use only Drugst.One edges."
                     [(value)]="proximityCustomEdges"
-                    >
+                  >
                   </app-toggle>
                   <p class="has-text-info is-size-7">
                     Include PPI edges from displayed network in the algorithms or
@@ -612,14 +732,16 @@
                   </label>
                 </div>
                 <p class="has-text-info is-size-7">
-                  Isolated nodes will not be considered in the clustering algorithm. They would form their own cluster anyways.
+                  Isolated nodes will not be considered in the clustering algorithm. They would form their own cluster
+                  anyways.
                 </p>
               </div>
               <div class="field">
                 <label class="label" for="seed-louvain">Random Number Generator Seed</label>
                 <div class="control">
-                  <input type="number" [(ngModel)]="seed" id="seed-louvain" class="input" placeholder="Enter a seed or leave empty"
-                    (ngModelChange)="onSeedChange($event)" />
+                  <input type="number" [(ngModel)]="seed" id="seed-louvain" class="input"
+                         placeholder="Enter a seed or leave empty"
+                         (ngModelChange)="onSeedChange($event)"/>
                 </div>
                 <p class="has-text-info is-size-7">
                   Optional: Provide a seed for the random number generator, or leave empty to auto-generate one.
@@ -628,8 +750,9 @@
               <div class="field">
                 <label class="label" for="resolution_louvain">Resolution</label>
                 <div class="control">
-                  <input type="number" step="0.1" min="0" max="1" [(ngModel)]="resolution_louvain" id="resolution_louvain" class="input"
-                    placeholder="Enter a resolution value for the Louvain algorithm"/>
+                  <input type="number" step="0.1" min="0" max="1" [(ngModel)]="resolution_louvain"
+                         id="resolution_louvain" class="input"
+                         placeholder="Enter a resolution value for the Louvain algorithm"/>
                 </div>
                 <p class="has-text-info is-size-7">
                   Provide the Resolution value for the Louvain algorithm. Default: 1.0
@@ -665,13 +788,15 @@
                     Ignore isolated nodes
                   </label>
                 </div>
-                <p class="has-text-info is-size-7">Isolated nodes will not be considered in the clustering algorithm. They would form their own cluster anyways.</p>
+                <p class="has-text-info is-size-7">Isolated nodes will not be considered in the clustering algorithm.
+                  They would form their own cluster anyways.</p>
               </div>
               <div class="field">
                 <label class="label" for="seed">Random Number Generator Seed</label>
                 <div class="control">
-                  <input type="number" [(ngModel)]="seed" id="seed" class="input" placeholder="Enter a seed or leave empty"
-                    (ngModelChange)="onSeedChange($event)" />
+                  <input type="number" [(ngModel)]="seed" id="seed" class="input"
+                         placeholder="Enter a seed or leave empty"
+                         (ngModelChange)="onSeedChange($event)"/>
                 </div>
                 <p class="has-text-info is-size-7">
                   Optional: Provide a seed for the random number generator, or leave empty to auto-generate one.
@@ -680,8 +805,9 @@
               <div class="field">
                 <label class="label" for="max_nodes">Max Cluster Size</label>
                 <div class="control">
-                  <input type="number" [(ngModel)]="max_nodes" id="max_nodes" class="input" placeholder="Enter a max cluster size or leave empty"
-                    (ngModelChange)="onMaxNodesChange($event)" />
+                  <input type="number" [(ngModel)]="max_nodes" id="max_nodes" class="input"
+                         placeholder="Enter a max cluster size or leave empty"
+                         (ngModelChange)="onMaxNodesChange($event)"/>
                 </div>
                 <p class="has-text-info is-size-7">
                   Optional: Provide a maximum cluster size or leave empty for no limit.
@@ -689,7 +815,6 @@
               </div>
             </div>
           }
-
 
 
           @if (algorithm === 'first-neighbor') {
@@ -718,7 +843,8 @@
                       Only add upstream regulators
                     </label>
                   </div>
-                  <p class="has-text-info is-size-7">Only upstream regulators will be added in the First Neighbor algorithm.</p>
+                  <p class="has-text-info is-size-7">Only upstream regulators will be added in the First Neighbor
+                    algorithm.</p>
                 </div>
               }
             </div>
@@ -752,7 +878,7 @@
                     type="number"
                     placeholder="Result size"
                     required
-                    />
+                  />
                 </div>
               </div>
               <div class="field">
@@ -767,7 +893,7 @@
                     min="0"
                     max="1"
                     required
-                    />
+                  />
                 </div>
                 <p class="has-text-info is-size-7">
                   All nodes with degree greater than this value will be ignored.
@@ -786,14 +912,14 @@
                     min="0"
                     max="1"
                     required
-                    />
+                  />
                 </div>
                 <p class="has-text-info is-size-7">Penalty parameter for hubs.</p>
               </div>
               @if (drugstoneConfig.config.customEdges.selectable) {
                 <div
                   class="field"
-                  >
+                >
                   <label class="label">Include all displayed edges</label>
                   <app-toggle
                     textOn="Include"
@@ -801,7 +927,7 @@
                     tooltipOn="Use all edges from the visualized network and the Drugst.One database."
                     tooltipOff="Use only Drugst.One edges."
                     [(value)]="betweennessCustomEdges"
-                    >
+                  >
                   </app-toggle>
                   <p class="has-text-info is-size-7">
                     Include PPI edges from displayed network in the algorithms or
@@ -833,187 +959,185 @@
               </div>
               <div class="field">
                 <label class="label" for="keypathwayminer-k"
-                  >Additional proteins</label
-                  >
-                  <div class="control">
-                    <div class="select">
-                      <select id="keypathwayminer-k" [(ngModel)]="keypathwayminerK">
-                        <option [ngValue]="1">1</option>
-                        <option [ngValue]="2">2</option>
-                        <option [ngValue]="3">3</option>
-                        <option [ngValue]="5">5</option>
-                        <option [ngValue]="10">10</option>
-                        <option [ngValue]="15">15</option>
-                        <option [ngValue]="20">20</option>
-                        <option [ngValue]="25">25</option>
-                        <option [ngValue]="30">30</option>
-                        <option [ngValue]="40">40</option>
-                        <option [ngValue]="50">50</option>
-                      </select>
-                    </div>
+                >Additional proteins</label
+                >
+                <div class="control">
+                  <div class="select">
+                    <select id="keypathwayminer-k" [(ngModel)]="keypathwayminerK">
+                      <option [ngValue]="1">1</option>
+                      <option [ngValue]="2">2</option>
+                      <option [ngValue]="3">3</option>
+                      <option [ngValue]="5">5</option>
+                      <option [ngValue]="10">10</option>
+                      <option [ngValue]="15">15</option>
+                      <option [ngValue]="20">20</option>
+                      <option [ngValue]="25">25</option>
+                      <option [ngValue]="30">30</option>
+                      <option [ngValue]="40">40</option>
+                      <option [ngValue]="50">50</option>
+                    </select>
                   </div>
-                  <p class="has-text-info is-size-7">
-                    Number of new proteins to be found.
-                  </p>
                 </div>
-              </div>
-            }
-
-            @if (algorithm === 'multisteiner') {
-              <div>
-                <div class="box">
-                  <article class="media">
-                    <div class="media-left">
-                      <app-fa-solid-icon icon="info"></app-fa-solid-icon>
-                    </div>
-                    <div class="media-content">
-                      <div class="content">
-                        <h6 class="is-6">About Multi-level Steiner Tree</h6>
-                        <p>
-                          The Multi-level Steiner Tree algorithm can be used to
-                          approximate a minimum spanning subnetwork between seed
-                          nodes, which happen to be central interaction partners
-                          between the seed nodes, and thus represent favorable
-                          drug-targets (Ahmed et al. 2019).
-                        </p>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-                <div class="field">
-                  <label class="label" for="multisteiner-numtrees"
-                    >Number of Steiner trees to return</label
-                    >
-                    <div class="control">
-                      <div class="select">
-                        <select
-                          id="multisteiner-numtrees"
-                          [(ngModel)]="multisteinerNumTrees"
-                          >
-                          <option [ngValue]="1">1</option>
-                          <option [ngValue]="2">2</option>
-                          <option [ngValue]="3">3</option>
-                          <option [ngValue]="5">5</option>
-                          <option [ngValue]="10">10</option>
-                          <option [ngValue]="15">15</option>
-                          <option [ngValue]="20">20</option>
-                          <option [ngValue]="25">25</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="field">
-                    <label class="label" for="multisteiner-numtrees"
-                      >Tolerance for trees</label
-                      >
-                      <div class="control">
-                        <div class="select">
-                          <select
-                            id="multisteiner-tolerance"
-                            [(ngModel)]="multisteinerTolerance"
-                            >
-                            <option [ngValue]="0">0</option>
-                            <option [ngValue]="1">1</option>
-                            <option [ngValue]="2">2</option>
-                            <option [ngValue]="3">3</option>
-                            <option [ngValue]="5">5</option>
-                            <option [ngValue]="10">10</option>
-                            <option [ngValue]="15">15</option>
-                            <option [ngValue]="20">20</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="field">
-                      <label class="label" for="multisteiner-md">Maximum degree</label>
-                      <div class="control">
-                        <input
-                          [(ngModel)]="multisteinerMaxDeg"
-                          id="multisteiner-md"
-                          class="input"
-                          type="number"
-                          placeholder="Maximum degree"
-                          min="0"
-                          max="1"
-                          required
-                          />
-                      </div>
-                      <p class="has-text-info is-size-7">
-                        All nodes with degree greater than this value will be ignored.
-                        Disabled if equal to 0.
-                      </p>
-                    </div>
-                    <div class="field">
-                      <label class="label" for="multisteiner-hp">Hub penalty</label>
-                      <div class="control">
-                        <input
-                          [(ngModel)]="multisteinerHubPenalty"
-                          id="multisteiner-hp"
-                          class="input"
-                          type="number"
-                          placeholder="Maximum degree"
-                          min="0"
-                          max="1"
-                          required
-                          />
-                      </div>
-                      <p class="has-text-info is-size-7">Penalty parameter for hubs.</p>
-                    </div>
-                    @if (drugstoneConfig.config.customEdges.selectable) {
-                      <div
-                        class="field"
-                        >
-                        <label class="label">Include all displayed edges</label>
-                        <app-toggle
-                          textOn="Include"
-                          textOff="Ignore"
-                          tooltipOn="Use all edges from the visualized network and the Drugst.One database."
-                          tooltipOff="Use only Drugst.One edges."
-                          [(value)]="multisteinerCustomEdges"
-                          >
-                        </app-toggle>
-                        <p class="has-text-info is-size-7">
-                          Include PPI edges from displayed network in the algorithms or
-                          use only edges from the Drugst.One database.
-                        </p>
-                      </div>
-                    }
-                  </div>
-                }
+                <p class="has-text-info is-size-7">
+                  Number of new proteins to be found.
+                </p>
               </div>
             </div>
-          </section>
+          }
 
-          <footer class="modal-card-foot">
-            <button
-              (click)="startTask(); close()"
-              class="button is-success is-rounded has-tooltip"
-              pTooltip="Run the analysis."
-              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
-              tooltipPosition="top"
-              [disabled]="!analysis.canLaunchTask() || !isAnySelected()"
-              >
-              <app-fa-solid-icon icon="rocket"></app-fa-solid-icon>
-              <span> Launch </span>
-            </button>
-            <button
-              (click)="close()"
-              class="button is-rounded has-tooltip"
-              pTooltip="Close the current window."
-              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
-              tooltipPosition="top"
-              >
-              Close
-            </button>
-            @if (!isAnySelected()) {
-              <button mat-icon-button
+          @if (algorithm === 'multisteiner') {
+            <div>
+              <div class="box">
+                <article class="media">
+                  <div class="media-left">
+                    <app-fa-solid-icon icon="info"></app-fa-solid-icon>
+                  </div>
+                  <div class="media-content">
+                    <div class="content">
+                      <h6 class="is-6">About Multi Steiner Trees</h6>
+                      <p>
+                        The Multi-Steiner tree algorithm can be used to approximate a minimum spanning subnetwork
+                        between seed nodes, identifying intermediate connector proteins that act as central interaction
+                        partners between the seeds, and thus represent favorable drug targets (Sadegh et al., 2020)
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              </div>
+              <div class="field">
+                <label class="label" for="multisteiner-numtrees"
+                >Number of Steiner trees to return</label
+                >
+                <div class="control">
+                  <div class="select">
+                    <select
+                      id="multisteiner-numtrees"
+                      [(ngModel)]="multisteinerNumTrees"
+                    >
+                      <option [ngValue]="1">1</option>
+                      <option [ngValue]="2">2</option>
+                      <option [ngValue]="3">3</option>
+                      <option [ngValue]="5">5</option>
+                      <option [ngValue]="10">10</option>
+                      <option [ngValue]="15">15</option>
+                      <option [ngValue]="20">20</option>
+                      <option [ngValue]="25">25</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label" for="multisteiner-numtrees"
+                >Tolerance for trees</label
+                >
+                <div class="control">
+                  <div class="select">
+                    <select
+                      id="multisteiner-tolerance"
+                      [(ngModel)]="multisteinerTolerance"
+                    >
+                      <option [ngValue]="0">0</option>
+                      <option [ngValue]="1">1</option>
+                      <option [ngValue]="2">2</option>
+                      <option [ngValue]="3">3</option>
+                      <option [ngValue]="5">5</option>
+                      <option [ngValue]="10">10</option>
+                      <option [ngValue]="15">15</option>
+                      <option [ngValue]="20">20</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label" for="multisteiner-md">Maximum degree</label>
+                <div class="control">
+                  <input
+                    [(ngModel)]="multisteinerMaxDeg"
+                    id="multisteiner-md"
+                    class="input"
+                    type="number"
+                    placeholder="Maximum degree"
+                    min="0"
+                    max="1"
+                    required
+                  />
+                </div>
+                <p class="has-text-info is-size-7">
+                  All nodes with degree greater than this value will be ignored.
+                  Disabled if equal to 0.
+                </p>
+              </div>
+              <div class="field">
+                <label class="label" for="multisteiner-hp">Hub penalty</label>
+                <div class="control">
+                  <input
+                    [(ngModel)]="multisteinerHubPenalty"
+                    id="multisteiner-hp"
+                    class="input"
+                    type="number"
+                    placeholder="Maximum degree"
+                    min="0"
+                    max="1"
+                    required
+                  />
+                </div>
+                <p class="has-text-info is-size-7">Penalty parameter for hubs.</p>
+              </div>
+              @if (drugstoneConfig.config.customEdges.selectable) {
+                <div
+                  class="field"
+                >
+                  <label class="label">Include all displayed edges</label>
+                  <app-toggle
+                    textOn="Include"
+                    textOff="Ignore"
+                    tooltipOn="Use all edges from the visualized network and the Drugst.One database."
+                    tooltipOff="Use only Drugst.One edges."
+                    [(value)]="multisteinerCustomEdges"
+                  >
+                  </app-toggle>
+                  <p class="has-text-info is-size-7">
+                    Include PPI edges from displayed network in the algorithms or
+                    use only edges from the Drugst.One database.
+                  </p>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+
+    <footer class="modal-card-foot">
+      <button
+        (click)="startTask(); close()"
+        class="button is-success is-rounded has-tooltip"
+        pTooltip="Run the analysis."
+        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+        tooltipPosition="top"
+        [disabled]="!analysis.canLaunchTask() || !isAnySelected()"
+      >
+        <app-fa-solid-icon icon="rocket"></app-fa-solid-icon>
+        <span> Launch </span>
+      </button>
+      <button
+        (click)="close()"
+        class="button is-rounded has-tooltip"
+        pTooltip="Close the current window."
+        [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+        tooltipPosition="top"
+      >
+        Close
+      </button>
+      @if (!isAnySelected()) {
+        <button mat-icon-button
                 [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
                 tooltipPosition="top"
                 pTooltip="Choose at least one geneset!"
-                >
-                <app-fa-solid-icon icon="exclamation-triangle"></app-fa-solid-icon>
-              </button>
-            }
-          </footer>
-        </div>
-      </div>
+        >
+          <app-fa-solid-icon icon="exclamation-triangle"></app-fa-solid-icon>
+        </button>
+      }
+    </footer>
+  </div>
+</div>

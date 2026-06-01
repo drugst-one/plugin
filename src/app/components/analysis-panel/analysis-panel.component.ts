@@ -548,6 +548,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       this.tableProteinScoreTooltip =
         'Normalized inverse mean distance of the protein to the seeds. ' +
         'The higher the score, the more relevant the protein.';
+    } else if (this.task.info.algorithm === 'harmonic') {
+      this.tableDrugScoreTooltip =
+        'Normalized inverse mean distance of the drug to the seeds. ' +
+        'The higher the score, the more relevant the drug.';
+      this.tableProteinScoreTooltip =
+        'Normalized inverse mean distance of the protein to the seeds. ' +
+        'The higher the score, the more relevant the protein.';
     } else if (this.task.info.algorithm === 'trustrank') {
       this.tableDrugScoreTooltip =
         'Amount of ‘trust’ on the drug at termination of the algorithm. ' +
@@ -574,12 +581,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         this.analysis.target = result.parameters.target;
         if ("cutoff" in result) {
           // Round cutoff to 3 decimal places for display
-          this.cutoff = result["cutoff"] !== undefined && result["cutoff"] !== null 
-            ? Math.round(result["cutoff"] * 1000) / 1000 
+          this.cutoff = result["cutoff"] !== undefined && result["cutoff"] !== null
+            ? Math.round(result["cutoff"] * 1000) / 1000
             : result["cutoff"];
           this.prunedNetwork = result["network"];
           this.pruneOrphanNodes = result["pruneOrphanNodes"];
-          
+
           // If this is an automatic cutoff, show notification
           if (result["automaticCutoff"] === true) {
             // Show toast notification about automatic cutoff
@@ -588,12 +595,12 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
               type: 'info',
               callback: () => {}
             });
-            
+
             // Log automatic pruning
             this.logger.logMessage(`First Neighbor: Automatic SPD cutoff applied (${this.cutoff.toFixed(3)}). Network pruned from ${result["networkInitial"]["nodes"].length} to ${result["network"]["nodes"].length} nodes.`);
           }
         }
-        
+
         // Setup pruning min/max values for first_neighbor (same as manual pruning)
         if (result["algorithm"] === "first_neighbor" && result["networkInitial"]) {
           this.netex.prepareNetwork(result["networkInitial"]["nodes"], "spd").then((pruningResult) => {
@@ -743,7 +750,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             this.tableProteins.sort((a, b) => b.score - a.score);
             this.rankTable(this.tableProteins);
 
-            this.tableHasScores = ['trustrank', 'closeness', 'degree', 'betweenness', 'quick', 'super']
+            this.tableHasScores = ['trustrank', 'closeness', 'harmonic', 'degree', 'betweenness', 'quick', 'super']
               .indexOf(this.task.info.algorithm) !== -1;
             if (this.tableHasScores) {
               this.toggleNormalization(true);

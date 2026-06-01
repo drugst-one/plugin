@@ -238,8 +238,8 @@ export const defaultConfig: IConfig = {
   calculateProperties: false,
   customLinks: {}, // { test: 'test link', test2: 'test2 link' }
   algorithms: {
-    drug: ['trustrank', 'closeness', 'degree', 'proximity'],
-    'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'betweenness', 'first-neighbor'],
+    drug: ['trustrank', 'closeness', 'degree', 'proximity', 'closeness', 'harmonic'],
+    'drug-target': ['trustrank', 'multisteiner', 'keypathwayminer', 'degree', 'closeness', 'harmonic', 'betweenness', 'first-neighbor'],
     gene: ['pathway-enrichment'], clustering: ['louvain-clustering', 'leiden-clustering']
   },
   nodeGroups: {

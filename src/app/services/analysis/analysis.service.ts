@@ -15,6 +15,7 @@ export type AlgorithmType =
   | 'keypathwayminer'
   | 'multisteiner'
   | 'closeness'
+  | 'harmonic'
   | 'degree'
   | 'proximity'
   | 'pathway-enrichment'
@@ -28,7 +29,8 @@ export const algorithmNames = {
   trustrank: 'TrustRank',
   keypathwayminer: 'KeyPathwayMiner',
   multisteiner: 'Multi-Steiner',
-  closeness: 'Harmonic Centrality',
+  closeness: 'Closeness Centrality',
+  harmonic: 'Harmonic Centrality',
   degree: 'Degree Centrality',
   proximity: 'Network Proximity',
   betweenness: 'Betweenness Centrality',
@@ -49,6 +51,7 @@ export interface Algorithm {
 
 export const TRUSTRANK: Algorithm = {slug: 'trustrank', name: algorithmNames.trustrank};
 export const CLOSENESS_CENTRALITY: Algorithm = {slug: 'closeness', name: algorithmNames.closeness};
+export const HARMONIC_CENTRALITY: Algorithm = {slug: 'harmonic', name: algorithmNames.harmonic};
 export const DEGREE_CENTRALITY: Algorithm = {slug: 'degree', name: algorithmNames.degree};
 export const NETWORK_PROXIMITY: Algorithm = {slug: 'proximity', name: algorithmNames.proximity};
 export const BETWEENNESS_CENTRALITY: Algorithm = {slug: 'betweenness', name: algorithmNames.betweenness};
@@ -58,7 +61,6 @@ export const PATHWAYENRICHMENT: Algorithm = {slug: 'pathway-enrichment', name: a
 export const LOUVAINCLUSTERING: Algorithm = { slug: 'louvain-clustering', name: algorithmNames['louvain-clustering'] };
 export const LEIDENCLUSTERING: Algorithm = { slug: 'leiden-clustering', name: algorithmNames['leiden-clustering'] };
 export const FIRSTNEIGHBOR: Algorithm = { slug: 'first-neighbor', name: algorithmNames['first-neighbor'] };
-
 
 export const MAX_TASKS = 3;
 
@@ -90,7 +92,7 @@ export class AnalysisService {
   public inPathwayAnalysis = false;
   public target = '';
   public nodesToAdd: Node[] = [];
-  
+
   private nodesToAddNotifier = new Subject<boolean>();
 
   private intervalId: any;

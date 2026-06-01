@@ -302,6 +302,7 @@ export type AlgorithmType =
   | 'keypathwayminer'
   | 'multisteiner'
   | 'closeness'
+  | 'harmonic'
   | 'degree'
   | 'proximity'
   | 'betweenness'

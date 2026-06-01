@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {
-  AnalysisService, BETWEENNESS_CENTRALITY, CLOSENESS_CENTRALITY,
+  AnalysisService, BETWEENNESS_CENTRALITY, CLOSENESS_CENTRALITY, HARMONIC_CENTRALITY,
   DEGREE_CENTRALITY,
   FIRSTNEIGHBOR,
   KEYPATHWAYMINER, LEIDENCLUSTERING, LOUVAINCLUSTERING, MAX_TASKS,
@@ -70,6 +70,14 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   public closenessResultSize = 20;
   public closenessCustomEdges: boolean;
 
+  // Harmonic Parameters
+  public harmonicIncludeIndirectDrugs = false;
+  public harmonicIncludeNonApprovedDrugs = false;
+  public harmonicMaxDeg = 0;
+  public harmonicHubPenalty = 0.0;
+  public harmonicResultSize = 20;
+  public harmonicCustomEdges: boolean;
+
   // Degree Parameters
   public degreeIncludeNonApprovedDrugs = false;
   public degreeMaxDeg = 0;
@@ -106,6 +114,7 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.trustrankCustomEdges = this.drugstoneConfig.config.customEdges.default;
     this.closenessCustomEdges = this.drugstoneConfig.config.customEdges.default;
+    this.harmonicCustomEdges = this.drugstoneConfig.config.customEdges.default;
     this.degreeCustomEdges = this.drugstoneConfig.config.customEdges.default;
     this.proximityCustomEdges = this.drugstoneConfig.config.customEdges.default;
     this.betweennessCustomEdges = this.drugstoneConfig.config.customEdges.default;
@@ -115,9 +124,9 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges<LaunchAnalysisComponent>): void {
     if (this.target === 'drug-target') {
-      this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, BETWEENNESS_CENTRALITY, FIRSTNEIGHBOR];
+      this.algorithms = [MULTISTEINER, KEYPATHWAYMINER, TRUSTRANK, CLOSENESS_CENTRALITY, HARMONIC_CENTRALITY, DEGREE_CENTRALITY, BETWEENNESS_CENTRALITY, FIRSTNEIGHBOR];
     } else if (this.target === 'drug') {
-      this.algorithms = [TRUSTRANK, CLOSENESS_CENTRALITY, DEGREE_CENTRALITY, NETWORK_PROXIMITY];
+      this.algorithms = [TRUSTRANK, CLOSENESS_CENTRALITY, HARMONIC_CENTRALITY, DEGREE_CENTRALITY, NETWORK_PROXIMITY];
     } else if (this.target === 'gene') {
       this.algorithms = [PATHWAYENRICHMENT];
     }  else if (this.target === 'clustering') {
@@ -224,6 +233,15 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       parameters.hub_penalty = this.closenessHubPenalty;
       parameters.result_size = this.closenessResultSize;
       parameters.custom_edges = this.closenessCustomEdges;
+    } else if (this.algorithm === 'harmonic') {
+      parameters.include_indirect_drugs = this.harmonicIncludeIndirectDrugs;
+      parameters.include_non_approved_drugs = this.harmonicIncludeNonApprovedDrugs;
+      if (this.harmonicMaxDeg && this.harmonicMaxDeg > 0) {
+        parameters.max_deg = this.harmonicMaxDeg;
+      }
+      parameters.hub_penalty = this.harmonicHubPenalty;
+      parameters.result_size = this.harmonicResultSize;
+      parameters.custom_edges = this.harmonicCustomEdges;
     } else if (this.algorithm === 'degree') {
       parameters.include_non_approved_drugs = this.degreeIncludeNonApprovedDrugs;
       if (this.degreeMaxDeg && this.degreeMaxDeg > 0) {
