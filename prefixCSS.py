@@ -286,6 +286,9 @@ class ParserCSS:
         newLines = []
         with open(path) as f:
             for line in f:
+                if len(line) > 1000:
+                    newLines.append(line)
+                    continue
                 # leading white spaces are necessary for sass
                 leadingWhiteSaces = len(line) - len(line.lstrip())
                 line = line.strip()
@@ -352,6 +355,8 @@ class ParserCSS:
         for root, dirs, files in os.walk(directory):
             for file in files:
                 if file.endswith(".scss") or file.endswith(".css") or file.endswith(".sass"):
+                    if ".min." in file:
+                        continue
                     path = os.path.join(root, file)
                     # skip ng select classes
                     if '@ng-select' in path or '-no-prefix.scss' in path:
@@ -376,7 +381,7 @@ class BuildManager:
         files_to_copy = [
             'package.json', 'package-lock.json', 'angular.json',
             'tsconfig.json', 'tsconfig.app.json', 'extra-webpack.config.js',
-            'build-netex.js'
+            'build-netex.js', 'prefixCSS.py'
         ]
         print("Copying configuration files...")
         for f in files_to_copy:
@@ -428,8 +433,6 @@ class BuildManager:
     def parseApp(self):
         print(f"Prefixing files in {self.target_dir}...")
         ParserHTML().parseDirectory(os.path.join(self.target_dir, 'src/app/'))
-        ParserCSS().parseDirectory(os.path.join(self.target_dir, 'src/'))
-        ParserCSS().parseDirectory(os.path.join(self.target_dir, 'node_modules/'))
         ParserJS().parseDirectory(os.path.join(self.target_dir, 'src/app/'))
 
     def cleanup(self):
@@ -460,9 +463,20 @@ if __name__ == '__main__':
         prepare(args.target)
     elif args.stage == 'cleanup':
         BuildManager(args.target).cleanup()
+    elif args.stage == 'prefix-css':
+        css_path = 'drugsTone-build/styles.css'
+        if os.path.exists(css_path):
+            print(f"Prefixing compiled CSS: {css_path}")
+            scss = ParserCSS().parseCSS(css_path)
+            scss = scss.replace('#drugstone-plugin-appWindow :root', '#drugstone-plugin-appWindow')
+            scss = scss.replace('#appWindow :root', '#appWindow')
+            ParserCSS().write(css_path, scss)
+            print("Successfully prefixed compiled CSS.")
+        else:
+            print(f"CSS file not found for prefixing: {css_path}")
     else:
         # Compatibility with old stages if needed, or error out
         if args.stage == 'parse':
             prepare(args.target)
         else:
-            raise Exception(f'ERROR: Unknown argument for --stage: {args.stage}. Should be "prepare" or "cleanup."')
+            raise Exception(f'ERROR: Unknown argument for --stage: {args.stage}. Should be "prepare", "cleanup" or "prefix-css."')
