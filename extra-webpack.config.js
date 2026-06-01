@@ -56,10 +56,10 @@ function cleanCSS(css) {
     if (char === '{') {
       let selector = currentSegment;
       currentSegment = '';
-      
+
       let trimmed = selector.trim();
       let isAtRule = trimmed.startsWith('@');
-      
+
       if (isAtRule) {
         let type = 'other';
         if (trimmed.startsWith('@media') || trimmed.startsWith('@container') || trimmed.startsWith('@supports')) {
@@ -75,10 +75,10 @@ function cleanCSS(css) {
         } else if (trimmed.startsWith('@keyframes') || trimmed.startsWith('@-webkit-keyframes')) {
           type = 'keyframes';
         }
-        
+
         let insideDarkMedia = mediaQueryDepths.some(d => d.type === 'dark-media');
         let insideLightMedia = mediaQueryDepths.some(d => d.type === 'light-media');
-        
+
         if (!insideDarkMedia && !insideLightMedia && type !== 'dark-media' && type !== 'light-media') {
           output += selector + '{';
         }
@@ -89,7 +89,7 @@ function cleanCSS(css) {
           output += selector + '{';
         }
       }
-      
+
       depth++;
       i++;
       continue;
@@ -99,16 +99,16 @@ function cleanCSS(css) {
       let blockContent = currentSegment;
       currentSegment = '';
       depth--;
-      
+
       let insideDarkMedia = mediaQueryDepths.some(d => d.type === 'dark-media');
-      let isClosingLightMedia = mediaQueryDepths.length > 0 && 
+      let isClosingLightMedia = mediaQueryDepths.length > 0 &&
                                mediaQueryDepths[mediaQueryDepths.length - 1].type === 'light-media' &&
                                mediaQueryDepths[mediaQueryDepths.length - 1].depth === depth;
-      
+
       if (!insideDarkMedia && !isClosingLightMedia) {
         output += blockContent + '}';
       }
-      
+
       if (mediaQueryDepths.length > 0 && mediaQueryDepths[mediaQueryDepths.length - 1].depth === depth) {
         mediaQueryDepths.pop();
       }
@@ -119,7 +119,7 @@ function cleanCSS(css) {
     currentSegment += char;
     i++;
   }
-  
+
   output += currentSegment;
   return output;
 }
@@ -138,19 +138,18 @@ class FixRootSelectorPlugin {
               const asset = compilation.getAsset(assetName);
               const originalSource = asset.source.source().toString();
               let updatedSource = originalSource;
-              
+
               // Replace both dev and prod wrapper :root combinations
               updatedSource = updatedSource.replace(/#appWindow\s+:root/g, '#appWindow');
               updatedSource = updatedSource.replace(/#drugstone-plugin-appWindow\s+:root/g, '#drugstone-plugin-appWindow');
-              
+
               // Strip prefers-color-scheme dark and flatten prefers-color-scheme light
               updatedSource = cleanCSS(updatedSource);
-              
+
               compilation.updateAsset(
                 assetName,
                 new sources.RawSource(updatedSource)
               );
-              console.log(`[FixRootSelectorPlugin] Fixed :root selectors and media queries in asset: ${assetName}`);
             }
           }
         }
@@ -159,8 +158,54 @@ class FixRootSelectorPlugin {
   }
 }
 
-module.exports = {
-  plugins: [
-    new FixRootSelectorPlugin()
-  ]
+module.exports = (config) => {
+  config.plugins = config.plugins || [];
+  config.plugins.push(new FixRootSelectorPlugin());
+
+  config.ignoreWarnings = config.ignoreWarnings || [];
+  config.ignoreWarnings.push(
+    (warning) => {
+      const message = warning.message || (typeof warning === 'string' ? warning : '');
+      return message.includes('Deprecation Warning') ||
+             message.includes('Sass @import rules') ||
+             message.includes('sass-loader');
+    }
+  );
+
+  function configureSassLoader(rules) {
+    if (!rules) return;
+    for (let i = 0; i < rules.length; i++) {
+      const rule = rules[i];
+      if (!rule) continue;
+      if (rule.oneOf) {
+        configureSassLoader(rule.oneOf);
+      }
+      if (rule.rules) {
+        configureSassLoader(rule.rules);
+      }
+      if (rule.use) {
+        const useArray = Array.isArray(rule.use) ? rule.use : [rule.use];
+        for (let j = 0; j < useArray.length; j++) {
+          let entry = useArray[j];
+          if (typeof entry === 'string' && entry.includes('sass-loader')) {
+            entry = { loader: entry, options: {} };
+            useArray[j] = entry;
+          }
+          if (entry && typeof entry === 'object' && entry.loader && entry.loader.includes('sass-loader')) {
+            entry.options = entry.options || {};
+            entry.options.sassOptions = entry.options.sassOptions || {};
+            entry.options.sassOptions.quietDeps = true;
+            entry.options.sassOptions.silenceDeprecations = ['import'];
+          }
+        }
+        if (!Array.isArray(rule.use)) {
+          rule.use = useArray[0];
+        }
+      }
+    }
+  }
+
+  configureSassLoader(config.module.rules);
+
+  return config;
 };
