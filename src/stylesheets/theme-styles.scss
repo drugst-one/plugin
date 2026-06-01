@@ -259,6 +259,15 @@
     color: var(--drgstn-text-primary) !important;
   }
 
+  .table a,
+  .p-datatable a {
+    color: #485fc7 !important;
+
+    &:hover {
+      color: #3e8ed0 !important;
+    }
+  }
+
   .button.is-hovered,
   .button:hover,
   .button {

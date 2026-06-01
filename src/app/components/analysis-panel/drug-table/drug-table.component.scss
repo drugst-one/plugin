@@ -43,3 +43,11 @@ td.rank-column {
   text-align: right !important;
   padding-right: 35px !important;
 }
+
+a {
+  color: #485fc7 !important;
+  
+  &:hover {
+    color: #3e8ed0 !important;
+  }
+}

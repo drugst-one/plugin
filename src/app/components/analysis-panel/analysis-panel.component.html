@@ -526,6 +526,7 @@
                     <button
                       (click)="downloadNodesAsCSV('drug')"
                       class="button is-primary control is-outlined is-rounded is-pulled-right is-small"
+                      [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                       >
                       <app-fa-solid-icon
                         icon="download"
@@ -607,7 +608,8 @@
                   <span>Pathway enrichment</span>
                   <div class="field has-addons is-pulled-right m-1 control">
                     <button (click)="downloadPathwayEnrichmentAsCSV()"
-                      class="button is-primary is-rounded is-outlined is-pulled-right is-small">
+                      class="button is-primary is-rounded is-outlined is-pulled-right is-small"
+                      [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }">
                       <app-fa-solid-icon icon="download" title="download resulting proteins"></app-fa-solid-icon>
                       <span>Download</span>
                     </button>
@@ -834,6 +836,7 @@
                                   <button
                                     (click)="downloadNodesAsCSV('protein')"
                                     class="button is-primary is-rounded is-outlined is-pulled-right is-small"
+                                    [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
                                     >
                                     <app-fa-solid-icon
                                       icon="download"
