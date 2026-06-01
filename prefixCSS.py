@@ -299,7 +299,7 @@ class ParserCSS:
                     # skip empty lines as empty lines in the beginning of .sass files cause errors
                     continue
 
-                if line.startswith('@import') or line.startswith('@forward') or line.startswith('@error') or line.startswith('@mixin') or line.startswith('@content') or line.startswith('src'):
+                if line.startswith('@import') or line.startswith('@forward') or line.startswith('@use') or line.startswith('@error') or line.startswith('@mixin') or line.startswith('@content') or line.startswith('src'):
                     line = leadingWhiteSaces*' ' + line
                     newLines.append(line)
                     # leave imports untouched
@@ -433,6 +433,7 @@ class BuildManager:
     def parseApp(self):
         print(f"Prefixing files in {self.target_dir}...")
         ParserHTML().parseDirectory(os.path.join(self.target_dir, 'src/app/'))
+        ParserCSS().parseDirectory(os.path.join(self.target_dir, 'src/app/'))
         ParserJS().parseDirectory(os.path.join(self.target_dir, 'src/app/'))
 
     def cleanup(self):
