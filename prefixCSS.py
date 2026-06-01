@@ -276,7 +276,7 @@ class ParserCSS:
     def prefixClasses(self, classListString):
         classListStringList = classListString.split('.')
         classListStringList = [x for x in classListStringList if len(x)]
-        classListStringList = [self.PREFIXCLASS + x if not (x.startswith('ng-') or x.startswith('p-') or x.startswith('pi-') or x.startswith('drugstone-plugin-') or x.startswith('fa-')) else '.' + x for x in classListStringList]
+        classListStringList = [self.PREFIXCLASS + x if not (x.startswith('ng-') or x.startswith('p-') or x.startswith('pi-') or x.startswith('drugstone-plugin-') or x.startswith('fa-') or x.startswith('mat-') or x.startswith('cdk-')) else '.' + x for x in classListStringList]
         return '.'.join(classListStringList)
 
     def prefixId(self, classListString):

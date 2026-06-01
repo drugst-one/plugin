@@ -12,6 +12,7 @@ function prefixSelector(selector) {
           className.startsWith('ng-') || 
           className.startsWith('p-') || 
           className.startsWith('cdk-') ||
+          className.startsWith('mat-') ||
           className.startsWith('vis-') ||
           className.startsWith('drugstone-plugin-')) {
         return match;

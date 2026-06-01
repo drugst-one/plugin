@@ -259,6 +259,22 @@
     color: var(--drgstn-text-primary) !important;
   }
 
+  .table thead th,
+  .table thead td,
+  .pathway-table thead th,
+  .p-datatable .p-datatable-thead > tr > th,
+  .p-column-header-content,
+  .mat-sort-header-container,
+  .mat-sort-header-button {
+    font-weight: bold !important;
+    white-space: nowrap !important;
+  }
+
+  .p-column-header-content,
+  .mat-sort-header-container {
+    flex-wrap: nowrap !important;
+  }
+
   .table a,
   .p-datatable a {
     color: #485fc7 !important;
