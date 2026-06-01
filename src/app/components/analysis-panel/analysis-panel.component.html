@@ -677,7 +677,7 @@
         
                 <td style="vertical-align: middle; text-align: center;">
                   <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                    <button (click)="item.showGenes = !item.showGenes" pTooltip="Show overlapping genes."
+                    <button (click)="item.showGenes = !item.showGenes" pTooltip="Show overlapping genes." [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-right'"
                       class="button is-small" style="vertical-align: middle;">
                       @if (!item.showGenes) {
 <span>&#9654;</span>

@@ -2,55 +2,58 @@
 
 .drgstn-tooltip {
   position: absolute !important;
-  padding: .25em .5rem !important;
   max-width: 12.5rem !important;
-}
 
-.drgstn-tooltip-top {
-  .p-tooltip-text:before {
-    width: 0;
-    left: 50%;
-    bottom: 0;
-    border: 6px solid transparent;
-    border-top: 6px solid var(--drgstn-tooltip);
-    border-bottom: 0;
-    transform: translate(-50%, calc(100% - 1px));
+  &.p-tooltip-top {
+    padding: 0 0 6px 0 !important;
+    .p-tooltip-text:before {
+      width: 0;
+      left: 50%;
+      bottom: 0;
+      border: 6px solid transparent;
+      border-top: 6px solid var(--drgstn-tooltip);
+      border-bottom: 0;
+      transform: translate(-50%, calc(100% - 1px));
+    }
   }
-}
 
-.drgstn-tooltip-bottom {
-  .p-tooltip-text:before {
-    width: 0;
-    left: 50%;
-    top: 0;
-    border: 6px solid transparent;
-    border-bottom: 6px solid var(--drgstn-tooltip);
-    border-top: 0;
-    transform: translate(-50%, calc(-100% + 1px));
+  &.p-tooltip-bottom {
+    padding: 6px 0 0 0 !important;
+    .p-tooltip-text:before {
+      width: 0;
+      left: 50%;
+      top: 0;
+      border: 6px solid transparent;
+      border-bottom: 6px solid var(--drgstn-tooltip);
+      border-top: 0;
+      transform: translate(-50%, calc(-100% + 1px));
+    }
   }
-}
 
-.drgstn-tooltip-left {
-  .p-tooltip-text:before {
-    height: 0;
-    top: 50%;
-    right: 0;
-    border: 6px solid transparent;
-    border-left: 6px solid var(--drgstn-tooltip);
-    border-right: 0;
-    transform: translate(calc(100% - 1px),-50% );
+  &.p-tooltip-left {
+    padding: 0 6px 0 0 !important;
+    .p-tooltip-text:before {
+      height: 0;
+      top: 50%;
+      right: 0;
+      border: 6px solid transparent;
+      border-left: 6px solid var(--drgstn-tooltip);
+      border-right: 0;
+      transform: translate(calc(100% - 1px),-50% );
+    }
   }
-}
 
-.drgstn-tooltip-right {
-  .p-tooltip-text:before {
-    height: 0;
-    top: 50%;
-    left: 0;
-    border: 6px solid transparent;
-    border-right: 6px solid var(--drgstn-tooltip);
-    border-left: 0;
-    transform: translate(calc(-100% + 1px),-50% );
+  &.p-tooltip-right {
+    padding: 0 0 0 6px !important;
+    .p-tooltip-text:before {
+      height: 0;
+      top: 50%;
+      left: 0;
+      border: 6px solid transparent;
+      border-right: 6px solid var(--drgstn-tooltip);
+      border-left: 0;
+      transform: translate(calc(-100% + 1px),-50% );
+    }
   }
 }
 

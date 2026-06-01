@@ -57,7 +57,6 @@ import { BugReportComponent } from './components/bug-report/bug-report.component
 import { ViewListComponent } from './components/analysis-panel/view-list/view-list.component';
 import { ImageComponent } from './image/image.component';
 import { ImageFallbackDirective } from './directives/image-fallback/image-fallback.directive';
-import { TooltipHelperDirective } from './directives/tooltip-helper/tooltip-helper.directive';
 import { ExternalAnalysisButtonComponent } from './components/external-analysis-button/external-analysis-button.component';
 import { MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
@@ -118,7 +117,6 @@ import { ScientificPipe } from './components/analysis-panel/scientific-pipe/scie
     ViewListComponent,
     ImageComponent,
     ImageFallbackDirective,
-    TooltipHelperDirective,
     ExternalAnalysisButtonComponent,
     IdspaceButtonComponent,
     NetworkUploadDialogComponent,

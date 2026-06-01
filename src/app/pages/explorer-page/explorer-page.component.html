@@ -125,32 +125,32 @@
           </div>
           <footer class="card-footer">
             <a (click)="analysis.addAllToSelection()" class="card-footer-item text-primary" tooltipPosition="top"
-              pTooltip="Add all proteins to the selection.">
+              pTooltip="Add all proteins to the selection." [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'">
               <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
               <span>Add all</span>
             </a>
             <a (click)="analysis.addFirstNeighbors()" class="card-footer-item text-primary" tooltipPosition="top"
-              pTooltip="Add first neighbor proteins of selection.">
+              pTooltip="Add first neighbor proteins of selection." [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'">
               <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
               <span>Add first neighbors</span>
             </a>
           </footer>
           <footer class="card-footer">
             <a (click)="analysis.addConnectedComponents()" class="card-footer-item text-primary" tooltipPosition="top"
-              pTooltip="Add full connected components of all nodes in selection.">
+              pTooltip="Add full connected components of all nodes in selection." [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'">
               <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
               <span>Add connected components</span>
             </a>
             @if (analysis.inPathwayAnalysis) {
               <a (click)="analysis.addSelectedToNetwork()"
-                class="card-footer-item text-primary" tooltipPosition="top" pTooltip="Add selected nodes to network.">
+                class="card-footer-item text-primary" tooltipPosition="top" pTooltip="Add selected nodes to network." [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'">
                 <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
                 <span>Add selected nodes to network</span>
               </a>
             }
           </footer>
           <footer class="card-footer">
-            <a class="card-footer-item text-primary" tooltipPosition="top" pTooltip="Add all proteins to the selection.">
+            <a class="card-footer-item text-primary">
               <app-fa-solid-icon icon="plus"></app-fa-solid-icon>
               <span class="is-fullwidth">
                 <app-group-selection (selectGroupEmitter)="analysis.addGroupToSelection($event)"
@@ -163,13 +163,13 @@
                           analysis.invertSelection(
                             networkHandler.activeNetwork.currentViewNodes
                           )
-                        " class="card-footer-item text-primary" tooltipPosition="top" pTooltip="Invert the current selection.">
+                        " class="card-footer-item text-primary" tooltipPosition="top" pTooltip="Invert the current selection." [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'">
               <app-fa-solid-icon icon="sync"></app-fa-solid-icon>
               <span> Invert </span>
             </a>
             @if (analysis.getSelection().length) {
               <a (click)="analysis.viewFromSelection()"
-                class="card-footer-item text-primary" tooltipPosition="top" pTooltip="Create view from the selection.">
+                class="card-footer-item text-primary" tooltipPosition="top" pTooltip="Create view from the selection." [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'">
                 <app-fa-solid-icon icon="check"></app-fa-solid-icon>
                 <span> Save selection </span>
               </a>
@@ -179,7 +179,7 @@
             @if (analysis.getSelection().length) {
               <a (click)="analysis.resetSelection()"
                 class="card-footer-item has-text-danger" tooltipPosition="top"
-                pTooltip="Remove all entries from the selection.">
+                pTooltip="Remove all entries from the selection." [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'">
                 <app-fa-solid-icon icon="broom"></app-fa-solid-icon>
                 <span> Reset </span>
               </a>
