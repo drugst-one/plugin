@@ -91,15 +91,21 @@
     color: var(--drgstn-text-primary) !important;
   }
 
-  .modal-card,
+  .modal-card {
+    background-color: var(--drgstn-panel) !important;
+  }
+
   .modal-card-body {
     background-color: var(--drgstn-panel) !important;
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
   }
 
   .modal-card-head,
   .modal-card-foot {
     border-color: var(--drgstn-border) !important;
     background-color: var(--drgstn-border) !important;
+    padding: 1.25rem 2rem !important;
   }
 
   .tr {
@@ -336,6 +342,10 @@
     color: var(--drgstn-text-secondary) !important;
   }
 
+  .has-text-info.has-text-info {
+    color: #3e8ed0 !important;
+  }
+
   .has-background-panel {
     color: var(--drgstn-panel) !important;
   }
@@ -347,6 +357,77 @@
 
     a:hover {
       background-color: var(--drgstn-primary) !important;
+    }
+  }
+
+  .tabs.vertical {
+    display: block !important;
+    overflow: visible !important;
+    margin-right: 1.5rem !important;
+
+    & > div {
+      display: flex;
+      flex-direction: column;
+
+      .algorithm-button {
+        width: 100%;
+        margin-top: -1px;
+
+        a {
+          border: 1px solid var(--drgstn-border) !important;
+          border-radius: 0 !important;
+          justify-content: flex-start;
+          display: flex;
+          align-items: center;
+          width: 100%;
+          padding: 0.5em 1em;
+          color: var(--drgstn-text-primary) !important;
+          background-color: transparent;
+        }
+
+        a:hover {
+          background-color: var(--drgstn-panel-secondary) !important;
+          color: var(--drgstn-text-primary) !important;
+          border-color: var(--drgstn-border) !important;
+        }
+
+        &.is-active {
+          a, a:hover {
+            background-color: var(--drgstn-primary) !important;
+            color: var(--drgstn-text-secondary) !important;
+            border-color: var(--drgstn-primary) !important;
+            z-index: 1;
+          }
+        }
+
+        &:first-child {
+          margin-top: 0;
+          a {
+            border-top-left-radius: 0 !important;
+            border-top-right-radius: 0 !important;
+          }
+        }
+
+        &:last-child {
+          a {
+            border-bottom-left-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+          }
+        }
+      }
+    }
+
+    &.is-rounded {
+      & > div {
+        .algorithm-button:first-child a {
+          border-top-left-radius: 0 !important;
+          border-top-right-radius: 0 !important;
+        }
+        .algorithm-button:last-child a {
+          border-bottom-left-radius: 0 !important;
+          border-bottom-right-radius: 0 !important;
+        }
+      }
     }
   }
 }

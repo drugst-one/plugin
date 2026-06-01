@@ -10,12 +10,11 @@
   .p-tooltip-text:before {
     width: 0;
     left: 50%;
-    bottom: +7px;
+    bottom: 0;
     border: 6px solid transparent;
     border-top: 6px solid var(--drgstn-tooltip);
     border-bottom: 0;
-    transform: translate(-50%, calc(100% + 3px));
-
+    transform: translate(-50%, calc(100% - 1px));
   }
 }
 
@@ -23,11 +22,11 @@
   .p-tooltip-text:before {
     width: 0;
     left: 50%;
-    top: +3px;
+    top: 0;
     border: 6px solid transparent;
     border-bottom: 6px solid var(--drgstn-tooltip);
     border-top: 0;
-    transform: translate(-50%, -5px);
+    transform: translate(-50%, calc(-100% + 1px));
   }
 }
 
@@ -35,7 +34,7 @@
   .p-tooltip-text:before {
     height: 0;
     top: 50%;
-    right: +7px;
+    right: 0;
     border: 6px solid transparent;
     border-left: 6px solid var(--drgstn-tooltip);
     border-right: 0;
@@ -47,11 +46,11 @@
   .p-tooltip-text:before {
     height: 0;
     top: 50%;
-    left: +7px;
+    left: 0;
     border: 6px solid transparent;
     border-right: 6px solid var(--drgstn-tooltip);
     border-left: 0;
-    transform: translate(-5px,-50% );
+    transform: translate(calc(-100% + 1px),-50% );
   }
 }
 
@@ -67,6 +66,7 @@
   }
 
   .p-tooltip-text {
+    position: relative !important;
     white-space: pre-line !important;
     background: var(--drgstn-tooltip) !important;
     border-radius: 4px !important;
