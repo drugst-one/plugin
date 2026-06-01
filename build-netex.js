@@ -92,20 +92,38 @@ function prefixCSS(css) {
       let isAtRule = trimmed.startsWith('@');
       
       if (isAtRule) {
-        output += selector + '{';
         let type = 'other';
         if (trimmed.startsWith('@media') || trimmed.startsWith('@container') || trimmed.startsWith('@supports')) {
-          type = 'media';
+          if (trimmed.includes('prefers-color-scheme')) {
+            if (trimmed.includes('dark')) {
+              type = 'dark-media';
+            } else if (trimmed.includes('light')) {
+              type = 'light-media';
+            }
+          } else {
+            type = 'media';
+          }
         } else if (trimmed.startsWith('@keyframes') || trimmed.startsWith('@-webkit-keyframes')) {
           type = 'keyframes';
+        }
+        
+        let insideDarkMedia = mediaQueryDepths.some(d => d.type === 'dark-media');
+        let insideLightMedia = mediaQueryDepths.some(d => d.type === 'light-media');
+        
+        if (!insideDarkMedia && !insideLightMedia && type !== 'dark-media' && type !== 'light-media') {
+          output += selector + '{';
         }
         mediaQueryDepths.push({ depth: depth, type: type });
       } else {
         let insideKeyframes = mediaQueryDepths.some(d => d.type === 'keyframes');
-        if (!insideKeyframes) {
-          output += prefixSelector(selector) + '{';
-        } else {
-          output += selector + '{';
+        let insideDarkMedia = mediaQueryDepths.some(d => d.type === 'dark-media');
+        
+        if (!insideDarkMedia) {
+          if (!insideKeyframes) {
+            output += prefixSelector(selector) + '{';
+          } else {
+            output += selector + '{';
+          }
         }
       }
       
@@ -115,9 +133,19 @@ function prefixCSS(css) {
     }
 
     if (char === '}') {
-      output += currentSegment + '}';
+      let blockContent = currentSegment;
       currentSegment = '';
       depth--;
+      
+      let insideDarkMedia = mediaQueryDepths.some(d => d.type === 'dark-media');
+      let isClosingLightMedia = mediaQueryDepths.length > 0 && 
+                               mediaQueryDepths[mediaQueryDepths.length - 1].type === 'light-media' &&
+                               mediaQueryDepths[mediaQueryDepths.length - 1].depth === depth;
+      
+      if (!insideDarkMedia && !isClosingLightMedia) {
+        output += blockContent + '}';
+      }
+      
       if (mediaQueryDepths.length > 0 && mediaQueryDepths[mediaQueryDepths.length - 1].depth === depth) {
         mediaQueryDepths.pop();
       }

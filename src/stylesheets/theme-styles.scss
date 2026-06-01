@@ -237,6 +237,11 @@
     color: var(--drgstn-text-primary) !important;
   }
 
+  .table td,
+  .table th {
+    color: var(--drgstn-text-primary);
+  }
+
   .table thead td,
   .table thead th {
     color: var(--drgstn-text-primary) !important;
