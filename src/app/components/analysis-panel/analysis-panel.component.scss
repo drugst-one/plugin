@@ -189,3 +189,12 @@ div.control.dropdown {
   z-index: 10;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
+.pathway-table td .button {
+  border: 1px solid transparent !important;
+  transition: border-color 0.15s ease-in-out;
+  
+  &:hover {
+    border: 1px solid var(--drgstn-border) !important;
+  }
+}
