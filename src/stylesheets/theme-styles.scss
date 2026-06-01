@@ -169,6 +169,12 @@
     background-color: var(--drgstn-panel-secondary) !important;
   }
 
+  a.dropdown-item.is-active,
+  button.dropdown-item.is-active {
+    background-color: var(--drgstn-primary) !important;
+    color: var(--drgstn-text-secondary) !important;
+  }
+
   .tissue-dropdown {
     background-color: var(--drgstn-panel) !important;
   }
