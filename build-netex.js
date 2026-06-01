@@ -10,7 +10,18 @@ const concat = require('concat');
   ];
   await fs.ensureDir('drugsTone-build');
   await concat(files, 'drugsTone-build/drugstone.js');
-  await fs.copy('./dist/netex/styles.css', 'drugsTone-build/styles.css');
+
+  const cssPath = './dist/netex/styles.css';
+  if (await fs.pathExists(cssPath)) {
+    let css = await fs.readFile(cssPath, 'utf8');
+    css = css.replace(/#appWindow\s+:root/g, '#appWindow');
+    css = css.replace(/#drugstone-plugin-appWindow\s+:root/g, '#drugstone-plugin-appWindow');
+    await fs.writeFile('drugsTone-build/styles.css', css, 'utf8');
+    console.log('Successfully copied and post-processed production styles.css');
+  } else {
+    await fs.copy(cssPath, 'drugsTone-build/styles.css');
+  }
+
   await fs.copy('./dist/netex/assets/', 'drugsTone-build/assets/');
 })();
 
