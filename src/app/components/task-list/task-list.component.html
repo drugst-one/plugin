@@ -7,6 +7,8 @@
       <a
         class="list-item box small-box"
         [class.is-active]="task.token === token"
+        (click)="task.info.done && open(task.token)"
+        [style.cursor]="task.info.done ? 'pointer' : 'default'"
         >
         @if (!task.info.startedAt) {
           <div>
@@ -68,7 +70,7 @@
               </div>
               <div class="column pt-0 pb-0">
                 <a
-                  (click)="analysis.removeTask(task.token)"
+                  (click)="analysis.removeTask(task.token); $event.stopPropagation()"
                   class="has-text-danger is-pulled-right"
                   >
                   <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
@@ -116,7 +118,7 @@
               </div>
               <div class="column pt-0 pb-0">
                 <a
-                  (click)="analysis.removeTask(task.token)"
+                  (click)="analysis.removeTask(task.token); $event.stopPropagation()"
                   class="has-text-danger is-pulled-right"
                   >
                   <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
@@ -133,7 +135,7 @@
         @if (task.info.done) {
           <div
             >
-            <div class="columns mb-0" (click)="open(task.token)"
+            <div class="columns mb-0"
               pTooltip="Show analysis results"
               [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
               tooltipPosition="top">
@@ -173,7 +175,7 @@
               </div>
               <div class="column pt-0 pb-0">
                 <a
-                  (click)="analysis.removeTask(task.token)"
+                  (click)="analysis.removeTask(task.token); $event.stopPropagation()"
                   class="has-text-danger is-pulled-right"
                   pTooltip="Delete task"
                   [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
@@ -224,7 +226,7 @@
               </div>
               <div class="column pt-0 pb-0">
                 <a
-                  (click)="analysis.removeTask(task.token)"
+                  (click)="analysis.removeTask(task.token); $event.stopPropagation()"
                   class="has-text-danger is-pulled-right"
                   >
                   <app-fa-solid-icon icon="trash"></app-fa-solid-icon>

@@ -7,6 +7,8 @@
       <a
         class="list-item box small-box"
         [class.is-active]="task.token === token"
+        (click)="open(task.token)"
+        style="cursor: pointer;"
         >
         @if (task) {
           <div
@@ -15,13 +17,13 @@
               @if (!editing || currentEditingTask !== task.token) {
                 <div class="column is-8" style="width: 90% !important;">
                   <app-fa-solid-icon class="mr-2" icon="crosshairs"></app-fa-solid-icon>
-                  <span (click)="open(task.token)" pTooltip="Show selection view"
+                  <span pTooltip="Show selection view"
                   [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" tooltipPosition="top">{{ task.name }}</span>
-                  <app-fa-solid-icon icon="pen" (click)="editingTask(task)" class="ml-2" style="cursor: pointer;"></app-fa-solid-icon>
+                  <app-fa-solid-icon icon="pen" (click)="editingTask(task); $event.stopPropagation()" class="ml-2" style="cursor: pointer;"></app-fa-solid-icon>
                 </div>
               }
               @if (editing && currentEditingTask === task.token) {
-                <div class="column is-8 is-flex is-align-items-center">
+                <div class="column is-8 is-flex is-align-items-center" (click)="$event.stopPropagation()">
                   <app-fa-solid-icon class="mr-2" icon="crosshairs"></app-fa-solid-icon>
                   <input [(ngModel)]="taskTextMap[task.token]" class="input is-small ml-3" minlength="4"
                     style="width: auto; display: inline-block; font-size: 1rem; padding: 2px 6px;" />
@@ -44,7 +46,7 @@
               </div>
               <div class="column pt-0 pb-0">
                 <a
-                  (click)="analysis.removeView(task.token)"
+                  (click)="analysis.removeView(task.token); $event.stopPropagation()"
                   class="has-text-danger is-pulled-right"
                   pTooltip="Delete view"
                   [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
