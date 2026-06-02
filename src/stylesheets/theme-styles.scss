@@ -250,8 +250,9 @@
   }
 
   .table td,
-  .table th {
-    color: var(--drgstn-text-primary);
+  .table th,
+  .table td p {
+    color: var(--drgstn-text-primary) !important;
   }
 
   .table thead td,
