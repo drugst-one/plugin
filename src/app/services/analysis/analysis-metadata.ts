@@ -9,26 +9,71 @@ function cloneDeep<T>(value: T): T {
   return JSON.parse(JSON.stringify(value));
 }
 
+const ANALYSIS_CONFIG_KEYS: Array<keyof IConfig> = [
+  'identifier',
+  'label',
+  'reviewed',
+  'calculateProperties',
+  'licensedDatasets',
+  'interactionProteinProtein',
+  'interactionDrugProtein',
+  'indicationDrugDisorder',
+  'associatedProteinDisorder',
+  'autofillEdges',
+  'overlayDirectedEdges',
+  'physicsOn',
+  'layoutOn',
+];
+
+const ADVANCED_SETTINGS_KEYS: Array<keyof IConfig> = [
+  'identifier',
+  'label',
+  'reviewed',
+  'approvedDrugs',
+  'calculateProperties',
+  'licensedDatasets',
+  'interactionProteinProtein',
+  'interactionDrugProtein',
+  'indicationDrugDisorder',
+  'associatedProteinDisorder',
+  'customEdges',
+  'autofillEdges',
+  'selfReferences',
+  'overlayDirectedEdges',
+  'physicsOn',
+  'layoutOn',
+  'selectionMultiDrag',
+  'nodeShadow',
+  'edgeShadow',
+];
+
+function pickConfigFields(config: Partial<IConfig>, keys: Array<keyof IConfig>): Record<string, any> {
+  return keys.reduce((result: Record<string, any>, key) => {
+    const value = config[key];
+
+    if (value === undefined) {
+      return result;
+    }
+
+    result[key] = typeof value === 'object' && value !== null ? cloneDeep(value) : value;
+    return result;
+  }, {});
+}
+
 function summarizeConfig(config?: Partial<IConfig>): Record<string, any> | undefined {
   if (!config) {
     return undefined;
   }
 
-  return {
-    identifier: config.identifier,
-    label: config.label,
-    reviewed: config.reviewed,
-    calculateProperties: config.calculateProperties,
-    licensedDatasets: config.licensedDatasets,
-    interactionProteinProtein: config.interactionProteinProtein,
-    interactionDrugProtein: config.interactionDrugProtein,
-    indicationDrugDisorder: config.indicationDrugDisorder,
-    associatedProteinDisorder: config.associatedProteinDisorder,
-    autofillEdges: config.autofillEdges,
-    overlayDirectedEdges: config.overlayDirectedEdges,
-    physicsOn: config.physicsOn,
-    layoutOn: config.layoutOn,
-  };
+  return pickConfigFields(config, ANALYSIS_CONFIG_KEYS);
+}
+
+export function summarizeAdvancedSettings(config?: Partial<IConfig>): Record<string, any> | undefined {
+  if (!config) {
+    return undefined;
+  }
+
+  return pickConfigFields(config, ADVANCED_SETTINGS_KEYS);
 }
 
 function summarizeInputNetwork(inputNetwork?: { nodes?: any[]; edges?: any[] }): NetworkSummary | undefined {

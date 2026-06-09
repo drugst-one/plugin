@@ -30,6 +30,9 @@ import {LegendService} from '../../services/legend-service/legend-service.servic
 import {ToastService} from '../../services/toast/toast.service';
 import { Subject } from 'rxjs';
 import { LoggerService } from 'src/app/services/logger/logger.service';
+import {
+  summarizeAdvancedSettings,
+} from 'src/app/services/analysis/analysis-metadata';
 
 
 declare var vis: any;
@@ -43,6 +46,8 @@ declare var vis: any;
 
 export class ExplorerPageComponent implements OnInit, AfterViewInit {
   private baseDrgstnHeight = 0;
+  private shouldLogAdvancedSettings = false;
+  private lastLoggedAdvancedSettingsSignature?: string;
 
   private networkJSON = undefined;  //'{"nodes": [], "edges": []}'
   public _config: string;
@@ -97,6 +102,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (config == null) {
       return;
     }
+    this.shouldLogAdvancedSettings = true;
     this._config = config;
     if (this.id !== null) {
       this.activateConfig();
@@ -629,6 +635,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     } else {
       this.drugstoneConfig.config = {...this.drugstoneConfig.config};
     }
+    this.logAdvancedSettingsConfigState();
     if (updateNetworkFlag && typeof this.networkJSON !== 'undefined') {
       // update network if network config has changed and networkJSON exists
       if (this.networkHandler.activeNetwork.networkInternal !== null && !this.networkHandler.activeNetwork.ignorePosition) {
@@ -647,6 +654,42 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       }).catch(e => {
         console.error(e);
       });
+    }
+  }
+
+  private logAdvancedSettingsConfigState(): void {
+    if (!this.shouldLogAdvancedSettings) {
+      return;
+    }
+
+    const currentSettings = summarizeAdvancedSettings(this.drugstoneConfig.currentConfig());
+
+    if (!currentSettings) {
+      return;
+    }
+
+    const currentSignature = JSON.stringify(currentSettings);
+    this.shouldLogAdvancedSettings = false;
+
+    if (currentSignature === this.lastLoggedAdvancedSettingsSignature) {
+      return;
+    }
+
+    this.lastLoggedAdvancedSettingsSignature = currentSignature;
+    this.logger.changeComponent(this.logger.MAIN_NETWORK);
+    const details = {
+      advancedSettings: currentSettings,
+    };
+
+    const mergedReloadLog = this.logger.replaceLastLogIfMatches(
+      'Application reloaded.',
+      'Application reloaded. Advanced settings applied.',
+      details,
+      this.logger.MAIN_NETWORK
+    );
+
+    if (!mergedReloadLog) {
+      this.logger.logMessage('Advanced settings applied.', details);
     }
   }
 

@@ -34,6 +34,29 @@ export class LoggerService {
     this.logsSubject.next();
   }
 
+  replaceLastLogIfMatches(expectedMessage: string, message: string, details?: unknown, component?: string): boolean {
+    const lastLog = this.logs[this.logs.length - 1];
+
+    if (!lastLog) {
+      return false;
+    }
+
+    if (lastLog.message !== expectedMessage) {
+      return false;
+    }
+
+    if (component && lastLog.component !== component) {
+      return false;
+    }
+
+    lastLog.message = message;
+    lastLog.details = details;
+
+    this.saveLogsToStorage();
+    this.logsSubject.next();
+    return true;
+  }
+
   changeComponent(component: string): void {
     this.component = component;
   }
