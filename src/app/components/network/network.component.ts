@@ -834,11 +834,22 @@ export class NetworkComponent implements OnInit {
     this.drugstoneConfig.currentConfig().overlayDirectedEdges = bool;
     this.loadingScreen.stateUpdate(true);
     if (bool) {
-      this.undirectedEdges = this.nodeData.edges.get();
+      const currentEdges = this.nodeData.edges.get();
+      this.undirectedEdges = currentEdges;
       const nodes = this.nodeData.nodes.get();
       const nodesMappedDict: { [key: string]: any } = {};
       nodes.forEach((node: any) => {
         nodesMappedDict[node["id"]] = node;
+      });
+      const ppiEdges = currentEdges.filter((edge: any) => {
+        const fromNode = nodesMappedDict[edge.from];
+        const toNode = nodesMappedDict[edge.to];
+        return fromNode?.drugstoneType === 'protein' && toNode?.drugstoneType === 'protein';
+      });
+      const preservedEdges = currentEdges.filter((edge: any) => {
+        const fromNode = nodesMappedDict[edge.from];
+        const toNode = nodesMappedDict[edge.to];
+        return fromNode?.drugstoneType !== 'protein' || toNode?.drugstoneType !== 'protein';
       });
       const drugstoneMapping: { [key: string]: string } = {};
       nodes.forEach((node: any) => {
@@ -846,17 +857,21 @@ export class NetworkComponent implements OnInit {
           drugstoneMapping[node["drugstoneId"][0]] = node["id"];
         }
       });
-      this.netex.overlayDirectedEdges(this.nodeData.edges.get(), nodesMappedDict, drugstoneMapping).then(response => {
+      this.netex.overlayDirectedEdges(ppiEdges, nodesMappedDict, drugstoneMapping).then(response => {
         const mappedEdges = response.flatMap(edge => mapCustomEdge(edge, this.drugstoneConfig.currentConfig(), this.drugstoneConfig));
-        this.nodeData.edges.update(mappedEdges);
-      }
-    )} else {
+        this.nodeData.edges.clear();
+        this.nodeData.edges.update([...preservedEdges, ...mappedEdges]);
+        this.loadingScreen.stateUpdate(false);
+      }).catch(() => {
+        this.loadingScreen.stateUpdate(false);
+      });
+    } else {
       if (this.undirectedEdges) {
         this.nodeData.edges.clear();
         this.nodeData.edges.update(this.undirectedEdges);
       }
+      this.loadingScreen.stateUpdate(false);
     }
-    this.loadingScreen.stateUpdate(false);
   }
 
   clearCanvas() {
