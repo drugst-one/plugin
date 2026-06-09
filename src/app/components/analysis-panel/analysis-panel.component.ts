@@ -465,7 +465,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         });
 
         // @ts-ignore
-        if (!this.drugstoneConfig.selfReferences) {
+        if (!this.drugstoneConfig.currentConfig().selfReferences) {
           edges = edges.filter(el => el.from !== el.to);
         }
         for (const node of nodes) {

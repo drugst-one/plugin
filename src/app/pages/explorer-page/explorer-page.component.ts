@@ -823,7 +823,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       });
 
       // @ts-ignore
-      if (!this.drugstoneConfig.selfReferences) {
+      if (!this.drugstoneConfig.currentConfig().selfReferences) {
         edges = edges.filter(el => el.from !== el.to);
       }
 

@@ -823,7 +823,13 @@ export class NetworkComponent implements OnInit {
     const filteredNodes = nodes.filter(n => n.drugstoneType === 'protein');
     const netexEdges = await this.netex.fetchEdges(filteredNodes, this.drugstoneConfig.currentConfig().interactionProteinProtein, this.drugstoneConfig.currentConfig().licensedDatasets);
     const filteredEdges = netexEdges.filter(edge => edge.proteinA === addedNode["drugstoneId"][0] || edge.proteinB === addedNode["drugstoneId"][0]);
-    edges.push(...filteredEdges.map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.currentConfig(), node_map)).flatMap(e => e));
+    const mappedEdges = filteredEdges
+      .map(netexEdge => mapNetexEdge(netexEdge, this.drugstoneConfig.currentConfig(), node_map))
+      .flatMap(e => e);
+    const edgesToAdd = this.drugstoneConfig.currentConfig().selfReferences
+      ? mappedEdges
+      : mappedEdges.filter(edge => edge.from !== edge.to);
+    edges.push(...edgesToAdd);
   }
 
   public updateDirectedEdgesOverlay(bool: boolean) {
