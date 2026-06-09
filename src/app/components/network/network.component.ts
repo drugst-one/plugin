@@ -598,104 +598,100 @@ export class NetworkComponent implements OnInit {
     }
   }
 
-  public toImage() {
-    // @ts-ignore
-    this.downloadDom(this.networkWithLegendEl.nativeElement).catch(error => {
+  public async toImage() {
+    this.loadingScreen.stateUpdate(true);
+    try {
+      await this.downloadDom(this.networkWithLegendEl.nativeElement);
+    } catch (error) {
       console.error('Falling back to network only screenshot. Some components seem to be inaccessible, most likely the legend is a custom image with CORS access problems on the host server side.');
-      // @ts-ignore
-      this.downloadDom(this.networkEl.nativeElement).catch(e => {
+      try {
+        await this.downloadDom(this.networkEl.nativeElement);
+      } catch (e) {
         console.error('Some network content seems to be inaccessible for saving as a screenshot. This can happen due to custom images used as nodes. Please ensure correct CORS accessability on the images host server.');
-        this.loadingScreen.stateUpdate(false)
         console.error(e);
-      });
+        this.analysis.screenshotError();
+      }
+    } finally {
+      this.loadingScreen.stateUpdate(false);
+    }
+  }
+
+  public async downloadDom(originalElement: HTMLElement) {
+    const originalCanvas = originalElement.querySelector('canvas') as HTMLCanvasElement | null;
+    if (!originalCanvas) {
+      throw new Error('No canvas found for screenshot export.');
+    }
+
+    await this.waitForCurrentFrame();
+
+    const exportCanvas = document.createElement('canvas');
+    exportCanvas.width = originalCanvas.width;
+    exportCanvas.height = originalCanvas.height;
+
+    const exportContext = exportCanvas.getContext('2d');
+    if (!exportContext) {
+      throw new Error('Could not create screenshot canvas context.');
+    }
+
+    exportContext.fillStyle = '#ffffff';
+    exportContext.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+    exportContext.drawImage(originalCanvas, 0, 0, exportCanvas.width, exportCanvas.height);
+
+    if (originalElement === this.networkWithLegendEl.nativeElement && this.drugstoneConfig.config.showLegend) {
+      await this.drawLegendOnExportCanvas(exportContext, exportCanvas, originalElement);
+    }
+
+    const generatedImage = exportCanvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = generatedImage;
+    a.download = `Network.png`;
+    this.logger.logMessage(`Downloaded network as PNG: ${a.download}`);
+    a.click();
+  }
+
+  private waitForCurrentFrame(): Promise<void> {
+    return new Promise((resolve) => {
+      this.networkInternal.once('afterDrawing', () => resolve());
+      this.networkInternal.redraw();
     });
   }
 
-  public async downloadDom(originalElement: object) {
-    this.loadingScreen.stateUpdate(true)
-    // @ts-ignore
-    let originalCanvas = originalElement.querySelector('canvas');
-
-    let position = this.networkInternal.getViewPosition();
-    let scale = this.networkInternal.getScale()
-
-    let ratio = 8;
-
-    let originalHeight = originalCanvas.clientHeight;
-    let originalWidth = originalCanvas.clientWidth;
-    originalCanvas.width = originalWidth * ratio;
-    originalCanvas.height = originalHeight * ratio;
-    originalCanvas.style.width = "calc( 100% * " + ratio + ")";
-    originalCanvas.style.height = "calc( 100% * " + ratio + ")";
-
-    let newCanvas = document.createElement('canvas');
-    let canvasContainer = document.createElement('div');
-    newCanvas.width = originalCanvas.width;
-    newCanvas.height = originalCanvas.height;
-    newCanvas.style.width = originalCanvas.style.width;
-    newCanvas.style.height = originalCanvas.style.height;
-    let newCtx = newCanvas.getContext('2d');
-    canvasContainer.appendChild(newCanvas)
-    canvasContainer.style.height = originalCanvas.height;
-    canvasContainer.style.width = originalCanvas.width;
-    canvasContainer.style.position = "relative";
-    let legendElement;
-    legendElement = document.body.getElementsByClassName("drugstone-plugin-legend")[0];
-    if (!legendElement)
-      legendElement = document.body.getElementsByClassName("legend")[0];
-    // @ts-ignore
-    let legend = legendElement.cloneNode(true);
-    legend.style['max-width'] = '11rem'
-    legend.style.width = "auto";
-    legend.style.position = "absolute";
-    legend.style.bottom = "0px";
-    legend.style.zoom = ((legend.classList.contains("legend-small") ? 0.75 : 1) * ratio).toString();
-    let right = this.drugstoneConfig.config.legendPos === 'right'
-    if (right) {
-      //TODO fix legend position
-    } else {
-      legend.style['transform-origin'] = "bottom left";
+  private async drawLegendOnExportCanvas(
+    exportContext: CanvasRenderingContext2D,
+    exportCanvas: HTMLCanvasElement,
+    originalElement: HTMLElement
+  ): Promise<void> {
+    const legendElement = originalElement.querySelector('.drugstone-plugin-legend, .legend') as HTMLElement | null;
+    if (!legendElement) {
+      return;
     }
-    // @ts-ignore
-    canvasContainer.appendChild(legend)
 
-    this.networkInternal.once("afterDrawing", () => {
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          createImageBitmap(originalCanvas).then(imgBitmap => {
-            newCtx.drawImage(imgBitmap, 0, 0);
-            document.body.appendChild(canvasContainer);
-            requestAnimationFrame(() => {
-              setTimeout(() => {
-                return domtoimage.toPng(canvasContainer).then((generatedImage) => {
-                  const a = document.createElement('a');
-                  a.href = generatedImage;
-                  a.download = `Network.png`;
-                  this.logger.logMessage(`Downloaded network as PNG: ${a.download}`);
-                  a.click();
-                }).catch(e => {
-                  console.error(e);
-                  this.analysis.screenshotError()
-                }).finally(() => {
-                  document.body.removeChild(canvasContainer);
-                  originalCanvas.width = originalWidth;
-                  originalCanvas.height = originalHeight;
-                  originalCanvas.style.width = "100%";
-                  originalCanvas.style.height = "100%";
-                  this.networkInternal.moveTo({position, scale: scale, animation: false});
-                  this.loadingScreen.stateUpdate(false)
-                });
-              }, 1000);
-            });
-          });
-        }, 2500);
-      });
+    const containerRect = originalElement.getBoundingClientRect();
+    const legendRect = legendElement.getBoundingClientRect();
+    if (!containerRect.width || !containerRect.height || !legendRect.width || !legendRect.height) {
+      return;
+    }
+
+    const scaleX = exportCanvas.width / containerRect.width;
+    const scaleY = exportCanvas.height / containerRect.height;
+    const legendX = (legendRect.left - containerRect.left) * scaleX;
+    const legendY = (legendRect.top - containerRect.top) * scaleY;
+    const legendWidth = legendRect.width * scaleX;
+    const legendHeight = legendRect.height * scaleY;
+
+    const legendImageUrl = await domtoimage.toPng(legendElement, {
+      bgcolor: '#ffffff',
     });
-    // @ts-ignore
-    this.networkInternal.moveTo({
-      position,
-      scale: ratio * scale,
-      animation: false
+    const legendImage = await this.loadImage(legendImageUrl);
+    exportContext.drawImage(legendImage, legendX, legendY, legendWidth, legendHeight);
+  }
+
+  private loadImage(src: string): Promise<HTMLImageElement> {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.onerror = (error) => reject(error);
+      image.src = src;
     });
   }
 
