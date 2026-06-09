@@ -762,6 +762,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             });
             this.tableProteins.sort((a, b) => b.score - a.score);
             this.rankTable(this.tableProteins);
+            this.syncAlgorithmScoreProperties();
 
             this.tableHasScores = ['trustrank', 'closeness', 'harmonic', 'degree', 'betweenness', 'quick', 'super']
               .indexOf(this.task.info.algorithm) !== -1;
@@ -872,6 +873,47 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     }
   }
 
+  private getAlgorithmScorePropertyPrefix(): string | null {
+    const algorithm = this.task?.info?.algorithm;
+    if (!algorithm || !this.tableHasScores) {
+      return null;
+    }
+
+    return algorithm.replace(/-/g, '_');
+  }
+
+  private syncAlgorithmScoreProperties(): void {
+    const prefix = this.getAlgorithmScorePropertyPrefix();
+    if (!prefix || !this.nodeData?.nodes) {
+      return;
+    }
+
+    const scoreKey = `${prefix}_score`;
+    const rankKey = `${prefix}_rank`;
+    const updatedNodes = [...this.tableDrugs, ...this.tableProteins]
+      .filter((node) => node.score !== undefined || node.rank !== undefined)
+      .map((node) => {
+        const nodeWithProperties = node as any;
+        if (!nodeWithProperties.properties) {
+          nodeWithProperties.properties = {};
+        }
+
+        if (node.score !== undefined) {
+          nodeWithProperties.properties[scoreKey] = node.score;
+        }
+
+        if (node.rank !== undefined) {
+          nodeWithProperties.properties[rankKey] = node.rank;
+        }
+
+        return nodeWithProperties;
+      });
+
+    if (updatedNodes.length > 0) {
+      this.nodeData.nodes.update(updatedNodes);
+    }
+  }
+
   public emitVisibleItems(on: boolean) {
     if (on) {
       this.visibleItems.emit([this.nodeData.nodes, [this.proteins, this.selectedTissue], this.nodeData.edges]);
@@ -955,6 +997,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         unnormalizeFn(this.tableDrugs);
       }
     }
+
+    this.syncAlgorithmScoreProperties();
   }
 
   public downloadNodesAsCSV(view: string) {
