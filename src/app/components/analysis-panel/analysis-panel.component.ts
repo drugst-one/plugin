@@ -36,6 +36,7 @@ import {Sort} from '@angular/material/sort';
 import {LoggerService} from 'src/app/services/logger/logger.service';
 import {DatePipe} from '@angular/common';
 import {ToastService} from 'src/app/services/toast/toast.service';
+import { buildLoggableParameters } from 'src/app/services/analysis/analysis-metadata';
 
 declare var vis: any;
 
@@ -529,8 +530,6 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     this.analysis.inPathwayAnalysis = this.task["info"]["algorithm"] === "pathway-enrichment";
     if (!this.analysis.inPathwayAnalysis) {
       this.logger.changeComponent(algorithmNames[this.task["info"]["algorithm"]] + " | " + this.task["info"]["target"]);
-      const formattedDate = this.datePipe.transform(this.task["info"]["finishedAt"], 'short');
-      this.logger.logMessage(`Analysis Result View loaded: ${algorithmNames[this.task["info"]["algorithm"]]} (${this.task["info"]["target"]}). Task finished at: ${formattedDate}.`);
     }
     this.analysis.switchSelection(this.token);
 
@@ -620,7 +619,19 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         if (this.networkHandler.activeNetwork.networkType !== 'analysis') {
           return;
         }
+        const formattedDate = this.datePipe.transform(this.task["info"]["finishedAt"], 'short');
         this.drugstoneConfig.set_analysisConfig(result.parameters.config);
+        if (!this.analysis.inPathwayAnalysis) {
+          this.logger.logMessage(
+            `Analysis Result View loaded: ${algorithmNames[this.task["info"]["algorithm"]]} (${this.task["info"]["target"]}). Task finished at: ${formattedDate}.`,
+            {
+              algorithm: this.task["info"]["algorithm"],
+              algorithmName: algorithmNames[this.task["info"]["algorithm"]],
+              target: this.task["info"]["target"],
+              parameters: buildLoggableParameters(result.parameters),
+            }
+          );
+        }
         if (result["algorithm"] === "pathway_enrichment") {
           if ("geneset" in result) {
             let needLog = !this.geneSet || !this.pathway;

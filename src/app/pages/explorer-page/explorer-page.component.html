@@ -26,7 +26,7 @@
     <!-- Start explorer -->
     <div
       class="drugstone explorer columns is-gapless"
-      style="display: flex; flex-wrap: wrap;"
+      style="display: flex; flex-wrap: wrap; align-content: flex-start;"
       [ngClass]="{
         'is-flex-direction-row-reverse':
           drugstoneConfig.config.showSidebar === 'right'
@@ -640,7 +640,12 @@
   </div>
   <!-- End  network block -->
   @if (drugstoneConfig.currentConfig().showLogger) {
-    <app-logger class="drugstone logger column" #logger style="order: 2; flex-basis: 100%; width: 100%"></app-logger>
+    <app-logger
+      class="drugstone logger column"
+      #logger
+      style="order: 2; flex-basis: 100%; width: 100%"
+      (heightChanged)="updateMainColumnHeight()"
+    ></app-logger>
   }
 
   <div class="is-hidden-tablet mobile-fallback">

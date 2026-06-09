@@ -42,6 +42,7 @@ declare var vis: any;
 })
 
 export class ExplorerPageComponent implements OnInit, AfterViewInit {
+  private baseDrgstnHeight = 0;
 
   private networkJSON = undefined;  //'{"nodes": [], "edges": []}'
   public _config: string;
@@ -314,15 +315,19 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    if (!this.baseDrgstnHeight) {
+      this.baseDrgstnHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--drgstn-height'));
+    }
+
+    const drgstnHeight = this.baseDrgstnHeight;
+
     if (!this.drugstoneConfig.currentConfig().showLogger) {
-      const drgstnHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--drgstn-height'));
       this.mainColumn.nativeElement.style.height = `${drgstnHeight}px`;
       this.sidebar.nativeElement.style.height = `${drgstnHeight}px`;
       return;
     }
     if (this.loggerElement && this.mainColumn && this.sidebar) {
       const loggerHeight = this.loggerElement.nativeElement.offsetHeight;
-      const drgstnHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--drgstn-height'));
       const newHeight = drgstnHeight - loggerHeight;
       this.mainColumn.nativeElement.style.height = `${newHeight}px`;
       this.sidebar.nativeElement.style.height = `${newHeight}px`;
@@ -330,6 +335,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.baseDrgstnHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--drgstn-height'));
     this.dropdownSettings = {
       singleSelection: false,
       idField: 'id',
@@ -561,6 +567,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       const sidebarWidth = Math.round(sidebar.getBoundingClientRect().width);
       document.documentElement.style.setProperty('--sidebar-width', `${sidebarWidth}px`);
     }
+    setTimeout(() => this.updateMainColumnHeight(), 0);
   }
 
   public activateConfig(updateNetworkFlag = false) {
