@@ -46,6 +46,9 @@ declare var vis: any;
 
 export class ExplorerPageComponent implements OnInit, AfterViewInit {
   private baseDrgstnHeight = 0;
+  private readonly pruningPreviewDebounceMs = 250;
+  private pruningPreviewTimeoutId?: ReturnType<typeof setTimeout>;
+  private pruningPreviewRequestId = 0;
   private shouldLogAdvancedSettings = false;
   private lastLoggedAdvancedSettingsSignature?: string;
 
@@ -400,6 +403,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
 
   async selectProperty(propertyKey: string) {
+    this.cancelNumericPruningPreview();
     this.prunedNetwork = null;
     this.selectedProperty = propertyKey;
     const result = await this.netex.prepareNetwork(this.networkHandler.activeNetwork.nodeData.nodes.get(), propertyKey);
@@ -440,14 +444,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.prunedNetwork = result["prunedNetwork"];
       });
     } else {
-      this.netex.pruneNetworkNumber(network, this.selectedProperty, this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then((result) => {
-        this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
-        this.prunedNetwork = result["prunedNetwork"];
-      });
+      this.scheduleNumericPruningPreview();
     }
   }
 
   pruneNetwork() {
+    this.cancelNumericPruningPreview();
     this.prunedNetwork.nodes.forEach(node => {
       if (node.group === "selectedNode") {
         if ("groupID" in node) {
@@ -491,11 +493,48 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   onSliderValueChanged() {
-    const network = { "nodes": this.networkHandler.activeNetwork.nodeData.nodes.get(), "edges": this.networkHandler.activeNetwork.nodeData.edges.get() };
-    this.netex.pruneNetworkNumber(network, this.selectedProperty, this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then((result) => {
-      this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
-      this.prunedNetwork = result["prunedNetwork"];
-    });
+    this.scheduleNumericPruningPreview();
+  }
+
+  private scheduleNumericPruningPreview(): void {
+    this.cancelNumericPruningPreview(false);
+
+    const requestId = ++this.pruningPreviewRequestId;
+    this.pruningPreviewTimeoutId = setTimeout(() => {
+      this.applyNumericPruningPreview(requestId).catch(console.error);
+    }, this.pruningPreviewDebounceMs);
+  }
+
+  private cancelNumericPruningPreview(invalidateRequests = true): void {
+    if (this.pruningPreviewTimeoutId) {
+      clearTimeout(this.pruningPreviewTimeoutId);
+      this.pruningPreviewTimeoutId = undefined;
+    }
+
+    if (invalidateRequests) {
+      this.pruningPreviewRequestId += 1;
+    }
+  }
+
+  private async applyNumericPruningPreview(requestId: number): Promise<void> {
+    const network = {
+      nodes: this.networkHandler.activeNetwork.nodeData.nodes.get(),
+      edges: this.networkHandler.activeNetwork.nodeData.edges.get(),
+    };
+    const result = await this.netex.pruneNetworkNumber(
+      network,
+      this.selectedProperty,
+      this.cutoff,
+      this.pruneDirection,
+      this.pruneOrphanNodes
+    );
+
+    if (requestId !== this.pruningPreviewRequestId) {
+      return;
+    }
+
+    this.networkHandler.activeNetwork.nodeData.nodes.update(result['network']['nodes']);
+    this.prunedNetwork = result['prunedNetwork'];
   }
 
   // We need to add the cluster config groups to the config object

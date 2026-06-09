@@ -501,7 +501,7 @@
           <div>
             <div class="prune-dropdown-container">
               <div class="choose-property-title">Select Prune Direction:</div>
-              <select [(ngModel)]="pruneDirection" id="pruneDirection" class="prune-select">
+              <select [(ngModel)]="pruneDirection" (ngModelChange)="onSliderValueChanged()" id="pruneDirection" class="prune-select">
                 <option value="greater">Greater than/equal</option>
                 <option value="lesser">Less than/equal</option>
               </select>

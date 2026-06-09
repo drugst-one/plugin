@@ -60,6 +60,9 @@ const maxNodeLimit = 250;
   styleUrls: ['./analysis-panel.component.scss'],
 })
 export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit {
+  private readonly pruningPreviewDebounceMs = 250;
+  private pruningPreviewTimeoutId?: ReturnType<typeof setTimeout>;
+  private pruningPreviewRequestId = 0;
 
   @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
   @Input() token: string | null = null;
@@ -197,13 +200,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     if (this.cutoff !== undefined && this.cutoff !== null) {
       this.cutoff = Math.round(this.cutoff * 1000) / 1000;
     }
-    const network = {"nodes": this.result?.networkInitial?.nodes, "edges": this.result?.networkInitial?.edges};
-    this.netex.pruneNetworkNumber(network, "spd", this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then((res) => {
-      this.prunedNetwork = res["prunedNetwork"];
-    });
+    this.scheduleFirstNeighborPruningPreview();
   }
 
   async pruneNetwork() {
+    this.cancelFirstNeighborPruningPreview();
     this.prunedNetwork["nodes"] = await this.netex.recalculateStatistics(this.prunedNetwork, this.drugstoneConfig.currentConfig());
     await this.netex.updateResultNetwork(this.token, this.prunedNetwork, this.cutoff, this.pruneOrphanNodes).then(async () => {
       await this.refreshTask();
@@ -524,6 +525,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   private async refreshTask() {
+    this.cancelFirstNeighborPruningPreview();
     this.loadingScreen.stateUpdate(true);
     this.analysis.analysisActive = true;
     this.task = await this.getTask(this.token);
@@ -801,6 +803,75 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   }
 
+  private scheduleFirstNeighborPruningPreview(): void {
+    this.cancelFirstNeighborPruningPreview(false);
+
+    const requestId = ++this.pruningPreviewRequestId;
+    this.pruningPreviewTimeoutId = setTimeout(() => {
+      this.applyFirstNeighborPruningPreview(requestId).catch(console.error);
+    }, this.pruningPreviewDebounceMs);
+  }
+
+  private cancelFirstNeighborPruningPreview(invalidateRequests = true): void {
+    if (this.pruningPreviewTimeoutId) {
+      clearTimeout(this.pruningPreviewTimeoutId);
+      this.pruningPreviewTimeoutId = undefined;
+    }
+
+    if (invalidateRequests) {
+      this.pruningPreviewRequestId += 1;
+    }
+  }
+
+  private async applyFirstNeighborPruningPreview(requestId: number): Promise<void> {
+    const initialNetwork = this.result?.networkInitial;
+    if (!initialNetwork) {
+      return;
+    }
+
+    const network = {
+      nodes: initialNetwork.nodes,
+      edges: initialNetwork.edges,
+    };
+    const response = await this.netex.pruneNetworkNumber(
+      network,
+      'spd',
+      this.cutoff,
+      this.pruneDirection,
+      this.pruneOrphanNodes
+    );
+
+    if (requestId !== this.pruningPreviewRequestId) {
+      return;
+    }
+
+    this.prunedNetwork = response['prunedNetwork'];
+    this.updateFirstNeighborPreviewTables(this.prunedNetwork?.nodes ?? []);
+  }
+
+  private updateFirstNeighborPreviewTables(nodes: any[]): void {
+    const analysisNetwork = this.networkHandler.networks['analysis'];
+    this.tableProteins = nodes.filter(node => node.drugstoneId && node.drugstoneType === 'protein');
+    this.tableSelectedProteins = [];
+
+    this.tableProteins.forEach((protein) => {
+      if (protein.score !== undefined) {
+        protein.rawScore = protein.score;
+      }
+      protein.isSeed = analysisNetwork.seedMap[protein.id];
+      const wrapper = getWrapperFromNode(protein);
+      if (this.analysis.inSelection(wrapper)) {
+        this.tableSelectedProteins.push(protein);
+      }
+    });
+
+    if (this.tableHasScores) {
+      this.tableProteins.sort((a, b) => b.score - a.score);
+      this.rankTable(this.tableProteins);
+      this.toggleNormalization(this.tableNormalize);
+    }
+  }
+
   public emitVisibleItems(on: boolean) {
     if (on) {
       this.visibleItems.emit([this.nodeData.nodes, [this.proteins, this.selectedTissue], this.nodeData.edges]);
@@ -826,6 +897,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   close() {
+    this.cancelFirstNeighborPruningPreview();
     this.analysis.analysisActive = false;
     this.logger.logMessage("Analysis/View closed.");
     this.logger.changeComponent(this.logger.MAIN_NETWORK);
