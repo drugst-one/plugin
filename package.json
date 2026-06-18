@@ -91,6 +91,6 @@
       "webpack-dev-server": "5.2.5"
     },
     "esbuild": "0.28.1",
-    "@babel/core": "7.29.0"
+    "@babel/core": "7.29.6"
   }
 }
