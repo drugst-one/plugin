@@ -26,11 +26,11 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^21.2.6",
+    "@angular/animations": "^21.2.7",
     "@angular/cdk": "21.2.4",
-    "@angular/common": "^21.2.6",
-    "@angular/compiler": "^21.2.6",
-    "@angular/core": "^21.2.6",
+    "@angular/common": "^21.2.7",
+    "@angular/compiler": "^21.2.7",
+    "@angular/core": "^21.2.7",
     "@angular/elements": "^21.2.14",
     "@angular/forms": "^21.2.14",
     "@angular/localize": "^21.2.14",
@@ -89,6 +89,7 @@
       "vite": "7.3.2",
       "uuid": "11.1.1",
       "webpack-dev-server": "5.2.4"
-    }
+    },
+    "esbuild": "0.28.1"
   }
 }
