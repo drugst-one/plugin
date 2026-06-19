@@ -80,41 +80,139 @@
     </span>
   </header>
 }
-<div
-  class="card-content network-view-settings"
-  [class.analysis]="networkType === 'analysis'"
-  >
-  <div class="card-image canvas-content" #networkWithLegend>
-    @if (drugstoneConfig.config.showLegend) {
-      <div>
-        <app-network-legend
-          [config]="drugstoneConfig.currentConfig()"
-        ></app-network-legend>
+@if (networkType === 'explorer') {
+  <div class="card-content tab-header-small explorer-tab-layout">
+    <div class="tabs is-centered tabs-header">
+      <ul>
+        <li [class.is-active]="explorerTab === 'table'">
+          <a (click)="chooseExplorerTab('table')">Table</a>
+        </li>
+        <li [class.is-active]="explorerTab === 'network'">
+          <a (click)="chooseExplorerTab('network')">Network</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="tab-content" [class.is-visible]="explorerTab === 'network'">
+      <div class="network-view-settings explorer-tab-network-view">
+        <div class="card-image canvas-content" #networkWithLegend>
+          @if (drugstoneConfig.config.showLegend) {
+            <div>
+              <app-network-legend
+                [config]="drugstoneConfig.currentConfig()"
+              ></app-network-legend>
+            </div>
+          }
+          <div class="center image1 fullheight" #network>
+            <button class="button is-loading center" alt="loading...">
+              Loading
+            </button>
+          </div>
+        </div>
+
+        @if (
+          drugstoneConfig.config.showNetworkMenu &&
+          drugstoneConfig.config.showNetworkMenu === 'right'
+          ) {
+          <app-network-menu (networkEmitter)="networkEmitter.emit($event)" (resetEmitter)="reset()"
+          ></app-network-menu>
+        }
+
+        @if (
+          drugstoneConfig.config.showNetworkMenu &&
+          drugstoneConfig.config.showNetworkMenu === 'left'
+          ) {
+          <app-network-menu-left (resetEmitter)="reset()"
+          ></app-network-menu-left>
+        }
       </div>
-    }
-    <div class="center image1 fullheight" #network>
-      <button class="button is-loading center" alt="loading...">
-        Loading
-      </button>
+    </div>
+
+    <div class="content tab-content scrollable table-tab" [class.is-visible]="explorerTab === 'table'">
+      @if (getExplorerTableProteins().length > 0) {
+        <div class="table-header">
+          <div class="columns m-1">
+            <div class="column">
+              <h4 class="is-4">
+                <app-fa-solid-icon
+                  icon="dna"
+                  title="protein table"
+                ></app-fa-solid-icon>
+                <span>Proteins</span>
+              </h4>
+            </div>
+            <div class="column">
+              <div class="field has-addons is-pulled-right m-1 control">
+                <button
+                  (click)="downloadExplorerProteinsAsCSV()"
+                  class="button is-primary is-rounded is-outlined is-pulled-right is-small"
+                  [ngClass]="{ 'text-small': drugstoneConfig.smallStyle }"
+                >
+                  <app-fa-solid-icon
+                    icon="download"
+                    title="download proteins"
+                  ></app-fa-solid-icon>
+                  <span>Download</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+      <div class="columns m-1">
+        <div class="column">
+          <app-prot-table
+            [tableHasScores]="explorerTableHasScores()"
+            [tableProteins]="getExplorerTableProteins()"
+            [tableProteinScoreTooltip]="''"
+            [tableProteinSelection]="tableProteinSelection"
+            [tableSelectedProteins]="explorerTableSelectedProteins"
+            [identifier]="drugstoneConfig.currentConfig().identifier"
+            [partition]="explorerTableHasPartition()"
+          ></app-prot-table>
+        </div>
+      </div>
     </div>
   </div>
+}
 
-  @if (
-    drugstoneConfig.config.showNetworkMenu &&
-    drugstoneConfig.config.showNetworkMenu === 'right'
-    ) {
-    <app-network-menu (networkEmitter)="networkEmitter.emit($event)" (resetEmitter)="reset()"
-    ></app-network-menu>
-  }
+@if (networkType === 'analysis') {
+  <div
+    class="card-content network-view-settings"
+    [class.analysis]="networkType === 'analysis'"
+    >
+    <div class="card-image canvas-content" #networkWithLegend>
+      @if (drugstoneConfig.config.showLegend) {
+        <div>
+          <app-network-legend
+            [config]="drugstoneConfig.currentConfig()"
+          ></app-network-legend>
+        </div>
+      }
+      <div class="center image1 fullheight" #network>
+        <button class="button is-loading center" alt="loading...">
+          Loading
+        </button>
+      </div>
+    </div>
 
-  @if (
-    drugstoneConfig.config.showNetworkMenu &&
-    drugstoneConfig.config.showNetworkMenu === 'left'
-    ) {
-    <app-network-menu-left (resetEmitter)="reset()"
-    ></app-network-menu-left>
-  }
-</div>
+    @if (
+      drugstoneConfig.config.showNetworkMenu &&
+      drugstoneConfig.config.showNetworkMenu === 'right'
+      ) {
+      <app-network-menu (networkEmitter)="networkEmitter.emit($event)" (resetEmitter)="reset()"
+      ></app-network-menu>
+    }
+
+    @if (
+      drugstoneConfig.config.showNetworkMenu &&
+      drugstoneConfig.config.showNetworkMenu === 'left'
+      ) {
+      <app-network-menu-left (resetEmitter)="reset()"
+      ></app-network-menu-left>
+    }
+  </div>
+}
 <app-network-empty-warning></app-network-empty-warning>
 <app-network-warning></app-network-warning>
 <app-group-warning></app-group-warning>

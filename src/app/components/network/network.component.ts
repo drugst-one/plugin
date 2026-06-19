@@ -18,7 +18,7 @@ import {
 } from '../../interfaces';
 import {AnalysisService} from 'src/app/services/analysis/analysis.service';
 import {NetworkSettings} from 'src/app/network-settings';
-import {downLoadFile, pieChartContextRenderer} from 'src/app/utils';
+import {downLoadFile, downloadNodeAttributes, downloadResultCSV, pieChartContextRenderer} from 'src/app/utils';
 import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
 import {LegendService} from 'src/app/services/legend-service/legend-service.service';
 import {LoadingScreenService} from 'src/app/services/loading-screen/loading-screen.service';
@@ -126,6 +126,8 @@ export class NetworkComponent implements OnInit {
   public latestVersionString = undefined;
 
   public nodeGroupsWithExpression: Set<string> = new Set();
+  public explorerTab: 'network' | 'table' = 'network';
+  public explorerTableSelectedProteins: Node[] = [];
 
   private selectMode = false;
 
@@ -135,6 +137,12 @@ export class NetworkComponent implements OnInit {
 
   ngOnInit(): void {
     this.networkHandler.networks[this.networkType] = this;
+    this.analysis.subscribeList(() => {
+      if (this.networkType !== 'explorer') {
+        return;
+      }
+      this.refreshExplorerTableSelection();
+    });
   }
 
   isBig(): boolean {
@@ -148,6 +156,83 @@ export class NetworkComponent implements OnInit {
   }
   async readLatestVersion() {
     this.latestVersionString = await this.netex.getLatestVersion(this.versionString)
+  }
+
+  public chooseExplorerTab(tab: 'network' | 'table') {
+    this.explorerTab = tab;
+
+    if (tab === 'table') {
+      this.refreshExplorerTableSelection();
+      return;
+    }
+
+    setTimeout(() => {
+      this.networkInternal?.redraw();
+    });
+  }
+
+  public getExplorerTableProteins(): Node[] {
+    if (!this.nodeData?.nodes?.get) {
+      return [];
+    }
+    return this.nodeData.nodes.get().filter((node: Node) => node.drugstoneType === 'protein');
+  }
+
+  public explorerTableHasScores(): boolean {
+    return this.getExplorerTableProteins().some((node: Node) => node.score !== undefined && node.score !== null);
+  }
+
+  public explorerTableHasPartition(): boolean {
+    return this.getExplorerTableProteins().some((node: Node) => node['cluster'] !== undefined && node['cluster'] !== null);
+  }
+
+  public downloadExplorerProteinsAsCSV() {
+    let data = this.getExplorerTableProteins().map((node: Node) => ({
+      ...node,
+      properties: node.properties ? {...node.properties} : node.properties,
+    }));
+
+    if (data.length === 0) {
+      return;
+    }
+
+    if (data.some((node: Node) => node.score !== undefined && node.score !== null)) {
+      data = data.sort((a, b) => (b.score ?? Number.NEGATIVE_INFINITY) - (a.score ?? Number.NEGATIVE_INFINITY));
+    }
+
+    const filename = downloadResultCSV(data, downloadNodeAttributes, 'drugstone_protein');
+    this.logger.logMessage(`Downloaded PROTEIN-nodes as CSV: ${filename}`);
+  }
+
+  public tableProteinSelection = (selection): void => {
+    const oldSelection = [...this.explorerTableSelectedProteins];
+    this.explorerTableSelectedProteins = selection ?? [];
+
+    const addItems = [];
+    const removeItems = [];
+
+    for (const protein of this.explorerTableSelectedProteins) {
+      const wrapper = getWrapperFromNode(protein);
+      if (oldSelection.indexOf(protein) === -1) {
+        addItems.push(wrapper);
+      }
+    }
+
+    for (const protein of oldSelection) {
+      const wrapper = getWrapperFromNode(protein);
+      if (this.explorerTableSelectedProteins.indexOf(protein) === -1) {
+        removeItems.push(wrapper);
+      }
+    }
+
+    this.analysis.addItems(addItems);
+    this.analysis.removeItems(removeItems);
+  };
+
+  private refreshExplorerTableSelection() {
+    const selectedIds = new Set(this.analysis.getSelectionIds());
+    this.explorerTableSelectedProteins = this.getExplorerTableProteins()
+      .filter((node: Node) => selectedIds.has(node.id));
   }
 
   exportSVG() {
