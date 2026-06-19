@@ -424,6 +424,18 @@ export const downloadNodeAttributes = [
   'rank',
 ];
 
+function flattenNodePropertiesForExport(nodeObj: any) {
+  const flattenedNode = {...nodeObj};
+
+  if ('properties' in flattenedNode && typeof flattenedNode.properties === 'object' && flattenedNode.properties !== null) {
+    Object.keys(flattenedNode.properties).forEach((key) => {
+      flattenedNode[key] = flattenedNode.properties[key];
+    });
+  }
+
+  return flattenedNode;
+}
+
 const _formatNetworkData = function (
   nodes: any[],
   edges: string[],
@@ -433,10 +445,11 @@ const _formatNetworkData = function (
   const nodeData = {};
   let iNode = 0;
   nodes.forEach((nodeObj) => {
+    const flattenedNode = flattenNodePropertiesForExport(nodeObj);
     const item = {};
     nodeAttrs.forEach((attr) => {
-      if (nodeObj.hasOwnProperty(attr)) {
-        item[attr] = nodeObj[attr];
+      if (flattenedNode.hasOwnProperty(attr)) {
+        item[attr] = flattenedNode[attr];
       }
     });
     nodeData[iNode] = item;
@@ -493,10 +506,11 @@ export const downloadGraphml = function (
   graphml.push('<graph edgedefault="undirected">');
 
   nodes.forEach(node => {
+    const flattenedNode = flattenNodePropertiesForExport(node);
     graphml.push(`<node id="${node.id}">`);
     for (let i = 0; i < nodeAttrs.length; i++) {
-      if (node.hasOwnProperty(nodeAttrs[i])) {
-        graphml.push(`<data key="d${i}">${node[nodeAttrs[i]]}</data>`);
+      if (flattenedNode.hasOwnProperty(nodeAttrs[i])) {
+        graphml.push(`<data key="d${i}">${flattenedNode[nodeAttrs[i]]}</data>`);
       }
     }
     graphml.push(`</node>`);
