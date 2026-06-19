@@ -5,6 +5,10 @@ type NetworkSummary = {
   edgeCount: number;
 };
 
+type NetworkNodeSummary = NetworkSummary & {
+  nodeIds: Array<string | number>;
+};
+
 function cloneDeep<T>(value: T): T {
   return JSON.parse(JSON.stringify(value));
 }
@@ -84,6 +88,34 @@ function summarizeInputNetwork(inputNetwork?: { nodes?: any[]; edges?: any[] }):
   return {
     nodeCount: Array.isArray(inputNetwork.nodes) ? inputNetwork.nodes.length : 0,
     edgeCount: Array.isArray(inputNetwork.edges) ? inputNetwork.edges.length : 0,
+  };
+}
+
+function getNodeId(node: any): string | number | undefined {
+  if (typeof node === 'string' || typeof node === 'number') {
+    return node;
+  }
+
+  if (!node || node.id === undefined || node.id === null) {
+    return undefined;
+  }
+
+  return node.id;
+}
+
+export function summarizeNetworkNodeIds(inputNetwork?: { nodes?: any[]; edges?: any[] }): NetworkNodeSummary | undefined {
+  if (!inputNetwork) {
+    return undefined;
+  }
+
+  const nodes = Array.isArray(inputNetwork.nodes) ? inputNetwork.nodes : [];
+
+  return {
+    nodeCount: nodes.length,
+    edgeCount: Array.isArray(inputNetwork.edges) ? inputNetwork.edges.length : 0,
+    nodeIds: nodes
+      .map(node => getNodeId(node))
+      .filter((nodeId): nodeId is string | number => nodeId !== undefined),
   };
 }
 

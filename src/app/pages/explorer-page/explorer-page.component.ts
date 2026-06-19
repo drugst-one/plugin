@@ -31,6 +31,7 @@ import {ToastService} from '../../services/toast/toast.service';
 import { Subject } from 'rxjs';
 import { LoggerService } from 'src/app/services/logger/logger.service';
 import {
+  summarizeNetworkNodeIds,
   summarizeAdvancedSettings,
 } from 'src/app/services/analysis/analysis-metadata';
 
@@ -702,12 +703,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
 
     const currentSettings = summarizeAdvancedSettings(this.drugstoneConfig.currentConfig());
+    const networkSummary = this.getReloadLogNetworkSummary();
 
-    if (!currentSettings) {
+    if (!currentSettings || !networkSummary) {
       return;
     }
 
-    const currentSignature = JSON.stringify(currentSettings);
+    const details = {
+      advancedSettings: currentSettings,
+      network: networkSummary,
+    };
+    const currentSignature = JSON.stringify(details);
     this.shouldLogAdvancedSettings = false;
 
     if (currentSignature === this.lastLoggedAdvancedSettingsSignature) {
@@ -716,9 +722,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
     this.lastLoggedAdvancedSettingsSignature = currentSignature;
     this.logger.changeComponent(this.logger.MAIN_NETWORK);
-    const details = {
-      advancedSettings: currentSettings,
-    };
 
     const mergedReloadLog = this.logger.replaceLastLogIfMatches(
       'Application reloaded.',
@@ -730,6 +733,19 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (!mergedReloadLog) {
       this.logger.logMessage('Advanced settings applied.', details);
     }
+  }
+
+  private getReloadLogNetworkSummary(): ReturnType<typeof summarizeNetworkNodeIds> {
+    if (typeof this.networkJSON === 'string') {
+      try {
+        return summarizeNetworkNodeIds(JSON5.parse(this.networkJSON));
+      } catch (error) {
+        console.error('Failed parsing network JSON for reload log.');
+        console.error(error);
+      }
+    }
+
+    return summarizeNetworkNodeIds(this.networkHandler.networks['explorer']?.inputNetwork);
   }
 
   analysisWindowChanged($event: [any[], [Node[], Tissue], NodeInteraction[]]) {
