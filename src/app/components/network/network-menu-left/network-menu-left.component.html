@@ -3,7 +3,7 @@
   [ngClass]="
     networkHandler.networkSidebarOpen ? 'opened' : 'closed'
   "
-  [class.no-header]="networkHandler.activeNetwork.networkType === 'analysis'"
+  [class.no-header]="networkHandler.activeNetwork.networkType === 'analysis' || networkHandler.activeNetwork.networkType === 'explorer'"
   [class.small-sidebar]="drugstoneConfig.smallStyle"
   >
   <a

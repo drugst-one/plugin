@@ -20,6 +20,57 @@
   }
 }
 
+.tab-header-small {
+  padding: 0 !important;
+}
+
+.explorer-tab-layout {
+  height: calc(100% - #{$network-header-height});
+  position: relative;
+
+  .tabs {
+    margin: 0;
+  }
+
+  .network-view-settings {
+    height: 100%;
+  }
+}
+
+.tabs-header {
+  height: $analysis-tab-header-height;
+}
+
+.tab-content {
+  visibility: hidden;
+  position: absolute;
+  top: $analysis-tab-header-height;
+  left: 0;
+  width: 100%;
+  height: calc(100% - #{$analysis-tab-header-height});
+
+  &.is-visible {
+    visibility: visible;
+  }
+
+  &.scrollable {
+    overflow-y: auto;
+    padding-right: 10px;
+  }
+}
+
+.table-tab {
+  padding-top: 0.75rem;
+}
+
+.table-header {
+  margin-bottom: 1rem;
+}
+
+.explorer-tab-network-view {
+  height: 100%;
+}
+
 div.dropdown-list {
   padding: 0 !important;
   border-radius: 5px !important;
@@ -61,4 +112,3 @@ div.control.dropdown {
   font-size: .6rem !important;
   padding-bottom: 0 !important;
 }
-

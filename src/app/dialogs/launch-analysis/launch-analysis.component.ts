@@ -14,6 +14,7 @@ import {NetworkHandlerService} from '../../services/network-handler/network-hand
 import { LoggerService } from 'src/app/services/logger/logger.service';
 import { HttpClient } from '@angular/common/http';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
+import { buildLoggableParameters } from 'src/app/services/analysis/analysis-metadata';
 
 @Component({
   standalone: false,
@@ -171,7 +172,6 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
     const groupLog = Object.entries(groupCounts)
       .map(([group, count]) => `${count} in ${this.drugstoneConfig.currentConfig().nodeGroups[group].groupName}`)
       .join(', ');
-    this.logger.logMessage(`Starting analysis with ${this.analysis.getSelection().length} seeds and algorithm ${algorithmNames[this.algorithm]} (${this.target}). Groups of Selection: ${groupLog}.`);
     // all nodes in selection have drugstoneId, hence exist in the backend
     const seeds = selection.map((item) => item.id);
     const seedsFiltered = seeds.filter(el => el != null);
@@ -289,15 +289,29 @@ export class LaunchAnalysisComponent implements OnInit, OnChanges {
       this.logger.logMessage(`Pathway enrichment sources: ${sourcesUsed.join(', ') || 'none'}`);
     } else if (this.algorithm === 'louvain-clustering'){
       parameters.ignore_isolated = this.ignore_isolated
-      parameters.seed = this.seed
+      if (this.seed !== null) {
+        parameters.seed = this.seed
+      }
       parameters.resolution = this.resolution_louvain
     } else if (this.algorithm === 'leiden-clustering') {
       parameters.ignore_isolated = this.ignore_isolated
-      parameters.seed = this.seed
+      if (this.seed !== null) {
+        parameters.seed = this.seed
+      }
       parameters.max_nodes = this.max_nodes !== null ? this.max_nodes : 0
     } else if (this.algorithm === 'first-neighbor'){
       parameters.only_upstream_regulators = this.firstNeighborOnlyUpstreamRegulators;
     }
+    this.logger.logMessage(
+      `Starting analysis with ${selection.length} seeds and algorithm ${algorithmNames[this.algorithm]} (${this.target}). Groups of Selection: ${groupLog}.`,
+      {
+        algorithm: this.algorithm,
+        algorithmName: algorithmNames[this.algorithm],
+        target: this.target,
+        selectionGroups: groupCounts,
+        parameters: buildLoggableParameters(parameters),
+      }
+    );
     const token = await this.analysis.startAnalysis(this.algorithm, this.target, parameters);
     const object = {taskId: token, algorithm: this.algorithm, target: this.target, params: parameters};
     this.taskEvent.emit(object);

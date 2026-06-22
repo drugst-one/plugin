@@ -30,6 +30,10 @@ import {LegendService} from '../../services/legend-service/legend-service.servic
 import {ToastService} from '../../services/toast/toast.service';
 import { Subject } from 'rxjs';
 import { LoggerService } from 'src/app/services/logger/logger.service';
+import {
+  summarizeNetworkNodeIds,
+  summarizeAdvancedSettings,
+} from 'src/app/services/analysis/analysis-metadata';
 
 
 declare var vis: any;
@@ -42,6 +46,12 @@ declare var vis: any;
 })
 
 export class ExplorerPageComponent implements OnInit, AfterViewInit {
+  private baseDrgstnHeight = 0;
+  private readonly pruningPreviewDebounceMs = 250;
+  private pruningPreviewTimeoutId?: ReturnType<typeof setTimeout>;
+  private pruningPreviewRequestId = 0;
+  private shouldLogAdvancedSettings = false;
+  private lastLoggedAdvancedSettingsSignature?: string;
 
   private networkJSON = undefined;  //'{"nodes": [], "edges": []}'
   public _config: string;
@@ -96,6 +106,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     if (config == null) {
       return;
     }
+    this.shouldLogAdvancedSettings = true;
     this._config = config;
     if (this.id !== null) {
       this.activateConfig();
@@ -314,15 +325,19 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    if (!this.baseDrgstnHeight) {
+      this.baseDrgstnHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--drgstn-height'));
+    }
+
+    const drgstnHeight = this.baseDrgstnHeight;
+
     if (!this.drugstoneConfig.currentConfig().showLogger) {
-      const drgstnHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--drgstn-height'));
       this.mainColumn.nativeElement.style.height = `${drgstnHeight}px`;
       this.sidebar.nativeElement.style.height = `${drgstnHeight}px`;
       return;
     }
     if (this.loggerElement && this.mainColumn && this.sidebar) {
       const loggerHeight = this.loggerElement.nativeElement.offsetHeight;
-      const drgstnHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--drgstn-height'));
       const newHeight = drgstnHeight - loggerHeight;
       this.mainColumn.nativeElement.style.height = `${newHeight}px`;
       this.sidebar.nativeElement.style.height = `${newHeight}px`;
@@ -330,6 +345,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.baseDrgstnHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--drgstn-height'));
     this.dropdownSettings = {
       singleSelection: false,
       idField: 'id',
@@ -388,6 +404,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
 
 
   async selectProperty(propertyKey: string) {
+    this.cancelNumericPruningPreview();
     this.prunedNetwork = null;
     this.selectedProperty = propertyKey;
     const result = await this.netex.prepareNetwork(this.networkHandler.activeNetwork.nodeData.nodes.get(), propertyKey);
@@ -428,14 +445,12 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.prunedNetwork = result["prunedNetwork"];
       });
     } else {
-      this.netex.pruneNetworkNumber(network, this.selectedProperty, this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then((result) => {
-        this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
-        this.prunedNetwork = result["prunedNetwork"];
-      });
+      this.scheduleNumericPruningPreview();
     }
   }
 
   pruneNetwork() {
+    this.cancelNumericPruningPreview();
     this.prunedNetwork.nodes.forEach(node => {
       if (node.group === "selectedNode") {
         if ("groupID" in node) {
@@ -479,11 +494,48 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   onSliderValueChanged() {
-    const network = { "nodes": this.networkHandler.activeNetwork.nodeData.nodes.get(), "edges": this.networkHandler.activeNetwork.nodeData.edges.get() };
-    this.netex.pruneNetworkNumber(network, this.selectedProperty, this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then((result) => {
-      this.networkHandler.activeNetwork.nodeData.nodes.update(result["network"]["nodes"]);
-      this.prunedNetwork = result["prunedNetwork"];
-    });
+    this.scheduleNumericPruningPreview();
+  }
+
+  private scheduleNumericPruningPreview(): void {
+    this.cancelNumericPruningPreview(false);
+
+    const requestId = ++this.pruningPreviewRequestId;
+    this.pruningPreviewTimeoutId = setTimeout(() => {
+      this.applyNumericPruningPreview(requestId).catch(console.error);
+    }, this.pruningPreviewDebounceMs);
+  }
+
+  private cancelNumericPruningPreview(invalidateRequests = true): void {
+    if (this.pruningPreviewTimeoutId) {
+      clearTimeout(this.pruningPreviewTimeoutId);
+      this.pruningPreviewTimeoutId = undefined;
+    }
+
+    if (invalidateRequests) {
+      this.pruningPreviewRequestId += 1;
+    }
+  }
+
+  private async applyNumericPruningPreview(requestId: number): Promise<void> {
+    const network = {
+      nodes: this.networkHandler.activeNetwork.nodeData.nodes.get(),
+      edges: this.networkHandler.activeNetwork.nodeData.edges.get(),
+    };
+    const result = await this.netex.pruneNetworkNumber(
+      network,
+      this.selectedProperty,
+      this.cutoff,
+      this.pruneDirection,
+      this.pruneOrphanNodes
+    );
+
+    if (requestId !== this.pruningPreviewRequestId) {
+      return;
+    }
+
+    this.networkHandler.activeNetwork.nodeData.nodes.update(result['network']['nodes']);
+    this.prunedNetwork = result['prunedNetwork'];
   }
 
   // We need to add the cluster config groups to the config object
@@ -561,6 +613,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       const sidebarWidth = Math.round(sidebar.getBoundingClientRect().width);
       document.documentElement.style.setProperty('--sidebar-width', `${sidebarWidth}px`);
     }
+    setTimeout(() => this.updateMainColumnHeight(), 0);
   }
 
   public activateConfig(updateNetworkFlag = false) {
@@ -622,6 +675,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     } else {
       this.drugstoneConfig.config = {...this.drugstoneConfig.config};
     }
+    this.logAdvancedSettingsConfigState();
     if (updateNetworkFlag && typeof this.networkJSON !== 'undefined') {
       // update network if network config has changed and networkJSON exists
       if (this.networkHandler.activeNetwork.networkInternal !== null && !this.networkHandler.activeNetwork.ignorePosition) {
@@ -641,6 +695,57 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         console.error(e);
       });
     }
+  }
+
+  private logAdvancedSettingsConfigState(): void {
+    if (!this.shouldLogAdvancedSettings) {
+      return;
+    }
+
+    const currentSettings = summarizeAdvancedSettings(this.drugstoneConfig.currentConfig());
+    const networkSummary = this.getReloadLogNetworkSummary();
+
+    if (!currentSettings || !networkSummary) {
+      return;
+    }
+
+    const details = {
+      advancedSettings: currentSettings,
+      network: networkSummary,
+    };
+    const currentSignature = JSON.stringify(details);
+    this.shouldLogAdvancedSettings = false;
+
+    if (currentSignature === this.lastLoggedAdvancedSettingsSignature) {
+      return;
+    }
+
+    this.lastLoggedAdvancedSettingsSignature = currentSignature;
+    this.logger.changeComponent(this.logger.MAIN_NETWORK);
+
+    const mergedReloadLog = this.logger.replaceLastLogIfMatches(
+      'Application reloaded.',
+      'Application reloaded. Advanced settings applied.',
+      details,
+      this.logger.MAIN_NETWORK
+    );
+
+    if (!mergedReloadLog) {
+      this.logger.logMessage('Advanced settings applied.', details);
+    }
+  }
+
+  private getReloadLogNetworkSummary(): ReturnType<typeof summarizeNetworkNodeIds> {
+    if (typeof this.networkJSON === 'string') {
+      try {
+        return summarizeNetworkNodeIds(JSON5.parse(this.networkJSON));
+      } catch (error) {
+        console.error('Failed parsing network JSON for reload log.');
+        console.error(error);
+      }
+    }
+
+    return summarizeNetworkNodeIds(this.networkHandler.networks['explorer']?.inputNetwork);
   }
 
   analysisWindowChanged($event: [any[], [Node[], Tissue], NodeInteraction[]]) {
@@ -734,7 +839,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       });
 
       // @ts-ignore
-      if (!this.drugstoneConfig.selfReferences) {
+      if (!this.drugstoneConfig.currentConfig().selfReferences) {
         edges = edges.filter(el => el.from !== el.to);
       }
 

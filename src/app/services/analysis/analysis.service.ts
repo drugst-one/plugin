@@ -519,9 +519,9 @@ export class AnalysisService {
       // get ids for selected nodes
       seeds = this.getSelection().map((item: Wrapper) => item.id);
     } else {
-      // get all node ids
+      // get all currently visible protein node ids, including nodes added during editing
       const unmappedNodes = [];
-      this.networkHandler.activeNetwork.currentViewProteins.forEach((item: Node) => {
+      this.networkHandler.activeNetwork.currentViewNodes.forEach((item: Node) => {
         if (item.drugstoneType === 'protein') {
           seeds.push(item.id);
         } else if (item.drugstoneType !== 'drug' && item.drugstoneType !== 'disorder' && item.drugstoneId === undefined) {

@@ -21,16 +21,40 @@ export class LoggerService {
     this.logMessage('Application reloaded.');
   }
 
-  logMessage(message: string): void {
+  logMessage(message: string, details?: unknown): void {
     const log: LogMessage = {
       component: this.component,
       message: message,
       time: new Date(),
+      details,
     };
     this.logs.push(log);
 
     this.saveLogsToStorage();
     this.logsSubject.next();
+  }
+
+  replaceLastLogIfMatches(expectedMessage: string, message: string, details?: unknown, component?: string): boolean {
+    const lastLog = this.logs[this.logs.length - 1];
+
+    if (!lastLog) {
+      return false;
+    }
+
+    if (lastLog.message !== expectedMessage) {
+      return false;
+    }
+
+    if (component && lastLog.component !== component) {
+      return false;
+    }
+
+    lastLog.message = message;
+    lastLog.details = details;
+
+    this.saveLogsToStorage();
+    this.logsSubject.next();
+    return true;
   }
 
   changeComponent(component: string): void {
@@ -63,7 +87,7 @@ export class LoggerService {
   }
 
   downloadLogs() {
-    let logText = 'Component\tMessage\tTime\n';
+    let logText = 'Component\tMessage\tTime\tDetails\n';
 
     const formatDate = (date: Date): string => {
       const dd = String(date.getDate()).padStart(2, '0');
@@ -75,9 +99,18 @@ export class LoggerService {
       return `${dd}.${mm}.${yyyy} ${hh}:${min}:${ss}`;
     };
 
+    const formatDetails = (details: unknown): string => {
+      if (details === undefined) {
+        return '';
+      }
+
+      return JSON.stringify(details).replace(/\s+/g, ' ');
+    };
+
     this.logs.forEach((log) => {
       const formattedTime = formatDate(new Date(log.time));
-      logText += `${log.component}\t${log.message}\t${formattedTime}\n`;
+      const formattedDetails = formatDetails(log.details);
+      logText += `${log.component}\t${log.message}\t${formattedTime}\t${formattedDetails}\n`;
     });
 
     const now = new Date();

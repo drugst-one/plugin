@@ -38,35 +38,44 @@ export class NetworkLegendComponent implements OnInit {
     drugAndSeeds: ["default"],
   };
 
+  private getDisplayedNodes(): any[] {
+    const nodeData = this.networkHandler.activeNetwork.nodeData?.nodes;
+    if (nodeData?.get) {
+      return nodeData.get();
+    }
+    if (Array.isArray(this.networkHandler.activeNetwork.currentViewNodes)) {
+      return this.networkHandler.activeNetwork.currentViewNodes;
+    }
+    if (Array.isArray(this.networkHandler.activeNetwork.inputNetwork?.nodes)) {
+      return this.networkHandler.activeNetwork.inputNetwork.nodes;
+    }
+    return [];
+  }
+
+  private hasDisplayedNodes(): boolean {
+    return this.getDisplayedNodes().length > 0;
+  }
+
+  private getDisplayedNodeGroupKey(node: any): string | null {
+    if (!node) {
+      return null;
+    }
+    if (typeof node.group === "string" && node.group.length > 0) {
+      return node.group;
+    }
+    if (typeof node.groupID === "string" && node.groupID.length > 0) {
+      return node.groupID;
+    }
+    if (typeof node.groupId === "string" && node.groupId.length > 0) {
+      return node.groupId;
+    }
+    if (typeof node._group === "string" && node._group.length > 0) {
+      return node._group;
+    }
+    return null;
+  }
 
   public get_nodes_to_keep() {
-    if (this.analysis.currentNetwork && this.analysis.analysisActive) {
-      const uniqueGroups = new Set<string>();
-      if (this.legendService.context.includes("adjacentDisorders")) {
-        uniqueGroups.add("defaultDisorder");
-      }
-      if (this.legendService.context.includes("adjacentDrugs")) {
-        uniqueGroups.add("foundDrug");
-      }
-      if (this.networkHandler.activeNetwork.nodeData?.nodes) {
-        this.networkHandler.activeNetwork.nodeData.nodes.forEach(node => {
-          if ("groupID" in node) {
-            uniqueGroups.add(node.groupID);
-          } else if ("groupId" in node) {
-            uniqueGroups.add(node.groupId);
-          }
-        });
-      } else {
-        this.analysis.currentNetwork.nodes.forEach(node => {
-          if ("groupID" in node) {
-            uniqueGroups.add(node.groupID);
-          } else if ("groupId" in node) {
-            uniqueGroups.add(node.groupId);
-          }
-        });
-      }
-      return Array.from(uniqueGroups);
-    }
     const uniqueGroups = new Set<string>();
     if (this.legendService.context.includes("adjacentDisorders")) {
       uniqueGroups.add("defaultDisorder");
@@ -74,34 +83,25 @@ export class NetworkLegendComponent implements OnInit {
     if (this.legendService.context.includes("adjacentDrugs")) {
       uniqueGroups.add("foundDrug");
     }
-    if(this.networkHandler.activeNetwork.nodeData?.nodes){
-      this.networkHandler.activeNetwork.nodeData.nodes.forEach(node => {
-        if ("groupID" in node) {
-          uniqueGroups.add(node.groupID);
-        } else if ("groupId" in node) {
-          uniqueGroups.add(node.groupId);
-        }
-      });
-    } else {
-      this.networkHandler.activeNetwork.inputNetwork.nodes.forEach(node => {
-        if ("groupID" in node) {
-          uniqueGroups.add(node.groupID);
-        } else if ("groupId" in node) {
-          uniqueGroups.add(node.groupId);
-        }
-      });
-    }
+
+    this.getDisplayedNodes().forEach((node) => {
+      const groupKey = this.getDisplayedNodeGroupKey(node);
+      if (groupKey) {
+        uniqueGroups.add(groupKey);
+      }
+    });
+
     return Array.from(uniqueGroups);
   }
 
   public checkNodeGroupContext(nodeGroupKey) {
+    if (!this.hasDisplayedNodes()) {
+      return false;
+    }
+
     const to_keep = this.get_nodes_to_keep()
     if (to_keep.length > 0){
       return to_keep.includes(nodeGroupKey);
-    }
-    if (nodeGroupKey === "selectedNode") {
-      // selected node is not supposed to appear in legend
-      return false;
     }
     return !this.legendService.get_nodes_to_delete().includes(nodeGroupKey);
   }

@@ -299,10 +299,10 @@
                         <td>{{task.info.parameters.ignoreIsolated}}</td>
                       </tr>
                     }
-                    @if (result?.parameters?.seed !== undefined) {
+                    @if (result?.parameters && (task.info.algorithm === 'louvain-clustering' || task.info.algorithm === 'leiden-clustering')) {
                       <tr>
                         <td>Seed</td>
-                        <td>{{result?.parameters?.seed}}</td>
+                        <td>{{result?.parameters?.seed ?? 'Auto-generated'}}</td>
                       </tr>
                     }
                     @if (

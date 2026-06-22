@@ -36,6 +36,7 @@ import {Sort} from '@angular/material/sort';
 import {LoggerService} from 'src/app/services/logger/logger.service';
 import {DatePipe} from '@angular/common';
 import {ToastService} from 'src/app/services/toast/toast.service';
+import { buildLoggableParameters } from 'src/app/services/analysis/analysis-metadata';
 
 declare var vis: any;
 
@@ -59,6 +60,9 @@ const maxNodeLimit = 250;
   styleUrls: ['./analysis-panel.component.scss'],
 })
 export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit {
+  private readonly pruningPreviewDebounceMs = 250;
+  private pruningPreviewTimeoutId?: ReturnType<typeof setTimeout>;
+  private pruningPreviewRequestId = 0;
 
   @ViewChild('networkWithLegend', {static: false}) networkWithLegendEl: ElementRef;
   @Input() token: string | null = null;
@@ -196,13 +200,11 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
     if (this.cutoff !== undefined && this.cutoff !== null) {
       this.cutoff = Math.round(this.cutoff * 1000) / 1000;
     }
-    const network = {"nodes": this.result?.networkInitial?.nodes, "edges": this.result?.networkInitial?.edges};
-    this.netex.pruneNetworkNumber(network, "spd", this.cutoff, this.pruneDirection, this.pruneOrphanNodes).then((res) => {
-      this.prunedNetwork = res["prunedNetwork"];
-    });
+    this.scheduleFirstNeighborPruningPreview();
   }
 
   async pruneNetwork() {
+    this.cancelFirstNeighborPruningPreview();
     this.prunedNetwork["nodes"] = await this.netex.recalculateStatistics(this.prunedNetwork, this.drugstoneConfig.currentConfig());
     await this.netex.updateResultNetwork(this.token, this.prunedNetwork, this.cutoff, this.pruneOrphanNodes).then(async () => {
       await this.refreshTask();
@@ -463,7 +465,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         });
 
         // @ts-ignore
-        if (!this.drugstoneConfig.selfReferences) {
+        if (!this.drugstoneConfig.currentConfig().selfReferences) {
           edges = edges.filter(el => el.from !== el.to);
         }
         for (const node of nodes) {
@@ -523,14 +525,13 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   private async refreshTask() {
+    this.cancelFirstNeighborPruningPreview();
     this.loadingScreen.stateUpdate(true);
     this.analysis.analysisActive = true;
     this.task = await this.getTask(this.token);
     this.analysis.inPathwayAnalysis = this.task["info"]["algorithm"] === "pathway-enrichment";
     if (!this.analysis.inPathwayAnalysis) {
       this.logger.changeComponent(algorithmNames[this.task["info"]["algorithm"]] + " | " + this.task["info"]["target"]);
-      const formattedDate = this.datePipe.transform(this.task["info"]["finishedAt"], 'short');
-      this.logger.logMessage(`Analysis Result View loaded: ${algorithmNames[this.task["info"]["algorithm"]]} (${this.task["info"]["target"]}). Task finished at: ${formattedDate}.`);
     }
     this.analysis.switchSelection(this.token);
 
@@ -620,7 +621,19 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         if (this.networkHandler.activeNetwork.networkType !== 'analysis') {
           return;
         }
+        const formattedDate = this.datePipe.transform(this.task["info"]["finishedAt"], 'short');
         this.drugstoneConfig.set_analysisConfig(result.parameters.config);
+        if (!this.analysis.inPathwayAnalysis) {
+          this.logger.logMessage(
+            `Analysis Result View loaded: ${algorithmNames[this.task["info"]["algorithm"]]} (${this.task["info"]["target"]}). Task finished at: ${formattedDate}.`,
+            {
+              algorithm: this.task["info"]["algorithm"],
+              algorithmName: algorithmNames[this.task["info"]["algorithm"]],
+              target: this.task["info"]["target"],
+              parameters: buildLoggableParameters(result.parameters),
+            }
+          );
+        }
         if (result["algorithm"] === "pathway_enrichment") {
           if ("geneset" in result) {
             let needLog = !this.geneSet || !this.pathway;
@@ -749,6 +762,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
             });
             this.tableProteins.sort((a, b) => b.score - a.score);
             this.rankTable(this.tableProteins);
+            this.syncAlgorithmScoreProperties();
 
             this.tableHasScores = ['trustrank', 'closeness', 'harmonic', 'degree', 'betweenness', 'quick', 'super']
               .indexOf(this.task.info.algorithm) !== -1;
@@ -790,6 +804,116 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
 
   }
 
+  private scheduleFirstNeighborPruningPreview(): void {
+    this.cancelFirstNeighborPruningPreview(false);
+
+    const requestId = ++this.pruningPreviewRequestId;
+    this.pruningPreviewTimeoutId = setTimeout(() => {
+      this.applyFirstNeighborPruningPreview(requestId).catch(console.error);
+    }, this.pruningPreviewDebounceMs);
+  }
+
+  private cancelFirstNeighborPruningPreview(invalidateRequests = true): void {
+    if (this.pruningPreviewTimeoutId) {
+      clearTimeout(this.pruningPreviewTimeoutId);
+      this.pruningPreviewTimeoutId = undefined;
+    }
+
+    if (invalidateRequests) {
+      this.pruningPreviewRequestId += 1;
+    }
+  }
+
+  private async applyFirstNeighborPruningPreview(requestId: number): Promise<void> {
+    const initialNetwork = this.result?.networkInitial;
+    if (!initialNetwork) {
+      return;
+    }
+
+    const network = {
+      nodes: initialNetwork.nodes,
+      edges: initialNetwork.edges,
+    };
+    const response = await this.netex.pruneNetworkNumber(
+      network,
+      'spd',
+      this.cutoff,
+      this.pruneDirection,
+      this.pruneOrphanNodes
+    );
+
+    if (requestId !== this.pruningPreviewRequestId) {
+      return;
+    }
+
+    this.prunedNetwork = response['prunedNetwork'];
+    this.updateFirstNeighborPreviewTables(this.prunedNetwork?.nodes ?? []);
+  }
+
+  private updateFirstNeighborPreviewTables(nodes: any[]): void {
+    const analysisNetwork = this.networkHandler.networks['analysis'];
+    this.tableProteins = nodes.filter(node => node.drugstoneId && node.drugstoneType === 'protein');
+    this.tableSelectedProteins = [];
+
+    this.tableProteins.forEach((protein) => {
+      if (protein.score !== undefined) {
+        protein.rawScore = protein.score;
+      }
+      protein.isSeed = analysisNetwork.seedMap[protein.id];
+      const wrapper = getWrapperFromNode(protein);
+      if (this.analysis.inSelection(wrapper)) {
+        this.tableSelectedProteins.push(protein);
+      }
+    });
+
+    if (this.tableHasScores) {
+      this.tableProteins.sort((a, b) => b.score - a.score);
+      this.rankTable(this.tableProteins);
+      this.toggleNormalization(this.tableNormalize);
+    }
+  }
+
+  private getAlgorithmScorePropertyPrefix(): string | null {
+    const algorithm = this.task?.info?.algorithm;
+    if (!algorithm || !this.tableHasScores) {
+      return null;
+    }
+
+    return algorithm.replace(/-/g, '_');
+  }
+
+  private syncAlgorithmScoreProperties(): void {
+    const prefix = this.getAlgorithmScorePropertyPrefix();
+    if (!prefix || !this.nodeData?.nodes) {
+      return;
+    }
+
+    const scoreKey = `${prefix}_score`;
+    const rankKey = `${prefix}_rank`;
+    const updatedNodes = [...this.tableDrugs, ...this.tableProteins]
+      .filter((node) => node.score !== undefined || node.rank !== undefined)
+      .map((node) => {
+        const nodeWithProperties = node as any;
+        if (!nodeWithProperties.properties) {
+          nodeWithProperties.properties = {};
+        }
+
+        if (node.score !== undefined) {
+          nodeWithProperties.properties[scoreKey] = node.score;
+        }
+
+        if (node.rank !== undefined) {
+          nodeWithProperties.properties[rankKey] = node.rank;
+        }
+
+        return nodeWithProperties;
+      });
+
+    if (updatedNodes.length > 0) {
+      this.nodeData.nodes.update(updatedNodes);
+    }
+  }
+
   public emitVisibleItems(on: boolean) {
     if (on) {
       this.visibleItems.emit([this.nodeData.nodes, [this.proteins, this.selectedTissue], this.nodeData.edges]);
@@ -815,6 +939,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   close() {
+    this.cancelFirstNeighborPruningPreview();
     this.analysis.analysisActive = false;
     this.logger.logMessage("Analysis/View closed.");
     this.logger.changeComponent(this.logger.MAIN_NETWORK);
@@ -872,6 +997,8 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
         unnormalizeFn(this.tableDrugs);
       }
     }
+
+    this.syncAlgorithmScoreProperties();
   }
 
   public downloadNodesAsCSV(view: string) {
