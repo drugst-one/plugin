@@ -2,38 +2,38 @@
   <div
     class="list is-hoverable"
     [ngClass]="{ 'text-normal': drugstoneConfig.smallStyle }"
-    >
+  >
     @for (task of analysis.tasks; track task) {
       <a
         class="list-item box small-box"
         [class.is-active]="task.token === token"
         (click)="task.info.done && open(task.token)"
         [style.cursor]="task.info.done ? 'pointer' : 'default'"
-        >
+      >
         @if (!task.info.startedAt) {
           <div>
             <div class="columns mb-0">
               <div class="column is-8">
                 <span
-                  >@if (task.info.target === 'drug-target') {
+                >@if (task.info.target === 'drug-target') {
                   <app-fa-solid-icon
                     icon="crosshairs"
                   ></app-fa-solid-icon>
                 }
-                @if (task.info.target === 'drug') {
-                  <app-fa-solid-icon
-                    icon="capsules"
-                  ></app-fa-solid-icon>
-                }
-                @if (task.info.target === 'clustering') {
-                  <app-fa-solid-icon
-                    icon="hexagon-nodes"
-                  ></app-fa-solid-icon>
-                }
-                @if (task.info.target === 'gene') {
-                  <app-fa-solid-icon icon="dna"></app-fa-solid-icon>
-                }
-                {{ algorithmNames[task.info.algorithm] }}</span
+                  @if (task.info.target === 'drug') {
+                    <app-fa-solid-icon
+                      icon="capsules"
+                    ></app-fa-solid-icon>
+                  }
+                  @if (task.info.target === 'clustering') {
+                    <app-fa-solid-icon
+                      icon="hexagon-nodes"
+                    ></app-fa-solid-icon>
+                  }
+                  @if (task.info.target === 'gene') {
+                    <app-fa-solid-icon icon="dna"></app-fa-solid-icon>
+                  }
+                  {{ algorithmNames[task.info.algorithm] }}</span
                 >
               </div>
               <div class="column">
@@ -45,25 +45,21 @@
             </div>
             <div class="columns mb-0">
               <div class="column is-8 pt-0 pb-0">
-                @if (
-                  task.stats.queueLength > 0 && task.stats.queuePosition === 1
-                  ) {
+                @if (task.stats.queueLength > 0 && task.stats.queuePosition === 1) {
                   <small
-                    >
+                  >
                     Queued: 1 other task to finish
                   </small>
                 }
                 @if (task.stats.queueLength > 0 && task.stats.queuePosition > 1) {
                   <small
-                    >
+                  >
                     Queued: {{ task.stats.queuePosition }} other tasks to finish
                   </small>
                 }
-                @if (
-                  task.stats.queueLength === 0 || task.stats.queuePosition === 0
-                  ) {
+                @if (task.stats.queueLength === 0 || task.stats.queuePosition === 0) {
                   <small
-                    >
+                  >
                     Execution imminent...
                   </small>
                 }
@@ -72,7 +68,7 @@
                 <a
                   (click)="analysis.removeTask(task.token); $event.stopPropagation()"
                   class="has-text-danger is-pulled-right"
-                  >
+                >
                   <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
                 </a>
               </div>
@@ -84,25 +80,25 @@
             <div class="columns mb-0">
               <div class="column is-8">
                 <span
-                  >@if (task.info.target === 'drug-target') {
+                >@if (task.info.target === 'drug-target') {
                   <app-fa-solid-icon
                     icon="crosshairs"
                   ></app-fa-solid-icon>
                 }
-                @if (task.info.target === 'drug') {
-                  <app-fa-solid-icon
-                    icon="capsules"
-                  ></app-fa-solid-icon>
-                }
-                @if (task.info.target === 'gene') {
-                  <app-fa-solid-icon
-                    icon="dna"
-                  ></app-fa-solid-icon>
-                }
-                @if (task.info.target === 'clustering') {
-                  <app-fa-solid-icon icon="hexagon-nodes"></app-fa-solid-icon>
-                }
-                {{ algorithmNames[task.info.algorithm] }}</span
+                  @if (task.info.target === 'drug') {
+                    <app-fa-solid-icon
+                      icon="capsules"
+                    ></app-fa-solid-icon>
+                  }
+                  @if (task.info.target === 'gene') {
+                    <app-fa-solid-icon
+                      icon="dna"
+                    ></app-fa-solid-icon>
+                  }
+                  @if (task.info.target === 'clustering') {
+                    <app-fa-solid-icon icon="hexagon-nodes"></app-fa-solid-icon>
+                  }
+                  {{ algorithmNames[task.info.algorithm] }}</span
                 >
               </div>
               <div class="column p-0">
@@ -120,7 +116,7 @@
                 <a
                   (click)="analysis.removeTask(task.token); $event.stopPropagation()"
                   class="has-text-danger is-pulled-right"
-                  >
+                >
                   <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
                 </a>
               </div>
@@ -133,15 +129,69 @@
           </div>
         }
         @if (task.info.done) {
-          <div
-            >
-            <div class="columns mb-0"
-              pTooltip="Show analysis results"
-              [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
-              tooltipPosition="top">
-              <div class="column is-8">
+          <div>
+            @if (!editing || currentEditingTask !== task.token) {
+              <div class="columns mb-0"
+                   pTooltip="Show analysis results"
+                   [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+                   tooltipPosition="top">
+                <div class="column is-8">
                 <span
-                  >@if (task.info.target === 'drug-target') {
+                >@if (task.info.target === 'drug-target') {
+                  <app-fa-solid-icon
+                    icon="crosshairs"
+                  ></app-fa-solid-icon>
+                }
+                  @if (task.info.target === 'drug') {
+                    <app-fa-solid-icon
+                      icon="capsules"
+                    ></app-fa-solid-icon>
+                  }
+                  @if (task.info.target === 'gene') {
+                    <app-fa-solid-icon
+                      icon="dna"
+                    ></app-fa-solid-icon>
+                  }
+                  @if (task.info.target === 'clustering') {
+                    <app-fa-solid-icon icon="hexagon-nodes"></app-fa-solid-icon>
+                  }
+                  @if (task.name){
+                    {{task.name}}
+                  }
+                    @if (!task.name){
+                  {{ algorithmNames[task.info.algorithm] }}
+                    }
+                </span>
+                  <app-fa-solid-icon icon="pen" (click)="editingTask(task); $event.stopPropagation()" class="ml-2"
+                                     style="cursor: pointer;"></app-fa-solid-icon>
+                </div>
+                <div class="column">
+                  <app-fa-solid-icon
+                    classString="is-pulled-right has-text-success"
+                    icon="check"
+                  ></app-fa-solid-icon>
+                </div>
+              </div>
+              <div class="columns mb-0">
+                <div class="column is-8 pt-0 pb-0">
+                  <small>Finished {{ task.info.finishedAt | date: "short" }}</small>
+                </div>
+                <div class="column pt-0 pb-0">
+                  <a
+                    (click)="analysis.removeTask(task.token); $event.stopPropagation()"
+                    class="has-text-danger is-pulled-right"
+                    pTooltip="Delete task"
+                    [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+                    tooltipPosition="top"
+                  >
+                    <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
+                  </a>
+                </div>
+              </div>
+            }
+            @if (editing && currentEditingTask === task.token) {
+              <div class="column is-7 is-flex is-align-items-center" (click)="$event.stopPropagation()">
+                @if (task.info.target === 'drug-target') {
                   <app-fa-solid-icon
                     icon="crosshairs"
                   ></app-fa-solid-icon>
@@ -159,8 +209,20 @@
                 @if (task.info.target === 'clustering') {
                   <app-fa-solid-icon icon="hexagon-nodes"></app-fa-solid-icon>
                 }
-                {{ algorithmNames[task.info.algorithm] }}</span
-                >
+                <input [(ngModel)]="taskTextMap[task.token]" class="input is-small ml-3" minlength="4"
+                       style="width: auto; display: inline-block; font-size: 1rem; padding: 2px 6px;"/>
+                <app-fa-solid-icon icon="check" (click)="saveSelectionName(task)"
+                                   [class.has-text-grey-light]="taskTextMap[task.token]?.length < 4"
+                                   [style.pointerEvents]="taskTextMap[task.token]?.length < 4 ? 'none' : 'auto'"
+                                   class="ml-2"
+                                   style="cursor: pointer;"></app-fa-solid-icon>
+                @if (taskTextMap[task.token]?.length < 4) {
+                  <app-fa-solid-icon icon="exclamation-triangle"
+                                     class="has-text-danger ml-2" pTooltip="Please enter at least 4 characters"
+                                     tooltipPosition="top"
+                                     [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'">
+                  </app-fa-solid-icon>
+                }
               </div>
               <div class="column">
                 <app-fa-solid-icon
@@ -168,23 +230,23 @@
                   icon="check"
                 ></app-fa-solid-icon>
               </div>
-            </div>
-            <div class="columns mb-0">
-              <div class="column is-8 pt-0 pb-0">
-                <small>Finished {{ task.info.finishedAt | date: "short" }}</small>
-              </div>
-              <div class="column pt-0 pb-0">
-                <a
-                  (click)="analysis.removeTask(task.token); $event.stopPropagation()"
-                  class="has-text-danger is-pulled-right"
-                  pTooltip="Delete task"
-                  [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
-                  tooltipPosition="top"
+              <div class="columns mb-0">
+                <div class="column is-8 pt-0 pb-0">
+                  <small>Finished {{ task.info.finishedAt | date: "short" }}</small>
+                </div>
+                <div class="column pt-0 pb-0">
+                  <a
+                    (click)="analysis.removeTask(task.token); $event.stopPropagation()"
+                    class="has-text-danger is-pulled-right"
+                    pTooltip="Delete task"
+                    [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'"
+                    tooltipPosition="top"
                   >
-                  <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
-                </a>
+                    <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
+                  </a>
+                </div>
               </div>
-            </div>
+            }
           </div>
         }
         @if (task.info.failed) {
@@ -192,25 +254,25 @@
             <div class="columns mb-0">
               <div class="column is-8">
                 <span
-                  >@if (task.info.target === 'drug-target') {
+                >@if (task.info.target === 'drug-target') {
                   <app-fa-solid-icon
                     icon="crosshairs"
                   ></app-fa-solid-icon>
                 }
-                @if (task.info.target === 'drug') {
-                  <app-fa-solid-icon
-                    icon="capsules"
-                  ></app-fa-solid-icon>
-                }
-                @if (task.info.target === 'gene') {
-                  <app-fa-solid-icon
-                    icon="dna"
-                  ></app-fa-solid-icon>
-                }
-                @if (task.info.target === 'clustering') {
-                  <app-fa-solid-icon icon="hexagon-nodes"></app-fa-solid-icon>
-                }
-                {{ algorithmNames[task.info.algorithm] }}</span
+                  @if (task.info.target === 'drug') {
+                    <app-fa-solid-icon
+                      icon="capsules"
+                    ></app-fa-solid-icon>
+                  }
+                  @if (task.info.target === 'gene') {
+                    <app-fa-solid-icon
+                      icon="dna"
+                    ></app-fa-solid-icon>
+                  }
+                  @if (task.info.target === 'clustering') {
+                    <app-fa-solid-icon icon="hexagon-nodes"></app-fa-solid-icon>
+                  }
+                  {{ algorithmNames[task.info.algorithm] }}</span
                 >
               </div>
               <div class="column">
@@ -228,7 +290,7 @@
                 <a
                   (click)="analysis.removeTask(task.token); $event.stopPropagation()"
                   class="has-text-danger is-pulled-right"
-                  >
+                >
                   <app-fa-solid-icon icon="trash"></app-fa-solid-icon>
                 </a>
               </div>

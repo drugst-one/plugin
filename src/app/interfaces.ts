@@ -88,6 +88,7 @@ export type AlgorithmTarget = 'drug' | 'drug-target' | 'gene' | 'clustering'
 
 export interface Task {
   token: string;
+  name: string;
   info: {
     target: AlgorithmTarget,
     algorithm: AlgorithmType | QuickAlgorithmType;
