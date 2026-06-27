@@ -54,10 +54,12 @@ export class TaskListComponent implements OnInit {
     this.justEdited = task.token;
     this.editing = false;
     const newName = this.taskTextMap[task.token];
+
     const payload: any = {
       token: task.token,
       name: newName
     };
+
     try {
       const resp = await this.http.put<any>(`${this.netex.getBackend()}rename_task`, payload).toPromise();
       if (resp && resp.message === 'Name updated successfully.') {
@@ -65,7 +67,7 @@ export class TaskListComponent implements OnInit {
           message: 'The name of the task has been updated successfully.',
           type: 'success'
         });
-        this.analysis.setViewInfos();
+        task.info.name=newName
       } else {
         this.toast.setNewToast({
           message: 'Failed to update the name of the task.',

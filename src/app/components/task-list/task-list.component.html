@@ -155,10 +155,10 @@
                   @if (task.info.target === 'clustering') {
                     <app-fa-solid-icon icon="hexagon-nodes"></app-fa-solid-icon>
                   }
-                  @if (task.name){
-                    {{task.name}}
+                  @if (task.info.name){
+                    {{task.info.name}}
                   }
-                    @if (!task.name){
+               @if (!task.info.name){
                   {{ algorithmNames[task.info.algorithm] }}
                     }
                 </span>
