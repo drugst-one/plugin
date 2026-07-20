@@ -217,6 +217,13 @@
     color: var(--drgstn-text-primary);
   }
 
+  a.dropdown-item,
+  button.dropdown-item,
+  .dropdown-item {
+    background-color: transparent;
+    color: var(--drgstn-text-primary);
+  }
+
   // general network settings, some will be overwritten in analysis
 
   .analysis-view {

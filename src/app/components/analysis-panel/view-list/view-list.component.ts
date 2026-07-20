@@ -18,6 +18,7 @@ export class ViewListComponent implements OnInit {
 
   editing = false;
   taskTextMap: { [key: string]: string } = {};
+  justEdited: string = null
   currentEditingTask: string = null;
 
   constructor(public drugstoneConfig: DrugstoneConfigService, public analysis: AnalysisService, public netex: NetexControllerService, private http: HttpClient,  public toast: ToastService) { }
@@ -26,6 +27,12 @@ export class ViewListComponent implements OnInit {
   }
 
   open(token) {
+    if (this.editing)
+      return
+    if(this.justEdited == token){
+      this.justEdited = null;
+      return;
+    }
     this.token = token;
     this.tokenChange.emit(token);
   }
@@ -39,6 +46,7 @@ export class ViewListComponent implements OnInit {
   }
 
   async saveSelectionName(task) {
+    this.justEdited = task.token;
     this.editing = false;
     const newName = this.taskTextMap[task.token];
 

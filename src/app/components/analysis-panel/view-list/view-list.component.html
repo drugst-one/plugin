@@ -11,8 +11,7 @@
         style="cursor: pointer;"
         >
         @if (task) {
-          <div
-            >
+          <div>
             <div class="columns mb-0 is-flex is-align-items-center">
               @if (!editing || currentEditingTask !== task.token) {
                 <div class="column is-8" style="width: 90% !important;">
@@ -23,7 +22,7 @@
                 </div>
               }
               @if (editing && currentEditingTask === task.token) {
-                <div class="column is-8 is-flex is-align-items-center" (click)="$event.stopPropagation()">
+                <div class="column is-7 is-flex is-align-items-center" (click)="$event.stopPropagation()">
                   <app-fa-solid-icon class="mr-2" icon="crosshairs"></app-fa-solid-icon>
                   <input [(ngModel)]="taskTextMap[task.token]" class="input is-small ml-3" minlength="4"
                     style="width: auto; display: inline-block; font-size: 1rem; padding: 2px 6px;" />

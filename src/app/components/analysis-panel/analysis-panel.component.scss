@@ -193,8 +193,9 @@ div.control.dropdown {
 .pathway-table td .button {
   border: 1px solid transparent !important;
   transition: border-color 0.15s ease-in-out;
-  
+
   &:hover {
     border: 1px solid var(--drgstn-border) !important;
   }
 }
+
