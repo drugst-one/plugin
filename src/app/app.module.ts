@@ -70,6 +70,7 @@ import { GeneRowsComponent } from './components/analysis-panel/gene-rows/gene-ro
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { LoggerComponent } from './components/logger/logger.component';
 import { ScientificPipe } from './components/analysis-panel/scientific-pipe/scientific.pipe';
+import { PruningDistributionDialogComponent } from './components/pruning-distribution-dialog/pruning-distribution-dialog.component';
 
 
 
@@ -123,6 +124,7 @@ import { ScientificPipe } from './components/analysis-panel/scientific-pipe/scie
     GeneRowsComponent,
     LoggerComponent,
     ScientificPipe,
+    PruningDistributionDialogComponent,
   ],
   imports: [
     BrowserModule,
