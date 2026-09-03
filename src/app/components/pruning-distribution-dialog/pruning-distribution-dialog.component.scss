@@ -1,0 +1,29 @@
+.pruning-distribution-modal-card { width: min(760px, calc(100vw - 32px)); height: calc(100vh - 16px); max-height: calc(100vh - 16px); }
+.pruning-distribution-modal-card .modal-card-body { overflow-y: auto; }
+.pruning-distribution-modal-card .modal-card-head,
+.pruning-distribution-modal-card .modal-card-foot { padding-top: .75rem !important; padding-bottom: .75rem !important; }
+.distribution-summary { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 20px; color: var(--drgstn-text-primary); }
+.distribution-status { position: relative; display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px; border: 0; border-radius: 4px; background: transparent; cursor: help; font: inherit; }
+.distribution-status-retained { color: #188038; background: #e6f4ea; }
+.distribution-status-pruned { color: #b3261e; background: #fce8e6; }
+.distribution-status-info { color: #1a73e8; background: #e8f0fe; }
+.distribution-node-tooltip { display: none; position: absolute; top: 100%; left: 0; z-index: 20; width: 20rem; max-height: 10rem; overflow-y: auto; padding: .5rem 1rem; border-radius: 4px; background: var(--drgstn-tooltip); color: var(--drgstn-text-secondary); font-family: var(--drgstn-font-family); font-size: .75rem; font-weight: normal; line-height: 1.35; text-align: left; overflow-wrap: anywhere; white-space: normal; }
+.distribution-status-retained .distribution-node-tooltip { right: 0; left: auto; }
+.distribution-status:hover .distribution-node-tooltip, .distribution-status:focus .distribution-node-tooltip { display: block; }
+.distribution-chart { margin-bottom: 24px; }
+.distribution-chart-heading { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.distribution-chart h4 { margin: 0; color: var(--drgstn-text-primary); }
+.distribution-chart h4 span { font-size: .82em; font-weight: normal; }
+.distribution-download-button { display: inline-flex; align-items: center; justify-content: center; padding: 4px; border: 0; border-radius: 4px; background: transparent; color: var(--drgstn-text-primary); cursor: pointer; }
+.distribution-download-button:hover { background: var(--drgstn-panel-secondary); }
+.distribution-svg { display: block; width: 100%; height: auto; min-height: 180px; border: 1px solid var(--drgstn-border); border-radius: 4px; background: var(--drgstn-panel); cursor: crosshair; touch-action: none; }
+.distribution-axis { stroke: var(--drgstn-border); stroke-width: 1; }
+.distribution-bar { fill: var(--drgstn-primary); opacity: .72; }
+.distribution-line { stroke: var(--drgstn-primary); stroke-width: 2; }
+.distribution-pruned-region { fill: #b7b7b7; opacity: .42; pointer-events: none; }
+.distribution-cutoff { stroke: #d83a3a; stroke-width: 2; pointer-events: none; }
+.distribution-cutoff-label, .distribution-label { fill: var(--drgstn-text-primary); font-size: 11px; pointer-events: none; }
+.distribution-cutoff-label { fill: #b02222; font-weight: 600; }
+.distribution-label-end { text-anchor: end; }
+.distribution-y-label { text-anchor: end; }
+.distribution-footer { justify-content: space-between !important; gap: 8px; }

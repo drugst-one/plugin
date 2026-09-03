@@ -520,6 +520,10 @@
                     <input style="margin-top: 5px; width: 50%" type="number" [min]="minPruningValue" [max]="maxPruningValue" [(ngModel)]="cutoff"
                       [step]="pruningType === 'float' ? step : 1" (input)="onSliderValueChanged()">
                   </div>
+                  <button type="button" class="button is-light is-small distribution-button" (click)="openPruningDistribution()">
+                    <app-fa-solid-icon icon="chart-line"></app-fa-solid-icon>
+                    Show score distribution
+                  </button>
                 </div>
               }
               @if (prunedNetwork) {
@@ -538,6 +542,18 @@
           }
         </div>
       }
+      <app-pruning-distribution-dialog
+        [show]="showPruningDistribution"
+        [propertyName]="selectedProperty"
+        [nodes]="pruningDistributionNodes"
+        [minimum]="minPruningValue"
+        [maximum]="maxPruningValue"
+        [cutoff]="cutoff"
+        [pruningDirection]="pruneDirection"
+        [pruningType]="pruningType"
+        (close)="closePruningDistribution()"
+        (cutoffChange)="updateDistributionCutoff($event)">
+      </app-pruning-distribution-dialog>
       @if (drugstoneConfig.config.showViews) {
         <div class="card bar-large">
           <header class="card-header" [ngClass]="{ 'b-text-small': drugstoneConfig.smallStyle }">
