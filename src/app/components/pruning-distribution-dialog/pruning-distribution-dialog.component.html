@@ -1,0 +1,82 @@
+@if (show) {
+  <div class="modal pruning-distribution-modal is-active">
+    <div class="modal-background" (click)="close.emit()"></div>
+    <div class="modal-card pruning-distribution-modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Distribution: {{ propertyName }}</p>
+        <button type="button" class="delete" aria-label="close" (click)="close.emit()"></button>
+      </header>
+      <section class="modal-card-body">
+        <div class="distribution-summary">
+          <span>{{ distributionValues.length }} numeric values</span>
+          @if (distributionMissingValues > 0) {
+            <button type="button" class="distribution-status distribution-status-info">
+              <app-fa-solid-icon icon="info-circle"></app-fa-solid-icon>
+              {{ distributionMissingValues }} missing values
+              <span class="distribution-node-tooltip" role="tooltip">{{ missingNodesTooltip }}</span>
+            </button>
+          }
+          <button type="button" class="distribution-status distribution-status-retained">
+            <app-fa-solid-icon icon="check"></app-fa-solid-icon>
+            {{ qualifyingNodeCount }} retained
+            <span class="distribution-node-tooltip" role="tooltip">{{ qualifyingNodesTooltip }}</span>
+          </button>
+          <button type="button" class="distribution-status distribution-status-pruned">
+            <app-fa-solid-icon icon="times"></app-fa-solid-icon>
+            {{ prunedNodeIds.length }} removed
+            <span class="distribution-node-tooltip" role="tooltip">{{ prunedNodesTooltip }}</span>
+          </button>
+        </div>
+        @if (distributionValues.length > 0) {
+          <div class="distribution-chart">
+            <div class="distribution-chart-heading">
+              <h4>Value distribution</h4>
+              <button type="button" class="distribution-download-button" (click)="downloadHistogram()" pTooltip="Download histogram as SVG" tooltipPosition="top"
+                [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" aria-label="Download histogram as SVG">
+                <app-fa-solid-icon icon="download"></app-fa-solid-icon>
+              </button>
+            </div>
+            <svg #histogramSvg class="distribution-svg" [attr.viewBox]="'0 0 ' + plotWidth + ' ' + plotHeight" (pointerdown)="setCutoffFromDistribution($event)" (pointermove)="$event.buttons && setCutoffFromDistribution($event)">
+              <line [attr.x1]="padding.left" [attr.x2]="plotWidth - padding.right" [attr.y1]="padding.top + innerHeight" [attr.y2]="padding.top + innerHeight" class="distribution-axis" />
+              @for (bin of distributionBins; track $index; let i = $index) { <rect class="distribution-bar" [attr.x]="histogramBarX(i) + 1" [attr.y]="padding.top + innerHeight - histogramBarHeight(bin.count)" [attr.width]="histogramBarWidth() - 2" [attr.height]="histogramBarHeight(bin.count)"><title>{{ formatValue(bin.from) }} – {{ formatValue(bin.to) }}: {{ bin.count }} nodes</title></rect> }
+              <line class="distribution-cutoff" [attr.x1]="cutoffX" [attr.x2]="cutoffX" [attr.y1]="padding.top" [attr.y2]="padding.top + innerHeight" />
+              <text class="distribution-cutoff-label" [attr.x]="cutoffX + 5" [attr.y]="padding.top + 12">Cutoff {{ formatValue(cutoff) }}</text>
+              <text class="distribution-label" [attr.x]="padding.left" [attr.y]="plotHeight - 8">{{ formatValue(distributionMinimum) }}</text><text class="distribution-label distribution-label-end" [attr.x]="plotWidth - padding.right" [attr.y]="plotHeight - 8">{{ formatValue(distributionMaximum) }}</text>
+            </svg>
+          </div>
+          <div class="distribution-chart">
+            <div class="distribution-chart-heading">
+              <h4>Sorted values <span>(use the bend in this curve as an elbow cue)</span></h4>
+              <button type="button" class="distribution-download-button" (click)="downloadSortedPlot()" pTooltip="Download ranked plot as SVG" tooltipPosition="top"
+                [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'" aria-label="Download ranked plot as SVG">
+                <app-fa-solid-icon icon="download"></app-fa-solid-icon>
+              </button>
+            </div>
+            <svg #sortedSvg class="distribution-svg" [attr.viewBox]="'0 0 ' + plotWidth + ' ' + plotHeight" (pointerdown)="setCutoffFromSortedDistribution($event)" (pointermove)="$event.buttons && setCutoffFromSortedDistribution($event)">
+              <line [attr.x1]="padding.left" [attr.x2]="padding.left" [attr.y1]="padding.top" [attr.y2]="padding.top + innerHeight" class="distribution-axis" />
+              <line [attr.x1]="padding.left" [attr.x2]="plotWidth - padding.right" [attr.y1]="padding.top + innerHeight" [attr.y2]="padding.top + innerHeight" class="distribution-axis" />
+              @for (tick of sortedValueTicks; track tick.value) {
+                <line [attr.x1]="padding.left - 4" [attr.x2]="padding.left" [attr.y1]="tick.y" [attr.y2]="tick.y" class="distribution-axis" />
+                <text class="distribution-label distribution-y-label" [attr.x]="padding.left - 7" [attr.y]="tick.y + 4">{{ formatAxisValue(tick.value) }}</text>
+              }
+              <polyline class="distribution-line" fill="none" [attr.points]="sortedValuesPolyline" />
+              <rect class="distribution-pruned-region" [attr.x]="sortedPrunedRegionX" [attr.y]="padding.top" [attr.width]="sortedPrunedRegionWidth" [attr.height]="innerHeight" />
+              <line class="distribution-cutoff" [attr.x1]="sortedCutoffX" [attr.x2]="sortedCutoffX" [attr.y1]="padding.top" [attr.y2]="padding.top + innerHeight" />
+              <text class="distribution-cutoff-label" [attr.x]="sortedCutoffLabelX" [attr.y]="padding.top + 12" [attr.text-anchor]="sortedCutoffLabelAnchor">Cutoff {{ formatValue(cutoff) }}</text>
+              <text class="distribution-label" [attr.x]="padding.left" [attr.y]="plotHeight - 8">highest-ranked node</text><text class="distribution-label distribution-label-end" [attr.x]="plotWidth - padding.right" [attr.y]="plotHeight - 8">lowest-ranked node</text>
+            </svg>
+          </div>
+          <p class="help">Click or drag in either chart to set the cutoff. The existing slider and exact value stay in sync.</p>
+        } @else { <div class="notification is-warning">No finite numeric values are available for this property.</div> }
+      </section>
+      <footer class="modal-card-foot distribution-footer">
+        <button type="button" class="button is-light" (click)="downloadData()" pTooltip="Download node scores and cutoff status as CSV" tooltipPosition="top"
+          [tooltipStyleClass]="'drgstn drgstn-tooltip drgstn-tooltip-top'">
+          <app-fa-solid-icon icon="download"></app-fa-solid-icon>
+          <span>.csv</span>
+        </button>
+        <button type="button" class="button is-primary is-rounded distribution-use-cutoff" (click)="close.emit()">Use cutoff {{ formatValue(cutoff) }}</button>
+      </footer>
+    </div>
+  </div>
+}

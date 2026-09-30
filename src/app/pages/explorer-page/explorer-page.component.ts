@@ -200,6 +200,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   step: number;
   pruneOrphanNodes = false;
 
+  showPruningDistribution = false;
+  pruningDistributionNodes: any[] = [];
+
   selectedValues: any[] = [];
 
   dropdownSettings = {};
@@ -406,6 +409,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   async selectProperty(propertyKey: string) {
     this.cancelNumericPruningPreview();
     this.prunedNetwork = null;
+    this.showPruningDistribution = false;
     this.selectedProperty = propertyKey;
     const result = await this.netex.prepareNetwork(this.networkHandler.activeNetwork.nodeData.nodes.get(), propertyKey);
     this.pruningType = result['type'];
@@ -421,6 +425,21 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         this.cutoff = result['max']
       }
     }
+  }
+
+  openPruningDistribution(): void {
+    this.pruningDistributionNodes = this.networkHandler.activeNetwork?.nodeData?.nodes?.get?.() ?? [];
+    this.showPruningDistribution = true;
+  }
+
+  closePruningDistribution(): void {
+    this.showPruningDistribution = false;
+    this.pruningDistributionNodes = [];
+  }
+
+  updateDistributionCutoff(cutoff: number): void {
+    this.cutoff = cutoff;
+    this.onSliderValueChanged();
   }
 
   onSelectionChange(event) {
@@ -494,6 +513,9 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   onSliderValueChanged() {
+    if (this.pruningType === 'float' && this.cutoff != null) {
+      this.cutoff = Number(this.cutoff.toFixed(3));
+    }
     this.scheduleNumericPruningPreview();
   }
 

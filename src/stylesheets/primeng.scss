@@ -1,5 +1,9 @@
 @import '../stylesheets/icons';
 
+body.pruning-distribution-open {
+  overflow: hidden;
+}
+
 .drgstn-tooltip {
   position: absolute !important;
   max-width: 12.5rem !important;
@@ -54,6 +58,16 @@
       border-left: 0;
       transform: translate(calc(-100% + 1px),-50% );
     }
+  }
+}
+
+.pruning-distribution-tooltip {
+  max-width: 18rem !important;
+
+  .p-tooltip-text {
+    max-height: 10rem;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
   }
 }
 
