@@ -7,7 +7,7 @@
     (selectionChange)="tableProteinSelection($event)"
     styleClass="table is-hoverable is-narrow drgstn"
     >
-    <ng-template pTemplate="header">
+    <ng-template #header>
       <tr>
         <th class="checkbox-col">
           <p-tableHeaderCheckbox class="drgstn"></p-tableHeaderCheckbox>
@@ -45,10 +45,11 @@
         <th [pSortableColumn]="'label'">
           Label
           <p-sortIcon [field]="'label'"></p-sortIcon>
-          <th [pSortableColumn]="'proteinName'">
-            Name
-            <p-sortIcon [field]="'proteinName'"></p-sortIcon>
-          </th>
+        </th>
+        <th [pSortableColumn]="'proteinName'">
+          Name
+          <p-sortIcon [field]="'proteinName'"></p-sortIcon>
+        </th>
           @if (partition) {
             <th [pSortableColumn]="'cluster'">
               Cluster
@@ -102,7 +103,7 @@
           </th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-e>
+      <ng-template #body let-e>
         <tr>
           <td>
             <p-tableCheckbox [value]="e" class="drgstn"></p-tableCheckbox>

@@ -4,7 +4,7 @@
     [value]="tableDrugs"
     class=""
     >
-    <ng-template pTemplate="header">
+    <ng-template #header>
       <tr>
         @if (tableHasScores) {
           <th [pSortableColumn]="'rank'" class="rank-column">
@@ -51,7 +51,7 @@
       }
     </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-e>
+  <ng-template #body let-e>
     <tr>
       @if (tableHasScores) {
         <td class="rank-column">{{ e.rank}}</td>
