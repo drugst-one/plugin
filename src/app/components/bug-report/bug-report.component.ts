@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {DrugstoneConfigService} from '../../services/drugstone-config/drugstone-config.service';
 import {NetexControllerService} from '../../services/netex-controller/netex-controller.service';
 
@@ -6,6 +6,7 @@ import {NetexControllerService} from '../../services/netex-controller/netex-cont
   standalone: false,
   selector: 'app-bug-report',
   templateUrl: './bug-report.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./bug-report.component.scss']
 })
 export class BugReportComponent implements OnInit {

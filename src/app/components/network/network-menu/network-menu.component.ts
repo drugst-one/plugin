@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy} from '@angular/core';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
@@ -11,6 +11,7 @@ import { AnalysisService } from 'src/app/services/analysis/analysis.service';
   standalone: false,
   selector: 'app-network-menu',
   templateUrl: './network-menu.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./network-menu.component.scss']
 })
 export class NetworkMenuComponent implements OnInit {

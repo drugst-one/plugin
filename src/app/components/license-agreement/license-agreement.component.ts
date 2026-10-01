@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
 
@@ -6,6 +6,7 @@ import { NetexControllerService } from 'src/app/services/netex-controller/netex-
   standalone: false,
   selector: 'app-license-agreement',
   templateUrl: './license-agreement.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./license-agreement.component.scss']
 })
 export class LicenseAgreementComponent implements OnInit {

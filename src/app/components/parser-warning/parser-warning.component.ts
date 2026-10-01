@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {DrugstoneConfigService} from '../../services/drugstone-config/drugstone-config.service';
 
 @Component({
   standalone: false,
   selector: 'app-parser-warning',
   templateUrl: './parser-warning.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./parser-warning.component.scss']
 })
 export class ParserWarningComponent implements OnInit {

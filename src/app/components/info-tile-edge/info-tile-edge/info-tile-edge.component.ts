@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { getWrapperFromNode } from 'src/app/interfaces';
 import { AnalysisService } from 'src/app/services/analysis/analysis.service';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
@@ -8,6 +8,7 @@ import { NetworkHandlerService } from 'src/app/services/network-handler/network-
   standalone: false,
   selector: 'app-info-tile-edge',
   templateUrl: './info-tile-edge.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./info-tile-edge.component.scss']
 })
 export class InfoTileEdgeComponent implements OnInit {

@@ -9,6 +9,7 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   getWrapperFromNode,
@@ -42,6 +43,7 @@ declare var vis: any;
   standalone: false,
   selector: 'app-explorer-page',
   templateUrl: './explorer-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./explorer-page.component.scss'],
 })
 

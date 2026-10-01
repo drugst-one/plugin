@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { DrugstoneConfigService } from "src/app/services/drugstone-config/drugstone-config.service";
 import { Wrapper } from "../../interfaces";
 import { AnalysisService } from "../../services/analysis/analysis.service";
@@ -8,6 +8,7 @@ import { NetworkHandlerService } from "../../services/network-handler/network-ha
   standalone: false,
   selector: "app-info-tile",
   templateUrl: "./info-tile.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: [
     "./info-tile.component.scss",
     "../../pages/explorer-page/explorer-page.component.scss",

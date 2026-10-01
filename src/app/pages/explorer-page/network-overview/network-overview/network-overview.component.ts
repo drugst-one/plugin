@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AnalysisService } from 'src/app/services/analysis/analysis.service';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
@@ -8,6 +8,7 @@ import { NetworkHandlerService } from 'src/app/services/network-handler/network-
   standalone: false,
   selector: 'app-network-overview',
   templateUrl: './network-overview.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./network-overview.component.scss']
 })
 export class NetworkOverviewComponent implements OnInit {

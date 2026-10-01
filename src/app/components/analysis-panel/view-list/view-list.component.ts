@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy} from '@angular/core';
 import {DrugstoneConfigService} from '../../../services/drugstone-config/drugstone-config.service';
 import {algorithmNames, AnalysisService} from '../../../services/analysis/analysis.service';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
@@ -10,6 +10,7 @@ import { ToastService } from 'src/app/services/toast/toast.service';
   standalone: false,
   selector: 'app-view-list',
   templateUrl: './view-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./view-list.component.scss']
 })
 export class ViewListComponent implements OnInit {

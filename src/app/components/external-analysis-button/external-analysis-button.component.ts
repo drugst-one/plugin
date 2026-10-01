@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {AnalysisService} from '../../services/analysis/analysis.service';
 import {DrugstoneConfigService} from '../../services/drugstone-config/drugstone-config.service';
 
@@ -6,6 +6,7 @@ import {DrugstoneConfigService} from '../../services/drugstone-config/drugstone-
   standalone: false,
   selector: 'app-external-analysis-button',
   templateUrl: './external-analysis-button.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./external-analysis-button.component.scss']
 })
 export class ExternalAnalysisButtonComponent implements OnInit {

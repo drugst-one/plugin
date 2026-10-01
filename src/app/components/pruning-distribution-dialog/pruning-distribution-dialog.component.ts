@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
 interface DistributionNodeValue {
   id: string;
@@ -9,6 +9,7 @@ interface DistributionNodeValue {
   standalone: false,
   selector: 'app-pruning-distribution-dialog',
   templateUrl: './pruning-distribution-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./pruning-distribution-dialog.component.scss'],
 })
 export class PruningDistributionDialogComponent implements OnChanges, OnDestroy {

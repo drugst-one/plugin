@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { LiveToasts } from 'src/app/interfaces';
 import { ToastService } from 'src/app/services/toast/toast.service';
 
@@ -6,6 +6,7 @@ import { ToastService } from 'src/app/services/toast/toast.service';
   standalone: false,
   selector: 'app-toast',
   templateUrl: './toast.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./toast.component.scss']
 })
 export class ToastComponent implements OnInit {

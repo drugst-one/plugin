@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { LegendContext } from "src/app/interfaces";
 import { DrugstoneConfigService } from "src/app/services/drugstone-config/drugstone-config.service";
 import { IConfig } from "../../../config";
@@ -10,6 +10,7 @@ import { AnalysisService } from "src/app/services/analysis/analysis.service";
   standalone: false,
   selector: "app-network-legend",
   templateUrl: "./network-legend.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./network-legend.component.scss"],
 })
 export class NetworkLegendComponent implements OnInit {

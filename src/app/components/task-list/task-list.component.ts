@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy} from '@angular/core';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import {AnalysisService, algorithmNames} from '../../services/analysis/analysis.service';
 import {HttpClient} from "@angular/common/http";
@@ -10,6 +10,7 @@ import {NetexControllerService} from "../../services/netex-controller/netex-cont
   standalone: false,
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./task-list.component.scss']
 })
 

@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import domtoimage from 'dom-to-image-cross-origin';
 import {InteractionDatabase} from 'src/app/config';
 import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
@@ -33,6 +33,7 @@ declare var C2S: any;
   standalone: false,
   selector: 'app-network',
   templateUrl: './network.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./network.component.scss']
 })
 export class NetworkComponent implements OnInit {

@@ -1,9 +1,10 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ChangeDetectionStrategy} from '@angular/core';
 
 @Component({
   standalone: false,
   selector: 'app-prot-table',
   templateUrl: './prot-table.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./prot-table.component.scss'],
 })
 export class ProtTableComponent implements OnInit {

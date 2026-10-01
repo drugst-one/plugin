@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {NgSelectComponent} from '@ng-select/ng-select';
 import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
 import {Wrapper} from '../../interfaces';
@@ -7,6 +7,7 @@ import {Wrapper} from '../../interfaces';
   standalone: false,
   selector: 'app-query-tile-component',
   templateUrl: './query-tile.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./query-tile.component.scss']
 })
 export class QueryTileComponent implements OnInit {

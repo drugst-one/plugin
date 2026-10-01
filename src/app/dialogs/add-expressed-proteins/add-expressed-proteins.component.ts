@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ChangeDetectionStrategy} from '@angular/core';
 import {AnalysisService} from '../../services/analysis/analysis.service';
 import {getWrapperFromNode, Node, Tissue, NodeAttributeMap} from '../../interfaces';
 import {environment} from '../../../environments/environment';
@@ -9,6 +9,7 @@ import { NetexControllerService } from 'src/app/services/netex-controller/netex-
   standalone: false,
   selector: 'app-add-expressed-proteins',
   templateUrl: './add-expressed-proteins.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./add-expressed-proteins.component.scss']
 })
 export class AddExpressedProteinsComponent implements OnChanges {

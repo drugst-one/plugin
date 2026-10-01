@@ -1,10 +1,11 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy} from '@angular/core';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 
 @Component({
   standalone: false,
   selector: 'app-toggle-inplace',
   templateUrl: './toggle-inplace.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./toggle-inplace.component.scss']
 })
 export class ToggleInplaceComponent implements OnInit {

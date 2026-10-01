@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy} from '@angular/core';
 import {NodeGroup} from 'src/app/config';
 import { LegendService } from 'src/app/services/legend-service/legend-service.service';
 
@@ -6,6 +6,7 @@ import { LegendService } from 'src/app/services/legend-service/legend-service.se
   standalone: false,
   selector: 'app-group-selection',
   templateUrl: './group-selection.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./group-selection.component.scss']
 })
 export class GroupSelectionComponent implements OnInit {

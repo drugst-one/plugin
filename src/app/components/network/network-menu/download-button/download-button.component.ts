@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { DrugstoneConfigService } from "src/app/services/drugstone-config/drugstone-config.service";
 import { NetexControllerService } from "src/app/services/netex-controller/netex-controller.service";
 import {
@@ -14,6 +14,7 @@ import { LoggerService } from "src/app/services/logger/logger.service";
   standalone: false,
   selector: "app-download-button",
   templateUrl: "./download-button.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./download-button.component.scss"],
 })
 export class DownloadButtonComponent implements OnInit {

@@ -1,9 +1,10 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 
 @Component({
   standalone: false,
   selector: 'app-drug-table',
   templateUrl: './drug-table.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./drug-table.component.scss'],
 })
 export class DrugTableComponent implements OnInit {

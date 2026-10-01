@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { LoggerService } from 'src/app/services/logger/logger.service';
 import { Subscription } from 'rxjs';
 
@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
   standalone: false,
   selector: 'app-logger',
   templateUrl: './logger.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./logger.component.scss']
 })
 export class LoggerComponent implements OnInit, AfterViewInit {

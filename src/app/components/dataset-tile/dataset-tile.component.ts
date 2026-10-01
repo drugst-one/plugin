@@ -1,10 +1,11 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from '@angular/core';
 import {Dataset} from '../../interfaces';
 
 @Component({
   standalone: false,
   selector: 'app-dataset-tile',
   templateUrl: './dataset-tile.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./dataset-tile.component.scss']
 })
 

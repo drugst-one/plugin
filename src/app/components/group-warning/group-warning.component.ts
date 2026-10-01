@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {DrugstoneConfigService} from '../../services/drugstone-config/drugstone-config.service';
 
 @Component({
   standalone: false,
   selector: 'app-group-warning',
   templateUrl: './group-warning.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./group-warning.component.scss']
 })
 export class GroupWarningComponent implements OnInit {

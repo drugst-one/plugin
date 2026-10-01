@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {DrugstoneConfigService} from '../../services/drugstone-config/drugstone-config.service';
 
 @Component({
   standalone: false,
   selector: 'app-privacy-banner',
   templateUrl: './privacy-banner.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./privacy-banner.component.scss']
 })
 export class PrivacyBannerComponent implements OnInit {

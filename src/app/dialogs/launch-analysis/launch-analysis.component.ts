@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ChangeDetectionStrategy} from '@angular/core';
 import {
   AnalysisService, BETWEENNESS_CENTRALITY, CLOSENESS_CENTRALITY, HARMONIC_CENTRALITY,
   DEGREE_CENTRALITY,
@@ -20,6 +20,7 @@ import { buildLoggableParameters } from 'src/app/services/analysis/analysis-meta
   standalone: false,
   selector: 'app-launch-analysis',
   templateUrl: './launch-analysis.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./launch-analysis.component.scss']
 })
 export class LaunchAnalysisComponent implements OnInit, OnChanges {

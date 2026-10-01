@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 
 
@@ -6,6 +6,7 @@ import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugst
   standalone: false,
   selector: 'app-toggle-inplace-reversed',
   templateUrl: './toggle-inplace-reversed.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./toggle-inplace-reversed.component.scss']
 })
 export class ToggleInplaceReversedComponent implements OnInit {

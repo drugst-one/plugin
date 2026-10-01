@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import { NetexControllerService } from 'src/app/services/netex-controller/netex-controller.service';
 import {
@@ -15,6 +15,7 @@ import {NetworkHandlerService} from 'src/app/services/network-handler/network-ha
   standalone: false,
   selector: 'app-download-button-inverse',
   templateUrl: './download-button-inverse.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./download-button-inverse.component.scss']
 })
 export class DownloadButtonInverseComponent implements OnInit {

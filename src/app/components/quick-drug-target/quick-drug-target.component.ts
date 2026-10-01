@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy} from '@angular/core';
 import {AnalysisService} from 'src/app/services/analysis/analysis.service';
 import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugstone-config.service';
 
@@ -6,6 +6,7 @@ import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugston
   standalone: false,
   selector: 'app-quick-drug-target',
   templateUrl: './quick-drug-target.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./quick-drug-target.component.scss']
 })
 export class QuickDrugTargetComponent implements OnInit {

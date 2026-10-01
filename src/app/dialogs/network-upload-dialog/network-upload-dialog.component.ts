@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { Identifier } from 'typescript';
 
 @Component({
   standalone: false,
   selector: 'app-network-upload-dialog',
   templateUrl: './network-upload-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./network-upload-dialog.component.scss']
 })
 export class NetworkUploadDialogComponent implements OnInit {

@@ -9,6 +9,7 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {algorithmNames, AnalysisService} from '../../services/analysis/analysis.service';
@@ -57,6 +58,7 @@ const maxNodeLimit = 250;
   standalone: false,
   selector: 'app-analysis-panel',
   templateUrl: './analysis-panel.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./analysis-panel.component.scss'],
 })
 export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit {

@@ -732,7 +732,7 @@
                       <strong>Prune on SPD value</strong>
                     </h5>
                     <div>
-                      @if (result?.network?.nodes?.length !== undefined) {
+                      @if ($safeNavigationMigration(result?.network?.nodes?.length) !== undefined) {
                         <p>
                           <strong>Initial Network Size:</strong> {{ result?.networkInitial?.nodes?.length }}
                         </p>
@@ -789,9 +789,9 @@
                               </h4>
                             </div>
                             <div class="column">
-                              @if (result?.modularity !== undefined) {
+                              @if ($safeNavigationMigration(result?.modularity) !== undefined) {
                                 <p>
-                                  <strong>Modularity:</strong> {{ result?.modularity | number: '1.4-4' }}
+                                  <strong>Modularity:</strong> {{ $safeNavigationMigration(result?.modularity) | number: '1.4-4' }}
                                 </p>
                               }
                             </div>

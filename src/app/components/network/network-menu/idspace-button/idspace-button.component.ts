@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Identifier } from 'src/app/config';
 import { DrugstoneConfigService } from 'src/app/services/drugstone-config/drugstone-config.service';
 import { NetworkHandlerService } from 'src/app/services/network-handler/network-handler.service';
@@ -7,6 +7,7 @@ import { NetworkHandlerService } from 'src/app/services/network-handler/network-
   standalone: false,
   selector: 'app-idspace-button',
   templateUrl: './idspace-button.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./idspace-button.component.scss']
 })
 export class IdspaceButtonComponent implements OnInit {

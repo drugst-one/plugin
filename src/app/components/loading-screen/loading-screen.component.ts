@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy} from '@angular/core';
 import {LoadingScreenService} from 'src/app/services/loading-screen/loading-screen.service';
 import {DrugstoneConfigService} from '../../services/drugstone-config/drugstone-config.service';
 
@@ -6,6 +6,7 @@ import {DrugstoneConfigService} from '../../services/drugstone-config/drugstone-
   standalone: false,
   selector: 'app-loading-screen',
   templateUrl: './loading-screen.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./loading-screen.component.scss']
 })
 export class LoadingScreenComponent implements OnInit {
