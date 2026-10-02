@@ -7,6 +7,7 @@ import {
   Input,
   OnInit,
   Output,
+  OnDestroy,
   SimpleChanges,
   ViewChild,
   ChangeDetectionStrategy
@@ -29,7 +30,7 @@ import {DrugstoneConfigService} from 'src/app/services/drugstone-config/drugston
 import {NetworkHandlerService} from 'src/app/services/network-handler/network-handler.service';
 import {LegendService} from '../../services/legend-service/legend-service.service';
 import {ToastService} from '../../services/toast/toast.service';
-import { Subject } from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import { LoggerService } from 'src/app/services/logger/logger.service';
 import {
   summarizeNetworkNodeIds,
@@ -47,13 +48,14 @@ declare var vis: any;
   styleUrls: ['./explorer-page.component.scss'],
 })
 
-export class ExplorerPageComponent implements OnInit, AfterViewInit {
+export class ExplorerPageComponent implements OnInit, AfterViewInit, OnDestroy {
   private baseDrgstnHeight = 0;
   private readonly pruningPreviewDebounceMs = 250;
   private pruningPreviewTimeoutId?: ReturnType<typeof setTimeout>;
   private pruningPreviewRequestId = 0;
   private shouldLogAdvancedSettings = false;
   private lastLoggedAdvancedSettingsSignature?: string;
+  private configChangeSubscription?: Subscription;
 
   private networkJSON = undefined;  //'{"nodes": [], "edges": []}'
   public _config: string;
@@ -274,7 +276,8 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     public networkHandler: NetworkHandlerService,
     public legendService: LegendService,
     public toast: ToastService,
-    public logger: LoggerService
+    public logger: LoggerService,
+    private hostElement: ElementRef<HTMLElement>
   ) {
 
     this.showDetails = false;
@@ -350,6 +353,17 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.configChangeSubscription = this.drugstoneConfig.configChanges.subscribe(change => {
+      this.hostElement.nativeElement.dispatchEvent(new CustomEvent('drugstone-analysis-config-change', {
+        detail: {
+          version: 1,
+          source: change.source,
+          config: structuredClone(change.config)
+        },
+        bubbles: true,
+        composed: true
+      }));
+    });
     this.baseDrgstnHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--drgstn-height'));
     this.dropdownSettings = {
       singleSelection: false,
@@ -379,6 +393,10 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
         );
       });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.configChangeSubscription?.unsubscribe();
   }
 
   hasProperties(): boolean {
@@ -641,9 +659,6 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
   }
 
   public activateConfig(updateNetworkFlag = false) {
-    // remove analysis panel when loading config
-    this.selectedAnalysisToken = null;
-
     let configObj = {};
     let groupsObj = {};
     try {
@@ -673,12 +688,20 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
       console.error(e);
     }
     configObj = merge(configObj, groupsObj);
-    if (this.drugstoneConfig.analysisConfig) {
-            this.drugstoneConfig.set_analysisConfig({...this.drugstoneConfig.analysisConfig, configObj});
-      // this.drugstoneConfig.set_analysisConfig(merge(this.drugstoneConfig.analysisConfig, configObj));
-    } else {
-      this.drugstoneConfig.config = {...this.drugstoneConfig.config, ...configObj};
+    const hadAnalysis = this.selectedToken !== null || !!this.drugstoneConfig.analysisConfig;
+    // External settings always target the global config. Apply them before closing
+    // so the global-config event reports the new settings, not the previous ones.
+    this.drugstoneConfig.config = {...this.drugstoneConfig.config, ...configObj};
+    if (hadAnalysis) {
+      if (this.analysisElement) {
+        this.analysisElement.close();
+      } else if (this.drugstoneConfig.analysisConfig) {
+        this.drugstoneConfig.remove_analysisConfig();
+      }
+      this.networkHandler.setActiveNetwork('explorer');
+      updateNetworkFlag = true;
     }
+    this.selectedAnalysisToken = null;
     // update Drugst.One according to the settings
     // check if config updates affect network
     for (const key of Object.keys(configObj)) {
@@ -694,11 +717,7 @@ export class ExplorerPageComponent implements OnInit, AfterViewInit {
     }
     this.networkHandler.networkSidebarOpen = this.drugstoneConfig.config.expandNetworkMenu;
     // trigger updates on config e.g. in legend
-    if (this.drugstoneConfig.analysisConfig) {
-      this.drugstoneConfig.analysisConfig = {...this.drugstoneConfig.analysisConfig};
-    } else {
-      this.drugstoneConfig.config = {...this.drugstoneConfig.config};
-    }
+    this.drugstoneConfig.config = {...this.drugstoneConfig.config};
     this.logAdvancedSettingsConfigState();
     if (updateNetworkFlag && typeof this.networkJSON !== 'undefined') {
       // update network if network config has changed and networkJSON exists
