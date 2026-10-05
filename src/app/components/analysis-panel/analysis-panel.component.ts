@@ -401,7 +401,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
       this.logger.logMessage('View "' + name + '" loaded. Nodes: ' + view.network.nodes.length + ', Edges: ' + view.network.edges.length + '.');
       this.task = view;
       this.result = view;
-      this.drugstoneConfig.set_analysisConfig(view.config);
+      this.drugstoneConfig.set_analysisConfig(view.config, 'view');
       this.analysis.switchSelection(this.token);
       // this.loadingScreen.stateUpdate(false);
       // Reset
@@ -624,7 +624,7 @@ export class AnalysisPanelComponent implements OnInit, OnChanges, AfterViewInit 
           return;
         }
         const formattedDate = this.datePipe.transform(this.task["info"]["finishedAt"], 'short');
-        this.drugstoneConfig.set_analysisConfig(result.parameters.config);
+        this.drugstoneConfig.set_analysisConfig(result.parameters.config, 'task');
         if (!this.analysis.inPathwayAnalysis) {
           this.logger.logMessage(
             `Analysis Result View loaded: ${algorithmNames[this.task["info"]["algorithm"]]} (${this.task["info"]["target"]}). Task finished at: ${formattedDate}.`,
