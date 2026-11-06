@@ -213,7 +213,9 @@
     }
   </div>
 }
-<app-network-empty-warning></app-network-empty-warning>
+@if (networkType === 'explorer' && networkHandler.activeNetwork.networkType === 'explorer') {
+  <app-network-empty-warning></app-network-empty-warning>
+}
 <app-network-warning></app-network-warning>
 <app-group-warning></app-group-warning>
 <app-parser-warning></app-parser-warning>
