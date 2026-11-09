@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {defaultConfig, IConfig} from '../../config';
 import {Subject} from 'rxjs';
+import * as mergeWith from 'lodash/fp/mergeWith';
+import * as cloneDeep from 'lodash/cloneDeep';
 
 export type DrugstoneConfigChangeSource = 'task' | 'view' | 'global';
 
@@ -33,10 +35,14 @@ export class DrugstoneConfigService {
   constructor() {
   }
 
-  set_analysisConfig(config: IConfig, source: DrugstoneConfigChangeSource = this.configSource) {
-    this.analysisConfig = config;
+  set_analysisConfig(config: Partial<IConfig>, source: DrugstoneConfigChangeSource = this.configSource) {
+    // Saved lists replace current choices, including explicitly empty lists.
+    this.analysisConfig = mergeWith(
+      (_current, saved) => Array.isArray(saved) ? cloneDeep(saved) : undefined,
+      this.config, config
+    );
     this.configSource = source;
-    this.configChangeSubject.next({source, config});
+    this.configChangeSubject.next({source, config: this.analysisConfig});
   }
 
   remove_analysisConfig() {

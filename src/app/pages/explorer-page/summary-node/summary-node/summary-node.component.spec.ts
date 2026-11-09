@@ -1,25 +1,26 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {CommonModule} from '@angular/common';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {TestBed} from '@angular/core/testing';
+import {SummaryNodeComponent} from './summary-node.component';
+import {DrugstoneConfigService} from '../../../../services/drugstone-config/drugstone-config.service';
+import {AnalysisService} from '../../../../services/analysis/analysis.service';
+import {NetexControllerService} from '../../../../services/netex-controller/netex-controller.service';
+import {NetworkHandlerService} from '../../../../services/network-handler/network-handler.service';
 
-import { SummaryNodeComponent } from './summary-node.component';
-
-describe('SummaryNodeComponent', () => {
-  let component: SummaryNodeComponent;
-  let fixture: ComponentFixture<SummaryNodeComponent>;
-
-  beforeEach(async () => {
+describe('SummaryNodeComponent for externally created tasks', () => {
+  it('opens node details using inherited group definitions', async () => {
+    const wrapper = {id: 'A1BG', data: {id: 'A1BG', group: 'seedNode'}};
     await TestBed.configureTestingModule({
-      declarations: [ SummaryNodeComponent ]
-    })
-    .compileComponents();
-  });
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(SummaryNodeComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
+      imports: [CommonModule], declarations: [SummaryNodeComponent], schemas: [NO_ERRORS_SCHEMA],
+      providers: [DrugstoneConfigService,
+        {provide: AnalysisService, useValue: {}}, {provide: NetexControllerService, useValue: {}},
+        {provide: NetworkHandlerService, useValue: {activeNetwork: {selectedWrapper: wrapper}}}]
+    }).compileComponents();
+    TestBed.inject(DrugstoneConfigService).set_analysisConfig({nodeGroups: {}}, 'task');
+    const fixture = TestBed.createComponent(SummaryNodeComponent);
+    expect(() => fixture.detectChanges()).not.toThrow();
+    expect(fixture.nativeElement.textContent).toContain('Seed Nodes');
+    expect(fixture.nativeElement.querySelector('app-info-tile').wrapper).toBe(wrapper);
+    fixture.destroy();
   });
 });
